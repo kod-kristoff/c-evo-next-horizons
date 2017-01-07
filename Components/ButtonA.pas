@@ -32,7 +32,7 @@ begin
 RegisterComponents('Samples', [TButtonA]);
 end;
 
-constructor TButtonA.Create;
+constructor TButtonA.Create(aOwner: TComponent);
 begin
 inherited Create(aOwner);
 FCaption:='';

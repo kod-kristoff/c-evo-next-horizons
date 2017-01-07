@@ -341,7 +341,7 @@ end;
 
 procedure TCityTypeDlg.DeleteBtnClick(Sender: TObject);
 begin
-  fillchar(MyData.ImpOrder[ctype], sizeof(MyData.ImpOrder[ctype]), -1);
+  fillchar(MyData.ImpOrder[ctype], sizeof(MyData.ImpOrder[ctype]), Byte(-1));
   listed := [];
   Changed := true;
   SmartUpdateContent

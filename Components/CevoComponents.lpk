@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <Package Version="4">
+    <PathDelim Value="\"/>
+    <Name Value="CevoComponents"/>
+    <Type Value="RunAndDesignTime"/>
+    <CompilerOptions>
+      <Version Value="11"/>
+      <PathDelim Value="\"/>
+      <SearchPaths>
+        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)\"/>
+      </SearchPaths>
+      <Parsing>
+        <SyntaxOptions>
+          <SyntaxMode Value="Delphi"/>
+          <CStyleOperator Value="False"/>
+          <IncludeAssertionCode Value="True"/>
+          <AllowLabel Value="False"/>
+          <CPPInline Value="False"/>
+        </SyntaxOptions>
+      </Parsing>
+      <CodeGeneration>
+        <Checks>
+          <IOChecks Value="True"/>
+          <RangeChecks Value="True"/>
+          <OverflowChecks Value="True"/>
+          <StackChecks Value="True"/>
+        </Checks>
+        <VerifyObjMethodCallValidity Value="True"/>
+      </CodeGeneration>
+    </CompilerOptions>
+    <Files Count="7">
+      <Item1>
+        <Filename Value="Area.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="Area"/>
+      </Item1>
+      <Item2>
+        <Filename Value="ButtonA.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="ButtonA"/>
+      </Item2>
+      <Item3>
+        <Filename Value="ButtonB.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="ButtonB"/>
+      </Item3>
+      <Item4>
+        <Filename Value="ButtonC.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="ButtonC"/>
+      </Item4>
+      <Item5>
+        <Filename Value="ButtonN.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="ButtonN"/>
+      </Item5>
+      <Item6>
+        <Filename Value="EOTButton.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="EOTButton"/>
+      </Item6>
+      <Item7>
+        <Filename Value="ButtonBase.pas"/>
+        <UnitName Value="ButtonBase"/>
+      </Item7>
+    </Files>
+    <RequiredPkgs Count="2">
+      <Item1>
+        <PackageName Value="LCL"/>
+      </Item1>
+      <Item2>
+        <PackageName Value="FCL"/>
+      </Item2>
+    </RequiredPkgs>
+    <UsageOptions>
+      <UnitPath Value="$(PkgOutDir)"/>
+    </UsageOptions>
+    <PublishOptions>
+      <Version Value="2"/>
+    </PublishOptions>
+  </Package>
+</CONFIG>

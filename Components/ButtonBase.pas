@@ -41,26 +41,28 @@ implementation
 //uses
 //  MMSystem;
 
-constructor TButtonBase.Create;
+constructor TButtonBase.Create(AOwner: TComponent);
 begin
-inherited Create(aOwner);
-//FDownSound:='';
-//FUpSound:='';
-FGraphic:=nil; Active:=false; FDown:=false; FPermanent:=false;
-ClickProc:=nil;
+  inherited;
+  //FDownSound:='';
+  //FUpSound:='';
+  FGraphic:=nil; Active:=false; FDown:=false; FPermanent:=false;
+  ClickProc:=nil;
 end;
 
-procedure TButtonBase.MouseDown;
+procedure TButtonBase.MouseDown(Button: TMouseButton; Shift: TShiftState;
+      x, y: integer);
 begin
-Active:=true;
-MouseMove(Shift,x,y)
+  Active:=true;
+  MouseMove(Shift,x,y)
 end;
 
-procedure TButtonBase.MouseUp;
+procedure TButtonBase.MouseUp(Button: TMouseButton; Shift: TShiftState;
+      x, y: integer);
 begin
-if ssLeft in Shift then exit;
-MouseMove(Shift,x,y);
-if Active and FDown then
+  if ssLeft in Shift then exit;
+    MouseMove(Shift,x,y);
+  if Active and FDown then
   begin
 //  PlayUpSound;
   Active:=false;
@@ -85,7 +87,7 @@ else
   end
 end;
 
-procedure TButtonBase.MouseMove;
+procedure TButtonBase.MouseMove(Shift: TShiftState; x, y: integer);
 begin
 if Active then
    if (x>=0) and (x<Width) and (y>=0) and (y<Height) then

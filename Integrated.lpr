@@ -2,7 +2,7 @@
 program Integrated;
 
 uses
-  Forms, Interfaces,
+  Forms, Interfaces, SysUtils,
   StringTables in 'StringTables.pas',
   Directories in 'Directories.pas',
   Protocol in 'Protocol.pas',
@@ -46,7 +46,18 @@ uses
 
 {$R cevo.RES}
 
+{$IFDEF DEBUG}
+const
+  HeapTraceLog = 'heaptrclog.trc';
+{$ENDIF}
+
 begin
+  {$IFDEF DEBUG}
+  // Heap trace
+  DeleteFile(ExtractFilePath(ParamStr(0)) + HeapTraceLog);
+  SetHeapTraceOutput(ExtractFilePath(ParamStr(0)) + HeapTraceLog);
+  {$ENDIF}
+
   DotNetClient := nil;
   Application.Initialize;
   Application.Title := 'C-evo';

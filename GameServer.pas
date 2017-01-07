@@ -1543,9 +1543,9 @@ begin
 
   MaskD(ObserveLevel, MapSize, not Cardinal(3 shl (2 * pTurn)));
   if Mode > moLoading_Fast then
-    MaskD(RW[pTurn].Map^, MapSize, not Cardinal(fUnit or fHiddenUnit or
+    MaskD(RW[pTurn].Map^, MapSize, Cardinal(not Cardinal(fUnit or fHiddenUnit or
       fStealthUnit or fObserved or fSpiedOut or fOwned or fOwnZoCUnit or
-      fInEnemyZoC));
+      fInEnemyZoC)));
   RW[pTurn].nEnemyUn := 0;
 
   MirBuilt := false;
@@ -1994,9 +1994,9 @@ begin
     begin // restrict view area to current positions
       MaskD(ObserveLevel, MapSize, not Cardinal(3 shl (2 * pTurn)));
       if Mode > moLoading_Fast then
-        MaskD(RW[pTurn].Map^, MapSize, not Cardinal(fUnit or fHiddenUnit or
+        MaskD(RW[pTurn].Map^, MapSize, Cardinal(not Cardinal(fUnit or fHiddenUnit or
           fStealthUnit or fObserved or fSpiedOut or fOwned or fOwnZoCUnit or
-          fInEnemyZoC));
+          fInEnemyZoC)));
       RW[pTurn].nEnemyUn := 0;
       DiscoverViewAreas(pTurn);
     end;

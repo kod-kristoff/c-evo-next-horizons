@@ -32,7 +32,7 @@ begin
 RegisterComponents('Samples', [TButtonB]);
 end;
 
-constructor TButtonB.Create;
+constructor TButtonB.Create(aOwner: TComponent);
 begin
 inherited Create(aOwner);
 ShowHint:=true;

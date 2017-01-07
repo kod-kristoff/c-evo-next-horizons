@@ -7,7 +7,11 @@ uses
   LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics, Forms;
 
 type
+
+  { TBackground }
+
   TBackground = class(TForm)
+    procedure FormDestroy(Sender: TObject);
     procedure FormPaint(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -51,6 +55,13 @@ begin
     Left := StartDlg.Left - 8;
     Top := StartDlg.Top - 8;
   end
+end;
+
+procedure TBackground.FormDestroy(Sender: TObject);
+begin
+  // TODO Why FormClose is not executed?
+  if img <> nil then
+    FreeAndNil(img);
 end;
 
 procedure TBackground.FormPaint(Sender: TObject);

@@ -1415,144 +1415,123 @@ type
 
   TJobProgressData = array [0 .. nJob - 1] of record Required, Done,
     NextTurnPlus: integer;
-end;
-TBattleForecast = record pAtt, mixAtt, HealthAtt, ExpAtt, FlagsAtt, Movement,
-  EndHealthDef, EndHealthAtt: integer;
-end;
-TBattleForecastEx = record pAtt, mixAtt, HealthAtt, ExpAtt, FlagsAtt, Movement,
-  EndHealthDef, EndHealthAtt: integer; // must be same as in TBattleForecast
-AStr, DStr, ABaseDamage, DBaseDamage: integer;
-end;
-TShowMove = record Owner, Health, mix, emix, Flags, FromLoc, dx, dy, EndHealth,
-  EndHealthDef, Fuel, Exp, Load: integer;
-end;
-TShowShipChange = record Reason, Ship1Owner, Ship2Owner: integer;
-Ship1Change, Ship2Change: array [0 .. nShipPart - 1] of integer;
-end;
-TOffer = record nDeliver, nCost: integer;
-Price:
-array [0 .. 11] of Cardinal;
-end;
-TChart = array [0 .. INFIN] of integer;
-TEditTileData = record Loc, NewTile: integer
-end;
-TCreateUnitData = record Loc, p, mix: integer;
-end;
+  end;
+  TBattleForecast = record
+    pAtt, mixAtt, HealthAtt, ExpAtt, FlagsAtt, Movement,
+    EndHealthDef, EndHealthAtt: integer;
+  end;
+  TBattleForecastEx = record
+    pAtt, mixAtt, HealthAtt, ExpAtt, FlagsAtt, Movement,
+    EndHealthDef, EndHealthAtt: integer; // must be same as in TBattleForecast
+    AStr, DStr, ABaseDamage, DBaseDamage: integer;
+  end;
+  TShowMove = record
+    Owner, Health, mix, emix, Flags, FromLoc, dx, dy, EndHealth,
+    EndHealthDef, Fuel, Exp, Load: integer;
+  end;
+  TShowShipChange = record
+    Reason, Ship1Owner, Ship2Owner: integer;
+    Ship1Change, Ship2Change: array [0 .. nShipPart - 1] of integer;
+  end;
+  TOffer = record nDeliver, nCost: integer;
+    Price: array [0 .. 11] of Cardinal;
+  end;
+  TChart = array [0 .. INFIN] of integer;
+  TEditTileData = record
+    Loc, NewTile: integer
+  end;
+  TCreateUnitData = record
+    Loc, p, mix: integer;
+  end;
 
-TTileList = array [0 .. INFIN] of Cardinal;
-TTileObservedLastList = array [0 .. INFIN] of SmallInt;
-TOwnerList = array [0 .. INFIN] of ShortInt;
-TByteList = array [0 .. INFIN] of Byte;
-TIntList = array [0 .. INFIN] of integer;
-TCityList = array [0 .. INFIN] of TCity;
-TUnList = array [0 .. INFIN] of TUn;
-TModelList = array [0 .. INFIN] of TModel;
-TEnemyUnList = array [0 .. INFIN] of TUnitInfo;
-TEnemyCityList = array [0 .. INFIN] of TCityInfo;
-TEnemyModelList = array [0 .. INFIN] of TModelInfo;
-TBattleList = array [0 .. INFIN] of TBattle;
+  TTileList = array [0 .. INFIN] of Cardinal;
+  TTileObservedLastList = array [0 .. INFIN] of SmallInt;
+  TOwnerList = array [0 .. INFIN] of ShortInt;
+  TByteList = array [0 .. INFIN] of Byte;
+  TIntList = array [0 .. INFIN] of integer;
+  TCityList = array [0 .. INFIN] of TCity;
+  TUnList = array [0 .. INFIN] of TUn;
+  TModelList = array [0 .. INFIN] of TModel;
+  TEnemyUnList = array [0 .. INFIN] of TUnitInfo;
+  TEnemyCityList = array [0 .. INFIN] of TCityInfo;
+  TEnemyModelList = array [0 .. INFIN] of TModelInfo;
+  TBattleList = array [0 .. INFIN] of TBattle;
 
-TPlayerContext = record Data: pointer;
-Map:
-^TTileList;
-{ the playground, a list of tiles with index = location, see tile flags }
-MapObservedLast:
-^TTileObservedLastList;
-// turn in which the tile was observed last, index = location
-Territory:
-^TOwnerList; // nation to which's territory a tile belongs, -1 indicates none
-Un:
-^TUnList; { units }
-City:
-^TCityList; { cities }
-Model:
-^TModelList; { unit models }
-EnemyUn:
-^TEnemyUnList; // known units of enemy players
-EnemyCity:
-^TEnemyCityList; // known cities of enemy players
-EnemyModel:
-^TEnemyModelList; // known unit models of enemy players
-EnemyReport:
-array [0 .. nPl - 1] of ^TEnemyReport;
+  TPlayerContext = record
+    Data: pointer;
+    Map: ^TTileList;
+    { the playground, a list of tiles with index = location, see tile flags }
+    MapObservedLast: ^TTileObservedLastList;
+    // turn in which the tile was observed last, index = location
+    Territory: ^TOwnerList; // nation to which's territory a tile belongs, -1 indicates none
+    Un: ^TUnList; { units }
+    City: ^TCityList; { cities }
+    Model: ^TModelList; { unit models }
+    EnemyUn: ^TEnemyUnList; // known units of enemy players
+    EnemyCity: ^TEnemyCityList; // known cities of enemy players
+    EnemyModel: ^TEnemyModelList; // known unit models of enemy players
+    EnemyReport: array [0 .. nPl - 1] of ^TEnemyReport;
 
-TestFlags, // options turned on in the "Manipulation" menu
-Turn, // current turn
-Alive, { bitset of IDs of players still alive, flag 1 shl p for player p }
-Happened, // flags indicate what happened within the last turnaround
-AnarchyStart, // start turn of anarchy, <0 if not in anarchy
-Credibility, // own credibility
-MaxCredibility, // maximum credibility still to achieve
-nUn, { number of units }
-nCity, { number of cities }
-nModel, { number of developed unit models }
-nEnemyUn, nEnemyCity, nEnemyModel, Government, { gAnarchy..gDemocracy }
-Money, TaxRate, LuxRate, Research,
-{ collected research points for currently researched tech }
-ResearchTech: integer; // currently researched tech
-DevModel:
-TModel; { unit model currently under development }
-Tech:
-array [0 .. (nAdv + 3) div 4 * 4 - 1] of ShortInt; { tech status indicator }
-Attitude:
-array [0 .. nPl - 1] of integer; // attitude to other nations
-Treaty:
-array [0 .. nPl - 1] of integer; // treaty with other nations
-EvaStart:
-array [0 .. nPl - 1] of integer; // peace treaty: start of evacuation period
-Tribute:
-array [0 .. nPl - 1] of integer; // no longer in use
-TributePaid:
-array [0 .. nPl - 1] of integer; // no longer in use
-Wonder:
-array [0 .. 27] of TWonderInfo;
-Ship:
-array [0 .. nPl - 1] of TShipInfo;
-NatBuilt:
-array [28 .. (nImp + 3) div 4 * 4 - 1] of ShortInt;
-nBattleHistory:
-integer;
-BattleHistory:
-^TBattleList; // complete list of all my battles in the whole game
-BorderHelper:
-^TByteList;
-LastCancelTreaty:
-array [0 .. nPl - 1] of integer; // turn of last treaty cancel
-OracleIncome:
-integer;
-DefaultDebugMap:
-^TIntList;
-Filler:
-array [0 .. 879] of Byte;
-end;
+    TestFlags, // options turned on in the "Manipulation" menu
+    Turn, // current turn
+    Alive, { bitset of IDs of players still alive, flag 1 shl p for player p }
+    Happened, // flags indicate what happened within the last turnaround
+    AnarchyStart, // start turn of anarchy, <0 if not in anarchy
+    Credibility, // own credibility
+    MaxCredibility, // maximum credibility still to achieve
+    nUn, { number of units }
+    nCity, { number of cities }
+    nModel, { number of developed unit models }
+    nEnemyUn, nEnemyCity, nEnemyModel, Government, { gAnarchy..gDemocracy }
+    Money, TaxRate, LuxRate, Research,
+    { collected research points for currently researched tech }
+    ResearchTech: integer; // currently researched tech
+    DevModel: TModel; { unit model currently under development }
+    Tech: array [0 .. (nAdv + 3) div 4 * 4 - 1] of ShortInt; { tech status indicator }
+    Attitude: array [0 .. nPl - 1] of integer; // attitude to other nations
+    Treaty: array [0 .. nPl - 1] of integer; // treaty with other nations
+    EvaStart: array [0 .. nPl - 1] of integer; // peace treaty: start of evacuation period
+    Tribute: array [0 .. nPl - 1] of integer; // no longer in use
+    TributePaid: array [0 .. nPl - 1] of integer; // no longer in use
+    Wonder: array [0 .. 27] of TWonderInfo;
+    Ship: array [0 .. nPl - 1] of TShipInfo;
+    NatBuilt: array [28 .. (nImp + 3) div 4 * 4 - 1] of ShortInt;
+    nBattleHistory: integer;
+    BattleHistory: ^TBattleList; // complete list of all my battles in the whole game
+    BorderHelper: ^TByteList;
+    LastCancelTreaty: array [0 .. nPl - 1] of integer; // turn of last treaty cancel
+    OracleIncome: integer;
+    DefaultDebugMap: ^TIntList;
+    Filler: array [0 .. 879] of Byte;
+  end;
 
-TInitModuleData = record Server: TServerCall;
-DataVersion, DataSize, Flags: integer;
-end;
-TNewGameData = record lx, ly, LandMass, MaxTurn: integer;
-Difficulty:
-array [0 .. nPl - 1] of integer;
-{ difficulty levels of the players, if it's 0 this player is the supervisor,
-  -1 for unused slots }
-RO:
-array [0 .. nPl - 1] of ^TPlayerContext;
-AssemblyPath:
-array [0 .. 255] of char;
-SuperVisorRO:
-array [0 .. nPl - 1] of ^TPlayerContext;
-end;
-TNewGameExData = record lx, ly, LandMass, MaxTurn, RND: integer;
-Difficulty:
-array [0 .. nPl - 1] of integer;
-{ difficulty levels of the players, if it's 0 this player is the supervisor,
-  -1 for unused slots }
-Controlled:
-integer;
-end;
-TShowNegoData = record pSender, pTarget, Action: integer;
-Offer:
-TOffer;
-end;
+  TInitModuleData = record
+    Server: TServerCall;
+    DataVersion, DataSize, Flags: integer;
+  end;
+
+  TNewGameData = record
+    lx, ly, LandMass, MaxTurn: integer;
+    Difficulty: array [0 .. nPl - 1] of integer;
+    { difficulty levels of the players, if it's 0 this player is the supervisor,
+      -1 for unused slots }
+    RO: array [0 .. nPl - 1] of ^TPlayerContext;
+    AssemblyPath: array [0 .. 255] of char;
+    SuperVisorRO: array [0 .. nPl - 1] of ^TPlayerContext;
+  end;
+
+  TNewGameExData = record
+    lx, ly, LandMass, MaxTurn, RND: integer;
+    Difficulty: array [0 .. nPl - 1] of integer;
+    { difficulty levels of the players, if it's 0 this player is the supervisor,
+      -1 for unused slots }
+    Controlled: integer;
+  end;
+
+  TShowNegoData = record
+    pSender, pTarget, Action: integer;
+    Offer: TOffer;
+  end;
 
 const
   { predefined unit models: }
@@ -1738,8 +1717,8 @@ begin
 end;
 
 begin
-  assert(sizeof(TPlayerContext) = 2048);
-  assert(sizeof(TModel) - 2 * sizeof(LongInt) - 4 * sizeof(word)
-    = sIntSetDevModel and $F * 4);
+  // TODO assert(sizeof(TPlayerContext) = 2048);
+  // TODO assert(sizeof(TModel) - 2 * sizeof(LongInt) - 4 * sizeof(word)
+  //  = sIntSetDevModel and $F * 4);
 
 end.

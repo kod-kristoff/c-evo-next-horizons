@@ -1,21 +1,20 @@
 object Background: TBackground
-  Left = 199
-  Top = 123
+  Left = 581
+  Height = 172
+  Top = 638
+  Width = 202
   BorderIcons = []
   BorderStyle = bsNone
   Caption = 'C-evo'
-  ClientHeight = 172
-  ClientWidth = 202
   Color = clBlack
-  Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -13
   Font.Name = 'MS Sans Serif'
-  Font.Style = []
-  WindowState = wsMaximized
   OnClose = FormClose
   OnCreate = FormCreate
+  OnDestroy = FormDestroy
   OnPaint = FormPaint
   OnShow = FormShow
-  PixelsPerInch = 96
+  LCLVersion = '1.6.2.0'
+  WindowState = wsMaximized
 end

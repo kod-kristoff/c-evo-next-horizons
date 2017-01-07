@@ -433,7 +433,7 @@ begin
     eDied - job done and died (thurst) }
   var
     stage, NextJob, Tile: integer;
-    Done: Set of jNone .. jTrans;
+    Done: Set of jNone .. jPoll;
   begin
     Done := [];
     Tile := MyMap[MyUn[uix].Loc];

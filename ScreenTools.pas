@@ -1499,6 +1499,7 @@ begin
   Phrases.loadfromfile(HomeDir + 'Language.txt');
   Phrases2.loadfromfile(HomeDir + 'Language2.txt');
 end;
+
 Sounds := TStringTable.create;
 if not Sounds.loadfromfile(HomeDir + 'Sounds\sound.txt') then
 begin
@@ -1591,6 +1592,7 @@ end;
 for section := Low(TFontType) to High(TFontType) do
   UniFont[section].Free;
 Phrases.Free;
+FreeAndNil(Phrases2);
 if Sounds <> nil then
   Sounds.Free;
 LogoBuffer.Free;

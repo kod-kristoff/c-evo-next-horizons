@@ -29,7 +29,7 @@ begin
 RegisterComponents('Samples', [TButtonC]);
 end;
 
-constructor TButtonC.Create;
+constructor TButtonC.Create(aOwner: TComponent);
 begin
 inherited Create(aOwner);
 ShowHint:=true;

@@ -42,7 +42,7 @@ begin
 RegisterComponents('Samples', [TButtonN]);
 end;
 
-constructor TButtonN.Create;
+constructor TButtonN.Create(aOwner: TComponent);
 begin
 inherited Create(aOwner);
 ShowHint:=true;
@@ -77,7 +77,8 @@ with Canvas do
   end
 end;
 
-procedure TButtonN.MouseDown;
+procedure TButtonN.MouseDown(Button: TMouseButton; Shift: TShiftState;
+      x, y: integer);
 begin
 if FPossible and (Button=mbLeft) and (@ChangeProc<>nil) then
   ChangeProc(Self)

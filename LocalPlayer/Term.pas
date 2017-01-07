@@ -2515,7 +2515,7 @@ begin
               begin
                 FarTech := adNone;
                 FillChar(EnhancementJobs, SizeOf(EnhancementJobs), jNone);
-                FillChar(ImpOrder, SizeOf(ImpOrder), -1);
+                FillChar(ImpOrder, SizeOf(ImpOrder), Byte(-1));
                 ColdWarStart := -ColdWarTurns - 1;
                 ToldAge := -1;
                 ToldModels := 3;
@@ -2532,7 +2532,7 @@ begin
                     CityID := -1;
                     EffectiveOwner := -1
                   end;
-                FillChar(ToldTech, SizeOf(ToldTech), tsNA);
+                FillChar(ToldTech, SizeOf(ToldTech), Byte(tsNA));
                 if G.Difficulty[p1] > 0 then
                   SoundPreload(sbStart);
               end;

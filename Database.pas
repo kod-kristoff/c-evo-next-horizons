@@ -78,7 +78,7 @@ type
   TVicinity8Loc = array [0 .. 7] of integer;
   TVicinity21Loc = array [0 .. 27] of integer;
 
-procedure MaskD(var x; Count, Mask: Cardinal);
+procedure MaskD(var x: array of Cardinal; Count, Mask: Cardinal);
 procedure IntServer(Command, Player, Subject: integer; var Data);
 procedure CompactLists(p: integer);
 procedure ClearTestFlags(ClearFlags: integer);
@@ -170,14 +170,12 @@ uses
 var
   UnBuilt: array [0 .. nPl - 1] of integer; { number of units built }
 
-procedure MaskD(var x; Count, Mask: Cardinal);
+procedure MaskD(var x: array of Cardinal; Count, Mask: Cardinal);
+var
+  I: Integer;
 begin
-{ TODO
-  sub eax,4
-@r: and [eax+edx*4],ecx
-  dec edx
-  jnz @r
-  }
+  for I := 0 to Count - 1 do
+    x[I] := x[I] and Mask;
 end;
 
 procedure CompactLists(p: integer);
@@ -1658,10 +1656,10 @@ begin
     if (RealMap[Loc1] and fterrain>=fGrass) and (random(20)=0) then
     RealMap[Loc1]:=RealMap[Loc1] or fPoll; }
 
-  FillChar(Occupant, MapSize, -1);
+  FillChar(Occupant, MapSize, Byte(-1));
   FillChar(ZoCMap, MapSize, 0);
   FillChar(ObserveLevel, MapSize * 4, 0);
-  FillChar(UsedByCity, MapSize * 4, -1);
+  FillChar(UsedByCity, MapSize * 4, Byte(-1));
   GTestFlags := 0;
   GInitialized := GAlive or GWatching;
   for p := 0 to nPl - 1 do
@@ -1680,7 +1678,7 @@ begin
 
         GetMem(Map, 4 * MapSize);
         GetMem(MapObservedLast, 2 * MapSize);
-        FillChar(MapObservedLast^, 2 * MapSize, -1);
+        FillChar(MapObservedLast^, 2 * MapSize, Byte(-1));
         GetMem(Territory, MapSize);
         FillChar(Territory^, MapSize, $FF);
         GetMem(Un, numax * SizeOf(TUn));
@@ -1707,7 +1705,7 @@ begin
           begin // initialize enemy report
             GetMem(EnemyReport[p1], SizeOf(TEnemyReport) - 2 *
               (INFIN + 1 - nmmax));
-            FillChar(EnemyReport[p1].Tech, nAdv, tsNA);
+            FillChar(EnemyReport[p1].Tech, nAdv, Byte(tsNA));
             EnemyReport[p1].TurnOfContact := -1;
             EnemyReport[p1].TurnOfCivilReport := -1;
             EnemyReport[p1].TurnOfMilReport := -1;
@@ -1730,7 +1728,7 @@ begin
         nEnemyModel := 0;
         for Loc1 := 0 to MapSize - 1 do
           Map[Loc1] := fUNKNOWN;
-        FillChar(Tech, nAdv, tsNA);
+        FillChar(Tech, nAdv, Byte(tsNA));
         FillChar(NatBuilt, SizeOf(NatBuilt), 0);
       end;
 
@@ -1819,14 +1817,14 @@ var
   p1: integer;
 begin
   CalculatePrimitive;
-  FillChar(Occupant, MapSize, -1);
+  FillChar(Occupant, MapSize, Byte(-1));
   FillChar(ObserveLevel, MapSize * 4, 0);
   with RW[0] do
   begin
     ResourceMask[0] := $FFFFFFFF;
     GetMem(Map, 4 * MapSize);
     GetMem(MapObservedLast, 2 * MapSize);
-    FillChar(MapObservedLast^, 2 * MapSize, -1);
+    FillChar(MapObservedLast^, 2 * MapSize, Byte(-1));
     GetMem(Territory, MapSize);
     FillChar(Territory^, MapSize, $FF);
     Un := nil;
@@ -2692,7 +2690,7 @@ var
 begin
   if Mode = moLoading_Fast then
     exit;
-  MaskD(RW[p].Map^, MapSize, not Cardinal(fInEnemyZoC));
+  MaskD(RW[p].Map^, MapSize, Cardinal(not Cardinal(fInEnemyZoC)));
   ObserveMask := 3 shl (2 * p);
   for Loc := 0 to MapSize - 1 do
     if (ZoCMap[Loc] > 0) and (ObserveLevel[Loc] and ObserveMask <> 0) then
@@ -2720,7 +2718,7 @@ var
 begin
   if Mode <> moPlaying then
     exit;
-  MaskD(RW[p].Map^, MapSize, not Cardinal(fPeace));
+  MaskD(RW[p].Map^, MapSize, Cardinal(not Cardinal(fPeace)));
   for p1 := -1 to nPl - 1 do
     PeacePlayer[p1] := (p1 >= 0) and (p1 <> p) and (1 shl p1 and GAlive <> 0)
       and (RW[p].Treaty[p1] in [trPeace, TrFriendlyContact]);
@@ -2828,7 +2826,7 @@ begin
     end;
   end;
 
-  FillChar(Country, MapSize, -1);
+  FillChar(Country, MapSize, Byte(-1));
   for Loc := 0 to MapSize - 1 do
     Dist[Loc] := CountryRadius + 1;
   for p1 := 0 to nPl - 1 do
