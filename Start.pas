@@ -1,4 +1,4 @@
-{$INCLUDE switches}
+{$INCLUDE Switches.pas}
 unit Start;
 
 interface
@@ -6,7 +6,7 @@ interface
 uses
   GameServer, Messg, ButtonBase, ButtonA, ButtonC, ButtonB, Area,
 
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, StdCtrls,
+  LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics, Controls, Forms, StdCtrls,
   Menus, Registry;
 
 const
@@ -104,11 +104,9 @@ var
 implementation
 
 uses
-  Directories, Protocol, Direct, ScreenTools, Inp, Back,
+  Directories, Protocol, Direct, ScreenTools, Inp, Back;
 
-  ShellAPI;
-
-{$R *.DFM}
+{$R *.lfm}
 
 const
   // predefined world size
@@ -926,7 +924,7 @@ begin
         end;
 
         if (AutoDiff < 0) and (bixView[0] = bixNoTerm) then
-          FileName := 'Round' + IntToStr(GetCurrentProcessID())
+          FileName := 'Round' + IntToStr(GetProcessID())
         else
         begin
           inc(GameCount);
@@ -1593,8 +1591,7 @@ begin
     case SelectedAction of
       maConfig:
         begin
-          ShellExecute(Handle, 'open', pchar(HomeDir + 'Configurator.exe'),
-            pchar('-r"' + ParamStr(0) + '"'), '', SW_SHOWNORMAL);
+           OpenDocument(pchar(HomeDir + 'Configurator.exe'));{ *Převedeno z ShellExecute* }
           Close
         end;
       maManual:
@@ -1602,11 +1599,9 @@ begin
       maCredits:
         DirectHelp(cStartCredits);
       maAIDev:
-        ShellExecute(Handle, 'open',
-          pchar(HomeDir + 'AI Template\AI development manual.html'), '', '',
-          SW_SHOWNORMAL);
+         OpenDocument(pchar(HomeDir + 'AI Template\AI development manual.html'));{ *Převedeno z ShellExecute* }
       maWeb:
-        ShellExecute(Handle, 'open', 'http://c-evo.org', '', '', SW_SHOWNORMAL)
+        OpenURL('http://c-evo.org'){ *Převedeno z ShellExecute* }
     end;
   end
   else if (AutoDiff < 0) and ((Page = pgStartRandom) or (Page = pgStartMap) and

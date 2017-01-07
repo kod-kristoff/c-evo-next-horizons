@@ -1,4 +1,4 @@
-{$INCLUDE switches}
+{$INCLUDE switches.pas}
 unit LocalPlayer;
 
 interface
@@ -24,7 +24,9 @@ begin
   begin
     FormsCreated := true;
     BaseWin.CreateOffscreen;
+//    Application.MainForm := MainScreen;
     Application.CreateForm(TMainScreen, MainScreen);
+    MainScreen.HandleNeeded; // Force to call CreateParams method
     Application.CreateForm(TCityDlg, CityDlg);
     Application.CreateForm(TModalSelectDlg, ModalSelectDlg);
     Application.CreateForm(TListDlg, ListDlg);

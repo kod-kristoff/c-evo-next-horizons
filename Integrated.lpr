@@ -1,8 +1,8 @@
-{$INCLUDE switches}
-program cevo;
+{$INCLUDE Switches.pas}
+program Integrated;
 
 uses
-  Forms,
+  Forms, Interfaces,
   StringTables in 'StringTables.pas',
   Directories in 'Directories.pas',
   Protocol in 'Protocol.pas',

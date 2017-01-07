@@ -1,4 +1,4 @@
-{$INCLUDE switches}
+{$INCLUDE Switches.pas}
 // {$DEFINE TEXTLOG}
 // {$DEFINE LOADPERF}
 unit Database;
@@ -170,12 +170,14 @@ uses
 var
   UnBuilt: array [0 .. nPl - 1] of integer; { number of units built }
 
-procedure MaskD(var x; Count, Mask: Cardinal); Register;
-asm
+procedure MaskD(var x; Count, Mask: Cardinal);
+begin
+{ TODO
   sub eax,4
 @r: and [eax+edx*4],ecx
   dec edx
   jnz @r
+  }
 end;
 
 procedure CompactLists(p: integer);

@@ -1,12 +1,12 @@
-{$INCLUDE switches}
+{$INCLUDE switches.pas}
 unit MessgEx;
 
 interface
 
 uses
-  Messg, Protocol, ScreenTools,
+  Messg, Protocol, ScreenTools, Windows,
 
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, ButtonA,
+  LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics, Controls, Forms, ButtonA,
   ButtonB, ButtonBase, StdCtrls;
 
 type
@@ -76,7 +76,7 @@ uses
   ClientTools, BaseWin, Term, Help, Select, Diplomacy, Inp, UnitStat, Tribes,
   IsoEngine, Diagram;
 
-{$R *.DFM}
+{$R *.lfm}
 
 const
   LostUnitsPerLine = 6;

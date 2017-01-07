@@ -1,12 +1,12 @@
-{$INCLUDE switches}
+{$INCLUDE switches.pas}
 unit Term;
 
 interface
 
 uses
-  Protocol, Tribes, PVSB, ClientTools, ScreenTools, BaseWin, Messg, ButtonBase,
+  Windows, Protocol, Tribes, PVSB, ClientTools, ScreenTools, BaseWin, Messg, ButtonBase,
 
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Menus,
+  LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics, Controls, Forms, Menus,
   ExtCtrls,
   ButtonA, ButtonB, ButtonC, EOTButton, Area;
 
@@ -426,14 +426,14 @@ implementation
 
 uses
   Directories, IsoEngine, CityScreen, Draft, MessgEx, Select, CityType, Help,
-  UnitStat, Diplomacy, Inp, log, Diagram, NatStat, Wonders, Enhance, Nego,
+  UnitStat, Diplomacy, Inp, Log, Diagram, NatStat, Wonders, Enhance, Nego,
   Battle, Rates,
   TechTree,
 
-  Registry, ShellAPI;
+  Registry;
 
-{$R *.DFM}
-{$R Res1.res}
+{$R *.lfm}
+// TODO {$R Res1.res}
 
 const
   lxmax_xxx = 130;
@@ -4203,15 +4203,15 @@ begin
         exit; { map window not moved }
       offscreen.Canvas.Font.Assign(UniFont[ftSmall]);
       rec := Rect(0, 0, MapWidth, MapHeight);
-      ScrollDC(offscreen.Canvas.Handle, (xwd - xw) * (xxt * 2),
-        (ywd - yw) * yyt, rec, rec, 0, nil);
+      { TODO ScrollDC(offscreen.Canvas.Handle, (xwd - xw) * (xxt * 2),
+        (ywd - yw) * yyt, rec, rec, 0, nil);}
       for DoInvalidate := false to FastScrolling do
       begin
         if DoInvalidate then
         begin
           rec.Bottom := MapHeight - overlap;
-          ScrollDC(Canvas.Handle, (xwd - xw) * (xxt * 2), (ywd - yw) * yyt, rec,
-            rec, 0, nil);
+          { TODO ScrollDC(Canvas.Handle, (xwd - xw) * (xxt * 2), (ywd - yw) * yyt, rec,
+            rec, 0, nil);}
           ProcessOptions := prInvalidate;
         end
         else
@@ -4371,7 +4371,7 @@ begin
       begin
         if supervising then
         begin
-          Frame(Panel.Canvas, ClientWidth - xPalace - 1, yPalace - 1,
+          ScreenTools.Frame(Panel.Canvas, ClientWidth - xPalace - 1, yPalace - 1,
             ClientWidth - xPalace + xSizeBig, yPalace + ySizeBig,
             $B0B0B0, $FFFFFF);
           RFrame(Panel.Canvas, ClientWidth - xPalace - 2, yPalace - 2,
@@ -4391,11 +4391,11 @@ begin
       end;
 
       if GameMode = cMovie then
-        Frame(Panel.Canvas, xMini + 1, yMini + 1, xMini + 2 + G.lx * 2,
+        ScreenTools.Frame(Panel.Canvas, xMini + 1, yMini + 1, xMini + 2 + G.lx * 2,
           yMini + 2 + G.ly, $000000, $000000)
       else
       begin
-        Frame(Panel.Canvas, xMini + 1, yMini + 1, xMini + 2 + G.lx * 2,
+        ScreenTools.Frame(Panel.Canvas, xMini + 1, yMini + 1, xMini + 2 + G.lx * 2,
           yMini + 2 + G.ly, $B0B0B0, $FFFFFF);
         RFrame(Panel.Canvas, xMini, yMini, xMini + 3 + G.lx * 2,
           yMini + 3 + G.ly, $FFFFFF, $B0B0B0);
@@ -4497,9 +4497,9 @@ begin
               yyt * 3, 1 + xSrc * (xxt * 2 + 1), 1 + ySrc * (yyt * 3 + 1));
             if BrushTypes[i] = BrushType then
             begin
-              Frame(Panel.Canvas, xTroop + 2 + x, yTroop + 7 - yyt div 2,
+              ScreenTools.Frame(Panel.Canvas, xTroop + 2 + x, yTroop + 7 - yyt div 2,
                 xTroop + 2 * xxt + x, yTroop + 2 * yyt + 11, $000000, $000000);
-              Frame(Panel.Canvas, xTroop + 1 + x, yTroop + 6 - yyt div 2,
+              ScreenTools.Frame(Panel.Canvas, xTroop + 1 + x, yTroop + 6 - yyt div 2,
                 xTroop + 2 * xxt - 1 + x, yTroop + 2 * yyt + 10,
                 MainTexture.clMark, MainTexture.clMark);
             end
@@ -4654,9 +4654,9 @@ begin
                         x := (Count - TrRow * sb.si.npos) * TrPitch;
                         if uix = UnFocus then
                         begin
-                          Frame(Panel.Canvas, xTroop + 4 + x, yTroop + 3,
+                          ScreenTools.Frame(Panel.Canvas, xTroop + 4 + x, yTroop + 3,
                             xTroop + 64 + x, yTroop + 47, $000000, $000000);
-                          Frame(Panel.Canvas, xTroop + 3 + x, yTroop + 2,
+                          ScreenTools.Frame(Panel.Canvas, xTroop + 3 + x, yTroop + 2,
                             xTroop + 63 + x, yTroop + 46, MainTexture.clMark,
                             MainTexture.clMark);
                         end
@@ -4821,9 +4821,9 @@ begin
       MoveTo(0, TopBarHeight - 3);
       LineTo(ClientWidth, TopBarHeight - 3);
       Pen.Color := MainTexture.clBevelLight;
-      Frame(TopBar.Canvas, 40, -1, xTreasurySection - 1, TopBarHeight - 7,
+      ScreenTools.Frame(TopBar.Canvas, 40, -1, xTreasurySection - 1, TopBarHeight - 7,
         MainTexture.clBevelShade, MainTexture.clBevelLight);
-      Frame(TopBar.Canvas, xResearchSection + 332, -1, ClientWidth,
+      ScreenTools.Frame(TopBar.Canvas, xResearchSection + 332, -1, ClientWidth,
         TopBarHeight - 7, MainTexture.clBevelShade, MainTexture.clBevelLight);
     end;
     if GameMode <> cMovie then
@@ -6844,13 +6844,13 @@ begin
             end
           end
           else
-            with MessgExDlg do
+            // TODO with MessgExDlg do
             begin // revolution!
-              MessgText := Tribe[me].TPhrase('REVOLUTION');
-              Kind := mkYesNo;
-              IconKind := mikPureIcon;
-              IconIndex := 72; // anarchy palace
-              ShowModal;
+              MessgExDlg.MessgText := Tribe[me].TPhrase('REVOLUTION');
+              MessgExDlg.Kind := mkYesNo;
+              MessgExDlg.IconKind := mikPureIcon;
+              MessgExDlg.IconIndex := 72; // anarchy palace
+              MessgExDlg.ShowModal;
               if ModalResult = mrOK then
               begin
                 Play('REVOLUTION');
@@ -6867,7 +6867,7 @@ begin
         end
       end
       else if Sender = mWebsite then
-        ShellExecute(Handle, 'open', 'http://c-evo.org', '', '', SW_SHOWNORMAL)
+        OpenURL('http://c-evo.org'){ *Převedeno z ShellExecute* }
       else if Sender = mRandomMap then
       begin
         if not Edited or (SimpleQuery(mkYesNo, Phrases.Lookup('MAP_RANDOM'), '')

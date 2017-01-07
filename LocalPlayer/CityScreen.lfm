@@ -12,8 +12,6 @@ object CityDlg: TCityDlg
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   FormStyle = fsStayOnTop
-  OldCreateOrder = False
-  Scaled = False
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
@@ -22,7 +20,6 @@ object CityDlg: TCityDlg
   OnPaint = FormPaint
   OnShow = FormShow
   PixelsPerInch = 96
-  TextHeight = 16
   object CloseBtn: TButtonA
     Left = 335
     Top = 447

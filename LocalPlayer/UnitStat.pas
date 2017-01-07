@@ -1,4 +1,4 @@
-{$INCLUDE switches}
+{$INCLUDE switches.pas}
 unit UnitStat;
 
 interface
@@ -6,7 +6,7 @@ interface
 uses
   Protocol, ClientTools, Term, ScreenTools, BaseWin,
 
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, ButtonA,
+  LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics, Controls, Forms, ButtonA,
   ButtonB,
   ButtonBase, ButtonC;
 
@@ -53,7 +53,7 @@ implementation
 
 uses Inp, Select, Tribes, IsoEngine, Help, Directories;
 
-{$R *.DFM}
+{$R *.lfm}
 
 const
   xView = 71;

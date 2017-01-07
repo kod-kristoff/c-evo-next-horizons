@@ -12,8 +12,6 @@ object HelpDlg: THelpDlg
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   FormStyle = fsStayOnTop
-  OldCreateOrder = False
-  Scaled = False
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
@@ -22,7 +20,6 @@ object HelpDlg: THelpDlg
   OnMouseMove = PaintBox1MouseMove
   OnPaint = FormPaint
   PixelsPerInch = 96
-  TextHeight = 16
   object CloseBtn: TButtonB
     Left = 522
     Top = 6

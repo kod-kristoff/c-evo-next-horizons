@@ -1,4 +1,4 @@
-{$INCLUDE switches}
+{$INCLUDE switches.pas}
 unit Diagram;
 
 interface
@@ -6,7 +6,7 @@ interface
 uses
   BaseWin,
 
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms,
+  LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics, Controls, Forms,
   ButtonB, ButtonBase, Menus;
 
 type
@@ -42,7 +42,7 @@ implementation
 uses
   Protocol, ScreenTools, ClientTools, Term, Tribes;
 
-{$R *.DFM}
+{$R *.lfm}
 
 const
   Border = 24;
@@ -65,7 +65,7 @@ begin
     Brush.Color := $000000;
     FillRect(Rect(Left, Top, Left + Width, Top + 200));
     Brush.Style := bsClear;
-    Frame(canvas, Left - 1, Top - 1, Left + Width, Top + 200,
+    ScreenTools.Frame(canvas, Left - 1, Top - 1, Left + Width, Top + 200,
       MainTexture.clBevelShade, MainTexture.clBevelLight);
     RFrame(canvas, Left - 2, Top - 2, Left + Width + 1, Top + 200 + 1,
       MainTexture.clBevelShade, MainTexture.clBevelLight);

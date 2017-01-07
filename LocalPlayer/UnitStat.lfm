@@ -11,14 +11,11 @@ object UnitStatDlg: TUnitStatDlg
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   FormStyle = fsStayOnTop
-  OldCreateOrder = False
-  Scaled = False
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnShow = FormShow
   PixelsPerInch = 96
-  TextHeight = 16
   object SwitchBtn: TButtonB
     Left = 12
     Top = 29

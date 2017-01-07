@@ -1,4 +1,4 @@
-{$INCLUDE switches}
+{$INCLUDE switches.pas}
 unit Draft;
 
 interface
@@ -6,7 +6,7 @@ interface
 uses
   Protocol, ClientTools, Term, ScreenTools, PVSB, BaseWin,
 
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, ExtCtrls,
+  LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics, Controls, Forms, ExtCtrls,
   ButtonA,
   ButtonB, ButtonBase, Area;
 
@@ -46,7 +46,7 @@ implementation
 
 uses Help, Tribes, Directories;
 
-{$R *.DFM}
+{$R *.lfm}
 
 const
   MaxLines0 = 11;
@@ -351,7 +351,7 @@ begin
         end; // if not (code[i] in AutoFeature)
         DarkGradient(offscreen.Canvas, xFeature + 17,
           yFeature + LinePitch * i, 16, 1);
-        Frame(offscreen.Canvas, xFeature + 18, yFeature + 1 + LinePitch * i,
+        ScreenTools.Frame(offscreen.Canvas, xFeature + 18, yFeature + 1 + LinePitch * i,
           xFeature + 20 - 2 + 13, yFeature + 2 + 1 - 2 + 13 + LinePitch * i,
           $C0C0C0, $C0C0C0);
         Sprite(offscreen, HGrSystem, xFeature + 20, yFeature + 2 + 1 + LinePitch

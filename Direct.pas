@@ -1,4 +1,4 @@
-{$INCLUDE switches}
+{$INCLUDE Switches.pas}
 unit Direct;
 
 interface
@@ -6,7 +6,7 @@ interface
 uses
   Messg,
 
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms;
+  LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics, Controls, Forms;
 
 const
   WM_GO = WM_USER;
@@ -40,9 +40,9 @@ var
 implementation
 
 uses
-  ScreenTools, Protocol, GameServer, Start, LocalPlayer, NoTerm, Back, ShellAPI;
+  ScreenTools, Protocol, GameServer, Start, LocalPlayer, NoTerm, Back;
 
-{$R *.DFM}
+{$R *.lfm}
 
 procedure Notify(ID: integer);
 begin
@@ -109,7 +109,7 @@ begin
       end;
     ntLoadError:
       begin
-        if OpenClipboard(Handle) then
+(* TODO        if OpenClipboard(Handle) then
         begin // copy file path to clipboard
           NotifyMessage := NotifyMessage + #0;
           hMem := GlobalAlloc(GMEM_MOVEABLE or GMEM_DDESHARE,
@@ -127,10 +127,9 @@ begin
           Kind := mkYesNo;
           ShowModal;
           if ModalResult = mrOK then
-            ShellExecute(Handle, 'open',
-              'http://c-evo.org/_sg/contact/cevobug.html', '', '',
-              SW_SHOWNORMAL);
+            OpenURL('http://c-evo.org/_sg/contact/cevobug.html');{ *Převedeno z ShellExecute* }
         end
+    *)
       end;
     ntStartDone:
       if not Quick then

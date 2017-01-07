@@ -1,4 +1,4 @@
-{$INCLUDE switches}
+{$INCLUDE Switches.pas}
 unit Messg;
 
 interface
@@ -6,7 +6,7 @@ interface
 uses
   ScreenTools,
 
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, ButtonBase,
+  LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics, Controls, Forms, ButtonBase,
   ButtonA,
   ButtonB, Area;
 
@@ -70,7 +70,7 @@ procedure SoundMessage(SimpleText, SoundItem: string);
 
 implementation
 
-{$R *.DFM}
+{$R *.lfm}
 
 constructor TDrawDlg.Create(AOwner: TComponent);
 begin

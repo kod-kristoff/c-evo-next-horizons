@@ -1,4 +1,4 @@
-{$INCLUDE switches}
+{$INCLUDE switches.pas}
 unit Select;
 
 interface
@@ -6,8 +6,8 @@ interface
 uses
   Protocol, ClientTools, Term, ScreenTools, IsoEngine, PVSB, BaseWin,
 
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms,
-  ExtCtrls, ButtonB, ButtonBase, Menus;
+  LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics, Controls, Forms,
+  ExtCtrls, ButtonB, ButtonBase, Menus, Types;
 
 const
   MaxLayer = 3;
@@ -88,7 +88,7 @@ implementation
 uses
   CityScreen, Help, UnitStat, Tribes, Inp;
 
-{$R *.DFM}
+{$R *.lfm}
 
 const
   CityNameSpace = 127;
@@ -760,7 +760,7 @@ begin
       end;
     for i := -1 to DispLines do
       if (i + sb.si.npos >= 0) and (i + sb.si.npos < Lines[Layer]) then
-        line(offscreen.Canvas, i, true, false)
+        Self.line(offscreen.Canvas, i, true, false)
   end;
   MarkUsedOffscreen(InnerWidth, 8 + 48 + DispLines * LineDistance);
 end;

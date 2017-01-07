@@ -12,8 +12,6 @@ object ListDlg: TListDlg
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   FormStyle = fsStayOnTop
-  OldCreateOrder = False
-  Scaled = False
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnDestroy = FormDestroy
@@ -23,7 +21,6 @@ object ListDlg: TListDlg
   OnPaint = FormPaint
   OnShow = FormShow
   PixelsPerInch = 96
-  TextHeight = 16
   object CloseBtn: TButtonB
     Left = 343
     Top = 6

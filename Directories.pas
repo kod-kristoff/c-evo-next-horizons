@@ -1,4 +1,4 @@
-{$INCLUDE switches}
+{$INCLUDE Switches.pas}
 unit Directories;
 
 interface
@@ -11,7 +11,7 @@ function LocalizedFilePath(path: string): string;
 implementation
 
 uses
-  ShlObj, Windows, SysUtils;
+  ShlObj, LCLIntf, LCLType, LMessages, SysUtils, FileUtil;
 
 function GetSpecialDirectory(const CSIDL: integer): string;
 var

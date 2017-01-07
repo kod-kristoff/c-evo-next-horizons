@@ -1,10 +1,10 @@
-{$INCLUDE switches}
-unit log;
+{$INCLUDE Switches.pas}
+unit Log;
 
 interface
 
 uses
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms,
+  LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics, Controls, Forms,
   StdCtrls, Menus;
 
 type
@@ -46,7 +46,7 @@ implementation
 uses
   ClientTools, Tribes;
 
-{$R *.DFM}
+{$R *.lfm}
 
 const
   MaxLines = 1000;

@@ -1,10 +1,10 @@
-{$INCLUDE switches}
+{$INCLUDE switches.pas}
 unit PVSB;
 
 interface
 
 uses
-  Windows, Messages, SysUtils;
+  Windows, LCLIntf, LCLType, LMessages, Messages, SysUtils;
 
 type
   TPVScrollbar = record

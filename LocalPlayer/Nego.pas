@@ -1,4 +1,4 @@
-{$INCLUDE switches}
+{$INCLUDE switches.pas}
 unit Nego;
 
 interface
@@ -426,7 +426,7 @@ begin
     else
       FillRect(Rect(X, Y, X + 64, Y + 48));
     Brush.Style := bsClear;
-    Frame(Offscreen.Canvas, X - 1, Y - 1, X + 64, Y + 48, $000000, $000000);
+    ScreenTools.Frame(Offscreen.Canvas, X - 1, Y - 1, X + 64, Y + 48, $000000, $000000);
   end
 end;
 

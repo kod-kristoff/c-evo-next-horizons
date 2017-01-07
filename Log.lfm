@@ -13,13 +13,10 @@ object LogDlg: TLogDlg
   Font.Style = []
   FormStyle = fsStayOnTop
   KeyPreview = True
-  OldCreateOrder = False
-  Scaled = False
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
   OnKeyUp = FormKeyUp
   PixelsPerInch = 96
-  TextHeight = 16
   object List: TMemo
     Left = 0
     Top = 0

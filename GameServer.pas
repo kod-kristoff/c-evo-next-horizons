@@ -1,4 +1,4 @@
-{$INCLUDE switches}
+{$INCLUDE Switches.pas}
 // {$DEFINE TEXTLOG}
 // {$DEFINE LOADPERF}
 unit GameServer;
@@ -6,7 +6,7 @@ unit GameServer;
 interface
 
 uses
-  Protocol, Database;
+  Protocol, Database, dynlibs, Windows;
 
 const
   Version = $010200;
@@ -98,7 +98,7 @@ implementation
 uses
   Directories, CityProcessing, UnitProcessing, CmdList,
 
-  Windows, Classes, SysUtils;
+  LCLIntf, LCLType, LMessages, Classes, SysUtils;
 
 var
   MaxTurn, LoadTurn, { turn where to stop loading }
@@ -1535,7 +1535,7 @@ begin
           SeeTech(pTurn, ad);
           inc(nTech[pTurn]);
           if Mode >= moMovie then
-            CallPlayer(cShowGreatLibTech, pTurn, ad);
+            // TODO CallPlayer(cShowGreatLibTech, pTurn, ad);
           // do not call CallPlayer(pTurn) while map is invalid
         end;
       end;

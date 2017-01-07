@@ -1,4 +1,4 @@
-{$INCLUDE switches}
+{$INCLUDE switches.pas}
 unit Wonders;
 
 interface
@@ -6,7 +6,7 @@ interface
 uses
   ScreenTools, BaseWin, Protocol,
 
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms,
+  LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics, Controls, Forms,
   ButtonBase, ButtonB;
 
 type
@@ -35,7 +35,7 @@ implementation
 uses
   Term, ClientTools, Help, Tribes;
 
-{$R *.DFM}
+{$R *.lfm}
 
 const
   RingPosition: array [0 .. 20, 0 .. 1] of Integer = ((-80, -32), // Pyramids

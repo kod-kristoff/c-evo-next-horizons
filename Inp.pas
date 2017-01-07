@@ -1,4 +1,4 @@
-{$INCLUDE switches}
+{$INCLUDE Switches.pas}
 unit Inp;
 
 interface
@@ -6,7 +6,7 @@ interface
 uses
   ScreenTools, Messg,
 
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms,
+  LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics, Controls, Forms,
   ButtonA, StdCtrls, ButtonB, ButtonBase;
 
 type
@@ -30,7 +30,7 @@ var
 
 implementation
 
-{$R *.DFM}
+{$R *.lfm}
 
 procedure TInputDlg.FormCreate(Sender: TObject);
 begin

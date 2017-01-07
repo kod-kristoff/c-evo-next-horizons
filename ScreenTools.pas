@@ -1,18 +1,19 @@
-{$INCLUDE switches}
+{$INCLUDE Switches.pas}
 unit ScreenTools;
 
 interface
 
 uses
-  StringTables,
+  Windows, StringTables,
 
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Menus;
+  LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics, Controls, Forms, Menus;
 
 type
   TTexture = record
     Image: TBitmap;
     clBevelLight, clBevelShade, clTextLight, clTextShade, clLitText, clMark,
-      clPage, clCover: TColor end;
+      clPage, clCover: TColor;
+  end;
 
     function ChangeResolution(x, y, bpp, freq: integer): boolean;
     procedure RestoreResolution;
@@ -191,7 +192,7 @@ implementation
 uses
   Directories, Sound, ButtonBase, ButtonA, ButtonB,
 
-  Registry, JPEG;
+  Registry;
 
 var
   StartResolution: TDeviceMode;

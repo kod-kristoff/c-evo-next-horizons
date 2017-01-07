@@ -1,4 +1,4 @@
-{$INCLUDE switches}
+{$INCLUDE switches.pas}
 unit Help;
 
 interface
@@ -6,8 +6,8 @@ interface
 uses
   Protocol, ScreenTools, BaseWin, StringTables,
 
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms,
-  ExtCtrls, ButtonB, PVSB, ButtonBase;
+  LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics, Controls, Forms,
+  ExtCtrls, ButtonB, PVSB, ButtonBase, Types;
 
 const
   MaxHist = 16;
@@ -97,12 +97,12 @@ var
 implementation
 
 uses
-  Directories, ClientTools, Term, Tribes, ShellAPI, Inp, Messg;
+  Directories, ClientTools, Term, Tribes, Inp, Messg;
 
-{$R *.DFM}
+{$R *.lfm}
 
 type
-  THelpLineInfo = packed record
+  THelpLineInfo = class
     Format, Picpix: Byte;
     Link: Word;
   end;
@@ -112,6 +112,7 @@ procedure THyperText.AddLine(s: String; Format: integer; Picpix: integer;
 var
   HelpLineInfo: THelpLineInfo;
 begin
+  HelpLineInfo := THelpLineInfo.Create;
   if LinkIndex < 0 then
     LinkIndex := liInvalid;
   HelpLineInfo.Format := Format;
@@ -474,7 +475,7 @@ begin
             end;
           pkSmallIcon, pkSmallIcon_AsPreq:
             begin
-              Frame(OffScreen.Canvas, 8 - 1 + x0[i], 2 - 1 + i * 24,
+              ScreenTools.Frame(OffScreen.Canvas, 8 - 1 + x0[i], 2 - 1 + i * 24,
                 8 + xSizeSmall + x0[i], 2 + 20 + i * 24, $000000, $000000);
               if HelpLineInfo.Picpix = imPalace then
                 BitBlt(OffScreen.Canvas.Handle, 8 + x0[i], 2 + i * 24,
@@ -532,7 +533,7 @@ begin
             end;
           pkDomain:
             begin
-              Frame(OffScreen.Canvas, 8 - 1 + x0[i], 2 - 1 + i * 24,
+              ScreenTools.Frame(OffScreen.Canvas, 8 - 1 + x0[i], 2 - 1 + i * 24,
                 8 + 36 + x0[i], 2 + 20 + i * 24, $000000, $000000);
               Dump(OffScreen, HGrSystem, 8 + x0[i], 2 + i * 24, 36, 20,
                 75 + HelpLineInfo.Picpix * 37, 295);
@@ -540,7 +541,7 @@ begin
             end;
           pkAdvIcon, pkAdvIcon_AsPreq:
             begin
-              Frame(OffScreen.Canvas, 8 - 1 + x0[i], 2 - 1 + i * 24,
+              ScreenTools.Frame(OffScreen.Canvas, 8 - 1 + x0[i], 2 - 1 + i * 24,
                 8 + xSizeSmall + x0[i], 2 + ySizeSmall + i * 24,
                 $000000, $000000);
               if AdvIcon[HelpLineInfo.Picpix] < 84 then
@@ -581,7 +582,7 @@ begin
                   inc(cnt);
                   Dump(OffScreen, HGrSystem, InnerWidth - 38 - 38 * cnt,
                     i * 24 + 1, 36, 20, 75 + j * 37, 295);
-                  Frame(OffScreen.Canvas, InnerWidth - 39 - 38 * cnt, i * 24,
+                  ScreenTools.Frame(OffScreen.Canvas, InnerWidth - 39 - 38 * cnt, i * 24,
                     InnerWidth - 2 - 38 * cnt, i * 24 + 21, $000000, $000000);
                 end;
               DarkGradient(OffScreen.Canvas, InnerWidth - 38 - 38 * cnt,
@@ -706,7 +707,7 @@ begin
             begin
               DarkGradient(OffScreen.Canvas, x0[i] + 8 - 1,
                 7 + i * 24 - 3, 16, 1);
-              Frame(OffScreen.Canvas, x0[i] + 8, 7 + i * 24 - 2, x0[i] + 8 + 13,
+              ScreenTools.Frame(OffScreen.Canvas, x0[i] + 8, 7 + i * 24 - 2, x0[i] + 8 + 13,
                 7 + i * 24 - 2 + 13, $C0C0C0, $C0C0C0);
               Sprite(OffScreen, HGrSystem, x0[i] + 8 + 2, 7 + i * 24, 10, 10,
                 66 + HelpLineInfo.Picpix mod 11 * 11,
@@ -715,7 +716,7 @@ begin
             end;
           pkExp:
             begin
-              Frame(OffScreen.Canvas, 20 - 1, 8 - 4 + i * 24, 20 + 12,
+              ScreenTools.Frame(OffScreen.Canvas, 20 - 1, 8 - 4 + i * 24, 20 + 12,
                 8 + 11 + i * 24, $000000, $000000);
               Dump(OffScreen, HGrSystem, 20, 8 - 3 + i * 24, 12, 14,
                 121 + HelpLineInfo.Picpix * 13, 28);
@@ -729,7 +730,7 @@ begin
             end;
           pkGov:
             begin
-              Frame(OffScreen.Canvas, 8 - 1 + x0[i], 2 - 1 + i * 24,
+              ScreenTools.Frame(OffScreen.Canvas, 8 - 1 + x0[i], 2 - 1 + i * 24,
                 8 + xSizeSmall + x0[i], 2 + 20 + i * 24, $000000, $000000);
               BitBlt(OffScreen.Canvas.Handle, 8 + x0[i], 2 + i * 24, xSizeSmall,
                 ySizeSmall, SmallImp.Canvas.Handle, (HelpLineInfo.Picpix - 1) *
@@ -749,8 +750,8 @@ begin
         else
           x0[i] := x0[i] + 8
         end;
-        line(OffScreen.Canvas, i, false)
-      end
+        Self.line(OffScreen.Canvas, i, false)
+      end;
   end;
   MarkUsedOffscreen(InnerWidth, InnerHeight + 13 + 48);
 end; { OffscreenPaint }
@@ -1894,15 +1895,11 @@ begin
       if Link shr 8 and $3F = hkInternet then
         case Link and $FF of
           1:
-            ShellExecute(Handle, 'open',
-              pchar(HomeDir + 'AI Template\AI development manual.html'), '', '',
-              SW_SHOWNORMAL);
+             OpenDocument(pchar(HomeDir + 'AI Template\AI development manual.html'));{ *Převedeno z ShellExecute* }
           2:
-            ShellExecute(Handle, 'open', 'http://c-evo.org', '', '',
-              SW_SHOWNORMAL);
+            OpenURL('http://c-evo.org');{ *Převedeno z ShellExecute* }
           3:
-            ShellExecute(Handle, 'open', 'http://c-evo.org/_sg/contact', '', '',
-              SW_SHOWNORMAL);
+            OpenURL('http://c-evo.org/_sg/contact');{ *Převedeno z ShellExecute* }
         end
       else
       begin

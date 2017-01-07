@@ -9,9 +9,9 @@
 
 {$TYPEINFO OFF}
 {$DEBUGINFO ON}
-{$LOCALSYMBOLS ON}
+//{$LOCALSYMBOLS ON}
 
-{$E-,S-,Z1}
+//{$E-,S-,Z1}
 
 {$IFDEF FPC} // freepascal
   {$MODE DELPHI}

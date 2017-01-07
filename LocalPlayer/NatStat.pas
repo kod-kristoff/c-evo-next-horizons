@@ -1,4 +1,4 @@
-{$INCLUDE switches}
+{$INCLUDE switches.pas}
 unit NatStat;
 
 interface
@@ -6,7 +6,7 @@ interface
 uses
   Protocol, ClientTools, Term, ScreenTools, BaseWin,
 
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms,
+  LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics, Controls, Forms,
   ButtonBase, ButtonB, ButtonC, Menus, EOTButton;
 
 type
@@ -54,7 +54,7 @@ var
 
 implementation
 
-{$R *.DFM}
+{$R *.lfm}
 
 uses
   Diagram, Select, Messg, MessgEx, Help, Tribes, Directories;

@@ -4,7 +4,7 @@ interface
 
 uses
   ButtonBase,
-  WinProcs, Classes, Graphics;
+  Classes, Graphics, LCLIntf, LCLType;
 
 const
 eotBlinkOff=-1; eotCancel=0; eotGray=1; eotBlinkOn=2; eotBackToNego=3;

@@ -1,4 +1,4 @@
-{$INCLUDE switches}
+{$INCLUDE switches.pas}
 unit CityScreen;
 
 interface
@@ -6,7 +6,7 @@ interface
 uses
   Protocol, ClientTools, Term, ScreenTools, IsoEngine, BaseWin,
 
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, ExtCtrls,
+  LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics, Controls, Forms, ExtCtrls,
   ButtonA,
   ButtonB, ButtonBase, ButtonC, Area;
 
@@ -92,7 +92,7 @@ uses
 
   Math;
 
-{$R *.DFM}
+{$R *.lfm}
 
 const
   { modes }
@@ -305,7 +305,7 @@ begin
 
   with SmallCityMap.Canvas do
   begin
-    brush.Color := Colors.Canvas.Pixels[clkAge0 + Age, cliImp];
+    brush.Color := ScreenTools.Colors.Canvas.Pixels[clkAge0 + Age, cliImp];
     for i := 0 to 29 do
     begin
       for iix := 28 to nImp - 1 do
@@ -337,7 +337,7 @@ begin
           i := ImpPosition[iix];
         if i < 36 then
         begin
-          brush.Color := Colors.Canvas.Pixels[clkAge0 + Age, cliImpProject];
+          brush.Color := ScreenTools.Colors.Canvas.Pixels[clkAge0 + Age, cliImpProject];
           FillRect(Rect(5 + 16 * (i mod 3) + 48 * (i div 18),
             3 + 12 * (i mod 18 div 3), 13 + 16 * (i mod 3) + 48 * (i div 18),
             11 + 12 * (i mod 18 div 3)));
@@ -988,7 +988,7 @@ begin
       yProd + dyBar + 16, $FFFFFF, $B0B0B0);
     if ProdHint then
     begin
-      Frame(offscreen.Canvas, xView + 9 - 1, yView + 5 - 1,
+      ScreenTools.Frame(offscreen.Canvas, xView + 9 - 1, yView + 5 - 1,
         xView + 9 + xSizeBig, yView + 5 + ySizeBig, $B0B0B0, $FFFFFF);
       RFrame(offscreen.Canvas, xView + 9 - 2, yView + 5 - 2,
         xView + 9 + xSizeBig + 1, yView + 5 + ySizeBig + 1, $FFFFFF, $B0B0B0);
@@ -1623,7 +1623,7 @@ begin
           xView + 5, yView + 3, SRCCOPY);
         bitblt(Canvas.Handle, xView + 5 + 62, yView + 3, 2, 42,
           Back.Canvas.Handle, xView + 5 + 62, yView + 3, SRCCOPY);
-        Frame(Canvas, xView + 9 - 1, yView + 5 - 1, xView + 9 + xSizeBig,
+        ScreenTools.Frame(Canvas, xView + 9 - 1, yView + 5 - 1, xView + 9 + xSizeBig,
           yView + 5 + ySizeBig, $B0B0B0, $FFFFFF);
         RFrame(Canvas, xView + 9 - 2, yView + 5 - 2, xView + 9 + xSizeBig + 1,
           yView + 5 + ySizeBig + 1, $FFFFFF, $B0B0B0);

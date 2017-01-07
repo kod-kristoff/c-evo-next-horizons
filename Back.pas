@@ -1,10 +1,10 @@
-{$INCLUDE switches}
+{$INCLUDE Switches.pas}
 unit Back;
 
 interface
 
 uses
-  Windows, Messages, SysUtils, Classes, Graphics, Forms;
+  LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics, Forms;
 
 type
   TBackground = class(TForm)
@@ -24,7 +24,7 @@ implementation
 uses
   Directories, ScreenTools, Start;
 
-{$R *.DFM}
+{$R *.lfm}
 
 procedure TBackground.FormCreate(Sender: TObject);
 begin

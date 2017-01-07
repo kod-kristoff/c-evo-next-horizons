@@ -12,13 +12,10 @@ object Background: TBackground
   Font.Height = -13
   Font.Name = 'MS Sans Serif'
   Font.Style = []
-  OldCreateOrder = False
-  Scaled = False
   WindowState = wsMaximized
   OnClose = FormClose
   OnCreate = FormCreate
   OnPaint = FormPaint
   OnShow = FormShow
   PixelsPerInch = 96
-  TextHeight = 16
 end
