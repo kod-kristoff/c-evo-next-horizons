@@ -8,20 +8,20 @@ const
 MaxCount=4000;
 
 type
-TCharList=array[0..9999999] of char;
+TCharList=array[0..9999999] of AnsiChar;
 
 TStringTable=class
   constructor Create;
   destructor Destroy; override;
-  function LoadFromFile(const FileName: string): boolean;
-  function GetHandle(const Item: string): integer;
+  function LoadFromFile(const FileName: String): boolean;
+  function GetHandle(const Item: AnsiString): integer;
   function LookupByHandle(Handle: integer; Index: integer =-1): string;
   function Lookup(const Item: string; Index: integer =-1): string;
   function Search(const Content: string; var Handle, Index: integer): boolean;
 protected
   Count: integer;
   Data: ^TCharList;
-  Lines: array[0..MaxCount-1] of PChar;
+  Lines: array[0..MaxCount-1] of PAnsiChar;
   end;
 
 
@@ -41,7 +41,7 @@ begin
 if Data<>nil then FreeMem(Data);
 end;
 
-function TStringTable.LoadFromFile(const FileName: string): boolean;
+function TStringTable.LoadFromFile(const FileName:string): boolean;
 var
 nData, i: integer;
 f: TFileStream;
@@ -70,7 +70,7 @@ while (i<nData) and (Count<MaxCount) do
   end;
 end;
 
-function TStringTable.GetHandle(const Item: string): integer;
+function TStringTable.GetHandle(const Item: AnsiString): integer;
 var
 i,l: integer;
 begin
