@@ -6,7 +6,8 @@ interface
 uses
   Windows, StringTables,
 
-  LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics, Controls, Forms, Menus;
+  LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics, Controls,
+  Forms, Menus;
 
 type
   TTexture = record
@@ -15,177 +16,173 @@ type
       clPage, clCover: TColor;
   end;
 
-    function ChangeResolution(x, y, bpp, freq: integer): boolean;
-    procedure RestoreResolution;
-    function Play(Item: string; Index: integer = -1): boolean;
-    procedure PreparePlay(Item: string; Index: integer = -1);
-    procedure EmptyMenu(MenuItems: TMenuItem; Keep: integer = 0);
-    function turntoyear(Turn: integer): integer;
-    function TurnToString(Turn: integer): string;
-    function MovementToString(Movement: integer): string;
-    procedure BtnFrame(ca: TCanvas; p: TRect; const T: TTexture);
-    procedure EditFrame(ca: TCanvas; p: TRect; const T: TTexture);
-    function HexStringToColor(s: string): integer;
-    function LoadGraphicFile(bmp: TBitmap; Path: string;
-      Options: integer = 0): boolean;
-    function LoadLocalizedGraphicFile(bmp: TBitmap; Path: string;
-      Options: integer = 0): boolean;
-    function LoadGraphicSet(Name: string): integer;
-    procedure Dump(dst: TBitmap; HGr, xDst, yDst, Width, Height, xGr,
-      yGr: integer);
-    procedure Sprite(Canvas: TCanvas; HGr, xDst, yDst, Width, Height, xGr,
-      yGr: integer); overload;
-    procedure Sprite(dst: TBitmap; HGr, xDst, yDst, Width, Height, xGr,
-      yGr: integer); overload;
-    procedure MakeBlue(dst: TBitmap; x, y, w, h: integer);
-    procedure ImageOp_B(dst, Src: TBitmap; xDst, yDst, xSrc, ySrc, w,
-      h: integer);
-    procedure ImageOp_BCC(dst, Src: TBitmap; xDst, yDst, xSrc, ySrc, w, h,
-      Color1, Color2: integer);
-    procedure ImageOp_CCC(bmp: TBitmap; x, y, w, h, Color0, Color1,
-      Color2: integer);
-    procedure SLine(ca: TCanvas; x0, x1, y: integer; cl: TColor);
-    procedure DLine(ca: TCanvas; x0, x1, y: integer; cl0, cl1: TColor);
-    procedure Frame(ca: TCanvas; x0, y0, x1, y1: integer; cl0, cl1: TColor);
-    procedure RFrame(ca: TCanvas; x0, y0, x1, y1: integer; cl0, cl1: TColor);
-    procedure CFrame(ca: TCanvas; x0, y0, x1, y1, Corner: integer; cl: TColor);
-    procedure FrameImage(ca: TCanvas; Src: TBitmap;
-      x, y, Width, Height, xSrc, ySrc: integer; IsControl: boolean = false);
-    procedure GlowFrame(dst: TBitmap; x0, y0, Width, Height: integer;
-      cl: TColor);
-    procedure InitOrnament;
-    procedure InitCityMark(const T: TTexture);
-    procedure Fill(ca: TCanvas; Left, Top, Width, Height, xOffset,
-      yOffset: integer);
-    procedure FillLarge(ca: TCanvas; x0, y0, x1, y1, xm: integer);
-    procedure FillSeamless(ca: TCanvas; Left, Top, Width, Height, xOffset,
-      yOffset: integer; const Texture: TBitmap);
-    procedure FillRectSeamless(ca: TCanvas;
-      x0, y0, x1, y1, xOffset, yOffset: integer; const Texture: TBitmap);
-    procedure PaintBackground(Form: TForm; Left, Top, Width, Height: integer);
-    procedure Corner(ca: TCanvas; x, y, Kind: integer; const T: TTexture);
-    procedure BiColorTextOut(ca: TCanvas; clMain, clBack: TColor; x, y: integer;
-      s: string);
-    procedure LoweredTextOut(ca: TCanvas; cl: TColor; const T: TTexture;
-      x, y: integer; s: string);
-    function BiColorTextWidth(ca: TCanvas; s: string): integer;
-    procedure RisedTextOut(ca: TCanvas; x, y: integer; s: string);
-    procedure LightGradient(ca: TCanvas; x, y, Width, Color: integer);
-    procedure DarkGradient(ca: TCanvas; x, y, Width, Kind: integer);
-    procedure VLightGradient(ca: TCanvas; x, y, Height, Color: integer);
-    procedure VDarkGradient(ca: TCanvas; x, y, Height, Kind: integer);
-    procedure NumberBar(dst: TBitmap; x, y: integer; Cap: string; val: integer;
-      const T: TTexture);
-    procedure CountBar(dst: TBitmap; x, y, w: integer; Kind: integer;
-      Cap: string; val: integer; const T: TTexture);
-    procedure PaintProgressBar(ca: TCanvas;
-      Kind, x, y, pos, Growth, max: integer; const T: TTexture);
-    procedure PaintRelativeProgressBar(ca: TCanvas;
-      Kind, x, y, size, pos, Growth, max: integer; IndicateComplete: boolean;
-      const T: TTexture);
-    procedure PaintLogo(ca: TCanvas; x, y, clLight, clShade: integer);
-    function SetMainTextureByAge(Age: integer): boolean;
+function ChangeResolution(x, y, bpp, freq: integer): boolean;
+procedure RestoreResolution;
+function Play(Item: string; Index: integer = -1): boolean;
+procedure PreparePlay(Item: string; Index: integer = -1);
+procedure EmptyMenu(MenuItems: TMenuItem; Keep: integer = 0);
+function turntoyear(Turn: integer): integer;
+function TurnToString(Turn: integer): string;
+function MovementToString(Movement: integer): string;
+procedure BtnFrame(ca: TCanvas; p: TRect; const T: TTexture);
+procedure EditFrame(ca: TCanvas; p: TRect; const T: TTexture);
+function HexStringToColor(s: string): integer;
+function LoadGraphicFile(bmp: TBitmap; Path: string;
+  Options: integer = 0): boolean;
+function LoadLocalizedGraphicFile(bmp: TBitmap; Path: string;
+  Options: integer = 0): boolean;
+function LoadGraphicSet(Name: string): integer;
+procedure Dump(dst: TBitmap; HGr, xDst, yDst, Width, Height, xGr, yGr: integer);
+procedure Sprite(Canvas: TCanvas; HGr, xDst, yDst, Width, Height, xGr,
+  yGr: integer); overload;
+procedure Sprite(dst: TBitmap; HGr, xDst, yDst, Width, Height, xGr,
+  yGr: integer); overload;
+procedure MakeBlue(dst: TBitmap; x, y, w, h: integer);
+procedure ImageOp_B(dst, Src: TBitmap; xDst, yDst, xSrc, ySrc, w, h: integer);
+procedure ImageOp_BCC(dst, Src: TBitmap; xDst, yDst, xSrc, ySrc, w, h, Color1,
+  Color2: integer);
+procedure ImageOp_CCC(bmp: TBitmap; x, y, w, h, Color0, Color1,
+  Color2: integer);
+procedure SLine(ca: TCanvas; x0, x1, y: integer; cl: TColor);
+procedure DLine(ca: TCanvas; x0, x1, y: integer; cl0, cl1: TColor);
+procedure Frame(ca: TCanvas; x0, y0, x1, y1: integer; cl0, cl1: TColor);
+procedure RFrame(ca: TCanvas; x0, y0, x1, y1: integer; cl0, cl1: TColor);
+procedure CFrame(ca: TCanvas; x0, y0, x1, y1, Corner: integer; cl: TColor);
+procedure FrameImage(ca: TCanvas; Src: TBitmap;
+  x, y, Width, Height, xSrc, ySrc: integer; IsControl: boolean = false);
+procedure GlowFrame(dst: TBitmap; x0, y0, Width, Height: integer; cl: TColor);
+procedure InitOrnament;
+procedure InitCityMark(const T: TTexture);
+procedure Fill(ca: TCanvas; Left, Top, Width, Height, xOffset,
+  yOffset: integer);
+procedure FillLarge(ca: TCanvas; x0, y0, x1, y1, xm: integer);
+procedure FillSeamless(ca: TCanvas; Left, Top, Width, Height, xOffset,
+  yOffset: integer; const Texture: TBitmap);
+procedure FillRectSeamless(ca: TCanvas; x0, y0, x1, y1, xOffset,
+  yOffset: integer; const Texture: TBitmap);
+procedure PaintBackground(Form: TForm; Left, Top, Width, Height: integer);
+procedure Corner(ca: TCanvas; x, y, Kind: integer; const T: TTexture);
+procedure BiColorTextOut(ca: TCanvas; clMain, clBack: TColor; x, y: integer;
+  s: string);
+procedure LoweredTextOut(ca: TCanvas; cl: TColor; const T: TTexture;
+  x, y: integer; s: string);
+function BiColorTextWidth(ca: TCanvas; s: string): integer;
+procedure RisedTextOut(ca: TCanvas; x, y: integer; s: string);
+procedure LightGradient(ca: TCanvas; x, y, Width, Color: integer);
+procedure DarkGradient(ca: TCanvas; x, y, Width, Kind: integer);
+procedure VLightGradient(ca: TCanvas; x, y, Height, Color: integer);
+procedure VDarkGradient(ca: TCanvas; x, y, Height, Kind: integer);
+procedure NumberBar(dst: TBitmap; x, y: integer; Cap: string; val: integer;
+  const T: TTexture);
+procedure CountBar(dst: TBitmap; x, y, w: integer; Kind: integer; Cap: string;
+  val: integer; const T: TTexture);
+procedure PaintProgressBar(ca: TCanvas; Kind, x, y, pos, Growth, max: integer;
+  const T: TTexture);
+procedure PaintRelativeProgressBar(ca: TCanvas; Kind, x, y, size, pos, Growth,
+  max: integer; IndicateComplete: boolean; const T: TTexture);
+procedure PaintLogo(ca: TCanvas; x, y, clLight, clShade: integer);
+function SetMainTextureByAge(Age: integer): boolean;
 
-  const
-    nGrExtmax = 64;
-    wMainTexture = 640;
-    hMainTexture = 480;
+const
+  nGrExtmax = 64;
+  wMainTexture = 640;
+  hMainTexture = 480;
 
-    // template positions in Template.bmp
-    xLogo = 1;
-    yLogo = 1;
-    wLogo = 122;
-    hLogo = 23; // logo
-    xBBook = 1;
-    yBBook = 74;
-    wBBook = 143;
-    hBBook = 73; // big book
-    xSBook = 72;
-    ySBook = 37;
-    wSBook = 72;
-    hSBook = 36; // small book
-    xNation = 1;
-    yNation = 25;
-    xCoal = 1;
-    yCoal = 148;
+  // template positions in Template.bmp
+  xLogo = 1;
+  yLogo = 1;
+  wLogo = 122;
+  hLogo = 23; // logo
+  xBBook = 1;
+  yBBook = 74;
+  wBBook = 143;
+  hBBook = 73; // big book
+  xSBook = 72;
+  ySBook = 37;
+  wSBook = 72;
+  hSBook = 36; // small book
+  xNation = 1;
+  yNation = 25;
+  xCoal = 1;
+  yCoal = 148;
 
-    // Icons.bmp structure
-    xSizeBig = 56;
-    ySizeBig = 40;
+  // Icons.bmp structure
+  xSizeBig = 56;
+  ySizeBig = 40;
 
-    GlowRange = 8;
+  GlowRange = 8;
 
-    EmptySpaceColor = $101010;
+  EmptySpaceColor = $101010;
 
-    // template positions in System2.bmp
-    xOrna = 156;
-    yOrna = 1;
-    wOrna = 27;
-    hOrna = 26; // ornament
+  // template positions in System2.bmp
+  xOrna = 156;
+  yOrna = 1;
+  wOrna = 27;
+  hOrna = 26; // ornament
 
-    // sound modes
-    smOff = 0;
-    smOn = 1;
-    smOnAlt = 2;
+  // sound modes
+  smOff = 0;
+  smOn = 1;
+  smOnAlt = 2;
 
-    // color matrix
-    clkAge0 = 1;
-    cliTexture = 0;
-    cliBevelLight = cliTexture + 1;
-    cliBevelShade = cliTexture + 2;
-    cliTextLight = cliTexture + 3;
-    cliTextShade = cliTexture + 4;
-    cliLitText = cliTexture + 5;
-    cliMark = cliTexture + 6;
-    cliDimmedText = cliTexture + 7;
-    cliRoad = 8;
-    cliHouse = cliRoad + 1;
-    cliImp = cliRoad + 2;
-    cliImpProject = cliRoad + 3;
-    cliPage = 13;
-    cliCover = cliPage + 1;
-    clkMisc = 5;
-    cliPaper = 0;
-    cliPaperText = 1;
-    cliPaperCaption = 2;
-    clkCity = 6;
-    cliPlains = 0;
-    cliPrairie = 1;
-    cliHills = 2;
-    cliTundra = 3;
-    cliWater = 4;
+  // color matrix
+  clkAge0 = 1;
+  cliTexture = 0;
+  cliBevelLight = cliTexture + 1;
+  cliBevelShade = cliTexture + 2;
+  cliTextLight = cliTexture + 3;
+  cliTextShade = cliTexture + 4;
+  cliLitText = cliTexture + 5;
+  cliMark = cliTexture + 6;
+  cliDimmedText = cliTexture + 7;
+  cliRoad = 8;
+  cliHouse = cliRoad + 1;
+  cliImp = cliRoad + 2;
+  cliImpProject = cliRoad + 3;
+  cliPage = 13;
+  cliCover = cliPage + 1;
+  clkMisc = 5;
+  cliPaper = 0;
+  cliPaperText = 1;
+  cliPaperCaption = 2;
+  clkCity = 6;
+  cliPlains = 0;
+  cliPrairie = 1;
+  cliHills = 2;
+  cliTundra = 3;
+  cliWater = 4;
 
-    // LoadGraphicFile options
-    gfNoError = $01;
-    gfNoGamma = $02;
-    gfJPG = $04;
+  // LoadGraphicFile options
+  gfNoError = $01;
+  gfNoGamma = $02;
+  gfJPG = $04;
 
-  type
-    TGrExtDescr = record { don't use dynamic strings here! }
-      Name: string[31];
-      Data, Mask: TBitmap;
-      pixUsed: array [Byte] of Byte;
-    end;
+type
+  TGrExtDescr = record { don't use dynamic strings here! }
+    Name: string[31];
+    Data, Mask: TBitmap;
+    pixUsed: array [Byte] of Byte;
+  end;
 
-    TGrExtDescrSize = record { for size calculation only - must be the same as
-        TGrExtDescr, but without pixUsed }
-      Name: string[31];
-      Data, Mask: TBitmap;
-    end;
+  TGrExtDescrSize = record { for size calculation only - must be the same as
+      TGrExtDescr, but without pixUsed }
+    Name: string[31];
+    Data, Mask: TBitmap;
+  end;
 
-    TFontType = (ftNormal, ftSmall, ftTiny, ftCaption, ftButton);
+  TFontType = (ftNormal, ftSmall, ftTiny, ftCaption, ftButton);
 
-  var
-    Phrases, Phrases2, Sounds: TStringTable;
-    nGrExt: integer;
-    GrExt: array [0 .. nGrExtmax - 1] of ^TGrExtDescr;
-    HGrSystem, HGrSystem2, ClickFrameColor, SoundMode, MainTextureAge: integer;
-    MainTexture: TTexture;
-    Templates, Colors, Paper, BigImp, LogoBuffer: TBitmap;
-    FullScreen, GenerateNames, InitOrnamentDone,
-      Phrases2FallenBackToEnglish: boolean;
+var
+  Phrases, Phrases2, Sounds: TStringTable;
+  nGrExt: integer;
+  GrExt: array [0 .. nGrExtmax - 1] of ^TGrExtDescr;
+  HGrSystem, HGrSystem2, ClickFrameColor, SoundMode, MainTextureAge: integer;
+  MainTexture: TTexture;
+  Templates, Colors, Paper, BigImp, LogoBuffer: TBitmap;
+  FullScreen, GenerateNames, InitOrnamentDone,
+    Phrases2FallenBackToEnglish: boolean;
 
-    UniFont: array [TFontType] of TFont;
+  UniFont: array [TFontType] of TFont;
 
 implementation
 
@@ -1456,15 +1453,17 @@ begin
 initialization
 
 Reg := TRegistry.create;
-Reg.OpenKey('SOFTWARE\cevo\RegVer9', true);
 try
-  Gamma := Reg.ReadInteger('Gamma');
-except
-  Gamma := 100;
-  Reg.WriteInteger('Gamma', Gamma);
+  Reg.OpenKey('SOFTWARE\cevo\RegVer9', true);
+  if Reg.ValueExists('Gamma') then
+    Gamma := Reg.ReadInteger('Gamma')
+    else begin
+      Gamma := 100;
+      Reg.WriteInteger('Gamma', Gamma);
+    end;
+finally
+  Reg.Free;
 end;
-Reg.closekey;
-Reg.Free;
 
 if Gamma <> 100 then
 begin

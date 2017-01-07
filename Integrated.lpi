@@ -28,10 +28,10 @@
           <Version Value="11"/>
           <PathDelim Value="\"/>
           <Target>
-            <Filename Value="C-evo"/>
+            <Filename Value="c-evo"/>
           </Target>
           <SearchPaths>
-            <IncludeFiles Value="LocalPlayer"/>
+            <IncludeFiles Value="LocalPlayer;$(ProjOutDir)"/>
             <OtherUnitFiles Value="LocalPlayer"/>
             <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
@@ -44,6 +44,9 @@
             </SyntaxOptions>
           </Parsing>
           <CodeGeneration>
+            <SmartLinkUnit Value="True"/>
+            <TargetCPU Value="i386"/>
+            <TargetOS Value="win32"/>
             <Optimizations>
               <OptimizationLevel Value="3"/>
             </Optimizations>
@@ -52,6 +55,7 @@
             <Debugging>
               <GenerateDebugInfo Value="False"/>
             </Debugging>
+            <LinkSmart Value="True"/>
             <Options>
               <Win32>
                 <GraphicApplication Value="True"/>
@@ -289,7 +293,7 @@
       <Filename Value="c-evo"/>
     </Target>
     <SearchPaths>
-      <IncludeFiles Value="LocalPlayer;$(ProjOutDir)"/>
+      <IncludeFiles Value="LocalPlayer"/>
       <OtherUnitFiles Value="LocalPlayer"/>
       <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>

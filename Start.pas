@@ -206,24 +206,6 @@ begin
     end;
     Reg.WriteInteger('MultiControl', 0);
     Reg.closekey;
-
-    // register file type: "cevo Book" -- fails with no administrator rights!
-    try
-      Reg.RootKey := HKEY_CLASSES_ROOT;
-      Reg.OpenKey('.cevo', true);
-      Reg.WriteString('', 'cevoBook');
-      Reg.closekey;
-      Reg.OpenKey('cevoBook', true);
-      Reg.WriteString('', 'cevo Book');
-      Reg.closekey;
-      Reg.OpenKey('cevoBook\DefaultIcon', true);
-      Reg.WriteString('', ParamStr(0) + ',0');
-      Reg.closekey;
-      Reg.OpenKey('cevoBook\shell\open\command', true);
-      Reg.WriteString('', ParamStr(0) + ' "%1"');
-      Reg.closekey;
-    except
-    end;
   end
   else
   begin
