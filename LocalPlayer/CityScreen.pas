@@ -437,6 +437,7 @@ line, MessageCount: integer;
 var
 x,y,xGr,i,i1,j,iix,d,dx,dy,PrCost,Cnt,Loc1,FreeSupp,Paintiix,HappyGain,
   OptiType,rx,ry,TrueFood,TrueProd,TruePoll: integer;
+av: Integer;
 PrName,s:string;
 UnitInfo: TUnitInfo;
 UnitReport: TUnitReport;
@@ -546,7 +547,8 @@ if IsCityAlive then
     if ((dx+dy) and 1=0) and (dx*dx*dy*dy<81) then
       begin
       Loc1:=dLoc(cLoc,dx,dy);
-      if (CityAreaInfo.Available[(dy+3) shl 2+(dx+3) shr 1] in [faNotAvailable,faTreaty,faInvalid])
+      av := CityAreaInfo.Available[(dy+3) shl 2+(dx+3) shr 1];
+      if ((av = faNotAvailable) or (av = faTreaty) or (av =faInvalid))
         and ((Loc1<0) or (Loc1>=G.lx*G.ly) or (MyMap[Loc1] and fCity=0)) then
         Sprite(offscreen,HGrTerrain,xmArea-xxt+xxt*dx,ymArea-yyt+yyt*dy,xxt*2,
           yyt*2,1+5*(xxt*2+1),1+yyt+15*(yyt*3+1));
