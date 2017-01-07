@@ -265,7 +265,9 @@
       <Unit39>
         <Filename Value="LocalPlayer\Rates.pas"/>
         <IsPartOfProject Value="True"/>
+        <ComponentName Value="RatesDlg"/>
         <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
       </Unit39>
       <Unit40>
         <Filename Value="LocalPlayer\TechTree.pas"/>
@@ -278,7 +280,7 @@
     <Version Value="11"/>
     <PathDelim Value="\"/>
     <Target>
-      <Filename Value="lib\$(TargetCPU)-$(TargetOS)\c-evo"/>
+      <Filename Value="c-evo"/>
     </Target>
     <SearchPaths>
       <IncludeFiles Value="LocalPlayer;$(ProjOutDir)"/>
@@ -302,6 +304,8 @@
         <StackChecks Value="True"/>
       </Checks>
       <VerifyObjMethodCallValidity Value="True"/>
+      <TargetCPU Value="i386"/>
+      <TargetOS Value="win32"/>
     </CodeGeneration>
     <Linking>
       <Debugging>
