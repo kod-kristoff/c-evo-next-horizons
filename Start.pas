@@ -237,10 +237,14 @@ else
   try
     ScreenMode:=Reg.ReadInteger('ScreenMode');
     FullScreen:= ScreenMode>0;
-    ResolutionX:=Reg.ReadInteger('ResolutionX');
-    ResolutionY:=Reg.ReadInteger('ResolutionY');
-    ResolutionBPP:=Reg.ReadInteger('ResolutionBPP');
-    ResolutionFreq:=Reg.ReadInteger('ResolutionFreq');
+    if Reg.ValueExists('ResolutionX') then
+      ResolutionX:=Reg.ReadInteger('ResolutionX');
+    if Reg.ValueExists('ResolutionY') then
+        ResolutionY:=Reg.ReadInteger('ResolutionY');
+    if Reg.ValueExists('ResolutionBPP') then
+        ResolutionBPP:=Reg.ReadInteger('ResolutionBPP');
+    if Reg.ValueExists('ResolutionFreq') then
+        ResolutionFreq:=Reg.ReadInteger('ResolutionFreq');
     if ScreenMode=2 then
       ChangeResolution(ResolutionX,ResolutionY,ResolutionBPP,ResolutionFreq);
   except
