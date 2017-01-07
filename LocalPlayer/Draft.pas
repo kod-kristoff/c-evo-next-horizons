@@ -96,7 +96,8 @@ end;
 
 procedure TDraftDlg.FormDestroy(Sender: TObject);
 begin
-  Template.Free;
+  FreeAndNil(Template);
+  FreeAndNil(Back);
 end;
 
 procedure TDraftDlg.CloseBtnClick(Sender: TObject);

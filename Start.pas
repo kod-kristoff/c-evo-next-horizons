@@ -19,6 +19,9 @@ const
   maWeb = 4;
 
 type
+
+  { TStartDlg }
+
   TStartDlg = class(TDrawDlg)
     PopupMenu1: TPopupMenu;
     StartBtn: TButtonA;

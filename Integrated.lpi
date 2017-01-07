@@ -130,7 +130,9 @@
       <Unit11>
         <Filename Value="Start.pas"/>
         <IsPartOfProject Value="True"/>
+        <ComponentName Value="StartDlg"/>
         <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
       </Unit11>
       <Unit12>
         <Filename Value="Messg.pas"/>
@@ -181,7 +183,9 @@
       <Unit22>
         <Filename Value="LocalPlayer\Term.pas"/>
         <IsPartOfProject Value="True"/>
+        <ComponentName Value="MainScreen"/>
         <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
       </Unit22>
       <Unit23>
         <Filename Value="LocalPlayer\MessgEx.pas"/>
@@ -235,7 +239,9 @@
       <Unit33>
         <Filename Value="LocalPlayer\Nego.pas"/>
         <IsPartOfProject Value="True"/>
+        <ComponentName Value="NegoDlg"/>
         <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
       </Unit33>
       <Unit34>
         <Filename Value="LocalPlayer\CityType.pas"/>

@@ -1,22 +1,20 @@
 object MainScreen: TMainScreen
   Left = 231
+  Height = 480
   Top = 190
+  Width = 800
   HorzScrollBar.Visible = False
   VertScrollBar.Visible = False
   Caption = 'C-evo'
-  ClientHeight = 435
-  ClientWidth = 782
+  ClientHeight = 480
+  ClientWidth = 800
   Color = clBtnFace
   Constraints.MinHeight = 480
   Constraints.MinWidth = 800
-  Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -13
   Font.Name = 'MS Sans Serif'
-  Font.Style = []
   KeyPreview = True
-  Position = poDefault
-  WindowState = wsMaximized
   OnClose = FormClose
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
@@ -29,13 +27,15 @@ object MainScreen: TMainScreen
   OnPaint = FormPaint
   OnResize = FormResize
   OnShow = FormShow
-  PixelsPerInch = 96
+  Position = poDefault
+  LCLVersion = '1.6.2.0'
+  WindowState = wsMaximized
   object UnitBtn: TButtonB
     Tag = 14
     Left = 208
+    Height = 25
     Top = 384
     Width = 25
-    Height = 25
     Visible = False
     Down = False
     Permanent = False
@@ -45,9 +45,9 @@ object MainScreen: TMainScreen
   object MapBtn0: TButtonC
     Tag = 51
     Left = 16
+    Height = 12
     Top = 304
     Width = 12
-    Height = 12
     Visible = False
     Down = False
     Permanent = False
@@ -57,9 +57,9 @@ object MainScreen: TMainScreen
   object MapBtn1: TButtonC
     Tag = 291
     Left = 16
+    Height = 12
     Top = 320
     Width = 12
-    Height = 12
     Visible = False
     Down = False
     Permanent = False
@@ -69,9 +69,9 @@ object MainScreen: TMainScreen
   object MapBtn4: TButtonC
     Tag = 1028
     Left = 16
+    Height = 12
     Top = 368
     Width = 12
-    Height = 12
     Visible = False
     Down = False
     Permanent = False
@@ -81,9 +81,9 @@ object MainScreen: TMainScreen
   object MapBtn5: TButtonC
     Tag = 1328
     Left = 16
+    Height = 12
     Top = 384
     Width = 12
-    Height = 12
     Visible = False
     Down = False
     Permanent = False
@@ -93,9 +93,9 @@ object MainScreen: TMainScreen
   object MapBtn6: TButtonC
     Tag = 1541
     Left = 16
+    Height = 12
     Top = 400
     Width = 12
-    Height = 12
     Visible = False
     Down = False
     Permanent = False
@@ -105,9 +105,9 @@ object MainScreen: TMainScreen
   object TerrainBtn: TButtonB
     Tag = 28
     Left = 240
+    Height = 25
     Top = 384
     Width = 25
-    Height = 25
     Visible = False
     Down = False
     Permanent = False
@@ -117,9 +117,9 @@ object MainScreen: TMainScreen
   object UnitInfoBtn: TButtonB
     Tag = 15
     Left = 176
+    Height = 25
     Top = 384
     Width = 25
-    Height = 25
     Visible = False
     Down = False
     Permanent = False
@@ -128,9 +128,9 @@ object MainScreen: TMainScreen
   end
   object EOT: TEOTButton
     Left = 712
+    Height = 48
     Top = 368
     Width = 48
-    Height = 48
     Visible = False
     Down = False
     Permanent = False
@@ -139,34 +139,34 @@ object MainScreen: TMainScreen
   end
   object MenuArea: TArea
     Left = 2
+    Height = 36
     Top = 1
     Width = 36
-    Height = 36
   end
   object TreasuryArea: TArea
     Left = 208
+    Height = 36
     Top = 1
     Width = 164
-    Height = 36
   end
   object ResearchArea: TArea
     Left = 384
+    Height = 36
     Top = 1
     Width = 240
-    Height = 36
   end
   object ManagementArea: TArea
     Left = 704
+    Height = 40
     Top = 312
     Width = 56
-    Height = 40
   end
   object MovieSpeed1Btn: TButtonB
     Tag = 256
     Left = 384
+    Height = 25
     Top = 384
     Width = 25
-    Height = 25
     Visible = False
     Down = False
     Permanent = True
@@ -176,9 +176,9 @@ object MainScreen: TMainScreen
   object MovieSpeed2Btn: TButtonB
     Tag = 512
     Left = 416
+    Height = 25
     Top = 384
     Width = 25
-    Height = 25
     Visible = False
     Down = False
     Permanent = True
@@ -188,9 +188,9 @@ object MainScreen: TMainScreen
   object MovieSpeed3Btn: TButtonB
     Tag = 768
     Left = 448
+    Height = 25
     Top = 384
     Width = 25
-    Height = 25
     Visible = False
     Down = False
     Permanent = True
@@ -200,9 +200,9 @@ object MainScreen: TMainScreen
   object MovieSpeed4Btn: TButtonB
     Tag = 1024
     Left = 480
+    Height = 25
     Top = 384
     Width = 25
-    Height = 25
     Visible = False
     Down = False
     Permanent = True
@@ -213,13 +213,13 @@ object MainScreen: TMainScreen
     Enabled = False
     Interval = 50
     OnTimer = Timer1Timer
-    Left = 8
-    Top = 48
+    left = 8
+    top = 48
   end
   object GamePopup: TPopupMenu
     AutoPopup = False
-    Left = 40
-    Top = 48
+    left = 40
+    top = 48
     object mHelp: TMenuItem
       Tag = 7
       ShortCut = 112
@@ -248,6 +248,7 @@ object MainScreen: TMainScreen
       object mOwnMovement: TMenuItem
         Tag = 30
         GroupIndex = 1
+        RadioItem = True
         object mSlowMoves: TMenuItem
           Tag = 75
           RadioItem = True
@@ -274,6 +275,7 @@ object MainScreen: TMainScreen
       object mAllyMovement: TMenuItem
         Tag = 90
         GroupIndex = 1
+        RadioItem = True
         object mAlSlowMoves: TMenuItem
           Tag = 91
           RadioItem = True
@@ -300,6 +302,7 @@ object MainScreen: TMainScreen
       object mEnemyMovement: TMenuItem
         Tag = 74
         GroupIndex = 1
+        RadioItem = True
         object mEnMoves: TMenuItem
           Tag = 78
           RadioItem = True
@@ -326,6 +329,7 @@ object MainScreen: TMainScreen
       object N11: TMenuItem
         Caption = '-'
         GroupIndex = 1
+        RadioItem = True
       end
       object mRepList: TMenuItem
         Tag = 65
@@ -574,8 +578,8 @@ object MainScreen: TMainScreen
   end
   object UnitPopup: TPopupMenu
     AutoPopup = False
-    Left = 104
-    Top = 48
+    left = 104
+    top = 48
     object mdisband: TMenuItem
       Tag = 72
       ShortCut = 16452
@@ -657,8 +661,8 @@ object MainScreen: TMainScreen
   end
   object StatPopup: TPopupMenu
     AutoPopup = False
-    Left = 72
-    Top = 48
+    left = 72
+    top = 48
     object mUnitStat: TMenuItem
       Tag = 9
       ShortCut = 113
@@ -713,15 +717,15 @@ object MainScreen: TMainScreen
     end
   end
   object EditPopup: TPopupMenu
-    Left = 168
-    Top = 48
+    left = 168
+    top = 48
     object mCreateUnit: TMenuItem
       Tag = 47
     end
   end
   object TerrainPopup: TPopupMenu
-    Left = 136
-    Top = 48
+    left = 136
+    top = 48
     object mtrans: TMenuItem
       Tag = 273
       ShortCut = 79

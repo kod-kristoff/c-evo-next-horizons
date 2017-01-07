@@ -11,12 +11,18 @@ uses
 
 const
   MaxHistory = 62;
+  scDipNoticeStart = scDipNotice - scDipStart;
+  scDipBreakStart = scDipBreak - scDipStart;
 
 type
   THistory = record
     n: integer;
     Text: array [0 .. MaxHistory - 1] of ansistring;
   end;
+
+  TCommandAllowedEnum = scDipNoticeStart .. scDipBreakStart;
+
+  { TNegoDlg }
 
   TNegoDlg = class(TBufferedDrawDlg)
     OkBtn: TButtonA;
@@ -52,6 +58,7 @@ type
     ExitBtn: TButtonN;
     CancelTreatyBtn: TButtonN;
     procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
     procedure FormMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: integer);
     procedure OkBtnClick(Sender: TObject);
@@ -75,7 +82,7 @@ type
     Page, DipCommand: integer;
     CurrentOffer: TOffer;
     MyAllowed, OppoAllowed: TPriceSet;
-    CommandAllowed: set of scDipNotice - scDipStart .. scDipBreak - scDipStart;
+    CommandAllowed: set of TCommandAllowedEnum;
     History: array [0 .. nPl - 1] of THistory;
     RomanFont: TFont;
     Costs, Delivers: array [0 .. 11] of cardinal;
@@ -164,6 +171,11 @@ begin
   AcceptBtn.SmartHint := Phrases.Lookup('BTN_ACCEPT');
   ExitBtn.SmartHint := Phrases.Lookup('BTN_BREAK');
   CancelTreatyBtn.SmartHint := Phrases.Lookup('BTN_CNTREATY');
+end;
+
+procedure TNegoDlg.FormDestroy(Sender: TObject);
+begin
+  FreeAndNil(RomanFont);
 end;
 
 procedure TNegoDlg.FormShow(Sender: TObject);

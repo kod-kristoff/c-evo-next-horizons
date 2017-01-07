@@ -1,39 +1,36 @@
 object NegoDlg: TNegoDlg
   Left = 269
+  Height = 480
   Top = 163
+  Width = 640
   BorderStyle = bsNone
   ClientHeight = 480
   ClientWidth = 640
   Color = clBtnFace
-  Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -13
   Font.Name = 'MS Sans Serif'
-  Font.Style = []
   FormStyle = fsStayOnTop
-  OldCreateOrder = False
-  Scaled = False
   OnCreate = FormCreate
+  OnDestroy = FormDestroy
   OnKeyDown = FormKeyDown
   OnMouseDown = FormMouseDown
   OnShow = FormShow
-  PixelsPerInch = 96
-  TextHeight = 16
+  LCLVersion = '1.6.2.0'
   object OkBtn: TButtonA
     Left = 426
+    Height = 25
     Top = 446
     Width = 100
-    Height = 25
     Down = False
     Permanent = False
     OnClick = OkBtnClick
-    Caption = ''
   end
   object BwdBtn: TButtonB
     Left = 13
+    Height = 25
     Top = 446
     Width = 25
-    Height = 25
     Down = False
     Permanent = False
     OnClick = BwdBtnClick
@@ -41,9 +38,9 @@ object NegoDlg: TNegoDlg
   end
   object FwdBtn: TButtonB
     Left = 602
+    Height = 25
     Top = 446
     Width = 25
-    Height = 25
     Down = False
     Permanent = False
     OnClick = FwdBtnClick
@@ -51,9 +48,9 @@ object NegoDlg: TNegoDlg
   end
   object CloseBtn: TButtonB
     Left = 602
+    Height = 25
     Top = 6
     Width = 25
-    Height = 25
     Down = False
     Permanent = False
     OnClick = CloseBtnClick
@@ -62,9 +59,9 @@ object NegoDlg: TNegoDlg
   object WantStateReportBtn: TButtonN
     Tag = 257
     Left = 181
+    Height = 42
     Top = 12
     Width = 42
-    Height = 42
     Possible = True
     Lit = False
     ButtonIndex = 6
@@ -73,9 +70,9 @@ object NegoDlg: TNegoDlg
   object WantMilReportBtn: TButtonN
     Tag = 258
     Left = 223
+    Height = 42
     Top = 12
     Width = 42
-    Height = 42
     Possible = True
     Lit = False
     ButtonIndex = 7
@@ -84,9 +81,9 @@ object NegoDlg: TNegoDlg
   object WantMapBtn: TButtonN
     Tag = 259
     Left = 265
+    Height = 42
     Top = 12
     Width = 42
-    Height = 42
     Possible = True
     Lit = False
     ButtonIndex = 8
@@ -95,9 +92,9 @@ object NegoDlg: TNegoDlg
   object WantTech2Btn: TButtonN
     Tag = 261
     Left = 181
+    Height = 42
     Top = 54
     Width = 42
-    Height = 42
     Possible = True
     Lit = False
     ButtonIndex = 10
@@ -106,9 +103,9 @@ object NegoDlg: TNegoDlg
   object WantTech1Btn: TButtonN
     Tag = 260
     Left = 139
+    Height = 42
     Top = 54
     Width = 42
-    Height = 42
     Possible = True
     Lit = False
     ButtonIndex = 10
@@ -117,9 +114,9 @@ object NegoDlg: TNegoDlg
   object WantModelBtn: TButtonN
     Tag = 262
     Left = 223
+    Height = 42
     Top = 54
     Width = 42
-    Height = 42
     Possible = True
     Lit = False
     ButtonIndex = 11
@@ -128,9 +125,9 @@ object NegoDlg: TNegoDlg
   object WantMoneyBtn: TButtonN
     Tag = 263
     Left = 265
+    Height = 42
     Top = 54
     Width = 42
-    Height = 42
     Possible = True
     Lit = False
     ButtonIndex = 12
@@ -139,9 +136,9 @@ object NegoDlg: TNegoDlg
   object WantShipPart2Btn: TButtonN
     Tag = 267
     Left = 265
+    Height = 42
     Top = 96
     Width = 42
-    Height = 42
     Possible = True
     Lit = False
     ButtonIndex = 16
@@ -150,9 +147,9 @@ object NegoDlg: TNegoDlg
   object WantHiTreatyBtn: TButtonN
     Tag = 264
     Left = 139
+    Height = 42
     Top = 96
     Width = 42
-    Height = 42
     Possible = True
     Lit = False
     ButtonIndex = 14
@@ -161,9 +158,9 @@ object NegoDlg: TNegoDlg
   object WantLoTreatyBtn: TButtonN
     Tag = 265
     Left = 181
+    Height = 42
     Top = 96
     Width = 42
-    Height = 42
     Possible = True
     Lit = False
     ButtonIndex = 15
@@ -172,9 +169,9 @@ object NegoDlg: TNegoDlg
   object WantShipPart1Btn: TButtonN
     Tag = 266
     Left = 223
+    Height = 42
     Top = 96
     Width = 42
-    Height = 42
     Possible = True
     Lit = False
     ButtonIndex = 16
@@ -183,9 +180,9 @@ object NegoDlg: TNegoDlg
   object WantAnythingBtn: TButtonN
     Tag = 256
     Left = 139
+    Height = 42
     Top = 12
     Width = 42
-    Height = 42
     Possible = True
     Lit = False
     ButtonIndex = 17
@@ -194,9 +191,9 @@ object NegoDlg: TNegoDlg
   object OfferStateReportBtn: TButtonN
     Tag = 513
     Left = 375
+    Height = 42
     Top = 12
     Width = 42
-    Height = 42
     Possible = True
     Lit = False
     ButtonIndex = 6
@@ -205,9 +202,9 @@ object NegoDlg: TNegoDlg
   object OfferMilReportBtn: TButtonN
     Tag = 514
     Left = 417
+    Height = 42
     Top = 12
     Width = 42
-    Height = 42
     Possible = True
     Lit = False
     ButtonIndex = 7
@@ -216,9 +213,9 @@ object NegoDlg: TNegoDlg
   object OfferMapBtn: TButtonN
     Tag = 515
     Left = 459
+    Height = 42
     Top = 12
     Width = 42
-    Height = 42
     Possible = True
     Lit = False
     ButtonIndex = 8
@@ -227,9 +224,9 @@ object NegoDlg: TNegoDlg
   object OfferTech2Btn: TButtonN
     Tag = 517
     Left = 375
+    Height = 42
     Top = 54
     Width = 42
-    Height = 42
     Possible = True
     Lit = False
     ButtonIndex = 10
@@ -238,9 +235,9 @@ object NegoDlg: TNegoDlg
   object OfferTech1Btn: TButtonN
     Tag = 516
     Left = 333
+    Height = 42
     Top = 54
     Width = 42
-    Height = 42
     Possible = True
     Lit = False
     ButtonIndex = 10
@@ -249,9 +246,9 @@ object NegoDlg: TNegoDlg
   object OfferModelBtn: TButtonN
     Tag = 518
     Left = 417
+    Height = 42
     Top = 54
     Width = 42
-    Height = 42
     Possible = True
     Lit = False
     ButtonIndex = 11
@@ -260,9 +257,9 @@ object NegoDlg: TNegoDlg
   object OfferMoneyBtn: TButtonN
     Tag = 519
     Left = 459
+    Height = 42
     Top = 54
     Width = 42
-    Height = 42
     Possible = True
     Lit = False
     ButtonIndex = 12
@@ -271,9 +268,9 @@ object NegoDlg: TNegoDlg
   object OfferShipPart2Btn: TButtonN
     Tag = 523
     Left = 459
+    Height = 42
     Top = 96
     Width = 42
-    Height = 42
     Possible = True
     Lit = False
     ButtonIndex = 16
@@ -282,9 +279,9 @@ object NegoDlg: TNegoDlg
   object OfferHiTreatyBtn: TButtonN
     Tag = 520
     Left = 333
+    Height = 42
     Top = 96
     Width = 42
-    Height = 42
     Possible = True
     Lit = False
     ButtonIndex = 14
@@ -293,9 +290,9 @@ object NegoDlg: TNegoDlg
   object OfferLoTreatyBtn: TButtonN
     Tag = 521
     Left = 375
+    Height = 42
     Top = 96
     Width = 42
-    Height = 42
     Possible = True
     Lit = False
     ButtonIndex = 15
@@ -304,9 +301,9 @@ object NegoDlg: TNegoDlg
   object OfferShipPart1Btn: TButtonN
     Tag = 522
     Left = 417
+    Height = 42
     Top = 96
     Width = 42
-    Height = 42
     Possible = True
     Lit = False
     ButtonIndex = 16
@@ -315,9 +312,9 @@ object NegoDlg: TNegoDlg
   object OfferAnythingBtn: TButtonN
     Tag = 512
     Left = 333
+    Height = 42
     Top = 12
     Width = 42
-    Height = 42
     Possible = True
     Lit = False
     ButtonIndex = 17
@@ -326,9 +323,9 @@ object NegoDlg: TNegoDlg
   object AcceptBtn: TButtonN
     Tag = 32
     Left = 139
+    Height = 42
     Top = 426
     Width = 42
-    Height = 42
     Possible = True
     Lit = False
     ButtonIndex = 0
@@ -337,9 +334,9 @@ object NegoDlg: TNegoDlg
   object PassBtn: TButtonN
     Tag = 78
     Left = 181
+    Height = 42
     Top = 426
     Width = 42
-    Height = 42
     Possible = True
     Lit = False
     ButtonIndex = 1
@@ -348,9 +345,9 @@ object NegoDlg: TNegoDlg
   object ExitBtn: TButtonN
     Tag = 240
     Left = 223
+    Height = 42
     Top = 426
     Width = 42
-    Height = 42
     Possible = True
     Lit = False
     ButtonIndex = 2
@@ -359,9 +356,9 @@ object NegoDlg: TNegoDlg
   object CancelTreatyBtn: TButtonN
     Tag = 48
     Left = 265
+    Height = 42
     Top = 426
     Width = 42
-    Height = 42
     Possible = True
     Lit = False
     ButtonIndex = 3

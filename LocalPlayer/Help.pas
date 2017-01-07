@@ -36,10 +36,15 @@ const
   fJungle = 8; // pseudo terrain
 
 type
+
+  { THyperText }
+
   THyperText = class(TStringList)
     procedure AddLine(s: String = ''; Format: integer = 0; Picpix: integer = 0;
       LinkCategory: integer = 0; LinkIndex: integer = 0);
+    procedure AddText(Const S : String); override;
     procedure LF;
+    destructor Destroy; override;
   end;
 
   THelpDlg = class(TFramedDlg)
@@ -121,9 +126,19 @@ begin
   AddObject(s, TObject(HelpLineInfo));
 end;
 
+procedure THyperText.AddText(const S: String);
+begin
+  AddLine(S);
+end;
+
 procedure THyperText.LF;
 begin
   AddLine;
+end;
+
+destructor THyperText.Destroy;
+begin
+  inherited Destroy;
 end;
 
 const
@@ -188,7 +203,9 @@ begin
   CaptionRight := SearchBtn.Left;
   inc(ModalFrameIndent, 29);
   MainText := THyperText.Create;
+  MainText.OwnsObjects := True;
   SearchResult := THyperText.Create;
+  SearchResult.OwnsObjects := True;
   CreatePVSB(sb, Handle, 36, 551, 36 + 432);
 
   HelpText := TStringTable.Create;
@@ -225,12 +242,12 @@ end;
 
 procedure THelpDlg.FormDestroy(Sender: TObject);
 begin
-  MainText.Free;
-  SearchResult.Free;
-  ExtPic.Free;
-  TerrIcon.Free;
-  HelpText.Free;
-  // CaptionFont.Free;
+  FreeAndNil(MainText);
+  FreeAndNil(SearchResult);
+  FreeAndNil(ExtPic);
+  FreeAndNil(TerrIcon);
+  FreeAndNil(HelpText);
+  // FreeAndNil(CaptionFont);
 end;
 
 procedure THelpDlg.CloseBtnClick(Sender: TObject);

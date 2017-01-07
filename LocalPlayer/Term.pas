@@ -3528,12 +3528,13 @@ begin
   var
     i: integer;
   begin
-    Mini.free;
-    Buffer.free;
-    Panel.free;
+    TopBar.Free;
+    Mini.Free;
+    Buffer.Free;
+    Panel.Free;
     for i := 0 to nPl - 1 do
       if AILogo[i] <> nil then
-        AILogo[i].free;
+        AILogo[i].Free;
   end;
 
   procedure TMainScreen.FormResize(Sender: TObject);
