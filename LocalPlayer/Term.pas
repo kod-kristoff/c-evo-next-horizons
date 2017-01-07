@@ -4204,15 +4204,15 @@ begin
         exit; { map window not moved }
       offscreen.Canvas.Font.Assign(UniFont[ftSmall]);
       rec := Rect(0, 0, MapWidth, MapHeight);
-      { TODO ScrollDC(offscreen.Canvas.Handle, (xwd - xw) * (xxt * 2),
-        (ywd - yw) * yyt, rec, rec, 0, nil);}
+      ScrollDC(offscreen.Canvas.Handle, (xwd - xw) * (xxt * 2),
+        (ywd - yw) * yyt, rec, rec, 0, nil);
       for DoInvalidate := false to FastScrolling do
       begin
         if DoInvalidate then
         begin
           rec.Bottom := MapHeight - overlap;
-          { TODO ScrollDC(Canvas.Handle, (xwd - xw) * (xxt * 2), (ywd - yw) * yyt, rec,
-            rec, 0, nil);}
+          ScrollDC(Canvas.Handle, (xwd - xw) * (xxt * 2), (ywd - yw) * yyt, rec,
+            rec, 0, nil);
           ProcessOptions := prInvalidate;
         end
         else
@@ -7788,22 +7788,24 @@ begin
 
     procedure TMainScreen.mLogClick(Sender: TObject);
     begin
-      LogDlg.Show
+      LogDlg.Show;
     end;
 
     procedure TMainScreen.FormShow(Sender: TObject);
     begin
-      Timer1.Enabled := true
+      Timer1.Enabled := true;
+      Left := 0;
+      Top := 0;
     end;
 
     procedure TMainScreen.FormClose(Sender: TObject; var Action: TCloseAction);
     begin
-      Timer1.Enabled := false
+      Timer1.Enabled := false;
     end;
 
     procedure TMainScreen.Radio(Sender: TObject);
     begin
-      TMenuItem(Sender).Checked := true
+      TMenuItem(Sender).Checked := true;
     end;
 
     procedure TMainScreen.mManipClick(Sender: TObject);

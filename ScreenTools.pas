@@ -5,7 +5,6 @@ interface
 
 uses
   Windows, StringTables,
-
   LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics, Controls,
   Forms, Menus;
 
@@ -607,8 +606,8 @@ var
   PixelSrc: ^Byte;
   PixelDst: ^TPixel;
 begin
-  // TODO assert(Src.PixelFormat = pf8bit);
-  // TODO assert(dst.PixelFormat = pf24bit);
+  {TODO assert(Src.PixelFormat = pf8bit);}
+  assert(dst.PixelFormat = pf24bit);
   if xDst < 0 then
   begin
     w := w + xDst;

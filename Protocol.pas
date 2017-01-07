@@ -1717,8 +1717,8 @@ begin
 end;
 
 begin
-  // TODO assert(sizeof(TPlayerContext) = 2048);
-  // TODO assert(sizeof(TModel) - 2 * sizeof(LongInt) - 4 * sizeof(word)
-  //  = sIntSetDevModel and $F * 4);
+  assert(sizeof(TPlayerContext) = 2048);
+  assert(sizeof(TModel) - 2 * sizeof(LongInt) - 4 * sizeof(word)
+  = sIntSetDevModel and $F * 4);
 
 end.

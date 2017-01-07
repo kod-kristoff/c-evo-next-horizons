@@ -181,12 +181,13 @@ const
 
 procedure TStartDlg.FormCreate(Sender: TObject);
 var
-  x, y, i, ResolutionX, ResolutionY, ResolutionBPP, ResolutionFreq,
-    ScreenMode: integer;
+  x, y, i, ResolutionX, ResolutionY, ResolutionBPP, ResolutionFreq: Integer;
+  ScreenMode: Integer;
   DefaultAI, s: string;
   r0, r1: HRgn;
   Reg: TRegistry;
-  FirstStart: boolean;
+  FirstStart: Boolean;
+  Location: TPoint;
 begin
   Reg := TRegistry.Create;
   FirstStart := not Reg.KeyExists('SOFTWARE\cevo\RegVer9\Start');
@@ -236,22 +237,20 @@ begin
   else
   begin
     Reg.OpenKey('SOFTWARE\cevo\RegVer9', false);
-    try
+    if Reg.ValueExists('ScreenMode') then
       ScreenMode := Reg.ReadInteger('ScreenMode');
-      FullScreen := ScreenMode > 0;
-      if Reg.ValueExists('ResolutionX') then
-        ResolutionX := Reg.ReadInteger('ResolutionX');
-      if Reg.ValueExists('ResolutionY') then
-        ResolutionY := Reg.ReadInteger('ResolutionY');
-      if Reg.ValueExists('ResolutionBPP') then
-        ResolutionBPP := Reg.ReadInteger('ResolutionBPP');
-      if Reg.ValueExists('ResolutionFreq') then
-        ResolutionFreq := Reg.ReadInteger('ResolutionFreq');
-      if ScreenMode = 2 then
-        ChangeResolution(ResolutionX, ResolutionY, ResolutionBPP,
-          ResolutionFreq);
-    except
-    end;
+    FullScreen := ScreenMode > 0;
+    if Reg.ValueExists('ResolutionX') then
+      ResolutionX := Reg.ReadInteger('ResolutionX');
+    if Reg.ValueExists('ResolutionY') then
+      ResolutionY := Reg.ReadInteger('ResolutionY');
+    if Reg.ValueExists('ResolutionBPP') then
+      ResolutionBPP := Reg.ReadInteger('ResolutionBPP');
+    if Reg.ValueExists('ResolutionFreq') then
+      ResolutionFreq := Reg.ReadInteger('ResolutionFreq');
+    if ScreenMode = 2 then
+      ChangeResolution(ResolutionX, ResolutionY, ResolutionBPP,
+        ResolutionFreq);
     Reg.closekey;
   end;
   Reg.Free;
@@ -276,8 +275,11 @@ begin
 
   if FullScreen then
   begin
-    left := (screen.width - 800) * 3 div 8;
-    top := screen.height - ClientHeight - (screen.height - 600) div 3;
+    Location := Point(Screen.Width, Screen.Height);
+    Location := Point((Screen.width - 800) * 3 div 8,
+      Screen.height - ClientHeight - (Screen.height - 600) div 3);
+    Left := Location.X;
+    Top := Location.Y;
 
     r0 := CreateRectRgn(0, 0, ClientWidth, ClientHeight);
     r1 := CreateRectRgn(TabOffset + 4 * TabSize + 2, 0, ClientWidth, TabHeight);
