@@ -469,12 +469,9 @@ begin
   if (Width <= 0) or (Height <= 0) then
     exit;
 
-  with FOutput.Canvas do
-  begin
-    Brush.Color := Color;
-    FillRect(Rect(x, y, x + Width, y + Height));
-    Brush.Style := bsClear;
-  end
+  FOutput.Canvas.Brush.Color := Color;
+  FOutput.Canvas.FillRect(Rect(x, y, x + Width, y + Height));
+  FOutput.Canvas.Brush.Style := bsClear;
 end;
 
 procedure TIsoMap.Textout(x, y, Color: integer; const s: string);
