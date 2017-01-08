@@ -215,13 +215,13 @@ begin
   Back.Width := ClientWidth;
   Back.Height := ClientHeight;
   Template := TBitmap.Create;
-  LoadGraphicFile(Template, HomeDir + 'Graphics' + DirectorySeparator + 'City', gfNoGamma);
+  LoadGraphicFile(Template, HomeDir + 'Graphics\City', gfNoGamma);
   Template.PixelFormat := pf8bit;
   CityMapTemplate := TBitmap.Create;
-  LoadGraphicFile(CityMapTemplate, HomeDir + 'Graphics' + DirectorySeparator + 'BigCityMap', gfNoGamma);
+  LoadGraphicFile(CityMapTemplate, HomeDir + 'Graphics\BigCityMap', gfNoGamma);
   CityMapTemplate.PixelFormat := pf8bit;
   SmallCityMapTemplate := TBitmap.Create;
-  LoadGraphicFile(SmallCityMapTemplate, HomeDir + 'Graphics' + DirectorySeparator + 'SmallCityMap',
+  LoadGraphicFile(SmallCityMapTemplate, HomeDir + 'Graphics\SmallCityMap',
     gfNoGamma);
   SmallCityMapTemplate.PixelFormat := pf24bit;
   SmallCityMap := TBitmap.Create;
@@ -446,14 +446,16 @@ procedure TCityDlg.OffscreenPaint;
         line[i, 0] := 0;
         line[i, 1] := 0;
         line[i, 2] := gray; // 255-(255-gray) div 2;
-      end
+      end;
     end;
 
   var
     i: integer;
   begin
+    Offscreen.BeginUpdate;
     for i := 0 to h - 1 do
-      RedLine(@(PLine(offscreen.ScanLine[y + i])[x]), w)
+      RedLine(@(PLine(offscreen.ScanLine[y + i])[x]), w);
+    Offscreen.EndUpdate;
   end;
 
 var

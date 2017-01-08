@@ -156,6 +156,7 @@ begin
     (ClientWidth - BiColorTextWidth(Offscreen.Canvas, s)) div 2 - 1, 7, s);
   Offscreen.Canvas.Font.Assign(UniFont[ftNormal]);
 
+  Offscreen.BeginUpdate;
   xm := ClientWidth div 2;
   ym := ClientHeight div 2;
   for Y := 0 to 127 do
@@ -183,9 +184,10 @@ begin
               Line[i][xm - 1 - X][ch] := 0
             else
               Line[i][xm - 1 - X][ch] := c;
-          end
+          end;
     end;
   end;
+  Offscreen.EndUpdate;
 
   HaveWonder := false;
   for i := 0 to 20 do

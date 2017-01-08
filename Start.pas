@@ -829,6 +829,8 @@ var
 begin
   SetMainTextureByAge(-1);
   List.Font.Color := MainTexture.clMark;
+  EmptyPicture.BeginUpdate;
+
   Fill(EmptyPicture.Canvas, 0, 0, 64, 64, (wMaintexture - 64) div 2,
     (hMaintexture - 64) div 2);
   for y := 0 to 63 do
@@ -842,6 +844,7 @@ begin
       PictureLine[x] := i;
     end
   end;
+  EmptyPicture.EndUpdate;
 
   Difficulty[0] := Diff0;
 
@@ -1016,6 +1019,7 @@ procedure TStartDlg.PaintInfo;
     Mini.PixelFormat := pf24bit;
     Mini.width := MiniWidth * 2;
     Mini.height := MiniHeight;
+    Mini.BeginUpdate;
     for y := 0 to MiniHeight - 1 do
     begin
       MiniLine := Mini.ScanLine[y];
@@ -1032,6 +1036,7 @@ procedure TStartDlg.PaintInfo;
           MiniLine[xm, 2] := cm and $FF * Brightness div 3;
         end;
     end;
+    Mini.EndUpdate;
   end;
 
 var
@@ -1052,6 +1057,7 @@ var
     if MiniMode = mmPicture then
     begin
       MiniLine := nil;
+      Mini.BeginUpdate;
       for y := 0 to MiniHeight - 1 do
       begin
         PrevMiniLine := MiniLine;
@@ -1087,7 +1093,8 @@ var
             MiniLine[xm, 1] := cm shr 8 and $FF;
             MiniLine[xm, 2] := cm and $FF;
           end;
-      end
+        Mini.EndUpdate;
+      end;
     end;
   end;
 

@@ -342,6 +342,7 @@ begin
   Mask24 := TBitmap.Create;
   Mask24.Assign(GrExt[HGrTerrain].Mask);
   Mask24.PixelFormat := pf24bit;
+  Mask24.BeginUpdate;
   for ySrc := 0 to TerrainIconLines - 1 do
   begin
     for i := 0 to yyt * 3 - 1 do
@@ -357,50 +358,55 @@ begin
           then
             Border := false;
         if Border then
-          inc(TSpriteSize[i].Left) until not Border or
-            (TSpriteSize[i].Left = xxt * 2 - 1);
-        TSpriteSize[i].Top := 0;
-        repeat
-          Border := true;
-          for x := 0 to xxt * 2 - 1 do
-            if MaskLine[TSpriteSize[i].Top]^[1 + xSrc * (xxt * 2 + 1) + x, 0] = 0
-            then
+          inc(TSpriteSize[i].Left);
+      until not Border or
+        (TSpriteSize[i].Left = xxt * 2 - 1);
+      TSpriteSize[i].Top := 0;
+      repeat
+        Border := true;
+        for x := 0 to xxt * 2 - 1 do
+          if MaskLine[TSpriteSize[i].Top]^[1 + xSrc * (xxt * 2 + 1) + x, 0] = 0
+          then
+            Border := false;
+        if Border then
+          inc(TSpriteSize[i].Top);
+      until not Border or
+        (TSpriteSize[i].Top = yyt * 3 - 1);
+      TSpriteSize[i].Right := xxt * 2;
+      repeat
+        Border := true;
+        for y := 0 to yyt * 3 - 1 do
+          if MaskLine[y]^[xSrc * (xxt * 2 + 1) + TSpriteSize[i].Right, 0] = 0
+          then
+            Border := false;
+        if Border then
+          dec(TSpriteSize[i].Right);
+      until not Border or
+        (TSpriteSize[i].Right = TSpriteSize[i].Left);
+      TSpriteSize[i].Bottom := yyt * 3;
+      repeat
+        Border := true;
+        for x := 0 to xxt * 2 - 1 do
+          if MaskLine[TSpriteSize[i].Bottom - 1]^
+            [1 + xSrc * (xxt * 2 + 1) + x, 0] = 0 then
               Border := false;
-          if Border then
-            inc(TSpriteSize[i].Top) until not Border or
-              (TSpriteSize[i].Top = yyt * 3 - 1);
-          TSpriteSize[i].Right := xxt * 2;
-          repeat
-            Border := true;
-            for y := 0 to yyt * 3 - 1 do
-              if MaskLine[y]^[xSrc * (xxt * 2 + 1) + TSpriteSize[i].Right, 0] = 0
-              then
-                Border := false;
-            if Border then
-              dec(TSpriteSize[i].Right) until not Border or
-                (TSpriteSize[i].Right = TSpriteSize[i].Left);
-            TSpriteSize[i].Bottom := yyt * 3;
-            repeat
-              Border := true;
-              for x := 0 to xxt * 2 - 1 do
-                if MaskLine[TSpriteSize[i].Bottom - 1]^
-                  [1 + xSrc * (xxt * 2 + 1) + x, 0] = 0 then
-                  Border := false;
-              if Border then
-                dec(TSpriteSize[i].Bottom) until not Border or
-                  (TSpriteSize[i].Bottom = TSpriteSize[i].Top);
-            end
-          end;
-          Mask24.Free;
+        if Border then
+          dec(TSpriteSize[i].Bottom);
+      until not Border or
+        (TSpriteSize[i].Bottom = TSpriteSize[i].Top);
+    end
+  end;
+  Mask24.EndUpdate;
+  Mask24.Free;
 
-          if Borders <> nil then
-            Borders.Free;
-          Borders := TBitmap.Create;
-          Borders.PixelFormat := pf24bit;
-          Borders.Width := xxt * 2;
-          Borders.Height := (yyt * 2) * nPl;
-          BordersOK := 0;
-        end;
+  if Borders <> nil then
+    Borders.Free;
+  Borders := TBitmap.Create;
+  Borders.PixelFormat := pf24bit;
+  Borders.Width := xxt * 2;
+  Borders.Height := (yyt * 2) * nPl;
+  BordersOK := 0;
+end;
 
         procedure Done;
         begin
@@ -1007,6 +1013,7 @@ begin
                     xxt * 2, yyt * 2, GrExt[HGrTerrain].Data.Canvas.Handle,
                     1 + 8 * (xxt * 2 + 1),
                     1 + yyt + 16 * (yyt * 3 + 1), SRCCOPY);
+                  Borders.BeginUpdate;
                   for dy := 0 to yyt * 2 - 1 do
                   begin
                     Line := Borders.ScanLine[p1 * (yyt * 2) + dy];
@@ -1018,6 +1025,7 @@ begin
                         Line[dx, 2] := Tribe[p1].Color and $FF;
                       end
                   end;
+                  Borders.EndUpdate;
                   BordersOK := BordersOK or 1 shl p1;
                 end;
                 for dy := 0 to 1 do
@@ -1339,6 +1347,7 @@ begin
             y_n, w_n: single;
             Line: ^TLine;
           begin
+            FOutput.BeginUpdate;
             for y := y0 to y1 - 1 do
             begin
               Line := FOutput.ScanLine[y];
@@ -1352,7 +1361,8 @@ begin
               end
               else
                 MakeDark(@Line[x0], x1 - x0);
-            end
+            end;
+            FOutput.EndUpdate;
           end;
 
           procedure CityGrid(xm, ym: integer);

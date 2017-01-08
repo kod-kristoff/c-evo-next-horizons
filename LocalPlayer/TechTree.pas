@@ -165,6 +165,7 @@ begin
     end;
 
     // texturize background
+    Image.BeginUpdate;
     TexWidth := Paper.width;
     TexHeight := Paper.height;
     for Y := 0 to Image.height - 1 do
@@ -175,8 +176,9 @@ begin
       begin
         if Cardinal((@DstLine[X])^) and $FFFFFF = $7F007F then // transparent
           DstLine[X] := SrcLine[X mod TexWidth];
-      end
-    end
+      end;
+    end;
+    Image.EndUpdate;
   end;
 
   // fit window to image, center image in window, center window to screen

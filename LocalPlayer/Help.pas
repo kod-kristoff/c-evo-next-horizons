@@ -374,6 +374,8 @@ begin
     Heaven[dy] := BigImp.Canvas.Pixels[woEiffel mod 7 * xSizeBig,
       (SystemIconLines + woEiffel div 7) * ySizeBig + dy];
 
+  BigImp.BeginUpdate;
+  Offscreen.BeginUpdate;
   xSrc := iix mod 7 * xSizeBig;
   ySrc := (iix div 7 + 1) * ySizeBig;
   for y := 0 to ySizeBig * 2 - 1 do
@@ -407,9 +409,11 @@ begin
           PaintLine[x0 + x, 0] := PaintLine[x0 + x, 0] * sum shr 22;
           PaintLine[x0 + x, 1] := PaintLine[x0 + x, 1] * sum shr 22;
           PaintLine[x0 + x, 2] := PaintLine[x0 + x, 2] * sum shr 22;
-        end
-      end
+        end;
+      end;
     end;
+  Offscreen.EndUpdate;
+  BigImp.EndUpdate;
 end;
 
 procedure THelpDlg.OffscreenPaint;

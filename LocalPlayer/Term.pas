@@ -436,7 +436,7 @@ uses
   Registry;
 
 {$R *.lfm}
-// TODO {$R Res1.res}
+{TODO {$R Res1.res}
 
 const
   lxmax_xxx = 130;
@@ -521,6 +521,7 @@ begin
   // resample icons
   GetMem(resampled, nx * ny * 12);
   FillChar(resampled^, nx * ny * 12, 0);
+  BigImp.BeginUpdate;
   for ix := 0 to BigImp.width div xSizeBig - 1 do
     for iy := 0 to BigImp.height div ySizeBig - 1 do
       for y := 0 to ySizeBig - 2 * cut - 1 do
@@ -552,13 +553,15 @@ begin
             if (xdivider < xSizeSmall) and (ydivider < ySizeSmall) then
               inc(resampled[ir + nx + 1, ch], c * (xSizeSmall - xdivider) *
                 (ySizeSmall - ydivider));
-          end
-        end
+          end;
+        end;
       end;
+  BigImp.EndUpdate;
 
   // sharpen resampled icons
   SmallImp.width := nx;
   SmallImp.height := ny;
+  SmallImp.BeginUpdate;
   for y := 0 to ny - 1 do
   begin
     line := SmallImp.ScanLine[y];
@@ -586,6 +589,7 @@ begin
         line[x][ch] := sum;
       end;
   end;
+  SmallImp.EndUpdate;
   FreeMem(resampled);
   // smallimp.savetofile(homedir+'smallimp.bmp'); //!!!
 end;
@@ -4087,6 +4091,7 @@ begin
       FillRect(Rect(0, 0, Mini.width, Mini.height));
     end;
     MiniLine := nil;
+    Mini.BeginUpdate;
     for y := 0 to G.ly - 1 do
     begin
       PrevMiniLine := MiniLine;
@@ -4158,8 +4163,9 @@ begin
             MiniLine[xm, 1] := cm shr 8 and $FF;
             MiniLine[xm, 2] := cm and $FF;
           end;
-        end
+        end;
     end;
+    Mini.EndUpdate;
   end;
 
   procedure TMainScreen.MainOffscreenPaint;

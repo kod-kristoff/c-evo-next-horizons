@@ -246,6 +246,7 @@ begin
     yIcon := (IconIndex + SystemIconLines * 7) div 7 * ySizeBig;
     // prepare screwed icon
     fillchar(Screwed, sizeof(Screwed), 0);
+    BigImp.BeginUpdate;
     for iy := 0 to 39 do
     begin
       SrcLine := BigImp.ScanLine[iy + yIcon];
@@ -277,9 +278,10 @@ begin
               + share * SrcLine[ix + xIcon, 2];
             Screwed[xDst + dx, yDst + dy, 3] := Screwed[xDst + dx, yDst + dy,
               3] + share;
-          end
+          end;
       end;
     end;
+    BigImp.EndUpdate;
     xb := xBBook;
     yb := yBBook;
     wb := wBBook;

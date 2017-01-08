@@ -438,12 +438,14 @@ begin
   end;
   if (Options and gfNoGamma = 0) and (Gamma <> 100) then
   begin
+    bmp.BeginUpdate;
     FirstLine := bmp.ScanLine[0];
     LastLine := bmp.ScanLine[bmp.Height - 1];
     if FirstLine < LastLine then
       ApplyGamma(pointer(FirstLine), @LastLine[bmp.Width])
     else
-      ApplyGamma(pointer(LastLine), @FirstLine[bmp.Width])
+      ApplyGamma(pointer(LastLine), @FirstLine[bmp.Width]);
+    bmp.EndUpdate;
   end
 end;
 
@@ -496,12 +498,14 @@ begin
   end;
   if (Options and gfNoGamma = 0) and (Gamma <> 100) then
   begin
+    bmp.BeginUpdate;
     FirstLine := bmp.ScanLine[0];
     LastLine := bmp.ScanLine[bmp.Height - 1];
     if FirstLine < LastLine then
       ApplyGamma(pointer(FirstLine), @LastLine[bmp.Width])
     else
-      ApplyGamma(pointer(LastLine), @FirstLine[bmp.Width])
+      ApplyGamma(pointer(LastLine), @FirstLine[bmp.Width]);
+    bmp.EndUpdate;
   end
 end;
 
@@ -545,6 +549,8 @@ begin
     GrExt[nGrExt].Mask.Width := Source.Width;
     GrExt[nGrExt].Mask.Height := Source.Height;
 
+    GrExt[nGrExt].Data.BeginUpdate;
+    GrExt[nGrExt].Mask.BeginUpdate;
     for y := 0 to Source.Height - 1 do
     begin
       DataLine := GrExt[nGrExt].Data.ScanLine[y];
@@ -569,9 +575,11 @@ begin
         end
       end
     end;
+    GrExt[nGrExt].Data.EndUpdate;
+    GrExt[nGrExt].Mask.EndUpdate;
 
     FillChar(GrExt[nGrExt].pixUsed, GrExt[nGrExt].Data.Height div 49 * 10, 0);
-    inc(nGrExt)
+    inc(nGrExt);
   end
 end;
 
@@ -601,8 +609,10 @@ type
 var
   i: integer;
 begin
+  dst.BeginUpdate;
   for i := 0 to h - 1 do
-    BlueLine(@(PLine(dst.ScanLine[y + i])[x]), w)
+    BlueLine(@(PLine(dst.ScanLine[y + i])[x]), w);
+  dst.EndUpdate;
 end;
 
 procedure ImageOp_B(dst, Src: TBitmap; xDst, yDst, xSrc, ySrc, w, h: integer);
@@ -637,6 +647,7 @@ begin
   if (w < 0) or (h < 0) then
     exit;
 
+  dst.BeginUpdate;
   h := yDst + h;
   while yDst < h do
   begin
@@ -665,7 +676,8 @@ begin
     end;
     inc(yDst);
     inc(ySrc);
-  end
+  end;
+  dst.EndUpdate;
 end;
 
 procedure ImageOp_BCC(dst, Src: TBitmap; xDst, yDst, xSrc, ySrc, w, h, Color1,
@@ -680,14 +692,12 @@ var
   ix, iy, amp1, amp2, trans, Value: integer;
   SrcLine, DstLine: ^TLine;
 begin
-  if xDst < 0 then
-  begin
+  if xDst < 0 then begin
     w := w + xDst;
     xSrc := xSrc - xDst;
     xDst := 0;
   end;
-  if yDst < 0 then
-  begin
+  if yDst < 0 then begin
     h := h + yDst;
     ySrc := ySrc - yDst;
     yDst := 0;
@@ -699,6 +709,7 @@ begin
   if (w < 0) or (h < 0) then
     exit;
 
+  dst.BeginUpdate;
   for iy := 0 to h - 1 do
   begin
     SrcLine := Src.ScanLine[ySrc + iy];
@@ -731,6 +742,7 @@ begin
       end
     end
   end;
+  dst.EndUpdate;
 end;
 
 procedure ImageOp_CCC(bmp: TBitmap; x, y, w, h, Color0, Color1,
@@ -745,6 +757,7 @@ var
   i, Red, Green: integer;
   Pixel: ^TPixel;
 begin
+  bmp.BeginUpdate;
   assert(bmp.PixelFormat = pf24bit);
   h := y + h;
   while y < h do
@@ -765,7 +778,8 @@ begin
       Pixel := Pointer(Pixel) + 3;
     end;
     inc(y);
-  end
+  end;
+  bmp.EndUpdate;
 end;
 
 procedure Sprite(Canvas: TCanvas; HGr, xDst, yDst, Width, Height, xGr,
@@ -883,6 +897,7 @@ var
   x, y, ch, r: integer;
   DstLine: ^TLine;
 begin
+  dst.BeginUpdate;
   for y := -GlowRange + 1 to Height - 1 + GlowRange - 1 do
   begin
     DstLine := dst.ScanLine[y0 + y];
@@ -916,7 +931,8 @@ begin
             (DstLine[x0 + x][2 - ch] * (r - 1) + (cl shr (8 * ch) and $FF) *
             (GlowRange - r)) div (GlowRange - 1);
     end;
-  end
+  end;
+  dst.EndUpdate;
 end;
 
 procedure InitOrnament;
