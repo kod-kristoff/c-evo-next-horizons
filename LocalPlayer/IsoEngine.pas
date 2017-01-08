@@ -139,29 +139,29 @@ begin
   LandPatch := TBitmap.Create;
   LandPatch.PixelFormat := pf24bit;
   LandPatch.Canvas.Brush.Color := 0;
-  LandPatch.Width := xxt * 18;
-  LandPatch.Height := yyt * 9;
+  LandPatch.SetSize(xxt * 18, yyt * 9);
+  LandPatch.Canvas.FillRect(0, 0, LandPatch.Width, LandPatch.Height);
   if OceanPatch <> nil then
     OceanPatch.Free;
   OceanPatch := TBitmap.Create;
   OceanPatch.PixelFormat := pf24bit;
   OceanPatch.Canvas.Brush.Color := 0;
-  OceanPatch.Width := xxt * 8;
-  OceanPatch.Height := yyt * 4;
+  OceanPatch.SetSize(xxt * 8, yyt * 4);
+  OceanPatch.Canvas.FillRect(0, 0, OceanPatch.Width, OceanPatch.Height);
   LandMore := TBitmap.Create;
   LandMore.PixelFormat := pf24bit;
   LandMore.Canvas.Brush.Color := 0;
-  LandMore.Width := xxt * 18;
-  LandMore.Height := yyt * 9;
+  LandMore.SetSize(xxt * 18, yyt * 9);
+  LandMore.Canvas.FillRect(0, 0, LandMore.Width, LandMore.Height);
   OceanMore := TBitmap.Create;
   OceanMore.PixelFormat := pf24bit;
   OceanMore.Canvas.Brush.Color := 0;
-  OceanMore.Width := xxt * 8;
-  OceanMore.Height := yyt * 4;
+  OceanMore.SetSize(xxt * 8, yyt * 4);
+  OceanMore.Canvas.FillRect(0, 0, OceanMore.Width, OceanMore.Height);
   DitherMask := TBitmap.Create;
   DitherMask.PixelFormat := pf24bit;
-  DitherMask.Width := xxt * 2;
-  DitherMask.Height := yyt * 2;
+  DitherMask.SetSize(xxt * 2, yyt * 2);
+  DitherMask.Canvas.FillRect(0, 0, DitherMask.Width, DitherMask.Height);
   BitBlt(DitherMask.Canvas.Handle, 0, 0, xxt * 2, yyt * 2,
     GrExt[HGrTerrain].Mask.Canvas.Handle, 1 + 7 * (xxt * 2 + 1),
     1 + yyt + 15 * (yyt * 3 + 1), SRCAND);
@@ -325,7 +325,6 @@ begin
   for x := 0 to 6 do
     BitBlt(LandPatch.Canvas.Handle, (x + 2) * (xxt * 2), yyt, xxt * 2, yyt,
       DitherMask.Canvas.Handle, 0, 0, SRCAND);
-
   BitBlt(DitherMask.Canvas.Handle, 0, 0, xxt * 2, yyt, DitherMask.Canvas.Handle,
     0, 0, DSTINVERT);
 
@@ -336,7 +335,7 @@ begin
   LandMore.Free;
   OceanMore.Free;
   DitherMask.Free;
-  // LandPatch.Savetofile('landpatch.bmp');
+  //LandPatch.Savetofile('landpatch.bmp');
 
   // reduce size of terrain icons
   Mask24 := TBitmap.Create;

@@ -548,8 +548,7 @@ begin
     GrExt[nGrExt].Data.PixelFormat := pf24bit;
     GrExt[nGrExt].Mask := TBitmap.create;
     GrExt[nGrExt].Mask.PixelFormat := pf24bit;
-    GrExt[nGrExt].Mask.Width := Source.Width;
-    GrExt[nGrExt].Mask.Height := Source.Height;
+    GrExt[nGrExt].Mask.SetSize(Source.Width, Source.Height);
 
     GrExt[nGrExt].Data.BeginUpdate;
     GrExt[nGrExt].Mask.BeginUpdate;
@@ -582,7 +581,7 @@ begin
 
     FillChar(GrExt[nGrExt].pixUsed, GrExt[nGrExt].Data.Height div 49 * 10, 0);
     inc(nGrExt);
-  end
+  end;
 end;
 
 procedure Dump(dst: TBitmap; HGr, xDst, yDst, Width, Height, xGr, yGr: integer);
