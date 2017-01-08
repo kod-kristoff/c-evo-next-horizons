@@ -1,4 +1,4 @@
-{$INCLUDE switches.pas}
+{$INCLUDE Switches.pas}
 unit Wonders;
 
 interface

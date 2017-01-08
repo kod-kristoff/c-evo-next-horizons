@@ -1,12 +1,12 @@
-{$INCLUDE switches}
+{$INCLUDE Switches.pas}
 unit TechTree;
 
 interface
 
 uses
-  ScreenTools, Messg,
+  ScreenTools, Messg, LCLIntf, LCLType,
 
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms,
+  Messages, SysUtils, Classes, Graphics, Controls, Forms,
   ButtonBase, ButtonB;
 
 type
@@ -36,7 +36,7 @@ implementation
 uses
   Directories;
 
-{$R *.DFM}
+{$R *.dfm}
 
 const
   BlackBorder = 4;

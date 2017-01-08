@@ -248,9 +248,11 @@ begin
       ResolutionBPP := Reg.ReadInteger('ResolutionBPP');
     if Reg.ValueExists('ResolutionFreq') then
       ResolutionFreq := Reg.ReadInteger('ResolutionFreq');
+    {$IFDEF WINDOWS}
     if ScreenMode = 2 then
       ChangeResolution(ResolutionX, ResolutionY, ResolutionBPP,
         ResolutionFreq);
+    {$ENDIF}
     Reg.closekey;
   end;
   Reg.Free;

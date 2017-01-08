@@ -1,12 +1,12 @@
-{$INCLUDE switches}
+{$INCLUDE Switches.pas}
 unit CityType;
 
 interface
 
 uses
-  Protocol, ClientTools, Term, ScreenTools, BaseWin,
+  Protocol, ClientTools, Term, ScreenTools, BaseWin, LCLIntf, LCLType,
 
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms,
+  Messages, SysUtils, Classes, Graphics, Controls, Forms,
   ButtonB, ExtCtrls, ButtonA, ButtonBase;
 
 type
@@ -43,7 +43,7 @@ implementation
 
 uses Help;
 
-{$R *.DFM}
+{$R *.dfm}
 
 const
   xList = 7;
@@ -344,7 +344,7 @@ begin
   fillchar(MyData.ImpOrder[ctype], sizeof(MyData.ImpOrder[ctype]), Byte(-1));
   listed := [];
   Changed := true;
-  SmartUpdateContent
+  SmartUpdateContent;
 end;
 
 end.

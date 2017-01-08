@@ -1,12 +1,12 @@
-{$INCLUDE switches}
+{$INCLUDE Switches.pas}
 unit Enhance;
 
 interface
 
 uses
-  ScreenTools, BaseWin, Protocol, ClientTools, Term,
+  ScreenTools, BaseWin, Protocol, ClientTools, Term, LCLIntf, LCLType,
 
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms,
+  Messages, SysUtils, Classes, Graphics, Controls, Forms,
   ButtonBase, ButtonB, ButtonC, Menus;
 
 type
@@ -44,7 +44,7 @@ implementation
 
 uses Help;
 
-{$R *.DFM}
+{$R *.dfm}
 
 procedure TEnhanceDlg.FormCreate(Sender: TObject);
 var

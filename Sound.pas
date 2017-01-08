@@ -3,7 +3,7 @@ unit Sound;
 interface
 
 uses
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, MMSystem;
+  Messages, SysUtils, Classes, Graphics, Controls, Forms {$IFDEF WINDOWS}, MMSystem{$ENDIF};
 
 function PrepareSound(FileName: string): integer;
 procedure PlaySound(FileName: string);
@@ -11,12 +11,14 @@ procedure PlaySound(FileName: string);
 type
   TSoundPlayer = class(TForm)
   private
-    procedure OnMCI(var m: TMessage); message MM_MCINOTIFY;
+    {$IFDEF WINDOWS}
+    procedure OnMCI(var m: TMessage); message MM_MCINOTIFY;}
+    {$ENDIF}
   end;
 
 implementation
 
-{$R *.DFM}
+{$R *.dfm}
 
 type
   TSound = class
@@ -31,9 +33,12 @@ type
   end;
 
 constructor TSound.Create(const FileName: string);
+{$IFDEF WINDOWS}
 var
   OpenParm: TMCI_Open_Parms;
+{$ENDIF}
 begin
+  {$IFDEF WINDOWS}
   FDeviceID := 0;
   FFileName := FileName;
   if FileExists(FFileName) then
@@ -45,34 +50,45 @@ begin
       MCI_OPEN_SHAREABLE, integer(@OpenParm));
     FDeviceID := OpenParm.wDeviceID;
   end
+  {$ENDIF}
 end;
 
 destructor TSound.Destroy;
 begin
+  {$IFDEF WINDOWS}
   if FDeviceID <> 0 then
-    mciSendCommand(FDeviceID, MCI_CLOSE, MCI_WAIT, 0);
+    mciSendCommand(FDeviceID, MCI_CLOSE, MCI_WAIT, 0);}
+  {$ENDIF}
   inherited Destroy;
 end;
 
 procedure TSound.Play(HWND: DWORD);
+{$IFDEF WINDOWS}
 var
   PlayParm: TMCI_Play_Parms;
+{$ENDIF}
 begin
+  {$IFDEF WINDOWS}
   if FDeviceID <> 0 then
   begin
     PlayParm.dwCallback := HWND;
     mciSendCommand(FDeviceID, MCI_PLAY, MCI_NOTIFY, integer(@PlayParm));
   end
+  {$ENDIF}
 end;
 
 procedure TSound.Stop;
 begin
+  {$IFDEF WINDOWS}
   mciSendCommand(FDeviceID, MCI_STOP, 0, 0);
+  {$ENDIF}
 end;
 
 procedure TSound.Reset;
 begin
+  {$IFDEF WINDOWS}
   mciSendCommand(FDeviceID, MCI_SEEK, MCI_SEEK_TO_START, 0);
+  {$ENDIF}
 end;
 
 type
@@ -84,6 +100,7 @@ var
   SoundList: ^TSoundList;
   PlayingSound: TSound;
 
+{$IFDEF WINDOWS}
 procedure TSoundPlayer.OnMCI(var m: TMessage);
 begin
   if (m.wParam = MCI_Notify_Successful) and (PlayingSound <> nil) then
@@ -92,6 +109,7 @@ begin
     PlayingSound := nil;
   end;
 end;
+{$ENDIF}
 
 function PrepareSound(FileName: string): integer;
 begin

@@ -91,7 +91,7 @@ begin
     inherited
   else
   begin
-    if integer(Msg.LParamHi) >= Top + TitleHeight then
+    if integer((Msg.LParam shr 16) and $ffff) >= Top + TitleHeight then
       Msg.result := HTCLIENT
     else
     begin
@@ -99,10 +99,10 @@ begin
         if Controls[i].Visible then
         begin
           ControlBounds := Controls[i].BoundsRect;
-          if (integer(Msg.LParamLo) >= Left + ControlBounds.Left) and
-            (integer(Msg.LParamLo) < Left + ControlBounds.Right) and
-            (integer(Msg.LParamHi) >= Top + ControlBounds.Top) and
-            (integer(Msg.LParamHi) < Top + ControlBounds.Bottom) then
+          if (integer(Msg.LParam and $ffff) >= Left + ControlBounds.Left) and
+            (integer(Msg.LParam and $ffff) < Left + ControlBounds.Right) and
+            (integer((Msg.LParam shr 16 ) and $ffff) >= Top + ControlBounds.Top) and
+            (integer((Msg.LParam shr 16) and $ffff) < Top + ControlBounds.Bottom) then
           begin
             Msg.result := HTCLIENT;
             exit;

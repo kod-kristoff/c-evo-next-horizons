@@ -1,12 +1,12 @@
-{$INCLUDE switches}
+{$INCLUDE Switches.pas}
 unit NoTerm;
 
 interface
 
 uses
-  ScreenTools, Protocol, Messg,
+  ScreenTools, Protocol, Messg, LCLIntf, LCLType, dateutils, Platform,
 
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms,
+  Messages, SysUtils, Classes, Graphics, Controls, Forms,
   ButtonBase, ButtonB;
 
 type
@@ -22,7 +22,7 @@ type
     procedure Client(Command, Player: integer; var Data);
   private
     me, Active, ToldAlive, Round: integer;
-    PerfFreq, LastShowYearTime, LastShowTurnChange, LastNewTurn: int64;
+    LastShowYearTime, LastShowTurnChange, LastNewTurn: TDateTime;
     TurnTime, TotalStatTime: extended;
     G: TNewGameData;
     Server: TServerCall;
@@ -46,7 +46,7 @@ implementation
 
 uses GameServer, log, Start;
 
-{$R *.DFM}
+{$R *.dfm}
 
 const
   UpdateInterval = 0.1; // seconds
@@ -80,7 +80,6 @@ begin
   Canvas.Font.Assign(UniFont[ftSmall]);
   TitleHeight := 36;
   InitButtons();
-  QueryPerformanceFrequency(PerfFreq);
   LastShowYearTime := 0;
 end;
 
@@ -138,7 +137,7 @@ var
   ActiveDuration: extended;
   ShipComplete: boolean;
   r: TRect;
-  now: int64;
+  nowt: TDateTime;
 begin
   case Command of
     cDebugMessage:
@@ -212,15 +211,14 @@ begin
           Active := -1
         end; // should not happen
 
-        QueryPerformanceCounter(now);
-        if {$IFDEF VER100}(now.LowPart - LastShowYearTime.LowPart){$ELSE}(now - LastShowYearTime){$ENDIF} / PerfFreq >= UpdateInterval then
+        nowt := NowPrecise;
+        if SecondOf(nowt - LastShowYearTime) >= UpdateInterval then
         begin
           ShowYear;
-          LastShowYearTime := now;
+          LastShowYearTime := nowt;
         end;
-        TurnTime :=
-        {$IFDEF VER100}(now.LowPart - LastNewTurn.LowPart){$ELSE}(now - LastNewTurn){$ENDIF} / PerfFreq;
-        LastNewTurn := now;
+        TurnTime := SecondOf(nowt - LastNewTurn);
+        LastNewTurn := nowt;
         if (G.RO[me].Alive <> ToldAlive) then
         begin
           for p := 1 to nPlOffered - 1 do
@@ -266,11 +264,10 @@ begin
 
     cShowTurnChange:
       begin
-        QueryPerformanceCounter(now);
+        nowt := NowPrecise;
         if Active >= 0 then
         begin
-          ActiveDuration :=
-          {$IFDEF VER100}(now.LowPart - LastShowTurnChange.LowPart){$ELSE}(now - LastShowTurnChange){$ENDIF} / PerfFreq;
+          ActiveDuration := SecondOf(nowt - LastShowTurnChange);
           TimeStat[Active] := TimeStat[Active] + ActiveDuration;
           TotalStatTime := TotalStatTime + ActiveDuration;
           if not DisallowShowActive[Active] then
@@ -278,7 +275,7 @@ begin
           DisallowShowActive[Active] := (ActiveDuration < TurnTime * 0.25) and
             (ActiveDuration < ShowActiveThreshold);
         end;
-        LastShowTurnChange := now;
+        LastShowTurnChange := nowt;
 
         Active := integer(Data);
         if (Active >= 0) and not DisallowShowActive[Active] then

@@ -1,10 +1,10 @@
-{$INCLUDE switches.pas}
+{$INCLUDE Switches.pas}
 unit PVSB;
 
 interface
 
 uses
-  Windows, LCLIntf, LCLType, LMessages, Messages, SysUtils;
+  LCLIntf, LCLType, LMessages, Messages, SysUtils;
 
 type
   TPVScrollbar = record
@@ -27,9 +27,11 @@ const
 procedure CreatePVSB;
 begin
   inc(Count);
+  {$IFDEF WINDOWS}
   sb.h := CreateWindowEx(0, 'SCROLLBAR', pchar('PVSB' + IntToStr(Count)),
     SBS_VERT or WS_CHILD or SBS_RIGHTALIGN, x1 - 100, y0, 100, y1 - y0,
     Handle, 0, 0, nil);
+  {$ENDIF}
   sb.si.cbSize := 28;
 end;
 
@@ -59,14 +61,14 @@ begin
       result := false
     else
     begin
-      if m.wParamLo in [SB_THUMBPOSITION, SB_THUMBTRACK] then
+      if (m.wParam and $ffff) in [SB_THUMBPOSITION, SB_THUMBTRACK] then
       begin
-        result := m.wParamHi <> npos;
-        npos := m.wParamHi;
+        result := ((m.wParam shr 16) and $ffff) <> npos;
+        npos := (m.wParam shr 16) and $ffff;
       end
       else
       begin
-        case m.wParamLo of
+        case (m.wParam and $ffff) of
           SB_LINEUP:
             NewPos := npos - 1;
           SB_LINEDOWN:
@@ -83,7 +85,7 @@ begin
         if NewPos > nMax - integer(nPage) + 1 then
           NewPos := nMax - integer(nPage) + 1;
         result := NewPos <> npos;
-        if (NewPos <> npos) or (m.wParamLo = SB_ENDSCROLL) then
+        if (NewPos <> npos) or ((m.wParam and $ffff) = SB_ENDSCROLL) then
         begin
           npos := NewPos;
           FMask := SIF_POS;

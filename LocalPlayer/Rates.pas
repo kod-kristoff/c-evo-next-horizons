@@ -1,12 +1,12 @@
-{$INCLUDE switches}
+{$INCLUDE Switches.pas}
 unit Rates;
 
 interface
 
 uses
-  Protocol, ScreenTools, BaseWin,
+  Protocol, ScreenTools, BaseWin, LCLIntf, LCLType,
 
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms,
+  Messages, SysUtils, Classes, Graphics, Controls, Forms,
   ButtonBase, ButtonB, ButtonC;
 
 type
@@ -33,7 +33,7 @@ implementation
 uses
   ClientTools, Term, Tribes;
 
-{$R *.DFM}
+{$R *.dfm}
 
 const
   MessageLineSpacing = 20;

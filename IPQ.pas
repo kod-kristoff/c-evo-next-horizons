@@ -1,7 +1,7 @@
 {binary heap priority queue
 code contributed by Rassim Eminli}
 
-{$INCLUDE switches.pas}
+{$INCLUDE Switches.pas}
 
 unit IPQ;
 

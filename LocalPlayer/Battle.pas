@@ -1,12 +1,12 @@
-{$INCLUDE switches}
+{$INCLUDE Switches.pas}
 unit Battle;
 
 interface
 
 uses
-  ScreenTools, Protocol, Messg, ButtonBase, ButtonA,
+  ScreenTools, Protocol, Messg, ButtonBase, ButtonA, Types, LCLIntf, LCLType,
 
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms;
+  Messages, SysUtils, Classes, Graphics, Controls, Forms;
 
 type
   TBattleDlg = class(TDrawDlg)
@@ -38,7 +38,7 @@ implementation
 uses
   Term, ClientTools, IsoEngine;
 
-{$R *.DFM}
+{$R *.dfm}
 
 const
   Border = 3;

@@ -6,7 +6,7 @@ unit GameServer;
 interface
 
 uses
-  Protocol, Database, dynlibs, Windows;
+  Protocol, Database, dynlibs, Platform, dateutils;
 
 const
   Version = $010200;
@@ -126,7 +126,7 @@ var
   AICredits: string;
   AIInfo: array [0 .. nPl - 1] of string;
   Notify: TNotifyFunction;
-  PerfFreq, LastClientTime: int64;
+  LastClientTime: TDateTime;
 {$IFOPT O-}HandoverStack: array [0 .. 31] of Cardinal; {$ENDIF}
   AutoSaveExists, LoadOK, WinOnAlone, PreviewElevation, MovieStopped: boolean;
 
@@ -319,12 +319,11 @@ procedure ChangeClient;
 // hand over control to other client (as specified by CC...)
 var
   p: integer;
-  T: int64;
+  T: TDateTime;
 begin
-  QueryPerformanceCounter(T);
+  T := NowPrecise;
   PutMessage(1 shl 16 + 2, Format('CLIENT: took %.1f ms',
-    [{$IFDEF VER100}(T.LowPart - LastClientTime.LowPart)
-{$ELSE}(T - LastClientTime){$ENDIF} * 1000.0 / PerfFreq]));
+    [MilliSecondOf(T - LastClientTime)]));
   LastClientTime := T;
   PutMessage(1 shl 16 + 2, Format('CLIENT: calling %d (%s)',
     [CCPlayer, Brain[bix[CCPlayer]].Name]));
@@ -4471,7 +4470,6 @@ end; { <<<server }
 
 initialization
 
-QueryPerformanceFrequency(PerfFreq);
 FindFirst(ParamStr(0), $21, ExeInfo);
 
 {$IFOPT O-}nHandoverStack := 0; {$ENDIF}

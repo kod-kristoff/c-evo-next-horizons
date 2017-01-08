@@ -1,12 +1,12 @@
-{$INCLUDE switches.pas}
+{$INCLUDE Switches.pas}
 unit Nego;
 
 interface
 
 uses
-  ScreenTools, BaseWin, Protocol, Term,
+  ScreenTools, BaseWin, Protocol, Term, LCLType,
 
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, ButtonA,
+  Messages, SysUtils, Classes, Graphics, Controls, Forms, ButtonA,
   ButtonBase, ButtonB, ButtonC, ButtonN;
 
 const
@@ -102,7 +102,7 @@ implementation
 uses
   Messg, ClientTools, Diplomacy, Inp, Select, NatStat, Help, Tribes, MessgEx;
 
-{$R *.DFM}
+{$R *.dfm}
 
 const
   xPadC = 140;

@@ -1,13 +1,13 @@
-{$INCLUDE switches.pas}
+{$INCLUDE Switches.pas}
 unit Term;
 
 interface
 
 uses
-  Windows, Protocol, Tribes, PVSB, ClientTools, ScreenTools, BaseWin, Messg, ButtonBase,
+  Protocol, Tribes, PVSB, ClientTools, ScreenTools, BaseWin, Messg, ButtonBase,
 
   LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics, Controls, Forms, Menus,
-  ExtCtrls,
+  ExtCtrls, dateutils, Platform,
   ButtonA, ButtonB, ButtonC, EOTButton, Area;
 
 const
@@ -479,7 +479,6 @@ const
 var
   Jump: array [0 .. nPl - 1] of integer;
   pTurn, pLogo, UnStartLoc, ToldSlavery: integer;
-  PerfFreq: int64;
   SmallScreen, GameOK, MapValid, skipped, idle: boolean;
 
   SaveOption: array [0 .. nSaveOption - 1] of integer;
@@ -4204,15 +4203,19 @@ begin
         exit; { map window not moved }
       offscreen.Canvas.Font.Assign(UniFont[ftSmall]);
       rec := Rect(0, 0, MapWidth, MapHeight);
+      {$IFDEF WINDOWS}{TODO Linux}
       ScrollDC(offscreen.Canvas.Handle, (xwd - xw) * (xxt * 2),
         (ywd - yw) * yyt, rec, rec, 0, nil);
+      {$ENDIF}
       for DoInvalidate := false to FastScrolling do
       begin
         if DoInvalidate then
         begin
           rec.Bottom := MapHeight - overlap;
+          {$IFDEF WINDOWS}{TODO Linux}
           ScrollDC(Canvas.Handle, (xwd - xw) * (xxt * 2), (ywd - yw) * yyt, rec,
             rec, 0, nil);
+          {$ENDIF}
           ProcessOptions := prInvalidate;
         end
         else
@@ -6008,10 +6011,10 @@ begin
       yMin, xRange, yRange, xw1, Step, xMoving, yMoving, yl,
       SliceCount: integer;
     UnitInfo: TUnitInfo;
-    Ticks0, Ticks: int64;
+    Ticks0, Ticks: TDateTime;
   begin
     Timer1.Enabled := false;
-    QueryPerformanceCounter(Ticks0);
+    Ticks0 := NowPrecise;
     with ShowMove do
     begin
       UnitInfo.Owner := Owner;
@@ -6094,16 +6097,16 @@ begin
         SliceCount := 0;
         Ticks := Ticks0;
         repeat
-          if (SliceCount = 0) or ((Ticks - Ticks0) * 12000 * (SliceCount + 1)
-            div SliceCount < MoveTime * PerfFreq) then
+          if (SliceCount = 0) or (MillisecondOf(Ticks - Ticks0) * 12 * (SliceCount + 1)
+            div SliceCount < MoveTime) then
           begin
             if not idle or (GameMode = cMovie) then
               Application.ProcessMessages;
             Sleep(1);
             inc(SliceCount)
           end;
-          QueryPerformanceCounter(Ticks);
-        until (Ticks - Ticks0) * 12000 >= MoveTime * PerfFreq;
+          Ticks := NowPrecise;
+        until MillisecondOf(Ticks - Ticks0) * 12 >= MoveTime;
         Ticks0 := Ticks
       end;
     end;
@@ -6465,7 +6468,7 @@ begin
 
     var
       dx, dy: integer;
-      time0, time1: int64;
+      time0, time1: TDateTime;
     begin
       if GameMode = cMovie then
       begin
@@ -6550,13 +6553,12 @@ begin
             end;
           ' ':
             begin // test map repaint time
-              QueryPerformanceCounter(time0);
+              time0 := NowPrecise;
               MapValid := false;
               MainOffscreenPaint;
-              QueryPerformanceCounter(time1);
+              time1 := NowPrecise;
               SimpleMessage(Format('Map repaint time: %.3f ms',
-                [{$IFDEF VER100}(time1.LowPart - time0.LowPart)
-{$ELSE}(time1 - time0){$ENDIF} * 1000.0 / PerfFreq]));
+                [MillisecondOf(time1 - time0)]));
             end
         end
       else if Shift = [] then
@@ -8036,7 +8038,5 @@ begin
     end;
 
 initialization
-
-QueryPerformanceFrequency(PerfFreq);
 
 end.

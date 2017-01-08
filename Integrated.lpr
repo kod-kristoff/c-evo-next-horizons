@@ -44,7 +44,7 @@ uses
   Rates in 'LocalPlayer\Rates.pas' {RatesDlg} ,
   TechTree in 'LocalPlayer\TechTree.pas' {TechTreeDlg};
 
-{$R cevo.RES}
+{$R cevo.res}
 
 {$IFDEF DEBUG}
 const

@@ -1,10 +1,10 @@
-{$INCLUDE switches.pas}
+{$INCLUDE Switches.pas}
 unit MessgEx;
 
 interface
 
 uses
-  Messg, Protocol, ScreenTools, Windows,
+  Messg, Protocol, ScreenTools, Platform, DateUtils,
 
   LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics, Controls, Forms, ButtonA,
   ButtonB, ButtonBase, StdCtrls;
@@ -80,9 +80,6 @@ uses
 
 const
   LostUnitsPerLine = 6;
-
-var
-  PerfFreq: int64;
 
 procedure TMessgExDlg.FormCreate(Sender: TObject);
 begin
@@ -202,7 +199,7 @@ end;
 
 function TMessgExDlg.ShowModal: integer;
 var
-  Ticks0, Ticks: int64;
+  Ticks0, Ticks: TDateTime;
 begin
   if GameMode = cMovie then
   begin
@@ -210,12 +207,12 @@ begin
     begin
       MovieCancelled := false;
       Show;
-      QueryPerformanceCounter(Ticks0);
+      Ticks0 := NowPrecise;
       repeat
         Application.ProcessMessages;
         Sleep(1);
-        QueryPerformanceCounter(Ticks);
-      until MovieCancelled or ((Ticks - Ticks0) * 1000 >= 1500 * PerfFreq);
+        Ticks := NowPrecise;
+      until MovieCancelled or (MillisecondOf(Ticks - Ticks0) >= 1500);
       Hide;
     end;
     result := mrOk;
@@ -561,7 +558,5 @@ begin
 end;
 
 initialization
-
-QueryPerformanceFrequency(PerfFreq);
 
 end.

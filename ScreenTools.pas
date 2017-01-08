@@ -4,7 +4,7 @@ unit ScreenTools;
 interface
 
 uses
-  Windows, StringTables,
+  StringTables,
   LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics, Controls,
   Forms, Menus;
 
@@ -15,7 +15,9 @@ type
       clPage, clCover: TColor;
   end;
 
+{$IFDEF WINDOWS}
 function ChangeResolution(x, y, bpp, freq: integer): boolean;
+{$ENDIF}
 procedure RestoreResolution;
 function Play(Item: string; Index: integer = -1): boolean;
 procedure PreparePlay(Item: string; Index: integer = -1);
@@ -191,12 +193,15 @@ uses
   Registry;
 
 var
+  {$IFDEF WINDOWS}
   StartResolution: TDeviceMode;
+  {$ENDIF}
   ResolutionChanged: boolean;
 
   Gamma: integer; // global gamma correction (cent)
   GammaLUT: array [0 .. 255] of Byte;
 
+{$IFDEF WINDOWS}
 function ChangeResolution(x, y, bpp, freq: integer): boolean;
 var
   DevMode: TDeviceMode;
@@ -212,11 +217,14 @@ begin
   if result then
     ResolutionChanged := true;
 end;
+{$ENDIF}
 
 procedure RestoreResolution;
 begin
+  {$IFDEF WINDOWS}
   if ResolutionChanged then
     ChangeDisplaySettings(StartResolution, 0);
+  {$ENDIF}
   ResolutionChanged := false;
 end;
 
@@ -1475,7 +1483,9 @@ begin
   end;
 end;
 
+{$IFDEF WINDOWS}
 EnumDisplaySettings(nil, $FFFFFFFF, StartResolution);
+{$ENDIF}
 ResolutionChanged := false;
 
 Phrases := TStringTable.create;

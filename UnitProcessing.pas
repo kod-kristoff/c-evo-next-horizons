@@ -1,4 +1,4 @@
-{$INCLUDE switches}
+{$INCLUDE Switches}
 unit UnitProcessing;
 
 interface
