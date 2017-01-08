@@ -353,7 +353,7 @@ begin
   for i := bixFirstAI to nBrain - 1 do
   begin
     BrainPicture[i] := TBitmap.Create;
-    if not LoadGraphicFile(BrainPicture[i], HomeDir + Brain[i].FileName,
+    if not LoadGraphicFile(BrainPicture[i], HomeDir + 'AI' + DirectorySeparator + Brain[i].FileName,
       gfNoError) then
     begin
       BrainPicture[i].width := 64;

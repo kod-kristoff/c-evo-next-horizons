@@ -6,7 +6,7 @@ interface
 uses
   Messg,
 
-  LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics, Controls, Forms;
+  LCLIntf, LCLType, Messages, SysUtils, Classes, Graphics, Controls, Forms;
 
 const
   WM_GO = WM_USER;

@@ -65,10 +65,10 @@ Source: "{#MyAppSubDir}\Help\*.*"; DestDir: "{app}\Help"; Flags: ignoreversion
 Source: "{#MyAppSubDir}\Fonts.txt"; DestDir: "{app}\fonts.txt"; Flags: ignoreversion
 Source: "{#MyAppSubDir}\Language.txt"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#MyAppSubDir}\Language2.txt"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#MyAppSubDir}\AI\lib\x86_64-win64\StdAI.dll"; DestDir: "{app}"; Flags: ignoreversion; Check: Is64BitInstallMode
-Source: "{#MyAppSubDir}\AI\lib\i386-win32\StdAI.dll"; DestDir: "{app}"; Flags: ignoreversion; Check: not Is64BitInstallMode
-Source: "{#MyAppSubDir}\StdAI.bmp"; DestDir: "{app}"; Flags: ignoreversion; 
-Source: "{#MyAppSubDir}\StdAI.ai.txt"; DestDir: "{app}"; Flags: ignoreversion;
+Source: "{#MyAppSubDir}\AI\lib\x86_64-win64\StdAI.dll"; DestDir: "{app}\AI"; DestName: "StdAI-win64.dll"; Flags: ignoreversion; Check: Is64BitInstallMode
+Source: "{#MyAppSubDir}\AI\lib\i386-win32\StdAI.dll"; DestDir: "{app}\AI"; DestName: "StdAI-win32.dll"; Flags: ignoreversion; Check: not Is64BitInstallMode
+Source: "{#MyAppSubDir}\AI\StdAI.bmp"; DestDir: "{app}\AI"; Flags: ignoreversion; 
+Source: "{#MyAppSubDir}\AI\StdAI.ai.txt"; DestDir: "{app}\AI"; Flags: ignoreversion;
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
