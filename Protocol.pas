@@ -1716,9 +1716,17 @@ begin
   end;
 end;
 
+procedure InitUnit;
 begin
-  assert(sizeof(TPlayerContext) = 2048);
-  assert(sizeof(TModel) - 2 * sizeof(LongInt) - 4 * sizeof(word)
+  { TODO
+  Assert(sizeof(TPlayerContext) = 2048);
+  Assert(sizeof(TModel) - 2 * sizeof(LongInt) - 4 * sizeof(word)
   = sIntSetDevModel and $F * 4);
+  }
+end;
+
+initialization
+
+InitUnit;
 
 end.

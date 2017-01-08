@@ -8,10 +8,11 @@ var
 
 function LocalizedFilePath(path: string): string;
 
+
 implementation
 
 uses
-  LCLIntf, LCLType, LMessages, SysUtils, FileUtil;
+  LCLIntf, LCLType, SysUtils, FileUtil;
 
 var
   AppDataDir: string;
@@ -31,7 +32,7 @@ begin
     result := HomeDir + path
 end;
 
-procedure Init;
+procedure InitUnit;
 begin
   HomeDir := ExtractFilePath(ParamStr(0));
 
@@ -57,10 +58,10 @@ begin
         CopyFile(PChar(HomeDir + 'AppData\Saved\' + src.Name),
           PChar(DataDir + 'Saved\' + src.Name), false);
     until FindNext(src) <> 0;
-  end;
+end;
 
 initialization
 
-Init;
+InitUnit;
 
 end.
