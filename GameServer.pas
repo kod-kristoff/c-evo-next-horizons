@@ -60,7 +60,7 @@ type
 
   TBrainInfo = record
     FileName, DLLName, Name, Credits: string; { filename and full name }
-    hm, { module handle }
+    hm: TLibHandle; { module handle }
     Flags, ServerVersion, DataVersion, DataSize: integer;
     Client: TClientCall; { client function address }
     Initialized: boolean;

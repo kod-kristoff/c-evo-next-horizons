@@ -1,0 +1,26 @@
+This is Lazarus/FPC port of turn based Civilization like game called C-evo originally written in Delphi 4.
+
+
+=Build=
+
+* Use Lazarus 1.6.2
+
+=Conversion=
+
+* Convert binary .dfm to textual .dfm using Delphi convert.exe so Lazarus can use its content
+* Use Lazarus Delphi project converter
+* Identifier not found CopyFile - add FileUtil to uses
+* Identifier not found FreeLibrary - add dynlibs to uses
+* Identifier not found QueryPerformanceCounter - add Windows to uses
+* Identifier not found BitBlt - add LCLIntf, LCLType to uses
+* Identifier not found TDeviceMode - add Windows to uses
+* Cannot fine WinProcs - remove from uses
+* Identifier not found GetCurrentProcessID - replace by GetProcessID
+* Identifier not found CreateWindowEx - add Windows to uses
+* Identifier not found Windows.BitBlt - replace by LCLIntf.BitBlt
+* Illegal type conversion: "THelpLineInfo" to "Pointer" - change THelpLineInfo to class and add instance initialization and finalization
+* Identifier not found TSize - add Types to uses
+* Wrong number of parameters specified for call to "Frame" - used wrong Frame function from Graphics.TCanvas. Replace by ScreenTools.Frame
+* Wrong number of parameters specified for call to "Line" - used wrong Line function from Graphics.TCanvas. Replace by Self.Line
+* Wrong number of parameters specified for call to "Colors" - used wrong Colors variable from Graphics.TCanvas. Replace by ScreenTools.Colors
+
