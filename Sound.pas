@@ -12,7 +12,7 @@ type
   TSoundPlayer = class(TForm)
   private
     {$IFDEF WINDOWS}
-    procedure OnMCI(var m: TMessage); message MM_MCINOTIFY;}
+    procedure OnMCI(var m: TMessage); message MM_MCINOTIFY;
     {$ENDIF}
   end;
 
@@ -57,7 +57,7 @@ destructor TSound.Destroy;
 begin
   {$IFDEF WINDOWS}
   if FDeviceID <> 0 then
-    mciSendCommand(FDeviceID, MCI_CLOSE, MCI_WAIT, 0);}
+    mciSendCommand(FDeviceID, MCI_CLOSE, MCI_WAIT, 0);
   {$ENDIF}
   inherited Destroy;
 end;

@@ -4,6 +4,9 @@ unit Term;
 interface
 
 uses
+  {$IFDEF Windows}
+  Windows,
+  {$ENDIF}
   Protocol, Tribes, PVSB, ClientTools, ScreenTools, BaseWin, Messg, ButtonBase,
 
   LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics, Controls, Forms, Menus,
@@ -6106,7 +6109,7 @@ begin
             inc(SliceCount)
           end;
           Ticks := NowPrecise;
-        until MillisecondOf(Ticks - Ticks0) * 12 >= MoveTime;
+        until (Ticks - Ticks0) / OneMillisecond * 12 >= MoveTime;
         Ticks0 := Ticks
       end;
     end;

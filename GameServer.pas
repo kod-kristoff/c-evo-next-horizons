@@ -323,7 +323,7 @@ var
 begin
   T := NowPrecise;
   PutMessage(1 shl 16 + 2, Format('CLIENT: took %.1f ms',
-    [MilliSecondOf(T - LastClientTime)]));
+    [(T - LastClientTime) / OneMillisecond]));
   LastClientTime := T;
   PutMessage(1 shl 16 + 2, Format('CLIENT: calling %d (%s)',
     [CCPlayer, Brain[bix[CCPlayer]].Name]));

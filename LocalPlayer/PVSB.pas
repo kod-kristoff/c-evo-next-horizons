@@ -4,6 +4,9 @@ unit PVSB;
 interface
 
 uses
+  {$IFDEF WINDOWS}
+  Windows,
+  {$ENDIF}
   LCLIntf, LCLType, LMessages, Messages, SysUtils;
 
 type
