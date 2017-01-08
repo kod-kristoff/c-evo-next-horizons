@@ -8,7 +8,7 @@ uses
   Windows,
   {$ENDIF}
   StringTables,
-  LCLIntf, LCLType, SysUtils, Classes, Graphics, Controls,
+  LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics, Controls,
   Forms, Menus;
 
 type
@@ -191,7 +191,9 @@ var
 implementation
 
 uses
-  Directories, Sound, Registry;
+  Directories, Sound, ButtonBase, ButtonA, ButtonB,
+
+  Registry;
 
 var
   {$IFDEF WINDOWS}
@@ -383,7 +385,7 @@ end;
 
 procedure ApplyGamma(Start, Stop: pbyte);
 begin
-  while Start < Stop do
+  while integer(Start) < integer(Stop) do
   begin
     Start^ := GammaLUT[Start^];
     inc(Start);
@@ -441,7 +443,7 @@ begin
     bmp.BeginUpdate;
     FirstLine := bmp.ScanLine[0];
     LastLine := bmp.ScanLine[bmp.Height - 1];
-    if FirstLine < LastLine then
+    if integer(FirstLine) < integer(LastLine) then
       ApplyGamma(pointer(FirstLine), @LastLine[bmp.Width])
     else
       ApplyGamma(pointer(LastLine), @FirstLine[bmp.Width]);
@@ -501,7 +503,7 @@ begin
     bmp.BeginUpdate;
     FirstLine := bmp.ScanLine[0];
     LastLine := bmp.ScanLine[bmp.Height - 1];
-    if FirstLine < LastLine then
+    if integer(FirstLine) < integer(LastLine) then
       ApplyGamma(pointer(FirstLine), @LastLine[bmp.Width])
     else
       ApplyGamma(pointer(LastLine), @FirstLine[bmp.Width]);
@@ -619,12 +621,11 @@ procedure ImageOp_B(dst, Src: TBitmap; xDst, yDst, xSrc, ySrc, w, h: integer);
 // Src is template
 // X channel = background amp (old Dst content), 128=original brightness
 type
-  TPixel = array [0..2] of Byte;
-  PPixel = ^TPixel;
+  TPixel = array [0 .. 2] of Byte;
 var
   i, Brightness, test: integer;
   PixelSrc: ^Byte;
-  PixelDst: PPixel;
+  PixelDst: ^TPixel;
 begin
   {TODO assert(Src.PixelFormat = pf8bit);}
   assert(dst.PixelFormat = pf24bit);
@@ -651,8 +652,8 @@ begin
   h := yDst + h;
   while yDst < h do
   begin
-    PixelDst := dst.ScanLine[yDst] + 3 * xDst;
-    PixelSrc := Src.ScanLine[ySrc] + xSrc;
+    PixelDst := pointer(integer(dst.ScanLine[yDst]) + 3 * xDst);
+    PixelSrc := pointer(integer(Src.ScanLine[ySrc]) + xSrc);
     for i := 0 to w - 1 do
     begin
       Brightness := PixelSrc^;
@@ -671,8 +672,8 @@ begin
         PixelDst[2] := 255
       else
         PixelDst[0] := test; // Blue
-      PixelDst := Pointer(PixelDst) + 3;
-      PixelSrc := Pointer(PixelSrc) + 1;
+      PixelDst := pointer(integer(PixelDst) + 3);
+      PixelSrc := pointer(integer(PixelSrc) + 1);
     end;
     inc(yDst);
     inc(ySrc);
@@ -762,7 +763,7 @@ begin
   h := y + h;
   while y < h do
   begin
-    Pixel := bmp.ScanLine[y] + 3 * x;
+    Pixel := pointer(integer(bmp.ScanLine[y]) + 3 * x);
     for i := 0 to w - 1 do
     begin
       Red := (Pixel[0] * (Color0 and $0000FF) + Pixel[1] * (Color1 and $0000FF)
@@ -775,7 +776,7 @@ begin
         shr 8; // Blue
       Pixel[1] := Green;
       Pixel[2] := Red;
-      Pixel := Pointer(Pixel) + 3;
+      Pixel := pointer(integer(Pixel) + 3);
     end;
     inc(y);
   end;

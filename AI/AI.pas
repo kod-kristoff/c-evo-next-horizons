@@ -1,4 +1,4 @@
-{$INCLUDE switches.inc}
+{$INCLUDE Switches.inc}
 unit AI;
 
 interface

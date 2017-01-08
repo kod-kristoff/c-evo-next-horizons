@@ -5,8 +5,10 @@ interface
 
 uses
   Protocol, ClientTools, Term, ScreenTools, BaseWin,
-  LCLIntf, LCLType, SysUtils, Classes, Graphics, Controls, Forms,
-  ButtonB, ButtonC;
+
+  LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics, Controls, Forms, ButtonA,
+  ButtonB,
+  ButtonBase, ButtonC;
 
 type
   TUnitStatDlg = class(TBufferedDrawDlg)
@@ -80,7 +82,7 @@ begin
   Back.Width := 5 * wCommon;
   Back.Height := hMax;
   Template := TBitmap.Create;
-  LoadGraphicFile(Template, HomeDir + 'Graphics\Unit', gfNoGamma);
+  LoadGraphicFile(Template, HomeDir + 'Graphics' + DirectorySeparator + 'Unit', gfNoGamma);
   Template.PixelFormat := pf8bit;
 end;
 

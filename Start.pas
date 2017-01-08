@@ -198,10 +198,8 @@ begin
     OpenKey('SOFTWARE\cevo\RegVer9\Start', true);
     for I := 0 to nPlOffered - 1 do
     begin
-      if i = 0 then
-        s := ':StdIntf'
-      else
-        s := 'StdAI';
+      if i = 0 then s := ':StdIntf'
+        else s := 'StdAI';
       WriteString('Control' + IntToStr(i), s);
       WriteInteger('Diff' + IntToStr(i), 2);
     end;

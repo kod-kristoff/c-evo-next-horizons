@@ -182,7 +182,8 @@ var
   f: TSearchRec;
   T: TextFile;
   s: string;
-
+  Key: string;
+  Value: string;
 begin
   Notify := NotifyFunction;
   PreviewElevation := false;
@@ -203,43 +204,66 @@ begin
   Brain[bixRandom].Initialized := false;
   nBrain := bixFirstAI;
   bixBeginner := bixFirstAI;
-  if FindFirst(HomeDir + '*.ai.txt', $21, f) = 0 then
+  if FindFirst(HomeDir + 'AI' + DirectorySeparator + '*.ai.txt', $21, f) = 0 then
     repeat
       with Brain[nBrain] do
       begin
         FileName := Copy(f.Name, 1, Length(f.Name) - 7);
-        DLLName := HomeDir + FileName;
+        DLLName := HomeDir + 'AI' + DirectorySeparator + FileName;
         Name := Copy(f.Name, 1, Length(f.Name) - 7);
         Credits := '';
         Flags := fMultiple;
         Client := nil;
         Initialized := false;
         ServerVersion := 0;
-        AssignFile(T, HomeDir + f.Name);
+        AssignFile(T, HomeDir + 'AI' + DirectorySeparator + f.Name);
         Reset(T);
         while not EOF(T) do
         begin
           ReadLn(T, s);
           s := trim(s);
-          if Copy(s, 1, 5) = '#NAME' then
-            Name := Copy(s, 7, 255)
-          else if Copy(s, 1, 10) = '#.NET' then
+          if Pos(' ', S) > 0 then begin
+            Key := Copy(S, 1, Pos(' ', S) - 1);
+            Value := Trim(Copy(S, Pos(' ', S) + 1, Length(S)));
+          end else begin
+            Key := S;
+            Value := '';
+          end;
+          if Key = '#NAME' then
+            Name := Value
+          else if Key = '#.NET' then
             Flags := Flags or fDotNet
-          else if Copy(s, 1, 9) = '#BEGINNER' then
+          else if Key = '#BEGINNER' then
             bixBeginner := nBrain
-          else if Copy(s, 1, 5) = '#PATH' then
-            DLLName := HomeDir + trim(Copy(s, 7, 255))
-          else if Copy(s, 1, 12) = '#GAMEVERSION' then
-            for i := 13 to Length(s) do
-              case s[i] of
+          else if Key = '#PATH' then
+            DLLName := HomeDir + 'AI' + DirectorySeparator + Value
+          {$IFDEF WINDOWS}{$IFDEF CPU32}
+          else if Key = '#PATH_WIN32' then
+            DLLName := HomeDir + 'AI' + DirectorySeparator + Value
+          {$ENDIF}{$ENDIF}
+          {$IFDEF WINDOWS}{$IFDEF CPU64}
+          else if Key = '#PATH_WIN64' then
+            DLLName := HomeDir + 'AI' + DirectorySeparator + Value
+          {$ENDIF}{$ENDIF}
+          {$IFDEF LINUX}{$IFDEF CPU32}
+          else if Key = '#PATH_LINUX32' then
+            DLLName := HomeDir + 'AI' + DirectorySeparator + Value
+          {$ENDIF}{$ENDIF}
+          {$IFDEF LINUX}{$IFDEF CPU64}
+          else if Key = '#PATH_LINUX64' then
+            DLLName := HomeDir + 'AI' + DirectorySeparator + Value
+          {$ENDIF}{$ENDIF}
+          else if Key = '#GAMEVERSION' then
+            for i := 1 to Length(Value) do
+              case Value[i] of
                 '0' .. '9':
                   ServerVersion := ServerVersion and $FFFF00 + ServerVersion and
-                    $FF * 10 + ord(s[i]) - 48;
+                    $FF * 10 + ord(Value[i]) - 48;
                 '.':
                   ServerVersion := ServerVersion shl 8;
               end
-          else if Copy(s, 1, 8) = '#CREDITS' then
-            Credits := Copy(s, 10, 255)
+          else if Key = '#CREDITS' then
+            Credits := Value
         end;
         CloseFile(T);
       end;

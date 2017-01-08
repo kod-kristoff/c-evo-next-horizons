@@ -9,9 +9,9 @@ uses
   {$ENDIF}
   Protocol, Tribes, PVSB, ClientTools, ScreenTools, BaseWin, Messg, ButtonBase,
 
-  LCLIntf, LCLType, Messages, SysUtils, Classes, Graphics, Controls, Forms, Menus,
+  LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics, Controls, Forms, Menus,
   ExtCtrls, dateutils, Platform,
-  ButtonB, ButtonC, EOTButton, Area;
+  ButtonA, ButtonB, ButtonC, EOTButton, Area;
 
 const
   WM_EOT = WM_USER;
@@ -3416,33 +3416,25 @@ begin
     with Reg do begin
       doinit := false;
       OpenKey('SOFTWARE\cevo\RegVer9', false);
-      try
-        if ValueExists('TileWidth') then xxt := ReadInteger('TileWidth') div 2;
-        if ValueExists('TileHeight') then yyt := ReadInteger('TileHeight') div 2;
-        if ValueExists('OptionChecked') then OptionChecked := ReadInteger('OptionChecked');
-        if ValueExists('MapOptionChecked') then MapOptionChecked := ReadInteger('MapOptionChecked');
-        if ValueExists('CityMapMask') then CityRepMask := Cardinal(ReadInteger('CityReport'));
-      except
-        doinit := true;
-      end;
+      if ValueExists('TileWidth') then xxt := ReadInteger('TileWidth') div 2
+        else xxt := 48;
+      if ValueExists('TileHeight') then yyt := ReadInteger('TileHeight') div 2
+        else yyt := 24;
+      if ValueExists('OptionChecked') then OptionChecked := ReadInteger('OptionChecked')
+        else OptionChecked := DefaultOptionChecked;
+      if ValueExists('MapOptionChecked') then MapOptionChecked := ReadInteger('MapOptionChecked')
+        else MapOptionChecked := 1 shl moCityNames;
+      if ValueExists('CityMapMask') then CityRepMask := Cardinal(ReadInteger('CityReport'))
+        else CityRepMask := Cardinal(not chPopIncrease and not chNoGrowthWarning and
+        not chCaptured);
       CloseKey;
       if OptionChecked and (7 shl 16) = 0 then
         OptionChecked := OptionChecked or (1 shl 16);
       // old regver with no scrolling
     end;
-    Reg.free;
-    if doinit then
-    begin
-      xxt := 48;
-      yyt := 24;
-      OptionChecked := DefaultOptionChecked;
-      MapOptionChecked := 1 shl moCityNames;
-      CityRepMask := Cardinal(not chPopIncrease and not chNoGrowthWarning and
-        not chCaptured);
-    end;
+    Reg.Free;
 
-    if FullScreen then
-    begin
+    if FullScreen then begin
       p.Style := $87000000;
       BorderStyle := bsNone;
       BorderIcons := [];
@@ -3453,7 +3445,7 @@ begin
     else if 1 shl 15 and OptionChecked <> 0 then
       SoundMode := smOnAlt
     else
-      SoundMode := smOn
+      SoundMode := smOn;
   end;
 
   procedure TMainScreen.FormCreate(Sender: TObject);
@@ -4977,7 +4969,6 @@ begin
     i, uix, NewFocus: integer;
     GotoOnly: boolean;
   begin
-    Dist := 0;
     if ClientMode >= scContact then
       exit;
     DestinationMarkON := false;

@@ -1,7 +1,7 @@
 { single instance priority queue
   main parts contributed by Rassim Eminli }
 
-{$INCLUDE switches.inc}
+{$INCLUDE Switches.inc}
 unit Pile;
 
 interface
