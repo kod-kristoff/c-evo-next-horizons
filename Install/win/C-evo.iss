@@ -22,8 +22,8 @@ AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
-DefaultDirName={pf}\{#MyAppPublisherShort}\{#MyAppName}
-DefaultGroupName={#MyAppPublisherShort}\{#MyAppName}
+DefaultDirName={pf}\{#MyAppName}
+DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
 OutputDir=.
 OutputBaseFilename=Install-{#MyAppName}-{#MyAppVersion}
@@ -34,7 +34,7 @@ ChangesAssociations=yes
 ; done in "64-bit mode" on x64, meaning it should use the native
 ; 64-bit Program Files directory and the 64-bit view of the registry.
 ; On all other architectures it will install in "32-bit mode".
-;ArchitecturesInstallIn64BitMode=x64
+ArchitecturesInstallIn64BitMode=x64
 ; Note: We don't set ProcessorsAllowed because we want this
 ; installation to run on all architectures (including Itanium,
 ; since it's capable of running 32-bit code too).
@@ -56,17 +56,19 @@ Root: HKCR; Subkey: "{#FileTypeName}\DefaultIcon"; ValueType: string; ValueName:
 Root: HKCR; Subkey: "{#FileTypeName}\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
 
 [Files]
-;Source: "{#MyAppSubDir}\lib\x86_64-win64\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion; Check: Is64BitInstallMode
-Source: "{#MyAppSubDir}\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion; 
-;Check: not Is64BitInstallMode
+Source: "{#MyAppSubDir}\lib\x86_64-win64\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion; Check: Is64BitInstallMode
+Source: "{#MyAppSubDir}\lib\i386-win32\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion; Check: not Is64BitInstallMode
 Source: "{#MyAppSubDir}\Graphics\*"; DestDir: "{app}\Graphics"; Flags: ignoreversion
 Source: "{#MyAppSubDir}\Sounds\*.*"; DestDir: "{app}\Sounds"; Flags: ignoreversion
 Source: "{#MyAppSubDir}\Tribes\*.*"; DestDir: "{app}\Tribes"; Flags: ignoreversion
 Source: "{#MyAppSubDir}\Help\*.*"; DestDir: "{app}\Help"; Flags: ignoreversion
-Source: "{#MyAppSubDir}\fonts.txt"; DestDir: "{app}\fonts.txt"; Flags: ignoreversion
-Source: "{#MyAppSubDir}\language.txt"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#MyAppSubDir}\language2.txt"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#MyAppSubDir}\StdAI.*"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#MyAppSubDir}\Fonts.txt"; DestDir: "{app}\fonts.txt"; Flags: ignoreversion
+Source: "{#MyAppSubDir}\Language.txt"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#MyAppSubDir}\Language2.txt"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#MyAppSubDir}\AI\lib\x86_64-win64\StdAI.dll"; DestDir: "{app}"; Flags: ignoreversion; Check: Is64BitInstallMode
+Source: "{#MyAppSubDir}\AI\lib\i386-win32\StdAI.dll"; DestDir: "{app}"; Flags: ignoreversion; Check: not Is64BitInstallMode
+Source: "{#MyAppSubDir}\StdAI.bmp"; DestDir: "{app}"; Flags: ignoreversion; 
+Source: "{#MyAppSubDir}\StdAI.ai.txt"; DestDir: "{app}"; Flags: ignoreversion;
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
