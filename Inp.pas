@@ -6,8 +6,8 @@ interface
 uses
   ScreenTools, Messg,
 
-  LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics, Controls, Forms,
-  ButtonA, StdCtrls, ButtonB, ButtonBase;
+  LCLIntf, LCLType, SysUtils, Classes, Graphics, Controls, Forms,
+  ButtonA, StdCtrls;
 
 type
   TInputDlg = class(TDrawDlg)

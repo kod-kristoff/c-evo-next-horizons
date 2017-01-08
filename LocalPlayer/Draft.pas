@@ -5,10 +5,8 @@ interface
 
 uses
   Protocol, ClientTools, Term, ScreenTools, PVSB, BaseWin,
-
-  LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics, Controls, Forms, ExtCtrls,
-  ButtonA,
-  ButtonB, ButtonBase, Area;
+  LCLIntf, LCLType, SysUtils, Classes, Graphics, Controls, Forms, ExtCtrls,
+  ButtonA, ButtonB, Area;
 
 type
   TDraftDlg = class(TBufferedDrawDlg)
@@ -90,7 +88,7 @@ begin
   Back.Width := ClientWidth;
   Back.Height := ClientHeight;
   Template := TBitmap.Create;
-  LoadGraphicFile(Template, HomeDir + 'Graphics' + DirectorySeparator + 'MiliRes', gfNoGamma);
+  LoadGraphicFile(Template, HomeDir + 'Graphics\MiliRes', gfNoGamma);
   Template.PixelFormat := pf8bit;
 end;
 

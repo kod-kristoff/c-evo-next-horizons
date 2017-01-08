@@ -4,7 +4,7 @@ unit Back;
 interface
 
 uses
-  LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics, Forms;
+  LCLIntf, LCLType, SysUtils, Classes, Graphics, Forms;
 
 type
 

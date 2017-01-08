@@ -6,7 +6,7 @@ interface
 uses
   Protocol, ClientTools, ScreenTools, Tribes,
 {$IFNDEF SCR}Term, {$ENDIF}
-  LCLIntf, LCLType, LMessages, SysUtils, Classes, Graphics;
+  LCLIntf, LCLType, SysUtils, Classes, Graphics;
 
 type
   TInitEnemyModelEvent = function(emix: integer): boolean;
@@ -32,7 +32,7 @@ type
     FOutput: TBitmap;
     FLeft, FTop, FRight, FBottom, RealTop, RealBottom, AttLoc, DefLoc,
       DefHealth, FAdviceLoc: integer;
-    OutDC, DataDC, MaskDC: Cardinal;
+    OutDC, DataDC, MaskDC: HDC;
     function Connection4(Loc, Mask, Value: integer): integer;
     function Connection8(Loc, Mask: integer): integer;
     function OceanConnection(Loc: integer): integer;

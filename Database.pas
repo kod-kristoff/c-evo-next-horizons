@@ -890,6 +890,8 @@ begin
     for j := 0 to 11 do
       Dist[i, j] := Distance(RareLoc[i], RareLoc[j]);
 
+  ibest := 0;
+  jbest := 0;
   MinDist := Distance(0, MapSize - lx shr 1) shr 1;
   for RareType := 1 to 3 do
   begin
@@ -1289,9 +1291,9 @@ const
   MaxCityLoc = 64;
 
 var
-  p1, p2, nAlive, c, Loc, Loc1, CntGood, CntGoodGrass, MinDist, Tries, i, j, n,
-    nsc, TestLoc, V21, V8, BestDist, TestDist, MinGood, nIrrLoc, xLoc, yLoc, qx,
-    qy, FineDistSQR, nRest: integer;
+  p1, p2, nAlive, c, Loc, Loc1, CntGood, CntGoodGrass, MinDist, i, j, n,
+    nsc, V21, V8, BestDist, TestDist, MinGood, nIrrLoc,
+    FineDistSQR, nRest: integer;
   ccount: array [0 .. lxmax * lymax - 1] of word;
   sc, StartLoc0, sccount: array [1 .. nPl] of integer;
   TestStartLoc: array [0 .. nPl - 1] of integer;

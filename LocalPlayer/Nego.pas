@@ -4,10 +4,8 @@ unit Nego;
 interface
 
 uses
-  ScreenTools, BaseWin, Protocol, Term, LCLType,
-
-  Messages, SysUtils, Classes, Graphics, Controls, Forms, ButtonA,
-  ButtonBase, ButtonB, ButtonC, ButtonN;
+  ScreenTools, BaseWin, Protocol, Term, LCLType, SysUtils, Classes, Graphics,
+  Controls, Forms, ButtonA, ButtonB, ButtonN;
 
 const
   MaxHistory = 62;
@@ -100,7 +98,7 @@ var
 implementation
 
 uses
-  Messg, ClientTools, Diplomacy, Inp, Select, NatStat, Help, Tribes, MessgEx;
+  Messg, ClientTools, Diplomacy, Inp, Select, NatStat, Tribes, MessgEx;
 
 {$R *.dfm}
 
@@ -289,6 +287,7 @@ var
   s: string;
   preview, Dot: boolean;
 begin
+  nLines := 0;
   for preview := true downto false do
   begin
     Start := 1;

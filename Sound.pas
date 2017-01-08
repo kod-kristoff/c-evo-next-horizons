@@ -3,7 +3,7 @@ unit Sound;
 interface
 
 uses
-  Messages, SysUtils, Classes, Graphics, Controls, Forms {$IFDEF WINDOWS}, MMSystem{$ENDIF};
+  Messages, SysUtils, Classes, Graphics, Controls, Forms {$IFDEF WINDOWS}, MMSystem, Windows{$ENDIF};
 
 function PrepareSound(FileName: string): integer;
 procedure PlaySound(FileName: string);
@@ -72,7 +72,7 @@ begin
   if FDeviceID <> 0 then
   begin
     PlayParm.dwCallback := HWND;
-    mciSendCommand(FDeviceID, MCI_PLAY, MCI_NOTIFY, integer(@PlayParm));
+    mciSendCommand(FDeviceID, MCI_PLAY, MCI_NOTIFY, DWORD_PTR(@PlayParm));
   end
   {$ENDIF}
 end;

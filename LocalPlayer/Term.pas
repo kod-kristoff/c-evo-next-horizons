@@ -9,9 +9,9 @@ uses
   {$ENDIF}
   Protocol, Tribes, PVSB, ClientTools, ScreenTools, BaseWin, Messg, ButtonBase,
 
-  LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics, Controls, Forms, Menus,
+  LCLIntf, LCLType, Messages, SysUtils, Classes, Graphics, Controls, Forms, Menus,
   ExtCtrls, dateutils, Platform,
-  ButtonA, ButtonB, ButtonC, EOTButton, Area;
+  ButtonB, ButtonC, EOTButton, Area;
 
 const
   WM_EOT = WM_USER;
@@ -4971,6 +4971,7 @@ begin
     i, uix, NewFocus: integer;
     GotoOnly: boolean;
   begin
+    Dist := 0;
     if ClientMode >= scContact then
       exit;
     DestinationMarkON := false;

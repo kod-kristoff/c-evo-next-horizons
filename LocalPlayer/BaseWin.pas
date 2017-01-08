@@ -6,7 +6,7 @@ interface
 uses
   ScreenTools, Messg,
 
-  LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics, Controls, Forms;
+  LCLIntf, LCLType, SysUtils, Classes, Graphics, Controls, Forms;
 
 type
   TBufferedDrawDlg = class(TDrawDlg)

@@ -5,9 +5,8 @@ interface
 
 uses
   Protocol, ClientTools, Term, ScreenTools, BaseWin,
-
-  LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics, Controls, Forms,
-  ButtonBase, ButtonB, ButtonC, Menus, EOTButton;
+  LCLIntf, LCLType, SysUtils, Classes, Graphics, Controls, Forms,
+  ButtonB, ButtonC, Menus, EOTButton;
 
 type
   PEnemyReport = ^TEnemyReport;

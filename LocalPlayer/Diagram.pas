@@ -4,10 +4,8 @@ unit Diagram;
 interface
 
 uses
-  BaseWin,
-
-  LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics, Controls, Forms,
-  ButtonB, ButtonBase, Menus;
+  BaseWin, LCLIntf, LCLType, SysUtils, Classes, Graphics, Controls, Forms,
+  ButtonB, Menus;
 
 type
   TDiaDlg = class(TFramedDlg)
@@ -229,6 +227,7 @@ begin
         Textout(x - TextWidth(s) div 2, Border - 16, s);
       end;
 
+      y0 := 0;
       if max > 0 then
       begin
         for p := 0 to nPl - 1 do

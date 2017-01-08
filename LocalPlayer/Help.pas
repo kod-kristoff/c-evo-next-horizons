@@ -5,9 +5,8 @@ interface
 
 uses
   Protocol, ScreenTools, BaseWin, StringTables,
-
   LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics, Controls, Forms,
-  ExtCtrls, ButtonB, PVSB, ButtonBase, Types;
+  ExtCtrls, ButtonB, PVSB, Types;
 
 const
   MaxHist = 16;
@@ -40,6 +39,7 @@ type
   { THyperText }
 
   THyperText = class(TStringList)
+  public
     procedure AddLine(s: String = ''; Format: integer = 0; Picpix: integer = 0;
       LinkCategory: integer = 0; LinkIndex: integer = 0);
     procedure AddText(Const S : String); override;
@@ -1164,9 +1164,9 @@ var
   begin
     List := TStringList.Create;
     plus := TStringList.Create;
-    if FindFirst(HomeDir + 'Graphics' + DirectorySeparator + '*.credits.txt', $27, sr) = 0 then
+    if FindFirst(HomeDir + 'Graphics\*.credits.txt', $27, sr) = 0 then
       repeat
-        plus.LoadFromFile(HomeDir + 'Graphics' + DirectorySeparator + sr.Name);
+        plus.LoadFromFile(HomeDir + 'Graphics\' + sr.Name);
         List.AddStrings(plus);
       until FindNext(sr) <> 0;
     FindClose(sr);
@@ -1198,7 +1198,7 @@ var
     List: TStringList;
   begin
     List := TStringList.Create;
-    List.LoadFromFile(HomeDir + 'Sounds' + DirectorySeparator + 'sound.credits.txt');
+    List.LoadFromFile(HomeDir + 'Sounds\sound.credits.txt');
     for i := 0 to List.Count - 1 do
     begin
       s := List[i];
@@ -1912,7 +1912,7 @@ begin
       if Link shr 8 and $3F = hkInternet then
         case Link and $FF of
           1:
-             OpenDocument(pchar(HomeDir + 'AI Template' + DirectorySeparator + 'AI development manual.html'));{ *Převedeno z ShellExecute* }
+             OpenDocument(pchar(HomeDir + 'AI Template\AI development manual.html'));{ *Převedeno z ShellExecute* }
           2:
             OpenURL('http://c-evo.org');{ *Převedeno z ShellExecute* }
           3:

@@ -5,9 +5,7 @@ interface
 
 uses
   ScreenTools, Protocol, Messg, LCLIntf, LCLType, dateutils, Platform,
-
-  Messages, SysUtils, Classes, Graphics, Controls, Forms,
-  ButtonBase, ButtonB;
+  SysUtils, Classes, Graphics, Controls, Forms, ButtonB;
 
 type
   TNoTermDlg = class(TDrawDlg)
