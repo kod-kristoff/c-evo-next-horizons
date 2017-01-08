@@ -985,11 +985,9 @@ begin
       begin
         Reg := TRegistry.Create;
         Reg.OpenKey('SOFTWARE\cevo\RegVer9\Start', true);
-        try
-          MapCount := Reg.ReadInteger('MapCount');
-        except
-          MapCount := 0;
-        end;
+        if Reg.ValueExists('MapCount') then
+          MapCount := Reg.ReadInteger('MapCount')
+          else  MapCount := 0;
         inc(MapCount);
         Reg.WriteInteger('MapCount', MapCount);
         Reg.closekey;

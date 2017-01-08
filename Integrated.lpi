@@ -394,9 +394,7 @@
       <Unit40>
         <Filename Value="LocalPlayer\TechTree.pas"/>
         <IsPartOfProject Value="True"/>
-        <ComponentName Value="TechTreeDlg"/>
         <HasResources Value="True"/>
-        <ResourceBaseClass Value="Form"/>
       </Unit40>
       <Unit41>
         <Filename Value="Platform.pas"/>
@@ -431,6 +429,7 @@
         <OverflowChecks Value="True"/>
         <StackChecks Value="True"/>
       </Checks>
+      <VerifyObjMethodCallValidity Value="True"/>
     </CodeGeneration>
     <Linking>
       <Debugging>
