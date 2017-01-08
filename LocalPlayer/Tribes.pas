@@ -80,7 +80,7 @@ type
     procedure Init;
     begin
       StdUnitScript := tstringlist.Create;
-      StdUnitScript.LoadFromFile(LocalizedFilePath('Tribes\StdUnits.txt'));
+      StdUnitScript.LoadFromFile(LocalizedFilePath('Tribes' + DirectorySeparator + 'StdUnits.txt'));
       nPictureList := 0;
       PictureList := nil;
     end;
@@ -243,7 +243,7 @@ type
     Name := '';
     Color := $FFFFFF;
     found := 0;
-    AssignFile(TribeScript, LocalizedFilePath('Tribes\' + FileName +
+    AssignFile(TribeScript, LocalizedFilePath('Tribes' + DirectorySeparator + FileName +
       '.tribe.txt'));
     Reset(TribeScript);
     while not EOF(TribeScript) do
@@ -279,7 +279,7 @@ type
     for variant := 'a' to 'z' do
       Name[variant] := '';
     Script := tstringlist.Create;
-    Script.LoadFromFile(LocalizedFilePath('Tribes\' + FileName + '.tribe.txt'));
+    Script.LoadFromFile(LocalizedFilePath('Tribes' + DirectorySeparator + FileName + '.tribe.txt'));
     CityLine0 := 0;
     nCityLines := 0;
     for line := 0 to Script.Count - 1 do

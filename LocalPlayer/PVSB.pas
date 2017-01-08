@@ -40,6 +40,7 @@ end;
 
 procedure InitPVSB;
 begin
+  {$IFDEF WINDOWS}
   with sb.si do
   begin
     nMin := 0;
@@ -53,6 +54,7 @@ begin
     ShowWindow(sb.h, SW_HIDE)
   else
     ShowWindow(sb.h, SW_SHOW)
+  {$ENDIF}
 end;
 
 function ProcessPVSB;

@@ -125,9 +125,9 @@ begin
     begin
       TButtonBase(Components[cix]).Graphic := GrExt[HGrSystem].Data;
       // if ButtonDownSound<>'*' then
-      // DownSound:=HomeDir+'Sounds\'+ButtonDownSound+'.wav';
+      // DownSound:=HomeDir+'Sounds'+DirectorySeparator+ButtonDownSound+'.wav';
       // if ButtonUpSound<>'*' then
-      // UpSound:=HomeDir+'Sounds\'+ButtonUpSound+'.wav';
+      // UpSound:=HomeDir+'Sounds'+DirectorySeparator+ButtonUpSound+'.wav';
       if Components[cix] is TButtonA then
         TButtonA(Components[cix]).Font := UniFont[ftButton];
       if Components[cix] is TButtonB then

@@ -732,7 +732,7 @@ end;
 
 function CreateTribe(p: integer; FileName: string; Original: boolean): boolean;
 begin
-  if not FileExists(LocalizedFilePath('Tribes\' + FileName + '.tribe.txt')) then
+  if not FileExists(LocalizedFilePath('Tribes' + DirectorySeparator + FileName + '.tribe.txt')) then
   begin
     result := false;
     exit
@@ -1271,12 +1271,12 @@ begin
       ok: boolean;
     begin
       UnusedTribeFiles.Clear;
-      ok := FindFirst(DataDir + 'Localization\' + 'Tribes\*.tribe.txt',
+      ok := FindFirst(DataDir + 'Localization' + DirectorySeparator + 'Tribes' + DirectorySeparator + '*.tribe.txt',
         faArchive + faReadOnly, SearchRec) = 0;
       if not ok then
       begin
         FindClose(SearchRec);
-        ok := FindFirst(HomeDir + 'Tribes\*.tribe.txt', faArchive + faReadOnly,
+        ok := FindFirst(HomeDir + 'Tribes' + DirectorySeparator + '*.tribe.txt', faArchive + faReadOnly,
           SearchRec) = 0;
       end;
       if ok then
@@ -3409,19 +3409,19 @@ begin
     Reg := TRegistry.Create;
     doinit := true;
     if Reg.KeyExists('SOFTWARE\cevo\RegVer9') then
-    begin
+    with Reg do begin
       doinit := false;
-      Reg.OpenKey('SOFTWARE\cevo\RegVer9', false);
+      OpenKey('SOFTWARE\cevo\RegVer9', false);
       try
-        xxt := Reg.ReadInteger('TileWidth') div 2;
-        yyt := Reg.ReadInteger('TileHeight') div 2;
-        OptionChecked := Reg.ReadInteger('OptionChecked');
-        MapOptionChecked := Reg.ReadInteger('MapOptionChecked');
-        CityRepMask := Cardinal(Reg.ReadInteger('CityReport'));
+        if ValueExists('TileWidth') then xxt := ReadInteger('TileWidth') div 2;
+        if ValueExists('TileHeight') then yyt := ReadInteger('TileHeight') div 2;
+        if ValueExists('OptionChecked') then OptionChecked := ReadInteger('OptionChecked');
+        if ValueExists('MapOptionChecked') then MapOptionChecked := ReadInteger('MapOptionChecked');
+        if ValueExists('CityMapMask') then CityRepMask := Cardinal(ReadInteger('CityReport'));
       except
         doinit := true;
       end;
-      Reg.closekey;
+      CloseKey;
       if OptionChecked and (7 shl 16) = 0 then
         OptionChecked := OptionChecked or (1 shl 16);
       // old regver with no scrolling
@@ -3456,8 +3456,10 @@ begin
   var
     i, j: integer;
   begin
+    {$IFDEF WINDOWS}{TODO}
     Screen.Cursors[crImpDrag] := LoadCursor(HInstance, 'DRAG');
     Screen.Cursors[crFlatHand] := LoadCursor(HInstance, 'FLATHAND');
+    {$ENDIF}
 
     // tag-controlled language
     for i := 0 to ComponentCount - 1 do

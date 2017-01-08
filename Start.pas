@@ -193,75 +193,68 @@ begin
   FirstStart := not Reg.KeyExists('SOFTWARE\cevo\RegVer9\Start');
 
   if FirstStart then
-  begin
+  with Reg do begin
     // initialize AI assignment
-    Reg.OpenKey('SOFTWARE\cevo\RegVer9\Start', true);
-    for i := 0 to nPlOffered - 1 do
+    OpenKey('SOFTWARE\cevo\RegVer9\Start', true);
+    for I := 0 to nPlOffered - 1 do
     begin
       if i = 0 then
         s := ':StdIntf'
       else
         s := 'StdAI';
-      Reg.WriteString('Control' + IntToStr(i), s);
-      Reg.WriteInteger('Diff' + IntToStr(i), 2);
+      WriteString('Control' + IntToStr(i), s);
+      WriteInteger('Diff' + IntToStr(i), 2);
     end;
-    Reg.WriteInteger('MultiControl', 0);
-    Reg.closekey;
-  end
-  else
-  begin
-    Reg.OpenKey('SOFTWARE\cevo\RegVer9\Start', false);
-    try
-      WorldSize := Reg.ReadInteger('WorldSize');
-      StartLandMass := Reg.ReadInteger('LandMass');
-      MaxTurn := Reg.ReadInteger('MaxTurn');
-      DefaultAI := Reg.ReadString('DefaultAI');
-      AutoEnemies := Reg.ReadInteger('AutoEnemies');
-      AutoDiff := Reg.ReadInteger('AutoDiff');
-    except
-      FirstStart := true;
-    end;
-    Reg.closekey;
+    WriteInteger('MultiControl', 0);
+    CloseKey;
+  end;
+
+  with Reg do begin
+    OpenKey('SOFTWARE\cevo\RegVer9\Start', False);
+    if ValueExists('WorldSize') then WorldSize := Reg.ReadInteger('WorldSize')
+      else WorldSize := DefaultWorldSize;
+    if ValueExists('LandMass') then StartLandMass := Reg.ReadInteger('LandMass')
+      else StartLandMass := DefaultLandMass;
+    if ValueExists('MaxTurn') then MaxTurn := Reg.ReadInteger('MaxTurn')
+      else MaxTurn := 800;
+    if ValueExists('DefaultAI') then DefaultAI := Reg.ReadString('DefaultAI')
+      else DefaultAI := 'StdAI';
+    if ValueExists('AutoEnemies') then AutoEnemies := Reg.ReadInteger('AutoEnemies')
+      else AutoEnemies := 8;
+    if ValueExists('AutoDiff') then AutoDiff := Reg.ReadInteger('AutoDiff')
+      else AutoDiff := 1;
+    CloseKey;
   end;
 
   FullScreen := true;
-  if FirstStart then
-  begin
-    WorldSize := DefaultWorldSize;
-    StartLandMass := DefaultLandMass;
-    MaxTurn := 800;
-    DefaultAI := 'StdAI';
-    AutoEnemies := 8;
-    AutoDiff := 1;
-  end
-  else
-  begin
-    Reg.OpenKey('SOFTWARE\cevo\RegVer9', false);
-    if Reg.ValueExists('ScreenMode') then
-      ScreenMode := Reg.ReadInteger('ScreenMode');
+  with Reg do begin
+    OpenKey('SOFTWARE\cevo\RegVer9', False);
+    if ValueExists('ScreenMode') then
+      ScreenMode := ReadInteger('ScreenMode')
+      else ScreenMode := 1;
     FullScreen := ScreenMode > 0;
-    if Reg.ValueExists('ResolutionX') then
-      ResolutionX := Reg.ReadInteger('ResolutionX');
-    if Reg.ValueExists('ResolutionY') then
-      ResolutionY := Reg.ReadInteger('ResolutionY');
-    if Reg.ValueExists('ResolutionBPP') then
-      ResolutionBPP := Reg.ReadInteger('ResolutionBPP');
-    if Reg.ValueExists('ResolutionFreq') then
-      ResolutionFreq := Reg.ReadInteger('ResolutionFreq');
+    if ValueExists('ResolutionX') then
+      ResolutionX := ReadInteger('ResolutionX');
+    if ValueExists('ResolutionY') then
+      ResolutionY := ReadInteger('ResolutionY');
+    if ValueExists('ResolutionBPP') then
+      ResolutionBPP := ReadInteger('ResolutionBPP');
+    if ValueExists('ResolutionFreq') then
+      ResolutionFreq := ReadInteger('ResolutionFreq');
     {$IFDEF WINDOWS}
     if ScreenMode = 2 then
       ChangeResolution(ResolutionX, ResolutionY, ResolutionBPP,
         ResolutionFreq);
     {$ENDIF}
-    Reg.closekey;
+    CloseKey;
   end;
   Reg.Free;
 
   ActionsOffered := [maManual, maCredits, maWeb];
   if FileExists(HomeDir + 'Configurator.exe') then
-    include(ActionsOffered, maConfig);
-  if FileExists(HomeDir + 'AI Template\AI development manual.html') then
-    include(ActionsOffered, maAIDev);
+    Include(ActionsOffered, maConfig);
+  if FileExists(HomeDir + 'AI Template' + DirectorySeparator + 'AI development manual.html') then
+    Include(ActionsOffered, maAIDev);
 
   bixDefault := -1;
   for i := bixRandom to nBrain - 1 do
@@ -886,7 +879,7 @@ begin
     pgLoad:
       begin // load
         FileName := List.Items[List.ItemIndex];
-        if LoadGame(DataDir + 'Saved\', FileName + '.cevo', LoadTurn, false)
+        if LoadGame(DataDir + 'Saved' + DirectorySeparator, FileName + '.cevo', LoadTurn, false)
         then
           UnlistBackupFile(FileName)
         else
@@ -906,11 +899,8 @@ begin
 
         Reg := TRegistry.Create;
         Reg.OpenKey('SOFTWARE\cevo\RegVer9\Start', true);
-        try
-          GameCount := Reg.ReadInteger('GameCount');
-        except
-          GameCount := 0;
-        end;
+        if Reg.ValueExists('GameCount') then GameCount := Reg.ReadInteger('GameCount')
+          else GameCount := 0;
 
         if (AutoDiff < 0) and (bixView[0] = bixNoTerm) then
           FileName := 'Round' + IntToStr(GetProcessID())
@@ -982,7 +972,7 @@ begin
         Reg.closekey;
         Reg.Free;
 
-        StartNewGame(DataDir + 'Saved\', FileName + '.cevo', MapFileName,
+        StartNewGame(DataDir + 'Saved' + DirectorySeparator, FileName + '.cevo', MapFileName,
           lxpre[WorldSize], lypre[WorldSize], StartLandMass, MaxTurn);
         UnlistBackupFile(FileName);
       end;
@@ -1124,7 +1114,7 @@ begin
 
     pgLoad:
       begin
-        AssignFile(LogFile, DataDir + 'Saved\' + List.Items[List.ItemIndex]
+        AssignFile(LogFile, DataDir + 'Saved' + DirectorySeparator + List.Items[List.ItemIndex]
           + '.cevo');
         try
           Reset(LogFile, 4);
@@ -1179,7 +1169,7 @@ begin
         MiniMode := mmPicture;
         if Page = pgEditMap then
           MapFileName := List.Items[List.ItemIndex] + '.cevo map';
-        if LoadGraphicFile(Mini, DataDir + 'Maps\' + Copy(MapFileName, 1,
+        if LoadGraphicFile(Mini, DataDir + 'Maps' + DirectorySeparator + Copy(MapFileName, 1,
           Length(MapFileName) - 9), gfNoError) then
         begin
           if Mini.width div 2 > MaxWidthMapLogo then
@@ -1196,7 +1186,7 @@ begin
           MiniHeight := MaxHeightMapLogo;
         end;
 
-        AssignFile(MapFile, DataDir + 'Maps\' + MapFileName);
+        AssignFile(MapFile, DataDir + 'Maps' + DirectorySeparator + MapFileName);
         try
           Reset(MapFile, 4);
           BlockRead(MapFile, s[1], 2); { file id }
@@ -1371,7 +1361,7 @@ var
   f: TSearchRec;
 begin
   FormerGames.Clear;
-  if FindFirst(DataDir + 'Saved\*.cevo', $21, f) = 0 then
+  if FindFirst(DataDir + 'Saved' + DirectorySeparator + '*.cevo', $21, f) = 0 then
     repeat
       i := FormerGames.Count;
       while (i > 0) and (f.Time < integer(FormerGames.Objects[i - 1])) do
@@ -1390,7 +1380,7 @@ var
   f: TSearchRec;
 begin
   Maps.Clear;
-  if FindFirst(DataDir + 'Maps\*.cevo map', $21, f) = 0 then
+  if FindFirst(DataDir + 'Maps' + DirectorySeparator + '*.cevo map', $21, f) = 0 then
     repeat
       Maps.Add(Copy(f.Name, 1, Length(f.Name) - 9));
     until FindNext(f) <> 0;
@@ -1588,7 +1578,7 @@ begin
       maCredits:
         DirectHelp(cStartCredits);
       maAIDev:
-         OpenDocument(pchar(HomeDir + 'AI Template\AI development manual.html'));{ *Převedeno z ShellExecute* }
+         OpenDocument(pchar(HomeDir + 'AI Template' + DirectorySeparator + 'AI development manual.html'));{ *Převedeno z ShellExecute* }
       maWeb:
         OpenURL('http://c-evo.org'){ *Převedeno z ShellExecute* }
     end;
@@ -1755,25 +1745,25 @@ begin
           exit
         end;
       if Page = pgLoad then
-        AssignFile(f, DataDir + 'Saved\' + List.Items[List.ItemIndex] + '.cevo')
+        AssignFile(f, DataDir + 'Saved' + DirectorySeparator + List.Items[List.ItemIndex] + '.cevo')
       else
-        AssignFile(f, DataDir + 'Maps\' + List.Items[List.ItemIndex] +
+        AssignFile(f, DataDir + 'Maps'+ DirectorySeparator + List.Items[List.ItemIndex] +
           '.cevo map');
       ok := true;
       try
         if Page = pgLoad then
-          Rename(f, DataDir + 'Saved\' + NewName + '.cevo')
+          Rename(f, DataDir + 'Saved'+ DirectorySeparator + NewName + '.cevo')
         else
-          Rename(f, DataDir + 'Maps\' + NewName + '.cevo map');
+          Rename(f, DataDir + 'Maps'+ DirectorySeparator + NewName + '.cevo map');
       except
         // Play('INVALID');
         ok := false
       end;
       if Page <> pgLoad then
         try // rename map picture
-          AssignFile(f, DataDir + 'Maps\' + List.Items[List.ItemIndex]
+          AssignFile(f, DataDir + 'Maps'+ DirectorySeparator + List.Items[List.ItemIndex]
             + '.bmp');
-          Rename(f, DataDir + 'Maps\' + NewName + '.bmp');
+          Rename(f, DataDir + 'Maps'+ DirectorySeparator + NewName + '.bmp');
         except
         end;
       if ok then
@@ -1807,9 +1797,9 @@ begin
     if MessgDlg.ModalResult = mrOK then
     begin
       if Page = pgLoad then
-        AssignFile(f, DataDir + 'Saved\' + List.Items[List.ItemIndex] + '.cevo')
+        AssignFile(f, DataDir + 'Saved' + DirectorySeparator + List.Items[List.ItemIndex] + '.cevo')
       else
-        AssignFile(f, DataDir + 'Maps\' + List.Items[List.ItemIndex] +
+        AssignFile(f, DataDir + 'Maps' + DirectorySeparator + List.Items[List.ItemIndex] +
           '.cevo map');
       Erase(f);
       iDel := List.ItemIndex;
@@ -2001,7 +1991,7 @@ end;
 
 procedure TStartDlg.ReplayBtnClick(Sender: TObject);
 begin
-  LoadGame(DataDir + 'Saved\', List.Items[List.ItemIndex] + '.cevo',
+  LoadGame(DataDir + 'Saved' + DirectorySeparator, List.Items[List.ItemIndex] + '.cevo',
     LastTurn, true);
   SlotAvailable := -1;
 end;

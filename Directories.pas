@@ -27,7 +27,7 @@ end;
 
 function LocalizedFilePath(path: string): string;
 begin
-  result := DataDir + 'Localization\' + path;
+  result := DataDir + 'Localization' + DirectorySeparator + path;
   if not FileExists(result) then
     result := HomeDir + path
 end;
@@ -51,12 +51,12 @@ begin
     CreateDir(DataDir + 'Maps');
 
   // Copy appdata if not done yet
-  if FindFirst(HomeDir + 'AppData\Saved\*.cevo', $21, src) = 0 then
+  if FindFirst(HomeDir + 'AppData' + DirectorySeparator + 'Saved' + DirectorySeparator + '*.cevo', $21, src) = 0 then
     repeat
-      if (FindFirst(DataDir + 'Saved\' + src.Name, $21, dst) <> 0) or
+      if (FindFirst(DataDir + 'Saved' + DirectorySeparator + src.Name, $21, dst) <> 0) or
         (dst.Time < src.Time) then
-        CopyFile(PChar(HomeDir + 'AppData\Saved\' + src.Name),
-          PChar(DataDir + 'Saved\' + src.Name), false);
+        CopyFile(PChar(HomeDir + 'AppData' + DirectorySeparator + 'Saved' + DirectorySeparator + src.Name),
+          PChar(DataDir + 'Saved' + DirectorySeparator + src.Name), false);
     until FindNext(src) <> 0;
 end;
 
