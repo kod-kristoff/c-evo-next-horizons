@@ -421,7 +421,7 @@ var
 begin
   r0 := CreateRectRgn(x0, y0, x1, y1);
   for i := 0 to ControlCount - 1 do
-    if not(Controls[i] is TArea) and Controls[i].Visible then
+    if not (Controls[i] is TArea) and Controls[i].Visible then
     begin
       with Controls[i].BoundsRect do
         r1 := CreateRectRgn(left, top, Right, Bottom);
@@ -1091,8 +1091,8 @@ var
             MiniLine[xm, 1] := cm shr 8 and $FF;
             MiniLine[xm, 2] := cm and $FF;
           end;
-        Mini.EndUpdate;
       end;
+      Mini.EndUpdate;
     end;
   end;
 
@@ -1533,10 +1533,11 @@ begin
       List.Items.Assign(FormerGames);
   end;
   if Tab <> 2 then
-    if ListIndex[Tab] >= 0 then
-      List.ItemIndex := ListIndex[Tab]
-    else
-      List.ItemIndex := 0;
+    if List.Count > 0 then begin
+      if (List.Count > ListIndex[Tab]) then
+        List.ItemIndex := ListIndex[Tab]
+        else List.ItemIndex := 0;
+    end else List.ItemIndex := -1;
   case Tab of
     0:
       ChangePage(pgMain);
