@@ -237,6 +237,7 @@ var
   WAVFileName: string;
 {$ENDIF}
 begin
+  Result := False;
 {$IFNDEF DEBUG}
   if (Sounds = nil) or (SoundMode = smOff) or (Item = '') then
   begin
@@ -385,7 +386,7 @@ end;
 
 procedure ApplyGamma(Start, Stop: pbyte);
 begin
-  while integer(Start) < integer(Stop) do
+  while Start < Stop do
   begin
     Start^ := GammaLUT[Start^];
     inc(Start);
@@ -443,7 +444,7 @@ begin
     bmp.BeginUpdate;
     FirstLine := bmp.ScanLine[0];
     LastLine := bmp.ScanLine[bmp.Height - 1];
-    if integer(FirstLine) < integer(LastLine) then
+    if FirstLine < LastLine then
       ApplyGamma(pointer(FirstLine), @LastLine[bmp.Width])
     else
       ApplyGamma(pointer(LastLine), @FirstLine[bmp.Width]);
@@ -503,10 +504,10 @@ begin
     bmp.BeginUpdate;
     FirstLine := bmp.ScanLine[0];
     LastLine := bmp.ScanLine[bmp.Height - 1];
-    if integer(FirstLine) < integer(LastLine) then
-      ApplyGamma(pointer(FirstLine), @LastLine[bmp.Width])
+    if FirstLine < LastLine then
+      ApplyGamma(Pointer(FirstLine), @LastLine[bmp.Width])
     else
-      ApplyGamma(pointer(LastLine), @FirstLine[bmp.Width]);
+      ApplyGamma(Pointer(LastLine), @FirstLine[bmp.Width]);
     bmp.EndUpdate;
   end
 end;
@@ -648,11 +649,12 @@ begin
     exit;
 
   dst.BeginUpdate;
+  Src.BeginUpdate;
   h := yDst + h;
   while yDst < h do
   begin
-    PixelDst := pointer(integer(dst.ScanLine[yDst]) + 3 * xDst);
-    PixelSrc := pointer(integer(Src.ScanLine[ySrc]) + xSrc);
+    PixelDst := dst.ScanLine[yDst] + 3 * xDst;
+    PixelSrc := Src.ScanLine[ySrc] + xSrc;
     for i := 0 to w - 1 do
     begin
       Brightness := PixelSrc^;
@@ -671,12 +673,13 @@ begin
         PixelDst[2] := 255
       else
         PixelDst[0] := test; // Blue
-      PixelDst := pointer(integer(PixelDst) + 3);
-      PixelSrc := pointer(integer(PixelSrc) + 1);
+      PixelDst := Pointer(PixelDst) + 3;
+      PixelSrc := Pointer(PixelSrc) + 1;
     end;
     inc(yDst);
     inc(ySrc);
   end;
+  src.EndUpdate;
   dst.EndUpdate;
 end;
 
@@ -762,7 +765,7 @@ begin
   h := y + h;
   while y < h do
   begin
-    Pixel := pointer(integer(bmp.ScanLine[y]) + 3 * x);
+    Pixel := pointer(bmp.ScanLine[y]) + 3 * x;
     for i := 0 to w - 1 do
     begin
       Red := (Pixel[0] * (Color0 and $0000FF) + Pixel[1] * (Color1 and $0000FF)
@@ -775,7 +778,7 @@ begin
         shr 8; // Blue
       Pixel[1] := Green;
       Pixel[2] := Red;
-      Pixel := pointer(integer(Pixel) + 3);
+      Pixel := pointer(Pixel) + 3;
     end;
     inc(y);
   end;

@@ -40,6 +40,7 @@ type
   { THyperText }
 
   THyperText = class(TStringList)
+  public
     procedure AddLine(s: String = ''; Format: integer = 0; Picpix: integer = 0;
       LinkCategory: integer = 0; LinkIndex: integer = 0);
     procedure AddText(Const S : String); override;

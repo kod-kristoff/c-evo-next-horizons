@@ -7,29 +7,35 @@ uses
   {$IFDEF WINDOWS}
   Windows,
   {$ENDIF}
-  LCLIntf, LCLType, LMessages, Messages, SysUtils;
+  Forms, LCLIntf, LCLType, LMessages, Messages, SysUtils;
 
 type
   TPVScrollbar = record
     h: integer;
-    si: TScrollInfo end;
+    si: TScrollInfo;
+    Form: TForm;
+  end;
 
-    procedure CreatePVSB(var sb: TPVScrollbar; Handle, y0, x1, y1: integer);
-    procedure InitPVSB(var sb: TPVScrollbar; max, Page: integer);
-    function ProcessPVSB(var sb: TPVScrollbar; const m: TMessage): boolean;
-    function ProcessMouseWheel(var sb: TPVScrollbar; const m: TMessage)
-      : boolean;
-    procedure ShowPVSB(var sb: TPVScrollbar; Visible: boolean);
-    procedure EndPVSB(var sb: TPVScrollbar);
+  procedure CreatePVSB(var sb: TPVScrollbar; Handle, y0, x1, y1: integer);
+  procedure InitPVSB(var sb: TPVScrollbar; max, Page: integer);
+  function ProcessPVSB(var sb: TPVScrollbar; const m: TMessage): boolean;
+  function ProcessMouseWheel(var sb: TPVScrollbar; const m: TMessage)
+    : boolean;
+  procedure ShowPVSB(var sb: TPVScrollbar; Visible: boolean);
+  procedure EndPVSB(var sb: TPVScrollbar);
 
 implementation
 
 const
   Count: integer = 0;
 
-procedure CreatePVSB;
+procedure CreatePVSB(var sb: TPVScrollbar; Handle, y0, x1, y1: integer);
 begin
   inc(Count);
+  {$IFDEF LINUX}
+  sb.Form := TForm.Create(nil);
+  sb.h := sb.Form.Handle;
+  {$ENDIF}
   {$IFDEF WINDOWS}
   sb.h := CreateWindowEx(0, 'SCROLLBAR', pchar('PVSB' + IntToStr(Count)),
     SBS_VERT or WS_CHILD or SBS_RIGHTALIGN, x1 - 100, y0, 100, y1 - y0,
@@ -38,7 +44,7 @@ begin
   sb.si.cbSize := 28;
 end;
 
-procedure InitPVSB;
+procedure InitPVSB(var sb: TPVScrollbar; max, Page: integer);
 begin
   {$IFDEF WINDOWS}
   with sb.si do
@@ -57,7 +63,7 @@ begin
   {$ENDIF}
 end;
 
-function ProcessPVSB;
+function ProcessPVSB(var sb: TPVScrollbar; const m: TMessage): Boolean;
 var
   NewPos: integer;
 begin
@@ -100,7 +106,7 @@ begin
     end
 end;
 
-function ProcessMouseWheel;
+function ProcessMouseWheel(var sb: TPVScrollbar; const m: TMessage): Boolean;
 var
   NewPos: integer;
 begin
