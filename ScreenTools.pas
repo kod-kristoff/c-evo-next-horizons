@@ -770,14 +770,14 @@ begin
     Pixel := pointer(bmp.ScanLine[y]) + 3 * x;
     for i := 0 to w - 1 do
     begin
-      Red := (Pixel[0] * (Color0 and $0000FF) + Pixel[1] * (Color1 and $0000FF)
-        + Pixel[2] * (Color2 and $0000FF)) shr 8;
-      Green := (Pixel[0] * (Color0 shr 8 and $0000FF) + Pixel[1] *
-        (Color1 shr 8 and $0000FF) + Pixel[2] * (Color2 shr 8 and
-        $0000FF)) shr 8;
-      Pixel[0] := (Pixel[0] * (Color0 shr 16 and $0000FF) + Pixel[1] *
-        (Color1 shr 16 and $0000FF) + Pixel[2] * (Color2 shr 16 and $0000FF))
-        shr 8; // Blue
+      Red := ((Pixel[0] * (Color0 and $0000FF) + Pixel[1] * (Color1 and $0000FF)
+        + Pixel[2] * (Color2 and $0000FF)) shr 8) and $ff;
+      Green := ((Pixel[0] * (Color0 shr 8 and $0000FF) + Pixel[1] *
+        ((Color1 shr 8) and $0000FF) + Pixel[2] * ((Color2 shr 8) and
+        $0000FF)) shr 8) and $ff;
+      Pixel[0] := ((Pixel[0] * (Color0 shr 16 and $0000FF) + Pixel[1] *
+        ((Color1 shr 16) and $0000FF) + Pixel[2] * ((Color2 shr 16) and $0000FF))
+        shr 8) and $ff; // Blue
       Pixel[1] := Green;
       Pixel[2] := Red;
       Pixel := pointer(Pixel) + 3;
