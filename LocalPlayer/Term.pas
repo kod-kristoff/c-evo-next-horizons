@@ -1,4 +1,4 @@
-﻿{$INCLUDE Switches.pas}
+﻿{$INCLUDE Switches.inc}
 unit Term;
 
 interface

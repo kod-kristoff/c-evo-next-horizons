@@ -1,4 +1,4 @@
-{$INCLUDE Switches.pas}
+{$INCLUDE Switches.inc}
 // {$DEFINE TEXTLOG}
 // {$DEFINE LOADPERF}
 unit Database;
@@ -6,7 +6,7 @@ unit Database;
 interface
 
 uses
-  Protocol, CmdList;
+  SysUtils, Protocol, CmdList;
 
 const
   // additional test flags
@@ -477,6 +477,8 @@ function dLoc(Loc, dx, dy: integer): integer;
 var
   y0: integer;
 begin
+  if not (Loc >= 0) and (Loc < MapSize) and (dx + lx >= 0) then
+    raise Exception.Create('Relative location error');
   assert((Loc >= 0) and (Loc < MapSize) and (dx + lx >= 0));
   y0 := Loc div lx;
   result := (Loc + (dx + y0 and 1 + lx + lx) shr 1) mod lx + lx * (y0 + dy);

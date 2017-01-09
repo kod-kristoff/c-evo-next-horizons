@@ -1,4 +1,4 @@
-{$INCLUDE Switches.pas}
+{$INCLUDE Switches.inc}
 // {$DEFINE TEXTLOG}
 // {$DEFINE LOADPERF}
 unit GameServer;

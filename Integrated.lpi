@@ -173,7 +173,7 @@
         <PackageName Value="LCL"/>
       </Item2>
     </RequiredPackages>
-    <Units Count="42">
+    <Units Count="43">
       <Unit0>
         <Filename Value="Integrated.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -404,6 +404,10 @@
         <Filename Value="Platform.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit41>
+      <Unit42>
+        <Filename Value="Switches.inc"/>
+        <IsPartOfProject Value="True"/>
+      </Unit42>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
@@ -434,6 +438,8 @@
         <StackChecks Value="True"/>
       </Checks>
       <VerifyObjMethodCallValidity Value="True"/>
+      <TargetCPU Value="i386"/>
+      <TargetOS Value="win32"/>
     </CodeGeneration>
     <Linking>
       <Debugging>

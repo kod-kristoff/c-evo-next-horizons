@@ -1,4 +1,4 @@
-{$INCLUDE Switches}
+{$INCLUDE Switches.inc}
 unit StringTables;
 
 interface

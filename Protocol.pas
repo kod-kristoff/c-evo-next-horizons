@@ -1,4 +1,4 @@
-{$INCLUDE Switches.pas}
+{$INCLUDE Switches.inc}
 {$HINTS OFF}
 unit Protocol;
 
