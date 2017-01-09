@@ -982,7 +982,7 @@ end;
 procedure Fill(ca: TCanvas; Left, Top, Width, Height, xOffset,
   yOffset: integer);
 begin
-  assert((Left + xOffset >= 0) and (Left + xOffset + Width <= wMainTexture) and
+  Assert((Left + xOffset >= 0) and (Left + xOffset + Width <= wMainTexture) and
     (Top + yOffset >= 0) and (Top + yOffset + Height <= hMainTexture));
   BitBlt(ca.Handle, Left, Top, Width, Height, MainTexture.Image.Canvas.Handle,
     Left + xOffset, Top + yOffset, SRCCOPY);
@@ -1055,7 +1055,7 @@ begin
         y * Texture.Height + y0cut - yOffset, Texture.Width - x0cut - x1cut,
         Texture.Height - y0cut - y1cut, Texture.Canvas.Handle, x0cut,
         y0cut, SRCCOPY);
-    end
+    end;
   end;
 end;
 
@@ -1198,7 +1198,6 @@ begin
     var
       i, r, g, b: integer;
     begin
-      with ca do
       begin
         for i := 0 to 15 do
         begin // gradient
@@ -1217,14 +1216,14 @@ begin
             b := 0
           else if b >= 256 then
             b := 255;
-          Pen.Color := r + g shl 8 + b shl 16;
-          MoveTo(x + dx * i, y + dy * i);
-          LineTo(x + dx * i + Width, y + dy * i + Height);
+          ca.Pen.Color := r + g shl 8 + b shl 16;
+          ca.MoveTo(x + dx * i, y + dy * i);
+          ca.LineTo(x + dx * i + Width, y + dy * i + Height);
         end;
-        Pen.Color := $000000;
-        MoveTo(x + 1, y + 16 * dy + Height);
-        LineTo(x + 16 * dx + Width, y + 16 * dy + Height);
-        LineTo(x + 16 * dx + Width, y);
+        ca.Pen.Color := $000000;
+        ca.MoveTo(x + 1, y + 16 * dy + Height);
+        ca.LineTo(x + 16 * dx + Width, y + 16 * dy + Height);
+        ca.LineTo(x + 16 * dx + Width, y);
       end
     end;
 

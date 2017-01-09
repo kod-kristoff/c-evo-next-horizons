@@ -475,6 +475,7 @@ begin
     Offscreen.Height := 480
   else
     Offscreen.Height := Screen.Height - yUnused;
+  Offscreen.Canvas.FillRect(0, 0, Offscreen.Width, OffScreen.Height);
   Offscreen.Canvas.Brush.Style := bsClear;
 end;
 

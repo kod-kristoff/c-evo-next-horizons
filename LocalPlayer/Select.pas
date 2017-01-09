@@ -107,8 +107,8 @@ begin
   Layer2Btn.Hint := Phrases.Lookup('BTN_CLASSES');
   ScienceNationDot := TBitmap.Create;
   ScienceNationDot.PixelFormat := pf24bit;
-  ScienceNationDot.Width := 17;
-  ScienceNationDot.Height := 17;
+  ScienceNationDot.SetSize(17, 17);
+  ScienceNationDot.Canvas.FillRect(0, 0, ScienceNationDot.Width, ScienceNationDot.Height);
 end;
 
 procedure TListDlg.FormDestroy(Sender: TObject);

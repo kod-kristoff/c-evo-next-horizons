@@ -230,8 +230,8 @@ begin
   ExtPic := TBitmap.Create;
   TerrIcon := TBitmap.Create;
   TerrIcon.PixelFormat := pf24bit;
-  TerrIcon.Width := xSizeBig;
-  TerrIcon.Height := ySizeBig;
+  TerrIcon.SetSize(xSizeBig, ySizeBig);
+  TerrIcon.Canvas.FillRect(0, 0, TerrIcon.Width, TerrIcon.Height);
   SearchContent := '';
   nHist := -1;
 end;

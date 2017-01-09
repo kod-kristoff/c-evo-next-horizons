@@ -1,26 +1,26 @@
 object UnitStatDlg: TUnitStatDlg
   Left = 344
+  Height = 326
   Top = 213
+  Width = 208
   BorderStyle = bsNone
   ClientHeight = 326
   ClientWidth = 208
   Color = clBtnFace
-  Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -13
   Font.Name = 'MS Sans Serif'
-  Font.Style = []
   FormStyle = fsStayOnTop
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnShow = FormShow
-  PixelsPerInch = 96
+  LCLVersion = '1.6.2.0'
   object SwitchBtn: TButtonB
     Left = 12
+    Height = 25
     Top = 29
     Width = 25
-    Height = 25
     Down = False
     Permanent = False
     OnClick = SwitchBtnClick
@@ -28,9 +28,9 @@ object UnitStatDlg: TUnitStatDlg
   end
   object CloseBtn: TButtonB
     Left = 177
+    Height = 25
     Top = 6
     Width = 25
-    Height = 25
     Down = False
     Permanent = False
     OnClick = CloseBtnClick
@@ -38,9 +38,9 @@ object UnitStatDlg: TUnitStatDlg
   end
   object ConscriptsBtn: TButtonB
     Left = 43
+    Height = 25
     Top = 29
     Width = 25
-    Height = 25
     Down = False
     Permanent = False
     OnClick = ConscriptsBtnClick
@@ -48,9 +48,9 @@ object UnitStatDlg: TUnitStatDlg
   end
   object HelpBtn: TButtonC
     Left = 178
+    Height = 12
     Top = 145
     Width = 12
-    Height = 12
     Down = False
     Permanent = False
     OnClick = HelpBtnClick

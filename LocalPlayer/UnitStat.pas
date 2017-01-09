@@ -79,8 +79,8 @@ begin
 
   Back := TBitmap.Create;
   Back.PixelFormat := pf24bit;
-  Back.Width := 5 * wCommon;
-  Back.Height := hMax;
+  Back.SetSize(5 * wCommon, hMax);
+  Back.Canvas.FillRect(0, 0, Back.Width,Back.Height);
   Template := TBitmap.Create;
   LoadGraphicFile(Template, HomeDir + 'Graphics' + DirectorySeparator + 'Unit', gfNoGamma);
   Template.PixelFormat := pf8bit;

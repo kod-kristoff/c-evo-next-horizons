@@ -373,12 +373,12 @@ begin
 
   EmptyPicture := TBitmap.Create;
   EmptyPicture.PixelFormat := pf24bit;
-  EmptyPicture.width := 64;
-  EmptyPicture.height := 64;
+  EmptyPicture.SetSize(64, 64);
+  EmptyPicture.Canvas.FillRect(0, 0, EmptyPicture.Width, EmptyPicture.Height);
   LogoBuffer := TBitmap.Create;
   LogoBuffer.PixelFormat := pf24bit;
-  LogoBuffer.width := wBuffer;
-  LogoBuffer.height := 56;
+  LogoBuffer.SetSize(wBuffer, 56);
+  LogoBuffer.Canvas.FillRect(0, 0, LogoBuffer.Width, LogoBuffer.Height);
 
   Mini := TBitmap.Create;
   for x := 0 to 11 do

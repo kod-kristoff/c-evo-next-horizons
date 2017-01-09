@@ -398,8 +398,8 @@ begin
     Borders.Free;
   Borders := TBitmap.Create;
   Borders.PixelFormat := pf24bit;
-  Borders.Width := xxt * 2;
-  Borders.Height := (yyt * 2) * nPl;
+  Borders.SetSize(xxt * 2,(yyt * 2) * nPl);
+  Borders.Canvas.FillRect(0, 0, Borders.Width, Borders.Height);
   BordersOK := 0;
 end;
 
