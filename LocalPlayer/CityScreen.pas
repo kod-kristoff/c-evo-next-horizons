@@ -212,8 +212,8 @@ begin
 
   Back := TBitmap.Create;
   Back.PixelFormat := pf24bit;
-  Back.Width := ClientWidth;
-  Back.Height := ClientHeight;
+  Back.SetSize(ClientWidth, ClientHeight);
+  Back.Canvas.FillRect(0, 0, Back.Width, Back.Height);
   Template := TBitmap.Create;
   LoadGraphicFile(Template, HomeDir + 'Graphics' + DirectorySeparator + 'City', gfNoGamma);
   Template.PixelFormat := pf8bit;
@@ -226,12 +226,12 @@ begin
   SmallCityMapTemplate.PixelFormat := pf24bit;
   SmallCityMap := TBitmap.Create;
   SmallCityMap.PixelFormat := pf24bit;
-  SmallCityMap.Width := 98;
-  SmallCityMap.Height := 74;
+  SmallCityMap.SetSize(98, 74);
+  SmallCityMap.Canvas.FillRect(0, 0, SmallCityMap.Width, SmallCityMap.Height);
   ZoomCityMap := TBitmap.Create;
   ZoomCityMap.PixelFormat := pf24bit;
-  ZoomCityMap.Width := 228;
-  ZoomCityMap.Height := 124;
+  ZoomCityMap.SetSize(228, 124);
+  ZoomCityMap.Canvas.FillRect(0, 0, ZoomCityMap.Width, ZoomCityMap.Height);
 end;
 
 procedure TCityDlg.FormDestroy(Sender: TObject);
