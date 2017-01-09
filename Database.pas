@@ -1080,7 +1080,7 @@ var
   Adjacent: TVicinity8Loc;
 
 begin
-  FillChar(RealMap, MapSize * 4, 0);
+  FillChar(RealMap, MapSize * SizeOf(Cardinal), 0);
   plus := 0;
   bMountains := 256;
   while plus < MapSize * LandMass * ShMountains div 10000 do
@@ -2797,8 +2797,8 @@ procedure CheckBorders(OriginLoc, PlayerLosingCity: integer);
 // PlayerLosingCity: do nothing but remove tiles no longer in reach from this
 // player's territory, -1 for full border recalculation
 var
-  i, r, Loc, Loc1, dx, dy, p1, p2, cix, NewDist, dxMax, dyMax, OldOwner, V8,
-    NewOwner: integer;
+  i, r, Loc, Loc1, dx, dy, p1, p2, cix, NewDist, dxMax, dyMax, OldOwner, V8: Integer;
+  NewOwner: Cardinal;
   Adjacent: TVicinity8Loc;
   AtPeace: array [0 .. nPl, 0 .. nPl] of boolean;
   Country, FormerCountry, { to who's country a tile belongs }
@@ -2906,11 +2906,12 @@ begin
                 NewOwner := OldOwner // peace fixes borders
               else
                 ChangeTerritory(Loc, NewOwner);
-            inc(BorderChanges[i div 8], NewOwner shl (i mod 8 * 4));
+            BorderChanges[i shr 3] := BorderChanges[i shr 3] or
+              ((NewOwner shl ((i and 7) * 4)) and $ffffffff);
           end;
           inc(i);
-        end
-    end
+        end;
+    end;
   end
   else
     for Loc := 0 to MapSize - 1 do // update complete map
