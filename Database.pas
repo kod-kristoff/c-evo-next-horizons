@@ -1600,6 +1600,9 @@ begin
   if nAlive = 0 then
     exit;
 
+  for I := 0 to Length(StartLoc0) - 1 do
+    StartLoc0[I] := 0;
+
   // calculate starting positions
   nStartLoc0 := 0;
   nPrefStartLoc0 := 0;
@@ -2048,6 +2051,7 @@ var
   PModel: ^TModel;
 begin
   Defender := Occupant[Loc];
+  Cost := 0;
   Cnt := 0;
   Det := -1;
   for uix1 := 0 to RW[Defender].nUn - 1 do
