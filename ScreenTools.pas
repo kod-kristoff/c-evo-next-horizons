@@ -47,6 +47,8 @@ procedure ImageOp_BCC(dst, Src: TBitmap; xDst, yDst, xSrc, ySrc, w, h, Color1,
   Color2: integer);
 procedure ImageOp_CCC(bmp: TBitmap; x, y, w, h, Color0, Color1,
   Color2: integer);
+function BitBltCanvas(DestCanvas: TCanvas; X, Y, Width, Height: Integer; SrcCanvas: TCanvas;
+  XSrc, YSrc: Integer; Rop: DWORD): Boolean;
 procedure SLine(ca: TCanvas; x0, x1, y: integer; cl: TColor);
 procedure DLine(ca: TCanvas; x0, x1, y: integer; cl0, cl1: TColor);
 procedure Frame(ca: TCanvas; x0, y0, x1, y1: integer; cl0, cl1: TColor);
@@ -191,9 +193,7 @@ var
 implementation
 
 uses
-  Directories, Sound, ButtonBase, ButtonA, ButtonB,
-
-  Registry;
+  Directories, Sound, Registry;
 
 var
   {$IFDEF WINDOWS}
@@ -712,6 +712,7 @@ begin
   if (w < 0) or (h < 0) then
     exit;
 
+  Src.BeginUpdate;
   dst.BeginUpdate;
   for iy := 0 to h - 1 do
   begin
@@ -724,14 +725,14 @@ begin
       amp2 := SrcLine[xSrc + ix, 2] * 2;
       if trans <> $FF then
       begin
-        Value := (DstLine[xDst + ix][0] * trans + (Color2 shr 16 and $FF) * amp2
-          + (Color1 shr 16 and $FF) * amp1) div $FF;
+        Value := (DstLine[xDst + ix][0] * trans + ((Color2 shr 16) and $FF) * amp2
+          + ((Color1 shr 16) and $FF) * amp1) div $FF;
         if Value < 256 then
           DstLine[xDst + ix][0] := Value
         else
           DstLine[xDst + ix][0] := 255;
-        Value := (DstLine[xDst + ix][1] * trans + (Color2 shr 8 and $FF) * amp2
-          + (Color1 shr 8 and $FF) * amp1) div $FF;
+        Value := (DstLine[xDst + ix][1] * trans + ((Color2 shr 8) and $FF) * amp2
+          + ((Color1 shr 8) and $FF) * amp1) div $FF;
         if Value < 256 then
           DstLine[xDst + ix][1] := Value
         else
@@ -745,6 +746,7 @@ begin
       end
     end
   end;
+  Src.EndUpdate;
   dst.EndUpdate;
 end;
 
@@ -801,6 +803,14 @@ begin
     GrExt[HGr].Mask.Canvas.Handle, xGr, yGr, SRCAND);
   BitBlt(dst.Canvas.Handle, xDst, yDst, Width, Height,
     GrExt[HGr].Data.Canvas.Handle, xGr, yGr, SRCPAINT);
+end;
+
+function BitBltCanvas(DestCanvas: TCanvas; X, Y, Width, Height: Integer; SrcCanvas: TCanvas; XSrc,
+  YSrc: Integer; Rop: DWORD): Boolean;
+begin
+  Assert(Rop = SRCCOPY);
+  DestCanvas.CopyRect(Rect(X, X, Width, Height), SrcCanvas,
+    Rect(XSrc, YSrc, XSrc + Width, YSrc + Height));
 end;
 
 procedure SLine(ca: TCanvas; x0, x1, y: integer; cl: TColor);
@@ -1440,7 +1450,7 @@ begin
 
     procedure PaintLogo(ca: TCanvas; x, y, clLight, clShade: integer);
     begin
-      BitBlt(LogoBuffer.Canvas.Handle, 0, 0, wLogo, hLogo, ca.Handle, x,
+      BitBltCanvas(LogoBuffer.Canvas, 0, 0, wLogo, hLogo, ca, x,
         y, SRCCOPY);
       ImageOp_BCC(LogoBuffer, Templates, 0, 0, 1, 1, wLogo, hLogo,
         clLight, clShade);

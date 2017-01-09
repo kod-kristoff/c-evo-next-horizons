@@ -820,7 +820,7 @@ begin
         xScreen := (ClientWidth - BiColorTextWidth(Canvas, s)) div 2;
         LoweredTextOut(Canvas, -1, MainTexture, xScreen + 10,
           ClientHeight - 29, s);
-        BitBlt(ScienceNationDot.Canvas.Handle, 0, 0, 17, 17, Canvas.Handle,
+        BitBltCanvas(ScienceNationDot.Canvas, 0, 0, 17, 17, Canvas,
           xScreen - 10, ClientHeight - 27, SRCCOPY);
         ImageOp_BCC(ScienceNationDot, Templates, 0, 0, 114, 211, 17, 17,
           MainTexture.clBevelShade, Tribe[ScienceNation].Color);

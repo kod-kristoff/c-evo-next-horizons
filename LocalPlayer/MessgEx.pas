@@ -297,7 +297,7 @@ begin
   x := x - wb div 2;
 
   // paint
-  BitBlt(LogoBuffer.Canvas.Handle, 0, 0, wb, hb, ca.Handle, x, y, SRCCOPY);
+  BitBltCanvas(LogoBuffer.Canvas, 0, 0, wb, hb, ca, x, y, SRCCOPY);
 
   if IconIndex >= 0 then
     for iy := 0 to hScrewed - 1 do
@@ -435,7 +435,7 @@ begin
         IconIndex div 2 * 3 * ySizeBig);
     mikEnemyShipComplete:
       begin
-        BitBlt(Buffer.Canvas.Handle, 0, 0, 140, 120, Canvas.Handle,
+        BitBltCanvas(Buffer.Canvas, 0, 0, 140, 120, Canvas,
           (ClientWidth - 140) div 2, 24, SRCCOPY);
         ImageOp_BCC(Buffer, Templates, 0, 0, 1, 279, 140, 120, 0, $FFFFFF);
         BitBlt(Canvas.Handle, (ClientWidth - 140) div 2, 24, 140, 120,

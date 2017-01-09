@@ -541,8 +541,10 @@ begin
     Frame(Canvas, TabOffset + (Tab + 1) * TabSize + 1, 3,
       TabOffset + (Tab + 1) * TabSize + 2, TabHeight, MainTexture.clBevelShade,
       MainTexture.clBevelShade); // Tab shadow
-  BitBlt(LogoBuffer.Canvas.Handle, 0, 0, 36, 36, Canvas.Handle, 6,
+  BitBltCanvas(LogoBuffer.Canvas, 0, 0, 36, 36, Canvas, 6,
     3 + 2 * integer(Tab <> 0), SRCCOPY);
+
+
   ImageOp_BCC(LogoBuffer, Templates, 0, 0, 145, 38, 36, 27, $BFBF20, $4040DF);
   // logo part 1
   ImageOp_BCC(LogoBuffer, Templates, 10, 27, 155, 38 + 27, 26, 9, $BFBF20,
@@ -591,7 +593,7 @@ begin
               RisedTextOut(Canvas, xActionIcon + 99, y,
                 Phrases2.Lookup('ACTIONHEADER_WEB'));
               Canvas.Font.Assign(UniFont[ftNormal]);
-              BitBlt(LogoBuffer.Canvas.Handle, 0, 0, 91, 25, Canvas.Handle,
+              BitBltCanvas(LogoBuffer.Canvas, 0, 0, 91, 25, Canvas,
                 xActionIcon, y + 2, SRCCOPY);
               ImageOp_BCC(LogoBuffer, Templates, 0, 0, 1, 400, 91, 25, 0,
                 Colors.Canvas.Pixels[clkAge0 - 1, cliDimmedText]);
