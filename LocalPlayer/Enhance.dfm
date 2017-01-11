@@ -1,29 +1,26 @@
 object EnhanceDlg: TEnhanceDlg
   Left = 421
+  Height = 189
   Top = 507
+  Width = 640
   BorderStyle = bsNone
   ClientHeight = 189
   ClientWidth = 640
   Color = clBtnFace
-  Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -13
   Font.Name = 'MS Sans Serif'
-  Font.Style = []
   FormStyle = fsStayOnTop
-  OldCreateOrder = False
-  Scaled = False
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
   OnPaint = FormPaint
   OnShow = FormShow
-  PixelsPerInch = 96
-  TextHeight = 16
+  LCLVersion = '1.6.0.4'
   object ToggleBtn: TButtonB
     Left = 13
+    Height = 25
     Top = 6
     Width = 25
-    Height = 25
     Down = False
     Permanent = False
     OnClick = ToggleBtnClick
@@ -31,9 +28,9 @@ object EnhanceDlg: TEnhanceDlg
   end
   object CloseBtn: TButtonB
     Left = 602
+    Height = 25
     Top = 6
     Width = 25
-    Height = 25
     Down = False
     Permanent = False
     OnClick = CloseBtnClick
@@ -42,9 +39,9 @@ object EnhanceDlg: TEnhanceDlg
   object job1: TButtonC
     Tag = 1
     Left = 267
+    Height = 12
     Top = 144
     Width = 12
-    Height = 12
     Down = False
     Permanent = False
     OnClick = JobClick
@@ -53,9 +50,9 @@ object EnhanceDlg: TEnhanceDlg
   object job2: TButtonC
     Tag = 2
     Left = 279
+    Height = 12
     Top = 144
     Width = 12
-    Height = 12
     Down = False
     Permanent = False
     OnClick = JobClick
@@ -64,9 +61,9 @@ object EnhanceDlg: TEnhanceDlg
   object job4: TButtonC
     Tag = 4
     Left = 291
+    Height = 12
     Top = 144
     Width = 12
-    Height = 12
     Down = False
     Permanent = False
     OnClick = JobClick
@@ -75,9 +72,9 @@ object EnhanceDlg: TEnhanceDlg
   object job5: TButtonC
     Tag = 5
     Left = 303
+    Height = 12
     Top = 144
     Width = 12
-    Height = 12
     Down = False
     Permanent = False
     OnClick = JobClick
@@ -86,9 +83,9 @@ object EnhanceDlg: TEnhanceDlg
   object job7: TButtonC
     Tag = 7
     Left = 315
+    Height = 12
     Top = 144
     Width = 12
-    Height = 12
     Down = False
     Permanent = False
     OnClick = JobClick
@@ -97,9 +94,9 @@ object EnhanceDlg: TEnhanceDlg
   object job3: TButtonC
     Tag = 3
     Left = 339
+    Height = 12
     Top = 144
     Width = 12
-    Height = 12
     Down = False
     Permanent = False
     OnClick = JobClick
@@ -108,9 +105,9 @@ object EnhanceDlg: TEnhanceDlg
   object job6: TButtonC
     Tag = 6
     Left = 351
+    Height = 12
     Top = 144
     Width = 12
-    Height = 12
     Down = False
     Permanent = False
     OnClick = JobClick
@@ -119,16 +116,19 @@ object EnhanceDlg: TEnhanceDlg
   object job9: TButtonC
     Tag = 9
     Left = 363
+    Height = 12
     Top = 144
     Width = 12
-    Height = 12
     Down = False
     Permanent = False
     OnClick = JobClick
     ButtonIndex = 2
   end
   object Popup: TPopupMenu
-    Left = 16
-    Top = 48
+    left = 16
+    top = 48
+    object MenuItem1: TMenuItem
+      Caption = 'New Item1'
+    end
   end
 end

@@ -7,6 +7,9 @@ uses
 {$IFDEF Windows}
   Windows,
 {$ENDIF}
+{$IFDEF Linux}
+  LMessages, Messages,
+{$ENDIF}
   Protocol, Tribes, PVSB, ClientTools, ScreenTools, BaseWin, Messg, ButtonBase,
   LCLIntf, LCLType, SysUtils, Classes, Graphics, Controls,
   Forms, Menus, ExtCtrls, dateutils, Platform, ButtonB, ButtonC, EOTButton, Area;
@@ -4151,7 +4154,7 @@ begin
   Mini.EndUpdate;
 end;
 
-function ScrollDCCopy(Canvas: TCanvas; dx: longint; dy: longint; const lprcScroll:RECT; const lprcClip:RECT; hrgnUpdate:HRGN; lprcUpdate:LPRECT):WINBOOL;
+function ScrollDCCopy(Canvas: TCanvas; dx: longint; dy: longint; const lprcScroll:TRect; const lprcClip:TRect; hrgnUpdate:HRGN; lprcUpdate: PRect):Boolean;
 begin
   BitBltCanvas(Canvas, lprcScroll.Left + dx, lprcScroll.Top + dy, lprcScroll.Right - lprcScroll.Left, lprcScroll.Bottom - lprcScroll.Top,
     Canvas, lprcScroll.Left, lprcScroll.Top, SRCCOPY);

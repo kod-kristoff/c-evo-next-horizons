@@ -34,6 +34,8 @@ begin
   inc(Count);
   {$IFDEF LINUX}
   sb.Form := TForm.Create(nil);
+  sb.Form.SetBounds(x1 - 100, y0, 100, y1 - y0);
+  sb.Form.Name := 'PVSB' + IntToStr(Count);
   sb.h := sb.Form.Handle;
   {$ENDIF}
   {$IFDEF WINDOWS}
@@ -46,7 +48,6 @@ end;
 
 procedure InitPVSB(var sb: TPVScrollbar; max, Page: integer);
 begin
-  {$IFDEF WINDOWS}
   with sb.si do
   begin
     nMin := 0;
@@ -60,7 +61,6 @@ begin
     ShowWindow(sb.h, SW_HIDE)
   else
     ShowWindow(sb.h, SW_SHOW)
-  {$ENDIF}
 end;
 
 function ProcessPVSB(var sb: TPVScrollbar; const m: TMessage): Boolean;

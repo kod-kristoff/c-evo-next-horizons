@@ -10,7 +10,11 @@ uses
   ButtonB, ButtonC, Menus;
 
 type
+
+  { TEnhanceDlg }
+
   TEnhanceDlg = class(TFramedDlg)
+    MenuItem1: TMenuItem;
     ToggleBtn: TButtonB;
     CloseBtn: TButtonB;
     job1: TButtonC;
