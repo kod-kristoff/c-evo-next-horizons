@@ -127,7 +127,7 @@ begin
           Kind := mkYesNo;
           ShowModal;
           if ModalResult = mrOK then
-            OpenURL('http://c-evo.org/_sg/contact/cevobug.html');{ *Převedeno z ShellExecute* }
+            OpenURL('http://c-evo.org/_sg/contact/cevobug.html');
         end
     *)
       end;

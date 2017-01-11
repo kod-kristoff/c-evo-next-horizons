@@ -4,10 +4,9 @@ unit Help;
 interface
 
 uses
-  Protocol, ScreenTools, BaseWin, StringTables,
-
+  Protocol, ScreenTools, BaseWin, StringTables, Math,
   LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics, Controls, Forms,
-  ExtCtrls, ButtonB, PVSB, ButtonBase, Types;
+  ExtCtrls, ButtonB, PVSB, Types;
 
 const
   MaxHist = 16;
@@ -43,7 +42,6 @@ type
   public
     procedure AddLine(s: String = ''; Format: integer = 0; Picpix: integer = 0;
       LinkCategory: integer = 0; LinkIndex: integer = 0);
-    procedure AddText(Const S : String); override;
     procedure LF;
     destructor Destroy; override;
   end;
@@ -125,11 +123,6 @@ begin
   HelpLineInfo.Picpix := Picpix;
   HelpLineInfo.Link := LinkCategory shl 8 + LinkIndex;
   AddObject(s, TObject(HelpLineInfo));
-end;
-
-procedure THyperText.AddText(const S: String);
-begin
-  AddLine(S);
 end;
 
 procedure THyperText.LF;
@@ -380,21 +373,18 @@ begin
   xSrc := iix mod 7 * xSizeBig;
   ySrc := (iix div 7 + 1) * ySizeBig;
   for y := 0 to ySizeBig * 2 - 1 do
-    if (y0 + y >= 0) and (y0 + y < InnerHeight) then
-    begin
+    if ((y0 + y) >= 0) and ((y0 + y) < InnerHeight) then begin
       PaintPtr.Init(OffScreen, 0, y0 + y);
       CoalPtr.Init(Templates, 0, yCoal + y);
       for dy := -1 to 1 do
-        if ((y + dy) shr 1 >= 0) and ((y + dy) shr 1 < ySizeBig) then
-          ImpPtr[dy].Init(BigImp, 0, ySrc + (y + dy) shr 1);
-      for x := 0 to xSizeBig * 2 - 1 do
-      begin
+        if ((Max(y + dy, 0) shr 1) >= 0) and ((Max(y + dy, 0) shr 1) < ySizeBig) then
+          ImpPtr[dy].Init(BigImp, 0, ySrc + (Max(y + dy, 0) shr 1));
+      for x := 0 to xSizeBig * 2 - 1 do begin
         sum := 0;
-        for dx := -1 to 1 do
-        begin
-          xx := xSrc + (x + dx) shr 1;
-          ImpPtr[dy].SetX(xx);
-          for dy := -1 to 1 do
+        for dx := -1 to 1 do begin
+          xx := xSrc + Max((x + dx), 0) shr 1;
+          for dy := -1 to 1 do begin
+            ImpPtr[dy].SetX(xx);
             if ((y + dy) shr 1 < 0) or ((y + dy) shr 1 >= ySizeBig) or
               ((x + dx) shr 1 < 0) or ((x + dx) shr 1 >= xSizeBig) or
               ((y + dy) shr 1 < nHeaven) and
@@ -404,9 +394,9 @@ begin
             else
               sum := sum + ImpPtr[dy].Pixel^.B + 5 * ImpPtr[dy].Pixel^.G + 3 *
                 ImpPtr[dy].Pixel^.R;
+          end;
         end;
-        if sum < maxsum then
-        begin // no saturation
+        if sum < maxsum then begin // no saturation
           CoalPtr.SetX(xCoal + x);
           sum := 1 shl 22 - (maxsum - sum) * (256 - CoalPtr.Pixel^.B * 2);
           PaintPtr.SetX(x0 + x);
@@ -446,6 +436,7 @@ var
   s: string;
   HelpLineInfo: THelpLineInfo;
 begin
+  MainText.SaveToFile('MainText.txt');
   inherited;
   CaptionColor := Colors.Canvas.Pixels[clkMisc, cliPaperCaption];
   FillSeamless(OffScreen.Canvas, 0, 0, InnerWidth, InnerHeight, 0,
@@ -464,7 +455,7 @@ begin
             yl := InnerHeight - (4 + i * 24);
           BitBlt(Handle, 8, 4 + i * 24, ExtPic.Width, yl, ExtPic.Canvas.Handle,
             0, 0, SRCCOPY);
-        end
+        end;
       end;
     for i := -2 to InnerHeight div 24 do
       if (sb.si.npos + i >= 0) and (sb.si.npos + i < MainText.Count) then
@@ -915,7 +906,7 @@ var
     end;
   end;
 
-  procedure AddText(s: string);
+  procedure AddTextual(s: string);
   var
     i, p, l, ofs, CurrentFormat, FollowFormat, Picpix, LinkCategory, LinkIndex,
       RightMargin: integer;
@@ -1076,7 +1067,7 @@ var
 
   procedure AddItem(Item: string);
   begin
-    AddText(HelpText.Lookup(Item));
+    AddTextual(HelpText.Lookup(Item));
   end;
 
   procedure AddModelText(i: integer);
@@ -1106,7 +1097,7 @@ var
           pkNormal_64);
       s := HelpText.LookupByHandle(hSPECIALMODEL, i);
       if (s <> '') and (s <> '*') then
-        AddText(s);
+        AddTextual(s);
       if SpecialModelPreq[i] >= 0 then
         AddPreqAdv(SpecialModelPreq[i])
       else if SpecialModelPreq[i] = preLighthouse then
@@ -1138,7 +1129,7 @@ var
         AddLine;
         AddLine('', pkTerImp, i);
         AddLine;
-        AddText(HelpText.LookupByHandle(hJOBHELP, i));
+        AddTextual(HelpText.LookupByHandle(hJOBHELP, i));
         JobCost := -1;
         case JobHelp[i] of
           jCanal:
@@ -1149,10 +1140,10 @@ var
             JobCost := BaseWork;
         end;
         if JobCost >= 0 then
-          AddText(Format(HelpText.Lookup('JOBCOST'),
+          AddTextual(Format(HelpText.Lookup('JOBCOST'),
             [MovementToString(JobCost)]))
         else
-          AddText(HelpText.Lookup('JOBCOSTVAR'));
+          AddTextual(HelpText.Lookup('JOBCOSTVAR'));
         if JobPreq[JobHelp[i]] <> preNone then
         begin
           AddPreqAdv(JobPreq[JobHelp[i]]);
@@ -1240,7 +1231,7 @@ begin { Prepare }
       LF;
     case Kind of
       hkText:
-        AddText(HelpText.LookupByHandle(no));
+        AddTextual(HelpText.LookupByHandle(no));
       hkMisc:
         begin
           case no of
@@ -1299,7 +1290,7 @@ begin { Prepare }
                 AddSoundCredits;
                 NextSection('CRED_CAPAI');
                 Server(sGetAICredits, 0, 0, ps);
-                AddText(ps);
+                AddTextual(ps);
                 NextSection('CRED_CAPLANG');
                 AddItem('AUTHOR');
               end;
@@ -1324,7 +1315,7 @@ begin { Prepare }
                   else
                     AddLine('', pkBigIcon, i + 6);
                   LF;
-                  AddText(HelpText.LookupByHandle(hGOVHELP, i mod nGov));
+                  AddTextual(HelpText.LookupByHandle(hGOVHELP, i mod nGov));
                   if i mod nGov >= 2 then
                   begin
                     AddPreqAdv(GovPreq[i mod nGov]);
@@ -1341,7 +1332,7 @@ begin { Prepare }
             miscSearchResult:
               begin
                 Caption := HelpText.Lookup('HELPTITLE_SEARCHRESULTS');
-                AddText(Format(HelpText.Lookup('MATCHES'), [SearchContent]));
+                AddTextual(Format(HelpText.Lookup('MATCHES'), [SearchContent]));
                 MainText.AddStrings(SearchResult);
               end
           end; // case no
@@ -1457,7 +1448,7 @@ begin { Prepare }
           NextSection('ADVEFFECT');
           s := HelpText.LookupByHandle(hADVHELP, no);
           if s <> '*' then
-            AddText(s);
+            AddTextual(s);
           NextSection('SEEALSO');
           CheckSeeAlso := true
         end;
@@ -1520,7 +1511,7 @@ begin { Prepare }
           if Imp[no].Kind <> ikShipPart then
           begin
             NextSection('EFFECT');
-            AddText(HelpText.LookupByHandle(hIMPHELP, no));
+            AddTextual(HelpText.LookupByHandle(hIMPHELP, no));
           end;
           if no = woSun then
           begin
@@ -1532,9 +1523,9 @@ begin { Prepare }
           begin
             LF;
             if Imp[no].Expiration >= 0 then
-              AddText(Phrases2.Lookup('HELP_WONDERMORALE1'))
+              AddTextual(Phrases2.Lookup('HELP_WONDERMORALE1'))
             else
-              AddText(Phrases2.Lookup('HELP_WONDERMORALE2'));
+              AddTextual(Phrases2.Lookup('HELP_WONDERMORALE2'));
           end;
           if Imp[no].Preq <> preNone then
           begin
@@ -1581,7 +1572,7 @@ begin { Prepare }
               [Phrases.Lookup('ADVANCES', Imp[no].Expiration)]);
             if no = woPyramids then
               s := s + ' ' + HelpText.Lookup('EXPSLAVE');
-            AddText(s);
+            AddTextual(s);
           end;
           NextSection('SEEALSO');
           if (no < 28) and (Imp[no].Expiration >= 0) then
@@ -1647,17 +1638,17 @@ begin { Prepare }
             if no = 3 * 12 then
             begin
               LF;
-              AddText(HelpText.Lookup('DEADLANDS'));
+              AddTextual(HelpText.Lookup('DEADLANDS'));
             end;
             if (TerrType = fDesert) and (no <> fDesert + 12) then
             begin
               LF;
-              AddText(Format(HelpText.Lookup('HOSTILE'), [DesertThurst]));
+              AddTextual(Format(HelpText.Lookup('HOSTILE'), [DesertThurst]));
             end;
             if TerrType = fArctic then
             begin
               LF;
-              AddText(Format(HelpText.Lookup('HOSTILE'), [ArcticThurst]));
+              AddTextual(Format(HelpText.Lookup('HOSTILE'), [ArcticThurst]));
             end;
             if (no < 3 * 12) and (TransTerrain >= 0) then
             begin
@@ -1723,7 +1714,7 @@ begin { Prepare }
             if no = 3 * 12 then
             begin
               LF;
-              AddText(HelpText.Lookup('RARE'));
+              AddTextual(HelpText.Lookup('RARE'));
             end;
             if (no < 3 * 12) and (TerrType in [fDesert, fArctic]) then
             begin
@@ -1785,7 +1776,7 @@ begin { Prepare }
           else
             AddLine(HelpText.Lookup('HELPSPEC_FEATURE'));
           NextSection('EFFECT');
-          AddText(HelpText.LookupByHandle(hFEATUREHELP, no));
+          AddTextual(HelpText.LookupByHandle(hFEATUREHELP, no));
           if (Feature[no].Weight <> 0) or (Feature[no].Cost <> 0) then
           begin
             NextSection('COSTS');
@@ -1919,12 +1910,9 @@ begin
     with THelpLineInfo(MainText.Objects[Sel + sb.si.npos]) do
       if Link shr 8 and $3F = hkInternet then
         case Link and $FF of
-          1:
-             OpenDocument(pchar(HomeDir + 'AI Template' + DirectorySeparator + 'AI development manual.html'));{ *Převedeno z ShellExecute* }
-          2:
-            OpenURL('http://c-evo.org');{ *Převedeno z ShellExecute* }
-          3:
-            OpenURL('http://c-evo.org/_sg/contact');{ *Převedeno z ShellExecute* }
+          1: OpenDocument(pchar(HomeDir + 'AI Template' + DirectorySeparator + 'AI development manual.html'));
+          2: OpenURL('http://c-evo.org');
+          3: OpenURL('http://c-evo.org/_sg/contact');
         end
       else
       begin

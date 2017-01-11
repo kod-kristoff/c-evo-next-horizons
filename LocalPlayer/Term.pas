@@ -6859,7 +6859,7 @@ begin
     end
   end
   else if Sender = mWebsite then
-    OpenURL('http://c-evo.org') { *Převedeno z ShellExecute* }
+    OpenURL('http://c-evo.org')
   else if Sender = mRandomMap then
   begin
     if not Edited or (SimpleQuery(mkYesNo, Phrases.Lookup('MAP_RANDOM'), '')

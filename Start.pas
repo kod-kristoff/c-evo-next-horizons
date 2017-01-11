@@ -1564,7 +1564,7 @@ begin
     case SelectedAction of
       maConfig:
         begin
-           OpenDocument(pchar(HomeDir + 'Configurator.exe'));{ *Převedeno z ShellExecute* }
+           OpenDocument(pchar(HomeDir + 'Configurator.exe'));
           Close
         end;
       maManual:
@@ -1572,9 +1572,9 @@ begin
       maCredits:
         DirectHelp(cStartCredits);
       maAIDev:
-         OpenDocument(pchar(HomeDir + 'AI Template' + DirectorySeparator + 'AI development manual.html'));{ *Převedeno z ShellExecute* }
+         OpenDocument(pchar(HomeDir + 'AI Template' + DirectorySeparator + 'AI development manual.html'));
       maWeb:
-        OpenURL('http://c-evo.org'){ *Převedeno z ShellExecute* }
+        OpenURL('http://c-evo.org')
     end;
   end
   else if (AutoDiff < 0) and ((Page = pgStartRandom) or (Page = pgStartMap) and
