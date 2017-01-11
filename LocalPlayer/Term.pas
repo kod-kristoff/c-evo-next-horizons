@@ -505,13 +505,12 @@ const
   cut = 4;
   Sharpen = 80;
 type
-  TLine = array [0 .. 99999, 0 .. 2] of Byte;
   TBuffer = array [0 .. 99999, 0 .. 2] of integer;
 var
   sum, Cnt, dx, dy, nx, ny, ix, iy, ir, x, y, c, ch, xdivider,
     ydivider: integer;
   resampled: ^TBuffer;
-  line: ^TLine;
+  PixelPtr: TPixelPointer;
 begin
   nx := BigImp.width div xSizeBig * xSizeSmall;
   ny := BigImp.height div ySizeBig * ySizeSmall;
@@ -528,7 +527,7 @@ begin
           (ySizeBig - 2 * cut) - y * ySizeSmall;
         if ydivider > ySizeSmall then
           ydivider := ySizeSmall;
-        line := BigImp.ScanLine[cut + iy * ySizeBig + y];
+        PixelPtr.Init(BigImp, 0, cut + iy * ySizeBig + y);
         for x := 0 to xSizeBig - 1 do
         begin
           ir := ix * xSizeSmall + iy * nx * ySizeSmall + x *
@@ -540,7 +539,8 @@ begin
             xdivider := xSizeSmall;
           for ch := 0 to 2 do
           begin
-            c := line[ix * xSizeBig + x, ch];
+            PixelPtr.SetX(ix * xSizeBig + x);
+            c := PixelPtr.Pixel^.Planes[ch];
             inc(resampled[ir, ch], c * xdivider * ydivider);
             if xdivider < xSizeSmall then
               inc(resampled[ir + 1, ch], c * (xSizeSmall - xdivider) *
@@ -557,15 +557,12 @@ begin
   BigImp.EndUpdate;
 
   // sharpen resampled icons
-  SmallImp.width := nx;
-  SmallImp.height := ny;
+  SmallImp.SetSize(nx, ny);
   SmallImp.BeginUpdate;
-  for y := 0 to ny - 1 do
-  begin
-    line := SmallImp.ScanLine[y];
+  for y := 0 to ny - 1 do begin
+    PixelPtr.Init(SmallImp, 0, y);
     for x := 0 to nx - 1 do
-      for ch := 0 to 2 do
-      begin
+      for ch := 0 to 2 do begin
         sum := 0;
         Cnt := 0;
         for dy := -1 to 1 do
@@ -580,11 +577,10 @@ begin
               end;
         sum := ((Cnt * Sharpen + 800) * resampled[x + nx * y, ch] - sum *
           Sharpen) div (800 * xSizeBig * (ySizeBig - 2 * cut));
-        if sum < 0 then
-          sum := 0;
-        if sum > 255 then
-          sum := 255;
-        line[x][ch] := sum;
+        if sum < 0 then sum := 0;
+        if sum > 255 then sum := 255;
+        PixelPtr.SetX(x);
+        PixelPtr.Pixel^.Planes[ch] := sum;
       end;
   end;
   SmallImp.EndUpdate;
@@ -4065,11 +4061,9 @@ begin
 end;
 
 procedure TMainScreen.MiniPaint;
-type
-  TLine = array [0 .. 99999999, 0 .. 2] of Byte;
 var
   uix, cix, x, y, Loc, i, hw, xm, cm, cmPolOcean, cmPolNone: integer;
-  PrevMiniLine, MiniLine: ^TLine;
+  PrevMiniPixel, MiniPixel: PPixel32;
 begin
   cmPolOcean := GrExt[HGrSystem].Data.Canvas.Pixels[101, 67];
   cmPolNone := GrExt[HGrSystem].Data.Canvas.Pixels[102, 67];
@@ -4079,12 +4073,9 @@ begin
     Brush.Color := $000000;
     FillRect(Rect(0, 0, Mini.width, Mini.height));
   end;
-  MiniLine := nil;
   Mini.BeginUpdate;
   for y := 0 to G.ly - 1 do
   begin
-    PrevMiniLine := MiniLine;
-    MiniLine := Mini.ScanLine[y];
     for x := 0 to G.lx - 1 do
       if MyMap[x + G.lx * y] and fTerrain <> fUNKNOWN then
       begin
@@ -4092,6 +4083,7 @@ begin
         for i := 0 to 1 do
         begin
           xm := ((x - xwMini) * 2 + i + y and 1 - hw + G.lx * 5) mod (G.lx * 2);
+          MiniPixel := GetBitmapPixelPtr(Mini, xm, y);
           cm := MiniColors[MyMap[Loc] and fTerrain, i];
           if ClientMode = cEditMap then
           begin
@@ -4114,11 +4106,12 @@ begin
                 cm := Tribe[MyRO.EnemyCity[cix].Owner].Color
             end;
             cm := $808080 or cm shr 1; { increase brightness }
-            if PrevMiniLine <> nil then
-            begin // 2x2 city dot covers two scanlines
-              PrevMiniLine[xm, 0] := cm shr 16;
-              PrevMiniLine[xm, 1] := cm shr 8 and $FF;
-              PrevMiniLine[xm, 2] := cm and $FF;
+            if y > 0 then begin
+              // 2x2 city dot covers two scanlines
+              PrevMiniPixel := GetBitmapPixelPtr(Mini, xm, y - 1);
+              PrevMiniPixel^.B := cm shr 16;
+              PrevMiniPixel^.G := cm shr 8 and $FF;
+              PrevMiniPixel^.R := cm and $FF;
             end
           end
           else if (i = 0) and (MyMap[Loc] and fUnit <> 0) then
@@ -4147,9 +4140,9 @@ begin
             else
               cm := Tribe[MyRO.Territory[Loc]].Color;
           end;
-          MiniLine[xm, 0] := cm shr 16;
-          MiniLine[xm, 1] := cm shr 8 and $FF;
-          MiniLine[xm, 2] := cm and $FF;
+          MiniPixel^.B := cm shr 16;
+          MiniPixel^.G := cm shr 8 and $FF;
+          MiniPixel^.R := cm and $FF;
         end;
       end;
   end;

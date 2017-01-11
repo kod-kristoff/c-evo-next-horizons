@@ -197,8 +197,8 @@ begin
   if not Gone then
   begin
     PostMessage(Handle, WM_GO, 0, 0);
-    Gone := true
-  end
+    Gone := true;
+  end;
 end;
 
 procedure TDirectDlg.FormClose(Sender: TObject; var Action: TCloseAction);

@@ -29,6 +29,21 @@ type
   end;
   PPixel32 = ^TPixel32;
 
+  { TPixelPointer }
+
+  TPixelPointer = record
+    Base: PPixel32;
+    Pixel: PPixel32;
+    Line: PPixel32;
+    BytesPerPixel: Integer;
+    BytesPerLine: Integer;
+    procedure NextLine;
+    procedure NextPixel;
+    procedure SetXY(X, Y: Integer);
+    procedure SetX(X: Integer);
+    procedure Init(Bitmap: TBitmap; X: Integer = 0; Y: Integer = 0);
+  end;
+
 {$IFDEF WINDOWS}
 function ChangeResolution(x, y, bpp, freq: integer): boolean;
 {$ENDIF}
@@ -1487,157 +1502,199 @@ begin
       section: TFontType;
       Reg: TRegistry;
 
-initialization
+{ TPixelPointer }
 
-Reg := TRegistry.create;
-try
-  Reg.OpenKey('SOFTWARE\cevo\RegVer9', true);
-  if Reg.ValueExists('Gamma') then
-    Gamma := Reg.ReadInteger('Gamma')
-    else begin
-      Gamma := 100;
-      Reg.WriteInteger('Gamma', Gamma);
-    end;
-finally
-  Reg.Free;
+procedure TPixelPointer.NextLine; inline;
+begin
+  Line := Pointer(Line) + BytesPerLine;
+  Pixel := Line;
 end;
 
-if Gamma <> 100 then
+procedure TPixelPointer.NextPixel; inline;
 begin
-  GammaLUT[0] := 0;
-  for i := 1 to 255 do
-  begin
-    p := round(255.0 * exp(ln(i / 255.0) * 100.0 / Gamma));
-    assert((p >= 0) and (p < 256));
-    GammaLUT[i] := p;
+  Pixel := Pointer(Pixel) + BytesPerPixel;
+end;
+
+procedure TPixelPointer.SetXY(X, Y: Integer); inline;
+begin
+  Line := Pointer(Base) + Y * BytesPerLine;
+  SetX(X);
+end;
+
+procedure TPixelPointer.SetX(X: Integer); inline;
+begin
+  Pixel := Pointer(Line) + X * BytesPerPixel;
+end;
+
+procedure TPixelPointer.Init(Bitmap: TBitmap; X: Integer = 0; Y: Integer = 0); inline;
+begin
+  Base := PPixel32(Bitmap.RawImage.Data);
+  BytesPerLine := Bitmap.RawImage.Description.BytesPerLine;
+  BytesPerPixel := Bitmap.RawImage.Description.BitsPerPixel shr 3;
+  SetXY(X, Y);
+end;
+
+procedure UnitInit;
+begin
+  Reg := TRegistry.create;
+  try
+    Reg.OpenKey('SOFTWARE\cevo\RegVer9', true);
+    if Reg.ValueExists('Gamma') then
+      Gamma := Reg.ReadInteger('Gamma')
+      else begin
+        Gamma := 100;
+        Reg.WriteInteger('Gamma', Gamma);
+      end;
+  finally
+    Reg.Free;
   end;
-end;
 
-{$IFDEF WINDOWS}
-EnumDisplaySettings(nil, $FFFFFFFF, StartResolution);
-{$ENDIF}
-ResolutionChanged := false;
+  if Gamma <> 100 then
+  begin
+    GammaLUT[0] := 0;
+    for i := 1 to 255 do
+    begin
+      p := round(255.0 * exp(ln(i / 255.0) * 100.0 / Gamma));
+      assert((p >= 0) and (p < 256));
+      GammaLUT[i] := p;
+    end;
+  end;
 
-Phrases := TStringTable.create;
-Phrases2 := TStringTable.create;
-Phrases2FallenBackToEnglish := false;
-if FileExists(DataDir + 'Localization' + DirectorySeparator + 'Language.txt') then
-begin
-  Phrases.loadfromfile(DataDir + 'Localization' + DirectorySeparator + ' + Language.txt');
-  if FileExists(DataDir + 'Localization' + DirectorySeparator + 'Language2.txt') then
-    Phrases2.loadfromfile(DataDir + 'Localization' + DirectorySeparator + 'Language2.txt')
+  {$IFDEF WINDOWS}
+  EnumDisplaySettings(nil, $FFFFFFFF, StartResolution);
+  {$ENDIF}
+  ResolutionChanged := false;
+
+  Phrases := TStringTable.create;
+  Phrases2 := TStringTable.create;
+  Phrases2FallenBackToEnglish := false;
+  if FileExists(DataDir + 'Localization' + DirectorySeparator + 'Language.txt') then
+  begin
+    Phrases.loadfromfile(DataDir + 'Localization' + DirectorySeparator + ' + Language.txt');
+    if FileExists(DataDir + 'Localization' + DirectorySeparator + 'Language2.txt') then
+      Phrases2.loadfromfile(DataDir + 'Localization' + DirectorySeparator + 'Language2.txt')
+    else
+    begin
+      Phrases2.loadfromfile(HomeDir + 'Language2.txt');
+      Phrases2FallenBackToEnglish := true;
+    end
+  end
   else
   begin
+    Phrases.loadfromfile(HomeDir + 'Language.txt');
     Phrases2.loadfromfile(HomeDir + 'Language2.txt');
-    Phrases2FallenBackToEnglish := true;
-  end
-end
-else
-begin
-  Phrases.loadfromfile(HomeDir + 'Language.txt');
-  Phrases2.loadfromfile(HomeDir + 'Language2.txt');
-end;
-
-Sounds := TStringTable.create;
-if not Sounds.loadfromfile(HomeDir + 'Sounds' + DirectorySeparator + 'sound.txt') then
-begin
-  Sounds.Free;
-  Sounds := nil
-end;
-
-for section := Low(TFontType) to High(TFontType) do
-  UniFont[section] := TFont.create;
-
-LogoBuffer := TBitmap.create;
-LogoBuffer.PixelFormat := pf24bit;
-LogoBuffer.SetSize(wBBook, hBBook);
-
-section := ftNormal;
-AssignFile(fontscript, LocalizedFilePath('Fonts.txt'));
-try
-  Reset(fontscript);
-  while not eof(fontscript) do
-  begin
-    ReadLn(fontscript, s);
-    if s <> '' then
-      if s[1] = '#' then
-      begin
-        s := TrimRight(s);
-        if s = '#SMALL' then
-          section := ftSmall
-        else if s = '#TINY' then
-          section := ftTiny
-        else if s = '#CAPTION' then
-          section := ftCaption
-        else if s = '#BUTTON' then
-          section := ftButton
-        else
-          section := ftNormal;
-      end
-      else
-      begin
-        p := pos(',', s);
-        if p > 0 then
-        begin
-          UniFont[section].Name := Trim(copy(s, 1, p - 1));
-          size := 0;
-          for i := p + 1 to Length(s) do
-            case s[i] of
-              '0' .. '9':
-                size := size * 10 + Byte(s[i]) - 48;
-              'B', 'b':
-                UniFont[section].Style := UniFont[section].Style + [fsBold];
-              'I', 'i':
-                UniFont[section].Style := UniFont[section].Style + [fsItalic];
-            end;
-          // 0.8 constant is compensation for Lazarus as size of fonts against Delphi differs
-          UniFont[section].size :=
-            round(size * 72 / UniFont[section].PixelsPerInch * 0.8);
-        end;
-      end;
   end;
-  CloseFile(fontscript);
-except
+
+  Sounds := TStringTable.create;
+  if not Sounds.loadfromfile(HomeDir + 'Sounds' + DirectorySeparator + 'sound.txt') then
+  begin
+    Sounds.Free;
+    Sounds := nil
+  end;
+
+  for section := Low(TFontType) to High(TFontType) do
+    UniFont[section] := TFont.create;
+
+  LogoBuffer := TBitmap.create;
+  LogoBuffer.PixelFormat := pf24bit;
+  LogoBuffer.SetSize(wBBook, hBBook);
+
+  section := ftNormal;
+  AssignFile(fontscript, LocalizedFilePath('Fonts.txt'));
+  try
+    Reset(fontscript);
+    while not eof(fontscript) do
+    begin
+      ReadLn(fontscript, s);
+      if s <> '' then
+        if s[1] = '#' then
+        begin
+          s := TrimRight(s);
+          if s = '#SMALL' then
+            section := ftSmall
+          else if s = '#TINY' then
+            section := ftTiny
+          else if s = '#CAPTION' then
+            section := ftCaption
+          else if s = '#BUTTON' then
+            section := ftButton
+          else
+            section := ftNormal;
+        end
+        else
+        begin
+          p := pos(',', s);
+          if p > 0 then
+          begin
+            UniFont[section].Name := Trim(copy(s, 1, p - 1));
+            size := 0;
+            for i := p + 1 to Length(s) do
+              case s[i] of
+                '0' .. '9':
+                  size := size * 10 + Byte(s[i]) - 48;
+                'B', 'b':
+                  UniFont[section].Style := UniFont[section].Style + [fsBold];
+                'I', 'i':
+                  UniFont[section].Style := UniFont[section].Style + [fsItalic];
+              end;
+            // 0.8 constant is compensation for Lazarus as size of fonts against Delphi differs
+            UniFont[section].size :=
+              round(size * 72 / UniFont[section].PixelsPerInch * 0.8);
+          end;
+        end;
+    end;
+    CloseFile(fontscript);
+  except
+  end;
+
+  nGrExt := 0;
+  HGrSystem := LoadGraphicSet('System');
+  HGrSystem2 := LoadGraphicSet('System2');
+  Templates := TBitmap.create;
+  LoadGraphicFile(Templates, HomeDir + 'Graphics' + DirectorySeparator + 'Templates', gfNoGamma);
+  Templates.PixelFormat := pf24bit;
+  Colors := TBitmap.create;
+  LoadGraphicFile(Colors, HomeDir + 'Graphics' + DirectorySeparator + 'Colors');
+  Paper := TBitmap.create;
+  LoadGraphicFile(Paper, HomeDir + 'Graphics' + DirectorySeparator + 'Paper', gfJPG);
+  BigImp := TBitmap.create;
+  LoadGraphicFile(BigImp, HomeDir + 'Graphics' + DirectorySeparator + 'Icons');
+  MainTexture.Image := TBitmap.create;
+  MainTextureAge := -2;
+  ClickFrameColor := GrExt[HGrSystem].Data.Canvas.Pixels[187, 175];
+  InitOrnamentDone := false;
+  GenerateNames := true;
 end;
 
-nGrExt := 0;
-HGrSystem := LoadGraphicSet('System');
-HGrSystem2 := LoadGraphicSet('System2');
-Templates := TBitmap.create;
-LoadGraphicFile(Templates, HomeDir + 'Graphics' + DirectorySeparator + 'Templates', gfNoGamma);
-Templates.PixelFormat := pf24bit;
-Colors := TBitmap.create;
-LoadGraphicFile(Colors, HomeDir + 'Graphics' + DirectorySeparator + 'Colors');
-Paper := TBitmap.create;
-LoadGraphicFile(Paper, HomeDir + 'Graphics' + DirectorySeparator + 'Paper', gfJPG);
-BigImp := TBitmap.create;
-LoadGraphicFile(BigImp, HomeDir + 'Graphics' + DirectorySeparator + 'Icons');
-MainTexture.Image := TBitmap.create;
-MainTextureAge := -2;
-ClickFrameColor := GrExt[HGrSystem].Data.Canvas.Pixels[187, 175];
-InitOrnamentDone := false;
-GenerateNames := true;
+procedure UnitDone;
+begin
+  RestoreResolution;
+  for i := 0 to nGrExt - 1 do
+  begin
+    GrExt[i].Data.Free;
+    GrExt[i].Mask.Free;
+    FreeMem(GrExt[i]);
+  end;
+  for section := Low(TFontType) to High(TFontType) do
+    FreeAndNil(UniFont[section]);
+  FreeAndNil(Phrases);
+  FreeAndNil(Phrases2);
+  if Sounds <> nil then
+    FreeAndNil(Sounds);
+  FreeAndNil(LogoBuffer);
+  FreeAndNil(BigImp);
+  FreeAndNil(Paper);
+  FreeAndNil(Templates);
+  FreeAndNil(Colors);
+  FreeAndNil(MainTexture.Image);
+end;
+
+initialization
+
+UnitInit;
 
 finalization
 
-RestoreResolution;
-for i := 0 to nGrExt - 1 do
-begin
-  GrExt[i].Data.Free;
-  GrExt[i].Mask.Free;
-  FreeMem(GrExt[i]);
-end;
-for section := Low(TFontType) to High(TFontType) do
-  UniFont[section].Free;
-Phrases.Free;
-FreeAndNil(Phrases2);
-if Sounds <> nil then
-  Sounds.Free;
-LogoBuffer.Free;
-BigImp.Free;
-Paper.Free;
-Templates.Free;
-Colors.Free;
-MainTexture.Image.Free;
+UnitDone;
 
 end.

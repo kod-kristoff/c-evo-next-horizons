@@ -430,31 +430,27 @@ procedure TCityDlg.OffscreenPaint;
     end
   end;
 
-  procedure MakeRed(x, y, w, h: integer);
-  type
-    TLine = array [0 .. 99999, 0 .. 2] of byte;
-    PLine = ^TLine;
-
-    procedure RedLine(line: PLine; length: integer);
-    var
-      i, gray: integer;
-    begin
-      for i := 0 to length - 1 do
-      begin
-        gray := (integer(line[i, 0]) + integer(line[i, 1]) + integer(line[i, 2])
-          ) * 85 shr 8;
-        line[i, 0] := 0;
-        line[i, 1] := 0;
-        line[i, 2] := gray; // 255-(255-gray) div 2;
-      end;
-    end;
-
+  procedure MakeRed(X, Y, W, H: Integer);
   var
-    i: integer;
+    XX, YY: Integer;
+    Gray: Integer;
+    PixelPtr: PPixel32;
+    LinePtr: PPixel32;
   begin
     Offscreen.BeginUpdate;
-    for i := 0 to h - 1 do
-      RedLine(@(PLine(offscreen.ScanLine[y + i])[x]), w);
+    LinePtr := GetBitmapPixelPtr(Offscreen, X, Y);
+    for YY := 0 to h - 1 do begin
+      PixelPtr := LinePtr;
+      for XX := 0 to w - 1 do begin
+        Gray := (Integer(PixelPtr^.B) + Integer(PixelPtr^.G) + Integer(PixelPtr^.R)
+          ) * 85 shr 8;
+        PixelPtr^.B := 0;
+        PixelPtr^.G := 0;
+        PixelPtr^.R := Gray; // 255-(255-gray) div 2;
+        PixelPtr := Pointer(PixelPtr) + (Offscreen.RawImage.Description.BitsPerPixel shr 3);
+      end;
+      LinePtr := Pointer(LinePtr) + Offscreen.RawImage.Description.BytesPerLine;
+    end;
     Offscreen.EndUpdate;
   end;
 

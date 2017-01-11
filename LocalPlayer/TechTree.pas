@@ -119,12 +119,10 @@ begin
 end;
 
 procedure TTechTreeDlg.FormShow(Sender: TObject);
-type
-  TLine = array [0 .. 9999, 0 .. 2] of Byte;
 var
   X, Y, ad, TexWidth, TexHeight: Integer;
   s: string;
-  SrcLine, DstLine: ^TLine;
+  SrcPixel, DstPixel: PPixel32;
 begin
   if Image = nil then
   begin
@@ -170,12 +168,16 @@ begin
     TexHeight := Paper.height;
     for Y := 0 to Image.height - 1 do
     begin
-      SrcLine := Paper.ScanLine[Y mod TexHeight];
-      DstLine := Image.ScanLine[Y];
       for X := 0 to Image.width - 1 do
       begin
-        if Cardinal((@DstLine[X])^) and $FFFFFF = $7F007F then // transparent
-          DstLine[X] := SrcLine[X mod TexWidth];
+        DstPixel := GetBitmapPixelPtr(Image, X, Y);
+        if (DstPixel^.ARGB and $FFFFFF) = $7F007F then // transparent
+        begin
+          SrcPixel := GetBitmapPixelPtr(Paper, X mod TexWidth, Y mod TexHeight);
+          DstPixel^.B := SrcPixel^.B;
+          DstPixel^.G := SrcPixel^.G;
+          DstPixel^.R := SrcPixel^.R;
+        end;
       end;
     end;
     Image.EndUpdate;

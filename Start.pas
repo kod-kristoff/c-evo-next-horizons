@@ -1033,11 +1033,9 @@ var
   SaveMap: array [0 .. lxmax * lymax - 1] of Byte;
 
   procedure PaintFileMini;
-  type
-    TLine = array [0 .. 99999999, 0 .. 2] of Byte;
   var
     i, x, y, xm, cm, Tile, OwnColor, EnemyColor: integer;
-    MiniLine, PrevMiniLine: ^TLine;
+    MiniPixel, PrevMiniPixel: PPixel32;
   begin
     OwnColor := GrExt[HGrSystem].Data.Canvas.Pixels[95, 67];
     EnemyColor := GrExt[HGrSystem].Data.Canvas.Pixels[96, 67];
@@ -1046,16 +1044,12 @@ var
     Mini.height := MiniHeight;
     if MiniMode = mmPicture then
     begin
-      MiniLine := nil;
       Mini.BeginUpdate;
-      for y := 0 to MiniHeight - 1 do
-      begin
-        PrevMiniLine := MiniLine;
-        MiniLine := Mini.ScanLine[y];
-        for x := 0 to MiniWidth - 1 do
-          for i := 0 to 1 do
-          begin
+      for y := 0 to MiniHeight - 1 do begin
+        for x := 0 to MiniWidth - 1 do begin
+          for i := 0 to 1 do begin
             xm := (x * 2 + i + y and 1) mod (MiniWidth * 2);
+            MiniPixel := GetBitmapPixelPtr(Mini, xm, y);
             Tile := SaveMap[x + MiniWidth * y];
             if Tile and fTerrain = fUNKNOWN then
               cm := $000000
@@ -1065,11 +1059,12 @@ var
                 cm := OwnColor
               else
                 cm := EnemyColor;
-              if PrevMiniLine <> nil then
-              begin // 2x2 city dot covers two scanlines
-                PrevMiniLine[xm, 0] := cm shr 16;
-                PrevMiniLine[xm, 1] := cm shr 8 and $FF;
-                PrevMiniLine[xm, 2] := cm and $FF;
+              if y > 0 then begin
+                // 2x2 city dot covers two lines
+                PrevMiniPixel := GetBitmapPixelPtr(Mini, xm, y - 1);
+                PrevMiniPixel^.B := cm shr 16;
+                PrevMiniPixel^.G:= cm shr 8 and $FF;
+                PrevMiniPixel^.R := cm and $FF;
               end
             end
             else if (i = 0) and (Tile and smUnit <> 0) then
@@ -1079,10 +1074,11 @@ var
                 cm := EnemyColor
             else
               cm := MiniColors[Tile and fTerrain, i];
-            MiniLine[xm, 0] := cm shr 16;
-            MiniLine[xm, 1] := cm shr 8 and $FF;
-            MiniLine[xm, 2] := cm and $FF;
+            MiniPixel^.B := cm shr 16;
+            MiniPixel^.G:= cm shr 8 and $FF;
+            MiniPixel^.R := cm and $FF;
           end;
+        end;
       end;
       Mini.EndUpdate;
     end;

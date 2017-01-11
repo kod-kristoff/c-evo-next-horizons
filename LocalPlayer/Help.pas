@@ -364,13 +364,11 @@ procedure THelpDlg.WaterSign(x0, y0, iix: integer);
 const
   nHeaven = 28;
   maxsum = 9 * 9 * 255 * 75 div 100;
-type
-  TLine = array [0 .. 649, 0 .. 2] of Byte;
 var
   x, y, dx, dy, xSrc, ySrc, sum, xx: integer;
   Heaven: array [0 .. nHeaven] of integer;
-  PaintLine, CoalLine: ^TLine;
-  ImpLine: array [-1 .. 1] of ^TLine;
+  PaintPtr, CoalPtr: TPixelPointer;
+  ImpPtr: array [-1 .. 1] of TPixelPointer;
 begin
   // assume eiffel tower has free common heaven
   for dy := 0 to nHeaven - 1 do
@@ -384,34 +382,37 @@ begin
   for y := 0 to ySizeBig * 2 - 1 do
     if (y0 + y >= 0) and (y0 + y < InnerHeight) then
     begin
-      PaintLine := OffScreen.ScanLine[y0 + y];
-      CoalLine := Templates.ScanLine[yCoal + y];
+      PaintPtr.Init(OffScreen, 0, y0 + y);
+      CoalPtr.Init(Templates, 0, yCoal + y);
       for dy := -1 to 1 do
         if ((y + dy) shr 1 >= 0) and ((y + dy) shr 1 < ySizeBig) then
-          ImpLine[dy] := BigImp.ScanLine[ySrc + (y + dy) shr 1];
+          ImpPtr[dy].Init(BigImp, 0, ySrc + (y + dy) shr 1);
       for x := 0 to xSizeBig * 2 - 1 do
       begin
         sum := 0;
         for dx := -1 to 1 do
         begin
           xx := xSrc + (x + dx) shr 1;
+          ImpPtr[dy].SetX(xx);
           for dy := -1 to 1 do
             if ((y + dy) shr 1 < 0) or ((y + dy) shr 1 >= ySizeBig) or
               ((x + dx) shr 1 < 0) or ((x + dx) shr 1 >= xSizeBig) or
               ((y + dy) shr 1 < nHeaven) and
-              (ImpLine[dy, xx, 0] shl 16 + ImpLine[dy, xx, 1] shl 8 +
-              ImpLine[dy, xx, 2] = Heaven[(y + dy) shr 1]) then
+              (ImpPtr[dy].Pixel^.B shl 16 + ImpPtr[dy].Pixel^.G shl 8 +
+              ImpPtr[dy].Pixel^.R = Heaven[(y + dy) shr 1]) then
               sum := sum + 9 * 255
             else
-              sum := sum + ImpLine[dy, xx, 0] + 5 * ImpLine[dy, xx, 1] + 3 *
-                ImpLine[dy, xx, 2];
+              sum := sum + ImpPtr[dy].Pixel^.B + 5 * ImpPtr[dy].Pixel^.G + 3 *
+                ImpPtr[dy].Pixel^.R;
         end;
         if sum < maxsum then
         begin // no saturation
-          sum := 1 shl 22 - (maxsum - sum) * (256 - CoalLine[xCoal + x, 0] * 2);
-          PaintLine[x0 + x, 0] := PaintLine[x0 + x, 0] * sum shr 22;
-          PaintLine[x0 + x, 1] := PaintLine[x0 + x, 1] * sum shr 22;
-          PaintLine[x0 + x, 2] := PaintLine[x0 + x, 2] * sum shr 22;
+          CoalPtr.SetX(xCoal + x);
+          sum := 1 shl 22 - (maxsum - sum) * (256 - CoalPtr.Pixel^.B * 2);
+          PaintPtr.SetX(x0 + x);
+          PaintPtr.Pixel^.B := PaintPtr.Pixel^.B * sum shr 22;
+          PaintPtr.Pixel^.G := PaintPtr.Pixel^.G * sum shr 22;
+          PaintPtr.Pixel^.R := PaintPtr.Pixel^.R * sum shr 22;
         end;
       end;
     end;

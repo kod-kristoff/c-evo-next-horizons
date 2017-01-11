@@ -77,33 +77,26 @@ begin
 end;
 
 procedure TWondersDlg.OffscreenPaint;
-type
-  TLine = array [0 .. 649, 0 .. 2] of Byte;
 
   procedure DarkIcon(i: Integer);
   var
     X, Y, ch, x0Dst, y0Dst, x0Src, y0Src, darken, c: Integer;
-    Src, Dst: ^TLine;
+    Src, Dst: PPixel32;
   begin
     x0Dst := ClientWidth div 2 - xSizeBig div 2 + RingPosition[i, 0];
     y0Dst := ClientHeight div 2 - ySizeBig div 2 + RingPosition[i, 1];
     x0Src := (i mod 7) * xSizeBig;
     y0Src := (i div 7 + SystemIconLines) * ySizeBig;
-    for Y := 0 to ySizeBig - 1 do
-    begin
-      Src := BigImp.ScanLine[y0Src + Y];
-      Dst := Offscreen.ScanLine[y0Dst + Y];
-      for X := 0 to xSizeBig - 1 do
-      begin
-        darken := ((255 - Src[x0Src + X][0]) * 3 + (255 - Src[x0Src + X][1]) *
-          15 + (255 - Src[x0Src + X][2]) * 9) div 128;
-        for ch := 0 to 2 do
-        begin
-          c := Dst[x0Dst + X][ch] - darken;
-          if c < 0 then
-            Dst[x0Dst + X][ch] := 0
-          else
-            Dst[x0Dst + X][ch] := c;
+    for Y := 0 to ySizeBig - 1 do begin
+      for X := 0 to xSizeBig - 1 do begin
+        Src := GetBitmapPixelPtr(BigImp, x0Src + X, y0Src + Y);
+        Dst := GetBitmapPixelPtr(Offscreen, x0Dst + X, y0Dst + Y);
+        darken := ((255 - Src^.B) * 3 + (255 - Src^.G) *
+          15 + (255 - Src^.R) * 9) div 128;
+        for ch := 0 to 2 do begin
+          c := Dst^.Planes[ch] - darken;
+          if c < 0 then Dst^.Planes[ch] := 0
+            else Dst^.Planes[ch] := c;
         end
       end
     end;
@@ -128,7 +121,7 @@ const
 var
   i, X, Y, r, ax, ch, c: Integer;
   HaveWonder: boolean;
-  Line: array [0 .. 1] of ^TLine;
+  Line: array [0 .. 1] of PPixel32;
   s: string;
 begin
   if (OffscreenUser <> nil) and (OffscreenUser <> self) then
@@ -159,12 +152,8 @@ begin
   Offscreen.BeginUpdate;
   xm := ClientWidth div 2;
   ym := ClientHeight div 2;
-  for Y := 0 to 127 do
-  begin
-    Line[0] := Offscreen.ScanLine[ym + Y];
-    Line[1] := Offscreen.ScanLine[ym - 1 - Y];
-    for X := 0 to 179 do
-    begin
+  for Y := 0 to 127 do begin
+    for X := 0 to 179 do begin
       r := X * X * (32 * 32) + Y * Y * (45 * 45);
       ax := ((1 shl 16 div 32) * 45) * Y;
       if (r < 8 * 128 * 180 * 180) and
@@ -172,18 +161,21 @@ begin
         ((ax < amax0 * X) or (ax > amin2 * X)) or (ax > amin1 * X) and
         ((ax < amax1 * X) or (ax > amin3 * X))) then
         for i := 0 to 1 do
-          for ch := 0 to 2 do
-          begin
-            c := Line[i][xm + X][ch] - darken;
+          for ch := 0 to 2 do begin
+            Line[0] := GetBitmapPixelPtr(Offscreen, xm + X, ym + Y);
+            Line[1] := GetBitmapPixelPtr(Offscreen, xm + X, ym - 1 - Y);
+            c := Line[i]^.Planes[ch] - darken;
             if c < 0 then
-              Line[i][xm + X][ch] := 0
+              Line[i]^.Planes[ch] := 0
             else
-              Line[i][xm + X][ch] := c;
-            c := Line[i][xm - 1 - X][ch] - darken;
+              Line[i]^.Planes[ch] := c;
+            Line[0] := GetBitmapPixelPtr(Offscreen, xm - 1 - X, ym + Y);
+            Line[1] := GetBitmapPixelPtr(Offscreen, xm - 1 - X, ym - 1 - Y);
+            c := Line[i]^.Planes[ch] - darken;
             if c < 0 then
-              Line[i][xm - 1 - X][ch] := 0
+              Line[i]^.Planes[ch] := 0
             else
-              Line[i][xm - 1 - X][ch] := c;
+              Line[i]^.Planes[ch] := c;
           end;
     end;
   end;
