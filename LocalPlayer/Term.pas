@@ -8,11 +8,8 @@ uses
   Windows,
 {$ENDIF}
   Protocol, Tribes, PVSB, ClientTools, ScreenTools, BaseWin, Messg, ButtonBase,
-
-  LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics, Controls,
-  Forms, Menus,
-  ExtCtrls, dateutils, Platform,
-  ButtonA, ButtonB, ButtonC, EOTButton, Area;
+  LCLIntf, LCLType, SysUtils, Classes, Graphics, Controls,
+  Forms, Menus, ExtCtrls, dateutils, Platform, ButtonB, ButtonC, EOTButton, Area;
 
 const
   WM_EOT = WM_USER;
@@ -430,11 +427,8 @@ implementation
 
 uses
   Directories, IsoEngine, CityScreen, Draft, MessgEx, Select, CityType, Help,
-  UnitStat, Diplomacy, Inp, Log, Diagram, NatStat, Wonders, Enhance, Nego,
-  Battle, Rates,
-  TechTree,
-
-  Registry;
+  UnitStat, Log, Diagram, NatStat, Wonders, Enhance, Nego,
+  Battle, Rates, TechTree, Registry;
 
 {$R *.lfm}
 { TODO {$R Res1.res }
@@ -4957,6 +4951,7 @@ var
   i, uix, NewFocus: integer;
   GotoOnly: boolean;
 begin
+  Dist := 0;
   if ClientMode >= scContact then
     exit;
   DestinationMarkON := false;

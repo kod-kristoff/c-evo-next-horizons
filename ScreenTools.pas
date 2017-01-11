@@ -8,7 +8,7 @@ uses
   Windows,
   {$ENDIF}
   StringTables,
-  LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics, Controls,
+  LCLIntf, LCLType, SysUtils, Classes, Graphics, Controls,
   Forms, Menus;
 
 type
@@ -1550,8 +1550,7 @@ for section := Low(TFontType) to High(TFontType) do
 
 LogoBuffer := TBitmap.create;
 LogoBuffer.PixelFormat := pf24bit;
-LogoBuffer.Width := wBBook;
-LogoBuffer.Height := hBBook;
+LogoBuffer.SetSize(wBBook, hBBook);
 
 section := ftNormal;
 AssignFile(fontscript, LocalizedFilePath('Fonts.txt'));
@@ -1591,10 +1590,11 @@ try
               'I', 'i':
                 UniFont[section].Style := UniFont[section].Style + [fsItalic];
             end;
+          // 0.8 constant is compensation for Lazarus as size of fonts against Delphi differs
           UniFont[section].size :=
-            round(size * 72 / UniFont[section].PixelsPerInch);
-        end
-      end
+            round(size * 72 / UniFont[section].PixelsPerInch * 0.8);
+        end;
+      end;
   end;
   CloseFile(fontscript);
 except

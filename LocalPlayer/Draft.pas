@@ -6,9 +6,9 @@ interface
 uses
   Protocol, ClientTools, Term, ScreenTools, PVSB, BaseWin,
 
-  LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics, Controls, Forms, ExtCtrls,
+  LCLIntf, LCLType, SysUtils, Classes, Graphics, Controls, Forms, ExtCtrls,
   ButtonA,
-  ButtonB, ButtonBase, Area;
+  ButtonB, Area;
 
 type
   TDraftDlg = class(TBufferedDrawDlg)

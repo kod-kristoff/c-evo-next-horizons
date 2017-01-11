@@ -5,9 +5,8 @@ interface
 
 uses
   Protocol, ClientTools, Term, ScreenTools, BaseWin, LCLIntf, LCLType,
-
-  Messages, SysUtils, Classes, Graphics, Controls, Forms,
-  ButtonB, ExtCtrls, ButtonA, ButtonBase;
+  SysUtils, Classes, Graphics, Controls, Forms,
+  ButtonB, ExtCtrls;
 
 type
   TCityTypeDlg = class(TFramedDlg)
