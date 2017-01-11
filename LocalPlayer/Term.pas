@@ -4151,6 +4151,12 @@ begin
   Mini.EndUpdate;
 end;
 
+function ScrollDCCopy(Canvas: TCanvas; dx: longint; dy: longint; const lprcScroll:RECT; const lprcClip:RECT; hrgnUpdate:HRGN; lprcUpdate:LPRECT):WINBOOL;
+begin
+  BitBltCanvas(Canvas, lprcScroll.Left + dx, lprcScroll.Top + dy, lprcScroll.Right - lprcScroll.Left, lprcScroll.Bottom - lprcScroll.Top,
+    Canvas, lprcScroll.Left, lprcScroll.Top, SRCCOPY);
+end;
+
 procedure TMainScreen.MainOffscreenPaint;
 var
   ProcessOptions: integer;
@@ -4197,8 +4203,13 @@ begin
       exit; { map window not moved }
     offscreen.Canvas.Font.Assign(UniFont[ftSmall]);
     rec := Rect(0, 0, MapWidth, MapHeight);
-{$IFDEF WINDOWS}{ TODO Linux }
+{$IFDEF WINDOWS}
     ScrollDC(offscreen.Canvas.Handle, (xwd - xw) * (xxt * 2), (ywd - yw) * yyt,
+      rec, rec, 0, nil);
+{$ENDIF}
+{$IFDEF LINUX}
+    // Fallback to bitblt
+    ScrollDCCopy(offscreen.Canvas, (xwd - xw) * (xxt * 2), (ywd - yw) * yyt,
       rec, rec, 0, nil);
 {$ENDIF}
     for DoInvalidate := false to FastScrolling do
@@ -4206,9 +4217,14 @@ begin
       if DoInvalidate then
       begin
         rec.Bottom := MapHeight - overlap;
-{$IFDEF WINDOWS}{ TODO Linux }
+{$IFDEF WINDOWS}
         ScrollDC(Canvas.Handle, (xwd - xw) * (xxt * 2), (ywd - yw) * yyt, rec,
           rec, 0, nil);
+{$ENDIF}
+{$IFDEF LINUX}
+        // Fallback to bitblt
+        ScrollDCCopy(Canvas, (xwd - xw) * (xxt * 2), (ywd - yw) * yyt,
+          rec, rec, 0, nil);
 {$ENDIF}
         ProcessOptions := prInvalidate;
       end

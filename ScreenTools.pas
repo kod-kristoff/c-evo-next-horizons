@@ -809,7 +809,7 @@ function BitBltCanvas(DestCanvas: TCanvas; X, Y, Width, Height: Integer; SrcCanv
   YSrc: Integer; Rop: DWORD): Boolean;
 begin
   Assert(Rop = SRCCOPY);
-  DestCanvas.CopyRect(Rect(X, X, Width, Height), SrcCanvas,
+  DestCanvas.CopyRect(Rect(X, Y, X + Width, Y + Height), SrcCanvas,
     Rect(XSrc, YSrc, XSrc + Width, YSrc + Height));
 end;
 
