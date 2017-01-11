@@ -4,9 +4,8 @@ unit Start;
 interface
 
 uses
-  GameServer, Messg, ButtonBase, ButtonA, ButtonC, ButtonB, Area,
-
-  LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics, Controls, Forms, StdCtrls,
+  GameServer, Messg, ButtonBase, ButtonA, ButtonC, ButtonB, Area, Math,
+  LCLIntf, LCLType, SysUtils, Classes, Graphics, Controls, Forms, StdCtrls,
   Menus, Registry;
 
 const
@@ -450,7 +449,7 @@ const
     Canvas.Font.Assign(UniFont[ftNormal]);
     BiColorTextOut(Canvas, Colors.Canvas.Pixels[clkAge0 - 1, cliDimmedText],
       $000000, xAction, y + 21, Phrases2.Lookup(TextItem));
-    BitBlt(LogoBuffer.Canvas.Handle, 0, 0, 50, 50, Canvas.Handle,
+    BitBltCanvas(LogoBuffer.Canvas, 0, 0, 50, 50, Canvas,
       xActionIcon - 2, y - 2, SRCCOPY);
     GlowFrame(LogoBuffer, 8, 8, 34, 34, $202020);
     BitBlt(Canvas.Handle, xActionIcon - 2, y - 2, 50, 50,
@@ -565,7 +564,7 @@ begin
         then
           h := ClientHeight - ActionBottomBorder -
             (yAction + SelectedAction * ActionPitch - 8);
-        BitBlt(LogoBuffer.Canvas.Handle, 0, 0, w, h, Canvas.Handle,
+        BitBltCanvas(LogoBuffer.Canvas, 0, 0, w, h, Canvas,
           ActionSideBorder + i * wBuffer, yAction + SelectedAction * ActionPitch
           - 8, SRCCOPY);
         MakeBlue(LogoBuffer, 0, 0, w, h);
@@ -821,11 +820,9 @@ begin
 end;
 
 procedure TStartDlg.FormShow(Sender: TObject);
-type
-  TLine = array [0 .. 99999999] of Byte;
 var
-  i, x, y: integer;
-  PictureLine: ^TLine;
+  x, y: integer;
+  PicturePixel: PPixel32;
 begin
   SetMainTextureByAge(-1);
   List.Font.Color := MainTexture.clMark;
@@ -835,13 +832,12 @@ begin
     (hMaintexture - 64) div 2);
   for y := 0 to 63 do
   begin // darken texture for empty slot
-    PictureLine := EmptyPicture.ScanLine[y];
-    for x := 0 to 64 * 3 - 1 do
+    for x := 0 to 64 - 1 do
     begin
-      i := integer(PictureLine[x]) - 28;
-      if i < 0 then
-        i := 0;
-      PictureLine[x] := i;
+      PicturePixel := GetBitmapPixelPtr(EmptyPicture, x, y);
+      PicturePixel^.B := Max(PicturePixel^.B - 28, 0);
+      PicturePixel^.G := Max(PicturePixel^.G - 28, 0);
+      PicturePixel^.R := Max(PicturePixel^.R - 28, 0);
     end
   end;
   EmptyPicture.EndUpdate;
@@ -1003,11 +999,9 @@ end;
 procedure TStartDlg.PaintInfo;
 
   procedure PaintRandomMini(Brightness: integer);
-  type
-    TLine = array [0 .. lxmax * 2, 0 .. 2] of Byte;
   var
     i, x, y, xm, cm: integer;
-    MiniLine: ^TLine;
+    MiniPixel: PPixel32;
     Map: ^TTileList;
   begin
     Map := PreviewMap(StartLandMass);
@@ -1015,24 +1009,22 @@ procedure TStartDlg.PaintInfo;
     MiniHeight := lypre[WorldSize];
 
     Mini.PixelFormat := pf24bit;
-    Mini.width := MiniWidth * 2;
-    Mini.height := MiniHeight;
+    Mini.SetSize(MiniWidth * 2, MiniHeight);
     Mini.BeginUpdate;
-    for y := 0 to MiniHeight - 1 do
-    begin
-      MiniLine := Mini.ScanLine[y];
-      for x := 0 to MiniWidth - 1 do
-        for i := 0 to 1 do
-        begin
+    for y := 0 to MiniHeight - 1 do begin
+      for x := 0 to MiniWidth - 1 do begin
+        for i := 0 to 1 do begin
           xm := (x * 2 + i + y and 1) mod (MiniWidth * 2);
+          MiniPixel := GetBitmapPixelPtr(Mini, xm, y);
           cm := MiniColors
             [Map[x * lxmax div MiniWidth + lxmax *
             ((y * (lymax - 1) + MiniHeight div 2) div (MiniHeight - 1))] and
             fTerrain, i];
-          MiniLine[xm, 0] := cm shr 16 * Brightness div 3;
-          MiniLine[xm, 1] := cm shr 8 and $FF * Brightness div 3;
-          MiniLine[xm, 2] := cm and $FF * Brightness div 3;
+          MiniPixel^.B := ((cm shr 16) and $FF) * Brightness div 3;
+          MiniPixel^.G := ((cm shr 8) and $FF) * Brightness div 3;
+          MiniPixel^.R := ((cm shr 0) and $FF) * Brightness div 3;
         end;
+      end;
     end;
     Mini.EndUpdate;
   end;
