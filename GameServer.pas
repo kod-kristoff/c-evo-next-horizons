@@ -1545,7 +1545,8 @@ begin
     for p1 := 0 to nPl - 1 do
       if 1 shl p1 and GAlive <> 0 then
         inc(nAlive);
-    for ad := 0 to nAdv - 5 do
+    ad := 0;
+    while ad <= (nAdv - 5) do begin
       if RW[pTurn].Tech[ad] < tsSeen then
       begin
         nAppliers := 0;
@@ -1558,10 +1559,12 @@ begin
           SeeTech(pTurn, ad);
           inc(nTech[pTurn]);
           if Mode >= moMovie then
-            // TODO CallPlayer(cShowGreatLibTech, pTurn, ad);
+            CallPlayer(cShowGreatLibTech, pTurn, ad);
           // do not call CallPlayer(pTurn) while map is invalid
         end;
       end;
+      Inc(ad);
+    end;
   end;
 
   MaskD(ObserveLevel, MapSize, not Cardinal(3 shl (2 * pTurn)));
