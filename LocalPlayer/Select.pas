@@ -99,6 +99,7 @@ procedure TListDlg.FormCreate(Sender: TObject);
 begin
   inherited;
   Canvas.Font.Assign(UniFont[ftNormal]);
+  sb := TPVScrollbar.Create;
   CreatePVSB(sb, Handle, 2, 361, 2 + 422);
   InitButtons();
   Kind := kMission;
@@ -113,18 +114,19 @@ end;
 
 procedure TListDlg.FormDestroy(Sender: TObject);
 begin
-  ScienceNationDot.Free;
+  FreeAndNil(sb);
+  FreeAndNil(ScienceNationDot);
 end;
 
 procedure TListDlg.CloseBtnClick(Sender: TObject);
 begin
   Closable := true;
-  Close
+  Close;
 end;
 
 procedure TListDlg.FormCloseQuery(Sender: TObject; var CanClose: boolean);
 begin
-  CanClose := Closable or not(Kind in MustChooseKind)
+  CanClose := Closable or not(Kind in MustChooseKind);
 end;
 
 procedure TListDlg.OnScroll(var m: TMessage);
@@ -132,8 +134,8 @@ begin
   if ProcessPVSB(sb, m) then
   begin
     Sel := -2;
-    SmartUpdateContent(true)
-  end
+    SmartUpdateContent(true);
+  end;
 end;
 
 procedure TListDlg.OnMouseWheel(var m: TMessage);
@@ -144,7 +146,7 @@ begin
     SmartUpdateContent(true);
     PaintBox1MouseMove(nil, [], m.lParam and $FFFF - Left,
       m.lParam shr 16 - Top);
-  end
+  end;
 end;
 
 procedure TListDlg.OnMouseLeave(var Msg: TMessage);
@@ -153,7 +155,7 @@ begin
   begin
     line(Canvas, Sel, false, false);
     Sel := -2;
-  end
+  end;
 end;
 
 procedure TListDlg.FormPaint(Sender: TObject);
@@ -182,7 +184,7 @@ begin
     s := Phrases2.Lookup('SHIFTCLICK');
     LoweredTextOut(Canvas, -2, MainTexture,
       (ClientWidth - BiColorTextWidth(Canvas, s)) div 2, ClientHeight - 29, s);
-  end
+  end;
 end;
 
 procedure TListDlg.line(ca: TCanvas; l: integer; NonText, lit: boolean);

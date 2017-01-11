@@ -10,10 +10,14 @@ uses
   Forms, LCLIntf, LCLType, LMessages, Messages, SysUtils;
 
 type
-  TPVScrollbar = record
+
+  { TPVScrollbar }
+
+  TPVScrollbar = class
     h: integer;
     si: TScrollInfo;
     Form: TForm;
+    destructor Destroy; override;
   end;
 
   procedure CreatePVSB(var sb: TPVScrollbar; Handle, y0, x1, y1: integer);
@@ -151,6 +155,15 @@ begin
       SetScrollInfo(sb.h, SB_CTL, sb.si, true);
     end
   end
+end;
+
+{ TPVScrollbar }
+
+destructor TPVScrollbar.Destroy;
+begin
+  h := 0;
+  si.cbSize := 0;
+  FreeAndNil(Form);
 end;
 
 end.

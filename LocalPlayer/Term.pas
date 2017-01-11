@@ -3454,6 +3454,7 @@ procedure TMainScreen.FormCreate(Sender: TObject);
 var
   i, j: integer;
 begin
+  sb := TPVScrollbar.Create;
 {$IFDEF WINDOWS}{ TODO }
   Screen.Cursors[crImpDrag] := LoadCursor(HInstance, 'DRAG');
   Screen.Cursors[crFlatHand] := LoadCursor(HInstance, 'FLATHAND');
@@ -3528,13 +3529,14 @@ procedure TMainScreen.FormDestroy(Sender: TObject);
 var
   i: integer;
 begin
-  TopBar.free;
-  Mini.free;
-  Buffer.free;
-  Panel.free;
+  FreeAndNil(sb);
+  FreeAndNil(TopBar);
+  FreeAndNil(Mini);
+  FreeAndNil(Buffer);
+  FreeAndNil(Panel);
   for i := 0 to nPl - 1 do
     if AILogo[i] <> nil then
-      AILogo[i].free;
+      FreeAndNil(AILogo[i]);
 end;
 
 procedure TMainScreen.FormResize(Sender: TObject);
@@ -4154,11 +4156,14 @@ begin
   Mini.EndUpdate;
 end;
 
-function ScrollDCCopy(Canvas: TCanvas; dx: longint; dy: longint; const lprcScroll:TRect; const lprcClip:TRect; hrgnUpdate:HRGN; lprcUpdate: PRect):Boolean;
+{$IFDEF LINUX}
+// Can't do scrolling of DC under Linux, then fallback into BitBlt.
+function ScrollDC(Canvas: TCanvas; dx: longint; dy: longint; const lprcScroll:TRect; const lprcClip:TRect; hrgnUpdate:HRGN; lprcUpdate: PRect):Boolean;
 begin
   BitBltCanvas(Canvas, lprcScroll.Left + dx, lprcScroll.Top + dy, lprcScroll.Right - lprcScroll.Left, lprcScroll.Bottom - lprcScroll.Top,
     Canvas, lprcScroll.Left, lprcScroll.Top, SRCCOPY);
 end;
+{$ENDIF}
 
 procedure TMainScreen.MainOffscreenPaint;
 var
@@ -4211,8 +4216,7 @@ begin
       rec, rec, 0, nil);
 {$ENDIF}
 {$IFDEF LINUX}
-    // Fallback to bitblt
-    ScrollDCCopy(offscreen.Canvas, (xwd - xw) * (xxt * 2), (ywd - yw) * yyt,
+    ScrollDC(offscreen.Canvas, (xwd - xw) * (xxt * 2), (ywd - yw) * yyt,
       rec, rec, 0, nil);
 {$ENDIF}
     for DoInvalidate := false to FastScrolling do
@@ -4225,8 +4229,7 @@ begin
           rec, 0, nil);
 {$ENDIF}
 {$IFDEF LINUX}
-        // Fallback to bitblt
-        ScrollDCCopy(Canvas, (xwd - xw) * (xxt * 2), (ywd - yw) * yyt,
+        ScrollDC(Canvas, (xwd - xw) * (xxt * 2), (ywd - yw) * yyt,
           rec, rec, 0, nil);
 {$ENDIF}
         ProcessOptions := prInvalidate;

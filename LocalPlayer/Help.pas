@@ -207,6 +207,7 @@ begin
   MainText.OwnsObjects := True;
   SearchResult := THyperText.Create;
   SearchResult.OwnsObjects := True;
+  sb := TPVScrollbar.Create;
   CreatePVSB(sb, Handle, 36, 551, 36 + 432);
 
   HelpText := TStringTable.Create;
@@ -243,6 +244,7 @@ end;
 
 procedure THelpDlg.FormDestroy(Sender: TObject);
 begin
+  FreeAndNil(sb);
   FreeAndNil(MainText);
   FreeAndNil(SearchResult);
   FreeAndNil(ExtPic);
