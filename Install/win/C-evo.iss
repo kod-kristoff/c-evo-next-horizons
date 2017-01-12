@@ -62,7 +62,7 @@ Source: "{#MyAppSubDir}\Graphics\*"; DestDir: "{app}\Graphics"; Flags: ignorever
 Source: "{#MyAppSubDir}\Sounds\*.*"; DestDir: "{app}\Sounds"; Flags: ignoreversion
 Source: "{#MyAppSubDir}\Tribes\*.*"; DestDir: "{app}\Tribes"; Flags: ignoreversion
 Source: "{#MyAppSubDir}\Help\*.*"; DestDir: "{app}\Help"; Flags: ignoreversion
-Source: "{#MyAppSubDir}\Fonts.txt"; DestDir: "{app}\fonts.txt"; Flags: ignoreversion
+Source: "{#MyAppSubDir}\Fonts.txt"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#MyAppSubDir}\Language.txt"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#MyAppSubDir}\Language2.txt"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#MyAppSubDir}\AI\lib\x86_64-win64\StdAI.dll"; DestDir: "{app}\AI"; DestName: "StdAI-win64.dll"; Flags: ignoreversion; Check: Is64BitInstallMode
