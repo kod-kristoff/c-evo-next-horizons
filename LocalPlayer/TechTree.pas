@@ -36,7 +36,7 @@ implementation
 uses
   Directories;
 
-{$R *.dfm}
+{$R *.lfm}
 
 const
   BlackBorder = 4;

@@ -100,7 +100,7 @@ implementation
 uses
   Messg, ClientTools, Diplomacy, Inp, Select, NatStat, Tribes, MessgEx;
 
-{$R *.dfm}
+{$R *.lfm}
 
 const
   xPadC = 140;

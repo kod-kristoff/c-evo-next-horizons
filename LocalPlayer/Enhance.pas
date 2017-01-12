@@ -48,7 +48,7 @@ implementation
 
 uses Help;
 
-{$R *.dfm}
+{$R *.lfm}
 
 procedure TEnhanceDlg.FormCreate(Sender: TObject);
 var
