@@ -405,14 +405,10 @@ end;
 
 procedure Done;
 begin
-  NoMap.Free;
-  NoMap := nil;
-  LandPatch.Free;
-  LandPatch := nil;
-  OceanPatch.Free;
-  OceanPatch := nil;
-  Borders.Free;
-  Borders := nil;
+  FreeAndNil(NoMap);
+  FreeAndNil(LandPatch);
+  FreeAndNil(OceanPatch);
+  FreeAndNil(Borders);
 end;
 
 procedure Reset;
@@ -978,7 +974,7 @@ var
   procedure PaintBorder;
   var
     dx, dy: integer;
-    Line: ^TLine;
+    PixelPtr: TPixelPointer;
   begin
     if ShowBorder and (Loc >= 0) and (Loc < G.lx * G.ly) and
       (Tile and fTerrain <> fUNKNOWN) then
@@ -988,20 +984,25 @@ var
       begin
         if BordersOK and (1 shl p1) = 0 then
         begin
+          // Clearing before bitblt SRCCOPY shouldn't be neccesary but for some
+          // reason without it code works different then under Delphi
+          Borders.Canvas.FillRect(Bounds(0, p1 * (yyt * 2), xxt * 2, yyt * 2));
+
           LCLIntf.BitBlt(Borders.Canvas.Handle, 0, p1 * (yyt * 2), xxt * 2,
             yyt * 2, GrExt[HGrTerrain].Data.Canvas.Handle,
             1 + 8 * (xxt * 2 + 1), 1 + yyt + 16 * (yyt * 3 + 1), SRCCOPY);
           Borders.BeginUpdate;
           for dy := 0 to yyt * 2 - 1 do
           begin
-            Line := Borders.ScanLine[p1 * (yyt * 2) + dy];
-            for dx := 0 to xxt * 2 - 1 do
-              if Line[dx, 0] = 99 then
-              begin
-                Line[dx, 0] := Tribe[p1].Color shr 16 and $FF;
-                Line[dx, 1] := Tribe[p1].Color shr 8 and $FF;
-                Line[dx, 2] := Tribe[p1].Color and $FF;
-              end
+            PixelPtr.Init(Borders, 0, p1 * (yyt * 2) + dy);
+            for dx := 0 to xxt * 2 - 1 do begin
+              if PixelPtr.Pixel^.B = 99 then begin
+                PixelPtr.Pixel^.B := Tribe[p1].Color shr 16 and $FF;
+                PixelPtr.Pixel^.G := Tribe[p1].Color shr 8 and $FF;
+                PixelPtr.Pixel^.R := Tribe[p1].Color and $FF;
+              end;
+              PixelPtr.NextPixel;
+            end;
           end;
           Borders.EndUpdate;
           BordersOK := BordersOK or 1 shl p1;
