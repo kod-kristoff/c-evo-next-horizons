@@ -4,6 +4,6 @@
 #PATH StdAI.dll
 #PATH_WIN32 StdAI-win32.dll
 #PATH_WIN64 StdAI-win64.dll
-#PATH_LINUX32 libstdai-linux32.so
-#PATH_LINUX64 libstdai-linux64.so
+#PATH_LINUX32 libstdai-i386.so
+#PATH_LINUX64 libstdai-amd64.so
 #CREDITS Standard AI by Steffen Gerlach.

@@ -51,6 +51,8 @@ const
   HeapTraceLog = 'heaptrclog.trc';
 {$ENDIF}
 
+{$R *.res}
+
 begin
   {$IFDEF DEBUG}
   // Heap trace

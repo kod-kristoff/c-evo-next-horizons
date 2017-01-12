@@ -3,7 +3,8 @@ unit Sound;
 interface
 
 uses
-  Messages, SysUtils, Classes, Graphics, Controls, Forms {$IFDEF WINDOWS}, MMSystem, Windows{$ENDIF};
+  Messages, SysUtils, Classes, Graphics, Controls, Forms, fgl
+  {$IFDEF WINDOWS}, MMSystem, Windows{$ENDIF};
 
 function PrepareSound(FileName: string): integer;
 procedure PlaySound(FileName: string);
@@ -91,13 +92,10 @@ begin
   {$ENDIF}
 end;
 
-type
-  TSoundList = array [0 .. 99999] of TSound;
 
 var
-  nSoundList: integer;
   SoundPlayer: TSoundPlayer;
-  SoundList: ^TSoundList;
+  SoundList: TFPGObjectList<TSound>;
   PlayingSound: TSound;
 
 {$IFDEF WINDOWS}
@@ -113,19 +111,13 @@ end;
 
 function PrepareSound(FileName: string): integer;
 begin
-  for result := 1 to Length(FileName) do
-    FileName[result] := upcase(FileName[result]);
-  result := 0;
-  while (result < nSoundList) and (SoundList[result].FFileName <> FileName) do
+  Result := 0;
+  while (result < SoundList.Count) and (SoundList[result].FFileName <> FileName) do
     inc(result);
-  if result = nSoundList then
-  begin // first time this sound is played
-    if nSoundList = 0 then
-      ReallocMem(SoundList, 16 * 4)
-    else if (nSoundList >= 16) and (nSoundList and (nSoundList - 1) = 0) then
-      ReallocMem(SoundList, nSoundList * (2 * 4));
-    inc(nSoundList);
-    SoundList[result] := TSound.Create(FileName);
+  if result = SoundList.Count then begin
+    // first time this sound is played
+    SoundList.Add(TSound.Create(FileName));
+    Result := SoundList.Count - 1;
   end;
 end;
 
@@ -145,22 +137,28 @@ end;
 var
   i: integer;
 
+procedure UnitInit;
+begin
+  SoundList := TFPGObjectList<TSound>.Create;
+  PlayingSound := nil;
+  SoundPlayer := nil;
+end;
+
+procedure UnitDone;
+begin
+  if PlayingSound <> nil then begin
+    PlayingSound.Stop;
+    Sleep(222);
+  end;
+  FreeAndNil(SoundList);
+end;
+
 initialization
 
-nSoundList := 0;
-SoundList := nil;
-PlayingSound := nil;
-SoundPlayer := nil;
+UnitInit;
 
 finalization
 
-if PlayingSound <> nil then
-begin
-  PlayingSound.Stop;
-  Sleep(222);
-end;
-for i := 0 to nSoundList - 1 do
-  SoundList[i].Free;
-ReallocMem(SoundList, 0);
+UnitDone;
 
 end.

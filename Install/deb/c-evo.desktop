@@ -1,0 +1,10 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=C-evo
+Comment=Empire building game
+Exec=c-evo
+Icon=c-evo
+Terminal=false
+Type=Application
+Categories=GNOME;Application;Game;
+StartupNotify=true

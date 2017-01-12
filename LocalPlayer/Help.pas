@@ -436,7 +436,6 @@ var
   s: string;
   HelpLineInfo: THelpLineInfo;
 begin
-  MainText.SaveToFile('MainText.txt');
   inherited;
   CaptionColor := Colors.Canvas.Pixels[clkMisc, cliPaperCaption];
   FillSeamless(OffScreen.Canvas, 0, 0, InnerWidth, InnerHeight, 0,
