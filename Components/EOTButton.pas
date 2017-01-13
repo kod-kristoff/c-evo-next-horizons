@@ -3,8 +3,7 @@ unit EOTButton;
 interface
 
 uses
-  ButtonBase,
-  Classes, Graphics, LCLIntf, LCLType;
+  ButtonBase, Classes, SysUtils, Graphics, LCLIntf, LCLType;
 
 const
   eotBlinkOff = -1;
@@ -15,6 +14,7 @@ const
 
 type
   TEOTButton = class(TButtonBase)
+  public
     constructor Create(aOwner: TComponent); override;
     destructor Destroy; override;
     procedure SetButtonIndexFast(x: integer);
@@ -50,65 +50,71 @@ procedure ImageOp_CBC(Dst, Src: TBitmap; xDst, yDst, xSrc, ySrc, w, h, Color0,
 // G channel = background amp (old Dst content), 128=original brightness
 // R channel = Color2 amp
 type
-  TLine = array [0 .. 9999, 0 .. 2] of Byte;
+  TPixel = array [0 .. 2] of Byte;
 var
   ix, iy, amp0, amp1, trans, Value: integer;
-  SrcLine, DstLine: ^TLine;
+  SrcLine, DstLine: ^TPixel;
 begin
+  Src.BeginUpdate;
+  Dst.BeginUpdate;
   for iy := 0 to h - 1 do
   begin
-    SrcLine := Src.ScanLine[ySrc + iy];
-    DstLine := Dst.ScanLine[yDst + iy];
+    SrcLine := Src.ScanLine[ySrc + iy] + xSrc * (Src.RawImage.Description.BitsPerPixel shr 3);
+    DstLine := Dst.ScanLine[yDst + iy] + xDst * (Dst.RawImage.Description.BitsPerPixel shr 3);
     for ix := 0 to w - 1 do
     begin
-      trans := SrcLine[xSrc + ix, 0] * 2; // green channel = transparency
-      amp0 := SrcLine[xSrc + ix, 1] * 2;
-      amp1 := SrcLine[xSrc + ix, 2] * 2;
+      trans := SrcLine[0] * 2; // green channel = transparency
+      amp0 := SrcLine[1] * 2;
+      amp1 := SrcLine[2] * 2;
       if trans <> $FF then
       begin
-        Value := (DstLine[xDst + ix][0] * trans + (Color2 shr 16 and $FF) * amp1
+        Value := (DstLine[0] * trans + (Color2 shr 16 and $FF) * amp1
           + (Color0 shr 16 and $FF) * amp0) div $FF;
         if Value < 256 then
-          DstLine[xDst + ix][0] := Value
+          DstLine[0] := Value
         else
-          DstLine[xDst + ix][0] := 255;
-        Value := (DstLine[xDst + ix][1] * trans + (Color2 shr 8 and $FF) * amp1
+          DstLine[0] := 255;
+        Value := (DstLine[1] * trans + (Color2 shr 8 and $FF) * amp1
           + (Color0 shr 8 and $FF) * amp0) div $FF;
         if Value < 256 then
-          DstLine[xDst + ix][1] := Value
+          DstLine[1] := Value
         else
-          DstLine[xDst + ix][1] := 255;
-        Value := (DstLine[xDst + ix][2] * trans + (Color2 and $FF) * amp1 +
+          DstLine[1] := 255;
+        Value := (DstLine[2] * trans + (Color2 and $FF) * amp1 +
           (Color0 and $FF) * amp0) div $FF;
         if Value < 256 then
-          DstLine[xDst + ix][2] := Value
+          DstLine[2] := Value
         else
-          DstLine[xDst + ix][2] := 255;
-      end
-    end
+          DstLine[2] := 255;
+      end;
+      SrcLine := Pointer(SrcLine) + (Src.RawImage.Description.BitsPerPixel shr 3);
+      DstLine := Pointer(DstLine) + (Dst.RawImage.Description.BitsPerPixel shr 3);
+    end;
   end;
+  Src.EndUpdate;
+  Dst.EndUpdate;
 end;
 
 constructor TEOTButton.Create;
 begin
-  inherited Create(aOwner);
+  inherited;
   Buffer := TBitmap.Create;
   Buffer.PixelFormat := pf24bit;
-  Buffer.Width := 48;
-  Buffer.Height := 48;
+  Buffer.SetSize(48, 48);
+  Buffer.Canvas.FillRect(0, 0, Buffer.Width, Buffer.Height);
   Back := TBitmap.Create;
   Back.PixelFormat := pf24bit;
-  Back.Width := 48;
-  Back.Height := 48;
+  Back.SetSize(48, 48);
+  Back.Canvas.FillRect(0, 0, Back.Width, Back.Height);
   ShowHint := true;
   SetBounds(0, 0, 48, 48);
 end;
 
 destructor TEOTButton.Destroy;
 begin
-  Buffer.Free;
-  Back.Free;
-  inherited Destroy;
+  FreeAndNil(Buffer);
+  FreeAndNil(Back);
+  inherited;
 end;
 
 procedure TEOTButton.Paint;

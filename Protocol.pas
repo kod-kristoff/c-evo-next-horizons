@@ -1439,7 +1439,8 @@ type
     FoodSupport, ProdSupport, ReportFlags: integer;
   end;
 
-  TJobProgressData = array [0 .. nJob - 1] of record Required, Done,
+  TJobProgressData = array [0 .. nJob - 1] of record
+    Required, Done,
     NextTurnPlus: integer;
   end;
   TBattleForecast = record

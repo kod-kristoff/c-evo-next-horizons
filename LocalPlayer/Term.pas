@@ -4107,7 +4107,7 @@ begin
             end;
             cm := $808080 or cm shr 1; { increase brightness }
             if y > 0 then begin
-              // 2x2 city dot covers two scanlines
+              // 2x2 city dot covers two lines
               PrevMiniPixel := GetBitmapPixelPtr(Mini, xm, y - 1);
               PrevMiniPixel^.B := cm shr 16;
               PrevMiniPixel^.G := cm shr 8 and $FF;
