@@ -1,38 +1,37 @@
 object DraftDlg: TDraftDlg
   Left = 325
+  Height = 511
   Top = 206
+  Width = 315
   BorderIcons = []
   BorderStyle = bsNone
   ClientHeight = 511
   ClientWidth = 315
   Color = clBtnFace
-  Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -13
   Font.Name = 'MS Sans Serif'
-  Font.Style = []
   FormStyle = fsStayOnTop
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnMouseDown = PaintBox1MouseDown
   OnMouseUp = PaintBox1MouseUp
   OnShow = FormShow
-  PixelsPerInch = 96
+  LCLVersion = '1.6.0.4'
   object OKBtn: TButtonA
     Left = 196
+    Height = 25
     Top = 477
     Width = 100
-    Height = 25
     Down = False
     Permanent = False
     OnClick = OKBtnClick
-    Caption = ''
   end
   object CloseBtn: TButtonB
     Left = 284
+    Height = 25
     Top = 6
     Width = 25
-    Height = 25
     Down = False
     Permanent = False
     OnClick = CloseBtnClick
@@ -40,20 +39,20 @@ object DraftDlg: TDraftDlg
   end
   object GroundArea: TArea
     Left = 30
+    Height = 36
     Top = 464
     Width = 36
-    Height = 36
   end
   object SeaArea: TArea
     Left = 70
+    Height = 36
     Top = 464
     Width = 36
-    Height = 36
   end
   object AirArea: TArea
     Left = 110
+    Height = 36
     Top = 464
     Width = 36
-    Height = 36
   end
 end

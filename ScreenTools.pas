@@ -37,11 +37,11 @@ type
     Line: PPixel32;
     BytesPerPixel: Integer;
     BytesPerLine: Integer;
-    procedure NextLine;
-    procedure NextPixel;
-    procedure SetXY(X, Y: Integer);
-    procedure SetX(X: Integer);
-    procedure Init(Bitmap: TBitmap; X: Integer = 0; Y: Integer = 0);
+    procedure NextLine; inline;
+    procedure NextPixel; inline;
+    procedure SetXY(X, Y: Integer); inline;
+    procedure SetX(X: Integer); inline;
+    procedure Init(Bitmap: TBitmap; X: Integer = 0; Y: Integer = 0); inline;
   end;
 
 {$IFDEF WINDOWS}
@@ -623,29 +623,22 @@ begin
 end;
 
 procedure MakeBlue(dst: TBitmap; x, y, w, h: integer);
-type
-  TLine = array [0 .. 99999, 0 .. 2] of Byte;
-  PLine = ^TLine;
-
-  procedure BlueLine(line: PLine; Length: integer);
-  var
-    i: integer;
-  begin
-    for i := 0 to Length - 1 do
-    begin
-      line[i, 0] := line[i, 0] div 2;
-      line[i, 1] := line[i, 1] div 2;
-      line[i, 2] := line[i, 2] div 2;
-    end
-  end;
-
 var
-  i: integer;
+  XX, YY: Integer;
+  PixelPtr: TPixelPointer;
 begin
-  dst.BeginUpdate;
-  for i := 0 to h - 1 do
-    BlueLine(@(PLine(dst.ScanLine[y + i])[x]), w);
-  dst.EndUpdate;
+  Dst.BeginUpdate;
+  PixelPtr.Init(Dst, 0, 0);
+  for yy := 0 to h - 1 do begin
+    for xx := 0 to w - 1 do begin
+      PixelPtr.Pixel^.B := PixelPtr.Pixel^.B div 2;
+      PixelPtr.Pixel^.G := PixelPtr.Pixel^.G div 2;
+      PixelPtr.Pixel^.R := PixelPtr.Pixel^.R div 2;
+      PixelPtr.NextPixel;
+    end;
+    PixelPtr.NextLine;
+  end;
+  Dst.EndUpdate;
 end;
 
 procedure ImageOp_B(dst, Src: TBitmap; xDst, yDst, xSrc, ySrc, w, h: integer);
@@ -915,18 +908,16 @@ begin
 end;
 
 procedure GlowFrame(dst: TBitmap; x0, y0, Width, Height: integer; cl: TColor);
-type
-  TLine = array [0 .. 649, 0 .. 2] of Byte;
 var
   x, y, ch, r: integer;
-  DstLine: ^TLine;
+  DstPtr: TPixelPointer;
 begin
   dst.BeginUpdate;
   for y := -GlowRange + 1 to Height - 1 + GlowRange - 1 do
   begin
-    DstLine := dst.ScanLine[y0 + y];
     for x := -GlowRange + 1 to Width - 1 + GlowRange - 1 do
     begin
+      DstPtr.Init(dst, x0 + x, y0 + y);
       if x < 0 then
         if y < 0 then
           r := round(sqrt(sqr(x) + sqr(y)))
@@ -951,8 +942,8 @@ begin
         r := 1;
       if r < GlowRange then
         for ch := 0 to 2 do
-          DstLine[x0 + x][2 - ch] :=
-            (DstLine[x0 + x][2 - ch] * (r - 1) + (cl shr (8 * ch) and $FF) *
+          DstPtr.Pixel^.Planes[2 - ch] :=
+            (DstPtr.Pixel^.Planes[2 - ch] * (r - 1) + (cl shr (8 * ch) and $FF) *
             (GlowRange - r)) div (GlowRange - 1);
     end;
   end;

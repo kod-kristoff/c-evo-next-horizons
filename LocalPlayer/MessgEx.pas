@@ -231,27 +231,21 @@ const
   yScrewed = 10;
   wScrewed = 43;
   hScrewed = 27;
-type
-  TLine = array [0 .. 9999, 0 .. 2] of Byte;
 var
   ix, iy, xDst, yDst, dx, dy, xIcon, yIcon, xb, yb, wb, hb: integer;
   x1, xR, yR, share: single;
   Screwed: array [0 .. wScrewed - 1, 0 .. hScrewed - 1, 0 .. 3] of single;
-  SrcLine: ^TLine;
-
+  SrcPtr: TPixelPointer;
 begin
-  if IconIndex >= 0 then
-  begin
+  if IconIndex >= 0 then begin
     xIcon := IconIndex mod 7 * xSizeBig;
     yIcon := (IconIndex + SystemIconLines * 7) div 7 * ySizeBig;
     // prepare screwed icon
     fillchar(Screwed, sizeof(Screwed), 0);
     BigImp.BeginUpdate;
-    for iy := 0 to 39 do
-    begin
-      SrcLine := BigImp.ScanLine[iy + yIcon];
-      for ix := 0 to 55 do
-      begin
+    for iy := 0 to 39 do begin
+      for ix := 0 to 55 do begin
+        SrcPtr.Init(BigImp, ix + xIcon, iy + yIcon);
         xR := ix * (37 + iy * 5 / 40) / 56;
         xDst := Trunc(xR);
         xR := Frac(xR);
@@ -260,8 +254,7 @@ begin
         yDst := Trunc(yR);
         yR := Frac(yR);
         for dx := 0 to 1 do
-          for dy := 0 to 1 do
-          begin
+          for dy := 0 to 1 do begin
             if dx = 0 then
               share := 1 - xR
             else
@@ -271,11 +264,11 @@ begin
             else
               share := share * yR;
             Screwed[xDst + dx, yDst + dy, 0] := Screwed[xDst + dx, yDst + dy, 0]
-              + share * SrcLine[ix + xIcon, 0];
+              + share * SrcPtr.Pixel^.B;
             Screwed[xDst + dx, yDst + dy, 1] := Screwed[xDst + dx, yDst + dy, 1]
-              + share * SrcLine[ix + xIcon, 1];
+              + share * SrcPtr.Pixel^.G;
             Screwed[xDst + dx, yDst + dy, 2] := Screwed[xDst + dx, yDst + dy, 2]
-              + share * SrcLine[ix + xIcon, 2];
+              + share * SrcPtr.Pixel^.R;
             Screwed[xDst + dx, yDst + dy, 3] := Screwed[xDst + dx, yDst + dy,
               3] + share;
           end;
