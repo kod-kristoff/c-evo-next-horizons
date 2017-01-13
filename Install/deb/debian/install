@@ -7,6 +7,7 @@ Graphics usr/share/c-evo
 Help usr/share/c-evo
 Sounds usr/share/c-evo
 Tribes usr/share/c-evo
+Localization usr/share/c-evo
 
 AI/StdAI.ai.txt usr/share/c-evo/AI
 AI/StdAI.bmp usr/share/c-evo/AI

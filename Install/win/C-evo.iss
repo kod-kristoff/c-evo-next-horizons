@@ -61,6 +61,7 @@ Source: "{#MyAppSubDir}\lib\i386-win32\{#MyAppExeName}"; DestDir: "{app}"; Flags
 Source: "{#MyAppSubDir}\Graphics\*"; DestDir: "{app}\Graphics"; Flags: ignoreversion
 Source: "{#MyAppSubDir}\Sounds\*.*"; DestDir: "{app}\Sounds"; Flags: ignoreversion
 Source: "{#MyAppSubDir}\Tribes\*.*"; DestDir: "{app}\Tribes"; Flags: ignoreversion
+Source: "{#MyAppSubDir}\Localization\*.*"; DestDir: "{app}\Localization"; Flags: ignoreversion recursesubdirs
 Source: "{#MyAppSubDir}\Help\*.*"; DestDir: "{app}\Help"; Flags: ignoreversion
 Source: "{#MyAppSubDir}\Fonts.txt"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#MyAppSubDir}\Language.txt"; DestDir: "{app}"; Flags: ignoreversion
