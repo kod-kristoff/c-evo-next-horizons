@@ -4,6 +4,9 @@ unit CityScreen;
 interface
 
 uses
+  {$IFDEF LINUX}
+  LMessages,
+  {$ENDIF}
   Protocol, ClientTools, Term, ScreenTools, IsoEngine, BaseWin,
   LCLIntf, LCLType, Messages, SysUtils, Classes, Graphics, Controls, Forms, ExtCtrls,
   ButtonA, ButtonC, Area;
@@ -86,7 +89,7 @@ var
 implementation
 
 uses
-  Select, Messg, MessgEx, Help, Inp, Tribes, Directories,
+  Select, Messg, MessgEx, Help, Tribes, Directories,
 
   Math;
 

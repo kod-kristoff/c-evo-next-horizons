@@ -4,7 +4,7 @@ unit Draft;
 interface
 
 uses
-  Protocol, ClientTools, Term, ScreenTools, PVSB, BaseWin,
+  Protocol, ClientTools, Term, ScreenTools, BaseWin,
 
   LCLIntf, LCLType, SysUtils, Classes, Graphics, Controls, Forms, ExtCtrls,
   ButtonA,

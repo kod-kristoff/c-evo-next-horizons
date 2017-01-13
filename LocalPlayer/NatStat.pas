@@ -57,7 +57,7 @@ implementation
 {$R *.lfm}
 
 uses
-  Diagram, Select, Messg, MessgEx, Help, Tribes, Directories;
+  Messg, Tribes, Directories;
 
 const
   xIcon = 326;

@@ -6098,6 +6098,10 @@ begin
         begin
           if not idle or (GameMode = cMovie) then
             Application.ProcessMessages;
+          {$IFDEF LINUX}
+          // TODO: Force animation under linux
+          Application.ProcessMessages;
+          {$ENDIF}
           Sleep(1);
           inc(SliceCount)
         end;
