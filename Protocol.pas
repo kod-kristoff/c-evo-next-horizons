@@ -1195,12 +1195,11 @@ mcWill = 24;
 mcAcademy = 25;
 mcLine = 26;
 mcFirstNonCap = mcNav;
-AutoFeature:
-Set of mcFirstNonCap .. nFeature - 1 = [mcNav, mcSE, mcNP, mcJet, mcAcademy];
+AutoFeature: set of mcFirstNonCap .. nFeature - 1 = [mcNav, mcSE, mcNP, mcJet,
+  mcAcademy];
 // unit class advances, automatically applied if available
 
-Feature:
-array [0 .. nFeature - 1] of { unit model features }
+Feature: array [0 .. nFeature - 1] of { unit model features }
   record Domains, Preq, Weight, Cost: integer;
 end
 = ((Domains: 7; Preq: preNone; Weight: 1; Cost: 1), { mcOffense }
@@ -1231,11 +1230,9 @@ end
   (Domains: 1; Preq: preSun; Weight: 0; Cost: 0), { mcAcademy }
   (Domains: 7; Preq: adMassProduction; Weight: 0; Cost: 0)); { mcLine }
 
-WeightPreq7:
-array [0 .. nDomains - 1] of integer = (adHorsebackRiding, adSeafaring,
+WeightPreq7: array [0 .. nDomains - 1] of integer = (adHorsebackRiding, adSeafaring,
   adAdvancedFlight);
-WeightPreq10:
-array [0 .. nDomains - 1] of integer = (adAutomobile, adSteel, preNA);
+WeightPreq10: array [0 .. nDomains - 1] of integer = (adAutomobile, adSteel, preNA);
 
 INFIN = 999999;
 
@@ -1332,9 +1329,11 @@ type
     Job, // current terrain improvement job
     Exp, { micro experience, the level is Exp div ExpCost }
     Load: Byte; { number of transported units }
-    Flags: word end;
+    Flags: word;
+  end;
 
-    TCityInfo = packed record Loc, Status, // free for AI use
+  TCityInfo = packed record
+    Loc, Status, // free for AI use
     SavedStatus: LongInt; // for server internal use only
     Owner, // last known owner, even if not alive anymore!
     ID, // founding player <<12 + number, never changes, unique within the whole game
@@ -1397,8 +1396,11 @@ type
   end;
 
   TTileInfo = record
-    Food, Prod, Trade, ExplCity: integer end;
-    TCityReport = record HypoTiles, HypoTax, HypoLux, Working, Happy, FoodRep,
+    Food, Prod, Trade, ExplCity: integer;
+  end;
+
+  TCityReport = record
+    HypoTiles, HypoTax, HypoLux, Working, Happy, FoodRep,
       ProdRep, Trade, PollRep, Corruption, Tax, Lux, Science, Support, Eaten,
       ProdCost, Storage, Deployed: integer;
   end;
@@ -1431,8 +1433,11 @@ type
 
   TGetCityData = record
     Owner: integer;
-    c: TCity end;
-    TCityAreaInfo = record Available: array [0 .. 26] of integer;
+    c: TCity;
+  end;
+
+  TCityAreaInfo = record
+    Available: array [0 .. 26] of integer;
   end;
 
   TUnitReport = record
@@ -1460,7 +1465,8 @@ type
     Reason, Ship1Owner, Ship2Owner: integer;
     Ship1Change, Ship2Change: array [0 .. nShipPart - 1] of integer;
   end;
-  TOffer = record nDeliver, nCost: integer;
+  TOffer = record
+    nDeliver, nCost: integer;
     Price: array [0 .. 11] of Cardinal;
   end;
   TChart = array [0 .. INFIN] of integer;
@@ -1626,9 +1632,9 @@ const
     { preLeo,preLighthouse, } preLeo);
 
 procedure MakeUnitInfo(p: integer; const u: TUn; var ui: TUnitInfo);
-  procedure MakeModelInfo(p, mix: integer; const m: TModel; var mi: TModelInfo);
-    function IsSameModel(const mi1, mi2: TModelInfo): boolean;
-      function SpecialTile(Loc, TerrType, lx: integer): integer;
+procedure MakeModelInfo(p, mix: integer; const m: TModel; var mi: TModelInfo);
+function IsSameModel(const mi1, mi2: TModelInfo): boolean;
+function SpecialTile(Loc, TerrType, lx: integer): integer;
 
 implementation
 

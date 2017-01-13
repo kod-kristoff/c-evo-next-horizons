@@ -652,12 +652,13 @@ procedure ImageOp_B(dst, Src: TBitmap; xDst, yDst, xSrc, ySrc, w, h: integer);
 // Src is template
 // X channel = background amp (old Dst content), 128=original brightness
 var
-  i, Brightness, test: integer;
+  X, Y: Integer;
+  Brightness, test: integer;
   PixelSrc: ^Byte;
   PixelDst: PPixel32;
 begin
-  {TODO assert(Src.PixelFormat = pf8bit);}
-  assert(dst.PixelFormat = pf24bit);
+  //TODO Assert(Src.PixelFormat = pf8bit);
+  Assert(dst.PixelFormat = pf24bit);
   if xDst < 0 then
   begin
     w := w + xDst;
@@ -679,13 +680,10 @@ begin
 
   dst.BeginUpdate;
   Src.BeginUpdate;
-  h := yDst + h;
-  while yDst < h do
-  begin
-    PixelDst := GetBitmapPixelPtr(dst, xDst, yDst);
-    PixelSrc := Src.ScanLine[ySrc] + xSrc;
-    for i := 0 to w - 1 do
-    begin
+  for Y := 0 to h - 1 do begin
+    PixelDst := GetBitmapPixelPtr(dst, xDst, yDst + Y);
+    PixelSrc := Pointer(GetBitmapPixelPtr(Src, xSrc, ySrc + Y));
+    for X := 0 to w - 1 do begin
       Brightness := PixelSrc^;
       test := (PixelDst^.R * Brightness) shr 7;
       if test >= 256 then PixelDst^.R := 255
@@ -699,10 +697,8 @@ begin
       else
         PixelDst^.B := test; // Blue
       PixelDst := Pointer(PixelDst) + (Dst.RawImage.Description.BitsPerPixel shr 3);
-      PixelSrc := Pointer(PixelSrc) + 1;
+      PixelSrc := Pointer(PixelSrc) + (Src.RawImage.Description.BitsPerPixel shr 3);
     end;
-    inc(yDst);
-    inc(ySrc);
   end;
   src.EndUpdate;
   dst.EndUpdate;

@@ -190,8 +190,8 @@ begin
     OffscreenPaint;
     SmartInvalidate;
     if ImmUpdate then
-      Update
-  end
+      Update;
+  end;
 end;
 
 procedure TBufferedDrawDlg.MarkUsedOffscreen(xMax, yMax: integer);

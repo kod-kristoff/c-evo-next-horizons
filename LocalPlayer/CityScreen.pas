@@ -5,10 +5,8 @@ interface
 
 uses
   Protocol, ClientTools, Term, ScreenTools, IsoEngine, BaseWin,
-
-  LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics, Controls, Forms, ExtCtrls,
-  ButtonA,
-  ButtonB, ButtonBase, ButtonC, Area;
+  LCLIntf, LCLType, Messages, SysUtils, Classes, Graphics, Controls, Forms, ExtCtrls,
+  ButtonA, ButtonC, Area;
 
 const
   WM_PLAYSOUND = WM_USER;
@@ -236,13 +234,13 @@ end;
 
 procedure TCityDlg.FormDestroy(Sender: TObject);
 begin
-  AreaMap.Free;
-  SmallCityMap.Free;
-  ZoomCityMap.Free;
-  SmallCityMapTemplate.Free;
-  CityMapTemplate.Free;
-  Template.Free;
-  Back.Free;
+  FreeAndNil(AreaMap);
+  FreeAndNil(SmallCityMap);
+  FreeAndNil(ZoomCityMap);
+  FreeAndNil(SmallCityMapTemplate);
+  FreeAndNil(CityMapTemplate);
+  FreeAndNil(Template);
+  FreeAndNil(Back);
 end;
 
 procedure TCityDlg.Reset;
@@ -351,15 +349,16 @@ end;
 
 procedure TCityDlg.InitZoomCityMap;
 begin
+  // TODO: FillRect should not be needed as BitBlt is with SRCCOPY
+  ZoomCityMap.Canvas.FillRect(0, 0, ZoomCityMap.Width, ZoomCityMap.Height);
+
   bitblt(ZoomCityMap.Canvas.Handle, 0, 0, wZoomMap, hZoomMap,
     Back.Canvas.Handle, xZoomMap, yZoomMap, SRCCOPY);
-  if Mode = mImp then
-  begin
-    if ZoomArea < 3 then
+  if Mode = mImp then begin
+    if ZoomArea < 3 then begin
       ImageOp_B(ZoomCityMap, CityMapTemplate, 0, 0, 376 * SizeClass,
-        112 * ZoomArea, wZoomMap, hZoomMap)
-    else
-    begin
+        112 * ZoomArea, wZoomMap, hZoomMap);
+    end else begin
       ImageOp_B(ZoomCityMap, CityMapTemplate, 0, 0, 376 * SizeClass + 216,
         112 * (ZoomArea - 3), wZoomMap - wZoomEnvironment, hZoomMap);
       ImageOp_B(ZoomCityMap, CityMapTemplate, wZoomMap - wZoomEnvironment, 0,
