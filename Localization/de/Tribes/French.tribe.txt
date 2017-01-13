@@ -1,0 +1,151 @@
+#CHOOSE FRANKREICH
+#n Frankreich
+#s Franzosen
+#a französischer
+#m französischen
+#b französische 
+#COLOR 4B5FB7
+#SYMBOLS Nation1, 43
+#AGE0 StdCities, 2, StdTextures, 0, Nation1, 33
+#AGE1 StdCities, 2, StdTextures, 2, Nation1, 33
+#AGE2 StdCities, 4, StdTextures, 4, Nation1, 33
+#AGE3 StdCities, 5, StdTextures, 6, Nation1, 33
+
+#CITIES
+	Paris
+	Orléans
+	Lyon
+	Reims
+	Tours
+	Marseille
+	Chartres
+	Avignon
+	Besançon
+	Rouen
+	Grenoble
+	Dijon
+	Amiens
+	Cherbourg
+	Poitiers
+	Toulouse
+	Bayonne
+	Strasbourg
+	Brest
+	Bordeaux
+	Lille
+	Nice
+	Nantes
+	Saint-Étienne
+	Montpellier
+	Rennes
+	Le Havre
+	Toulon
+	Angers
+	Le Mans
+	Clermont-Ferrand
+	Aix-en-Provence
+	Limoges
+	Nîmes
+	Villeurbanne
+	Metz
+	Caen
+	Mulhouse
+	Boulogne-Billancourt
+	Perpignan
+	Nancy
+	Roubaix
+	Argenteuil
+	Tourcoing
+	Montreuil
+	Saint-Denis
+	Versailles
+	Nanterre
+	Créteil
+	Aulnay-sous-Bois
+	Pau
+	Vitry-sur-Seine
+	Calais
+	Colombes
+	La Rochelle
+	Asnières
+	Champigny-sur-Marne
+	Rueil-Malmaison
+	Saint-Maur-des-Fossés
+	Bourges
+	Antibes
+	Dunkerque
+	Courbevoie
+	Béziers
+	Cannes
+	Saint-Nazaire
+	Colmar
+	Villeneuve-d'Ascq
+	Valence
+	Lorient
+	Aubervilliers
+	Drancy
+	Mérignac
+	Troyes
+	La Seyne-sur-Mer
+	Quimper
+	Antony
+	Saint-Quentin
+	Neuilly-sur-Seine
+	Noisy-le-Grand
+	Sarcelles
+	Niort
+	Pessac
+	Vénissieux
+	Chambéry
+	Charleville-Mézières
+	Beauvais
+	Cergy
+	Levallois-Perret
+	Cholet
+	Issy-les-Moulineaux
+	Montauban
+	Vannes
+	Hyères
+	Évreux
+	Maisons-Alfort
+	Laval
+	Fontenay-sous-Bois
+	Ivry-sur-Seine
+	Saint-Malo
+	Arles
+	Belfort
+	Annecy
+	Sartrouville
+	Clichy
+	Chalon-sur-Saône
+	Pantin
+	Châteauroux
+	Meaux
+	La Roche-sur-Yon
+	Blois
+	Brive-la-Gaillarde
+	Évry
+	Clamart
+	Villejuif
+	Châlons-sur-Marne
+	Sevran
+	Le Blanc-Mesnil
+	Bondy
+	Fréjus
+	Narbonne
+	Épinay-sur-Seine
+	Tarbes
+	Albi
+	Saint-Brieuc
+	Chelles
+	Boulogne-sur-Mer
+	Bobigny
+	Carcassonne
+
+#UNITS StdUnits
+	23,	040,	Miliz
+
+#UNITS Nation1
+	3,	103,	Musketier
+	13,	104,	Schütze
+	23,	134,	Kavallerie

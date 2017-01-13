@@ -1,0 +1,943 @@
+#GAME Kniha %d
+#MAP Mapa %d
+#BC %d př.n.l.
+#AD %d n.l.
+#SHARE %d/%d
+#SHORTNAME #f
+#OWNED #a %s
+#GENCITY #f %d
+#GENMODEL #a Model %d
+
+'City Screen Text
+#HAPPINESS Morálka
+#CONTROL Kontrola
+#FAITH Víra
+#UNREST Nepokoj
+#HAPPINESSDEMAND Populace
+#HAPPINESSPLUS Přebytek
+#STORAGE Zásoby
+#FOOD Jídlo
+#DEMAND Populace
+#SURPLUS Přebytek
+#LACK Nedostatek
+#MATERIAL Materiál
+#PROD Produkce
+#POLL Znečištění
+#SUPPORT Jednotky
+#PROFIT Zisk
+#TRADE Obchod
+#CORR Korupce
+#SCIENCE Výzkum
+#TAX Daně
+#LUX Bohatství
+#DUMP Odpad
+#SUPUNITS Podporované jednotky
+
+'Class Screen Text
+#UNITOWNER #A
+#UNITSPEED Rychlost
+#UNITSTRENGTH Síla
+#UNITTRANSPORT Transport
+#UNITCOST Cena
+#UNITBUILT Vytvořeno
+#UNITINTRO Navrženo
+#UNITADOPT Převzato
+#UNITLOST Ztraceno v boji
+#UNITDESTROYED Poraženo
+#UNITAVAILABLE K dispozici
+#UNITINPROD Produkováno
+#UNITKNOWN Známé aktivní
+#UNITSPECIAL Speciální Jednotka
+
+'Diplomacy Screen Text
+#FRSTATGOV Vláda: %s
+#FRSTATPOP Populace: %d
+#FRSTATTER Území: %d
+#FRSTATTECH Technologie: %d%%
+#FRSTATEXP Průzkum: %d%%
+#FRLASTCONTACT Poslední návštěva:
+#FRNOCONTACT Nekontaktován, znám z legend
+#FRNOVISIT Ještě nenavštíven
+#FROLDCIVILREP (Stará statistika z doby %s)
+#FRNOCIVILREP (Žádná statistika není k dispozici)
+#FREXTINCT Zanikl
+#FRTREATY Vztah:
+#FRAND ,
+#FRCREDIBILITY (důvěryhodnost %d%%)
+#FRTREASURY Zlato: %d%%c
+#FRRELATIONS Zahraniční vztahy:
+
+'Other Dialog Text
+#PRESENT Přítomné jednotky
+#SHOWSTRENGTH Síla: %d/%d
+#RIVER Řeka
+#INITUNIT Vojenský výzkum
+#TECHFOCUS Zaměření: %s
+#NEXUS Zastavit výzkum
+#SCIENCEREPORT_EXTINCT %s (vyhlazený)
+#MODELDRAFT Návrh nové jednotky (%s)
+#TAXRATE Daně
+#MONEYGAINPOS +%d%%c
+#MONEYGAINNEG %d%%c
+#TECHGAIN +%d%%r
+#TECHWAIT %s (%d tahů)
+#COSTDIFF1 Úroveň obtížnosti: -25%
+#COSTDIFF2 Úroveň obtížnosti: ±0
+#COSTDIFF3 Úroveň obtížnosti: +25%
+#NATEXISTS (%s)
+#CONSCRIPTS Branci %s
+#WONDEROF %s od %s
+#WONDEROWNER (#f)
+#EXPIRED (skončila platnost)
+#DESTROYED (zničen)
+#NOWONDER Ještě nevybudovány žádné divy
+#BUILDORDER Stavby k postavení v
+#BUILDREST Nic nezařazeno:
+#ENHANCE %s: %s MP
+#SHIPCOMP Konstrukce
+#SHIPPOW Energie
+#SHIPHAB Obytný modul
+#SEARCH Hledání
+#RANMAP Náhodná mapa
+#TWOTERRAINS %s / %s
+#MPMAP Multi Player
+#NOGAMES Žádné knihy
+#AIT_ROUND Kolo %d,
+
+'Dialog Titles
+#TITLE_TRIBE Zvolte svůj národ
+#TITLE_GOV Zvolte formu vlády
+#TITLE_TECHSELECT Co máme nyní zkoumat?
+#TITLE_FARTECH Nastavte cíl výzkumu
+#TITLE_CITIES #b města
+#TITLE_EVENTS Události v městě %s
+#TITLE_MODELS #c jednotky
+#TITLE_DIAGRAMS Grafy
+#TITLE_SHIPS Kolonizační lodě
+#TITLE_SHIP #b kolonizační loď
+#TITLE_EMODELS Třídy cizích jednotek
+#TITLE_RATES Ekonomie
+#TITLE_DRAFT Vojenský výzkum
+#TITLE_WONDERS Divy světa
+#TITLE_ENHANCE Vylepšení terénu
+#TITLE_CITYTYPES Typy měst
+#TITLE_PROJECT Co bychom tu měli vybudovat?
+#TITLE_CITYNAME Jméno města
+#TITLE_MODELNAME Jméno třídy jednotek
+#TITLE_ERROR Chyba
+#TITLE_SCIENCE Vědecký výzkum
+#TITLE_OFFERDELIVER Přidat nabídku
+#TITLE_OFFERCOST Přidat požadavek
+#TITLE_NUMBER Číslo
+#TITLE_AMOUNT Množství
+#TITLE_CHOOSETECH Vyberte další pokrok
+#TITLE_CHOOSEMODEL Vyberte třídu jednotek
+#TITLE_CHOOSESHIPPART Vyberte typ
+#TITLE_CHOOSECITY Vyberte město
+#TITLE_BOOKNAME Jméno knihy
+#TITLE_MAPNAME Jméno mapy
+#TITLE_NATION #f
+#TITLE_SPYMISSION Špionážní operace
+#TITLE_SUICIDE Sebevražedná mise
+#FRMILREP Vojenské hlášení
+
+'Message Text
+#NOALTAI Nejsou nainstalovány žádné další AI moduly.\Alternativní AI moduly můžete stáhnout z domovské stránky C-evo,\nebo si naprogramovat vlastní.
+#REVOLUTION Máme ponechat #d říši v anarchii, abychom mohli založit novou formu vlády po překonání chaosu?
+#AUTOREVOLUTION Máme k dispozici novou formu vlády:\%s\\Abychom mohli
+nastolit nový způsob vládnutí, musíme svrhnout současnou
+vládu a překonat období anarchie. Máme začít s revolucí?
+#NOALTGOVS Revoluce nám dovoluje změnit formu naší vlády. Nyní to však ještě nemá smysl, protože neznáme jiný způsob vládnutí než despotismus.
+#AGE1 = %s =\Znalosti našich předků jsou neúplné a chybné. Mnoho otázek neumí
+knihovna správně zodpovědět. Odložili jsme dogmatismus a náš pohled na
+svět budeme rozvíjet podrobným zkoumáním věcí. Nazýváme to vědou.
+#AGE2 = %s =\Po dosažení objevu masové produkce přestalo být bohatství konečně
+jen výsadou malé skupiny lidí. Následky jsou
+dalekosáhlé. Masový trh umožňuje dříve nevídané investice,
+které nás povedou do nové technologické éry.
+#AGE3 = %s =\Pradávný sen lidstva se může stát skutečností. Nyní máme
+technologie potřebné pro zahájení kolonizace vzdálených hvězdných systémů. Studie ukazují,
+že pro tento gigantický projekt budou klíčové speciální kovy.
+#ENDTURN V tomto tahu nečekají na příkazy žádné jednotky.\Ukončete tah bez provedení žádné akce.
+#CREDUP Naše důvěryhodnost stoupla na "%s".
+#CREDDOWN Naše důvěryhodnost klesla na "%s".
+#CAPTURE #F obsazují město %s!
+#BOMBARD #F bombardují nechráněné město %s!
+#EXPEL Jednotky byly vyhnány z #e území.
+#DISPOSE %s\\Máme přestavět tuto budovu?
+#SPDESTRUCTQUERY \(Poznámka: Pokud zbouráme vesmírné středisko, ztratíme kontrolu nad naší kolonizační lodí!) 
+#SELL %s\\Máme prodat tuto budovu?
+#LOSEMAT Úplná změna projektu znamená zahájení nového projektu. %d%%p bude prodán za %d%%c.
+#LOSEMAT3 Změna projektu bude znamenat ztrátu 1/3 spotřebovaného materiálu. Chcete pokračovat?
+#DOUBLESTATEIMP %s\\Toto národní vylepšení již postavilo město %s. Máme je sem přesunout a po dokončení stavby prodat národní vylepšení v původním městě? 
+#READY Projekt bude dokončen v příštím kole.
+#NOMONEY Nemáme dost peněz, abychom\projekt dokončili v dalším tahu.\(%d%%c potřeba, %d%%c k dispozici)
+#BUY Máme utratit %d%%c pro dokončení projektu v dalším tahu?
+#EMIGRATE Emigrace může způsobit zničení města. Máme oddálit dokončení této jednotky, dokud nebude ve městě dostatek obyvatel?
+#ADDTOMAXSIZE Toto město dosáhlo svého maximálního počtu obyvatel.
+#CITYMANAGEOFF Vypnout automatickou správu městské populace?
+#GLIDERLOST Náš kluzák se ztratil nad mořem.
+#PLANELOST Našemu letadlu došlo palivo.
+#DAMAGED_UTILIZE Využití poškozené jednotky nám přinese méně zisku. Chcete pokračovat?  
+#NOBB Schází nám technologie pro budování mostů přes řeky.
+#NOCITY Tento typ terénu není vhodný k osídlení. Měli bychom vyhledat místa, na kterých můžeme postavit zavlažování.
+#NOCAPTURER Civilní jednotky nemohou obsazovat města.
+#NOBOMBARDER Bombardování měst vyžaduje sílu útoku.
+#ZOC Tento typ jednotky se nemůže pohybovat v zónách pod cizí kontrolou.
+#FASTATTACK Chcete útočit se silou pouze %d%%?
+#NOTIMELOADGROUND Tento typ jednotky potřebuje %s MP bodů, aby mohl být naložen nebo vyložen z transportu.
+#NOTIMELOADAIR Letadlo potřebuje 100 MP bodů, aby je bylo možné naložit nebo vyložit z nosiče.
+#NOTIMEBOMBARD Bombardování města vyžaduje 100 MP bodů.
+#NOTIMEEXPEL Pro vyhnání jednotky je potřeba 100 MP bodů.
+#NOROAD Tato jednotka se může pohybovat jen po cestách nebo železnici.
+#NONAV Tato loď nemá schopnost navigace.
+#NOTRANSPORT tato loď nemá transportní schopnost.
+#FULLTRANSPORT Tento transport je plně naložen.
+#LOWFUEL Toto letadlo má nyní nedostatek paliva. Pokud se pohne dále, nebude se moci vrátit do města nebo vojenské základny. Pokračovat?
+#LOWFUEL_GLIDER Tato jednotka musí být na konci tahu umístěna na zemi. Pokud se pohne dál, bude ztracena. Pokračovat?
+#UNREST_FOREIGN %s\\Toto je #c území. Přesuneme-li se sem, zvýší se nepokoje v domovském městě jednotky. Opravdu pokračovat?
+#UNREST_NOTOWN %s\\Opustíme-li #c území, zvýší se nepokoje v domovském městě jednotky. Opravdu pokračovat?
+#NOATTACKER Toto je civilní jednotka, která nemůže útočit.
+#ATTACKSUB Nemůžeme dostatečně zaměřit tuto cizí ponorku.
+#ATTACKSTEALTH Nemůžeme dostatečně zaměřit toto cizí neviditelné letadlo.
+#PEACE_NOATTACK Podepsali jsme mírovou smlouvu s národem #h.
+#PEACE_NOMOVE Podepsali jsme mírovou smlouvu s #g. Nemůžeme vstoupit na jejich území.
+#PEACE_NOWORK Toto je #c území!\Jsme vázáni mírovou smlouvou.
+#NOFOREIGNINFO Nenalezeny žádné nové informace.
+#FOREIGNINFO Získali jsme nové informace:
+#DOSSIER_PREPARED Statistika o #i je připravena. Máme k dispozici grafy a známe aktuální stav jejich vědeckého výzkumu.
+#VIOLATION Naše jednotky narušují území #e národa!\#F nám dávají lhůtu do %s, abychom se stáhli.
+#EVIOLATION #F se omlouvají za porušení mírové smlouvy. Souhlasí se stáhnutím svých jednotek do %s.
+#WITHDRAW Naše vojska byla donucena stáhnout se z #e území.
+#WONDERBUILT #F právě dokončili jeden\z divů světa:\%s
+#WONDERBUILTEXP Jiný národ právě dokončil div světa:\%s\\Jedná se o starodávný div, který již neposkytuje žádné výhody.
+#WONDERBUILTOWN Právě jsme dokončili jeden\z divů světa:\%s
+#WONDERCAPT #F právě získali jeden\z divů světa:\%s
+#WONDERCAPTOWN Právě jsme získali jeden\z divů světa:\%s
+#WONDEREXP Efekt jednoho z divů světa právě skončil:\%s
+#WONDERDEST Jeden z divů světa byl právě zničen:\%s
+#COLDWAR Vzhledem k hrozbě nukleární války ustaly diplomatické kontakty se všemi stranami. Vyjednávání jsou zbytečná. Studená válka začala.
+#COLDWAREND Studená válka skončila.
+#SHIPBUILT #F dokončili část své mezihvězdné kolonizační lodě.
+#SHIPBITRADE1 Národy #h a
+#SHIPBITRADE2 #h si vyměnily části kolonizační lodi.
+#SHIPUNITRADE1 #F obdrželi
+#SHIPUNITRADE2 částí kolonizační lodi od #h.
+#SHIPCAPTURE1 #F převzali kontrolu nad
+#SHIPCAPTURE2 #d kolonizační lodí!
+#SHIPDESTROYED #F ztratili kontrolu nad svou kolonizační lodí.
+#LOWFUNDS Docházejí nám zásoby zlata. Pokud nebudeme včas reagovat, budeme nuceni prodat některá vylepšení měst.\Přejete si přesto pokračovat?
+#DISORDER Ve městě %s hrozí civilní nepokoje.\Přejete si přesto pokračovat?
+#DISORDER_UNREST Město %s upadne do chaosu kvůli velkým nepokojům.\Chcete přesto pokračovat?
+#FAMINE Městu %s hrozí hladomor a úbytek populace.\Přejete si přesto pokračovat?
+#FAMINE_TILES Městu %s hrozí hladomor. Město nemá k dispozici dostatek úrodných políček.\Chcete přesto pokračovat?
+#FAMINE_UNREST Městu %s hrozí hladomor. Část populace je potřeba přesunout do policejních služeb, aby zabránila nepokojům. Město ale není takto schopno produkovat dostatek potravin.\\Chcete přesto pokračovat?
+#LOWSUPPORT Město %s nevyrábí dostatek materiálu pro podporu všech svých jednotek.\Přejete si přesto pokračovat?
+#LOWSUPPORT_TILES Městu %s hrozí nedostatek materiálu pro podporu svých jednotek. Město nemá k dispozici dostatek produkčních políček.\Chcete přesto pokračovat?
+#LOWSUPPORT_UNREST Městu %s hrozí nedostatek materiálu pro podporu svých jednotek. Část populace je potřeba přesunout do policejních služeb, aby zabránila nepokojům. Město ale není takto schopno produkovat dostatek materiálu.\\Chcete přesto pokračovat?
+#RESIGN Chystáte se zavřít tuto knihu.\Přejete si ji uložit?
+#ENDTOUR Chcete uložit tento tah, abyste mohli knihu poté otevřít v módu Supervisora?
+#MODELAVAILABLE Nyní můžeme produkovat nové jednotky.
+#RESEARCH_GENERAL Objevili jsme: %s!
+#GRLIB_GENERAL Z Velké knihovny jsme získali: %s!
+#ORACLEINCOME Příjem: %d%%c
+#NOSELLAGAIN %s\\Město nemůže prodat nebo přestavět více než jedno vylepšení za tah.
+#OUTOFCONTROL %s\\Toto město ještě není pod naší kontrolou.
+#NOCHANGEINANARCHY Nacházíme se v období anarchie, všechny funkce města jsou paralyzovány.
+#EXTINCT = %s =\Říše #h padla. Pouze legendy nám budou připomínat kulturu tohoto národa.
+#EXTINCTALL \\Nyní jsme jediným existujícím národem na světě.
+#GAMEOVER #F přišli o všechna svá města.\\KONEC HRY.
+#TIMEUP Čas vypršel.\Přestože #f dosáhli významné prosperity a velkého technologického pokroku, přestože je lze zařadit mezi nejvýznamnější národy na světě, nedosáhli konečného cíle všech civilizací.\\KONEC HRY.
+#TIMEUPSUPER Čas vypršel.\Žádnému národu se nepodařilo dokončit svoji kolonizační loď.
+#SPACESHIP1 #F vypustili svoji\mezihvězdnou kolonizační loď.\
+#SPACESHIP2 Dokončení tohoto gigantického projektu je důkazem jejich převahy v každém aspektu civilizace.\\KONEC HRY.
+#MYSPACESHIP Po období chudoby a krize, období krvavých válečných konfliktů a období radikální změny a neuvěřitelného vzrůstu jsme konečně uskutečnili starodávný sen lidstva. Naše loď byla vypuštěna a směřuje ke světům daleko ve vesmíru, aby na nich založila nový život.\\VÍTĚZSTVÍ.
+#SHAREDWIN (Vítězství dosaženo spolu s: %s)
+#SHAREDWIN_CONCAT %s, %s
+#NOAI Není nainstalován žádný AI modul!
+#FILENOTFOUND Soubor "%s" nebyl nalezen. 
+#AIEXCEPTION Došlo k výjimce v AI modulu %s!
+#LOADERR Tato kniha není kompatibilní s touto verzí C-evo.
+#NOFILENAME Jméno knihy musí být korektní jméno souboru. Znak '%s' není dovolen.
+#DLLERROR Nemohu nahrát %s.
+#AIERROR AI modul %s nenalezen.
+#MISSDEACT Hráč %d ukončen bez správné deaktivace.
+#CLIENTERROR Nemohu najít klienta %s.
+#LOADERROR Tato kniha obsahuje interní chybu a nelze pokračovat v jejím hraní.\\Pro posouzení chyby můžete zaslat soubor s knihou autorovi hry.\Chcete otevřít webovou stránku pro hlášení chyb?
+#NOSTARTPOS Tato mapa nemá definovány žádné startovní pozice. Není možné ji hrát.
+#TOOFEWTRIBES Počet účastníků nemůže převýšit počet nasazených národů ve hře.
+#DELETEQUERY Kniha bude odstraněna.
+#MAPDELETEQUERY Mapa bude odstraněna.
+#TURN #f\%s
+#SUPERTURN Supervisor\%s
+#FRNEWNATION Nyní můžeme kontaktovat #g.
+#FRCONTACT #A velvyslanec si přeje\s námi mluvit. Přijmeme jej?
+#FRREJECTED #F nepřijímají naše velvyslance.
+#FRCANCELQUERY_PEACE Máme jim vyhlásit válku?
+#FRCANCELQUERY_FRIENDLY Máme s nimi ukončit přátelský kontakt?
+#FRCANCELQUERY_ALLIANCE Máme zrušit dohodnuté spojenectví s nimi?
+#FRCANCELBYREJECT_PEACE #A velvyslanec:\Už jsme byli trpěliví dost.\Připravte se na válku!
+#FRCANCELBYREJECT_FRIENDLY #A velvyslanec:\To je konec našeho přátelství!
+#FRCANCELBYREJECT_ALLIANCE #A velvyslanec:\Nemůžeme udržovat spojenectví s národem,
+který není ochoten spolupracovat. Nedáváte nám jinou možnost než ukončit tuto dohodu.
+#FRMYALLIANCE1 #F vyhlásili válku našim spojencům,
+#FRMYALLIANCE2 #c říši. Měli bychom podpořit #a národ proti této agresi.
+#FRENEMYALLIANCE #F se rozhodli podporovat své spojence v boji proti nám. Proto rušíme naše dohody s nimi uzavřené.
+#FRANARCHY #D říše ovládá anarchie. Naši vyslanci nenašli žádnou legitimní vládu, se kterou by mohli jednat.
+#FRMYANARCHY Propukla u nás anarchie. Diplomatické aktivity vyžadují ustanovenou vládu.
+#FRCOLDWAR Nacházíme se ve Studené válce. Není žádný zájem o vyjednávání.
+#MAX2WANTS Nelze kombinovat více než dva požadavky v jednom návrhu.
+#MAX2OFFERS Nelze kombinovat více než dvě nabídky v jednom návrhu.
+#NOOFFER Tento návrh není platný!
+#CANCELTREATYRUSH Není povoleno během 3 tahů ukončit více než jednu smlouvu se stejným národem. 
+#NOSPACEPORT Nemáme vesmírné středisko, takže bychom ztratili všechny dojednané části kolonizační lodi. Chcete přesto pokračovat?
+#SUICIDE Máme poslat tyto\muže na smrt?
+#RATES Na co máme naši\ekonomiku zaměřit?
+#NORATES Socha svobody\je aktivní.
+
+'Diplomatic Statements, do not use '\'!
+#FRSTART_NOTREATY Slyšte slova #e národa.
+#FRSTART_PEACE Mnoho pozdravů od #h, máme zájem o tom hovořit.
+#FRCANCELTREATY_PEACE Vyhlašujeme vám válku.
+#FRCANCELTREATY_FRIENDLY Ukončujeme náš přátelský kontakt.
+#FRCANCELTREATY_ALLIANCE Nemáme žádné další důvody udržovat naše spojenectví. Považujte tuto dohodu za zrušenou.
+#FRNOTICE Nemyslete si, že budeme dále tolerovat vaše požadavky.
+#FRBREAK Toto jednání je ztrátou času. Přijděte jindy, až přehodnotíte svůj postoj.
+#FROFFER Nabízíme\-%s\výměnou za\-%s
+#FRPRESENT Nabízíme vám tento dárek:\-%s
+#FRDEMAND_STRONG Dejte nám\-%s\nebo ponesete následky!
+#FRDONE Chcete mluvit o něčem dalším?
+#FRPEACE Připravili jsme stálou mírovou smlouvu, abychom ukončili nepřátelství mezi našimi lidmi a abychom stanovili naše vzájemné hranice. Podepíšete ji?
+#FRFRIENDLY Máme velký respekt ke kultuře #h a jejím technologiím. Zůstaňme nadále v přátelském kontaktu, abychom se o sobě co nejvíce dozvěděli.
+#FRALLIANCE Vidíme velké možnosti ve spolupráci mezi našimi národy. Vytvoříte s námi spojenectví, abychom se mohli spolu postavit našim společným nepřátelům?
+#FRACCEPTTREATY Přijímáme. Tato dohoda nás může dovést do nové éry vztahu mezi našimi národy.
+#FRNOTACCEPTTREATY V současnosti o to nemáme zájem.
+#FRACCEPTOFFER Vypadá to na dobrou nabídku. Přijímáme.
+#FRACCEPTPRESENT #F s potěšením přijímají tento dar.
+#FRACCEPTDEMAND_STRONG Pro zachování našich dobrých vztahů jsme se rozhodli vyhovět vašim přáním.
+#FRNOTACCEPTOFFER Tato nabídka nám nepřipadá výhodná.
+#FRNOTACCEPTPRESENT #F nepotřebují takovéto dárky.
+#FRNOTACCEPTDEMAND_STRONG Požadujete příliš mnoho.
+#FRDELCHOICE Zajímá nás\-%s\Co můžeme na oplátku nabídnout?
+#FRCOSTCHOICE Máte něco, co byste nám mohli nabídnout výměnou za\-%s?
+#FRBYE V tomto okamžiku ne, tato diskuse zde končí. Na shledanou.
+#PRICE_CHOOSE Cena podle uvážení
+#PRICE_CIVIL Statistika o #i
+#PRICE_MIL Vojenské informace o #i
+#PRICE_MAP #B mapa světa
+#PRICE_SHIPCOMP %d konstrukcí kolonizační lodě
+#PRICE_SHIPPOW %d energetických modulů
+#PRICE_SHIPHAB %d obytných modulů
+#PRICE_ALLTECH Všechny #c pokroky
+#PRICE_ALLMODEL Všechny #c třídy jednotek
+#PRICE_CONCAT %s\-%s
+#PRICECAT_ALLTECH Všechny pokroky
+#PRICECAT_ALLMODEL Všechny třídy jednotek
+
+'Button Captions
+#BTN_OK OK
+#BTN_CANCEL Zrušit
+#BTN_YES Ano
+#BTN_NO Ne
+#BTN_INFO Info
+
+'Button Tooltips
+#BTN_SELECT Vybrat
+#BTN_PAGE Další strana
+#BTN_SUPPORT Zobrazit podporu
+#BTN_IMPRS Vylepšení
+#BTN_CLASSES Jednotky
+#BTN_WONDERS Divy světa
+#BTN_BUY Koupit
+#BTN_DELETE Vymazat
+#BTN_RENAME Přejmenovat
+#BTN_OBSOLETE Zastaralá jednotka
+#BTN_NONOBSOLETE Produkce povolena
+#BTN_ALLOWCONSCRIPTS Branci povoleni
+#BTN_NOCONSCRIPTS Bez branců
+#BTN_ENDTURN Konec tahu!
+#BTN_SKIP Přeskočit zobrazování cizích pohybů
+#BTN_NOAUTOMOVE Nepokračovat v automatickém pohybu
+#BTN_STOP Stop
+#BTN_NEGO Zpět k vyjednávání
+#BTN_DIALOG Kontaktovat tento národ!
+#BTN_BREAK Zrušit vyjednávání
+#BTN_PASS Nic nenabídnout
+#BTN_CNTREATY Zrušit smlouvu
+#BTN_ACCEPT Přijmout návrh
+#BTN_NOTICE Zaznamenaná rozhodnutí
+#BTN_REPLAY Přehrát knihu od začátku
+#BTN_RENGAME Přejmenovat knihu
+#BTN_DELGAME Odstranit knihu
+#BTN_RENMAP Přejmenovat mapu
+#BTN_DELMAP Odstranit mapu
+#BTN_CONTENTS Obsah
+#BTN_BACK Zpět
+#BTN_SEARCH Hledání
+#BTN_WANTPEACE Žádat mír
+#BTN_OFFERPEACE Nabídnout mír
+#BTN_WANTFRIENDLY Žádat přátelský kontakt
+#BTN_OFFERFRIENDLY Nabídnout přátelský kontakt
+#BTN_WANTALLIANCE Žádat spojenectví
+#BTN_OFFERALLIANCE Nabídnout spojenectví
+#BTN_NEGOEARLIER Dřívější část
+#BTN_NEGOLATER Pozdější část
+
+'Morphing Menu Entries
+#SUPER Supervisor
+#HUMAN Místní hráč
+#AIT AI turnaj
+#RANDOMAI Vybrat náhodné AI
+#NOMOD (Nic)
+#BTN_FOUND Usadit se
+#BTN_ADD Přidat k městu
+#BTN_SETHOME Podpora odtud
+#BTN_MOVEHOME Návrat do nejbližšího města
+#BTN_BUILDROAD Postavit cestu
+#BTN_BUILDBRIDGE Postavit most
+#BTN_BUILDRR Postavit železnici
+#BTN_BUILDRRBRIDGE Postavit železniční most
+#BTN_CLEAR Ostranit les
+#BTN_DRAIN Vysušit bažinu
+#BTN_UNDESERT Změnit na pastviny
+#FARTECH Nastavit zaměření výzkumu
+#NOFARTECH Žádné zaměření výzkumu
+#UTILIZE Využít
+#INTEGRATE Sloučit
+
+'Busy Messages
+#BUSY_START Vytvářím svět...
+#BUSY_MOD Nahrávám %s...
+#BUSY_MODLH Nahrávám grafiku a zvuky...
+#BUSY_INIT Inicializuji AI...
+#BUSY_LOAD Nahrávám uložená data...
+
+'Map Editor
+#MAP_START Startovní pozice
+#MAP_PREFSTART Preferovaná startovní pozice
+#MAP_RANDOM Chcete zrušit tuto mapu a nahradit ji automaticky vygenerovanou mapou?
+#MAP_CLOSE Chystáte se zavřít tuto mapu.\Chcete ji uložit?
+
+#STARTCONTROLS
+Konec
+Start
+Otevřít
+Nová Kniha
+Starší Knihy
+Velikost Světa:
+Rozloha pevniny:
+Vlastní nastavení hráčů
+Rok:
+Obtížnost pro %s
+Konec:
+Mapa
+Editor
+*
+Obtížnost:
+Cizí národy:
+AI modul:
+
+#AUTODIFF
+Začátečník
+Nízká
+Střední
+Vysoká
+Šílená
+
+#CONTROLS
+Zrušit příkazy
+Zavřít
+Ekonomika a daně
+Vliv Velké zdi
+Pouze terén
+Divy světa
+Manuál
+Test
+Vojenské hlášení
+Zobrazit log
+Typy měst
+Centrovat
+Pokračovat
+Příkazy jednotek
+Informace o třídě jednotek
+Postavit vojenskou základnu
+Transformovat
+Odstranit znečištění
+Odstranit
+Postavit pevnost
+Grafy
+Zůstat zde
+Postavit kanál
+Nalodit se
+Čekat
+Žádné příkazy
+Zobrazit kódy lokací
+Vylepšení terénu
+Možnosti
+Pohyb jednotek
+*
+Čekat na konci tahu
+Stínovat oblasti mimo dohled
+Volby v Hlášení města
+Jména měst
+Hranice
+Hlášení města
+Hlášení výzkumu
+Vylepšit
+Vylepšení terénu
+Kolonizační lodě
+Makro management
+Postavit zavlažování
+Postavit farmu
+Zalesnit
+Postavit důl
+Vytvořit jednotku
+Mřížka
+AI Debug Mapa
+Třídy cizích jednotek
+Politická mapa
+Pouze útoky a obsazení
+Nezobrazovat
+Přeskočit 20 tahů
+Národy
+Manipulace
+Získat všechny pokroky
+Dokončit projekty v každém tahu
+Dokončit výzkum v každém tahu
+Růst měst v každém tahu
+Zobrazit všechno
+Národy se navzájem znají
+Běž na konec hry
+Cizí města
+Seznam hlášení měst
+Obrazovky hlášení měst
+Jména
+Moderní zdroje nejsou potřeba
+Regenerace
+Vyjmout
+Náhodná mapa
+Rozpustit
+Naložit do tohoto transportu
+Pohyb nepřítele
+Pomalý
+Rychlý
+Velmi rychlý
+Pomalý
+Rychlý
+Zvuk
+Vypnutý
+Zapnutý (Výchozí implementace)
+Zapnutý (Alternativní implementace)
+Scrolling
+Pomalý
+Rychlý
+Vypnutý
+Otevřít webovou stránku C-evo
+ZAHÁJIT REVOLUCI!
+Pohyby spojenců
+Pomalý
+Rychlý
+Nezobrazovat
+Pouze hlídkování, útoky a obsazení
+Pouze hlídkování, útoky a obsazení
+Velikost políčka
+
+#ADVANCES
+Pokročilý let
+Obojživelné válečnictví
+Astronomie
+Atomová teorie
+Automobil
+Balistika
+Bankovnictví
+Stavění mostů
+Výroba bronzu
+Obřadní pohřbívání
+Chemie
+Rytířství
+Kompozity
+Zákoník
+Kombinované zbraně
+Spalovací motor
+Komunismus
+Počítače
+Branná povinnost
+Budování
+Korporace
+Vesmírný let
+Měna
+Demokracie
+Ekonomika
+Elektřina
+Elektronika
+Inženýrství
+Ekologie
+Kolo
+Výbušniny
+Let
+Špionáž
+Střelný prach
+Jízda na koních
+Impulzní pohon
+Industrializace
+Chytré zbraně
+Vynalézavost
+Výroba železa
+Laser
+Jaderná energie
+Literatura
+Internet
+Magnetismus
+Mapování
+Zednictví
+Masová produkce
+Matematika
+Lékařství
+Metalurgie
+Miniaturizace
+Mobilní válečnictví
+Monarchie
+Mysticismus
+Navigace
+Jaderná reakce
+Filozofie
+Fyzika
+Plasty
+Poezie
+Hrnčířství
+Rádiové vlny
+Recyklace
+Chlazení
+Jednobožství
+Republika
+Robotika
+Raketové inženýrství
+Železnice
+Kanalizace
+Věda
+Písmo
+Plavba po moři
+Samoregulovatelné prostředí
+Neviditelnost
+Parní stroj
+Ocel
+Syntetické jídlo
+Taktika
+Náboženství
+Gravitační teorie
+Obchod
+Mezihvězdná kolonizace
+Univerzita
+Pokročilé raketové inženýrství
+Válečnický kodex
+Abeceda
+Mnohobožství
+Rafinace
+Počítačová technologie
+Nanotechnologie
+Technologie materiálů
+Umělá Inteligence
+
+#IMPROVEMENTS
+Pyramidy
+Diův chrám
+Visuté zahrady
+Kolos
+Maják
+Velká knihovna
+Věštírna
+Sun Tzuova válečná akademie
+Leonardova dílna
+Magellanova expedice
+Michelangelova kaple
+*
+Kolej Isaaca Newtona
+Katedrála J.S.Bacha
+*
+Socha svobody
+Eiffelova věž
+Hooverova přehrada
+Shinkansen Express
+Projekt Manhattan
+Vesmírná stanice MIR
+*
+*
+*
+*
+*
+*
+*
+Obchodování
+Kasárny
+Sýpka
+Chrám
+Tržiště
+Knihovna
+Soud
+Městské hradby
+Akvadukt
+Banka
+Katedrála
+Univerzita
+Přístav
+Divadlo
+Továrna
+Průmyslový závod
+Recyklovací centrum
+Elektrárna
+Vodní elektrárna
+Atomová elektrárna
+Těžební plošina
+Radnice
+Kanalizační systém
+Supermarket
+Superdálnice
+Výzkumná laboratoř
+SAM rakety
+Pobřežní pevnost
+Letiště
+Loděnice
+Palác
+Velká zeď
+Koloseum
+Observatoř
+Vojenská akademie
+Velicí bunkr
+Farma jedlých řas
+Burza
+Vesmírné středisko
+Konstrukce kolonizační lodě
+Energetický modul
+Obytný modul
+
+#FEATURES
+Útok
+Obrana
+Pohyblivost
+Transport vojska po moři
+Transport letadel po moři
+Turbíny
+Bomby
+Palivo
+Transport vojska vzduchem
+Navigace
+Radar / Sonar
+Ponorka
+Dělostřelectvo
+Alpinistický
+Zásobovací loď
+Nadváha
+Vzdušná obrana
+Špionážní letoun
+Parní pohon
+Jaderná energie
+Tryskové motory
+Neviditelnost
+Fanatický
+První útok
+Síla vůle
+Výcvik na akademii
+Pásová výroba
+
+#TERRAIN
+Oceán
+Pobřeží
+Pastviny
+Poušť
+Prérie
+Tundra
+Arktida
+Bažina
+Džungle
+Les
+Kopce
+Hory
+*
+Ryby
+Pláně
+Oáza
+Pšenice
+Zlato
+Slonovina
+Rašelina
+Ovoce
+Zvěř
+Víno
+Železo
+*
+Mangan
+*
+Olej
+Bauxit
+Plyn
+*
+*
+Ebenové dřevo
+Minerální pramen
+Uhlí
+Diamanty
+Mrtvá krajina
+Kobalt
+Uran
+Rtuť
+
+#DOMAIN
+Pozemní
+Loď
+Letadla
+
+#EXPERIENCE
+Nováček
+Disciplinovaný
+Otrlý
+Veterán
+Elitní
+
+#UNITSTATUS
+Opevněný
+Bomby
+Pohyb v horách 
+Branci
+Odvolaný
+*
+*
+*
+Naložený
+Způsobuje nepokoje
+Stojí na místě
+*
+Pohybuje se k cíli
+Vylepšuje terén
+Regenerace
+
+#GOVERNMENT
+Anarchie
+Despotismus
+Monarchie
+Republika
+Fundamentalismus
+Komunismus
+Demokracie
+Budoucí společnost
+
+#TREATY
+Žádná smlouva
+*
+Mír
+Přátelský kontakt
+Spojenectví
+
+#HAVETREATY
+Kontakt s #g
+*
+V míru s #g
+Přátelský kontakt s #g
+Spojenectví s #g
+
+#CREDIBILITY
+Prolhaný
+Nepředvídatelný
+Izolacionistický
+Seriózní
+
+#CITYEVENTS
+Civilní nepokoje
+Produkce dokončena
+Růst populace
+Pokles populace
+Jenotka rozpuštěna
+Vylepšení prodáno
+Sabotáž produkce
+Dosažena maximální velikost
+Znečištění
+Město obléháno
+Div už existuje
+Emigrace pozdržena
+Město založeno
+Obsazení kompletní
+Obsazeno
+Typ města už není platný
+
+#CITYTYPE
+Běžné město
+Vědecké město
+Průmyslové město
+Metropole
+
+#DIAGRAM
+Populace
+Teritorium
+Vojenská síla
+Technologie
+Průzkum
+Kultivace
+
+#JOBRESULT
+*
+Cesta
+Železnice
+Odstranit les
+Zavlažování
+Farma
+Zalesnit
+Důl
+Kanál
+Transformovat
+Pevnost
+Odstranit znečištění
+Vojenská základna
+Odstranit
+Usadit se
+Most
+Železniční most
+Odstranit
+Pláně
+Vysušit
+
+#ARMYLOST
+#B armáda zničena.
+#C loďstvo zničeno.
+#B skupina zničena.
+
+#SPYMISSION
+Sabotáž produkce
+Krádež světové mapy
+Sběr znalostí o třetím národu
+Připravit národní statistiku
+Připravit vojenské hlášení
+
+#WANT
+Žádat o národní statistiku
+Žádat o vojenské informace
+Žádat o mapu světa
+*
+Žádat o vědecký pokrok
+Žádat o třídu jednotek
+Žádat o platbu
+*
+*
+*
+Žádat o části kolonizační lodi
+Nechat je něco nabídnout
+
+#OFFER
+Nabídnout národní statistiku
+Nabídnout vojenské informace
+Nabídnout mapu světa
+*
+Nabídnout vědecký pokrok
+Nabídnout třídu jednotek
+Nabídnout platbu
+*
+*
+*
+Nabídnout části kolonizační lodi
+Nechat je o něco žádat
+
+#CITYMANAGETYPE
+Plná kontrola
+Maximální\výzkum
+Uspíšit\výzkum
+Maximální\růst
+Uspíšit\produkci
+Maximální\produkce

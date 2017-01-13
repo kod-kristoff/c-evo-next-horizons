@@ -5,7 +5,6 @@ interface
 
 uses
   ScreenTools, Messg,
-
   LCLIntf, LCLType, SysUtils, Classes, Graphics, Controls, Forms,
   ButtonA, StdCtrls;
 
@@ -38,7 +37,7 @@ begin
   Canvas.Brush.Style := bsClear;
   TitleHeight := ClientHeight;
   InitButtons();
-  Center := true
+  Center := true;
 end;
 
 procedure TInputDlg.FormPaint(Sender: TObject);

@@ -1,0 +1,124 @@
+#CHOOSE SPANIEN
+#n Spanien
+#s Spanier
+#a spanischer
+#m spanischen
+#b spanische
+#COLOR FFFF00
+#SYMBOLS Nation1, 47
+#AGE0 StdCities, 3, StdTextures, 0, Nation1, 37
+#AGE1 StdCities, 3, StdTextures, 2, Nation1, 37
+#AGE2 StdCities, 4, StdTextures, 4, Nation1, 37
+#AGE3 StdCities, 5, StdTextures, 6, Nation1, 37
+
+#CITIES
+	Madrid
+	Sevilla
+	Toledo
+	Córdoba
+	Valéncia
+	Salamanca
+	Barcelona
+	Valladolid
+	Zaragoza
+	Cádiz
+	Bilbao
+	Granada
+	Málaga
+	Pamplona
+	Vigo
+	Avila
+	León
+	Burgos
+	Oviedo
+	Santander
+	Ciudad Rodrigo
+	Calatrava
+	Cartagena
+	Murcia
+	Las Palmas
+	Palma de Mallorca
+	Alicante
+	Gijón
+	L'Hospitalet
+	A Coruña
+	Vitoria-Gasteiz
+	Santa Cruz de Tenerife
+	Badalona
+	Elche
+	Móstoles
+	Sabadell
+	Jerez de la Frontera
+	Donostia-San Sebastián
+	Fuenlabrada
+	Terrassa
+	Leganés
+	Alcalá de Henares
+	Almería
+	Getafe
+	Albacete
+	Alcorcón
+	Castellón de la Plana
+	Huelva
+	Badajoz
+	La Laguna
+	Logroño
+	Santa Coloma de Gramanet
+	Tarragona
+	Lleida
+	Jaén
+	Marbella
+	Ourense
+	Mataró
+	Algeciras
+	Dos Hermanas
+	Torrejón de Ardoz
+	Barakaldo
+	Santiago de Compostela
+	Alcobendas
+	Reus
+	Telde
+	Lugo
+	San Fernando
+	Getxo
+	Avilés
+	Cáceres
+	Cornellá
+	Palencia
+	Ferrol
+	Sant Boi
+	Coslada
+	Parla
+	Lorca
+	El Puerto de Santa María
+	Talavera de la Reina
+	Pontevedra
+	Ceuta
+	Girona
+	Melilla
+	Pozuelo de Alarcón
+	Guadalajara
+	Zamora
+	Torrent
+	Manresa
+	Ponferrada
+	El Prat
+	Chiclana de la Frontera
+	Sanlúcar de Barrameda
+	Ciudad Real
+	La Línea de la Concepción
+	Rubí
+	Alcoy
+	Gandía
+	San Sebastián de los Reyes
+	Las Rozas de Madrid
+	Torrevieja
+	Alcalá de Guadaira
+
+#UNITS StdUnits
+	22,	040,	Milizia
+
+#UNITS Nation1
+	7,	103,	Musketier
+	17,	133,    Kavallerie
+	27,	201,    Kriegsschiff

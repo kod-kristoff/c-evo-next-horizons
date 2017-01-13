@@ -1,0 +1,71 @@
+#BELONG #A
+
+'Controls
+#SHIFTCLICK Nápověda: kliknutí se Shiftem
+#MAPPROP %d%% velikosti, %d hráčů
+#MENU_ADVTREE Strom vynálezů
+#MENU_VIEWPOINT Pohled
+#MENU_DEBUGMAPOFF Vypnuto
+#MENU_TELLAI Jaká AI?
+#BTN_MENU Hlavní menu
+#BTN_MANAGE Management říše
+
+'Tooltips
+#TIP_WORKING Pracující občané
+#TIP_CIVIL Občané v civilní službě
+#TIP_PRIMACY Výběr zaměření
+#TIP_PROJECT Aktuální produkce
+#TIP_SUPUNITS Zobrazit podporované jednotky
+#TIP_TREASURY Pokladnice
+
+'Advance Tree Legend
+#ADVTREE_UP0 Upgrade pozemních jednotek
+#ADVTREE_UP1 Upgrade námořních jednotek
+#ADVTREE_UP2 Upgrade leteckých jednotek
+#ADVTREE_GOV Zpřístupní formu vlády
+#ADVTREE_OTHER Jiný účinek
+
+'Start Dialog
+#ACTIONHEADER_CONFIG Konfigurátor
+#ACTION_CONFIG Změna jazyka, přidání map a AI
+#ACTIONHEADER_MANUAL Manuál
+#ACTION_MANUAL Popis pravidel a uživatelského rozhraní
+#ACTIONHEADER_CREDITS Autoři
+#ACTION_CREDITS Kdo se podílel na této hře
+#ACTIONHEADER_AIDEV Vývoj AI
+#ACTION_AIDEV Jak naprogramovat vlastní AI pro tuto hru
+#ACTIONHEADER_WEB Na webu: c-evo.org
+
+'Message Text
+#BUSY_DEINIT Deinicializuji %s...
+#AGE0 = %s =\Postavili jsme stálé osídlení, abychom mohli farmařit, což je mnohem účinnější způsob získávání potravy než lov a sběr. Přebytečné jídlo má nebývalý účinek, který naši předkové nepoznali: růst.
+#DISPOSE2 %s\\Máme přestavět tuto budovu za %d%%p?
+#SELL2 %s\\Máme prodat tuto budovu za %d%%c?
+#SHIP_UTILIZE Karavanu nelze použít pro urychlení produkce kolonizační lodi.
+
+'City Events
+#CITYEVENT_ALLIMPSMADE Všechny budovy byly postaveny
+
+'Diplomatic Statements, do not use '\'!
+#FRDEMAND_SOFT Budeme rádi, pokud nám věnujete\-%s
+#FRNOTACCEPTANYOFFER Je nám líto, ale nic z vaší nabídky nemá odpovídající protihodnotu.
+#FRNOTACCEPTANYWANT Vaše nabídka nemá pro nás žádnou hodnotu.
+
+'help.txt additions
+#HELP_WONDERMORALE1 Další efekt: +2%m v tomto městě (trvalá platnost).
+#HELP_WONDERMORALE2 Další efekt: +2%m v tomto městě.
+
+'future use
+#BTN_MAPPROJECT Městské projekty
+#CITYPRIO Nastavit nejvyšší prioritu tomuto městu
+
+#DRAFTDOMAIN
+Pozemní jednotka
+Námořní jednotka
+Letecká jednotka
+
+#AITSTAT
+Počet kol, kdy byla dokončena kolonizační loď
+Počet kol, kdy byly zničeny všechny ostatní národy 
+Počet kol, kdy byl zničen náš národ 
+Podíl na celkovém času

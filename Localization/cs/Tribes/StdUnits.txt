@@ -1,0 +1,131 @@
+0,	074,	Armáda otroků
+1,	075,	Svobodní občané
+3,	071,	Podvodní kabina
+4,	073,	Kluzák
+7,	064,	Člun
+10,	010,	Osadníci
+11,	011,	Inženýři
+13,	021,	Speciální komando
+14,	030,	Karavana
+16,	017,	Staveniště
+17,	041,	Městská stráž
+20,	100,	Válečníci
+21,	100,	Lučištníci
+22,	100,	Válečníci
+23,	100,	Válečníci
+24,	101,	Legie
+25,	101,	Kopiníci
+26,	101,	Phalanx
+27,	101,	Lučištníci
+30,	102,	Stráž
+31,	102,	Stráž
+32,	102,	Stráž
+33,	102,    Stráž
+34,	103,	Mušketýři
+35,	103,	Mušketýři
+36,	103,	Mušketýři
+37,	103,	Mušketýři
+40,	104,    Střelci
+41,	104,    Střelci
+42,	104,    Střelci
+43,	104,    Střelci
+44,	105,    Pěchota
+45,	105,	Pěchota
+46,	105,	Pěchota
+47,	105,	Pěchota
+50,	106,	Mariňáci
+51,	106,	Mariňáci
+52,	106,	Mariňáci
+53,	106,	Mariňáci
+54,	110,	Mechanizovaná pěchota
+55,	110,	Mechanizovaná pěchota
+56,	110,	Mechanizovaná pěchota
+57,	110,	Mechanizovaná pěchota
+60,	130,    Jezdci
+61,	130,	Jezdci
+62,	130,    Jezdci
+63,	130,    Jezdci
+64,	131,    Jezdci
+65,	131,    Jezdci
+66,	131,    Jezdci
+67,	131,    Jezdci
+70,	132,	Rytíři
+71,	132,	Rytíři
+72,	132,	Rytíři
+73,	132,	Rytíři
+74,	133,	Dragouni
+75,	133,	Dragouni
+76,	133,	Dragouni
+77,	133,	Dragouni
+80,	134,	Kavalérie
+81,	134,	Kavalérie
+82,	134,	Kavalérie
+83,	134,	Kavalérie
+84,	135,    Tank
+85,	135,    Tank
+86,	135,    Tank
+87,	135,    Tank
+90,	136,	Tank
+91,	136,	Tank
+92,	136,	Tank
+93,	136,	Tank
+100,	170,	Balista
+101,	170,	Obléhací věž
+102,	170,	Katapult
+103,	170,	Katapult
+104,	171,	Dělo
+105,	171,	Dělo
+106,	171,	Dělo
+107,	171,	Dělo
+110,	172,	Houfnice
+111,	172,	Houfnice
+112,	172,	Houfnice
+113,	172,	Houfnice
+114,	173,	Raketomet
+115,	173,	Raketomet
+116,	173,	Raketomet
+117,	173,	Raketomet
+120,	200,	Plachetnice
+121,	200,	Plachetnice
+122,	200,	Plachetnice
+123,	200,	Plachetnice
+124,	201,	Galeona
+125,	201,	Fregata
+126,	201,    Korveta
+127,	201,    Korveta
+130,	202,	Parník
+131,	202,	Torpédoborec
+132,	202,	Křižník
+133,	202,	Křižník
+134,	203,	Raketový křižník
+135,	203,	Bitevní loď
+136,	203,	Bitevní křižník
+137,	203,	Bitevní loď
+140,	210,	Transport
+141,	210,	Transport
+142,	210,	Transport
+143,	210,	Transport
+144,	220,	Nosič
+145,	220,	Nosič
+146,	220,	Nosič
+147,	220,	Nosič
+150,	240,	Ponorka
+151,	240,	Ponorka
+152,	240,	Ponorka
+153,	240,	Ponorka
+160,	300,	Stíhač
+161,	300,	Stíhač
+162,	300,	Stíhač
+163,	300,	Stíhač
+164,	301,	Tryskáč
+165,	301,	Tryskáč
+166,	301,	Vrtulník
+167,	301,	Tryskáč
+170,	310,	Bombardér
+171,	310,	Bombardér
+172,	310,	Zeppelin
+173,	310,	Bombardér
+174,	311,	Bombardér
+175,	311,	Bombardér
+176,	311,	Bombardér
+177,	311,	Bombardér

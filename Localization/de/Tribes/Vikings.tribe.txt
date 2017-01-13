@@ -1,0 +1,131 @@
+#CHOOSE WIKINGER
+#n Wikinger
+#s Wikinger
+#a wikinger
+#m wikinger
+#b wikinger
+#COLOR 9FBB8B
+#SYMBOLS Nation2, 93
+#AGE0 StdCities, 2, StdTextures, 0, Nation2, 83
+#AGE1 StdCities, 2, StdTextures, 2, Nation2, 83
+#AGE2 StdCities, 4, StdTextures, 4, Nation2, 83
+#AGE3 StdCities, 5, StdTextures, 6, Nation2, 83
+
+#CITIES
+	Trondheim
+	Kaupang
+	Uppsala
+	Hladir
+	Århus
+	Viborg
+	Roskilde
+	The Udal
+	Lindholm
+	Jorvik
+	Westness
+	Skara
+	Ravning Enge
+	Birka
+	Jarlshof
+	Sigtuna
+	Odense
+	Lund
+	Larne
+	Hedeby
+	Aldeigjuborg
+	Nonnebakken
+	Stockholm
+	Oslo
+	København
+	Göteborg
+	Malmö
+	Bergen
+	Aalborg
+	Linköping
+	Västerås
+	Örebro
+	Norrköpping
+	Helsingborg
+	Jönköping
+	Reykjavík
+	Stavanger
+	Umeå
+	Bærum
+	Borås
+	Sundsvall
+	Gävle
+	Frederiksberg
+	Eskilstuna
+	Halmstad
+	Huddinge
+	Esbjerg
+	Karlstad
+	Södertälje
+	Nacka
+	Kristianstad
+	Växjö
+	Botkyrka
+	Skellefteå
+	Luleå
+	Kristiansand
+	Haninge
+	Gentofte
+	Fredrikstad
+	Kungsbacka
+	Randers
+	Gladsakse
+	Kolding
+	Karlskrona
+	Järfälla
+	Täby
+	Kalmar
+	Helsingør
+	Östersund
+	Tromsø
+	Sollentuna
+	Herning
+	Gotland
+	Solna
+	Horsens
+	Mölndal
+	Örnsköldsvik
+	Falun
+	Drammen
+	Vejle
+	Trollhättan
+	Varberg
+	Norrtälje
+	Silkeborg
+	Sandnes
+	Lyngby-Tårbæk
+	Skien
+	Skövde
+	Hvidovre
+	Nyköping
+	Uddevalla
+	Hässleholm
+	Asker
+	Fredericia
+	Greve
+	Borlänge
+	Sarpsborg
+	Næstved
+	Høje Tåstrup
+	Ballerup
+	Svendborg
+	Lillehammer
+	Kópavogur
+	Hafnarfjörður
+	Akureyrí
+	Godthåb
+	Holsteinsborg
+
+#UNITS Nation2
+	60,	010,	Siedler
+	61,	040,	Miliz
+	62,	101,	Pikeier
+	63,	101,	Krieger
+	64,	102,	Bogenschütze
+	65,	102,	Schwertkämpfer
+	66,	102,	Schwertkämpfer
+	67,	133,	Dragoner

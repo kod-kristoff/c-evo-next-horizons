@@ -1,0 +1,1481 @@
+#HELPTITLE_MAIN Manuál
+#HELPTITLE_QUICKSTART Rychlý start
+#HELPTITLE_CONCEPTS Koncepce hry
+#HELPTITLE_TECHLIST Pokroky
+#HELPTITLE_IMPLIST Vylepšení měst
+#HELPTITLE_UNIQUELIST Národní vylepšení
+#HELPTITLE_WONDERLIST Divy světa
+#HELPTITLE_TERLIST Typy terénu
+#HELPTITLE_JOBLIST Vylepšení terénu
+#HELPTITLE_MODELLIST Speciální jednotky
+#HELPTITLE_FEATURELIST Vlastnosti jednotek
+#HELPTITLE_FEATURE1LIST Kapacity
+#HELPTITLE_FEATURE2LIST Speciální vlastnosti
+#HELPTITLE_FEATURE3LIST Pokroky
+#HELPTITLE_GOVLIST Formy vlády
+#HELPTITLE_KEYS Myš a klávesnice
+#HELPTITLE_ABOUT O této hře
+#HELPTITLE_CREDITS Autoři
+#HELPTITLE_SEARCHRESULTS Výsledky hledání
+
+#HELPSPEC_TER (Typ terénu)
+#HELPSPEC_ADV (Pokrok)
+#HELPSPEC_FUTURE (Budoucí technologie)
+#HELPSPEC_IMP (Vylepšení města)
+#HELPSPEC_NAT (Národní vylepšení)
+#HELPSPEC_WONDER (Div)
+#HELPSPEC_SHIPPART (Část kolonizační lodi)
+#HELPSPEC_CAP (Kapacita jednotek)
+#HELPSPEC_FEATURE (Speciální vlastnost jednotek)
+#HELPSPEC_STANDARD (Vylepšení jednotek)
+
+#TECHFORMULA %.6g*n*EXP(n/%.6g)
+#PREREQ Vyžaduje znalost pokroků
+#PREREQALT Vyžaduje znalost pokroků (potřeba 2 ze 3)
+#BASETECH (Klíčová technologie)
+#STRENGTHUP %s: Multiplikátor síly +%d
+#COSTUP (Multiplikátor ceny +%d)
+#COSTMIN (Multiplikátor ceny zvýšen na %d)
+#TRANSUP %s: Multiplikátor transportu +%d
+#ADVEFFECT Funkční efekt
+#EFFECT Efekt
+#COSTS Náklady
+#BUILDCOST Cena produkce: %d%%p
+#MAINTCOST Údržba: %d%%c každý tah
+#REPLACE Výměna
+#REPLACETEXT Po dokončení této budovy budou následující stavby již zastaralé a budou automaticky prodány:
+#EXPIRATION Skončení platnosti
+#EXPWITH Účinky divu zmizí, jakmile jakýkoliv národ objeví pokrok %s.
+#EXPSLAVE Všichni otroci jsou osvobozeni a přestanou pracovat.
+#REQUIRED %s potřeba
+#RAREREQUIRED K produkci je potřeba %s.
+#RESFOOD Jídlo: %d%%f
+#RESPROD Materiál: %d%%p
+#RESTRADE Obchod: %d%%t
+#MOREIRR (+%d%%f se zavlažováním)
+#MOREMINE (+%d%%p s dolem)
+#MOREROAD (+%d%%t s cestou)
+#SPECIAL Speciální zdroje
+#SPECIALFOOD , +%d%%f
+#SPECIALPROD , +%d%%p
+#SPECIALTRADE , +%d%%t
+#TRAFO Transformace na %s
+#MOVEPLAIN Pohyb: Snadný terén
+#MOVEHEAVY Pohyb: Obtížný terén
+#DEFBONUS Bonus k obraně: %d%%
+#JOBCOST -Cena konstrukce: %s MP
+#JOBCOSTVAR -Cena konstrukce: proměnná (viz okno Vylepšení terénu v Makro managementu)
+#TERIMPEXCLUDE Zavlažování, důl, pevnost a vojenská základna se navzájem vylučují.
+Například pokud postavíte vojenskou základnu na čtverci s pevností,
+pevnost bude nahrazena vojenskou základnou.
+#TERIMPCITY Čtverec s městem se počítá, jako kdyby měl následující
+vylepšení terénu:\-Cesta\-Železnice (po objevu pokroku
+Železnice)\-Kanál\-Zavlažování\-Farma.
+#HOSTILE Toto je nehostinný terén. Jednotka zde setrvávající nebo tudy procházející
+bude poškozena úměrně k MP bodům zde spotřebovaným. Celý tah způsobuje %d%% poškození.
+Nehostinnost terénu odstraňuje přítomnost řeky, oázy, kanálu nebo vojenské základny.
+#DEADLANDS V mrtvé krajině nelze postavit vylepšení terénu s výjimkou cesty a železnice.
+#RARE Na náhodné mapě je vždy celkem 12 čtverců typu Mrtvá krajina. Jen polovina
+z nich je ložiskem speciálního zdroje, jsou tedy přesně dvě ložiska pro každý typ.
+#STRENGTH Síla: %d/%d
+#SPEED Rychlost: %s
+#MODELNOTE (Jednotky mohou mít u různých národů jiný vzhled.)
+#COSTBASE Základní hodnota produkčních nákladů %s%%p
+#WEIGHT Hmotnost %s%%w
+#BUILDALLOW Umožňuje konstrukci
+#MODELALLOW Zpřístupní speciální jednotku
+#FEATALLOW Umožňuje používání
+#FOLLOWADV Umožňuje výzkum
+#GOVALLOW Zpřístupní novou formu vlády
+#UPGRADEALLOW Vojenský prospěch
+#SEEALSO Viz také:
+#FUTURETECHHELP25 Tento pokrok představuje výzkum budoucích technologií. Národ může učinit
+až 25 pokroků v této kategorii.\\
+Budoucí technologie vyžadují čtyřnásobné náklady na výzkum. Na rozdíl od klasických pokroků nemohou být
+předmětem výměny technologií, ani je nelze získat z Velké knihovny.
+#FUTURETECHHELP100 Tento pokrok představuje výzkum budoucích technologií. Národ může učinit
+až 100 pokroků v této kategorii.\\
+Budoucí technologie vyžadují čtyřnásobné náklady na výzkum. Na rozdíl od klasických pokroků nemohou být
+předmětem výměny technologií, ani je nelze získat z Velké knihovny.
+#CRED_CAPSOUND Zvuky
+#CRED_CAPAI Umělá Inteligence
+#CRED_CAPLANG Tato lokalizace
+#AUTHOR Českou lokalizaci připravil Martin "LFK" Šlancar.
+#MATCHES Nalezené shody pro výraz "%s":
+#NOMATCHES Výraz "%s" nenalezen.
+
+
+#CONCEPTS
+$Koncepce hry\
+
+;INTRO Úvod\
+;START Používání úvodní obrazovky\\
+
+!Základy hry\
+;BASICS Základy\
+;SCIENCE Výzkum\
+;DIPLOMACY Diplomacie\
+;SHIP Jak vyhrát hru\\
+
+!Koncepce jednotek\
+;MOVEMENT Pohyb jednotkami\
+;COMMANDS Příkazy jednotkám\
+;SETTLE Kultivace\
+;COMBAT Boj\
+;SPYMISSIONS Špionážní operace\
+;CLASSES Návrhy jednotek\\
+
+!Koncepce měst\
+;CITIES Správa měst\
+;PRODUCTION Produkce\
+;BUILDINGS Stavby\
+;SUPPORT Podpora jednotek\\
+
+!Pokročilé\
+;MACRO Makro Management\
+;MAPEDIT Editor map\
+;AIT Turnaj AI
+
+
+#ABOUT
+$O této hře\
+
+&LOGO\\
+
+!Projekt\
+C-evo je nekomerční herní projekt založený na famózní hře "Sid Meier's
+Civilization" od Microprose. Cílem C-evo není soupeřit s
+komerčními hrami o co nejúžasnější prezentaci. Místo toho se snaží být
+skutečnou, nestárnoucí strategickou hrou, která bude bavit díky té nejdůležitější věci:
+neustálé výzvě. Projekt se tedy více zaměřuje na návrh pravidel a umělé inteligence (AI). Více
+informací se dozvíte na domovské stránce projektu:\
+::E2 c-evo.org\\
+
+!Licence\
+C-evo je výsledkem práce většího počtu autorů. Je vám umožněno
+hrát hru a šířit ji bez výslovného souhlasu tvůrců. Software
+samotný a všechny jeho části (s výjimkou grafiky a zvuků) je označován jako tzv. Public
+Domain. To znamená, že si s programem můžete dělat, co chcete. To také zahrnuje binární
+kód a zdrojové texty, které jsou dostupné na webové stránce projektu. Co se týče
+grafiky, měli byste kontaktovat autora daného grafického díla, než ji použijete k jinému
+účelu než pro hraní této hry.\
+::C Autoři\\
+
+!Modulární AI\
+Hra má otevřené AI rozhraní. To znamená, že hráč může nahradit standardní AI modul,
+zahrnutý do hry, jinými AI algoritmy - buď pro všechny nebo jednotlivé
+národy. C-evo umožňuje hrát až s 8 různými AI moduly v jedné
+hře. Nejjednodušším způsobem jak vyvinout vlastní AI je použít šablonu C#. Můžete ji najít ve složce s
+nainstalovanou hrou.\
+::E1 Manuál návrhu AI\\
+
+!Systémové požadavky\
+-16 bitová barevná hloubka nebo lepší\
+-doporučeno zapnuté vyhlazování písma\\
+
+!Parametry příkazové řádky\
+--man ... zobrazí pouze manuál\\
+
+!Odinstalace\
+Použijte zástupce "Přidat nebo ubrat programy" (resp. "Programy a funkce") v Ovládacích panelech.\\
+
+!Hlášení chyb\
+
+Abyste podpořili vývoj tohoto projektu, hlaste nám prosím problémy, které
+objevíte. Předtím byste však měli\
+-se podívat na seznam známých nedostatků a problémů na domovské stránce projektu. Neposílejte
+nám informace o chybách, které jsou zde již uvedeny.\
+-se podívat, zda nebyla uvolněna novější verze programu, než kterou máte. V ní totiž
+může být problém odstraněn, především jedná-li se o významnou chybu.\
+-si prečíst příslušnou stránku manuálu. Možná se nejedná o chybu. (Tato hra není
+klon Civilization II!)\
+-se ujistit, že se nejedná o problém s instalací nebo s některým doplňkem hry vytvořeným
+třetí stranou jako je např. alternativní AI. Nejste-li si jisti, odinstalujte hru pomocí
+zástupce "Přidat nebo odebrat programy", znovu ji nainstalujte bez jakýchkoliv doplňků a pak ji otestujte
+znovu. V případě problémů s herním doplňkem kontaktujte prosím jeho autora.\\
+
+Před nahlášením problému zkuste prosím nalézt způsob, jak jej reprodukovat. Hlášení
+reprodukovatelné chyby je mnohem cennější. Možná postačí k reprodukci chyby
+načíst knihu v tahu těsně před objevením problému a pokračovat stejně
+jako předtím. Toto je dokonce použitelné i v případě pádu hry, protože vždy existuje
+autosave z posledního tahu, je to jméno knihy začínající
+znakem "~".\\
+
+Pak nám můžete poslat detailní popis problému. Použijte webový formulář na adrese\
+::E3 c-evo.org/_sg/contact\
+Pokud je vaše kniha
+potřeba k reprodukci problému, připojte ji prosím. Soubor můžete najít v
+této složce:\
+&SAVED
+
+
+#CREDITS
+$Autoři\
+
+@@15\\
+
+!Návrh hry\
+Původní "Sid Meier's Civilization" a "Civilization II" navrhl Sid Meier
+a Brian Reynolds.\
+Změny jsou založeny na připomínkách od Civ fanoušků.\\
+
+!Programování\
+Naprogramoval Steffen Gerlach.\
+
+!Testování\
+Nespočetně testerů. Díky vám všem!\\
+
+!Další příspěvky\
+Některé textury pocházejí z Mayangových volně šiřitelných textur.\
+Seznamy měst vypracoval Charles Nadolski.\\
+
+!Grafika\
+Většina grafiky je převzata z volně přístupných Civ II modpacků. Někteří z autorů jsou
+neznámí nebo nemohli být kontaktováni. Pokud jste zaznamenali věci chráněné komerční
+známkou, postrádáte-li své jméno v seznamu nebo nesouhlasíte
+s použitím vaší práce v tomto projektu, kontaktujte nás prosím.
+
+
+#QUICK
+$Rychlý start\
+
+!!Rychlý start\
+
+Základní tipy pro zahájení hraní bez čtení manuálu:\\
+
+-Toto je tahová hra. Zatímco jeden národ vykonává činnosti v rámci svého tahu, všechny ostatní
+národy nejsou aktivní (kromě případů, kdy jsou kontaktovány za účelem diplomatických jednání).\
+-Váš tah obvykle automaticky končí v okamžiku, kdy rozdáte příkazy všem svým jednotkám. Pokud
+nemáte žádné aktivní jednotky, hra čeká, až zmáčknete tlačítko "Konec tahu".
+Pokud se zdá být hra zatuhlá, pravděpodobně musíte zmáčknout právě toto tlačítko.\
+-Většina předmětů, na které můžete kliknout, je označena bílým rámečkem.\
+-Na jednom čtverci může být umístěno více jednotek. Vy pouze vidíte tu
+nejsilnější z nich.\
+-Pokud je skupina jednotek napadena, pouze nejsilnější jednotka ze skupina
+bojuje s útočníkem. Pokud je tato jednotka útočníkem poražena, celá skupina
+jednotek je zničena.\
+-Můžete zvolit jakoukoliv ze svých jednotek kliknutím na ni. Jednotka začne blikat.
+Tlačítko se znakem "!" otevře menu příkazů jednotce se seznamem jen těch příkazů,
+které lze provádět se zvolenou jednotkou.\
+-Jednotkami pohybujete pomocí pravého tlačítka myši nebo pomocí kurzorových kláves.\
+-Klikněte na jedno ze svých měst pro zobrazení informací o něm. To nejdůležitější, co je potřeba vědět,
+je stavba městských projektů. Klikněte na obrázek projektu uprostřed okna
+a vyberte nový projekt, např. začněte vyrábět nové Osadníky pro založení nových měst.\
+-Na vašem managementu závisí, jak rychle města produkují, jak rychle rostou a kolik daní odvádějí
+do vaší pokladnice, jak rychle probíhá vědecký výzkum.\
+-Kliknutím na položku se zmáčknutou klávesou Shift zobrazíte nápovědu o dané položce.\\
+
+Mějte na paměti, že tato hra má vlastní pravidla a koncepci. Není to přesný remake
+jiné hry. V C-evo můžete najít mnoho věcí ze série "Civilization" ale
+v mnoha ohledech je jiné. To ostatně platí pro celkovou filozofii hry: Nečekejte,
+že všechno v této hře je "civilizované"!\
+
+
+#INTRO
+$Úvod\
+
+@@56\
+!!Vítejte do C-evo\
+
+Tato hra vám umožní zopakovat si vývoj lidské civilizace.
+Povedete národ podle vašeho výběru po šest tisíciletí,
+od prvních osídlení až po kolonizaci vesmíru. Vaše cesta je plná
+nebezpečí. Zdroje jsou omezené, kultivace divokých oblastí
+zabere staletí. Rostoucí města bude neustále ohrožovat
+hladomor a nepokoje.\\
+
+Budete potřebovat předvídavost. Rozšiřujte svoji říši a vylepšujte svá města.
+Budujte kasárna, univerzity a elektrárny, nebo dokonce některý z úžasných
+divů světa. Objevujte nové technologie a zbraně.
+Prozkoumávejte okolí, abyste mohli najít úrodné oblasti a postupně odkrýt
+celou mapu světa. Vybudujte lodě, které objeví vzdálené kontinenty.\\
+
+Přirozeně váš národ není jediný na zemi. Národy na každém kontinentu
+začaly rozvíjet své specifické kultury. Uvědomte si, že není žádné právo
+na existenci. Každá říše může padnout, včetně vaší.\\
+
+Váš první kontakt s
+cizím národem nemusí být přijemný, ale diplomacie nabízí mnoho
+možností. Kupujte, prodávejte nebo vyměňujte různé druhy znalostí a zboží. Braňte vojensky své hranice
+nebo je chraňte pomocí smluv. Dokonce je možné vytvořit aliance s jinými
+národy. Ale nespoléhejte se mnoho na uzavřené dohody, národy jsou v této hře
+protivníky! Přeci jen všichni směřují k jedinému cíli, kterého může dosáhnout jen jeden,
+k vítězství.
+
+
+#BASICS
+$Základy\
+
+!!Základy\
+
+Váš národ se skládá z jednotek a měst. Zatímco jednotky jsou dobré k
+průzkumu, dobývání a obraně, města jsou zdrojem růstu, produkce
+a výzkumu.\\
+
+Mapa světa je rozdělena na čtvercová pole (která ovšem kvůli perspektivě vypadají jako
+kosočtverce). Každý čtverec obsahuje určitý typ terénu, který definuje
+jeho vlastnosti: produkční zdroje, bonus obrany a "cenu" pohybu pro
+jednotky, které na něj vstoupí. Jeden čtverec nemůže obsahovat více než jedno město, může ale obsahovat
+neomezený počet jednotek jednoho národa. Nápovědu o konkrétním čtverci získáte kliknutím na něj
+se zmáčknutou klávesou SHIFT.\
+::T Typy terénu\\
+
+Tato hra je tahová strategie, tzn. vaši oponenti neprovádějí žádnou činnost, dokud
+nedokončíte svůj tah. Standardně váš tah končí poté,
+co byly dokončeny přesuny všech jednotek. Pokud nemáte žádné aktivní jednotky nebo jste zapnuli volbu
+"Čekat na konci tahu", musíte stisknout tlačítko "Konec tahu" v pravém dolním
+rohu obrazovky.\\
+
+
+#SCIENCE
+$Výzkum\
+
+@@46\
+!!Výzkum\
+
+Národ může objevit několik pokroků. Většina z nich zpřístupní nové speciální budovy,
+vlastnosti jednotek, typy jednotek a/nebo formy vlády. Pro objevení
+některých porkoků může být vyžadována znalost jednoho nebo dvou dřívějších pokroků
+("předchůdců").\
+::A Pokroky\\
+
+Když hra začne, jste dotázáni na první pokrok k vynalézání.
+Nápovědu o určitém pokroku na seznamu získáte kliknutím na
+něj se stisknutou klávesou SHIFT.
+Rychlost vědeckého výzkumu závisí na počtu bodů výzkumu (%r), které
+produkuje váš národ. Pokud je nasbírán dostatek %r, pokrok
+je objeven a můžete si vybrat další cíl vědeckého výzkumu.
+V jednom okamžiku je možné mít pouze jeden vědecký projekt. Není možné
+změnit vědecký projekt po jeho vybrání.
+"Cena" za objevení nového pokroku roste s počtem pokroků, které váš národ již
+objevil.\\
+
+;SCIENCECOST Detailně: "Cena" výzkumu
+
+
+#SCIENCECOST
+$"Cena" výzkumu\
+
+!"Cena" výzkumu\
+
+"Cena" za objevení nového pokroku roste s počtem pokroků, které váš národ již
+objevil. Přesný vzorec pro vaši úroveň obtížnosti je:\
+&TECHFORMULA\\
+Číslo n začíná na 4 a zvyšuje se:\
+-nezvyšuje se v případě vojenského výzkumu\
+-nezvyšuje se v případě vývoje Počítačové technologie\
+-o 1 po prozkoumání pokroku získaného od jiného národa\
+-o 2 ve vech ostatních případech při objevování pokroků, včetně budoucích technologií\
+-o 1 v případě získání pokroku z Velké knihovny
+
+
+#DIPLOMACY
+$Diplomacie\
+
+!!Diplomacie\
+
+Dva národy o sobě nevědí, dokud pozemní jednotka jednoho národa
+neobjeví na sousedním čtverci město nebo pozemní jednotku druhého národa. Všechny informace
+o cizím národu mužete sledovat na obrazovce hlášení o národech. Množství dostupných
+informací silně závisí na tom, zda máte k dispozici statistiku o daném
+národu nebo ne. Statistika zahrnuje velikost populace, velikost území, zásoby zlata,
+seznam pokroků objevených národem, vztahy s cizími národy a všechny
+grafy historického vývoje národa kromě vojenského grafu.\\
+
+!Kontakt\
+Poté, co se dva národy o sobě dozví, mohou se kontaktovat a zahájit
+diplomatická jednání, umožňující jim obchodovat nebo podepisovat smlouvy.
+Jednání je posloupnost prohlášení vyměňovaných mezi oběma stranami.
+Nemůžete ale zadávat žádný text. Místo toho jsou prohlášení automaticky
+generována podle voleb, které zvolíte. Tyto volby zahrnují tvorbu
+návrhů, přijímání návrhů a rušení smluv.\\
+
+Jednání končí v momentu, kdy si oponenti nemají dále co nabídnout.
+Jednání může také předčasně skončit, když je jedna ze stran přeruší.\\
+
+!Návrhy\
+Většina možností diplomacie spočívá ve vytváření a přijímání návrhů. Obecně
+je návrh kombinací nabízených položek cizímu národu
+a položek požadovaných jako protiplatba. Možné položky:\
+-Smlouva\
+-Aktuální statistika\
+-Vojenské hlášení\
+-Peníze\
+-Technologie\
+-Třída jednotek\
+-Mapa světa\
+-Části kolonizační lodi (po postavení Vesmírného střediska)\\
+
+Pokud návrh neobsahuje požadavky, jedná se o dárek. Stejně jako každý
+jiný návrh musí druhá strana dárek přijmout. Naopak pokud
+návrh neobsahuje nabídky, jedná se o požadavek.\\
+
+Pokroky, získané diplomatickými obchody s jiným národem, nelze okamžitě
+používat. Nejprve musí váš národ porozumět nové technologii a naučit se
+ji používat. Ale tento výzkum potřebuje pouze polovinu úsilí oproti objevování pokroků
+"na vlastní pěst"; a nepotřebujete znát "předchůdce" pokroku.\\
+
+!Smlouvy\
+Možné smlouvy jsou:\\
+
+-Mírová smlouva:
+Jednotkám obou národů není dovoleno navzájem na sebe útočit nebo vstupovat na
+other nation's territory. Units have no siege effect on the other nation's cities.\\
+
+-Přátelský kontakt:
+Platí účinky Mírové smlouvy a národy si navíc v každém tahu vyměňují
+národní statistiky.\\
+
+-Spojenectví:
+Aliance ruší omezení pohybu jednotek způsobované státními hranicemi nebo
+zónami kontroly. Národy v alianci take sdílejí veškeré
+informace (statistiky, vojenská hlášení, světové mapy) a znají pozice jednotek druhého
+národa.\\
+
+Smlouva může být zrušena jen při jednání, nebo když národ odmítne přijmout
+velvyslance druhého národa. Po zrušení smlouvy s daným národem
+nemůže národ zrušit další smlouvu se stejným národem po dobu dalších 3 tahů.
+Zrušení mírové smlouvy s národem vyvolá automatické zrušení
+míru se všemi spojenci daného národa, dokonce i když to jsou vaši spojenci.\\
+
+!Důvěryhodnost\
+Můžete posuzovat ostatní národy podle jejich důvěryhodnosti. Úrovně důvěryhodnosti jsou:\
+-Seriózní (100% důvěryhodnost)\
+-Izolacionistický (90% - 99%)\
+-Nepředvídatelný (70% - 89%)\
+-Prolhaný (méně než 70%)\\
+
+Každý tah v mírovém období zvyšuje
+důvěryhodnost národa o 1 až do maximální důvěryhodnosti.
+Na počátku je maximální důvěryhodnost všech národů 100. Porušením mírové
+smlouvy se důvěryhodnost zmenšuje o polovinu a maximální důvěryhodnost se zmenší
+o 10. Porušení spojenectví snižuje důvěryhodnost o
+čtvrtinu. Aktuální důvěryhodnost národa je známa všem ostatním národům, které
+ví o tomto národu, i bez přímého diplomatického kontaktu.
+
+
+#SHIP
+$Jak vyhrát hru\
+
+!!Jak vyhrát hru\
+
+Je jen jediný způsob jak vyhrát tuto hru: kolonizovat hvězdy! Ať je váš národ
+první, který dokončí mezihvězdnou kolonizační loď, směřující ke vzdáleným světům
+vhodným k životu. Celá kolonizační loď se sestává z 12 velkých
+částí:\\
+
+;:B67 6 konstrukcí kolonizační lodi\
+;:B68 4 energetické moduly\
+;:B69 2 obytné moduly\\
+
+Produkce každé z těchto tří částí má vysoké požadavky na speciální
+moderní zdroje. Pouze města, která obhospodařují čtverce s těmito zdroji, je mohou
+produkovat. Produkci není přitom možné urychlit zužitkováním Karavany, přestavěním
+vylepšení města nebo použitím peněz. Moderní zdroje jsou tyto:\
+&MODERN\\
+
+Národ nedokáže rozpoznat tyto zdroje před objevením pokroku\
+::A47 Masová produkce
+
+
+#MOVEMENT
+$Pohyb jednotkami\
+
+!!Pohyb jednotkami\
+
+Jednotky jsou mobilní částí vašeho národa. Všechny pohyby a udělené příkazy
+se aplikují na aktivní jednotku. To je ta blikající v hlavním okně
+a také je zobrazena spolu s dalšími informacemi na spodní části obrazovky
+vedle minimapy. Jednotkou pohybujete pomocí kurzorových, resp.
+numerických kláves, nebo kliknutím pravého tlačítka myši na cílový čtverec.\\
+
+!Omezení\
+Jednotka se může vždy pohnout na sousední čtverec kromě těchto
+případů:\
+-Cílový čtverec je obsazen jednotkami jiného národa.\
+-Jednotce nezbývá dost pohybových bodů. Viz níže.\
+-Pozemní jednotka se pokouší vstoupit na čtverec moře, resp. loď se snaží přemístit na čtverec souše.\
+-Loď bez schopnosti navigace se pokouší vstoupit na otevřené moře.\
+-Je porušena zóna kontroly, viz níže.\\
+
+!Letadla\
+Letecké jednotky se musí v každém tahu vrátit na zem. Letadlo, které není
+na konci tahu umístěno ve městě, vojenské základně nebo na palubě nosiče,
+bude ztraceno. V určité míře však existuje možnost, jak se tomuto omezení
+vyhnout:\
+::F7 Palivo\\
+
+!Pohybové body\
+Každý pohyb zabere čas, tzn. spotřebovává pohybové body (movement points, MP). Lodě,
+letadla a pozemní jednotky pohybující se snadným terénem spotřebují 1 MP na
+pohyby, které směřují paralelně se sítí čtverců (např. na severozápad),
+resp. 1.5 MP pro příčné pohyby (např. přímo na sever). Pro pozemní jednotky v obtížném
+terénu se náklady na pohyb zvyšují o 20% resp. 30% rychlosti jednotky větší než 1.5 MP.
+Na pohyb do oblasti hor potřebuje pozemní jednotka plné MP a nebude se moci
+pohybovat v následujícím tahu.\
+::T Typy terénu\\
+
+Příklad pohybových bodů potřebných pro různé pohyby:\
+@MoveShot\
+-Vlevo - Jednotka s počátečním množstvím 1.5 MP\
+-Vpravo - Jednotka s počátečním množstvím 3 MP\\
+
+Pokud se pozemní jednotka pohybuje po cestě, řece nebo kanálu, jsou náklady na pohyb 0.4 MP resp.
+0.6 MP bez ohledu na typ terénu. Pokud jednotka využívá železniční
+spojení, stojí pohyb pouze 8% resp. 12% rychlosti jednotky.\\
+Plný počet MP bodů jednotky, definovaný rychlostí dané třídy jednotek, je obnoven
+na začátku každého tahu. Poškozené lodě nedosahují plné rychlosti. Jejich
+pohybové body jsou sníženy úměrně poškození, ale nikdy neklesnou pod 2.5 MP.\\
+Pro delší tahy můžete použít funkci Go-to. Prostě kliknete pravým tlačítkem myši na
+cílový čtverec.\\
+
+!Zóny konroly\
+Existují dva typy jednotek: jednotky se Zónami kontroly (ZK) a jednotky
+bez ZK. Jednotka se ZK se nemůže pohybovat se nemůže pohybovat mezi pozemními čtverci, které oba sousedí s
+nepřátelskými ZK jednotkami. Výjimkou jsou případy, kdy jeden ze čtverců je vlastní město nebo cílový čtverec je
+obsazen vlastní ZK jednotkou. Lodě, letadla a speciální komanda nemají žádné
+Zóny kontroly. Jednotky naložené v transportních jednotkách dtaké nemají ZK. Jednotky
+bez ZK nemohou obléhat čtverce.\\
+
+!Obsazení města\
+Pozemní jednotky s nenulovou silou útoku mohou vstoupit do nechráněného nepřátelského města. Pak
+je toto město obsazeno a připojí se k městům vašeho národa. Nepřátelské jednotky, které
+mají svůj domov v obsazeném městě, jsou zničeny. Velikost
+města je snížena o 1, což může vést ke zničení města, pokud se velikost města sníží pod minimální
+velikost 2. V obsazeném městě vládnou nepokoje po tři tahy.
+
+
+#COMMANDS
+$Příkazy jednotkám\
+
+@@16\
+!!Příkazy jednotkám\
+
+Menu příkazů nabízí několik příkazů pro právě zvolenou jednotku
+závisejících na jejím typu a umístění:\
+
+-Rozpustit: rozpustí jednotku\
+-Sloučit: sloučí jednotku do nové jednotky právě produkované ve městě, kde je slučovaná jednotka umístěna\
+-Pokračovat: pokračuje v pohybu na dříve zadanou pozici\
+-Čekat: vybere další jednotku\
+-Žádné příkazy: žádné příkazy a žádné další automatické zvolení v tomto tahu\
+-Zůstat zde: žádné příkazy a žádné další automatické zvolení\
+-Regenerace: žádné příkazy a další automatické zvolení, dokud se jednotka nezregeneruje do plného zdraví\
+-Podpora odtud: město, v němž se jednotka nachází, se stane jejím domovským\
+-Návrat do nejbližšího města: přesun jednotky do jakéhokoliv vlastního města tak rychle, jak je to možné\
+-Centruj: vycentruje hlavní okno na pozici jednotky\
+-Odstranit: zničí vylepšení terénu (akce stojí 1 MP a zničí
+pouze jedno vylepšení terénu.)
+
+
+#SETTLE
+$Kultivace\
+
+@@29\
+!!Kultivace\
+
+Osadníci a Inženýři mohou stavět vylepšení terénu, která zlepšují
+vlastnosti daného čtverce:\
+
+-Usadit se: Osadníci začnou budovat nové město\
+-Postavit ...: vybuduje vylepšení terénu, viz níže\
+-Odstranit les: změní čtverec lesa na prérii\
+-Vysušit bažinu: změní čtverec bažiny na pastviny\
+-Zalesnit\
+-Transformovat: transformuje typ terénu, transformační efekty viz Typy
+terénu\
+-Odstranit znečištění\\
+
+Budování vylepšení terénu zabere určitý počet
+pohybových bodů (MP). Tyto MP body se mohou sbírat po několik tahů a na práci
+se také může podílet více než jedna jednotka. Jednotce ale musí zbývat 1 MP, aby mohla
+zahájit konstrukci. Jednotky Inženýrů nejsou efektivnější než jednotky Osadníků,
+Inženýři prostě mají více MP bodů, a proto pracují rychleji.\
+::J Vylepšení terénu\
+::T Typy terénu
+
+
+#COMBAT
+$Boj\
+
+!!Boj\
+
+Na nepřátelskou jednotku na sousedním čtverci můžete zaútočit pomocí klávesnice nebo myši,
+stejně jako byste se přesunuli na tento čtverec. Ale ne každý útok je možný.
+Normálně nemůžete útočit pozemní jednotkou na námořní jednotku či naopak. Lodě
+nemohou útočit, pokud se nacházejí ve městech nebo v kanálech. Na letadla lze
+zaútočit pouze jinými letadly; neplatí pro letadla umístěná ve městě nebo vojenské základně.
+V bitvě je slabší jednotka zničena a silnější je poškozena -
+čím je jednotka pokročilejší, tím získává menší stupeň poškození. Přesnou předpověď
+útoku můžete získat kliknutím pravého tlačítka myši na cíl při stisknuté klávese Shift.\\
+
+Každá jednotka má odlišnou základní bojovou sílu v případě útoku a v případě obrany. Obě
+číselná vyjádření síly jsou obvykle zapsána dohromady a oddělena lomítkem. Například jednotka se silou 75/25 má
+základní sílu útoku 75 a základní sílu obrany 25. Během každého
+boje jsou tyto hodnoty ovlivňovány několika faktory:\
+-Zkušenost. Každá úroveň zvyšuje sílu jednotky o 25%. Viz níže.\
+-Bonus terénu pro pozemní jednotky (pouze pro obránce). Viz seznam typů terénu.\
+-Speciální struktury (pouze pro obránce), např. městské hradby nebo pevnost.\
+-Opevnění (pouze pro obránce). Pozemní jednotka, která není naložena do transportu
+a která se nepohybovala v předchozím
+tahu, se opevní a získá tak další bonus 50% ke své síle.\
+-Letadla ve městech nebo na základnách nemají žádnou sílu obrany. Lodě mají
+ve městech a kanálech svoji sílu sníženou na polovinu.\
+Vezměte na vědomí, že tyto bonusy se sčítají, nemají násobný efekt.\\
+
+Pokud zbývá útočící jednotce méně než 1 MP, nemá dostatek času
+na dobře zorganizovaný útok. Její síla je v tomto případě úměrně
+snížena.\\
+
+!Útočení na skupinu jednotek\
+Pokud jsou na jednom čtverci umístěny dvě nebo více jednotek a jsou napadeny, pouze jedna z
+nich se stane obráncem pozice. Je to vždy ta jednotka, která byla před útokem viditelná
+pro útočníka, než zaútočil. Obvykle je obráncem nejsilnější přítomná
+jednotka.\\
+
+;TILEDEF Detailně: Obránce čtverce\\
+
+Pokud je bránící se jednotka poražena a není umístěna ve městě, pevnosti
+nebo vojenské základně, všechny jednotky na stejném čtverci jsou zničeny - dokonce i
+ponorky a neviditelná letadla.\\
+
+!Zkušenost\
+Zkušenost jednotky se zvyšuje s poškozením, které obdrží během boje: 100%
+znamená skok na další zkušenostní úroveň. Úrovně zkušeností jsou:\
+&EXPERIENCE\\
+
+!Regenerace\
+Poškozená jednotka se regeneruje úměrně ke zbývajícím pohybovým bodům na
+konci tahu. Pokud se v tahu vůbec nepohybovala, její "zdraví" vzroste o
+8% resp. o 20%, je-li umístěna ve městě nebo ve vojenské základně, což také zajišťuje, že ve městě
+nepropuknou nepokoje. Avšak "zdraví"
+jednotky nemůže vzrůst o více než dvojnásobek v každém tahu. Jednotky se
+neregenerují na vodě. Letadla se regenerují pouze ve městech a vojenských základnách.\\
+
+!Bombardování\
+Lodě a letadla se schopností útoku mohou bombardovat přilehlá nebráněná nepřátelská
+města; pokud jednotce zbývá alespoň 1 MP left. Populace
+bombardovaného města klesá o 1 tak dlouho, dokud nedojde k jeho kompletnímu
+zničení. Jednotka nezískává poškození ani zkušenost. Příkaz k zahájení
+bombardování udělujete pomocí myši či klávesnice stejným způsobem jako běžný útok.\\
+
+!Vyhnání jednotek\
+Národ může ze svého území vyhnat jednotky národů, se kterými má uzavřenou mírovou smlouvu.
+K tomu použije vlastní pozemní nebo námořní jednotku, které zbývá alespoň
+1 MP (aby byla schopná zaútočit na cizí jednotku v případě, že by s národem nebyla podepsána žádná
+smlouva). Vyhnání jednotek se provede pomocí myši nebo klávesnice stejným způsobem jako standardní útok.
+
+
+#TILEDEF
+$Obránce čtverce\
+
+!Obránce čtverce\
+
+Pokud je napadena skupina jednotek, obvykle ji brání nejsilnější
+jednotka. V určitých případech tomu tak není. Přesné schéma výběru obránce
+čtverce je následující:\
+-Kritéria výběru berou ohled na kategorie jednotek. Jako první brání
+fanatické pozemní jednotky, druhé v pořadí jsou normální jednotky se Zónami kontroly,
+třetí jsou jednotky bez Zón kontroly, čtvrté jsou ponorky a
+neviditelná letadla. Jednotky v transportních lodích nebo letadlech nikdy nebrání.\
+-Jsou-li v nejvyšší kategorii dvě nebo více jednotek, ta s lepší
+obrannou silou je vybrána. Výpočet síly zahrnuje
+zkušenosti, poškození a opevnění. Nejsou zahrnovány speciální vlastnosti,
+které jsou efektivní pouze proti speciálním nepřátelům.\
+-Pokud mají dvě nebo více jednotek stejnou obrannou sílu (nepříliš pravděpodobné),
+brání ta s menšími náklady na výrobu.
+
+
+#SPYMISSIONS
+$Špionážní operace\
+
+@@28\
+!!Špionážní operace\
+
+Špionážní operace mohou vykonávat pouze speciální komanda. Příkaz k provedení určité operace udělujete
+pohybem komanda do cizího města. Vyberte si z pěti typů misí:\
+-Sabotáž produkce: V příštím tahu je produkce města zastavena.\
+-Krádež světové mapy.\
+-Sběr znalostí o třetím národu: Získáte jakoukoliv znalost, kterou má tento národ
+o třetích národech.\
+-Připravit národní statistiku. Detaily najdete na obrazovce národa, hlášení o výzkumu a v grafech. \
+-Připravit vojenské hlášení.\\
+
+Uzavřená mírová smlouva mezi dvěma národy zabraňuje provádět špionážní operace proti druhému národu. Nicméně
+speciální komanda mohou infiltrovat jakékoliv území bez ohledu na uzavřené smlouvy.
+
+
+#CLASSES
+$Návrhy jednotek\
+
+!!Návrhy jednotek\
+
+Váš národ může produkovat jen známé třídy jednotek. Jednotky Milice
+a Osadníci jsou známy ihned na začátku, některé speciální jednotky jsou zpřístupněny
+po objevu určitého pokroku nebo postavení některého divu.\
+::S Speciální jednotky\\
+
+Všechny ostatní třídy jednotek, které chcete vyrábět, musí být navrženy vašimi
+vědci. Poté, co máte potřebné znalosti (např. Válečnický kodex pro
+uvedení nových pozemních jednotek), můžete zvolit "Vojenský výzkum" na
+seznamu pokroků. Otevře se vám obrazovka Vojenského výzkumu:\\
+
+@DraftShot\
+
+Legenda:\
+-1: Hmotnost\
+-2: Aktuální modifikátory\
+-3: Zde volíte vlastnosti a schopnosti\
+-4: Výběr typu jednotky\
+-5: Vlastnosti nové jednotky\\
+
+Vlastnosti třídy jednotek závisejí na dvou věcech: 1. na
+technologiích, které byly k dispozici, když jste zvolili návrh nové třídy jednotek. Některé vědecké pokroky přinášejí
+vylepšení v jednom nebo více odvětvích válečnictví, zvyšují příslušný
+modifikátor síly - a modifikátor ceny také. Jsou tu také modifikátory
+transportu ovlivňující počet jednotek, které transportní jednotka může unést.\
+
+2. na kapacitách a speciálních vlastnostech, které
+třídě jednotek přidělíte. Jednotlivé vlastnosti zvyšujete resp. snižujete klikáním na
+malá tlačítka nalevo. Většina vlastností zvyšuje cenu (%p) a hmotnost
+(%w) vaší jednotky. Maximální hmotnost závisí na typu jednotky a na
+technologiích, které jste objevili. Nápovědu o příslušné vlastnosti získáte kliknutím
+na ni při stisknuté klávese SHIFT.\
+::F Vlastnosti jednotek\\
+
+Na konci návrhu je síla útoku, síla obrany a transportní kapacita nové
+třídy jednotek vypočítána podle vzorce "základní hodnota × modifikátor". Pokud hrajete na nízké 
+resp. vysoké úrovni obtížnosti, jsou náklady na výrobu jednotek sníženy resp.
+zvýšeny o 25%.
+
+
+#CITIES
+$Správa měst\
+
+@@43\
+!!Správa měst\
+
+Hlavní funkcí města je těžba zdrojů z okolního území
+a jejich zpracování. Váš národ začíná s jedním městem, hlavním městem národa. Existují
+dva způsoby jak získat další města: použití Osadníků pro založení
+nových měst, nebo obsazení města nepřátelského národa. Zakládání měst Osadníky je možné jen v terénech,
+které umožňují postavení zavlažování (Pastviny, Pláně, Prérie, Kopce, Tundra).\\
+
+Každé město má vlastní okno pro jeho správu, které se zobrazí po kliknutí na město: \\
+
+@CityShot\
+
+Jednotlivé části této obrazovky jsou popsány v následujících sekcích.\\
+
+!Občané\
+
+Pracuje se s velkými skupinami městské populace, z nichž každá je na obrazovce reprezentována
+jako jeden obličej. Velikost města, vyjádřená počtem skupin, se zobrazuje
+levém horním rohu městské obrazovky. Minimální velikost města je 2. Jakákoliv událost,
+která sníží velikost města pod 2, znamená zrušení tohoto města.
+Maximální velikost města je 8, ale může být ještě zvýšena pomocí speciálních městských vylepšení.\\
+
+Každá skupina obyvatel může využívat jeden čtverec na území města (1), tj. těžit zdroje
+z tohoto čtverce. Jeden čtverec nemůže být využíván více než jednou skupinou. Čtverce,
+využívané jiným městem (vlastním či cizím), jsou označeny jako nedostupné.\\
+
+Skupiny, které nejsou přiřazeny ke čtvercům, zůstávají v civilní službě jako policejní jednotky
+(2) - bližší informace najdete v další sekci.\\
+
+!Spokojenost\
+
+Pravý horní panel na obrazovce města (3) zobrazuje spokojenost ve
+městě. Zde jsou důležité tři věci:\
+
+-Bohatství (symbol: %l). Vytváří se z obchodu, pokud je tato preference zapnuta
+v nastavení "Ekonomie a daně". Viz sekce "Obchod" níže.\
+-Morálka (%m). Město vždy začíná se 4 body morálky, které jsou znázorněny
+na čtverci města. Tato hodnota může být zvýšena pomocí některých městských vylepšení.
+Navíc morálku ve městě zvyšují také postavené divy světa,
+a to o 2%m.\
+-Kontrola (%o). Vyplývá z udržování policejních jednotek. Každá skupina obyvatel
+v civilní službě zvyšuje úroveň kontroly o 2%o. Speciální jednotka Městská stráž také
+udržuje kontrolu nad populací.\\
+
+Morálka a bohatství zvyšují spokojenost populace. Pro správnou
+funkci města je důležité, aby každá skupina obyvatel byla spokojená
+nebo pod kontrolou. Součet bodů spokojenosti (morálka a bohatství) a bodů kontroly nesmí
+být menší než počet skupin obyvatel. Pokud se tak stane, vypuknou civilní nepokoje.\\
+
+Pod některými formami vlády snižují určité situace spokojenost v populaci.
+Více informací naleznete v\
+::G Formy vlády\\
+
+!Víra\
+V případě vlády fundamentalismu se spokojenost počítá jinak. Každá skupina
+obyvatel vytváří jeden bod víry, který je dostatečný k tomu, aby činil tuto skupinu
+šťastnou. Spokojenost obyvatelstva ve fundamentalismu tedy není potřeba
+sledovat, protože tu nevznikají žádné civilní nepokoje. Morálka a kontrola
+není důležitá.\\
+
+
+!Zdroje\
+
+Čtverce poskytují své zdroje jednou v každém tahu. Existují tři typy zdrojů, které
+jsou těženy na území města: potraviny (%f), materiál (%p) a obchod (%t).
+Tyto tři typy zdrojů jsou zpracovávány různými způsoby, které jsou popsány v dalších
+třech sekcích.\\
+
+Množství produkce z jednoho čtverce závisí na:\
+::T Typy terénu\
+::J Vylepšení terénu\
+::G Formy vlády\\
+
+!Jídlo\
+Zdroje potravin (%f) představují všechny druhy jídla. Zpracování tohoto
+zdroje se zobrazuje na panelu jídla (4). Je potřeba pro zásobování městské
+populace, protože každá skupina obyvatel spotřebuje 2%f v každém tahu. Také některé typy jednotek
+vyžadují podporu jídlem z domovského města. Chybějící potraviny jsou brány z městských zásob
+potravin. Je-li zásobárna prázdná, město je postiženo
+hladomorem: jedna skupina obyvatel resp. jedna jednotka závislá na podpoře jídlem zemře. Obvykle ale
+město produkuje více jídla, než potřebuje.
+V takovém případě pak přebytek jídla směřuje do zásobárny. Výjimkou jsou velká města (velikost 8 a
+vyšší) pouze s jednou jednotkou přebytku jídla: tento jeden přebytek je přeměněn na zlato.
+Pokud je zásobárna jídla plná a město nedosáhlo maximální velikosti,
+město vzroste, tj. získá další skupinu obyvatel navíc.\\
+
+!Materiál\
+Materiál (%p) je abstraktní zdroj, který zastupuje vše využitelné
+k produkci: dřevo, ruda, ropa atd. Zpracování tohoto
+zdroje se zobrazuje na panelu materiálu (5). Část materiálu je také nutná pro podporu
+jednotek, které mají svůj domov v daném městě. Zbytek materiálu je
+používán pro produkci. Vyráběný městský projekt (6) můžete změnit
+kliknutím na něj. Mapa města (7) zobrazuje aktuální počet vylepšení ve
+městě. Další informace o produkci se dovíte v kapitole "Produkce".\\
+
+!Obchod\
+Tento zdroj (symbol: %t) zastupuje vše, co má hodnotu při obchodování.
+Obchod je 
+produkován pouze na čtvercích na městském území, ne na samotném čtverci
+s městem - ani v případě, že na tomto čtverci je umístěn zdroj se zlatem.
+Zpracování obchodu se zobrazuje na panelu obchodu (8). Část
+příjmu z obchodu se ztrácí kvůli korupci, která závisí na aktuální
+formě vlády a roste se vzdáleností mezi městem a hlavním městem.
+Zbytek %t je nejprve zdaněn podle aktuální daňové
+sazby, která se nastavuje v sekci "Ekonomie a daně". Zbytek obchodu je rozdělen do
+výzkumu a bohatství v poměru, který je nastaven v sekci "Ekonomie a daně". Daně (%c) jdou do
+zásob zlata, body výzkumu (%r) putují do aktuálního výzkumného projektu.
+Bohatství (%l) zvyšuje spokojenost ve městě. Všimněte si, že
+využívání zdrojů obchodu vyžaduje alespoň budovu\
+::B49 Radnice.\\
+
+;CORRUPTION Detailně: Výpočet korupce\\
+
+!Obléhání\
+Město nemůže získávat suroviny ze čtverců, na kterých je umístěna jednotka cizího národa. Výjimkou jsou národy,
+s nimiž máte uzavřen mír. Tímto způsobem mohou nepřátelské jednotky obléhat vaše města blokováním
+přístupu k jídlu, materiálu a zdrojům obchodu. Samozřejmě vy můžete obléhat nepřátelská města
+také. Pokud se území vašeho města překrývá s územím nepřátelského města, obléhání vám umožňuje
+zabránit nepřátelskému městu získávání surovin ze čtverců, které může vaše město začít využívat
+v dalším tahu.\\
+
+!Automatický management populace\
+Přidělování skupin městského obyvatelstva ke čtvercům na městském území a
+do civilní služby se děje automaticky a optimálně. Hráč potřebuje pouze nastavit 
+priority pomocí primárního přepínače (9). K dispozici je 5
+pozic:\
+-Maximální růst (výchozí nastavení). Maximalizuje bez kompromisů růst města.
+Všechny zdroje jsou obětovány pro získání
+jednoho bodu jídla.\
+-Maximální produkce. Maximalizuje bez kompromisů produkci města; stále je ale
+užitečné také použití zlata pro dokončení projektů. Jakékoliv množství jídla a
+výzkumu je obětováno pro získání jednoho bodu materiálu.\
+-Maximální výzkum. Maximalizuje zisk z obchodu (výzkum a
+daně) s malými kompromisy. Jídlo je považováno za téměř bezcenné.\
+-Uspíšit produkci. Kompromis mezi růstem a dalšími cíli, přičemž produkce
+má přednost před výzkumem a příjmem z daní.\
+-Uspíšit výzkum. Kompromis mezi růstem a dalšími cíli, přičemž výzkum a
+příjem z daní mají přednost před produkcí. Městský projekt Obchodování je považován
+za zisk z daní, není považován za produkci.\\
+
+;OPTI Detailně: Vzorce\\
+
+Za určitých okolností nemusí některá nastavení odpovídat svému pojmenování, protože
+neexistuje cíl jejich zaměření. Příklady: "Maximální produkce"
+při nastaveném projektu Obchodování; "Maximální růst", když
+město nemůže růst; "Maximální výzkum", když město nemá Radnici.
+V těchto případech nastavení stále fungují, ale projevují se pouze jejich sekundární priority,
+což může vést k neočekávaným výsledkům.\\
+
+Nad optimalizačními cíli jsou vždy nadřazena tři
+kritéria, která nelze změnit:\
+-1. priorita: Je zamezeno tvorbě civilních nepokojů.\
+-2. priorita: Je zajištěn materiál na podporu jednotek.\
+-3. priorita: Je zajištěna zásoba jídla na podporu populace a podporovaných jednotek.\\
+
+!Plná kontrola\
+Pokud z nějakých důvodů nechcete používat automatický management populace,
+můžete jej vypnout kliknutím na primární přepínač ve spodní části nebo
+kliknutím na území města. Tím je vám umožněno ručně vybrat čtverce, které se budou
+využívat. Kliknutím na využívaný čtverec zařadíte skupinu obyvatel na čtverci
+do civilní služby. Kliknutím na nevyužívaný čtverec mu přiřadíte skupinu obyvatel,
+která je momentálně v civilní službě. (Samozřejmě jen za předpokladu, že existuje
+taková skupina.) Tímto způsobem můžete přesunout skupinu z jednoho čtverce na druhý ve dvou
+krocích.\\
+
+Pokud je automatický management vypnutý, musíte se starat o vše
+sami: zásobu jídla, podporu jednotek, civilní nepokoje. Můžete narazit na
+problémy, které jste předtím neměli.\\
+
+!Civilní nepokoje\
+Pokud město ztratí kontrolu nad nespokojenými obyvateli (popsáno v
+sekci "Spokojenost"), upadne do nepokojů a zastaví produkci,
+výzkum a výběr daní. V dalším tahu přetrvávajících nepokojů
+město dále zastaví podporu jednotek, takže začne v každém tahu ztrácet jednu jednotku vyžadující
+podporu, dokud není ve městě nastolen pořádek.\\
+
+Automatický management populace obvykle zabraňuje civilním nepořádkům. Nedokáže
+ale zvládnout situaci, kdy je ve městě už příliš mnoho nespokojenosti. Pokud
+zaznamenáte nepokoje v automaticky spravovaném městě, zmenšete nespokojenost přesunem jednotek
+způsobujících nepokoje do oblasti, kde tento jev zmizí, nebo tyto jednotky rozpusťte.\\
+
+Pokud vypnete automatický management, je pouze na vás, jak udržíte dostatečnou míru spokojenosti
+ve městě. Nejčastější reakcí na potlačení nepokojů je
+posílení policejních sil.
+
+
+#CORRUPTION
+$Výpočet korupce\
+
+!Výpočet korupce\
+
+Korupce ve městě je vypočítávána podle tohoto vzorce:\
+@CORRUPTION\
+-T - obchod produkovaný městem\
+-C - korupční faktor daný formou vlády\
+-D - vzdálenost mezi městem a hlavním městem\
+-Dmax - teoretická maximální vzdálenost mezi dvěma městy (přes celou výšku mapy
+a půlku šířky mapy)\\
+
+Pokud národ nemá hlavní město, ve všech městech se soudem je korupce na úrovni 50%
+a ve všech ostatních městech na úrovni 100% nezávisle na aktuální formě vlády.
+
+
+#OPTI
+$Vzorce pro optimalizaci správy města\
+
+!Vzorce pro optimalizaci správy města\
+
+Pět primárních nastavení automatického managementu populace
+se z matematického hlediska odlišuje pouze v hodnotě m, která je
+maximalizována. Výpočet hodnoty m bere v úvahu jídlo (f), produkci (p),
+daně (t) a výzkum (r) po aplikování všech bonusů:\
+-Maximální růst: m = f, m2 = 2p + t + r\
+-Maximální produkce: m = 4p + t, m2 = r, m3 = f\
+-Maximální výzkum: m = 2r + t + p, m2 = f\
+-Uspíšit produkci: m = sqrt(f) * (8p + 2t + r)\
+-Uspíšit výzkum: m = sqrt(f) * (r + t + p)
+
+
+#PRODUCTION
+$Produkce\
+
+!!Produkce\
+
+Po založení nebo obsazení města je jeho projekt nastaven na "Obchodování",
+tzn. že vytěžený materiál je směněn za zlato. Můžete vybrat jiný projekt
+kliknutím na obrázek projektu. Výběr projektu závisí na aktuální
+úrovni znalostí vašeho národa. Nápovědu o příslušném projektu na seznamu získáte
+kliknutím na něj se stisknutou klávesou SHIFT. Můžete si vybrat ze tří kategorií
+projektů:\
+-Jednotky\
+-Městská a národní vylepšení\
+-Divy světa\\
+
+Pokud změníte městský projekt na jiný projekt stejné kategorie,
+ztrácíte třetinu nasbíraného materiálu. Pokud nastavíte projekt jiné kategorie,
+nasbíraný materiál je prodán. Abyste
+urychlili stavbu městského nebo národního vylepšení, můžete
+nechat přestavět jednu ze stávajících budov, což přidá dvě třetiny produkčního materiálu
+spotřebovaného na tuto budovu. Abyste urychlili produkci jednotky (kromě
+jednotky Karavana), můžete sloučit jednotku nacházející se na čtverci města. Tímto se přidají dvě třetiny
+produkčního materiálu spotřebovaného na tuto jednotku za předpokladu, že její zdraví bylo 100%.
+Jinak je množství získaného materiálu patřičně zmenšeno.\\
+
+!Emigrace\
+Osadníci, Inženýři, Otroci a Branci jsou získáváni z městské populace;
+velikost města je snížena, pokud jsou tyto jednotky vyrobeny.
+Výroba Branců a Otroků znamená emigraci pouze jedné skupiny obyvatel,
+Osadníci a Inženýři spotřebují dvě skupiny. Emigraci lze obrátit: Tyto jednotky
+mohou být přidány k městu za předpokladu, že nedosáhlo maximální velikosti. To
+způsobí, že populace města se zvýší o 1 resp. 2 skupiny obyvatel.\\
+
+!Branná povinnost\
+Každou pozemní jednotku můžete produkovat pomocí branců. Z města je odebrán jeden
+občan a navíc jednotka potřebuje podporu jídlem 1%f. Náklady na produkci jednotky
+se snižují o trojnásobek multiplikátoru ceny jednotky, ale nikdy ne pod násobek 1.
+Povolávání branců vyžaduje
+znalost pokroku\
+::A18 Branná povinnost\\
+
+!Kupování a prodávání projektů\
+Můžete tak zrychlit produkci, projekt je kompletní v následujícím tahu.
+Stojí to však čtyřnásobek počtu zbývajících %p převedený na peníze. Také
+můžete prodat projekt jeho změnou na projekt "Obchodování". Nasbíraná
+produkce je přeměněna na zlato.\\
+
+!Znečištění\
+Každý těžený zdroj materiálu vytváří jeden bod znečištění. Každá skupina obyvatel
+toleruje jeden bod znečištění, zbylé znečištění se hromadí. Pokud nahromaděné
+znečištění města překročí hranici 240 bodů, jeden čtverec v oblasti města je znečištěn
+a ztrácí tak polovinu svého produkčního potenciálu. Znečištění může být odstraněno pomocí
+Osadníků a Inženýrů.
+
+
+#BUILDINGS
+$Stavby\
+
+@@67\
+!!Stavby\
+
+Každá stavba má speciální pozitivní efekt na město, v němž byla postavena, nebo na
+celý národ. Jsou tři typy staveb, které se odlišují v tom, jak
+často je lze postavit:\
+-Vylepšení města: lze postavit jednou v každém městě.\
+-Národní vylepšení: lze postavit jen jednou v celém národě. Pokud město vybuduje
+národní vylepšení, které se nachází v jiném městě, je starší
+budova prodána.\
+-Divy: lze postavit jen jednou na světě. Pokud jeden národ postaví div,
+jiné národy jej již vybudovat nemohou. Pokud je div zničen
+(protože jeho město je zničeno), je ztracen navždy.\\
+
+::B Vylepšení měst\
+::B201 Národní vylepšení\
+::B202 Divy světa\\
+
+Většina městských a národních vylepšení vyžaduje náklady na údržbu, které jsou
+brány z národních zásob zlata. Jsou-li zásoby příliš nízké, je
+náhodná budova prodána.\\
+
+V obrazovce managementu města klikněte na tlačítko "Zobrazit vylepšení" a zobrazí se vám seznam vylepšení
+vybudovaných ve městě. Přejete-li si prodat nebo přestavět některé z nich, klikněte na jeho
+obrázek. Zisk z prodeje stavby je totožný s produkčními náklady
+a je přidán k zásobám zlata.
+
+
+#SUPPORT
+$Podpora jednotek\
+
+!!Podpora jednotek\
+
+Každá jednotka vyžaduje podporu ze svého domovského města v podobě jednoho %p v každém
+tahu. Lodě o hmotnosti 6%w nebo více vyžadují dvojitou podporu.
+Zpočátku je domovským městem jednotky to město, v němž byla vyrobena. Chcete-li
+změnit domovské město, přesuňte jednotku do daného města a zvolte příkaz
+"Podpora odtud". V obrazovce managementu města klikněte na tlačítko "Zobrazit podporu" a
+zobrazí se seznam jednotek podporovaných daným městem.\\
+
+Malý počet volných jednotek nepotřebuje podporu, což je vyznačeno šedým (%n) místo
+normálního symbolu podpory (%p). Počet těchto jednotek závisí na formě vlády. Pokud
+město neprodukuje dostatek materiálu pro podporu všech svých jednotek, jedna
+jednotka bude zrušena. Obvykle se jedná o nejméně nákladnou jednotku.\\
+
+Pokud v městu trvají nepokoje více než jeden tah, je zastavena podpora jednotek.
+Pokud existují jednotky vyžadující podporu z daného města, v každém tahu je jedna z nich zrušena.
+
+
+#MACRO
+$Makro management\
+
+!!Makro Management\
+
+Hraní této hry by měla být zábava, ne dřina. Makro management vám pomůže zbavit se
+opakujících se činností, takže se můžete koncentrovat na strategii. Makro
+management neumožňuje dělat zcela všechny věci, ale
+umožňuje hrát mnohem efektivněji. Není však doporučováno
+používat makro management dříve, než porozumíte základům toho, co
+chcete manažovat.\\
+
+!Vylepšení terénu\
+Dovoluje definovat fixní pořadí vylepšení terénu pro každý typ
+terénu. Poté, co určíte vylepšení terénu, můžete je aplikovat pomocí příkazu
+"Vylepšit" jednotky Osadníků - Osadníci postaví vybraná vylepšení
+terénu v definovaném pořadí. Máte-li třítlačítkovou myš, můžete to dokonce
+kombinovat s funkcí Go-to; klikněte prostředním tlačítkem myši
+na čtverec, který chcete vylepšit, a Osadníci se tam automaticky přesunou a začnou
+pracovat.\\
+
+!Typy měst\
+Můžete definovat pořadí stavby budov pro čtyři typy měst. Použijte metodu drag&drop k
+vytvoření pořadí staveb. Abyste městu přiřadili dané pořadí staveb,
+zvolte příslušný typ města jako městský projekt. Změny v pořadí staveb
+se automaticky promítnou na všechna města. Aktuální městský projekt však
+bude dokončen. Typ města zůstane vybrán
+i poté, co bude stavba všech vylepšení města dokončena.
+
+
+#START
+$Používání úvodní obrazovky\
+
+!Zahájení hry\
+
+Úvodní obrazovka má tři stránky, přepínáte se mezi nimi pomocí horních záložek. Pro
+zahájení nové hry se přepněte na záložku "Nová Kniha". Zvolte zde počet cizích národů
+a úroveň obtížnosti. Máte-li nainstalované alternativní AI moduly,
+můžete vybrat jeden z nich místo standardního AI; klikněte na obrázek
+AI modulu. Hru zahájíte kliknutím na tlačítko "Start".\\
+
+!Vlastní nastavení hráčů\
+Pokud zaškrtnete položku "Vlastní nastavení hráčů", máte větší svobodu při určování
+protivníků a úrovně obtížnosti. Jedině tento mód dovoluje hrát multiplayerovou
+hru v tzv. hotseat módu (více lidských hráčů na jednom počítači), hrát proti různým AI modulům
+najednou, nebo spouštět hry pouze s AI moduly v módu supervisora nebo v módu turnaje AI.
+Použijte 9 polí pro vybrání, kolik lidských hráčů a kolik AI modulů
+se zúčastní hry. Klikněte na pole a
+ze seznamu vyberte protivníka. Tři pole na levé straně mají u sebe další přepínače
+s označením "3". Takto nastavíte pomocí jednoho pole tři národy, takže
+můžete soupeřit celkem se 14 národy.\\
+
+Každý hráč má svoji úroveň obtížnosti, kterou můžete nastavit na levé
+straně pole. Jedna čára znamená nejjednodušší úroveň, tři čáry tu
+nejtěžší. Například pokud chcete hrát proti AI a přejete si
+mít hru co možná nejtěžší, nastavte vlastní obtížnost (tj. tu u
+"Místního hráče") na nejvyšší hodnotu a všechny ostatní obtížnosti pro AI nastavte nižší.\\
+
+Vyšší obtížnost znamená pomalejší růst populace, pomalejší produkci a
+výzkum, protože je zvýšena velikost městské zásobárny potravin i nákladů na produkci
+a výzkum.\\
+
+!Nahrávání hry\
+
+Když přerušíte hru a rozhodnete se uložit knihu, objeví se na seznamu
+starých knih. Chcete-li pokračovat ve hraní, musíte ji vybrat a stisknout tlačítko "Otevřít". Kniha obsahuje
+všechny tahy ze hry. Chcete-li otevřít hru v jiném časovém bodu než na
+konci, zadejte nejprve rok, ve kterém chcete knihu otevřít.\\
+
+!Mapy\
+
+Standardně hrajete na náhodné mapě světa, která je automaticky
+vygenerována na začátku hry. Na stránce "Mapy" můžete nastavit dva
+parametry tohoto světa: jeho velikost a procento, které zabírá pevnina.\\
+
+Také můžete hrát na speciální mapě, kterou někdo
+pro C-evo vytvořil, např. na mapě skutečné Země. Balení neobsahuje
+mapy, ale pár map je k dispozici na domovské stránce projektu.
+Soubory s mapami přesuňte do podadresáře "Maps".
+Mapu potřebujete pouze ke spuštění hry. Mapa není nutná k jejímu pozdějšímu
+načítání, protože mapa je uložena uvnitř knihy.
+
+
+#MAPEDIT
+$Editor map\
+
+!!Editor map\
+
+Hra obsahuje jednoduchý editor map. Abyste jej spustili, přepněte se na
+stránku "Mapy" na úvodní obrazovce. Zvolte mapu, kterou chcete editovat a zmáčkněte
+tlačítko "Editor". Chcete-li vytvořit novou mapu, zvolte "Náhodná mapa",
+nastavte velikost a procento zastoupení pevniny, pak spusťte editor.\\
+
+Operace v editoru jsou velmi jednoduché. Zvolte si typ terénu nebo objekt
+ze seznamu vespodu obrazovky a pak jej umístěte pomocí myši do
+mapy. Odlišení čtverců s oceánem/pobřežím a čtverců s normálními/speciálními
+zdroji se provádí automaticky, toto nemůžete ovlivnit. Nezapomeňte
+umístit alespoň jedno ložisko každého moderního zdroje, jinak hráči nebudou
+moci postavit mezihvězdnou kolonizační loď.\\
+
+Je důležité, abyste nastavili startovní pozice národů. Na mapu nelze umístit
+více národů, než je počet umístěných startovních pozic. Nejsou-li startovní pozice
+definovány, mapu nelze hrát. Chcete-li, aby lidský hráč
+začínal na konkrétní startovní pozici, nastavte ji jako Preferovanou startovní pozici.\\
+
+V úvodní obrazovce nejsou mapy hráčům zobrazovány. Místo toho můžete pro mapu vytvořit
+tématický obrázek. Musí se jednat o BMP soubor se stejným jménem jako
+mapa. Jednoduše jej pak umístěte do adresáře "maps". Maximální velikost obrázku je 192×96
+bodů.
+
+
+#AIT
+$Turnaj AI\
+
+!!Turnaj AI\
+
+Máte-li nainstalována různá AI, můžete je nechat utkat se proti sobě
+v turnaji. Na úvodní obrazovce se přepněte do "Vlastního nastavení hráčů" a
+v prostředním poli vyberte "AI turnaj". Pak
+zmáčkěte tlačítko "Start". Herní obrazovka se zmenší do malého okna.
+Po zmáčknutí tlačítka [I>] začne C-evo hrát nekonečné série
+kompletních her (kola). Výsledkem je jednoduchá statistika, která je updatována
+v každém kole:\\
+
+@AITShot\
+
+Význam čísel:\
+
+&AITSTAT
+
+#HOTKEYS
+$Myš a klávesnice\
+
+Funkce myši na hlavní mapě:\
+-Levé tlačítko myši na vlastní jednotce - Vybrání jednotky\
+-Levé tlačítko myši na vlastním městě - Zobrazení městské obrazovky\
+-Levé tlačítko myši na cizí jednotce - Získání informací\
+-Levé tlačítko myši na cizím městě - Zobrazení obrany města\
+-Levé tlačítko myši na neobsazeném čtverci - Vycentrování pohledu na danou pozici\
+-Pravé tlačítko myši - Pohyb aktivní jednotkou na danou pozici\
+-Pravé tlačítko myši (Supervisor) - Vytvoření jednotky\\
+
+Funkce klávesnice na hlavní mapě:\
+-Kurzorové klávesy - Pohyb aktivní jednotkou\
+-Klávesa "+" na numerické klávesnici - Konec tahu\
+-1 až 7 - zkratky pro malá tlačítka vedle malé mapky\
+-Mnoho zkratek pro položky v menu, viz menu
+
+#TRADINGGOODS
+$Obchodování\
+
+!!Obchodování\
+
+Pokud má město nastaven projekt "Obchodování", je materiál, který by jinak byl použit pro
+produkci, přímo směněn za zlato.
+
+#MILRES
+$Vojenský výzkum\
+
+!!Vojenský výzkum\
+
+Váš národ musí provést vojenský výzkum, aby mohl používat nové třídy
+jednotek.\
+:CLASSES Třídy jednotek
+
+#ADVHELP
+Maximální hmotnost leteckých jednotek vzroste na 7%w.
+*
+*
+*
+Maximální hmotnost pozemních jednotek vzroste na 10%w.
+*
+*
+Umožňuje stavět cesty přes řeky.
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+Umožňuje použití branců.
+Umožňuje stavbu pevností.\::J Viz seznam vylepšení terénu.
+*
+*
+*
+*
+*
+*
+*
+*
+*
++1%t na všech čtvercích snadného terénu s cestou.
+Umožňuje stavbu kanálů a transformaci terénu.\::J Viz seznam vylepšení terénu.
+Umožňuje vývoj leteckých jednotek.
+*
+*
+Maximální hmotnost pozemních jednotek vzroste na 7%w.
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
++1%t na všech čtvercích s řekou.\Umožňuje vývoj námořních jednotek.
+*
+Jsou přístupné moderní zdroje.\Klíčová technologie: Ostatní národy si všimnou, když národ objeví Masovou produkci.
+*
+Umožňuje stavbu vojenských základen.\::J Viz seznam vylepšení terénu.
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+Umožňuje stavbu farem.\::J Viz seznam vylepšení terénu.
+*
+*
+*
+*
+Umožňuje stavbu železničních tratí.\::J Viz seznam vylepšení terénu.
+*
+Jsou přístupné pokročilé zdroje.\Klíčová technologie: Ostatní národy si všimnou, když národ objeví Vědu.
+*
+Maximální hmotnost námořních jednotek vzroste na 7%w.
+*
+*
+*
+Maximální hmotnost námořních jednotek vzroste na 9%w.\Zvyšuje se maximální použití vlastnosti "obrana" o 1.
+*
+*
+*
+*
+*
+Klíčová technologie: Ostatní národy si všimnou, když národ objeví Mezihvězdnou kolonizaci.
+*
+*
+Umožňuje vývoj nových pozemních jednotek.
+*
+*
+*
++5% výzkum ve městech s Univerzitou\+10% výzkum ve městech s Výzkumnou laboratoří
++5% produkce ve městech s Továrnou\+10% produkce ve městech s Průmyslovým závodem\(nezvyšuje znečištění)
+*
+*
+
+#IMPHELP
+Je přístupná speciální jednotka:\\::S7 Otroci
+Národ ukradne z každého obsazeného města úplné informace o národu (statistiku) a vědecký objev podle svého výběru. Ukradené vynálezy se chovají jako vynálezy vyměněné při obchodu - musí být pochopeny, než začnou být používány, což zabere polovinu normálního vědeckého úsilí, nepotřebují žádné předcházející vynálezy.
+Pouštní čtverce mohou být přeměněny na Pláně/Pastviny.\Všechny jednotky jsou imunní proti účinkům nehostinných terenů.
+Náklady na budování divů světa jsou sníženy o čtvrtinu.
+Všechny pobřežní čtverce získají další %p.\\Tento div může být postaven jen v pobřežních městech.
+Národ získává každou technologii, která je již známa více než polovině existujících národů. Stejně jako u pokroků získaných diplomacií je nutné získaným pokrokům nejprve porozumět, což zabere polovinu polovinu nákladů na běžný výzkum. Není potřeba znát předchozí vyžadované pokroky.
+Za každý chrám tohoto národa a národů, které kontaktoval, je každý tah přidán do pokladnice 1%c.
+Zpřístupní tři speciální vlastnosti jednotek:
+Národ získá takový počet bodů výzkumu, které odpovídají objevu dvou plně vynalézaných pokroků. Obvykle to znamená okamžitý vědecký objev a další objev v následujícím tahu.\\Tento div navíc zpřístupní speciální jednotku:\\::S8 Kluzák
+Rychlost +2 pro všechny lodě národa.\\Tento div může být postaven jen v pobřežních městech.
+Cena za okamžité dokončení budov a divů je snížena na 2%c za každý zbývající bod materiálu.
+*
+Výzkum se zdvojnásobí, je-li formou vlády Monarchie.
+Katedrály získají +2%m.
+*
+Města si sama stanovují individuální rovnováhu mezi výzkumem a bohatstvím. Produkce bohatství je přizpůsobena optimálnímu množství.\\U měst s ruční správou tento div obvykle zabraňuje nepokojům, ale neplatí to pro města produkující příliš málo bodů obchodu nebo města s velkou mírou nespokojenosti, pro která nedostačuje ani 100% míra bohatství.
+Zabraňuje vypršení efektů divů národa. Divy s prošlým efektem jsou reaktivovány.
+Počítá se jako vodní elektrárna v každém městě.\\Tento div lze postavit jen ve městech poblíž řek nebo pohoří.
+Při pohybu po železnici nejsou ubírány MP body.
+Zahajuje Studenou válku. V tomto období nejsou možné žádné diplomatické aktivity. Studená válka trvá 40 tahů.
+Na dobu jednoho tahu je viditelný celý svět. Národ získá statistiky a vojenská hlášení o všech národech.\\Národ musí mít následující budovu, aby mohl tento div postavit:\::B66 Vesmírné středisko
+*
+*
+*
+*
+*
+*
+*
+*
+Všechny pozemní jednotky vyrobené v tomto městě jsou posíleny. "Zdraví" pozemních jednotek, umístěných ve městě, se v každém tahu zdvojnásobí.
+Po vzrůstu města zůstává zásobárna jídla z poloviny plná.
++2%m.
+Daně a bohatství +50%.
+Výzkum +50%.
+Umožňuje shromažďování bodů obchodu bez omezení a snižuje korupci o 50%.
++200% obrana pro městské obránce proti pozemním jednotkám. Město neztrácí populaci, když jsou obránci pozemními jednotkami zničeni.
+Zvyšuje maximální velikost města na 12.
+Daně a bohatství +75%.
++4%m.
+Výzkum +75%.
++1%f v pobřežních čtvercích.\\Toto vylepšení může být postaveno jen v pobřežních městech.
++4%m.
+Produkce +50%, znečištění +50%.
+Produkce +50%, znečištění +50%.
+Zcela zabraňuje znečištění.
+Elektrárna zdvojnásobuje efekt Továrny a Průmyslového závodu.\(Nemá smysl mít ve městě více než jednu elektrárnu.)\Znečištění +50%.
+Elektrárna zdvojnásobuje efekt Továrny a Průmyslového závodu.\(Nemá smysl mít ve městě více než jednu elektrárnu.)\Znečištění -50%.\\Toto vylepšení lze postavit jen ve městech poblíž řek nebo pohoří.
+Elektrárna zdvojnásobuje efekt Továrny a Průmyslového závodu.\(Nemá smysl mít ve městě více než jednu elektrárnu.)\Nezvyšuje znečištění.
++1%p v pobřežních čtvercích.\\Toto vylepšení může být postaveno jen v pobřežních městech.
+Umožňuje získávání až 3%t z jednoho čtverce.
+Zvyšuje maximální velikost města na 30.
+Zpřístupňuje výhody farem.
+Zdvojnásobuje zisk z obchodu díky objevu Kola.
+Výzkum +75%.
++100% obrana pro městské obránce proti leteckým jednotkám a ochrana proti bombardování těmito jednotkami.
++100% obrana pro městské obránce proti námořním jednotkám a ochrana proti bombardování těmito jednotkami.\\Toto vylepšení může být postaveno jen v pobřežních městech.
+Všechny letecké jednotky vyrobené v tomto městě jsou posíleny. "Zdraví" leteckých jednotek, umístěných ve městě, se v každém tahu zdvojnásobí.
+Všechny námořní jednotky vyrobené v tomto městě jsou posíleny. "Zdraví" námořních jednotek, umístěných ve městě, se v každém tahu zdvojnásobí.
+Umožňuje shromažďování bodů obchodu bez omezení a zcela zabraňuje korupci. Z města se stane hlavní město, které následně ovlivní korupci v ostatních městech. Viz odkaz:\:RESOURCES Typy zdrojů
+Počítá se jako Městské hradby v každém městě na kontinentě, kde byla zbudována. (Póly se nepočítají jako spojení kontinentů.)
+Vytváří takový počet bodů morálky, který odpovídá velikosti města.
+Celkový výzkum tohoto města je dvojnásobný.
+Všechny produkované pozemní jednotky v tomto městě se stávají elitními. "Zdraví" pozemních jednotek, umístěných ve městě, se v každém tahu zdvojnásobí.
++100% obrana pro obránce tohoto města proti jakémukoliv útočníkovi.
++12%f pro město.
+Zdvojnásobuje efekt všech bank.
+Speciální zdroje +100%.\\Umožňuje a kontroluje produkci mezihvězdné kolonizační lodě. Ztráta Vesmírného střediska znamená ztrátu vesmírné lodi. Pokud je Vesmírné středisko obsazeno jiným národem, který má také Vesmírné středisko, tento národ zabere zároveň kolonizační loď.
+
+*
+*
+*
+
+#FEATUREHELP
+Základní hodnota útoku +1.
+Základní hodnota obrany +1.\Poznámka: Tato vlastnost může být použita maximálně dvakrát u pozemních jednotek, resp. třikrát u námořních a leteckých jednotek.
+Rychlost +0.5.
+Základní hodnota transportu vojska +1.
+Základní hodnota transportu letadel +1.\V nosičích nesmí být transportována transportní letadla.\Obsahuje v sobě vlastnost Radar / Sonar.
+Rychlost +2.
+Základní hodnota útoku +2 pro první útok na pozemní nebo námořní cíl po startu z města, nosiče nebo vojenské základny.
+Jednotka se nemusí vracet do města, na nosič nebo vojenskou základnu hned, ale v dalším tahu za každý bod paliva.
+Základní hodnota transportu vojska +1.\V nosičích nemohou být převáženy jiné transportní jednotky.
+Jednotka se může pohybovat na otevřeném moři.
+Dosah viditelnosti činí 2 čtverce. Nachází ponorky v přilehlých čtvercích.
+Jednotka je neviditelná pro nepřátelské jednotky.
+Pozemní jednotky ignorují účinek městských hradeb a mohou útočit na lodě na přilehlých pobřežních čtvercích (s výjimkou ponorek).\Lodě mohou útočit na města a cíle na přilehlých pozemních čtvercích.
+Pohyb je v každém terénu stejně rychlý jako na cestě.
+Zdraví transportovaných jednotek se zdvojnásobí v každém tahu.
+Základní hodnoty útoku a obrany +1. Potřeba dvojité podpory. Jednotka se může pohybovat pouze po cestě, řece nebo kanálu s dvojitými náklady na pohyb nebo po železnici a nemůže být převážena.
++100% obrana proti leteckým jednotkám.
+Prozkoumává přilehlá města a skupiny jednotek (včetně neviditelných letadel).
+Rychlost +1.\Tato vlastnost pozbývá účinku po zpřístupnění atomového pohonu.
+Rychlost +2.
+Rychlost +4.
+Jednotka je neviditelná pro nepřátelské jednotky.
+Pokud je jednotka zničena v boji, způsobí dvojnásobek normálního poškození.\\Fanatické pozemní jednotky brání čtverec vždy, i když jsou přítomny silnější jednotky.\\Tato vlastnost jednotek se neuplatňuje pod formami vlády Republika, Demokracie nebo Budoucí společnost.
+Pokud jednotka zničí během útoku jinou jednotku, obdrží pouze polovinu normálního poškození.
+Jednotka útočí plnou silou, i když jí zbývá méně než 1 MP bodů pohybu.
+Dosah viditelnosti činí 2 čtverce. Jednotka se opevní, jestli zbyde alespoň polovina počátečních MP.
+Náklady na produkci jednotky jsou poloviční, pokud byl předtím ve městě produkován stejný typ jednotky. Jinak jsou náklady dvojnásobné.
+
+#GOVHELP
+-Ve všech městech zuří nepokoje.\-Nulové náklady na údržbu vylepšení měst.\-Není vyžadována žádná podpora jednotek.\-Trvá tři tahy.
+-Maximálně 3%f, 2%p a 2%t v jednom čtverci.\-Vysoká korupce. (Násobek 3)\-Počet jednotek bez podpory v každém městě: roven velikosti města.\-Žádné znečištění.\-Každý Osadník spotřebuje 1%f.
+-Nízká korupce. (Násobek 1)\-Počet jednotek bez podpory v každém městě: polovina velikosti města.\-Každý Osadník spotřebuje 1%f.
+-Všechny zdroje obchodu >0 zvýšeny o 1.\-Střední korupce. (Násobek 2)\-Každá bojová jednotka (útok >0) nacházející se na konci tahu na nepřátelském území snižuje spokojenost v domovském městě o 2 body.\-Každý Osadník spotřebuje 2%f.
+-Nízká korupce. (Násobek 1)\-Není potřeba žádná podpora jednotek.\-Víra.\-Výzkum je snížen na polovinu.\-Každý Osadník spotřebuje 1%f.
+-Všechny zdroje větší než 1%p jsou zvýšeny o 1.\-Žádná korupce.\-Počet jednotek bez podpory v každém městě: polovina velikosti města.\-Každý Osadník spotřebuje 2%f.
+-Všechny zdroje obchodu >0 zvýšeny o 1.\-Žádná korupce.\-Každá bojová jednotka (útok >0) nacházející se na konci tahu mimo vlastní nebo spojenecké území snižuje spokojenost v domovském městě o 2 body.\-Každý Osadník spotřebuje 2%f.
+-Všechny zdroje obchodu >0 zvýšeny o 1.\-Budoucí technologie potřebují pouze dvojnásobné úsilí na výzkum místo čtyřnásobného.\-Žádná korupce.\-Každá bojová jednotka (útok >0) nacházející se na konci tahu na nepřátelském území snižuje spokojenost v domovském městě o 2 body.\-Přebytek jídla je přeměněn na zlato.\-Žádný růst populace.\-Každý Osadník spotřebuje 2%f.
+
+#TECHAGE
+Pokroky Předindustriálního věku
+Pokroky Industriálního věku
+Moderní pokroky
+Budoucí technologie
+
+#SPECIALMODEL
+-Jednotka je schopna budovat vylepšení terénu a zakládat města.\-Vyžaduje podporu jídlem z domovského města.
+-Jednotka je schopna budovat vylepšení terénu a zakládat města.\-Vyžaduje podporu jídlem z domovského města.\-Odolná vůči nehostinným terénům.
+*
+-+100% obrana při obraně města.\-Vždy vyžaduje podporu.\-Pod despotismem jednotka zabraňuje nespokojenosti v populaci, je-li umístěna ve městě: +2%o!
+:SPYMISSIONS Schopná provádět špionážní operace.\-Prozkoumává přilehlá města a skupiny jednotek (včetně neviditelných letadel).\-Dohled činí 2 čtverce.\-Žádné zóny kontroly.\-Nikdy nezpůsobuje nepokoje v domovském městě.
+-Ve městech mohou být 2/3 produkčních nákladů Karavany zužitkovány na všechny městské projekty kromě částí kolonizační lodě.
+-Transportní kapacita 2 jednotky.
+-Jednotka je schopna vylepšovat terén.
+-Během tahu se počítá jako vzdušná jednotka, v tazích jiných národů se počítá jako pozemní jednotka.\-Prozkoumává přilehlá města a skupiny jednotek.\-Pokud není jednotka na konci tahu umístěna na čtverci země, je ztracena.\-Kluzák nemůže být transportován loděmi.
+
+#JOBHELP
+:MOVEMENT Urychluje pohyb jednotek.\::A29 Zisk z obchodu po objevu Kola.
+:MOVEMENT Urychluje pohyb jednotek.\-Materiál +50%.\-Lze postavit jen v případě, že na čtverci je již vybudována cesta. Cesta na čtverci zůstává, je skryta pod železniční tratí.
+-Umožňuje lodím pohnout se na tento čtverec.\-Ruší nehostinnost terénu\-Nelze postavit v Horách a v Arktickém terénu.
+-Zdroje jídla se zvýší v závislosti na typu terénu.
+::B51 Jídlo +50% pro města se Supermarketem.\-Lze postavit jen v případě, že na čtverci je již vybudováno zavlažování. Zavlažování na čtverci zůstává, je skryto pod farmou.
+-Zdroje materiálu se zvýší v závislosti na typu terénu.
+-+100% obrana pro pozemní jednotky.\-Dohled činí 2 čtverce.\:COMBAT Další účinky při boji.
+-Ruší nehostinnost terénu.\-Dohled činí 2 čtverce.\:COMBAT Účinky při boji a regeneraci.\::F6 Letadla zde mohou nakládat bomby.\-Lodě mohou vplout do vojenské základny, pokud je tu vybudován kanál.
+

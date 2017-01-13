@@ -106,7 +106,7 @@ var
 implementation
 
 uses
-  Directories, Protocol, Direct, ScreenTools, Inp, Back;
+  Directories, Protocol, Direct, ScreenTools, Inp, Back, Locale;
 
 {$R *.lfm}
 
@@ -248,8 +248,7 @@ begin
   Reg.Free;
 
   ActionsOffered := [maManual, maCredits, maWeb];
-  if FileExists(HomeDir + 'Configurator.exe') then
-    Include(ActionsOffered, maConfig);
+  Include(ActionsOffered, maConfig);
   if FileExists(HomeDir + 'AI Template' + DirectorySeparator + 'AI development manual.html') then
     Include(ActionsOffered, maAIDev);
 
@@ -403,13 +402,13 @@ procedure TStartDlg.FormDestroy(Sender: TObject);
 var
   i: integer;
 begin
-  FormerGames.Free;
-  Maps.Free;
-  Mini.Free;
-  EmptyPicture.Free;
-  LogoBuffer.Free;
+  FreeAndNil(FormerGames);
+  FreeAndNil(Maps);
+  FreeAndNil(Mini);
+  FreeAndNil(EmptyPicture);
+  FreeAndNil(LogoBuffer);
   for i := 0 to nBrain - 1 do
-    BrainPicture[i].Free;
+    FreeAndNil(BrainPicture[i]);
 end;
 
 procedure TStartDlg.SmartInvalidate(x0, y0, x1, y1: integer;
@@ -1564,15 +1563,19 @@ begin
     case SelectedAction of
       maConfig:
         begin
-           OpenDocument(pchar(HomeDir + 'Configurator.exe'));
-          Close
+          LocaleDlg := TLocaleDlg.Create(nil);
+          if LocaleDlg.ShowModal = mrOk then begin
+            LoadPhrases;
+            Invalidate;
+          end;
+          FreeAndNil(LocaleDlg);
         end;
       maManual:
         DirectHelp(cStartHelp);
       maCredits:
         DirectHelp(cStartCredits);
       maAIDev:
-         OpenDocument(pchar(HomeDir + 'AI Template' + DirectorySeparator + 'AI development manual.html'));
+        OpenDocument(pchar(HomeDir + 'AI Template' + DirectorySeparator + 'AI development manual.html'));
       maWeb:
         OpenURL('http://c-evo.org')
     end;

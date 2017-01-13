@@ -1270,13 +1270,12 @@ procedure TMainScreen.Client(Command, NewPlayer: integer; var Data);
     ok: boolean;
   begin
     UnusedTribeFiles.Clear;
-    ok := FindFirst(DataDir + 'Localization' + DirectorySeparator + 'Tribes' +
-      DirectorySeparator + '*.tribe.txt', faArchive + faReadOnly,
-      SearchRec) = 0;
+    ok := FindFirst(LocalizedFilePath('Tribes') + DirectorySeparator + '*.tribe.txt',
+      faArchive + faReadOnly, SearchRec) = 0;
     if not ok then
     begin
       FindClose(SearchRec);
-      ok := FindFirst(HomeDir + 'Tribes' + DirectorySeparator + '*.tribe.txt',
+      ok := FindFirst(LocalizedFilePath('Tribes' + DirectorySeparator + '*.tribe.txt'),
         faArchive + faReadOnly, SearchRec) = 0;
     end;
     if ok then

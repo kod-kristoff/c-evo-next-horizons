@@ -7,8 +7,7 @@ uses
   {$IFDEF WINDOWS}
   Windows,
   {$ENDIF}
-  StringTables,
-  LCLIntf, LCLType, SysUtils, Classes, Graphics, Controls,
+  StringTables, LCLIntf, LCLType, SysUtils, Classes, Graphics, Controls,
   Forms, Menus;
 
 type
@@ -115,6 +114,7 @@ procedure PaintRelativeProgressBar(ca: TCanvas; Kind, x, y, size, pos, Growth,
   max: integer; IndicateComplete: boolean; const T: TTexture);
 procedure PaintLogo(ca: TCanvas; x, y, clLight, clShade: integer);
 function SetMainTextureByAge(Age: integer): boolean;
+procedure LoadPhrases;
 
 const
   nGrExtmax = 64;
@@ -1521,19 +1521,51 @@ begin
   SetXY(X, Y);
 end;
 
+procedure LoadPhrases;
+begin
+  if Phrases = nil then Phrases := TStringTable.create;
+  if Phrases2 = nil then Phrases2 := TStringTable.create;
+  Phrases2FallenBackToEnglish := false;
+  if FileExists(LocalizedFilePath('Language.txt')) then
+  begin
+    Phrases.loadfromfile(LocalizedFilePath('Language.txt'));
+    if FileExists(LocalizedFilePath('Language2.txt')) then
+      Phrases2.loadfromfile(LocalizedFilePath('Language2.txt'))
+    else
+    begin
+      Phrases2.loadfromfile(HomeDir + 'Language2.txt');
+      Phrases2FallenBackToEnglish := true;
+    end
+  end
+  else
+  begin
+    Phrases.loadfromfile(HomeDir + 'Language.txt');
+    Phrases2.loadfromfile(HomeDir + 'Language2.txt');
+  end;
+
+  if Sounds = nil then Sounds := TStringTable.create;
+  if not Sounds.loadfromfile(HomeDir + 'Sounds' + DirectorySeparator + 'sound.txt') then
+  begin
+    FreeAndNil(Sounds);
+  end;
+end;
+
 procedure UnitInit;
 begin
   Reg := TRegistry.create;
+  with Reg do
   try
-    Reg.OpenKey('SOFTWARE\cevo\RegVer9', true);
-    if Reg.ValueExists('Gamma') then
-      Gamma := Reg.ReadInteger('Gamma')
+    OpenKey('SOFTWARE\cevo\RegVer9', true);
+    if ValueExists('Gamma') then
+      Gamma := ReadInteger('Gamma')
       else begin
         Gamma := 100;
-        Reg.WriteInteger('Gamma', Gamma);
+        WriteInteger('Gamma', Gamma);
       end;
+    if ValueExists('Locale') then LocaleCode := ReadString('Locale')
+      else LocaleCode := '';
   finally
-    Reg.Free;
+    Free;
   end;
 
   if Gamma <> 100 then
@@ -1552,32 +1584,7 @@ begin
   {$ENDIF}
   ResolutionChanged := false;
 
-  Phrases := TStringTable.create;
-  Phrases2 := TStringTable.create;
-  Phrases2FallenBackToEnglish := false;
-  if FileExists(DataDir + 'Localization' + DirectorySeparator + 'Language.txt') then
-  begin
-    Phrases.loadfromfile(DataDir + 'Localization' + DirectorySeparator + 'Language.txt');
-    if FileExists(DataDir + 'Localization' + DirectorySeparator + 'Language2.txt') then
-      Phrases2.loadfromfile(DataDir + 'Localization' + DirectorySeparator + 'Language2.txt')
-    else
-    begin
-      Phrases2.loadfromfile(HomeDir + 'Language2.txt');
-      Phrases2FallenBackToEnglish := true;
-    end
-  end
-  else
-  begin
-    Phrases.loadfromfile(HomeDir + 'Language.txt');
-    Phrases2.loadfromfile(HomeDir + 'Language2.txt');
-  end;
-
-  Sounds := TStringTable.create;
-  if not Sounds.loadfromfile(HomeDir + 'Sounds' + DirectorySeparator + 'sound.txt') then
-  begin
-    Sounds.Free;
-    Sounds := nil
-  end;
+  LoadPhrases;
 
   for section := Low(TFontType) to High(TFontType) do
     UniFont[section] := TFont.create;
@@ -1654,7 +1661,18 @@ begin
 end;
 
 procedure UnitDone;
+var
+  Reg: TRegistry;
 begin
+  Reg := TRegistry.create;
+  with Reg do
+  try
+    OpenKey('SOFTWARE\cevo\RegVer9', true);
+    WriteString('Locale', LocaleCode);
+  finally
+    Free;
+  end;
+
   RestoreResolution;
   for i := 0 to nGrExt - 1 do
   begin

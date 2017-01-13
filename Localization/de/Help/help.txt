@@ -1,0 +1,1181 @@
+#HELPTITLE_MAIN Spielanleitung
+#HELPTITLE_QUICKSTART Schnellstart
+#HELPTITLE_CONCEPTS Inhalt
+#HELPTITLE_TECHLIST Fortschritte
+#HELPTITLE_IMPLIST Städtische Bauwerke
+#HELPTITLE_UNIQUELIST Nationale Projekte
+#HELPTITLE_WONDERLIST Weltwunder
+#HELPTITLE_TERLIST Landschaften
+#HELPTITLE_JOBLIST Geländemodifikationen
+#HELPTITLE_MODELLIST Besondere Einheiten
+#HELPTITLE_FEATURELIST Ausstattungsmerkmale
+#HELPTITLE_FEATURE1LIST Kapatizität
+#HELPTITLE_FEATURE2LIST spezielle Fähigkeiten
+#HELPTITLE_FEATURE3LIST Fortschritte machen
+#HELPTITLE_GOVLIST Regierungsformen
+#HELPTITLE_KEYS Maus und Tastatur
+#HELPTITLE_ABOUT Über diese Hilfe
+#HELPTITLE_CREDITS Credits
+#HELPTITLE_SEARCHRESULTS Such-Ergebnis
+
+#HELPSPEC_TER (Landschaft)
+#HELPSPEC_ADV (Fortschritt)
+#HELPSPEC_FUTURE (Zukunftstechnologie)
+#HELPSPEC_IMP (Städtisches Bauwerk)
+#HELPSPEC_NAT (Nationales Projekt)
+#HELPSPEC_WONDER (Weltwunder)
+#HELPSPEC_SHIPPART (Raumschiffteil)
+#HELPSPEC_CAP (Eigenschaft von Einheiten)
+#HELPSPEC_FEATURE (Fähigkeit von Einheiten)
+#HELPSPEC_STANDARD (Einheitenbonus)
+
+#TECHFORMULA %.6g*n*EXP(n/%.6g)
+#PREREQ Voraussetzungen
+#PREREQALT Voraussetzungen (es werden 2 von 3 benötigt)
+#BASETECH (Schlüsseltechnologie)
+#STRENGTHUP %s: Kampfwertfaktor +%d
+#COSTUP (Kostenfaktor +%d)
+#COSTMIN (Kostenfaktor steigt auf %d)
+#TRANSUP %s: Transportfaktor +%d
+#ADVEFFECT Weitere Wirkungen
+#EFFECT Wirkung
+#COSTS Kosten
+#BUILDCOST Produktionskosten von %d%%p
+#MAINTCOST Unterhalt: %d%%c pro Runde
+#REPLACE Ersatz
+#REPLACETEXT Mit Fertigstellung dieses Bauwerkes sind folgende Einrchtungen überholt und werden automatisch verkauft:
+#EXPIRATION Veraltet
+#EXPWITH Wirkung endet mit der Entdeckung des Fortschritts %s.
+#EXPSLAVE Alle Sklaven werden freie Bürger
+#REQUIRED %s erforderlich
+#RAREREQUIRED Produktion erfordert %s
+#RESFOOD Nahrung: %d%%f
+#RESPROD Produktion: %d%%p
+#RESTRADE Handel: %d%%t
+#MOREIRR (+%d%%f mit Bewässerung)
+#MOREMINE (+%d%%p mit Bergwerk)
+#MOREROAD (+%d%%t mit Straße)
+#SPECIAL Besondere Resourcen:
+#SPECIALFOOD , +%d%%f
+#SPECIALPROD , +%d%%p
+#SPECIALTRADE , +%d%%t
+#TRAFO Transformation zu %s
+#MOVEPLAIN Fortbewegung: flaches Gelände
+#MOVEHEAVY Fortbewegung: schweres Gelände
+#DEFBONUS Verteidigungsbonus: %d%%
+#JOBCOST -Baukosten: %s AP
+#JOBCOSTVAR -Baukosten: Abhängig von der Landschaft. Siehe Hauptmenü Makro-Management/Landschaftsbau
+#TERIMPEXCLUDE Bewässerung, Bergwerk, Festung und Militärstützpunkt schließen sich gegenseitig aus. Wenn Beispielsweise ein Militärstützpunkt auf einer Landschaft mit Festung gebaut wird, so wird die Festung durch den Militärstützpunkt ersetzt
+#TERIMPCITY Die zentrale Stadt-Landschaft zählt so, als ob sie die folgenden Geländemodifikationen hätte:\-Straße\-Eisenbahn (nachdem der Fortschritt Eisenbahn erforscht wurde)\-Kanal\-Bewässerung\-Farmland.
+#HOSTILE Dies ist eine rauhe Gegend!\Eine Einheit, die sich durch dieses Gebiet bewegt, wird proportional zu den hier verbrauchten AP beschädigt. Eine ganze Runde verursacht %d%% Schaden.\Die folgenden Geländemodifikationen neutralisieren den Schadenseffekt:\-Fluß\-Kanal\-Oase\-Militärbasis.
+#DEADLANDS Auf unheimlichem Gelände können keine Geländemodifikationen vorgenommen werden.
+#RARE Auf einer zufälligen Karte sind immer 12 unheimliche Gelände. Die Hälfte davon haben besondere Resourcen. Es sind exakt zwei von jeden Typ.
+#STRENGTH Kampfwert: %d/%d
+#SPEED Tempo: %s
+#MODELNOTE (Bei einigen Nationen können die Einheiten anders heißen und aussehen.)
+#COSTBASE Basiswert Produktionskosten %s%%p
+#WEIGHT Gewicht %s%%w
+#BUILDALLOW Neue Bauwerke
+#MODELALLOW Neue besondere Einheit
+#FEATALLOW Neue Ausstattungsmerkmale
+#FOLLOWADV Weitere mögliche Fortschritte
+#GOVALLOW Neue Regierungsform
+#UPGRADEALLOW Militärischer Nutzen
+#SEEALSO Beachtenswertes:
+#FUTURETECHHELP25 Dieser Fortschritt repräsentiert eine Zukunftstechnologie; eine Nation kann bis zu 25 solcher Fortschritte machen.\\Eine Zukunftstechnologie erfordert die vierfachen Forschungskosten. Sie kann nicht getauscht oder über die Große Bibliothek erlangt werden.
+#FUTURETECHHELP100 Dieser Fortschritt repräsentiert eine Zukunftstechnologie; eine Nation kann bis zu 100 solcher Fortschritte machen.\\Eine Zukunftstechnologie erfordert die vierfachen Forschungskosten. Sie kann nicht getauscht oder über die Große Bibliothek erlangt werden.
+#CRED_CAPSOUND Sound
+#CRED_CAPAI Künstliche Intelligenz
+#CRED_CAPLANG Deutsche Übersetzung
+#AUTHOR Englishe Sprachversion von Steffen Gerlach.\Deutsche Übersetzung by Uwe Kadritzke, Janine Benkert und Marcel Bott.
+#MATCHES Treffer für "%s":
+#NOMATCHES Begriff "%s" nicht gefunden.
+
+
+#CONCEPTS
+$Inhalt\
+
+;INTRO Einleitung\\
+
+!Spielkonzepte\
+;BASICS Grundlagen des Spiels\
+;SCIENCE Forschung & Wissenschaft\
+;DIPLOMACY Kontakte & Diplomatie\
+;SHIP Siegbedingung: Das Raumschiff\\
+
+!Einheiten\
+;MOVEMENT Einheiten bewegen\
+;COMMANDS Einheitenbefehle\
+;SETTLE Besiedlung\
+;COMBAT Mit Einheiten kämpfen\
+;SPYMISSIONS Verdeckte Operationen\
+;CLASSES Einheiten entwickeln\\
+
+!Städte\
+;CITIES Grundlegendes über Städte\
+;RESOURCES Geländeerträge\
+;PRODUCTION Produktion & Bauaufträge\
+;BUILDINGS Bauwerke einer Stadt\
+;SUPPORT Unterhalt von Einheiten\\
+
+!Für Fortgeschrittene\
+;MACRO Makro Management\
+;MAPEDIT Der Kartograf\
+;AIT KI-Wettkampf
+
+
+#ABOUT
+$Über diese Hilfe\
+
+&LOGO\\
+
+!Das C-evo Projekt\
+C-evo ist ein nicht-kommerzielles Spiel, dass sich am bekannten "Sid Meier's Civilization" von Microprose orientiert. Dieses Projekt will nicht in seiner Erscheinung mit kommerziellen Spielen konkurrieren. C-evo wird auch nicht mit jeder neuen Version noch spannendere und unglaublich realistische Spielelemente hervorbringen. Stattdessen beabsichtigt C-evo ein ernsthaftes, zeitloses Strategiespiel zu sein, das vor allem eines bietet - strategische Herausforderungen!\
+Der Fokus liegt also beim Entwickeln der Regeln und auf der Künstlichen Intelligenz (KI). Für weitere Informationen besuche bitte die Webseite:\
+::E2 c-evo.org\\
+
+!Lizenz\
+C-evo ist das Werk verschiedener Autoren. Jeder ist dazu berechtigt das Spiel ohne ausdrückliche Genehmigung zu spielen und weiterzugeben. Alle Teile der Software bis auf die Grafiken unterstehen Public Domain. Mach damit, was Du willst, ausser Kohle. Die binaries und der Quellcode stehen auf der Projekt-Homepage bereit. Im Falle der Grafiken wird gebeten, die jeweiligen Autoren um Erlaubnis zu fragen, sollte eine andere Verwendung als das Spielen von C-evo vorgenommen werden. Dies dürfte in der Regel aber kein Problem darstellen.\
+::C Danksagungen\\
+
+!KI Programmierung\
+Ein Denkspiel ist immer nur so gut wie die Gegner, die es zu bieten hat, und das ist der Grund, warum eines der wichtigsten Dinge für uns das Schreiben einer wirklich guten Künstlichen Intelligenz (KI) ist. Um dieses Ziel zu unterstützen, besitzt das Spiel eine besondere Architektur, die es erlaubt, zu Beginn die KI jeder einzelnen Spielpartei gesondert zu bestimmen. Jeder, der mag, ist dadurch in der Lage, seinen eigenen KI-Algorithmus in einer frei wählbaren Programmiersprache getrennt vom Spiel in einer DLL zu entwickeln. Anschließend kann der Autor seine KI beim Spiel gegen menschliche Spieler, gegen die Standard-KI, oder gegen andere KI-Module testen.\
+Eine Anleitung im html-Format für die KI-Entwicklung ist im Installationspaket enthalten. Vielleicht führt uns ja diese Art von Wettbewerb zur ersten richtig guten KI im modernen Strategiespiel.\
+::E1 KI-Programmierhinweise\\
+
+!System-Voraussetzungen\
+-16bit-Farbtiefe (High Color) oder mehr\
+-'Schriftarten glätten' empfohlen\\
+
+!Kommandozeilenbefehle\
+-der Befehl 'cevo.exe -man' ruft nur diese Spielanleitung auf\\
+
+!Deinstallieren\
+Um das Spiel zu deinstallieren, benutze den Eintrag 'Software' in der Systemsteuerung.\\
+
+!Fehler berichten\
+
+Um die Weiterentwicklung dieses Programms zu unterstützen, informiere uns über Schwierigkeiten, die mit diesem Spiel aufgetreten sind. Doch vorher möchten wir Dich bitten,\
+-die Liste der bekannten Fehler auf der Projekt-homepage anzusehen. Bitte berichte keine Bugs, die dort bereits aufgelistet sind.\
+-nachzuschauen, ob es eine neuere Version gibt. Damit könnte das aufgetretene Problem bereits behoben sein.\
+-die Spielanleitung nochmal sorgfältig zu lesen. Vielleicht ist der Bug gar keiner. (Dieses Spiel ist kein Civilization II-Klon!)\
+-sicherzugehen, das der Fehler nichts mit der Installation des Spiels oder zusätzlichen Erweiterungen von Dritten zu tun hat. Wenn Du Dir nicht sicher sein solltest, installiere das Spiel nochmal neu. Tritt das Problem mit einer Erweiterung von Dritten auf, wie bei einer optionalen KI oder einem Modpack, kontaktiere nicht uns, sondern den Autor der jeweiligen Erweiterung.\\
+
+In einem zweiten Schritt könntest Du versuchen, Möglichkeiten zu finden den Fehler zu reproduzieren. Dies vereinfacht die Behebung eines Bugs ungemein. Vielfach reicht es aus, das Buch eine Runde früher zu laden. Dies ist eigentlich immer möglich, auch im Falle eines Programmabsturzes, denn es gibt immer die Autosave-Datei im C-evo Verzeichnis. Es ist das Buch, dessen Namen mit einer Tilde (~) beginnt.\\
+
+Wenn das Problem immer noch auftritt und Du den Fehler in der geschilderten Weise eingegrenzt hast, benutze das entsprechende Webformular auf\
+::E3 c-evo.org/_sg/contact\
+Falls das Buch mit dem aktuellen Spielstand zum Reproduzieren des Fehlers nötig ist - bitte anhängen. Es befindet sich im Unterordner "saved" des C-evo Programmordners.
+
+
+#CREDITS
+$Danksagungen\
+
+@@18\\
+
+!Spielentwurf\
+Die Originalspiele Civilization und Civilization II stammen von Sid Meier und Brian Reynolds.\
+Die Veränderungen basieren auf Wünschen und Vorschlägen von Civ-Fans.\\
+
+!Programmierung\
+Programmiert von Steffen Gerlach\
+PNG-Unterstützung durch Edmund H. Hand\\
+
+!Testerinnen und Tester\
+Unzählige. Danke an alle!\\
+
+!Weitere Beiträge\
+CityLists von Charles Nadolski\\
+
+!Grafiken\
+Die meisten Grafiken stammen aus Free Civ II Modpacks. Manche Urheberinnen und Urheber konnten nicht kontaktiert werden. Also wenn Du geschütztes Material findest, Dein Name fehlt oder Du nicht damit einverstanden bist, dass Deine Arbeit hier verwendet wird, melde Dich bitte.\\
+
+
+#QUICK
+$Schnellstart\
+
+!!Schnellstart\
+
+Einige Tipps für jene, die zu Beginn nicht die ganze Spielanleitung lesen wollen:\
+
+-Im Gegensatz zu den meisten kommerziellen Aufbau-Strategiespielen ist C-evo rundenbasiert. Solange ein Spieler nicht seine Runde beendet, wird das Spiel nicht weiterlaufen. Das gilt auch für Dich! Wenn das Spiel zu hängen scheint, musst Du vielleicht nur 'Runde beenden' anklicken. Deine Runde endet niemals automatisch, wenn Du dabei übergangen werden könntest.\
+-Dieses Spiel ist kein Spielfilm. Du kannst Dich nicht zurücklehnen und dem Geschehen zuschauen. Nichts wird gebaut, entdeckt oder erforscht werden, wenn Du es nicht ausdrücklich veranlasst.\
+-Die vier Schaltflächen unten links im Fenster dienen der Steuerung der meisten wesentlichen Funktionen.\
+-Es können sich zwei oder mehr Einheiten auf demselben Feld befinden. Du siehst allerdings nur die Stärkste von ihnen.\
+-Wähle eine beliebige Deiner Einheiten mit einem Linksklick aus. Die Einheit beginnt zu blinken. Die Schaltfläche mit dem Ausrufezeichen öffnet ein Befehlsmenü mit den Befehlen, die für die jeweilige Einheit in Frage kommen. Um die Einheit zu ziehen führe einen Rechtsklick auf ein anderes Landschaftsfeld aus.\
+-Klicke auf eine Deiner Städte um sie näher zu betrachten. Das wichtigste Detail ist das Bauprojekt der Stadt. Klicke auf das Symbol des Bauprojektes und wähle ein neues Projekt, zum Beispiel neue Siedler um neue Städte zu gründen.\
+-Wie schnell Städte produzieren, wie schnell sie wachsen und wie viel Steuern und Forschung sie abwerfen, hängt von Deiner Verwaltung der Städte ab.\
+-Shift+Klick auf ein Element öffnet in vielen Fällen ein Hilfefenster.\\
+
+
+
+
+
+
+@@22\\
+!Für Civ-Profis\
+
+Wenn Du schon 'Sid Meier's Civilization' oder 'Civilization II' gespielt hast, wirst Du keine großen Schwierigkeiten haben, mit dem Spiel zurecht zu kommen auch ohne die Spielanleitung zu lesen. Die Konzepte dieser Spiele sind so ziemlich die gleichen.\\
+
+Aber Vorsicht: C-evo ist kein Civ-Klon.\Du solltest, um keine Verwirrung aufkommen zu lassen, zumindest folgende Unterschiede kennen:\
+:MOVEMENT Einheiten bewegen\
+::T Landschaften\
+::B202 Weltwunder\
+::G Regierungsformen\
+::A Fortschritte\
+:DIPLOMACY Kontakte & Diplomatie\
+:SHIP Siegbedingung: Das Raumschiff.\\
+
+Neben diesen auffallenden Unterschieden, sollte folgendes beachtet werden:\
+
+-C-evo ist vollständig deterministisch. Es ist möglich alles vorherzusagen, abgesehen von der Weltkarte und natürlich dem, was die anderen Mitspieler tun werden.\
+-Die Computergegner nach denselben Regeln wie der menschliche Mitspieler. Sie haben keine systematischen Vorteile oder zusätzlichen Informationen.\
+-Städte funktionieren ein bisschen anders. Das Feld mit der Stadt selbst braucht fest einen Bürger um bearbeitet zu werden, und es erzeugt keinen Handel. Dagegen ist die Bürgerstruktur etwas vereinfacht. So gibt es z.B. keine Steuereintreiber mehr.\
+-Die kleinste Einwohnerzahl einer Stadt ist 2. Zur Produktion von Siedlern werden zwei Bürger entnommen.\
+-Die Größe des Nahrungsmittelspeichers ist nicht abhängig von der Größe der Stadt. Deshalb wachsen große Städte etwas schneller als kleine.\
+-Es nicht erforderlich das Landschaften zur Bewässerung an einem Fluß oder am Wasser liegen\
+-Du kannst Fortschritte, die Du von anderen Nationen erhalten hast, nicht unmittelbar anwenden. Du brauchst einen reduzierten Forschungsaufwand um die neue Technologie zu verstehen.\
+-Militärische Einheiten sind nicht automatisch mit bestimmten Fortschritten verfügbar, stattdessen müssen sie entworfen und erforscht werden.\
+-Einige Landschaften sind lebensfeindlich und fügen Bodeneinheiten Schaden zu.\\
+
+
+#INTRO
+$Einleitung\
+
+@@56\
+!!Willkommen bei C-evo\\
+
+C-evo ist ein Spiel über den Ursprung der menschlichen Zivilisation. Diesem Spiel sich zu widmen heißt eine Nation Deiner Wahl durch sechs Jahrtausende zu führen, von der ersten Siedlung bis zur Kolonisierung des Weltalls. Dieser Weg ist voller Hindernisse. Die Ressourcen sind begrenzt, wilde Gebiete verlangen Jahrhunderte zur Kultivierung. Hunger und Unruhen bilden eine konstante Bedrohung der wachsenden Städte.\\
+
+Deine Voraussicht ist gefragt. Erweitere das Reich und baue Deine Städte aus. Errichte Kasernen, Universitäten und Kraftwerke, oder einige der berühmten Weltwunder. Entdecke neue Technologien und Waffensysteme. Treibe die Erkundung der Welt voran um fruchtbare Landstriche zu finden und Deine Karten zu vervollständigen. Nutze die Kraft des Windes um ferne Kontinente zu entdecken.\\
+
+Selbstverständlich ist Deine Nation nicht die einzige auf der Welt. Nationen auf allen Kontinenten haben begonnen ihre eigene Kultur zu entwickeln. Sei Dir bewusst, dass es kein Recht gibt zu überleben. Jedes Reich kann vom Untergang bedroht werden, auch Deines.\\
+
+Dein erster Kontakt mit einer anderen Zivilisation könnte vielleicht nicht allzu angenehm ausfallen, aber das Mittel der Diplomatie räumt eine Vielzahl von Möglichkeiten ein. Kaufe, verkaufe oder tausche jede Art von Wissen und Material. Verteidige Deine Grenzen oder schütze sie durch Verträge. Sogar Bündnisse mit anderen Nationen können geschlossen werden. Hüte Dich jedoch davor, Dich zu sehr auf Vereinbarungen zu verlassen, denn die Nationen sind Kontrahentinnen in diesem Spiel! Letztlich streben sie alle nach dem Ziel, das nur eine von ihnen erreichen kann: Zu gewinnen.\\
+
+
+#BASICS
+$Grundlagen des Spiels\
+
+!!Grundlagen des Spiels\
+
+Deine Nation wird durch Einheiten und Städte dargestellt. Während Einheiten entdecken, kämpfen und verteidigen, sind Städte unerlässlich für Wachstum, Produktion und Forschung.\\
+
+Die Weltkarte ist in quadratische Felder unterteilt (durch die Perspektive erscheinen sie allerdings als Rauten). Jedes Feld zeigt eine bestimmte Landschaft, und von dieser hängen seine jeweiligen Eigenschaften ab: Rohstoffe, Verteidigungsbonus und Aktionspunkte, die die Einheiten brauchen um sich darauf zu bewegen. Es kann sich maximal eine Stadt auf einem Feld befinden, aber eine unbegrenzte Zahl von Einheiten einer Zivilisation. Informationen zu den einzelnen Landschaften erhält man, wenn man mit gedrückter Umschalt(Shift)-Taste auf das Feld klickt.\
+::T Landschaften\\
+
+Dieses Spiel ist rundenbasiert. Das heißt, die Gegner unternehmen nichts, bis Du Deine Runde beendet hast. Standardmäßig endet eine Runde automatisch, wenn alle Einheiten gezogen wurden. Falls es keine Einheiten gibt, die Du bewegen kannst, oder falls Du 'Am Ende jeder Runde warten' aktiviert hast, musst Du auf 'Runde beenden' klicken oder die '+'-Taste auf dem Zifferblock drücken (siehe unten).\\
+
+
+
+!Steuerung\
+
+@PanelShot\
+
+Legende:\
+-1: Hauptmenü\
+-2: aktuelles Spieljahr\
+-3: Vermögen und Einkommen pro Runde\
+-4: aktueller Forschungsstand mit seinem Forschungszuwachs\
+-5: Übersichtskarte\
+-6: div. Spielfeldanzeigeoptionen\
+-7: Aktive Einheit\
+-8: Verbliebene Aktionspunkte der aktiven Einheit\
+-9: Einheitenklasse der aktiven Einheit mit Heimatstadt\
+-10: Erfahrungsstufe der aktiven Einheit\
+-11: 'Gesundheitswert' der aktiven Einheit\
+-12: Berichtsmenü zur aktuellen Einheitenklasse\
+-13: Befehlsmenü für die aktive Einheit\
+-14: Menü Geländemodifikation der aktiven Einheit (nur vorhanden, wenn die Einheit Geländemodifikationen durchführen kann)\
+-15: Landschaftsfeld, auf dem sich die aktiven Einheit befindet\
+-16: Berichtsmenü\
+-17: Runde beenden\\
+
+Im Hauptmenü finden sich:\
+-die Hilfe,\
+-Einstellungen zum Meldungsumfang und zur Bewegungssichtbarkeit fremder Einheiten,\
+-das Makro-Management und\
+-die Manipulationseinstellungen.\
+Das Spiel kann auch über dieses Menü beendet werden.\\
+
+Links ist eine kleine Übersichtskarte. Wenn Du auf eine Position in dieser Miniaturkarte klickst, wird die Hauptkarte auf diesen Punkt zentriert.\
+Wenn Du Die Maustaste gedrückt hältst, kannst Du die Position der Karte auch kontinuierlich verschieben.\\
+
+Im 'Berichtsmenü zur aktuellen Einheitenklasse' finden sich Daten zur aktuellen Einheit wie u.a. Angriffswert, Verteidigungswert, Tempo, ...\\
+
+Rechts im 'Berichtsmenü' finden sich diverse Berichte wie den Einheiten-, Städte-, Forschungs-, Militär-, Nationenbericht, gebaute Weltwunder, div. Statistiken und die Wirtschaftseinstellungen.\\
+
+
+#SCIENCE
+$Forschung & Wissenschaft\
+
+@@46\
+!!Forschung & Wissenschaft\
+
+Eine Nation kann viele verschiedene neue technische, wissenschaftliche und kulturelle Fortschritte machen. Durch die meisten Fortschritte werden Bauwerke, Ausstattungsmerkmale von Einheiten, neue Einheitenklassen und/oder neue Regierungsformen verfügbar. Um einen bestimmten Fortschritt zu erlangen sind aber auch die jeweiligen Voraussetzungen zu erfüllen.\
+::A Fortschritte\\
+
+Deinen ersten zu entdeckenden Fortschritt musst Du am Ende Deiner ersten Runde wählen. Wenn Du die Umschalt-(Shift)-Taste gedrückt hältst und dabei auf die verschiedenen Fortschritte klickst, erscheint das jeweilige Hilfemenü. Die Geschwindigkeit des wissenschaftlichen Fortschritts hängt von den Forschungsausgaben ab, die Deine Nation produziert. Wenn genügend Messbecher %r gesammelt wurden, gilt der Fortschritt als entdeckt und es wird das nächste Forschungsziel angestrebt. Es kann zur gleichen Zeit immer nur ein Forschungsziel angestrebt werden und das ausgewählte Ziel ist auch nicht mehr änderbar. Die Kosten für einen neuen Fortschritt steigen mit der Anzahl bereits erzielter Fortschritte.\\
+
+;SCIENCECOST Referenz: Forschungsformel
+
+
+#SCIENCECOST
+$Forschungsformel\
+
+!Forschungsformel\
+
+Die exakten Kosten eines neuen Fortschrittes steigen mit der Anzahl der bereits erforschten Technologien. Die genaue Formel für den aktuellen Schwierigkeitsgrad lautet:\
+&TECHFORMULA\\
+Die Zahl n beginnt mit dem Wert 4 und erhöht sich\
+-nicht, wenn militärische Forschung durchgeführt wird;\
+-auch nicht, wenn Computertechnologie erforscht wird;\
+-um 1, wenn ein Fortschritt von einer anderen Nation erhalten wird;\
+-um 1, wenn ein Fortschritt durch die Grosse Bibliothek erhalten wird.\
+-um 2 in allen anderen Fällen, einschießlich Zukunftstechnologien.\\
+
+
+#DIPLOMACY
+$Kontakte & Diplomatie\
+
+!!Kontakte & Diplomatie\
+
+Die Nationen in einem Spiel kennen sich nicht, solange keine Bodeneinheit eine fremde Stadt oder eine gegnerische Einheit sichtet. Einen Überblick über alle Informationen einer fremden Nation finden sich im Bericht der Nationen. Der Umfang der Informationen hängt im starken Maße davon ab, ob ein Zivilberichte über die jeweilige Nation vorliegt oder nicht.\\
+
+Zivilberichte über eine Nation beinhalten Informationen über Regierungsform, Geld, Fortschritte, Staatsbeziehungen und Statistiken über ihre Weltkarte, die Bevölkerung, den wissenschaftlichen Stand und Kultivierung ihres Gebietes. Militärberichte beinhalten Informationen über alle Einheiten und ihre Anzahlen. Der Militärbericht enthält außerdem eine militärische Statistik.\\
+
+Achtung!\
+Die Informationen aus einem Zivilberichte über eine Nation aktualisieren sich nicht automatisch!\
+Das Bedeutet, Du siehst eine Einheit benutzt etwas oder ein Weltwunder veraltet, obwohl die Nation laut Deinem Fortschrittsbericht den entsprechenden Fortschritt noch gar nicht hat.\
+Erst die Beschaffung eines neuen Zivilberichtes gleicht Deine Informationen auf den aktuellen Status an.\\
+Ausnahme:\
+Die erfolgreiche Entwicklung einer Schlüsseltechnologie von einer fremden Nation wird dir sofort bekanntgegeben und wenn Du Fortschritte handelst, siehst Du den aktuellen Stand unabhängig von Deinem letzten Zivilberichte.\\
+
+
+!Kontakte\
+Nachdem zwei Nationen sich kennen, können sie miteinander in Kontakt treten um zu verhandeln, zu tauschen oder Verträge zu schließen. Eine Verhandlung ist eine Abfolge von Äußerungen zwischen den Parteien. Es kann aber kein freier Text eingegeben werden. Stattdessen werden die Mitteilungen automatisch generiert, je nach dem, welche Vorschläge Du auswählst. Die möglichen Vorschläge beinhalten auch die Unterbreitung von Angeboten, die Einwilligung in Angebote und das Kündigen von Abkommen.\\
+
+Eine Verhandlung endet, wenn beide Verhandlungspartner sich nichts mehr anzubieten haben. Eine Verhandlungsrunde kann auch ergebnislos verlaufen, wenn eine Nation sie einseitig beendet.\\
+
+!Angebote\
+Die meisten diplomatischen Aktionen bestehen darin, Vorschläge zu machen oder sie anzunehmen bzw. abzulehnen. Allgemein ist ein Angebot ein Paket an zu liefernden Gütern die dann mit Gütern bezahlt werden. Mögliche Güter sind:\
+-Ein Abkommen\
+-Ein Zivilbericht\
+-Ein Militärbericht\
+-Gold\
+-Tribut\
+-Technologien\
+-Entwürfe von Einheiten\
+-Die Weltkarte\
+-Raumschiffteile\\
+
+Wenn ein Angebot keinen zu zahlenden Preis beinhaltet, ist es ein Geschenk. Wie bei jedem anderen Angebot muss ein Geschenk angenommen werden. Wenn ein Angebot keinen Preis beinhaltet, den Du bezahlen willst, ist es eine Forderung.\\
+
+Technologische Fortschritte, die man durch einen diplomatischen Handel bekommen hat, sind nicht sofort anwendbar. Erst muss Deine Nation diese neue Technologie verstehen und sich ihrer Anwendungen bewusst werden. Allerdings kostet es nur die Hälfte an Forschungspunkten, diesen Fortschritt zu verstehen, und darüber hinaus müssen die jeweiligen Voraussetzungen für den Fortschritt nicht erfüllt sein.\\
+
+!Beispiel:\
+!Durchführung "Tausch meines Fortschrittes Bauwesen gegen Fortschritt Bronzeverarbeitung."\
+1.) Diplomatischen Kontakt mit Tauschnation aufnehmen:\(Kurztaste F9( Nationen..) / Tauschnation aus Liste aussuchen / Klick auf Regierungsbild)\
+2.) abzugebenden Fortschritt aussuchen:\
+    => Bild "Fortschritt anbieten" auf der rechten Seite anklicken\
+2b.) aus der nun auftauchenden Liste von Fortschritten den Fortschritt Bauwesen aussuchen\
+    => Der zunächst falsche Text erscheint:\
+    "Seid gegrüßt! Deutschland möchte ein paar Dinge mit Euch besprechen. Wir möchten Euch Bauwesen schenken."\
+3.) einzutauschenden Fortschritt aussuchen:\
+    => jetzt Bild "Fortschritt fordern" auf der linken Seite anklicken\
+3b.) aus der nun auftauchenden Liste von Fortschritten den Fortschritt Bronzeverarbeitung aussuchen\
+    => Der Text ändert sich jetzt in:\
+    "Seid gegrüßt! Deutschland möchte ein paar Dinge mit Euch besprechen. Wir bieten Euch Bauwesen im Tausch gegen Bronzeverarbeitung.\
+4.) mit Button "OK" das Angebot abschicken\\
+
+!Verträge\
+Ein Vertrag kann nur während einer diplomatischen Verhandlung aufgelöst werden, es sei denn, die Nation weist die Verhandlung zurück. Mögliche Verträge sind:\
+
+-Friedensvertrag: 
+Die Einheiten beider Nationen dürfen sich nicht angreifen oder sich in das Gebiet des Vertragspartners begeben.\
+
+-Freundschaftsvertrag: 
+Zusätzlich zum Friedensvertrag tauschen beide Nationen jede Runde Zivilberichte aus.\
+
+-Bündnisvertrag: 
+Wenn zwei Nationen sich verbünden, dürfen sie gegenseitig ihr Gebiet betreten und Kontrollzonen üben keine Wirkung aus. Alliierte teilen alle Informationen (Zivilberichte, Militärberichte, Weltkarten) und kennen die Bewegungen der alliierten Einheiten.\\
+
+Zusätzlich können sich zwei Nationen ohne vertragliche Bindung auf einen Waffenstillstand einigen. Ein Waffenstillstand ist kein Vertrag, sondern nur eine Einigung nicht mehr anzugreifen. Er endet, wenn eine Nation ihn bricht. Alles in allem gibt es folgende mögliche Beziehungen zwischen zwei Nationen:\
+&TREATIES\\
+
+Die Beendigung eines Friedensvertrages mit einer Nation führt automatisch zur Beendigung der friedlichen Beziehungen mit allen Verbündeten dieser Nation, auch wenn sie zuvor eigene Verbündete waren.\
+Zusätzlich zu einem Vertrag kann eine Nation der anderen Tribut zahlen. Tribut wird am Anfang jeder Runde gezahlt, bis der Vertrag aufgelöst wird.\\
+
+
+!Nationales Ansehen\
+Man kann andere Nationen durch ihre Glaubwürdigkeit einschätzen. Die Stufen sind:\
+-ehrenwert (100% Glaubwürdigkeit)\
+-isolationistisch (90% bis 99%)\
+-unberechenbar (70% bis 89%)\
+-verlogen (kleiner 70%)\\
+
+
+Jede Runde in Frieden erhöht die Glaubwürdigkeit einer Nation um 1, bis das Maximum an Glaubwürdigkeit erreicht ist. Anfangs ist das Maximum an Glaubwürdigkeit für alle Nationen 95. Wird ein Friedensvertrag gebrochen, halbiert sich die Glaubwürdigkeit und das Maximum sinkt um 10. Bricht man ein Bündnis oder einen freundschaftlichen Kontakt, verringert sich die Glaubwürdigkeit um ein Viertel. Die aktuelle Glaubwürdigkeit einer Nation ist auch ohne diplomatischen Kontakt allen anderen Nationen bekannt.
+
+
+#SHIP
+$Siegbedingung: Das Raumschiff\
+
+!!Siegbedingung: Das Raumschiff\
+
+Es gibt nur eine Möglichkeit, das Spiel zu gewinnen: Der Start eines Raumschiffes zur Besiedelung eines fremden Planeten! Sorge dafür, dass Deine Nation die erste ist, die ihr interstellares Raumschiff fertigstellt um damit in ferne Welten zu reisen und eine lebensfreundliche Umgebung zu finden. Ein komplettes Raumschiff besteht aus 12 großen und teuren Bauteilen:\\
+
+;:B67 6 Raumschiffbauteile\
+;:B68 4 Antriebsmodule\
+;:B69 2 Wohnmodule\\
+
+Die Produktion jedes dieser Teile erfordert besondere Ressourcen. Nur eine Stadt, die eine dieser Ressourcen abbaut, kann ein entsprechendes Raumschiffteil bauen. Es ist zudem nicht möglich, die Produktion durch zusätzlichen Einsatz von Einheiten, Umbau von Bauwerken oder Ausgeben von Geld zu beschleunigen. Die besonderen Ressourcen sind:\
+&MODERN\\
+
+Es gibt auf der Karte genau zwei Vorkommen jeder dieser Ressourcen. Felder mit besonderen Ressourcen können nicht von zivilen Einheiten betreten werden, d.h. man kann keine Festungen oder gar Städte darauf errichten. Deine Nation wird diese speziellen Ressourcen nicht erkennen, bevor sie nicht folgenden Fortschritt gemacht hat:\
+::A47 Massenproduktion\\
+
+
+#MOVEMENT
+$Einheiten bewegen\
+
+!!Einheiten bewegen\
+
+Einheiten sind der mobile Teil Deiner Nation. Alle Einheitenbefehle, die Du erlässt, gehen an die augenblicklich aktive Einheit. Sie wird blinkend auf der Karte dargestellt und erscheint im Einheitenfenster unten in der Steuerleiste. Eine Einheit kann durch die Pfeiltasten bzw. das Num-Pad bewegt werden oder durch einen Rechtsklick auf das anvisierte Feld.\\
+
+!Nicht mögliche Züge\
+Eine Einheit kann auf ein benachbartes Feld gezogen werden, außer in folgenden Fällen:\
+-Auf dem benachbarten Feld stehen Einheiten von anderen Nationen;\
+-Die Einheit hat nicht mehr genug Aktionspunkte (siehe unten);\
+-Eine Bodeneinheit versucht, sich auf ein Meeresfeld zu bewegen oder umgekehrt;\
+-Ein Schiff ohne Navigations-Ausstattung versucht, auf das offene Meer hinaus zu fahren;\
+-Ein Kontrollbereich wird verletzt (siehe unten).\\
+
+
+!Flugzeuge\
+Flugzeuge müssen am Ende einer jeden Runde auf den Boden zurückkehren. Ein Flugzeug geht verloren, falls es am Ende einer Runde nicht in einer Stadt, auf einer Militärbasis oder auf einem Flugzeugträger gelandet ist. Es gibt aber einen Weg, dieser Beschränkung teilweise zum umgehen:\
+::F7 Die Treibstoff Besonderheit\\
+
+!Aktionspunkte\
+Jede Bewegung kostet 'Zeit', d.h. sie kostet Aktions-Punkte (AP). Alle Einheiten, sowohl Bodeneinheiten wie auch Schiffe und Flugzeuge, benötigen für einen Zug parallel zu den Feldkanten 100 AP (z. B. Richtung Nordwesten) und für einen Zug diagonal über ein Feld (z.B. direkt nach Norden) 150 AP. Bei schwerem Gelände steigen diese Kosten noch einmal um 20% (parallel) bzw. 30% (diagonal) vom Einheitentempo über 150 AP.\\
+
+Wird eine Einheit auf ein Gebirgsfeld gezogen, muss sie ihre volle Menge an Aktionspunkten haben und kann in der nächsten Runde nicht bewegt werden.\
+::T Terrain Types\\
+
+Hier ist ein Beispiel mit den Bewegungskosten für verschiedene Züge:\
+@MoveShot\
+-Links - Eine Einheit mit 150 AP\
+-Rechts - Eine Einheit mit 300 AP\\
+
+Wird eine Einheit entlang einer Straße, einem Fluss oder einem Kanal gezogen, kostet das 40 AP (parallel zu den Feldseiten) bzw. 60 AP (diagonal zu den Feldseiten), wobei die Geländeart keine Rolle spielt. Wird eine Einheit auf einer Eisenbahnlinie innerhalb des eigenen Territoriums bewegt, kostet ein Zug nur 8% (parallel) bzw. 12% (diagonal) der maximalen AP dieser Einheit.\\
+
+Die Aktionspunkte einer Einheit werden am Anfang jeder Runde auf ihren beim Entwurf der Einheitenklasse festgelegten Maximalwert zurückgesetzt. Beschädigte Schiffe erreichen jedoch nicht ihre volle Punktzahl. Die AP eines beschädigten Schiffes sinken proportional zum Schaden, jedoch nicht unter 250 AP.\\
+
+Für längere Züge kannst Du die automatische Wegfindung benutzen. Mache dazu einen einfachen Rechtsklick auf das Zielfeld.\\
+
+!Kontrollbereiche\
+Es gibt zwei Arten von Einheiten. Eine Einheit mit Kontrollbereich (KB) und eine ohne. Eine Einheit mit Kontrollbereich kann nicht auf Felder gezogen werden, die an das besetzte Feld einer gegnerischen Kontroll-Einheit angrenzen, es sei denn, das Feld ist bereits durch eine eigene Einheit oder Stadt besetzt. Schiffe, Flugzeuge und spezielle Einheiten besitzen Kontrollfähigkeit. Einheiten mit Kontrollbereich auf Transportern besitzen ebenfalls keine Kontrollfähigkeit. Einheiten ohne Kontrollbereich können Felder nicht belagern.\\
+
+!Eroberung von Städten\
+Bodeneinheiten können sich unmittelbar in gegnerische Städte begeben, in denen keine gegnerischen Einheiten stehen. Die Stadt gilt dann als eingenommen und gehört von nun an Dir. Gegnerische Einheiten, die von dieser Stadt unterstützt wurden, werden dadurch zerstört. Eine eroberte Stadt ist drei Runden lang Unruhen ausgesetzt.\\
+
+
+#COMMANDS
+$Einheitenbefehle\
+
+@@16\
+!!Einheitenbefehle\
+Das Befehlsmenü bietet abhängig von ihrer Art und ihrem Standort diverse Befehle für die aktive Einheit.\\
+
+-Auflösen: Die Einheit wird aufgelöst.\
+-Integrieren: Einheit in neue Einheit integrieren, die von der Stadt in der sich die Einheit befindet, gerade erstellt wird.\
+-Befehl aufheben: Einheit unterbricht ihren derzeitigen Auftrag.\
+-Warten: Nächste Einheit wird aktiviert.\
+-Diese Runde warten: Keine Befehle und keine automatische Aktivierung in dieser Runde.\
+-Verschanzen: Einheit verschanzt sich. Keine Befehle und keine automatische Aktivierung.\
+-Wiederherstellen: Einheit bleibt verschanzt bis zur Beseitigung des erlittenen Schadens.\
+-Hier versorgen: Die Stadt, in sich der die Einheit befindet, wird zu ihrer Heimatstadt.\
+-Rückzug: Einheit kehrt so schnell wie möglich zu einer eigenen Stadt zurück.\
+-Zentrieren: Zentriert das Hauptfenster auf den aktuellen Standort der aktiven Einheit.\
+-Plündern: Zerstört vorhandene Einrichtungen wie Bewässerungen, Straßen, Festungen (Kostet 100 AP und zerstört eine Verbessung).\
+
+
+#SETTLE
+$Besiedlung\
+
+@@29\
+!!Besiedlung\
+
+Siedler und Ingenieure können Geländemodifikationen/Landschaftstransformationen vornehmen, durch die die Eigenschaften einer Landschaft optimal genutzt werden können:\
+-Stadt gründen: Der Siedler beginnt eine neue Stadt zu errichten.\
+-Transformieren: Angegebene Struktur errichten (siehe unten).\
+-Wald roden: Wald wird zur Steppe;\
+-Trockenlegen: Sumpf wird zu Weideland;\
+-Aufforsten: Landschaft wird zu bewaldetem Gebiet;\
+-Landschaftsbau: Führt eine Abfolge von zuvor definierten Geländemodifikationen und Landschaftsumbauten durch. Weitere Informationen unter Landschaftsbau;\
+-Verschmutzung beseitigen: Macht ein verschmutztes Geländefeld wieder voll nutzbar.\\
+
+Eine Geländemodifikationen/Landschaftstransformationen kostet eine bestimmte Zahl an AP. Die AP können über mehrere Runden hinweg auch von mehreren Einheiten angesammelt werden. Eine Einheit braucht jedoch mindestens 100 AP um mit der Arbeit in der gegenwärtigen Runde zu beginnen. Ingenieure haben keinen stärkeren Effekt als Siedler, aber Ingenieure haben mehr AP als Siedler und sind deswegen schneller.\
+::J Geländemodifikationen\
+::T Landschaften
+
+
+#COMBAT
+$Mit Einheiten kämpfen\
+
+!!Mit Einheiten kämpfen\
+
+Greife einen Gegner an, indem Du eine Einheit in genau derselben Weise wie bei einem gewöhnlichen Zug mit Maus oder Tastatur in das von der gegnerischen Einheit besetzte Feld schickst. Aber nicht jeder Angriff ist möglich. Vergiss nicht, dass Du außerhalb einer Stadt oder einem Militärstützpunkt Schiffe nicht mit Bodentruppen und Flugzeuge nur mit Flugzeugen angreifen kannst. Die schwächere Einheit wird im Kampf zerstört, die stärkere beschädigt - je größer die Überlegenheit, desto geringer der Schaden.\\
+
+Der grundlegende Kampfwert einer Einheit wird zwischen Angriff und Verteidigung unterschieden. Die zwei Werte werden normalerweise mit einem Slash dazwischen angezeigt z. B. eine 75/25 Einheit besitzt eine Angriffsstärke von 75 und Verteidigungsstärke von 25. Der Kampfwert kann durch verschiedene Faktoren beeinflusst werden:\
+-Erfahrung: Jede Erfahrungsstufe erhöht den Kampfwert der Einheit um 25% (siehe unten);\
+-Geländebonus (nur Verteidiger): (siehe Landschaften für detaillierte Informationen);\
+-Verteidigungsanlagen (nur Verteidiger): z.B. Stadtmauern, Festung;\
+-Verschanzen (nur Verteidiger): Eine Bodeneinheit, die sich der letzten Runde nicht gezogen wurde und nicht in eine Transporteinheit verladen ist, verschanzt sich und erhält einen Bonus von 50%;\
+-Flugzeuge in Städten oder Militärstützpunkten haben keinen Defensivwert, Schiffe haben in Städten oder Kanälen nur ihren halben Kampfwert.\All diese Boni sind kumulativ, nicht multiplikativ.\\
+
+Wenn eine angreifende Einheit weniger als 100 AP hat, kann sie keinen organisierten Angriff mehr durchführen. Ihr Kampfwert sinkt proportional.\\
+
+!Verteidigung\
+Befinden sich mehrere Einheiten auf demselben Feld, so verteidigt bei einem Angriff immer nur eine Einheit das Feld. Dies ist immer die Einheit, die für den Gegner sichtbar ist bevor er angreift. Normalerweise ist dies die stärkste anwesende Einheit der Verteidiger.\\
+
+;TILEDEF Referenz: Wahl des Verteidigers\\
+
+Sofern die verteidigende Einheit besiegt wird und sich nicht in einer Stadt, Festung oder Militärbasis befindet, werden alle anderen Einheiten auf diesem Feld ebenfalls zerstört - sogar U-Boote und Stealth-Flugzeuge.\\
+
+!Erfahrung\
+Die Erfahrung einer Einheit nimmt mit erlittenem Schaden zu: 100% machen eine Erfahrungsstufe aus. Die einzelnen Erfahrungsstufen sind:\
+&EXPERIENCE\\
+
+!Beschädigte Einheiten wiederherstellen\
+Eine beschädigte Einheit regeneriert sich proportional zu den Aktionspunkten, die ihr am Ende einer Runde bleiben. Wenn sie sich die ganze Runde lang nicht bewegt hat, verringert sich das Schadensmaß um 8 in freiem Gelände bzw. um 20 beim Aufenthalt in einer Stadt oder einem Militärstützpunkt - vorausgesetzt in der Stadt sind keine Unruhen. Der Schadenswert einer Einheit kann sich letztlich aber pro Runde nicht mehr als halbieren. Einheiten werden auf dem Wasser nicht wiederhergestellt. Flugzeuge können nur in Städten oder Militärstützpunkten wiederhergestellt werden.\\
+
+!Bombardieren\
+Schiffe und Flugzeuge mit Angriffswert und mindestens 100 verbliebenen Aktionspunkten können unverteidigte Städte bombardieren. Die Bevölkerung der Stadt sinkt um 1, solange es nicht zur vollständigen Zerstörung führen würde. Die Einheit selbst nimmt keinen Schaden, gewinnt aber auch keine Erfahrung. Bombardierungen werden wie gewöhnliche Züge ausgeführt.\\
+
+!Einheit vertreiben\
+Eine Nation kann Einheiten anderer Nationen mit denen ein Friedensvertrag besteht vom eigenem Gebiet durch eigene Einheiten vertreiben. Dies muß allerdings eine Boden- oder Marineeinheit mit mindestens 100 AP sein, die auch die Möglichkeit hätte die fremde Einheit anzugreifen, wenn kein Friedensvertrag vorhanden wär.\\
+
+
+#TILEDEF
+$Wahl des Verteidigers\
+
+!!Wahl des Verteidigers\
+
+Befinden sich mehrere Einheiten auf demselben Feld, so verteidigt bei einem Angriff normalerweise immer die stärkste Einheit. Unter bestimmten Umständen aber nicht. Der Verteidiger wird nach diesen Kriterien ausgewählt:\
+-Das oberste Kriterium sind die Einheitenklassen. Erste Wahl sind fanatische Bodentruppen, danach normale Einheiten (mit Grenzberücksichtigung), dann Einheiten (ohne Grenzberücksichtigung) und letztlich U-Boote und Stealth-Flugzeuge. Einheiten, die zum Transport an Bord eines Schiffes oder eines Flugzeuges verteidigen niemals.\
+-Falls mehrere Einheiten die höchste Kategorie haben, wird die Einheit mit dem höchsten Defensivwert ausgewählt. Der Kampfwert wird unter Berücksichtigung von Erfahrung, Schaden und Verschanzung ermittelt. Besondere Ausstattungsmerkmale, die nur gegen bestimmte Gegner wirksam sind, werden nicht berücksichtigt.\
+-Wenn zwei Einheiten genau gleichstark sind (sehr selten), dann verteidigt die mit den geringeren Produktionskosten.
+
+
+#SPYMISSIONS
+$Verdeckte Operationen\
+
+@@28\
+!!Verdeckte Operationen\
+
+Verdeckte Operationen können nur von Spionen ausgeführt werden. Eine verdeckte Operation wird ausgeführt, indem ein Spion in eine fremde Stadt eindringt. Es sind 5 Missionen durchführbar:\
+-Sabotageeinsatz: Die Produktion der Stadt wird für eine Runde lahmgelegt;\
+-Karte stehlen: Die Weltkarte der Nation zu diesem Zeitpunkt wird uns zugänglich;\
+-Informationen über Dritte: Alle Informationen der Nation über andere Nationen werden zugänglich;\
+-Zivilbericht vorbereiten: Der Zivilbericht und der Forschungsstand werden zusammen mit den Diagrammen zugänglich;\
+-Militärbericht vorbereiten: Der Militärbericht der Nation wird zugänglich.\\
+
+Ein Friedensvertrag zwischen zwei Nationen verbietet Spionageeinsätze. Spione kehren sich jedoch nicht um Verträge und sind in der Lage, in jedes Territorium einzudringen.
+
+
+#CLASSES
+$Einheiten entwickeln\
+
+!!Einheiten entwickeln\
+
+Deine Nation kann nur Einheiten produzieren, die sie selbst erforscht hat. Stadtwachen, Milizen und Siedler sind von Anfang an bekannt. Besondere Einheiten werden beim Erlangen bestimmter Fortschritte oder Weltwunder verfügbar.\
+::S Besondere Einheiten\\
+
+Alle anderen Einheiten, die produziert werden sollen, müssen erst erforscht werden. Wenn Du die entsprechenden Fortschritte entdeckt hast (z.B. Ehrenkodex für Bodentruppen) kannst Du mit militärischer Forschung beginnen, die Dich zum Entwurfsfenster für neue Einheitenklassen führt:\\
+
+@DraftShot\
+
+Legende:\
+-1: Gewicht und Maximalgewicht\
+-2: Aktuell gültige Faktoren\
+-3: Wählbare Ausstattungen und Eigenschaften\
+-4: Waffengattungen\
+-5: Zusammenfassung der neuen Einheitenklasse\\
+
+Die Eigenschaften einer Einheit hängen von zwei Dingen ab: Erstens davon, welche Fortschritte Du bislang erforscht hast. Manche Fortschritte verbessern eine oder mehrere Waffengattungen durch die Erhöhung des entsprechenden Kampfwertfaktors - und natürlich gibt es auch einen Kostenfaktor. 
+Ebenso gibt es Transportfaktoren, die die Ladekapazität von Einheiten verändern.\\
+
+Zweitens hängen die Eigenschaften der neuen Einheiten davon ab, welche zusätzlichen Fähigkeiten und welche besondere Ausrüstung Du für sie auswählst. Um die Werte einzelner Ausstattungsmerkmale zu erhöhen bzw. zu verringern benutze die kleinen +/- Tasten links. Die meisten Features erhöhen die Materialkosten %p und das Gewicht (%w) der Einheit. Das Maximalgewicht hängt von der Waffengattung und dem Forschungsstand ab. Wenn Du mit gedrückter Umschalt(Shift)-Taste auf ein Ausstattungsmerkmal klickst, öffnet sich der Hilfe-Bildschirm.\
+::F Ausstattungsmerkmale\\
+
+Am Schluss werden die Basiswerte für Bewaffnung und Panzerung, Tempo und Frachtkapazität mit dem jeweiligen Kostenfaktor multipliziert und so der Kampfwert der Einheit berechnet. Wenn Du einen geringeren bzw. höheren Schwierigkeitsgrad gewählt hast, verringern bzw. erhöhen sich die Kosten um 25%.
+
+
+#CITIES
+$Grundlegendes über Städte\
+
+@@43\
+!!Grundlegendes über Städte\
+
+Am Anfang hat Deine Nation eine einzige Stadt. Es gibt nun, einfach gesagt, zwei Möglichkeiten, weitere Städte zu gewinnen: Siedler bauen und ansiedeln, oder gegnerische Städte angreifen und erobern. Städte können nur auf einem bewässerbaren Gelände entstehen (Grasland, Ebenen, Prärie, Anhöhen, Tundra). Jede Stadt hat ihr eigenes Stadtfenster, das geöffnet wird, wenn Du auf die Stadt klickst.\\
+
+@CityShot\
+
+Die wichtigste Funktion einer Stadt ist das Sammeln von Erträgen aus dem umliegenden Gebiet und ihre Weiterverarbeitung. Geländefelder, die von einer Stadt ausgebeutet werden, können nicht gleichzeitig von anderen in der Nähe liegenden Städten genutzt werden. Wieviele der 21 möglichen Geländefelder von einer Stadt genutzt werden können, hängt von der Zahl ihrer Einwohner ab.\\
+
+Geländefelder erbringen ihre Erträge pro Runde. Der Ertrag eines einzelnen Feldes hängt von folgenden Bedingungen ab:\
+::T Landschaftsart\
+::J Geländemodifikationen\
+::G Regierungsform\\
+
+!Die Bürgerinnen und Bürger\
+
+Die Einwohner einer Stadt werden durch die Gesichter im oberen Bereich des Stadtfensters repräsentiert. Die Mindestanzahl der Einwohner einer Stadt beträgt 2. Jedes Ereignis, das die Zahl auf unter 2 sinken lässt, bedeutet die Auflösung dieser Stadt. Die maximale Größe einer Stadt ist 8, kann aber durch bestimmte Verbesserungen in Form von Bauwerken erhöhen werden.\\
+
+Jeder Einwohner kann auf einem Feld innerhalb des Stadtarreals arbeiten. Die zu bearbeitenden Felder können durch Anklicken auswählt werden.\(Anmerkung:\Wenn alle Bürger beschäftigt sind, muss erst ein Feld freigemacht werden, bevor ein anderes bearbeitet werden kann.)\Die restlichen Bürger (die nirgendwo arbeiten) sind Staatsbeamte.\\
+
+Bürger, die arbeiten, sind entweder zufrieden oder unzufrieden. Zwei Bürger sind von Anfang an zufriedene Bürger. Zusätzliche Bürger sind grundsätzlich unzufrieden. Es gibt aber zwei Wege, unzufriedene Bürger zufrieden zu stellen:\
+-Luxusausgaben: 2 Luxuspunkte (%l) machen einen unzufriedenen Bürger zufrieden;\
+-Bestimmte Bauwerke und Weltwunder: Ein Tempel z.B. sorgt für einen zusätzlichen zufriedenen Bürger.\\
+
+Wenn mehr als die Hälfte der Bürger einer Stadt unzufrieden ist, gibt es Unruhen und die Stadt produziert nichts, forscht nicht, sammelt keine Steuern.\\
+
+
+;CORRUPTION Referenz: Korruptionsformel\\
+
+!Management der Bürger\
+Die Zuordnung der Bürger zu Landschaften im Stadtgebiet und die damit verbundene Gewinnung von Material, Forschung und Wachstum kann hiermit automatisch und optimal durch eines der 5 Vorgaben eingestellt werden.\
+-maximales Wachstum (default Einstellung). Maximiert das Bevölkerungswachtum der Stadt ohne Rücksicht auf die Gewinnung von Material- und Forschungspunkten.\
+-maximale Produktion. Maximiert die Produktion ohne Rücksicht auf die Gewinnung von Nahrung- und Forschungspunkten. Geld ist aber weiterhin ein gutes Mittel um Projekte zu beschleunigen.\
+-maximale Forschung. Maximiert das auf Handel basierende Forschungsaufkommen (Forschung und Steuern) ohne Rücksicht auf die Gewinnung von Nahrung- und Material.\
+-beschleunigte Produktion. Ein Kompromiß zwischen Wachstum und den anderen Zielen, wobei Produktion bevorzugt wird gegenüber Forschung und Steuereinkommen.\
+-beschleunigte Forschung. Ein Kompromiß zwischen Wachstum und den anderen Zielen, wobei Forschung und Steuereinkommen bevorzugt wird gegenüber Produktion.\\
+
+;OPTI Im Detail: Die Stadtoptimierungsformel\\
+
+Beachte bitte, unter bestimmten Umständen kann das eingestellte Ziel nicht erreicht werden.\
+Beispiel:\
+-"maximale Produktion", wenn die Stadt "Handelsgüter" produziert.\
+-"maximales Wachstum", wenn die Stadt nicht mehr weiter wachsen kann.\
+-"maximale Forschung", wenn die Stadt kein Rathaus hat. In diesen Fall wirkt nur die zweite Priorität, was dann zu unerwarteten Ergebnissen führt.\\
+
+Unabhängig von der eingestellten ersten Priorität beachtet die Optimierung immer die drei Kriterien:\
+- 1. Priorität: Die zivile Ordnung wird beachtet.\
+- 2. Priorität: Die Versorgung der Einheiten mit Material wird garantiert.\
+- 3. Priorität: Die Versorgung der Bewohner und Einheiten mit Nahrung wird garantiert.\\
+
+
+!manuelles Management der Bürger\
+Wenn Du aus was immer für Gründen das automatische Management der Bürger ausschalten möchtest, so kannst Du das indem Du auf eine freie Landschaft des Stadtgebietes klickst und die Abfrage mit Ja beantwortest.\
+
+Danach hast Du die Möglichkeit über zwei Schritte eine Arbeitergruppe von einer Landschaft auf eine andere Landschaft zu setzen, indem Du\
+-einen Links-Klick auf die Arbeitergruppe die Umziehen soll machst (Arbeitergruppe wird zum Staatsbeamten) und danach\
+-auf eine freie Landschaft Links-Klickst (Staatsbeamter wird zur Arbeitergruppe und bearbeitet nun die neue Landschaft).\\
+
+Zu beachten ist, dass das Stadt-Mittelfeld nicht verändert werden kann! Es hat immer gewisse\::J Geländemodifikationen.\\
+
+Achtung!\
+Nachdem das automatische Management der Bürger ausgeschalten ist, mußt Du selbst dafür sorgen, dass\
+-genügend Nahrung produziert wird,\
+-genügend Material für die Versorgung der Einheiten bereit stehen und\
+-die Zufriedenheit der Bürger nicht kippt.\\
+
+
+!Unruhen\
+Wenn die Unzufriedenheit in einer Stadt zu stark steigt, so fällt sie in ein Chaos und die Produktion, Forschung und das Steueraufkommen aus dieser Stadt stoppen. Ab der zweiten Chaos-Runde stoppt auch die Versorgung der Einheiten. Mit jeder weiteren Chaos-Runde löst sich dann eine von dieser Stadt versorgte Einheit auf. Dies geht solange bis keine zu versorgende Einheit mehr da ist oder die Ordnung wieder hergestellt wurde.\\
+
+Das automatische Management der Bürger schützt vor Unruhen, sofern die Unzufriedenheit noch nicht zu groß geworden ist. Wenn also Einheiten Unzufriedenheit auslösen, so bewege sie zu einer Stelle an der die Unzufriedenheit durch diese Einheiten geringer wird oder löse sie, am besten in der Stadt, auf.\\
+
+Falls das automatische Management der Bürger ausgeschalten ist, so ist es Deine Aufgabe die Zufriedenheitsbalance wieder herzustellen.\\
+
+
+#CORRUPTION
+$Korruptionsformel\
+
+!!Korruptionsformel\
+
+Die genaue Formel für die Berechnung der Korruption in einer Stadt sieht folgendermaßen aus:\
+@CORRUPTION\
+-T - Handelseinkommen der Stadt\
+-C - Korruptionsfaktor der Regierungsform\
+-D - Entfernung zwischen Stadt und Hauptstadt\
+-Dmax - Größtmögliche Entfernung zweier Städte auf der Karte (Kartenhöhe und 1/2 Kartenbreite)\\
+
+Wenn die Staatskasse leer ist, beträgt die Korruption in Städten mit Gerichtsgebäuden 50% und in allen anderen Städten 100% - unabhängig von der Regierungsform.\\
+
+#OPTI
+$Stadtoptimierungsformel\
+
+!Stadtoptimierungsformel\
+
+Mathematisch unterscheiden sich die fünf Vorgaben für das automatische Management der Bürger nur durch den Wert m, der maximiert wird.\
+Die Berechnung berücksichtigt Nahrung (f), Produktion (p), Steuer (t), Forschung (r) unter Berücksichtigung aller Effekte durch die Gebäude.\\
+
+-maximales Wachstum: m = f, m2 = 2p + t + r\
+-maximale Produktion: m = 4p + t, m2 = r, m3 = f\
+-maximale Forschung: m = 2r + t + p, m2 = f\
+-beschleunigte Produktion: m = sqrt(f) * (8p + 2t + r)\
+-beschleunigte Forschung: m = sqrt(f) * (r + t + p)\
+ 
+
+
+
+
+#RESOURCES
+$Geländeerträge\
+
+!!Geländeerträge\
+
+Eine Stadt sammelt verschiedene Erträge aus den umliegenden Geländefeldern. Diese Erträge werden unterschiedlich genutzt. Insgesamt gibt es drei verschiedene Ertragsarten:\\
+
+!Material\
+Material (Symbol %p) ist eine abstrakte Grösse, die für alle Arten von Baumaterialien und Werkstoffen steht, die für die Produktion verwendet werden können, also z.B. Holz, Erz, Öl, usw. Ein Teil des Materials wird benötigt um die Einheiten zu unterhalten, die in dieser Stadt ihren Heimatstandort haben. Der übrige Ertrag wird für die Produktion gesammelt.\\
+
+!Nahrung\
+Die Nahrungsressource (Symbol %f) repräsentiert alle Arten von Nahrung. Es ist unbedingt erforderlich, eine Stadt ausreichend mit Nahrung zu versorgen, da jeder Einwohner 2 Einheiten %f pro Runde verbraucht. Es gibt außerdem noch Einheiten, die Nahrung aus ihrer Heimatstadt zu ihrem Unterhalt benötigen. Fehlende Nahrung wird aus dem Vorrat genommen. Ist der Vorrat erschöpft, erleidet die Stadt eine Hungersnot: Ein Bürger bzw. eine auf Nahrung angewiesene Einheit geht verloren.\\
+
+Aber normalerweise produziert eine Stadt mehr Nahrung als nötig. Dieser Überschuss geht in den Vorrat. Ab der Stadtgröße 8 wird ein Überschuss von nur einer Einheit %f in Gold umgewandelt. Ist der Vorrat gefüllt, wächst die Stadt und erhält einen neuen Einwohner hinzu.\\
+
+!Waren\
+Diese Ertragsart (Symbol %t) steht für Ressourcen mit einem Handelswert. Handelswerte werden allerdings nur auf Geländefeldern rund um die Stadt erzielt, aber nicht in ihr selbst - sogar nicht, wenn die Stadt auf eine Gold Ressource platziert ist. Einiges von diesem Einkommen geht aufgrund von Korruption verloren, die von der Regierungsform abhängt und sich durch die Entfernung zur Hauptstadt erhöht. Die restlichen Wareneinheiten %t werden entsprechend der im Nationsfenster festgelegten Sätze in Steuereinnahmen %c, Forschungsausgaben %r und Luxusausgaben %l umgewandelt. Steuern %c fließen in die Staatskasse, Forschungsausgaben %r kommen dem aktuellen Forschungsprojekt Deiner Nation zu Gute. Luxusausgaben %l erhöhen die Zufriedenheit der Bürger. Die wirtschaftliche Nutzung von Waren bedarf allerdings eines Rathauses:\
+::B49 Rathaus.\\
+
+
+
+#PRODUCTION
+$Produktion & Bauaufträge\
+
+!!Produktion & Bauaufträge\
+
+Gründest oder eroberst Du eine Stadt, ist das aktuelle Projekt immer 'Handelswaren', d.h. gesammeltes Material wird in Gold umgewandelt. Es kann ein anderes Projekt ausgewählt werden, indem ein Linkslick auf das Symbol im Stadtfenster ausgeführt wird. Die Auswahl hängt von den technologischen Fortschritten ab, die Deine Nation erforscht hat. Hilfe zu einem bestimmen Bauprojekt gibt es, wenn Du es mit gedrückter Umschalt-(Shift-)Taste anklickst.\
+Du hast die Wahl zwischen 3 Kategorien:\
+-Einheiten\
+-Städtische Bauwerke und Nationale Projekte\
+-Weltwunder\\
+
+Wenn Du ein bereits begonnenes Projekt änderst, verlierst Du 1/3 des bereits gesammelten Materials. Wenn das neue Projekt aus einer anderen Kategorie stammt, wird das bereits gesammelte Material in Gold umgewandelt und neues Material gesammelt. Um ein Bauwerk zu beschleunigen, können bereits vorhandene Bauwerke 'umgebaut' werden, welche zu 2/3 eingelöst werden. Um die Produktion von Einheiten (außer Karavanen) zu beschleunigen, können Einheiten aufgelöst werden. Das Material wird zu 2/3 wieder eingelöst, aber anteilig des Gesundheitszustandes auf.\\
+
+!Auswanderung\
+Siedler, Ingenieure, Sklaven und Wehrpflichtige werden aus der Bevölkerung rekrutiert, wodurch die Stadtgröße reduziert wird. Bei Bildung eines Wehrpflichtigen und Sklaven wird die Stadt um einen Einwohner kleiner, bei Siedlern und Ingenieuren um zwei. Umgekehrt können die Einheiten auch einer Stadt hinzugefügt werden, vorausgesetzt das diese noch nicht die maximale Größe erreicht hat. Durch eine Einheit wächst die Stadt um zwei Bürger.\\
+
+!Wehrpflichteinheiten\
+Bodentruppen können auch als Wehrpflichtige hergestellt werden. Dies kostet einen Bürger, und zusätzlich muss die Einheit mit Nahrung versorgt werden. Die Materialkosten einer solchen Einheit sinken dafür um das Dreifache des Kostenfaktors, allerdings nicht unter den Wert der einfachen Herstellungskosten der Einheit. Wehrpflichteinheiten können auch wieder einer Stadt hinzugefügt werden. Die Bildung von Wehrpflichteinheiten erfordert den Fortschritt\
+::A18 Wehrpflicht.\\
+
+!Kaufen und Verkaufen von Bauwerken\
+Es ist möglich die Produktion zu beschleunigen, um ein Bauprojekt bis zur nächsten Runde fertigstellen zu lassen. Die Kosten betragen bis zu dem Vierfachen des noch fehlenden Materials. Genauso kann ein laufendes Bauprojekt verkauft werden, indem es in Handelswaren' geändert wird. Das gesammelte Material wird in Gold umgewandelt.\\
+
+!Verschmutzung durch Abfall\
+Jede ausgebeutete Produktionsressource verursacht einen Umweltverschmutzungspunkt. Jeder Bürger verkraftet einen Verschmutzungspunkt, weitere werden aufaddiert. Erreicht die Umweltverschmutzung einer Stadt den Wert von 240, wird ein Feld des Stadtarreals verschmutzt und ist nur noch halb so ertragreich. Umweltverschmutzung kann von Siedlern und Ingenieuren beseitigt werden.
+
+
+#BUILDINGS
+$Bauwerke einer Stadt\
+
+@@67\
+!!Bauwerke einer Stadt\
+
+Jedes Bauwerk hat einen besonderen positiven Effekt auf die Stadt, in der es steht, oder sogar auf die ganze Nation. Es gibt drei Grundkategorien von Bauwerken, die sich dadurch unterscheiden, wie oft sie von einer Nation errichtet werden können:\
+-Städtische Bauwerke können einmal in jeder Stadt gebaut werden;\
+-Nationale Projekte können einmal von jeder Nation gebaut werden. Wenn eine Stadt ein Nationales Projekt fertiggestellt hat, das bereits in einer anderen Deiner Städte existiert, wird das bestehende verkauft.\
+-Weltwunder können nur einmal gebaut werden. Wenn eine Nation ein Weltwunder fertiggestellt hat, kann keine andere Nation es fertigstellen oder bauen. Wenn ein Weltwunder zerstört wird (z.B. weil die Stadt in der es stand, zerstört wurde), ist es für immer verloren. Zusätzlich zu seinen besonderen Wirkungen macht jedes Weltwunder in der Stadt, in der es steht, einen unzufriedenen Bürger zufrieden.\
+
+::B Städtische Bauwerke\
+::B201 Nationale Projekte\
+::B202 Weltwunder\\
+
+Die meisten Bauwerke und Nationalen Projekte kosten jede Runde eine bestimmte Menge Unterhaltungskosten, die aus der Staatskasse bestritten werden. Wenn kein Geld in der Staatskasse ist, wird ein zufälliges Bauwerk verkauft.\\
+
+Klicke auf die Schaltfläche 'Bauwerke' im Stadtfenster um zu sehen, welche Bauwerke in einer Stadt stehen. Wenn Du eines verkaufen oder umbauen willst, klicke auf das entsprechende Symbol. Wenn ein Bauwerk verkauft wird, geht der Betrag, der den Produktionskosten entspricht, in die Staatskasse.\Bei einem Umbau werden 2/3 der %p der aktuellen Produktion zuführen.\
+
+
+#SUPPORT
+$Unterhalt von Einheiten\
+
+!!Unterhalt von Einheiten\
+
+In der Regel muss jede Einheit von ihrer Heimatstadt pro Runde mit 1 %p unterstützt werden. Die Heimatstadt ist zunächst die Stadt, in der die Einheit gebildet wurde. Wenn Du den Heimatstandort ändern möchtest, kannst Du die Einheit in die gewünschte Stadt ziehen 
+und den Befehl 'Hier unterstützen' (H) aus dem Kommandomenü wählen. Klicke auf den Schaltfläche 'Einheiten' um die Einheiten zu sehen, die von einer Stadt unterstützt werden.\\
+
+Nicht alle Einheiten müssen unterstützt werden. Dies wird im Stadtfenster durch einen grauen an Stelle eines schwarzen Unterstützungsmarkers angezeigt. Die genaue Anzahl der unterhaltsfreien Einheiten hängt von der Regierungsform ab. Wenn die Stadt nicht genügend Produktionserträge hat, um alle ihre Einheiten zu unterhalten, werden Einheiten aufgelöst.\\
+
+In Städten, in denen mehr als eine Runde Unruhen herrschen, wird der Unterhalt von Einheiten eingestellt. Falls also Einheiten in der Stadt vorhanden sind, geht jede Runde eine Einheit verloren.
+
+
+#MACRO
+$Makro Management\
+
+!!Makro Management\
+
+Dieses Spiel zu spielen soll Spaß, nicht Arbeit machen. Makro Management hilft dabei, sich ständig wiederholende Aufgaben zu ersparen, so dass Du Dich mehr auf Deine Strategie konzentrieren kannst. Mit Makro Management kann man nichts tun, was man nicht auch ohne Makro Management tun könnte, aber man kann effizienter spielen. Es ist jedoch nicht empfehlenswert Makro Management zu benutzen, solange Du nicht die Funktionen verstanden hast, die Du über Makro Management steuern kannst.\\
+
+!Landschaftsbau\
+Unter Hauptmenü: Makor-Management/Landschaftsbau wird für jede Landschaft eine Abfolge von Geländemodifikationen und der nächsten möglichen Landschaftstransformationen festlegen. Nachdem Du das gemacht hast, kannst Du einem Siedler den Befehl 'Landschaftsbau' (E) geben.\
+Der Siedler wird dann der Reihe nach die entsprechenden Geländemodifikationen und Landschaftsumformungen vornehmen. Definerte Geländemodifikationen für die der Fortschritt noch nicht bekannt ist, werden von der Einheit nicht durchgeführt.\
+Mit einer Drei-Tasten-Maus kann man diesen Befehl sogar mit dem goto-Befehl verbinden:\
+Klicke einfach mit der dritten Maustaste auf ein Feld, das verbessert werden soll, und der Siedler wird automatisch dorthin gehen und seine Arbeit beginnen.\
+Ist der arbeitende Siedler markiert, so kann man den aktuellen Stand seiner Arbeit in der Mitte der unteren Leiste über dem Landschaftsfeld sehen.\\
+
+!Städtebau\
+Du kannst eine Reihenfolge der Bauprojekte für vier verschiedene Stadttypen festlegen. Das funktioniert per drag & drop. Um eine Stadt in dieser Reihenfolge bauen zu lassen, wähle den entsprechenden Stadttypus als Bauvorhaben. Änderungen in den Baureihenfolgen der Stadttypen gelten automatisch für alle dadurch gesteuerten Städte. Trotzdem wird das aktuelle Bauprojekt einer Stadt fertiggestellt. Der Stadttyp bleibt auch dann aktiviert, wenn alle vorgesehenen Bauwerke gebaut wurden.\\
+
+
+#START
+$Das Startfenster\
+
+!!Das Startfenster\
+
+Das Startfenster hat drei Register, zwischen denen Du mit einem Klick auf die oberen Laschen hin- und herschalten kannst. Um 
+ein neues Spiel zu beginnen, gehe in's Register 'Neues Buch'. Wähle die Anzahl Gegner und deren Schwierigkeitsgrad. Falls alternative KIs installiert sind, können diese gegen die Standard-KI getauscht werden. Klicke dann auf die Schaltfläche 'Start' .\\
+
+!Auswahl der Spieler\
+Verwende das Feld 'Gegner' mit den neun Fenstern, um die Art und Anzahl der gegnerischen Spieler genauer festzulegen. Nur dieser Modus erlaubt Multiplayer Spiele, gegen verschiedene KIs zu spielen oder KI-Games als Supervisor oder KI-Tunier zu starten.
+Klicke auf die Boxen und wähle jeweils einen menschlichen oder einen KI-Gegner aus der Liste. 
+Die drei linken Boxen haben zusätzlich noch eine Schaltfläche die eine "3" enthält.
+Hier kann die Auswahl für jeweils 2 oder 3 zusätzlich Gegenspieler getroffen werden, 
+die die gleiche Konfiguration erhalten. Damit können insgesamt bis zu 14 Nationen am Spiel teilnehmen.\\
+
+Jedem Gegner wird ein eigener Schwierigkeitsgrad zugewiesen, den Du mit den +/- Tasten links der Fenster 
+auswählen kannst. Ein Strich steht für den einfachen Level, drei Striche für den schwierigen.\
+Wenn Du zum Beispiel gegen die KI spielst und es so schwer wie möglich haben möchtest, 
+setze Deinen eigenen Schwierigkeitsgrad (Lokaler Spieler) auf das Maximum und den der KI-Gegner auf das Minimum.\\
+
+Ein höherer Schwierigkeitsgrad bedeutet langsamere Entwicklung der Bevölkerung, 
+langsamere Produktion und langsamerer Fortschritt bis die Produktions- und Fortschrittskosten und natürlich auch die Grösse des Nahrungsmittelspeichers angewachsen sind.\\
+
+!Ein gespeichertes Spiel laden\
+
+Alle gespeicherten Spiele erscheinen in der 'Bibliothek'. Wähle eines davon aus und klicke auf 'Öffnen' um weiterzuspielen.
+Ein Buch enthält alle Runden eines Spiels. Möchtest Du das Spiel zu einem früheren Zeitpunkt fortführen 
+als in der zuletzt gespeicherten Runde, benutze die Jahreszahl rechts 
+um den gewünschten Zeitpunkt einzustellen, bevor Du das Spiel öffnest.\\
+
+!Weltkarten\
+
+Standardmäßig spielst Du auf zufälligen Weltkarten, die automatisch am Anfang eines neuen Spiels 
+generiert werden. Im 'Karten'-Register können zwei 
+Parameter eingestellt werden: Größe und Prozentanteil der Landmasse.\\
+
+Alternativ ist es möglich auf einer editierten Karte zu spielen, die für C-evo 
+entworfen wurde, z.B. eine Karte der Erde. Das Grundpaket enthält keine solcher Karten, 
+jedoch können verschiedene solcher Karten von der Projekt-homepage heruntergeladen werden. 
+Verschiebe die Kartendateien in den 'Maps'-Ordner. Du benötigst die Karte nur zum Starten des Spiels. 
+Die Karte ist nicht erforderlich um das Spiel später wieder öffnen zu können, da sie im Buch mit abgespeichert wird.\\
+
+
+#MAPEDIT
+$Der Kartograf\
+
+!!Der Kartograf\
+
+Es gibt einen einfachen Karteneditor für Karten in diesem Spiel. Um ihn zu starten, 
+klicke auf 'Karten' im Startfenster. Wähle die gewünschte Karte aus und klicke dann auf 
+die Schaltfläche 'Kartograf'. Möchtest Du eine neue Karte erstellen, 
+wähle 'Zufallskarte', stelle Größe und Landmasse ein und starte dann den Kartografen.\\
+
+Die Bedienung des Editors ist sehr einfach. Wähle eine Landschaft oder ein Objekt 
+aus der Liste unten am Bildschirm und zeichne sie mittels der Maus in die 
+Karte. Die Grenzen zwischen Ozean und Küste und die Verteilung von Ressourcen werden 
+automatisch festgelegt. Vergiss nicht zumindest 
+eine Lagerstelle jeder besonderen Ressource festzulegen, 
+da sonst das Raumschiff nicht gebaut werden kann.\\
+
+Es ist wichtig die Startpunkte der Nationen zu markieren. Eine Karte kann nicht 
+von mehr Nationen bespielt werden als es Startpositionen gibt. Sind keine Startpositionen vorhanden, 
+ist die Karte leider nicht spielbar. 
+Möchtest Du eine besondere Startposition für den oder die menschlichen Spieler, markiere sie durch eine 'Bevorzugte Startposition'.\\
+
+Karten werden im Startfenster nicht angezeigt. Stattdessen kann ein 
+Symbol eingefügt werden. Dieses muss eine *.bmp-Datei sein und denselben Namen wie die 
+Karte besitzen. Speichere die Datei im 'Maps'-Ordner. Die maximale Grösse des Symbols beträgt 192 x 96 pixel.
+
+
+#AIT
+$KI-Wettkampf\
+
+!!KI-Wettkampf\
+
+Hast Du mehrere verschiedene KI-Module installiert, kannst Du sie in einem Wettkampf 
+gegeneinander antreten lassen. Wähle hierfür 
+KI-Wettkampf' im zentralen Feld der neun Gegner und klicke 
+auf 'Start'. Das Spiel selbst wird auf ein kleines Dialogfenster reduziert.
+Mit dem Klicken auf die Schaltfläche Abspielen' beginnt C-evo eine endlose Reihe an Spielen 
+rundenweise ablaufen zu lassen. Das Ergebnis besteht aus einer einfachen Statistik, die nach jeder 
+Runde aktualisiert wird.\\
+
+@AITShot\
+
+-1: Anzahl der Runden, die diese KI gewonnen hat, was bedeutet, dass sie entweder 
+als erste das Raumschiff fertiggestellt oder alle anderen Nationen beseitigt hat.\
+-2: Anzahl der Runden, in denen diese Nation zerstört wurde.
+
+
+#HOTKEYS
+$Maus & Tastatur\
+
+Mausbefehle der Hauptkarte:\
+-Einheit auswählen - Linksklick\
+-Stadtansicht - Linksklick\
+-Informationen über gegnerische Einheit - Linksklick\
+-Informationen über gegnerische Stadt (Städteverteidigung) - Linksklick\
+-Ansicht auf einen Punkt zentrieren - Linksklick auf der Karte\
+-Aktive Einheit bewegen - Rechtsklick auf das Zielfeld\
+-Einheit erzeugen (Beobachtermodus) - Rechtsklick\\
+
+Tastaturfunktionen auf der Karte:\
+-Einheit bewegen - Cursor Tasten\
+-Runde beenden - +'-Taste auf dem Zahlenfeld\
+-Abkürzungstasten für die Schaltflächen auf der Übersichtskarte - Zahlen 1 bis 7\
+-In den Menüs befinden sich weitere Tastaturkürzel
+
+#TRADINGGOODS
+$Handelswaren\
+
+!!Handelswaren\
+
+Produziert eine Stadt Handelswaren, wird das Material aus der Produktion direkt in Gold umgewandelt.
+
+#MILRES
+$Militärische Forschung\
+
+!!Militärische Forschung\
+
+Eine Nation muss militärische Forschung betreiben, um neue Einheitenklassen in Dienst stellen 
+zu können.\
+:CLASSES Einheitenklassen\\
+
+#ADVHELP
+Maximales Gewicht von Luft-Einheiten steigt auf 7%w
+*
+*
+*
+Maximales Gewicht von Bodentruppen steigt auf 10%w
+*
+*
+Straßen können über Flüsse gebaut werden
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+Erlaubt das Einziehen von Wehrpflichtigen-Einheiten
+Festungen können gebaut werden
+*
+*
+*
+*
+*
+*
+*
+*
+*
++1%t auf allen flachen Geländefeldern mit Straßen
+Kanalbau und Landschaftsbau werden verfügbar
+Führt Lufteinheiten ein
+*
+*
+Maximalgewicht von Bodentruppen steigt auf 7%w
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
++1%t auf allen Geländefeldern mit Flüssen; führt Seeeinheiten ein
+*
+Besondere Ressourcen werden verfügbar;\Schlüsseltechnologie:\Andere Nationen werden benachrichtigt, wenn diese Technologie erforscht worden ist.
+*
+Militärstützpunkte können gebaut werden
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+Farmland wird verfügbar
+*
+*
+*
+*
+Eisenbahnen können gebaut werden
+*
+Moderne Ressourcen werden verfügbar;\Schlüsseltechnologie:\Andere Nationen werden benachrichtigt, wenn diese Technologie erforscht worden ist.
+*
+Maximales Gewicht von Schiffen steigt auf 7%w
+*
+*
+*
+Maximales Gewicht von Schiffen steigt auf 9%w; erhöht maximale Panzerung um 1
+*
+*
+*
+*
+*
+Schlüsseltechnologie:\Andere Nationen werden benachrichtigt, wenn diese Technologie erforscht worden ist.
+*
+*
+Führt die Erforschung neuer Bodentruppen ein
+*
+*
+*
++5% Forschung in Städten mit einer Universität; +10% Forschung in Städten mit einem Forschungslabor
++5% Produktion in Städten mit einer Fabrik; +10% Produktion in Städten mit einer Fertigungsanlage\(Kein Einfluss auf die Umweltverschmutzung)
+*
+*
+
+#IMPHELP
+Besondere Einheit wird verfügbar:\\::S7 Sklaven\
+Die Nation erbeutet den Zivilbericht und einen Fortschritt ihrer Wahl, wenn sie eine Stadt erobert. Der erbeutete Fortschritt wird wie ein gehandelter Fortschritt behandelt. Er muss erst verstanden werden, bevor er benutzt werden kann.\\Dazu muss er mit der Hälfte der normalen Forschungspunkte erforscht werden. Die Vorbedingungen müssen aber nicht erfüllt sein.
+Wüstenfelder können zu Weideland oder Steppe transformiert werden.\Alle Einheiten sind unempfindlich gegen gegenüber Klimaeinflüssen rauher Gegenden.
+Baukosten für Weltwunder sinken um 1/4.
+Alle Küstenfelder produzieren +1 %p\\(Kann nur in Küstenstädten gebaut werden)
+Die Nation erhält alle Fortschritte, die mindestens zwei anderen Nationen bekannt sind.\Die Fortschritte, die man auf diese Weise erhält, müssen genauso wie die durch Handel erhaltenen Fortschritte erst "verstanden" werden, bevor sie benutzt werden können. Die Erforschung beansprucht nur den halben Forschungsaufwand und die Vorbedingungen müssen nicht erfüllt sein.
+Für jeden Tempel dieser Nation und und für alle Tempel von den Nationen zu denen diese Nation kontakt hat, gibt es pro Runde 1%c für die nationale Staatskasse.
+Drei besondere Ausstattungsmerkmale werden verfügbar:
+Die Nation erhält die Forschungspunkte von zwei Fortschritten. In Folge dessen wird der aktuelle Fortschritt sofort fertig und der nächste Fortschritt in der nächsten Runde.\\Zusätzlich wird der Bau der speziellen Einheit "Gleitsegler" möglich\\::S8 Gleitsegler
+Alle Schiffe der Nation bekommen einen Aktionsbonus von +200 AP\\(Kann nur in Küstenstädten gebaut werden).
+Die Kosten zur Fertigstellung von Gebäuden und Wunder für den Kauf vom fehlenden Material reduzieren sich auf 2%c pro fehlendes Material.
+*
+Forschung verdoppelt sich bei der Regierungsform Monarchie.
+Kathedralen machen einen zusätzlichen Bürger zufrieden.
+*
+Jede Stadt hat ihre eigene Luxusrate, die gerade so hoch ist, das keine Unruhen ausbrechen.\Dies gilt aber nicht, wenn die Stadt so wenig Handel betreit oder die Unzufriedenheit so hoch ist, dass selbst 100% Staatsbeamte nicht genug sind.
+Verhindert, dass die Weltwunder dieser Nation ihre Wirkung verlieren. Veraltete Weltwunder werden wieder aktiv.
+Zählt als Wasserkraftwerk in allen Städten.\(Kann nur in Städten an einem Fluss oder einem Gebirge gebaut werden).
+Bewegung auf Schienen kostet innerhalb des eigenen Territoriums keine Aktionspunkte mehr. 
+Löst den kalten Krieg aus. In dieser Zeit können keine diplomatischen Verhandlungen geführt werden.\Der kalte Krieg dauert 40 Runden.
+Die gesamte Welt wird für eine Runde sichtbar. Zivil- und Militärberichte von allen Nationen werden verfügbar.\\Um dieses Weltwunder zu errichten benötigt die Nation einen\::B66 Weltraumbahnhof
+*
+*
+*
+*
+*
+*
+*
+*
+Alle Bodentruppen, die in dieser Stadt gebaut werden, haben Erfahrungsstufe II. Alle hier stationierten Bodentruppen sind in der nächsten Runde wiederhergestellt.
+Nahrungsvorrat bleibt zur Hälfe gefüllt, wenn die Stadt wächst.
+Ein unzufriedener Bürger wird zufrieden.
+Steuern und Luxus steigen um 50%.
+Forschung der Stadt erhöht sich um 50%.
+Die Handelsbegrenzung wird aufgehoben. Die Korruption der Stadt sinkt um 50%.
+200% Verteidigungsbonus für Verteidiger einer Stadt gegen Bodentruppen. Die Stadt verliert keine Bürger, wenn die Verteidiger durch Bodentruppen besiegt werden.
+Die Stadt kann mehr als 8 Einwohner haben, max 12.
+Steuern und Luxus steigen um 100%.
+Zwei unzufriedene Bürger werden zufrieden.
+Die Forschung der Stadt erhöht sich um 75%.
+Küstenfelder produzieren +1%f\\(Dieses Bauwerk kann nur in Küstenstädten gebaut werden)
+Zwei unzufriedene Bürger werden zufrieden.
+Die Produktion steigt um 50%; Umweltverschmutzung steigt ebenfalls um 50%.
+Die Produktion steigt um 50%; Umweltverschmutzung steigt ebenfalls um 50%.
+Verhindert weitere Umweltverschmutzung.
+Verdoppelt die Wirkung von Fabrik und Fertigungsanlage. Umweltverschmutzung steigt um 50%.\(Mehr als ein Kraftwerk pro Stadt hat keine zusätzlichen Auswirkungen)
+Verdoppelt die Wirkung von Fabrik und Fertigungsanlage. Umweltverschmutzung sinkt um 50%.\(Mehr als ein Kraftwerk pro Stadt hat keine zusätzlichen Auswirkungen)\(Dieses Bauwerk kann nur in Städten an Flüssen oder Gebirgen gebaut werden)
+Verdoppelt die Wirkung von Fabrik und Fertigungsanlage. Hat keinen Einfluss auf die Umweltverschmutzung.\(Mehr als ein Kraftwerk pro Stadt hat keine zusätzlichen Auswirkungen)
+Küstenfelder produzieren +1%p\\(Dieses Bauwerk kann nur in Küstenstädten gebaut werden)
+Ermöglicht der Stadt Handelseinnahmen von bis zu 3%t pro Geländefeld.
+Die Stadt kann mehr als 12 Einwohner haben, max 30.
+Ermöglicht die Nutzung des Nahrungsbonus durch Farmland.
+Verdoppelt den Handelsertrag von Straßen.
+Forschung steigt um 75%.
+100% Verteidigungsbonus für Verteidiger einer Stadt gegen Luft-Einheiten, bietet Schutz vor Luftbombardement.
+100% Verteidigungsbonus für Verteidiger einer Stadt gegen Schiffe und U-Boote.\\(Dieses Bauwerk kann nur in Küstenstädten gebaut werden)
+Alle Lufteinheiten, die in dieser Stadt gebaut werden, haben Erfahrungsstufe II. Lufteinheiten in dieser Stadt sind in der nächsten Runde wiederhergestellt.
+Alle Schiffe, die in dieser Stadt gebaut werden, haben Erfahrungsstufe II. Marineeinheiten in dieser Stadt sind in der nächsten Runde wiederhergestellt.\(Dieses Bauwerk kann nur in Küstenstädten gebaut werden)
+Diese Stadt wird zur Hauptstadt! Das ermöglicht unbegrenzte Handelseinnahmen und verhindert Korruption. Der Standort hat Einfluss auf die Korruption, siehe auch:\:RESOURCES Geländeerträge;\::G Regierungsformen
+Zählt als Stadtmauer für jede Stadt auf diesem Kontinent.\(Die Pole zählen nicht als Verbindung für Kontinente)
+Die Hälfte der Bevölkerung einer Stadt ist immer zufrieden.
+Die Forschung in dieser Stadt wird verdoppelt.
+Alle in dieser Stadt ausgebildeten Bodentruppen sind Eliteeinheiten. Bodentruppen in dieser Stadt sind in der nächsten Runde wiederhergestellt.
+Die Verteidigung dieser Stadt steigt um 100% gegen alle Einheiten.
++12%f für diese eine Stadt
+Verdoppelt den Effekt aller Banken.
+Besondere Ressourcen verdoppeln sich. Ermöglicht die Produktion von Raumschiffbauteilen.
+*
+*
+*
+
+
+#FEATUREHELP
+Basiswert +1 für Bewaffnung.
+Basiswert für Panzerung +1\Hinweis: Dieses Ausstattungsmerkmal hat je nach Waffengattung in der Anwendung eine Höchstbegrenzung (2 mal für Bodeneinheiten, 3 mal für See- und Lufteinheiten).
++50 AP für Fortbewegung und Angriffe.
+Basiswert +1 für Fracht.
+Basiswert +1 für Fracht bei Flugzeugen. Lufteinheit besitzt Radar.\Transportflugzeuge können nicht auf Flugzeugträgern stationiert werden.
+Tempo +2oo AP
+Basiswert für Bewaffnung +2 für den ersten Angriff nach dem Start aus einer Stadt, einem Militärstützpunkt oder von einem Flugzeugträger.
+Ein Flugzeug braucht mit jeden Zusatztank eine Runde lang nicht zu einer Stadt, einem Militärstützpunkt oder Flugzeugträger zurückkehren.
+Basiswert +1 für Fracht\Transportflugzeuge können nicht auf Flugzeugträgern landen.
+Einheit kann über die offene See navigieren.
+2 Felder Sichtweite; U-Boote in angrenzenden Feldern werden aufgespürt.
+Unsichtbar für gegnerische Einheiten.
+Bodentruppen werden nicht von Stadtmauern behindert und können Schiffe auf angrenzenden Feldern angreifen.\Schiffe können Ziele auf angrenzenden Landfeldern angreifen.
+Bewegung in jedem Gelände so schnell wie auf Straßen.
+Einheiten an Bord sind in der nächsten Runde wiederhergestellt.
+Basiswert für Bewaffnung und Panzerung jeweils +1. Erfordert doppelte Unterstützung. Einheit kann nur entlang von Straßen oder Flüssen und Kanälen mit doppelten Bewegungskosten gezogen werden. Kann entlang von Schienen bewegt werden. Kann nicht in Transporteinheiten verladen werden.
+Doppelter Verteidigungswert gegen Lufteinheiten.
+Erkundet alle Städte und Einheiten in Sichtweite, einschließlich Stealth-Flugzeugen.
+Tempo +100 AP
+Tempo +100 AP
+Tempo +400 AP
+Für gegnerische Einheiten unsichtbar.
+Falls diese Einheit im Kampf zerstört wird, fügt sie doppelten Schaden zu.\Fanatische Bodeneinheiten verteidigen eine Position, auch wenn stärkere Verteidiger da sind.\Dieses Feature ist nicht aktiv, wenn die aktuelle Regierung Republik, Demokratie oder Libertarismus ist.
+Falls diese Einheit eine andere bei einem Angriff zerstört, nimmt sie nur den halben Schaden.
+Einheit attackiert immer mit voller Kraft, auch wenn weniger als 100 AP vorhanden sind.
+Beobachtungsradius 2 Felder. Einheit verschanzt sich, wenn mehr als die Hälfte ihrer AP verbraucht sind.
+Doppelte Produktionskosten für die erste produzierte Einheit in einer Stadt, die Hälfte der einfachen Produktionskosten für jede weitere unmittelbar anschließend gebaute Einheit.
+
+#GOVHELP
+Anarchie tritt bei Änderung der Regierungsform für drei Runden auf.\-Maximale Erträge von 3%f, 2%p und 2%t pro Geländefeld.\-In allen Städten herrschen Unruhen.\-Keine Instandhaltungskosten für Bauwerke.\-Keine Umweltverschmutzung.\-Siedler benötigen kein %f\-Keine Unterhaltskosten für Einheiten.
+-Maximale Erträge von 3%f, 2%p und 2%t pro Geländefeld.\-Hohe Korruption (Faktor 3)\-Keine Umweltverschmutzung.\-Jeder Siedler benötigt 1%f\-Jede Einheit benötigt mind. 1%p Unterhalt.\-Eine Einheit pro Bürger ist unterhaltsfrei.
+-Keine Ertragsgrenzen für Geländefelder.\-Geringe Korruption (Faktor 1)\-Jeder Siedler benötigt 1%f\-Jede Einheit benötigt mind. 1%p Unterhalt.\-Eine Einheit auf 2 Bürger ist unterhaltsfrei.
+-Alle Handelserträge um 1%t erhöht.\-Geringe Korruption (Faktor 1)\-Jede Kampfeinheit in feindlichem Territorium macht einen zufriedenen Bürger ihrer Heimatstadt unzufrieden.\-Jeder Siedler benötigt 2%f\-Jede Einheit benötigt mind. 1%p Unterhalt.
+-Keine Ertragsgrenzen für Geländefelder.\-Geringe Korruption (Faktor 1)\-Alle Bürger sind zufrieden.\-Forschung wird halbiert.\-Jeder Siedler benötigt 1%f\-Keine Unterhaltskosten für Einheiten.
+-Produktionserträge ab 2%p um 1%p erhöht.\-Keine Korruption.\-Jeder Siedler benötigt 2%f\-Jede Einheit benötigt mind. 1%p Unterhalt.\-Eine unterhaltsfreie Einheit auf je 2 Bürger.
+-Alle Handelserträge um 1%t erhöht.\-Keine Korruption.\-Jede Kampfeinheit außerhalb des eigenen oder alliierten Territoriums macht einen zufriedenen Bürger ihrer Heimatstadt unzufrieden.\-Jeder Siedler benötigt 2%f\-Jede Einheit benötigt mind. 1%p Unterhalt.
+-Alle Handelserträge um 1%t erhöht.\-Keine Korruption.\-Jede Kampfeinheit in feindlichem Territorium macht einen zufriedenen Bürger ihrer Heimatstadt unzufrieden.\-Erforschung von Zukunftstechnologien kostet die Hälfte.\-Nahrungsüberschuss wird in Gold umgewandelt.\-Kein Bevölkerungswachstum.\-Jeder Siedler benötigt 2%f\-Jede Einheit benötigt mind. 1%p Unterhalt.
+
+#TECHAGE
+Altertümliche Fortschritte
+Fortschritte der Industriellen Revolution
+Moderne Fortschritte
+Zukunftstechnologien
+
+#SPECIALMODEL
+-Kann Landschaftsbau betreiben, Geländemodifikationen vornehmen und Städte gründen.\-Muss mit Nahrung von der Heimatstadt unterstützt werden.
+-Kann Landschaftsbau betreiben, Geländemodifikationen vornehmen und Städte gründen.\-Muss mit Nahrung von der Heimatstadt unterstützt werden.\Erleidet keinen Schaden in rauhen Gegenden.
+*
+-Verteidigungsbonus von 100% in Städten.\-Unter der Regierungsform Despotismus stellt diese Einheit einen unzufriedenen Bürger einer Stadt zufrieden.\-Muss immer unterstützt werden.
+:SPYMISSIONS Führt verdeckte Operationen aus. Erkundet angrenzende Städte und Einheiten, einschließlich Stealth-Flugzeuge.\-Sichtweite 2 Felder.\-Kein Kontrollbereich.\-kann fremde Eisenbahnen nutzen.\
+-Wenn diese Einheit für ein Bauprojekt einer Stadt eingesetzt wird, werden diesem Projekt 2/3 der Produktionskosten dieser Einheit hinzugefügt. Ausnahme: Raumschiffteile.\-Muss mit 2%p unterstützt werden.
+-Frühe Transporteinheit, Kapazität 2 Einheiten.
+-Kann Landschaftsbau betreiben und Geländemodifikationen vornehmen.
+-Frühe Luft-/Bodeneinheit: zählt als Lufteinheit in der eigenen Runde und als Bodeneinheit für andere Spieler.\-Erkundet angrenzende Städte und Einheiten.\-Wenn sich diese Einheit am Ende der Runde nicht auf einem Landfeld befindet, geht sie verloren.\-Der Gleitsegler kann nicht mit Schiffen transportiert werden.
+
+#JOBHELP
+:MOVEMENT Geringere Fortbewegungskosten für Einheiten.\::A29 Handelsbonus mit dem Fortschritt Rad.
+:MOVEMENT Geringere Fortbewegungskosten für Einheiten.\-Produktionserträge steigen um 50%.\-Kann erst gebaut werden, wenn bereits eine Straße vorhanden ist.
+-Erlaubt Schiffen das Befahren des Landfeldes.\-Kann nicht im Gebirge, in Hügellandschaften oder in der Arktis errichtet werden.
+-Nahrungserträge steigen abhängig von der Landschaftsart.
+::B51 Nahrungserträge +50% mit Supermarkt.\-Kann nur gebaut werden, wenn bereits Bewässerung vorhanden ist.
+-Produktionserträge erhöhen sich abhängig von der Landschaftsart\-Kann nur auf Hügeln und im Gebirge errichtet werden.
+-Verteidigungsbonus 100%\:COMBAT Weitere Effekte im Kampf.
+:COMBAT Wirkungen im Kampf und bei der Wiederherstellung.\::F6 Beladen von Bombern.\-Schiffe können Militärstützpunkte nur erreichen, wenn dort ein Kanal vorhanden ist.

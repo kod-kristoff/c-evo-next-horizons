@@ -5,8 +5,9 @@ interface
 
 var
   HomeDir, DataDir: string;
+  LocaleCode: string;
 
-function LocalizedFilePath(path: string): string;
+function LocalizedFilePath(const Path: string): string;
 
 
 implementation
@@ -25,15 +26,18 @@ begin
   result := FindFirst(path, faDirectory, f) = 0;
 end;
 
-function LocalizedFilePath(path: string): string;
+function LocalizedFilePath(const Path: string): string;
 begin
-  result := DataDir + 'Localization' + DirectorySeparator + path;
-  if not FileExists(result) then
-    result := HomeDir + path
+  if LocaleCode <> '' then begin
+    Result := HomeDir + 'Localization' + DirectorySeparator + LocaleCode + DirectorySeparator + Path;
+    if not FileExists(Result) then
+      Result := HomeDir + Path;
+  end else Result := HomeDir + Path;
 end;
 
 procedure InitUnit;
 begin
+  LocaleCode := '';
   HomeDir := ExtractFilePath(ParamStr(0));
 
   AppDataDir := GetAppConfigDir(False);

@@ -1,0 +1,291 @@
+#CHOOSE ČEŠI
+#a Český
+#b Česká
+#c České
+#d Českou
+#e Českého
+#f Češi
+#g Čechy
+#h Čechů
+#i Češích
+#COLOR 5B5FB5
+#SYMBOLS Nation1, 42
+#AGE0 StdCities, 2, StdTextures, 0, Background, 23
+#AGE1 StdCities, 2, StdTextures, 2, Background, 23
+#AGE2 0, 0, StdTextures, 4, Background, 23
+#AGE3 0, 0, StdTextures, 6, Background, 23
+
+#CITIES
+	Praha
+	Brno
+	Ostrava
+	Plzeň
+	Olomouc
+	Liberec
+	České Budějovice
+	Hradec Králové
+	Ústí nad Labem
+	Pardubice
+	Havířov
+	Zlín
+	Kladno
+	Most
+	Karviná
+	Opava
+	Frýdek-Místek
+	Karlovy Vary
+	Děčín
+	Teplice
+	Chomutov
+	Jihlava
+	Prostějov
+	Přerov
+	Jablonec nad Nisou
+	Mladá Boleslav
+	Česká Lípa
+	Třebíč
+	Třinec
+	Tábor
+	Příbram
+	Znojmo
+	Orlová
+	Cheb
+	Trutnov
+	Kolín
+	Písek
+	Šumperk
+	Kroměříž
+	Vsetín
+	Valašské Meziříčí
+	Litvínov
+	Hodonín
+	Nový Jičín
+	Uherské Hradiště
+	Břeclav
+	Český Těšín
+	Krnov
+	Sokolov
+	Litoměřice
+	Havlíčkův Brod
+	Žďár nad Sázavou
+	Chrudim
+	Kopřivnice
+	Strakonice
+	Bohumín
+	Klatovy
+	Jindřichův Hradec
+	Vyškov
+	Kutná Hora
+	Náchod
+	Jirkov
+	Blansko
+	Žatec
+	Hranice
+	Louny
+	Mělník
+	Otrokovice
+	Bruntál
+	Svitavy
+	Uherský Brod
+	Rožnov pod Radhoštěm
+	Kadaň
+	Beroun
+	Kralupy nad Vltavou
+	Ostrov
+	Česká Třebová
+	Rakovník
+	Pelhřimov
+	Jičín
+	Neratovice
+	Dvůr Králové nad Labem
+	Benešov
+	Varnsdorf
+	Bílina
+	Klášterec nad Ohří
+	Brandýs nad Labem
+	Slaný
+	Ústí nad Orlicí
+	Mariánské Lázně
+	Chodov
+	Zábřeh
+	Turnov
+	Hlučín
+	Nymburk
+	Český Krumlov
+	Rokycany
+	Šternberk
+	Krupka
+	Poděbrady
+	Roudnice nad Labem
+	Vrchlabí
+	Jaroměř
+	Tachov
+	Jeseník
+	Aš
+	Holešov
+	Uničov
+	Kyjov
+	Nový Bor
+	Vlašim
+	Veselí nad Moravou
+	Vysoké Mýto
+	Prachatice
+	Rychnov nad Kněžnou
+	Velké Meziříčí
+	Moravská Třebová
+	Sušice
+	Frenštát pod Radhoštěm
+	Boskovice
+	Říčany
+	Rumburk
+	Domažlice
+	Humpolec
+	Nové Město na Moravě
+	Hlinsko
+	Studénka
+	Litomyšl
+	Nové Město nad Metují
+	Litovel
+	Čelákovice
+	Chotěboř
+	Lanškroun
+	Čáslav
+	Mohelnice
+	Frýdlant nad Ostravicí
+	Milevsko
+	Ivančice
+	Lovosice
+	Nová Paka
+	Semily
+	Štětí
+	Polička
+	Rýmařov
+	Hořice
+	Přelouč
+	Choceň
+	Bystřice nad Pernštejnem
+	Kuřim
+	Třeboň
+	Duchcov
+	Bystřice pod Hostýnem
+	Příbor
+	Nejdek
+	Lipník nad Bečvou
+	Červený Kostelec
+	Mnichovo Hradiště
+	Broumov
+	Tišnov
+	Vimperk
+	Lysá nad Labem
+	Týn nad Vltavou
+	Moravské Budějovice
+	Dačice
+	Dobříš
+	Sedlčany
+	Mikulov
+	Stříbro
+	Napajedla
+	Hulín
+	Dubí
+	Bílovec
+	Frýdlant
+	Sezimovo Ústí
+	Odry
+	Soběslav
+	Hrádek nad Nisou
+	Kraslice
+	Nový Bydžov
+	Světlá nad Sázavou
+	Kaplice
+	Dobruška
+	Slavičín
+	Tanvald
+	Petřvald
+	Nýřany
+	Rychvald
+	Staré Město
+	Kravaře
+	Mimoň
+	Benátky nad Jizerou
+	Blatná
+	Letovice
+	Dubňany
+	Český Brod
+	Veselí nad Lužnicí
+	Vodňany
+	Hronov
+	Železný Brod
+	Kojetín
+	Vratimov
+	Přeštice
+	Hořovice
+	Týniště nad Orlicí
+	Letohrad
+	Bučovice
+	Vítkov
+	Šlapanice
+	Holice
+	Kostelec nad Orlicí
+	Vrbno pod Pradědem
+	Lomnice nad Popelkou
+	Žamberk
+	Podbořany
+	Moravský Krumlov
+	Ledeč nad Sázavou
+	Brumov-Bylnice
+	Fulnek
+	Telč
+	Chrastava
+	Třešť
+	Horní Slavkov
+	Úpice
+	Strážnice
+	Bechyně
+	Hustopeče
+	Slavkov u Brna
+	Jablunkov
+	Roztoky
+	Jilemnice
+	Horažďovice
+	Šluknov
+	Dobřany
+	Luhačovice
+	Třebechovice pod Orebem
+	Šenov
+	Česká Kamenice
+	Stochov
+	Planá
+	Česká Skalice
+	Habartov
+	Zubří
+	Skuteč
+	Králův Dvůr
+	Rosice
+	Náměšť nad Oslavou
+	Jílové
+	Chropyně
+	Františkovy Lázně
+	Chlumec nad Cidlinou
+	Pacov
+	Týnec nad Sázavou
+	Valašské Klobouky
+	Kynšperk nad Ohří
+	Kunovice
+	Nýrsko
+	Hradec nad Moravicí
+	Nové Strašecí
+	Doksy
+	Bystřice
+	Osek
+
+
+#UNITS Nation2
+	50,	010,	Osadníci
+	60,	102,	Sekerník
+	87,	132,	Železný pán
+
+#UNITS StdUnits
+	23,	040,	Milice
+	30,	103,	Husita
+	75,	133,	Husitský Hejtman
+	47,	104,	Legionář

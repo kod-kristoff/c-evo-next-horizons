@@ -1,0 +1,961 @@
+#GAME %d. Buch
+#MAP Karte %d
+#BC %d v.Chr.
+#AD %d n.Chr.
+#SHARE %d/%d
+#SHORTNAME #N
+#OWNED %s - #N
+#GENCITY %d - #N
+#GENMODEL %d - #N
+#TILESIZE %dx%d
+
+'City Screen Text
+#HAPPINESS Zufriedenheit
+#CONTROL Staatsbeamte
+#FAITH Vertrauen
+#UNREST Unruhen
+#HAPPINESSDEMAND Bürger
+#HAPPINESSPLUS Überschuß
+#STORAGE Vorrat
+#FOOD Landwirtschaft
+#DEMAND Bedarf
+#SURPLUS Überschuß
+#LACK Mangel
+#MATERIAL Produktion
+#PROD Material
+#POLL Verschmutzung
+#SUPPORT Einheiten
+#PROFIT Erlös
+#TRADE Handel
+#CORR Korruption
+#SCIENCE Forschung
+#TAX Steuern
+#LUX Luxus
+#DUMP Abfall
+#SUPUNITS versorgte Einheiten
+
+'Class Screen Text
+#UNITOWNER (#N)
+#UNITSPEED Tempo
+#UNITSTRENGTH Kampfwert
+#UNITTRANSPORT Fracht
+#UNITCOST Kosten
+#UNITBUILT Hergestellt
+#UNITINTRO Entwickelt
+#UNITADOPT Erhalten
+#UNITLOST Verloren
+#UNITDESTROYED Zerstört
+#UNITAVAILABLE Verfügbar
+#UNITINPROD In Produktion
+#UNITKNOWN Bekannt
+#UNITSPECIAL Besondere Einheit
+
+'Diplomacy Screen Text
+#FRSTATGOV Government: %s
+#FRSTATPOP Bevölkerung: %d M
+#FRSTATTER Landfläche: %d Mkm²
+#FRSTATTECH Technologie: %d%%
+#FRSTATEXP Erkundung: %d%%
+#FRLASTCONTACT Letzter Kontakt
+#FRNOCONTACT (Noch keinen Kontakt)
+#FRNOVISIT Nation nicht besucht
+#FROLDCIVILREP (veralteter Zivilbericht aus %s)
+#FRNOCIVILREP (Kein Zivilbericht verfügbar)
+#FROURATT Unsere Haltung: %s
+#FREXTINCT (Erloschen)
+#FRTREATY Verhältnis:
+#FRAND ,
+#FRCREDIBILITY (%d%% Glaubwürdigkeit)
+#FRTREASURY Staatskasse: %d%%c
+#FRRELATIONS Auslandsbeziehungen:
+#FRMILREP Militärbericht
+
+'Other Dialog Text
+#PRESENT anwesende Einheiten
+#SHOWSTRENGTH Stärke: %d/%d
+#RIVER Fluss
+#INITUNIT Militärische Forschung
+#TECHFOCUS mit Endziel: %s
+#NEXUS Verknüpfung
+#SCIENCEREPORT_EXTINCT %s (erloschen)
+#MODELDRAFT Neue Einheit (%s)
+#TAXRATE Steuer
+#MONEYGAINPOS +%d%%c
+#MONEYGAINNEG %d%%c
+#TECHGAIN +%d%%r
+#TECHWAIT %s (%d Runden)
+#COSTDIFF1 Leichte Stufe: -25%
+#COSTDIFF2 Mitteleres Stufe: ±0%
+#COSTDIFF3 Schwere Stufe: +25%
+#NATEXISTS (%s)
+#CONSCRIPTS %s (Wehrpflichtige)
+#WONDEROF %s von %s
+#WONDEROWNER (#N)
+#EXPIRED (überholt)
+#DESTROYED (zerstört)
+#NOWONDER Bisher noch keine Weltwunder errichtet
+#BUILDORDER Bauplan für
+#BUILDREST Nicht zugeordnet:
+#ENHANCE %s: %s AP
+#SHIPCOMP Bauteile
+#SHIPPOW Antriebe
+#SHIPHAB Wohnmodule
+#SEARCH Suche
+#RANMAP Zufallskarte
+#TWOTERRAINS %s / %s
+#MPMAP Mehrspielermodus
+#NOGAMES Noch keine Bücher
+#AIT_ROUND Runde %d,
+
+'Dialog Titles
+#TITLE_TRIBE Meine Nation:
+#TITLE_GOV Neue Regierungsform
+#TITLE_TECHSELECT Nächstes Forschungsziel
+#TITLE_FARTECH Forschungsfocus festlegen
+#TITLE_CITIES #b Städte
+#TITLE_EVENTS Rundenbericht %s
+#TITLE_MODELS #b Einheiten
+#TITLE_DIAGRAMS Statistiken
+#TITLE_SHIPS Raumschiff
+#TITLE_SHIP Das #b Raumschiff
+#TITLE_EMODELS Fremde Einheiten
+#TITLE_EDEFENSE Stadtverteidigung
+#TITLE_RATES Wirtschaft
+#TITLE_DRAFT Neue Einheitenklasse
+#TITLE_WONDERS Weltwunder
+#TITLE_ENHANCE Landschaftsbau
+#TITLE_CITYTYPES Städtebau
+#TITLE_PROJECT Neuer Bauauftrag
+#TITLE_CITYNAME Name der Stadt
+#TITLE_MODELNAME Name der Einheitenklasse
+#TITLE_ERROR FEHLER
+#TITLE_SCIENCE Forschungsbericht
+#TITLE_OFFERDELIVER Angebot hinzu:
+#TITLE_OFFERCOST Forderung hinzu:
+#TITLE_NUMBER Anzahl:
+#TITLE_AMOUNT Betrag:
+#TITLE_CHOOSETECH Einen Fortschritt wählen:
+#TITLE_CHOOSEMODEL Eine Einheitenklasse wählen:
+#TITLE_CHOOSESHIPPART Ein Schiffsteil wählen:
+#TITLE_CHOOSECITY Eine Stadt wählen:
+#TITLE_BOOKNAME Neuer Name des Buches:
+#TITLE_MAPNAME Neuer Name der Karte:
+#TITLE_NATION #N
+#TITLE_SPYMISSION Verdeckte Operation
+#TITLE_SUICIDE Himmelfahrtskommando
+
+'Message Text
+#NOALTAI Es sind keine weiteren AIs installiert.\Alternative AI-Module können von der C-evo Webseite heruntergeladen oder selbst entwickelt werden.
+#REVOLUTION Das Volk wird sich gegen seine jetzige Regierung erheben. Soll #N für einige Runden der Anarchie überlassen werden, um eine neue Regierungsform einzuführen, sobald wieder geordnete Verhältnisse einkehren?
+#AUTOREVOLUTION Uns eröffnet sich eine neue Regierungsform:\%s\\Um zur neuen Regierungsform zu wechseln, muß die derzeitige Regierung gestürzt und das Land für einige Runden der Anarchie überlassen werden.\Soll eine Revolution angezettelt werden?
+#NOALTGOVS Mit einer Revolution werden wir in der Lage sein, unsere Regierungsform zu wechseln. Wir kennen aber noch keine andere Regierungsform als den Despotismus.
+#AGE0 GEBURT EINER ZIVILISATION\= %s =\\Wir befinden uns in einer Zeit, die man später als die ausgehende Steinzeit bezeichnen wird.\Seit Menschengedenken sind unsere Vorfahren auf der Suche nach Nahrung durch die Lande gestreift.\Diese Lebensweise werden wir nun aufgeben, um in diesen fruchtbaren Ebenen Landwirtschaft zu betreiben. Wir errichten eine dauerhafte Siedlung, genannt '%s'.
+#AGE1 DIE ENTDECKUNG DER WISSENSCHAFTEN\= %s =\\Jahrhunderte liegen hinter uns, in denen unser Wissen über die Welt von den Mächtigen diktiert und kontrolliert wurde, um ihre Macht zu sichern. Das ist Geschichte. Die religiös geprägte Naturphilosophie hat ausgedient. Sie weicht Wissenschaften, die von empirischem und rationalem Denken geleitet werden.\Wir verlassen das Mittelalter.
+#AGE2 WOHLSTAND FÜR DAS VOLK\= %s =\\Mit dem breiten Einzug der Massenproduktion ist Wohlstand erstmals nicht mehr das Privileg einer Minderheit.\Aber die sprunghafte Verbesserung des Lebensstandards der Bevölkerung bleibt nicht die einzige Folge.\Der Massenmarkt befördert neue Technologien, die milliardenschwere Investitionen erfordern und vorher undenkbar gewesen wären.
+#AGE3 DIE GROSSE HERAUSFORDERUNG\= %s =\\Was als ein Traum Generationen von Menschen faszinierte, ist plötzlich auch in der Realität greifbar geworden: Wir verfügen heute über die notwendige Technologie, um die Besiedlung fremder Sonnensysteme zu starten. Allerdings, so merken unsere Experten an, werden dafür Rohstoffe benötigt, die nur an wenigen Lagerstätten weltweit in ausreichender Menge abgebaut werden können.
+#ENDTURN Es warten keine Einheiten mehr auf Kommandos.\Zum Fortfahren die Runde beenden.
+#CREDUP Unsere Glaubwürdigkeit ist gestiegen auf "%s".
+#CREDDOWN Unsere Glaubwürdigkeit ist gefallen auf "%s".
+#FOREIGNCITY letzte bekannte Stadtverwaltung durch:\#N\(Keine Informationen mehr seit %s)
+#EXTINCTCITY letzte bekannte Stadtverwaltung durch:\Erloschen\(Keine Informationen mehr seit %s)
+#CAPTURE #N hat die Stadt %s eingenommen!
+#BOMBARD #N hat die ungeschützte Stadt %s bombardiert!
+#EXPEL Unsere Einheiten wurden vom Territorium der #S ausgewiesen.
+#DISPOSE %s abreißen und 2/3 der %%p\\der aktuellen Produktion zuführen?
+#SPDESTRUCTQUERY \(Anmerkung: Wir verlieren alle Bauteile des Raumschiffs, falls wir den Weltraumbahnhof demontieren!) 
+#SELL %s\\Dieses Bauwerk verkaufen?
+#LOSEMAT Ein Wechsel in einen anderen Projekttyp startet ein neues Projekt. Die %d%%p werden in %d%%c umgewandelt. Weiter?
+#LOSEMAT3 Dieser Projektwechsel führt zu einen Materialverlust von 1/3 der angesammelten Projektmaterialien. Weiter?
+#DOUBLESTATEIMP %s\\Dieses Nationale Projekt existiert bereits in einer Stadt von %s. Soll es in dieser Stadt erneut errichtet werden, wobei das alte Gebäude verkauft wird, wenn das Neue fertiggestellt ist?
+#READY Das Projekt wird bereits in der nächsten Runde fertig sein.
+#NOMONEY Wir haben nicht genug Geld in der Staatskasse, um dieses Projekt in der nächsten Runde fertigzustellen\(%d%%c benötigt, %d%%c verfügbar).
+#BUY Sollen wir %d%%c zuschießen, um dieses Projekt bis zur nächsten Runde fertigzustellen?
+#EMIGRATE Soll die Auswanderung verzögert werden, bis die Stadt genug Einwohner hat, um weiter bestehen zu können?
+#ADDTOMAXSIZE Diese Stadt hat ihre aktuelle max. Größe erreicht.
+#CITYMANAGEOFF Soll das automatische Management der Bürger abgeschalten werden?
+#GLIDERLOST Unser Gleitsegler ist im Meer verschollen.
+#PLANELOST Unser Flugzeug hatte keinen Treibstoff mehr.
+#DAMAGED_UTILIZE Die Verwendung einer beschädigten Einheit hat nur einen reduzierten Nutzen. Fortfahren?
+#NOBB Wir kennen Brückenbau noch nicht.
+#NOCITY Dieses unfruchtbare Gelände kann nicht bewässert werden und es ist deshalb ungeeignet, sich hier nieder zu lassen.
+#NOCAPTURER Diese Einheit kann keine Städte einnehmen.
+#NOBOMBARDER Bombardieren mit dieser Einheit nicht möglich.
+#ZOC Diese Einheit wird durch einen feindlichen Kontrollbereich aufgehalten.
+#FASTATTACK Diese Einheit ist erschöpft. Angriff mit %d%% durchführen?
+#NOTIMELOADGROUND Diese Einheit braucht %s AP für das Verladen oder Entladen.
+#NOTIMELOADAIR Flugzeuge brauchen 100 AP für das Verladen oder Entladen.
+#NOTIMEBOMBARD Das Bombardieren einer Stadt erfordert 100 AP.
+#NOTIMEEXPEL Einen Spion zu entlarven erfordert 100 AP.
+#NOROAD Diese Einheit kann sich nur auf Straßen und auf Schienen bewegen.
+#NONAV Dieses Schiff hat keine Navigationsausrüstung.
+#NOTRANSPORT Dieses Schiff kann keine Einheiten transportieren.
+#FULLTRANSPORT Dieser Transporter ist schon voll beladen.
+#LOWFUEL Das Flugzeug hat nur noch wenig Treibstoff. Sofern es weiterfliegt, wird es weder zu einer Stadt noch einer Militärbasis zurückkehren können. Fortfahren?
+#LOWFUEL_GLIDER Diese Einheit muss sich am Ende des Zuges auf festen Boden befinden. Wenn nicht, geht es verloren. Fortfahren?
+#UNREST_FOREIGN %s\\Dies ist das Hoheitsgebiet der #S. Das Betreten des Hoheitsgebietes wird die Unzufriedenheit in der Heimatstadt dieser Einheit erhöhen. Fortfahren?
+#UNREST_NOTOWN %s\\Der Abzug dieser Einheit aus #N wird die Unzufriedenheit in der Heimatstadt dieser Einheit erhöhen. Fortfahren?
+#NOATTACKER Dies ist eine zivile Einheit. Sie kann nicht angreifen.
+#ATTACKSUB Feindliches U-Boot konnte nicht geortet werden.
+#ATTACKSTEALTH Feindliches Stealth-Flugzeug konnte nicht geortet werden.
+#PEACE_NOATTACK Wir haben einen Friedensvertrag mit #N.
+#PEACE_NOMOVE Der Friedensvertrag mit #N verbietet uns, in ihr Hoheitsgebiet einzudringen.
+#PEACE_NOWORK Dies ist das Hoheitsgebiet der #S!\Wir sind an den Friedesvertrag gebunden.
+#NOFOREIGNINFO Wir haben keine neuen Informationen erhalten.
+#FOREIGNINFO Die Mission brachte neue Erkenntnisse über:
+#DOSSIER_PREPARED Ein Zivilbericht ist jetzt verfügbar einschließlich der Diagramme von #N und deren aktueller Forschungsstand.
+#VIOLATION Wir haben Truppen im Gebiet der #S und verletzen dadurch den Friedensvertrag. #N gibt uns Zeit bis %s, um sie zurückzuziehen.
+#EVIOLATION #N entschuldigt sich für die Verletzung des Friedensvertrages. Die Truppen müssen sich bis %s zurückziehen.
+#WITHDRAW Unsere Truppen wurden gezwungen, sich aus dem Gebiet der #S zurückzuziehen.
+#WONDERBUILT Die #S haben ein\Weltwunder fertiggestellt:\%s.
+#WONDERBUILTEXP Eine andere Nation hat ein\Weltwunder fertiggestellt:\%s\\Dies ist ein überholtes Bauwerk, das heute veraltet ist.
+#WONDERBUILTOWN Wir haben ein\Weltwunder fertiggestellt:\%s.
+#WONDERCAPT Die #S haben ein\Weltwunder erobert:\%s.
+#WONDERCAPTOWN Wir haben ein\Weltwunder erobert:\%s.
+#WONDEREXP Ein Weltwunder hat seine\Wirkung verloren:\%s.
+#WONDERDEST Ein Weltwunder wurde\zerstört:\%s.
+#COLDWAR Die neu entwickelte Atombombe verändert das Zusammenleben der Völker grundlegend. Verfeindete Machtböcke steigern sich in der gegenseitigen Androhung von Nuklearschlägen. Die diplomatischen Fronten verhärten, Kooperation ist ausgeschlossen, Verhandlungen zwecklos. Der kalte Krieg hat begonnen.
+#COLDWAREND Die Beziehungen der Völker verbessern sich wieder. Es können wieder Verhandlungen geführt werden. Der kalte Krieg ist vorüber.
+#SHIPBUILT Die #S haben ein Bauteil ihres Raumschiffes fertiggestellt.
+#SHIPBITRADE1 #N und
+#SHIPBITRADE2 #N tauschen ein Raumschiffteil aus.
+#SHIPUNITRADE1 #N erhält
+#SHIPUNITRADE2 Raumschiffteile von #N.
+#SHIPCAPTURE1 #N übernimmt die Kontrolle vom
+#SHIPCAPTURE2 #M Raumschiff!
+#SHIPDESTROYED #N hat die Kontrolle über das Raumschiff verloren.
+#LOWFUNDS Vorsicht!\Die Staatskassen sind leer. Wenn wir nichts unternehmen, werden wir früher oder später städtische Einrichtungen verkaufen müssen! Trotzdem weitermachen wie bisher?
+#DISORDER Achtung!\In der Stadt %s drohen zivile Unruhen. Einfach weitermachen wie bisher?
+#DISORDER_UNREST Achtung!\In der Stadt %s drohten zivile Unruhen wegen starker Unzufriedenheit.\Einfach weitermachen wie bisher?
+#FAMINE Vorsicht!\Die Stadt %s steht kurz vor einer Hungersnot.\Einfach weitermachen wie bisher?
+#FAMINE_TILES Vorsicht!\Die Stadt %s steht kurz vor einer Hungersnot. Es sind zu zuwenig fruchtbare Landschaften verfügbar.\Einfach weitermachen wie bisher?
+#FAMINE_UNREST Vorsicht!\Die Stadt %s steht kurz vor einer Hungersnot. Teile der Bevölkerung verlangen einen verstärkten Polizeieinsatz zur Bekämpfung der Unruhen. Die Schwächung der Wirtschaft hat ein solches Ausmaß erreicht, dass nicht mehr genug Nahrung produziert wird.\\Einfach weitermachen wie bisher?
+#LOWSUPPORT Achtung!\Die Stadt %s produziert nicht genug Material um alle ihre Einheiten unterstützen zu können. Trotzdem weitermachen wie bisher? 
+#LOWSUPPORT_TILES Achtung!\Die Stadt %s produziert nicht genug Material um alle ihre Einheiten unterstützen zu können. Es sind zu zuwenig produktive Landschaften verfügbar.\Einfach weitermachen wie bisher?
+#LOWSUPPORT_UNREST Achtung!\Die Stadt %s produziert nicht genug Material um alle ihre Einheiten unterstützen zu können. Teile der Bevölkerung verlangen einen verstärkten Polizeieinsatz zur Bekämpfung der Unruhen. Die Schwächung der Wirtschaft hat ein solches Ausmaß erreicht, dass nicht mehr genug Material produziert wird.\\Einfach weitermachen wie bisher?
+#RESIGN Dieses Buch wird geschlossen.\Soll der Spielstand gespeichert werden?
+#ENDTOUR Dieses Buch speichern und im Beobachter-Modus öffnen?
+#MODELAVAILABLE Bereit zur Produktion.
+#RESEARCH_GENERAL Wir haben einen neuen\Fortschritt entdeckt:\%s!
+#GRLIB_GENERAL Von der Großen Bibliothek haben wir einen neuen\Fortschritt erhalten:\%s.
+#ORACLEINCOME Einkommen: %d%%c
+#NOSELLAGAIN %s\\Eine Stadt kann nicht mehr als ein Bauwerk pro Runde verkaufen oder umbauen.
+#OUTOFCONTROL %s\\Diese Stadt wird noch nicht vollständig kontrolliert.
+#NOCHANGEINANARCHY Es herrscht Anarchie. Alle Dienste der Stadt wurden eingestellt.
+#EXTINCT Das Reich der #S ist untergegangen. Nur Legenden werden an ihre großartige Kultur erinnern.
+#EXTINCTALL \\Wir sind jetzt die einzige verbliebene Nation.
+#GAMEOVER NIEDERLAGE!\#N hat alle seine Städte und Einheiten verloren.\\DAS SPIEL IST AUS!
+#TIMEUP DIE ZEIT IST UM.\Obwohl #N es zu beträchtlichem Wohlstand gebracht hat, obwohl sie eine gute Position in den Beziehungen der Nationen erreicht und großes Wissen erworben haben, schafften sie es nicht, die ultimative Herausforderung der Zivilisation zu meistern.\\SPIEL VORBEI!
+#TIMEUPSUPER DIE ZEIT IST UM.\Keine Nation konnte ein Raumschiff fertigstellen.\\DAS SPIEL IST VORBEI!
+#SPACESHIP1 Die #S haben ihr Raumschiff abgeschossen.\
+#SPACESHIP2 Die Vollendung dieses gigantischen Projectes hat ihre ultimative Überlegenheit in jeden Aspekt von Civilisation bewiesen.\\GAME OVER.
+#MYSPACESHIP ES IST ERREICHT.\Nach Jahrhunderten der Armut und der Krisen, Jahrhunderten der Bedrohungen und blutiger militärischer Konflikte, Jahrhunderten des Umbruchs und unaufhaltsamen Fortschritts, haben wir endlich den ultimativen Traum der Menschheit wahrgemacht.\Unser Schiff ist gestartet,\um den weiten Raum des Weltalls für die Menschen zu erschließen.\\GEWONNEN.
+#SHAREDWIN (Sieg wird geteilt mit: %s)
+#SHAREDWIN_CONCAT %s, %s
+#NOAI Es ist keine KI installiert!
+#FILENOTFOUND Die Datei "%s" wurde nicht gefunden. 
+#AIEXCEPTION Unerwarteter Fehler im KI module %s!
+#LOADERR Dies ist kein Buch der aktuellen C-evo Version.
+#NOFILENAME Der Name des Buches muss ein kompatibler Dateiname sein. Das Zeichen '%s' ist nicht möglich.
+#DLLERROR C-evo konnte %s nicht laden.
+#AIERROR KI-Modul %s nicht gefunden.
+#MISSDEACT Spieler %d beendet ohne zulässige Deaktivierung.
+#CLIENTERROR Client von %s konnte nicht gefunden werden.
+#LOADERROR Fehler beim Öffnen dieses Buches.\Bitte hilf mit, dieses Problem zu beheben, indem Du das fehlerhafte Buch an <steffen@c-evo.org> sendest. Du findest es im Unterverzeichnis 'Saved'.
+#NOSTARTPOS In dieser Karte wurde keine Startposition festgelegt. Sie können diese nicht verwenden.
+#TOOFEWTRIBES Die Anzahl der Spieler kann nicht die Anzahl der installierten Völker übersteigen.\(Dieses Problem tritt meist auf, wenn der Unterordner 'tribes' versehentlich entfernt, verschoben oder umbenannt wurde.)
+#DELETEQUERY Das Buch wird gelöscht! Fortfahren?
+#MAPDELETEQUERY Die Karte wird gelöscht! Fortfahren?
+#TURN #N\%s
+#SUPERTURN Beobachter\%s
+#FRNEWNATION Wir haben Kontakt zu #N aufgenommen.
+#FRCONTACT Ein Gesandter der #S will uns sprechen. Sollen wir ihn empfangen?
+#FRREJECTED #N hat unseren Gesandten abgewiesen.
+#FRCANCELQUERY_CEASEFIRE Sollen wir unser Abkommen mit ihnen brechen?
+#FRCANCELQUERY_PEACE Sollen wir ihnen den Krieg erklären?
+#FRCANCELQUERY_FRIENDLY Sollen wir den Freundschaftsvertrag beenden?
+#FRCANCELQUERY_ALLIANCE Sollen wir das Bündnis mit ihnen aufheben?
+#FRCANCELBYREJECT_PEACE #A Abgesandter:\Unsere Geduld ist am Ende.\Bereitet euch auf eine Krieg vor!
+#FRCANCELBYREJECT_FRIENDLY #A Abgesandter:\Das ist das Ende unserer Freundschaft!
+#FRCANCELBYREJECT_ALLIANCE #A Abgesandter:\Wir können das Bündnis mit einer Nation nicht aufrechterhalten, die nicht gewillt ist mit uns zu kooperieren. Wir haben keine andere Wahl als unseren Vertrag aufzuheben.
+#FRMYALLIANCE1 #N hat einem unserer Verbündeten den Krieg erklärt,
+#FRMYALLIANCE2 #N. Uns bleibt es freigestellt das Reich der #S gegen diese Aggression zu unterstützen.
+#FRENEMYALLIANCE Die #S haben unsere gemeinsamen Verbündeten auf ihre Seite gezogen. Alle Abkommen mit ihnen sind aufgelöst.
+#FRANARCHY #N befindet sich in Anarchie. Unser Gesandter fand keine Gesprächspartner.
+#FRMYANARCHY Bei uns herrscht Anarchie. Wir brauchen eine handlungsfähige Verwaltung, um Gesandte zu entsenden.
+#FRCOLDWAR Wir befinden uns im Kalten Krieg. Verhandlungen mit anderen Nationen sind nicht möglich.
+#MAX2WANTS Mehr als zwei Forderungen können in einem Antrag nicht zusammengefasst werden.
+#MAX2OFFERS Mehr als zwei Angebote können in einem Antrag nicht zusammengefasst werden.
+#NOOFFER Dieser Antrag ist ungültig.
+#CANCELTREATYRUSH Die Aufhebung von mehr als einem Abkommen mit der gleichen Nation innerhalb von 3 Runden, ist nicht erlaubt.
+#NOSPACEPORT Da wir keinen Weltraumbahnhof besitzen, würden wir alle Teile für das Raumschiff verlieren. Trotzdem fortfahren?  
+#SUICIDE Soll diese Einheit\in den sicheren Tod geschickt werden?
+#RATES Wie sollen wir\unsere Wirtschaft ausrichten?
+#NORATES Die Freiheitsstatue\ist aktiv.
+
+'Diplomatic Statements, do not use '\'!
+#FRSTART_NOTREATY #N macht Euch folgenden Vorschlag:
+#FRSTART_PEACE Seid gegrüßt! #N möchte ein paar Dinge mit Euch besprechen.
+#FRCANCELTREATY_PEACE Wir erklären Ihnen den Krieg.
+#FRCANCELTREATY_FRIENDLY Unsere Freundschaft gehört der Vergangenheit an.
+#FRCANCELTREATY_ALLIANCE Wir sehen in unserem Bündnis keinen Sinn mehr. Betrachtet dieses Abkommen als gegenstandslos.
+#FRNOTICE Denkt nicht, wir würden Eure Launen noch sehr viel länger hinnehmen!
+#FRBREAK Diese Debatte ist Zeitverschwendung. Vielleicht reden wir noch einmal darüber, wenn Ihr Eure Position überdacht habt ...
+#FROFFER Wir bieten Euch %s im Tausch gegen %s.
+#FRPRESENT Wir möchten Euch %s schenken.
+#FRDEMAND_STRONG Wenn Ihr uns nicht %s gebt, werdet Ihr die Konsequenzen tragen müssen!
+#FRDONE Gibt es noch mehr, über das Ihr zu sprechen wünscht?
+#FRCEASEFIRE Wir bitten um einen Waffenstillstand.
+#FRPEACE Wir haben einen Friedensvertrag vorbereitet, um die freundschaftlichen Beziehungen zwischen unseren Völkern zu bestätigen und unsere gemeinsamen Grenzen festzusetzen. Werdet Ihr ihn unterzeichnen?
+#FRFRIENDLY Kultur und Technologie der #S verlangen uns großen Respekt ab. Seid Ihr damit einverstanden, freundschaftlichen Kontakt zu pflegen, um mehr übereinander zu lernen?
+#FRALLIANCE Wir sehen vielversprechende Möglichkeiten zur Zusammenarbeit unserer beiden Völker. Werdet Ihr ein Bündnis mit uns eingehen, um eine gemeinsame Front gegenüber unseren Gegnern zu bilden?
+#FRACCEPTCEASEFIRE Eurem Wunsch wird entsprochen. Wir werden unser Vorgehen für die nächste Zeit unterbrechen.
+#FRACCEPTTREATY Wir akzeptieren. Auf dass diese Vereinbarung eine neue Ära in den Beziehungen unserer Völker einleite.
+#FRNOTACCEPTTREATY Ihr seid noch nicht bereit, Abkommen mit #N zu schließen.
+#FRENDTREATY_PEACE Auflösung des Friedensvertrages.
+#FRENDTREATY_FRIENDLY Beendigung des Freundschaftsvertrages.
+#FRENDTREATY_ALLIANCE Aulösung des Bündnis
+#FRACCEPTOFFER Das scheint ein angemessenes Angebot zu sein, wir nehmen an.
+#FRACCEPTPRESENT #N dankt für dieses großzügige Geschenk.
+#FRACCEPTDEMAND_STRONG Um die guten Beziehungen unserer Völker zu schützen, haben wir beschlossen, für dieses Mal Eure Forderungen zu erfüllen.
+#FRNOTACCEPTOFFER Dieser Vorschlag scheint nicht vorteilhaft für uns.
+#FRNOTACCEPTPRESENT #N braucht keine solche Geschenke.
+#FRNOTACCEPTDEMAND_STRONG Ihr verlangt zu viel.
+#FRDELCHOICE Wir interessieren uns für %s. Was können wir Euch dafür anbieten?
+#FRCOSTCHOICE Gibt es etwas, das Ihr uns für %s geben könntet?
+#FRBYE Zur Zeit nicht. Möge die Diskussion hier enden. Auf Wiedersehen.
+#PRICE_CHOOSE einen Preis der Wahl
+#PRICE_CIVIL den Zivilbericht über #N
+#PRICE_MIL den Militärbericht über #N
+#PRICE_MAP die Weltkarte der #S
+#PRICE_SHIPCOMP %d Raumschiffteile
+#PRICE_SHIPPOW %d Antriebsmodule
+#PRICE_SHIPHAB %d Wohnmodule
+#PRICE_TRIBUTE %d%%c jede Runde
+#PRICE_ALLTECH alle Fortschritte der #S
+#PRICE_ALLMODEL alle Einheitenentwürfe der #S
+#PRICE_CONCAT %s und %s
+#PRICECAT_ALLTECH Alle Fortschritte
+#PRICECAT_ALLMODEL Alle Einheitenentwürfe
+
+'Button Captions
+#BTN_OK OK
+#BTN_CANCEL Abbrechen
+#BTN_YES Ja
+#BTN_NO Nein
+#BTN_INFO Info
+
+'Button Tooltips
+#BTN_SELECT Auswählen
+#BTN_PAGE Nächste Seite
+#BTN_SUPPORT Unterstützung
+#BTN_IMPRS Bauwerke
+#BTN_CLASSES Einheiten
+#BTN_WONDERS Nationale Projekte und Weltwunder
+#BTN_BUY Kaufen
+#BTN_DELETE Löschen
+#BTN_RENAME Umbenennen
+#BTN_OBSOLETE überholt
+#BTN_NONOBSOLETE Produktion zulässig
+#BTN_ALLOWCONSCRIPTS Wehrpflicht zulässig
+#BTN_NOCONSCRIPTS Keine Wehrpflichtigen
+#BTN_ENDTURN Runde beenden
+#BTN_SKIP Keine fremden Züge
+#BTN_NOAUTOMOVE Unsere Bewegungen nicht fortsetzen
+#BTN_STOP Halt
+#BTN_NEGO Zurück zur Verhandlung
+#BTN_DIALOG Dialog
+#BTN_BREAK Verhandlung abbrechen
+#BTN_PASS Nichts anbieten
+#BTN_CNTREATY Vertrag beenden
+#BTN_ACCEPT Vorschlag annehmen
+#BTN_NOTICE Entscheidung zur Kenntnis genommen
+#BTN_REPLAY Wiederholung
+#BTN_RENGAME Buch umbenennen
+#BTN_DELGAME Buch löschen
+#BTN_RENMAP Karte umbenennen
+#BTN_DELMAP Karte löschen
+#BTN_CONTENTS Inhalt
+#BTN_BACK Zurück
+#BTN_SEARCH Suchen
+#BTN_WANTCEASEFIRE Waffenruhe bitten
+#BTN_OFFERCEASEFIRE Waffenruhe anbieten
+#BTN_WANTPEACE Friedensvertrag anfragen
+#BTN_OFFERPEACE Friedensvertrag unterbreiten
+#BTN_WANTENDPEACE Auflösung des Friedensvertrages fordern
+#BTN_OFFERENDPEACE Auflösung des Friedensvertrages vorschlagen
+#BTN_WANTFRIENDLY Nach Freundschaft fragen
+#BTN_OFFERFRIENDLY Freundschaft anbieten
+#BTN_WANTALLIANCE Bündnis anfragen
+#BTN_OFFERALLIANCE Bündnis anbieten
+#BTN_WANTENDALLIANCE Bündnis beenden
+#BTN_OFFERENDALLIANCE Bündnisbeendigung vorschlagen
+#BTN_NEGOEARLIER Früherer Teil
+#BTN_NEGOLATER Späterer Teil
+
+'Morphing Menu Entries
+#SUPER Beobachter
+#HUMAN Lokaler Spieler
+#AIT KI Wettkampf
+#RANDOMAI AI zufällig wählen
+#NOMOD (keine)
+#BTN_FOUND Stadt gründen
+#BTN_ADD Zur Stadt hinzufügen
+#BTN_SETHOME Hier versorgen
+#BTN_MOVEHOME Rückzug
+#BTN_BUILDROAD Straße bauen
+#BTN_BUILDBRIDGE Brücke bauen
+#BTN_BUILDRR Eisenbahn bauen
+#BTN_BUILDRRBRIDGE Eisenbahnbrücke bauen
+#BTN_CLEAR Wald roden
+#BTN_DRAIN Sumpf trockenlegen
+#BTN_UNDESERT Wüste bewässern
+#FARTECH Forschungsziel: %s...
+#NOFARTECH (Erinnern)
+#UTILIZE Anwenden
+#INTEGRATE Integrieren
+
+'Busy Messages
+#BUSY_START Welt wird erstellt ...
+#BUSY_MOD %s wird geladen ...
+#BUSY_MODLH Grafiken werden initialisiert ...
+#BUSY_INIT Spieler werden initialisiert ...
+#BUSY_LOAD Spiel wird geladen ...
+
+'Map Editor
+#MAP_START Startposition
+#MAP_PREFSTART Bevorzugte Startposition
+#MAP_RANDOM Karte löschen und durch eine automatisch erstellte Zufallskarte ersetzen?
+#MAP_CLOSE Der Kartograf wird beendet.\Soll die Karte gespeichert werden?
+
+#STARTCONTROLS
+Schließen
+Start
+Öffnen
+Neues Buch
+Bibliothek
+Weltgröße:
+Landmasse:
+Die Gegner
+Jahr:
+Schwierigkeitsgrad %s
+Spielende:
+Karten
+Kartograf
+Hilfe
+Schwierigkeitsgrad:
+fremde Nationen:
+Kontrolliert von:
+
+#AUTODIFF
+anfänger
+leicht
+normal
+schwer
+unmöglich
+
+#CONTROLS
+Befehl aufheben
+Beenden
+meine Wirtschaft ...
+Wirkungsbereich der Großen Mauer
+Leere Karte
+Weltwunder ...
+Spielanleitung
+Testfunktionen
+Einheitenbericht ...
+KI-Fenster ...
+Städtebau ...
+Zentrieren
+Gehe zu
+Einheitenbefehle
+Einheitenklasse
+Stützpunkt bauen
+Transformieren
+Verschmutzung beseitigen
+Plündern
+Festung bauen
+Diagramme ...
+Verschanzen
+Kanal bauen
+Verladen
+Warten
+Diese Runde warten
+Ortskodierungen einblenden
+Geländemodifikationen
+Einstellungen
+Alle fremden Züge anzeigen
+In eigenem Fenster öffnen
+Am Ende der Runde warten
+Nebel des Krieges
+Meldungen Stadtereignisse
+Stadtnamen anzeigen
+Grenzen einblenden
+Städtebericht ...
+Forschungsbericht ...
+Landschaftsbau
+Landschaftsbau ...
+Raumschiffe ...
+Makro-Management
+Bewässerung anlegen
+Farmland einrichten
+Aufforsten
+Bergwerk bauen
+Einheit bilden
+Raster
+KI Kartentest
+Fremde Einheiten ...
+Politische Karte
+Nur Angriffe und Eroberungen
+Keine fremden Züge anzeigen
+20 Runden weiter
+Nationen ...
+Manipulation
+Alle Fortschritte erhalten
+Projekte nach jeder Runde fertig
+Forschung nach jeder Runde fertig
+Städte wachsen jede Runde
+Karte aufdecken
+Nationen kennen sich
+Weiter bis Spielende
+Fremde Städte ...
+Rundenbericht in Liste
+Städtebericht einzeln
+Klarnamen für Städte
+Keine besonderen Ressourcen
+Wiederherstellen
+Entladen
+Zufallskarte
+Auflösen
+Verladen auf
+feindliche Bewegung
+langsam
+schnell
+sehr schnell
+langsam
+schnell
+Sound
+deaktiviert
+Standard Schema
+Alternatives Schema
+Scrolling
+langsam
+schnell
+deaktiviert
+Öffne C-evo Website
+START REVOLUTION!
+Verbündete Bewegung
+langsam
+schnell
+Keine Züge Verbündeter anzeigen
+Nur Angriffe und Eroberungen
+Nur Angriffe und Eroberungen
+Tile Size
+
+#ADVANCES
+Moderne Luftfahrt
+Amphibische Kriegführung
+Astronomie
+Atomtheorie
+Automobil
+Ballistik
+Bankwesen
+Brückenbau
+Bronzeverarbeitung
+Feierliche Bestattung
+Chemie
+Rittertum
+Verbundwerkstoffe
+Gesetzgebung
+Kombinierte Waffen
+Verbrennungsmotor
+Kommunismus
+Mikrocomputer
+Wehrpflicht
+Bauwesen
+Aktiengesellschaft
+Raumfahrt
+Währung
+Demokratie
+Ökonomie
+Elektrizität
+Elektronik
+Ingenieurwesen
+Umweltschutz
+Das Rad
+Sprengstoffe
+Fliegerei
+Spionage
+Schießpulver
+Reiterei
+Impulsantrieb
+Industrialisierung
+Intelligente Waffen
+Erfindung
+Eisenbearbeitung
+Der Laser
+Atomenergie
+Literatur
+Internet
+Magnetismus
+Kartografie
+Steinmetzkunst
+Massenproduktion
+Mathematik
+Medizin
+Metallurgie
+Miniaturisierung
+Mobile Kriegführung
+Monarchie
+Mystik
+Navigation
+Kernspaltung
+Philosophie
+Physik
+Kunststoffe
+Dichtkunst
+Keramik
+Das Radio
+Recycling
+Kühltechnik
+Monotheismus
+Republik
+Robotik
+Raketen
+Eisenbahn
+Kanalisation
+Wissenschaft
+Schrift
+Seefahrt
+Künstliche Biosphäre
+Stealth-Technologie
+Dampfmaschine
+Stahl
+Synthetische Nahrung
+Taktiken
+Theologie
+Schwerkraft
+Handel
+Besiedelung des Weltraums
+Universität
+Fortgeschrittene Raketen
+Ehrenkodex
+Alphabet
+Polytheismus
+Raffinieren
+Computertechnologie
+Nanotechnologie
+Panzertechnologie
+Künstliche Intelligenz
+
+#IMPROVEMENTS
+Die Pyramiden
+Der Tempel des Zeus
+Die Hängenden Gärten
+Der Koloss
+Der Große Leuchtturm
+Die Große Bibliothek
+Das Orakel
+Sun Tzu's Kriegsakademie
+Evolutionstheorie
+Magellan's Entdeckungsreise
+Michelangelo's Kapelle
+*
+Newton's Universität
+Bach's Kathedrale
+*
+Die Freiheitsstatue
+Der Eiffelturm
+Der Hoover-Damm
+Der Shinkansen-Express
+Das Manhattanprojekt
+Raumstation MIR
+*
+*
+*
+*
+*
+*
+*
+Handelswaren
+Kaserne
+Kornspeicher
+Tempel
+Marktplatz
+Bibliothek
+Gericht
+Stadtmauern
+Aquädukt
+Bank
+Kathedrale
+Universität
+Hafen
+Theater
+Fabrik
+Fertigungsanlage
+Recycling-Center
+Kohlekraftwerk
+Wasserkraftwerk
+Atomkraftwerk
+Bohrinsel
+Rathaus
+Kanalisation
+Supermarkt
+Autobahn
+Forschungslabor
+Raketenabwehr
+Küstenfestung
+Flughafen
+Werft
+Palast
+Große Mauer
+Großes Kolosseum
+Große Sternwarte
+Militärakademie
+Kommandobunker
+Algenfarmprojekt
+Aktienbörse
+Weltraumbahnhof
+Raumschiffbauteil
+Antriebsmodul
+Wohnmodul
+
+#FEATURES
+Bewaffung
+Panzerung
+Tempo
+Seefracht
+Trägerdeck
+Turbinen
+Bombardieren
+Treibstoff
+Luftfracht
+Navigation
+Radar
+U-Boot
+Ferngeschütz
+Alpin
+Versorgungsschiff
+Übergewicht
+Luftabwehr
+Aufklärer
+Dampfantrieb
+Atomantrieb
+Düsenantrieb
+Stealth
+Fanatisch
+Erstschlag
+Willenskraft
+Ausbildung
+Serienproduktion
+
+#TERRAIN
+Ozean
+Küste
+Weideland
+Wüste
+Steppe
+Tundra
+Arktis
+Sumpf
+Dschungel
+Wald
+Hügel
+Gebirge
+*
+Fisch
+Ebene
+Oase
+Weizen
+Gold
+Elfenbein
+Torf
+Früchte
+Wild
+Wein
+Eisen
+*
+Mangan
+*
+Erdöl
+Bauxit
+Erdgas
+*
+*
+Ebenholz
+Mineralwasser
+Kohle
+Diamanten
+Unheimliches Gelände
+Titan
+Uran
+Quecksilber
+
+#DOMAIN
+Heer
+Marine
+Luftwaffe
+
+#EXPERIENCE
+Rekrut
+Gedrillt
+Kampferprobt
+Veteran
+Elite
+
+#UNITSTATUS
+verschanzt
+Bomber bewaffnet
+unterwegs im Gebirge
+Wehrpflichtig
+zurückgezogen
+*
+*
+*
+beladen
+verursacht Unruhen
+bleib hier
+*
+unterwegs zum Ziel
+betreibt Landschaftsbau
+wiederherstellen
+
+#GOVERNMENT
+Anarchie
+Despotismus
+Monarchie
+Republik
+Fundamentalismus
+Kommunismus
+Demokratie
+Libertarismus
+
+#TREATY
+Kein Abkommen
+Waffenstillstand
+Friedensvertrag
+Freundschaftsvertrag
+Bündnisvertrag
+
+#HAVETREATY
+Kontakt mit #N
+Waffenstillstand mit #N
+Frieden mit #N
+Freundschaft mit #N
+Verbündet mit #N
+
+#ATTITUDE
+Feindlich
+Eisig
+Unkooperativ
+Neutral
+Aufgeschlossen
+Herzlich
+Begeistert
+
+#CREDIBILITY
+verlogen
+unberechenbar
+isolationistisch
+ehrenwert
+
+#CITYEVENTS
+Unruhen
+Produktion abgeschlossen
+Bevölkerungswachstum
+Bevölkerungsrückgang
+Einheit aufgelöst
+Bauwerk verkauft
+Sabotage
+max Bevölkerung erreicht
+Verschmutzung
+Stadt wird belagert
+Weltwunder schon gebaut
+Auswanderung verzögert
+Stadt gegründet
+Übernahme beendet
+Stadt erobert
+Stadttyp nicht mehr gültig
+
+#CITYTYPE
+Gewöhnliche Stadt
+Großstadt
+Finanzzentrum
+Industriezentrum
+
+#DIAGRAM
+Bevölkerung
+Landfläche
+Militärische Einheiten
+Technologie
+Erkundung
+Kultivierung
+
+#JOBRESULT
+*
+Straße
+Eisenbahn
+Wald roden
+Bewässerung
+Farmland
+aufforsten
+Bergwerk
+Kanal
+Transform
+Festung
+Verschmutzung beseitigen
+Militärstützpunkt
+plündern
+Stadt gründen
+Brücke
+Eisenbahnbrücke
+rein
+Ebene
+Abwasserkanal
+
+#ARMYLOST
+Die #b Armee wurde zerstört.
+Die #b Flotte wurde zerstört.
+Der #b Pulk wurde zerstört.
+
+#SPYMISSION
+Sabotageeinsatz
+Karte stehlen
+Informationen über Dritte
+Zivilbericht vorbereiten
+Militärbericht vorbereiten
+
+#WANT
+Staatsinformationen fordern
+fordern Militärinformationen fordern
+Weltkarte fordern
+*
+Fortschritt fordern
+Einheitenkonstruktion fordern
+Geld fordern
+Tribut fordern
+*
+*
+Teile des Weltraumschiffs fordern
+Sie sollen etwas anbieten
+
+#OFFER
+Staatsinformationen anbieten
+Militärinformationen anbieten
+Weltkarte anbieten
+*
+Fortschritt anbieten
+Einheitenkonstruktion anbieten
+Geld anbieten
+Tribut anbieten
+*
+*
+Teile des Weltraumschiffs anbieten
+Sie sollten sich etwas aussuchen
+
+#CITYMANAGETYPE
+manuelles Management
+maximale\Forschung
+beschleunigte\Forschung
+maximales\Wachstum
+beschleunigte\Produktion
+maximale\Produktion
