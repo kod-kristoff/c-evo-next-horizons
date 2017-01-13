@@ -1557,7 +1557,7 @@ begin
   Phrases2FallenBackToEnglish := false;
   if FileExists(DataDir + 'Localization' + DirectorySeparator + 'Language.txt') then
   begin
-    Phrases.loadfromfile(DataDir + 'Localization' + DirectorySeparator + ' + Language.txt');
+    Phrases.loadfromfile(DataDir + 'Localization' + DirectorySeparator + 'Language.txt');
     if FileExists(DataDir + 'Localization' + DirectorySeparator + 'Language2.txt') then
       Phrases2.loadfromfile(DataDir + 'Localization' + DirectorySeparator + 'Language2.txt')
     else
