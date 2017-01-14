@@ -187,7 +187,7 @@ end;
 procedure TPVScrollBar.UpdateScrollBar;
 begin
   ScrollBar.Min := si.nMin;
-  ScrollBar.Max := Max(si.nMax - si.nPage + 1, 0);
+  ScrollBar.Max := Max(si.nMax{$IFDEF LINUX} - si.nPage + 1{$ENDIF}, 0);
   ScrollBar.PageSize := si.nPage;
   ScrollBar.Position := si.nPos;
 end;

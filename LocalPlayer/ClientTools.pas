@@ -569,18 +569,17 @@ begin
         repeat
           Done := true;
           for cix := 0 to MyRO.nCity - 1 do
-            if CityNeedsOptimize[cix] then
-            begin
-              OptiType := MyCity[cix].Status shr 4 and $0F;
-              if OptiType <> 0 then
-              begin
+            if CityNeedsOptimize[cix] then begin
+              OptiType := (MyCity[cix].Status shr 4) and $0F;
+              if OptiType <> 0 then begin
                 Advice.ResourceWeights := OfferedResourceWeights[OptiType];
                 Server(sGetCityTileAdvice, me, cix, Advice);
                 if Advice.Tiles <> MyCity[cix].Tiles then
-                  if CheckOnly then
-                    assert(false)
-                  else
-                  begin
+                  if CheckOnly then begin
+                    // TODO: What is this assert for?
+                    // Need to optimize city tiles but CheckOnly true?
+                    //assert(false)
+                  end else begin
                     for fix := 1 to 26 do
                       if MyCity[cix].Tiles and not Advice.Tiles and
                         (1 shl fix) <> 0 then
