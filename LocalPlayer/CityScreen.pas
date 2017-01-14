@@ -287,6 +287,7 @@ begin
   Color0 := Colors.Canvas.Pixels[clkAge0 + Age, cliRoad];
   Color1 := Colors.Canvas.Pixels[clkCity, cli1];
   Color2 := Colors.Canvas.Pixels[clkAge0 + Age, cliHouse];
+  SmallCityMap.Canvas.FillRect(0, 0, SmallCityMap.Width, SmallCityMap.Height);
   bitblt(SmallCityMap.Canvas.Handle, 0, 0, 83, hSmallMap,
     SmallCityMapTemplate.Canvas.Handle, 83 * SizeClass, 0, SRCCOPY);
   if IsPort then

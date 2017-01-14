@@ -32,6 +32,7 @@ type
     procedure PaintBox1MouseMove(Sender: TObject; Shift: TShiftState;
       x, y: integer);
     procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
     procedure PaintBox1MouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; x, y: integer);
     procedure FormPaint(Sender: TObject);
@@ -42,7 +43,6 @@ type
     procedure ToggleBtnClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure PlayerClick(Sender: TObject);
-    procedure FormDestroy(Sender: TObject);
   private
     Kind: TListKind;
     LineDistance, MaxLines, cixProject, pView, Sel, DispLines, Layer, nColumn,
