@@ -3362,14 +3362,24 @@ end; { <<<client }
 { *** main part *** }
 
 procedure TMainScreen.CreateParams(var p: TCreateParams);
-var
-  DefaultOptionChecked: integer;
-  Reg: TRegistry;
-  doinit: boolean;
 begin
   inherited;
 
-  // define which menu settings to save
+  if FullScreen then
+  begin
+    p.Style := $87000000;
+    BorderStyle := bsNone;
+    BorderIcons := [];
+  end;
+end;
+
+procedure TMainScreen.FormCreate(Sender: TObject);
+var
+  DefaultOptionChecked: integer;
+  Reg: TRegistry;
+  i, j: integer;
+begin
+   // define which menu settings to save
   SaveOption[0] := mAlEffectiveMovesOnly.Tag;
   SaveOption[1] := mEnMoves.Tag;
   SaveOption[2] := mEnAttacks.Tag;
@@ -3396,39 +3406,27 @@ begin
     1 shl 18 + 1 shl 19;
 
   Reg := TRegistry.Create;
-  doinit := true;
-  if Reg.KeyExists('SOFTWARE\cevo\RegVer9') then
-    with Reg do
-    begin
-      doinit := false;
-      OpenKey('SOFTWARE\cevo\RegVer9', false);
-      if ValueExists('TileWidth') then
-        xxt := ReadInteger('TileWidth') div 2
-      else
-        xxt := 48;
-      if ValueExists('TileHeight') then
-        yyt := ReadInteger('TileHeight') div 2
-      else
-        yyt := 24;
-      if ValueExists('OptionChecked') then
-        OptionChecked := ReadInteger('OptionChecked')
-      else
-        OptionChecked := DefaultOptionChecked;
-      if ValueExists('MapOptionChecked') then
-        MapOptionChecked := ReadInteger('MapOptionChecked')
-      else
-        MapOptionChecked := 1 shl moCityNames;
-      if ValueExists('CityMapMask') then
-        CityRepMask := Cardinal(ReadInteger('CityReport'))
-      else
-        CityRepMask := Cardinal(not chPopIncrease and not chNoGrowthWarning and
+  with Reg do
+  try
+    OpenKey('SOFTWARE\cevo\RegVer9', false);
+    if ValueExists('TileWidth') then xxt := ReadInteger('TileWidth') div 2
+      else xxt := 48;
+    if ValueExists('TileHeight') then yyt := ReadInteger('TileHeight') div 2
+      else yyt := 24;
+    if ValueExists('OptionChecked') then OptionChecked := ReadInteger('OptionChecked')
+      else OptionChecked := DefaultOptionChecked;
+    if ValueExists('MapOptionChecked') then MapOptionChecked := ReadInteger('MapOptionChecked')
+      else MapOptionChecked := 1 shl moCityNames;
+    if ValueExists('CityReport') then CityRepMask := Cardinal(ReadInteger('CityReport'))
+      else CityRepMask := Cardinal(not chPopIncrease and not chNoGrowthWarning and
           not chCaptured);
-      CloseKey;
-      if OptionChecked and (7 shl 16) = 0 then
-        OptionChecked := OptionChecked or (1 shl 16);
+    CloseKey;
+    if OptionChecked and (7 shl 16) = 0 then
+      OptionChecked := OptionChecked or (1 shl 16);
       // old regver with no scrolling
-    end;
-  Reg.free;
+  finally
+    Free;
+  end;
 
   if FullScreen then
   begin
@@ -3443,12 +3441,7 @@ begin
     SoundMode := smOnAlt
   else
     SoundMode := smOn;
-end;
 
-procedure TMainScreen.FormCreate(Sender: TObject);
-var
-  i, j: integer;
-begin
   sb := TPVScrollbar.Create;
 {$IFDEF WINDOWS}{ TODO }
   Screen.Cursors[crImpDrag] := LoadCursor(HInstance, 'DRAG');
@@ -3463,7 +3456,7 @@ begin
           -1 + Components[i].Tag and $FF);
         for j := 0 to nSaveOption - 1 do
           if Components[i].Tag and $FF = SaveOption[j] then
-            TMenuItem(Components[i]).Checked := 1 shl j and OptionChecked <> 0;
+            TMenuItem(Components[i]).Checked := ((1 shl j) and OptionChecked) <> 0;
       end
       else if Components[i] is TButtonBase then
       begin
@@ -7998,14 +7991,18 @@ begin
           inc(OptionChecked, 1 shl j);
 
   Reg := TRegistry.Create;
-  Reg.OpenKey('SOFTWARE\cevo\RegVer9', true);
-  Reg.WriteInteger('TileWidth', xxt * 2);
-  Reg.WriteInteger('TileHeight', yyt * 2);
-  Reg.WriteInteger('OptionChecked', OptionChecked);
-  Reg.WriteInteger('MapOptionChecked', MapOptionChecked);
-  Reg.WriteInteger('CityReport', integer(CityRepMask));
-  Reg.CloseKey;
-  Reg.free;
+  with Reg do
+  try
+    OpenKey('SOFTWARE\cevo\RegVer9', true);
+    WriteInteger('TileWidth', xxt * 2);
+    WriteInteger('TileHeight', yyt * 2);
+    WriteInteger('OptionChecked', OptionChecked);
+    WriteInteger('MapOptionChecked', MapOptionChecked);
+    WriteInteger('CityReport', integer(CityRepMask));
+    CloseKey;
+  finally
+    Free;
+  end;
 end;
 
 procedure TMainScreen.MovieSpeedBtnClick(Sender: TObject);
