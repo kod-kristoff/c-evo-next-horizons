@@ -103,12 +103,10 @@ begin
 end;
 
 function ApplyTileSize(xxtNew, yytNew: integer): boolean;
-type
-  TLine = array [0 .. INFIN, 0 .. 2] of Byte;
 var
   i, x, y, xSrc, ySrc, HGrTerrainNew, HGrCitiesNew, age, size: integer;
   LandMore, OceanMore, DitherMask, Mask24: TBitmap;
-  MaskLine: array [0 .. 32 * 3 - 1] of ^TLine; // 32 = assumed maximum for yyt
+  MaskLine: array [0 .. 32 * 3 - 1] of TPixelPointer; // 32 = assumed maximum for yyt
   Border: boolean;
 begin
   result := false;
@@ -345,49 +343,45 @@ begin
   for ySrc := 0 to TerrainIconLines - 1 do
   begin
     for i := 0 to yyt * 3 - 1 do
-      MaskLine[i] := Mask24.ScanLine[1 + ySrc * (yyt * 3 + 1) + i];
+      MaskLine[i].Init(Mask24, 0, 1 + ySrc * (yyt * 3 + 1) + i);
     for xSrc := 0 to 9 - 1 do
     begin
       i := ySrc * 9 + xSrc;
       TSpriteSize[i].Left := 0;
       repeat
         Border := true;
-        for y := 0 to yyt * 3 - 1 do
-          if MaskLine[y]^[1 + xSrc * (xxt * 2 + 1) + TSpriteSize[i].Left, 0] = 0
-          then
-            Border := false;
-        if Border then
-          inc(TSpriteSize[i].Left);
+        for y := 0 to yyt * 3 - 1 do begin
+          MaskLine[y].SetX(1 + xSrc * (xxt * 2 + 1) + TSpriteSize[i].Left);
+          if MaskLine[y].Pixel^.B = 0 then Border := false;
+        end;
+        if Border then Inc(TSpriteSize[i].Left);
       until not Border or (TSpriteSize[i].Left = xxt * 2 - 1);
       TSpriteSize[i].Top := 0;
       repeat
         Border := true;
-        for x := 0 to xxt * 2 - 1 do
-          if MaskLine[TSpriteSize[i].Top]^[1 + xSrc * (xxt * 2 + 1) + x, 0] = 0
-          then
-            Border := false;
-        if Border then
-          inc(TSpriteSize[i].Top);
+        for x := 0 to xxt * 2 - 1 do begin
+          MaskLine[TSpriteSize[i].Top].SetX(1 + xSrc * (xxt * 2 + 1) + x);
+          if MaskLine[TSpriteSize[i].Top].Pixel^.B = 0 then Border := false;
+        end;
+        if Border then inc(TSpriteSize[i].Top);
       until not Border or (TSpriteSize[i].Top = yyt * 3 - 1);
       TSpriteSize[i].Right := xxt * 2;
       repeat
         Border := true;
-        for y := 0 to yyt * 3 - 1 do
-          if MaskLine[y]^[xSrc * (xxt * 2 + 1) + TSpriteSize[i].Right, 0] = 0
-          then
-            Border := false;
-        if Border then
-          dec(TSpriteSize[i].Right);
+        for y := 0 to yyt * 3 - 1 do begin
+          MaskLine[y].SetX(xSrc * (xxt * 2 + 1) + TSpriteSize[i].Right);
+          if MaskLine[y].Pixel^.B = 0 then Border := false;
+        end;
+        if Border then Dec(TSpriteSize[i].Right);
       until not Border or (TSpriteSize[i].Right = TSpriteSize[i].Left);
       TSpriteSize[i].Bottom := yyt * 3;
       repeat
         Border := true;
-        for x := 0 to xxt * 2 - 1 do
-          if MaskLine[TSpriteSize[i].Bottom - 1]^[1 + xSrc * (xxt * 2 + 1) + x,
-            0] = 0 then
-            Border := false;
-        if Border then
-          dec(TSpriteSize[i].Bottom);
+        for x := 0 to xxt * 2 - 1 do begin
+          MaskLine[TSpriteSize[i].Bottom - 1].SetX(1 + xSrc * (xxt * 2 + 1) + x);
+          if MaskLine[TSpriteSize[i].Bottom - 1].Pixel^.B = 0 then Border := false;
+        end;
+        if Border then Dec(TSpriteSize[i].Bottom);
       until not Border or (TSpriteSize[i].Bottom = TSpriteSize[i].Top);
     end
   end;
@@ -929,8 +923,6 @@ end;
 // (x,y) is top left pixel of (2*xxt,3*yyt) rectangle
 procedure TIsoMap.PaintTileObjects(x, y, Loc, CityLoc, CityOwner: integer;
   UseBlink: boolean);
-type
-  TLine = array [0 .. 9 * 65, 0 .. 2] of Byte;
 var
   p1, p2, uix, cix, dy, Loc1, Tile, Multi, Destination: integer;
   CityInfo: TCityInfo;
@@ -1298,46 +1290,43 @@ procedure TIsoMap.Paint(x, y, Loc, nx, ny, CityLoc, CityOwner: integer;
   end;
 
   procedure ShadeOutside(x0, y0, x1, y1, xm, ym: integer);
-  const
-    rShade = 3.75;
 
-    procedure MakeDark(Line: pointer; length: integer);
-    type
-      TCardArray = array [0 .. 9999] of Cardinal;
-      PCardArray = ^TCardArray;
-      TByteArray = array [0 .. 9999] of Byte;
-      PByteArray = ^TByteArray;
+    procedure MakeDark(Line: PPixelPointer; Length: Integer);
     var
-      i, rest: integer;
+      I: Integer;
     begin
-      for i := length * 3 div 4 - 1 downto 0 do
-        PCardArray(Line)[i] := PCardArray(Line)[i] shr 1 and $7F7F7F7F;
-      rest := (length * 3 div 4) * 4;
-      for i := length * 3 mod 4 - 1 downto 0 do
-        PByteArray(Line)[rest + i] := PByteArray(Line)[rest + i] shr 1 and $7F;
+      for I := 0 to Length - 1 do begin
+        Line^.Pixel^.B := (Line^.Pixel^.B shr 1) and $7f;
+        Line^.Pixel^.G := (Line^.Pixel^.G shr 1) and $7f;
+        Line^.Pixel^.R := (Line^.Pixel^.R shr 1) and $7f;
+        Line^.NextPixel;
+      end;
     end;
 
-  type
-    TLine = array [0 .. 99999, 0 .. 2] of Byte;
+  const
+    rShade = 3.75;
   var
     y, wBright: integer;
     y_n, w_n: single;
-    Line: ^TLine;
+    Line: TPixelPointer;
   begin
     FOutput.BeginUpdate;
-    for y := y0 to y1 - 1 do
-    begin
-      Line := FOutput.ScanLine[y];
+    for y := y0 to y1 - 1 do begin
+      Line.Init(FOutput, 0, y);
       y_n := (y - ym) / yyt;
-      if abs(y_n) < rShade then
-      begin
+      if abs(y_n) < rShade then begin
+        // Darken left and right parts of elipsis
         w_n := sqrt(sqr(rShade) - sqr(y_n));
         wBright := trunc(w_n * xxt + 0.5);
-        MakeDark(@Line[x0], xm - x0 - wBright);
-        MakeDark(@Line[xm + wBright], x1 - xm - wBright);
-      end
-      else
-        MakeDark(@Line[x0], x1 - x0);
+        Line.SetX(x0);
+        MakeDark(@Line, xm - x0 - wBright);
+        Line.SetX(xm + wBright);
+        MakeDark(@Line, x1 - xm - wBright);
+      end else begin
+        // Darken entire line
+        Line.SetX(x0);
+        MakeDark(@Line, x1 - x0);
+      end;
     end;
     FOutput.EndUpdate;
   end;

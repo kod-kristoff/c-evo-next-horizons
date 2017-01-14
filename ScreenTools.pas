@@ -42,6 +42,7 @@ type
     procedure SetX(X: Integer); inline;
     procedure Init(Bitmap: TBitmap; X: Integer = 0; Y: Integer = 0); inline;
   end;
+  PPixelPointer = ^TPixelPointer;
 
 {$IFDEF WINDOWS}
 function ChangeResolution(x, y, bpp, freq: integer): boolean;
@@ -58,8 +59,6 @@ procedure BtnFrame(ca: TCanvas; p: TRect; const T: TTexture);
 procedure EditFrame(ca: TCanvas; p: TRect; const T: TTexture);
 function HexStringToColor(s: string): integer;
 function LoadGraphicFile(bmp: TBitmap; Path: string;
-  Options: integer = 0): boolean;
-function LoadLocalizedGraphicFile(bmp: TBitmap; Path: string;
   Options: integer = 0): boolean;
 function LoadGraphicSet(Name: string): integer;
 procedure Dump(dst: TBitmap; HGr, xDst, yDst, Width, Height, xGr, yGr: integer);
@@ -416,21 +415,11 @@ begin
       GammaLUT[$10 * HexCharToInt(s[5]) + HexCharToInt(s[6])];
 end;
 
-procedure ApplyGamma(Start, Stop: pbyte);
-begin
-  while Start < Stop do
-  begin
-    Start^ := GammaLUT[Start^];
-    inc(Start);
-  end;
-end;
-
 function LoadGraphicFile(bmp: TBitmap; Path: string; Options: integer): boolean;
-type
-  TLine = array [0 .. 9999, 0 .. 2] of Byte;
 var
-  FirstLine, LastLine: ^TLine;
+  PixelPtr: TPixelPointer;
   jtex: tjpegimage;
+  X, Y: Integer;
 begin
   result := true;
   if Options and gfJPG <> 0 then
@@ -473,74 +462,18 @@ begin
   end;
   if (Options and gfNoGamma = 0) and (Gamma <> 100) then
   begin
-    bmp.BeginUpdate;
-    FirstLine := bmp.ScanLine[0];
-    LastLine := bmp.ScanLine[bmp.Height - 1];
-    if FirstLine < LastLine then
-      ApplyGamma(pointer(FirstLine), @LastLine[bmp.Width])
-    else
-      ApplyGamma(pointer(LastLine), @FirstLine[bmp.Width]);
-    bmp.EndUpdate;
-  end
-end;
-
-function LoadLocalizedGraphicFile(bmp: TBitmap; Path: string;
-  Options: integer): boolean;
-type
-  TLine = array [0 .. 9999, 0 .. 2] of Byte;
-var
-  FirstLine, LastLine: ^TLine;
-  jtex: tjpegimage;
-begin
-  result := true;
-  if Options and gfJPG <> 0 then
-  begin
-    jtex := tjpegimage.create;
-    try
-      jtex.loadfromfile(LocalizedFilePath(Path + '.jpg'));
-    except
-      result := false;
+    Bmp.BeginUpdate;
+    PixelPtr.Init(bmp, 0, 0);
+    for Y := 0 to Bmp.Height - 1 do begin
+      for X := 0 to Bmp.Width - 1 do begin
+        PixelPtr.Pixel^.B := GammaLUT[PixelPtr.Pixel^.B];
+        PixelPtr.Pixel^.G := GammaLUT[PixelPtr.Pixel^.G];
+        PixelPtr.Pixel^.R := GammaLUT[PixelPtr.Pixel^.R];
+        PixelPtr.NextPixel;
+      end;
+      PixelPtr.NextLine;
     end;
-    if result then
-    begin
-      if Options and gfNoGamma = 0 then
-        bmp.PixelFormat := pf24bit;
-      bmp.Width := jtex.Width;
-      bmp.Height := jtex.Height;
-      bmp.Canvas.draw(0, 0, jtex);
-    end;
-    jtex.Free;
-  end
-  else
-  begin
-    try
-      bmp.loadfromfile(LocalizedFilePath(Path + '.bmp'));
-    except
-      result := false;
-    end;
-    if result then
-    begin
-      if Options and gfNoGamma = 0 then
-        bmp.PixelFormat := pf24bit;
-    end
-  end;
-  if not result then
-  begin
-    if Options and gfNoError = 0 then
-      Application.MessageBox(PChar(Format(Phrases.Lookup('FILENOTFOUND'),
-        [Path])), 'C-evo', 0);
-    exit;
-  end;
-  if (Options and gfNoGamma = 0) and (Gamma <> 100) then
-  begin
-    bmp.BeginUpdate;
-    FirstLine := bmp.ScanLine[0];
-    LastLine := bmp.ScanLine[bmp.Height - 1];
-    if FirstLine < LastLine then
-      ApplyGamma(Pointer(FirstLine), @LastLine[bmp.Width])
-    else
-      ApplyGamma(Pointer(LastLine), @FirstLine[bmp.Width]);
-    bmp.EndUpdate;
+    Bmp.EndUpdate;
   end
 end;
 
