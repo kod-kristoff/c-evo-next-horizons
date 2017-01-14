@@ -3428,13 +3428,6 @@ begin
     Free;
   end;
 
-  if FullScreen then
-  begin
-    p.Style := $87000000;
-    BorderStyle := bsNone;
-    BorderIcons := [];
-  end;
-
   if 1 shl 13 and OptionChecked <> 0 then
     SoundMode := smOff
   else if 1 shl 15 and OptionChecked <> 0 then
