@@ -16,6 +16,7 @@ object ListDlg: TListDlg
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnKeyDown = FormKeyDown
+  OnMouseWheel = FormMouseWheel
   OnMouseDown = PaintBox1MouseDown
   OnMouseMove = PaintBox1MouseMove
   OnPaint = FormPaint

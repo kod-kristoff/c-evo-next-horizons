@@ -18,6 +18,8 @@ type
     kChooseETech, kChooseModel, kChooseEModel, kChooseCity, kChooseECity,
     kStealTech, kGov, kMission);
 
+  { TListDlg }
+
   TListDlg = class(TFramedDlg)
     CloseBtn: TButtonB;
     Layer2Btn: TButtonB;
@@ -25,6 +27,8 @@ type
     Layer0Btn: TButtonB;
     ToggleBtn: TButtonB;
     Popup: TPopupMenu;
+    procedure FormMouseWheel(Sender: TObject; Shift: TShiftState;
+      WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
     procedure PaintBox1MouseMove(Sender: TObject; Shift: TShiftState;
       x, y: integer);
     procedure FormCreate(Sender: TObject);
@@ -39,7 +43,23 @@ type
     procedure FormKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure PlayerClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
-
+  private
+    Kind: TListKind;
+    LineDistance, MaxLines, cixProject, pView, Sel, DispLines, Layer, nColumn,
+      TechNameSpace, ScienceNation: integer;
+    sb: TPVScrollbar;
+    Lines, FirstShrinkedLine: array [0 .. MaxLayer - 1] of integer;
+    code: array [0 .. MaxLayer - 1, 0 .. 4095] of integer;
+    Column: array [0 .. nPl - 1] of integer;
+    Closable, MultiPage: boolean;
+    ScienceNationDot: TBitmap;
+    procedure ScrollBarUpdate(Sender: TObject);
+    procedure InitLines;
+    procedure line(ca: TCanvas; l: integer; NonText, lit: boolean);
+    function RenameCity(cix: integer): boolean;
+    function RenameModel(mix: integer): boolean;
+    procedure OnScroll(var m: TMessage); message WM_VSCROLL;
+    procedure OnMouseLeave(var Msg: TMessage); message CM_MOUSELEAVE;
   public
     result: integer;
     function OnlyChoice(TestKind: TListKind): integer;
@@ -52,24 +72,6 @@ type
     procedure TechChange;
     procedure AddCity;
     procedure RemoveUnit;
-
-  private
-    Kind: TListKind;
-    LineDistance, MaxLines, cixProject, pView, Sel, DispLines, Layer, nColumn,
-      TechNameSpace, ScienceNation: integer;
-    sb: TPVScrollbar;
-    Lines, FirstShrinkedLine: array [0 .. MaxLayer - 1] of integer;
-    code: array [0 .. MaxLayer - 1, 0 .. 4095] of integer;
-    Column: array [0 .. nPl - 1] of integer;
-    Closable, MultiPage: boolean;
-    ScienceNationDot: TBitmap;
-    procedure InitLines;
-    procedure line(ca: TCanvas; l: integer; NonText, lit: boolean);
-    function RenameCity(cix: integer): boolean;
-    function RenameModel(mix: integer): boolean;
-    procedure OnScroll(var m: TMessage); message WM_VSCROLL;
-    procedure OnMouseWheel(var m: TMessage); message LM_MOUSEWHEEL;
-    procedure OnMouseLeave(var Msg: TMessage); message CM_MOUSELEAVE;
   end;
 
   TModalSelectDlg = TListDlg;
@@ -100,7 +102,8 @@ begin
   inherited;
   Canvas.Font.Assign(UniFont[ftNormal]);
   sb := TPVScrollbar.Create;
-  CreatePVSB(sb, Handle, 2, 361, 2 + 422);
+  sb.Setup(36, 10, 36, Self);
+  sb.OnUpdate := ScrollBarUpdate;
   InitButtons();
   Kind := kMission;
   Layer0Btn.Hint := Phrases.Lookup('BTN_IMPRS');
@@ -131,21 +134,9 @@ end;
 
 procedure TListDlg.OnScroll(var m: TMessage);
 begin
-  if ProcessPVSB(sb, m) then
-  begin
+  if sb.Process(m) then  begin
     Sel := -2;
     SmartUpdateContent(true);
-  end;
-end;
-
-procedure TListDlg.OnMouseWheel(var m: TMessage);
-begin
-  if ProcessMouseWheel(sb, m) then
-  begin
-    Sel := -2;
-    SmartUpdateContent(true);
-    PaintBox1MouseMove(nil, [], m.lParam and $FFFF - Left,
-      m.lParam shr 16 - Top);
   end;
 end;
 
@@ -830,6 +821,15 @@ begin
           ScienceNationDot.Canvas.Handle, 0, 0, SRCCOPY);
       end;
     end
+  end;
+end;
+
+procedure TListDlg.FormMouseWheel(Sender: TObject; Shift: TShiftState;
+  WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
+begin
+  if sb.ProcessMouseWheel(WheelDelta) then begin
+    PaintBox1MouseMove(nil, [], MousePos.X - Left,
+      MousePos.Y - Top);
   end;
 end;
 
@@ -1598,7 +1598,7 @@ begin
   CloseBtn.Left := ClientWidth - 38;
   CaptionLeft := ToggleBtn.Left + ToggleBtn.Width;
   CaptionRight := CloseBtn.Left;
-  SetWindowPos(sb.h, 0, SideFrame + InnerWidth - GetSystemMetrics(SM_CXVSCROLL),
+  SetWindowPos(sb.ScrollBar.Handle, 0, SideFrame + InnerWidth - GetSystemMetrics(SM_CXVSCROLL),
     TitleHeight, GetSystemMetrics(SM_CXVSCROLL), LineDistance * DispLines + 48,
     SWP_NOZORDER or SWP_NOREDRAW);
 
@@ -1632,7 +1632,7 @@ begin
   Layer := 0;
   Sel := -2;
   ScienceNation := -1;
-  InitPVSB(sb, Lines[Layer] - 1, DispLines);
+  sb.Init(Lines[Layer] - 1, DispLines);
 
   OffscreenPaint;
 end;
@@ -1748,7 +1748,7 @@ begin
   end;
   InitLines;
   Sel := -2;
-  InitPVSB(sb, Lines[Layer] - 1, DispLines);
+  sb.Init(Lines[Layer] - 1, DispLines);
   OffscreenPaint;
   Invalidate
 end;
@@ -1761,7 +1761,7 @@ begin
   Layer := TComponent(Sender).Tag;
 
   Sel := -2;
-  InitPVSB(sb, Lines[Layer] - 1, DispLines);
+  sb.Init(Lines[Layer] - 1, DispLines);
   SmartUpdateContent
 end;
 
@@ -1860,6 +1860,12 @@ procedure TListDlg.RemoveUnit;
 begin
   if ListDlg.Visible and (Kind = kModels) then
     SmartUpdateContent;
+end;
+
+procedure TListDlg.ScrollBarUpdate(Sender: TObject);
+begin
+  Sel := -2;
+  SmartUpdateContent(true);
 end;
 
 end.

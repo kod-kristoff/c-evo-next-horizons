@@ -21,6 +21,9 @@ const
   pltsBlink = 1;
 
 type
+
+  { TMainScreen }
+
   TMainScreen = class(TDrawDlg)
     Timer1: TTimer;
     GamePopup: TPopupMenu;
@@ -215,20 +218,6 @@ type
     procedure GrWallBtnDownChanged(Sender: TObject);
     procedure BareBtnDownChanged(Sender: TObject);
     procedure MovieSpeedBtnClick(Sender: TObject);
-
-  public
-    procedure CreateParams(var p: TCreateParams); override;
-    procedure Client(Command, NewPlayer: integer; var Data);
-    procedure SetAIName(p: integer; Name: string);
-    function ZoomToCity(Loc: integer; NextUnitOnClose: boolean = false;
-      ShowEvent: integer = 0): boolean;
-    procedure CityClosed(Activateuix: integer; StepFocus: boolean = false;
-      SelectFocus: boolean = false);
-    function DipCall(Command: integer): integer;
-    function OfferCall(var Offer: TOffer): integer;
-    procedure UpdateViews(UpdateCityScreen: boolean = false);
-    function ContactRefused(p: integer; Item: String): boolean;
-
   private
     xw, yw, xwd, ywd, xwMini, ywMini, xMidPanel, xRightPanel, xTroop, xTerrain,
       xMini, yMini, ywmax, ywcenter, TroopLoc, TrCnt, TrRow, TrPitch, MapWidth,
@@ -241,6 +230,7 @@ type
     sb: TPVScrollbar;
     Closable, RepaintOnResize, Tracking, TurnComplete, Edited, GoOnPhase,
       HaveStrategyAdvice, FirstMovieTurn: boolean;
+    procedure ScrollBarUpdate(Sender: TObject);
     procedure ArrangeMidPanel;
     procedure MainOffscreenPaint;
     procedure MiniPaint;
@@ -281,6 +271,18 @@ type
     procedure SaveSettings;
     procedure OnScroll(var m: TMessage); message WM_VSCROLL;
     procedure OnEOT(var Msg: TMessage); message WM_EOT;
+  public
+    procedure CreateParams(var p: TCreateParams); override;
+    procedure Client(Command, NewPlayer: integer; var Data);
+    procedure SetAIName(p: integer; Name: string);
+    function ZoomToCity(Loc: integer; NextUnitOnClose: boolean = false;
+      ShowEvent: integer = 0): boolean;
+    procedure CityClosed(Activateuix: integer; StepFocus: boolean = false;
+      SelectFocus: boolean = false);
+    function DipCall(Command: integer): integer;
+    function OfferCall(var Offer: TOffer): integer;
+    procedure UpdateViews(UpdateCityScreen: boolean = false);
+    function ContactRefused(p: integer; Item: String): boolean;
   end;
 
 var
@@ -1472,7 +1474,8 @@ procedure TMainScreen.Client(Command, NewPlayer: integer; var Data);
     StartRunning := false;
     StayOnTop_Ensured := false;
 
-    CreatePVSB(sb, Handle, 100 - 200, 122, 100 + MidPanelHeight - 16 - 200);
+    sb.Setup(0, 0, 0, Self);
+    sb.OnUpdate := ScrollBarUpdate;
   end; { InitModule }
 
 // sound blocks for preload
@@ -2655,7 +2658,7 @@ begin { >>>client }
         for i := 0 to ControlCount - 1 do
           if Controls[i] is TButtonC then
             Controls[i].Visible := false;
-        InitPVSB(sb, 0, 1);
+        sb.Init(0, 1);
         for p1 := 0 to nPl - 1 do
           if Tribe[p1] <> nil then
             Tribe[p1].free;
@@ -3576,7 +3579,10 @@ begin
   MovieSpeed4Btn.Left := ClientWidth div 2 - 62 + 3 * 29 + 12;
   EOT.Top := ClientHeight - 64;
   EOT.Left := ClientWidth - 62;
-  SetWindowPos(sb.h, 0, xRightPanel + 10 - 14 - GetSystemMetrics(SM_CXVSCROLL),
+  sb.ScrollBar.BorderSpacing.Top := ClientHeight - yTroop - 24;
+  sb.ScrollBar.BorderSpacing.Right := ClientWidth - xRightPanel + 8;
+  sb.ScrollBar.BorderSpacing.Bottom := 8;
+  SetWindowPos(sb.ScrollBar.Handle, 0, xRightPanel + 10 - 14 - GetSystemMetrics(SM_CXVSCROLL),
     ClientHeight - MidPanelHeight + 8, 0, 0, SWP_NOSIZE or SWP_NOZORDER);
   MapBtn0.Left := xMini + G.lx - 44;
   MapBtn0.Top := ClientHeight - 15;
@@ -3614,11 +3620,10 @@ end;
 
 procedure TMainScreen.OnScroll(var m: TMessage);
 begin
-  if ProcessPVSB(sb, m) then
-  begin
+  if sb.Process(m) then begin
     PanelPaint;
-    Update
-  end
+    Update;
+  end;
 end;
 
 procedure TMainScreen.OnEOT(var Msg: TMessage);
@@ -3961,7 +3966,7 @@ begin
   end
 end;
 
-procedure TMainScreen.PaintLocTemp(Loc, Style: integer);
+procedure TMainScreen.PaintLocTemp(Loc: integer; Style: integer);
 var
   y0, x0, xMap, yMap: integer;
 begin
@@ -6340,16 +6345,16 @@ begin
     else // count enemy units here
       Server(sGetUnits, me, Loc, TrCnt);
   if TrCnt = 0 then
-    InitPVSB(sb, 0, 1)
+    sb.Init(0, 1)
   else
   begin
-    InitPVSB(sb, (TrCnt + TrRow - 1) div TrRow - 1, 1);
+    sb.Init((TrCnt + TrRow - 1) div TrRow - 1, 1);
     with sb.si do
       if (nMax >= integer(nPage)) and (trixFocus >= 0) then
       begin
         sb.si.npos := trixFocus div TrRow;
         sb.si.FMask := SIF_POS;
-        SetScrollInfo(sb.h, SB_CTL, sb.si, true);
+        SetScrollInfo(sb.ScrollBar.Handle, SB_CTL, sb.si, true);
       end
   end
 end;
@@ -8002,6 +8007,12 @@ procedure TMainScreen.MovieSpeedBtnClick(Sender: TObject);
 begin
   MovieSpeed := TButtonB(Sender).Tag shr 8;
   CheckMovieSpeedBtnState;
+end;
+
+procedure TMainScreen.ScrollBarUpdate(Sender: TObject);
+begin
+  PanelPaint;
+  Update;
 end;
 
 initialization

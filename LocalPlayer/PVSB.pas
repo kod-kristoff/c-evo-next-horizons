@@ -7,71 +7,97 @@ uses
   {$IFDEF WINDOWS}
   Windows,
   {$ENDIF}
-  Forms, LCLIntf, LCLType, LMessages, Messages, SysUtils;
+  Classes, Controls, Forms, LCLIntf, LCLType, LMessages, Messages, SysUtils,
+  StdCtrls, Math;
 
 type
 
   { TPVScrollbar }
 
-  TPVScrollbar = class
-    h: integer;
+  TPVScrollBar = class
+  private
+    FOnUpdate: TNotifyEvent;
+    procedure ScrollBarChanged(Sender: TObject);
+  public
+    ScrollBar: TScrollBar;
     si: TScrollInfo;
-    Form: TForm;
     destructor Destroy; override;
+    procedure Setup(TopSpacing, RightSpacing, BottomSpacing: integer; Parent: TWinControl);
+    procedure Init(max, Page: integer);
+    procedure SetPos(Pos: Integer);
+    function Process(const m: TMessage): boolean;
+    function ProcessMouseWheel(Delta: Integer) : boolean;
+    procedure Show(Visible: boolean);
+    procedure EndSB;
+    procedure UpdateScrollBar;
+    property OnUpdate: TNotifyEvent read FOnUpdate write FOnUpdate;
   end;
 
-  procedure CreatePVSB(var sb: TPVScrollbar; Handle, y0, x1, y1: integer);
-  procedure InitPVSB(var sb: TPVScrollbar; max, Page: integer);
-  function ProcessPVSB(var sb: TPVScrollbar; const m: TMessage): boolean;
-  function ProcessMouseWheel(var sb: TPVScrollbar; const m: TMessage)
-    : boolean;
-  procedure ShowPVSB(var sb: TPVScrollbar; Visible: boolean);
-  procedure EndPVSB(var sb: TPVScrollbar);
 
 implementation
 
 const
   Count: integer = 0;
 
-procedure CreatePVSB(var sb: TPVScrollbar; Handle, y0, x1, y1: integer);
+procedure TPVScrollBar.Setup(TopSpacing, RightSpacing, BottomSpacing: integer;
+  Parent: TWinControl);
 begin
   inc(Count);
-  {$IFDEF LINUX}
-  sb.Form := TForm.Create(nil);
-  sb.Form.SetBounds(x1 - 100, y0, 100, y1 - y0);
-  sb.Form.Name := 'PVSB' + IntToStr(Count);
-  sb.h := sb.Form.Handle;
+  //{$IFDEF LINUX}
+//  sb.Form := TForm.Create(nil);
+//  sb.Form.SetBounds(x1 - 100, y0, 100, y1 - y0);
+//  sb.Form.Name := 'PVSB' + IntToStr(Count);
+  ScrollBar := TScrollBar.Create(Parent);
+  ScrollBar.Kind := sbVertical;
+  ScrollBar.Name := 'PVSB' + IntToStr(Count);
+  ScrollBar.Parent := Parent;
+  ScrollBar.BorderSpacing.Top := TopSpacing;
+  ScrollBar.BorderSpacing.Right := RightSpacing;
+  ScrollBar.BorderSpacing.Bottom := BottomSpacing;
+  ScrollBar.Align := alRight;
+  ScrollBar.OnChange := ScrollBarChanged;
+  //sb.h := sb.ScrollBar.Handle;
+  (*
   {$ENDIF}
   {$IFDEF WINDOWS}
   sb.h := CreateWindowEx(0, 'SCROLLBAR', pchar('PVSB' + IntToStr(Count)),
     SBS_VERT or WS_CHILD or SBS_RIGHTALIGN, x1 - 100, y0, 100, y1 - y0,
     Handle, 0, 0, nil);
   {$ENDIF}
-  sb.si.cbSize := 28;
+  *)
+  si.cbSize := 28;
 end;
 
-procedure InitPVSB(var sb: TPVScrollbar; max, Page: integer);
+procedure TPVScrollBar.Init(max, Page: integer);
 begin
-  with sb.si do
-  begin
+  with si do begin
     nMin := 0;
     nMax := max;
     npos := 0;
     nPage := Page;
     FMask := SIF_PAGE or SIF_POS or SIF_RANGE;
   end;
-  SetScrollInfo(sb.h, SB_CTL, sb.si, true);
-  if max < Page then
-    ShowWindow(sb.h, SW_HIDE)
-  else
-    ShowWindow(sb.h, SW_SHOW)
+  UpdateScrollBar;
+  //SetScrollInfo(sb.ScrollBar.Handle, SB_CTL, sb.si, true);
+  if max < Page then ScrollBar.Visible := False
+    else ScrollBar.Visible := True;
 end;
 
-function ProcessPVSB(var sb: TPVScrollbar; const m: TMessage): Boolean;
+procedure TPVScrollBar.SetPos(Pos: Integer);
+begin
+  if Pos <> 0 then begin
+    si.npos := Pos;
+    si.FMask := SIF_POS;
+    //SetScrollInfo(sb.ScrollBar.Handle, SB_CTL, sb.si, true);
+    UpdateScrollBar;
+  end;
+end;
+
+function TPVScrollBar.Process(const m: TMessage): boolean;
 var
   NewPos: integer;
 begin
-  with sb.si do
+  with si do
     if nMax < integer(nPage) then
       result := false
     else
@@ -104,22 +130,24 @@ begin
         begin
           npos := NewPos;
           FMask := SIF_POS;
-          SetScrollInfo(sb.h, SB_CTL, sb.si, true);
+          UpdateScrollBar;
+          //SetScrollInfo(sb.ScrollBar.Handle, SB_CTL, sb.si, true);
         end;
       end
     end
 end;
 
-function ProcessMouseWheel(var sb: TPVScrollbar; const m: TMessage): Boolean;
+function TPVScrollBar.ProcessMouseWheel(Delta: Integer
+  ): boolean;
 var
   NewPos: integer;
 begin
-  with sb.si do
+  with si do
     if nMax < integer(nPage) then
       result := false
     else
     begin
-      NewPos := npos - m.wParam div (1 shl 16 * 40);
+      NewPos := npos - Delta div 300;
       if NewPos < 0 then
         NewPos := 0;
       if NewPos > nMax - integer(nPage) + 1 then
@@ -129,41 +157,54 @@ begin
       begin
         npos := NewPos;
         FMask := SIF_POS;
-        SetScrollInfo(sb.h, SB_CTL, sb.si, true);
+        UpdateScrollBar;
+        //SetScrollInfo(sb.ScrollBar.Handle, SB_CTL, sb.si, true);
       end
     end
 end;
 
-procedure ShowPVSB(var sb: TPVScrollbar; Visible: boolean);
+procedure TPVScrollBar.Show(Visible: boolean);
 begin
-  if not Visible or (sb.si.nMax < integer(sb.si.nPage)) then
-    ShowWindow(sb.h, SW_HIDE)
-  else
-    ShowWindow(sb.h, SW_SHOW)
+  if not Visible or (si.nMax < integer(si.nPage)) then
+    ScrollBar.Visible := False
+    else ScrollBar.Visible := True;
 end;
 
-procedure EndPVSB(var sb: TPVScrollbar);
+procedure TPVScrollBar.EndSB;
 begin
-  with sb.si do
-  begin
+  with si do begin
     if nMax < integer(nPage) then
       npos := 0 // hidden
-    else
-    begin
-      sb.si.npos := nMax - integer(nPage) + 1;
-      sb.si.FMask := SIF_POS;
-      SetScrollInfo(sb.h, SB_CTL, sb.si, true);
+    else begin
+      si.npos := nMax - integer(nPage) + 1;
+      si.FMask := SIF_POS;
+      UpdateScrollBar;
+      //SetScrollInfo(sb.ScrollBar.Handle, SB_CTL, sb.si, true);
     end
   end
 end;
 
+procedure TPVScrollBar.UpdateScrollBar;
+begin
+  ScrollBar.Min := si.nMin;
+  ScrollBar.Max := Max(si.nMax - si.nPage + 1, 0);
+  ScrollBar.PageSize := si.nPage;
+  ScrollBar.Position := si.nPos;
+end;
+
 { TPVScrollbar }
 
-destructor TPVScrollbar.Destroy;
+procedure TPVScrollBar.ScrollBarChanged(Sender: TObject);
 begin
-  h := 0;
+  si.npos := ScrollBar.Position;
+  if Assigned(FOnUpdate) then FOnUpdate(Self);
+end;
+
+destructor TPVScrollBar.Destroy;
+begin
+  //h := 0;
   si.cbSize := 0;
-  FreeAndNil(Form);
+  FreeAndNil(ScrollBar);
 end;
 
 end.

@@ -46,6 +46,8 @@ type
     destructor Destroy; override;
   end;
 
+  { THelpDlg }
+
   THelpDlg = class(TFramedDlg)
     CloseBtn: TButtonB;
     BackBtn: TButtonB;
@@ -53,6 +55,8 @@ type
     SearchBtn: TButtonB;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure FormMouseWheel(Sender: TObject; Shift: TShiftState;
+      WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
     procedure FormPaint(Sender: TObject);
     procedure CloseBtnClick(Sender: TObject);
     procedure PaintBox1MouseMove(Sender: TObject; Shift: TShiftState;
@@ -64,11 +68,6 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure SearchBtnClick(Sender: TObject);
-  public
-    Difficulty: integer;
-    procedure ShowNewContent(NewMode, Category, Index: integer);
-    procedure ClearHistory;
-    function TextIndex(Item: string): integer;
   protected
     procedure OffscreenPaint; override;
   private
@@ -86,13 +85,18 @@ type
     HistNo: array [0 .. MaxHist - 1] of integer;
     HistPos: array [0 .. MaxHist - 1] of integer;
     HistSearchContent: array [0 .. MaxHist - 1] of shortstring;
+    procedure ScrollBarUpdate(Sender: TObject);
     procedure line(ca: TCanvas; i: integer; lit: boolean);
     procedure Prepare(sbPos: integer = 0);
     procedure WaterSign(x0, y0, iix: integer);
     procedure Search(SearchString: string);
     procedure OnScroll(var m: TMessage); message WM_VSCROLL;
-    procedure OnMouseWheel(var m: TMessage); message LM_MOUSEWHEEL;
     procedure OnMouseLeave(var Msg: TMessage); message CM_MOUSELEAVE;
+  public
+    Difficulty: integer;
+    procedure ShowNewContent(NewMode, Category, Index: integer);
+    procedure ClearHistory;
+    function TextIndex(Item: string): integer;
   end;
 
 var
@@ -201,7 +205,8 @@ begin
   SearchResult := THyperText.Create;
   SearchResult.OwnsObjects := True;
   sb := TPVScrollbar.Create;
-  CreatePVSB(sb, Handle, 36, 551, 36 + 432);
+  sb.Setup(36, 9, 11, Self);
+  sb.OnUpdate := ScrollBarUpdate;
 
   HelpText := TStringTable.Create;
   HelpText.LoadFromFile(LocalizedFilePath('Help' + DirectorySeparator + 'help.txt'));
@@ -246,35 +251,31 @@ begin
   // FreeAndNil(CaptionFont);
 end;
 
+procedure THelpDlg.FormMouseWheel(Sender: TObject; Shift: TShiftState;
+  WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
+begin
+  if sb.ProcessMouseWheel(WheelDelta) then begin
+    PaintBox1MouseMove(nil, [], MousePos.X - Left,
+      MousePos.Y - Top);
+  end;
+end;
+
 procedure THelpDlg.CloseBtnClick(Sender: TObject);
 begin
-  Close
+  Close;
 end;
 
 procedure THelpDlg.OnScroll(var m: TMessage);
 begin
-  if ProcessPVSB(sb, m) then
-  begin
+  if sb.Process(m) then begin
     Sel := -1;
     SmartUpdateContent(true)
   end
 end;
 
-procedure THelpDlg.OnMouseWheel(var m: TMessage);
-begin
-  if ProcessMouseWheel(sb, m) then
-  begin
-    Sel := -1;
-    SmartUpdateContent(true);
-    PaintBox1MouseMove(nil, [], m.lParam and $FFFF - Left,
-      m.lParam shr 16 - Top);
-  end
-end;
-
 procedure THelpDlg.OnMouseLeave(var Msg: TMessage);
 begin
-  if Sel <> -1 then
-  begin
+  if Sel <> -1 then begin
     line(Canvas, Sel, false);
     Sel := -1
   end
@@ -770,6 +771,12 @@ begin
   end;
   MarkUsedOffscreen(InnerWidth, InnerHeight + 13 + 48);
 end; { OffscreenPaint }
+
+procedure THelpDlg.ScrollBarUpdate(Sender: TObject);
+begin
+  Sel := -1;
+  SmartUpdateContent(true)
+end;
 
 procedure THelpDlg.Prepare(sbPos: integer = 0);
 var
@@ -1834,13 +1841,9 @@ begin { Prepare }
     else
       LF;
 
-    InitPVSB(sb, Count - 1, InnerHeight div 24);
-    if sbPos <> 0 then
-    begin
-      sb.si.npos := sbPos;
-      sb.si.FMask := SIF_POS;
-      SetScrollInfo(sb.h, SB_CTL, sb.si, true);
-    end;
+    //Self.Show;
+    sb.Init(Count - 1, InnerHeight div 24);
+    sb.SetPos(sbPos);
     BackBtn.Visible := nHist > 0;
     TopBtn.Visible := (nHist > 0) or (Kind <> hkMisc) or (no <> miscMain);
     Sel := -1;

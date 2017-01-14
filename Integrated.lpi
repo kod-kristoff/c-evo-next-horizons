@@ -300,12 +300,16 @@
       <Unit25>
         <Filename Value="LocalPlayer\Help.pas"/>
         <IsPartOfProject Value="True"/>
+        <ComponentName Value="HelpDlg"/>
         <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
       </Unit25>
       <Unit26>
         <Filename Value="LocalPlayer\Select.pas"/>
         <IsPartOfProject Value="True"/>
+        <ComponentName Value="ListDlg"/>
         <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
       </Unit26>
       <Unit27>
         <Filename Value="LocalPlayer\CityScreen.pas"/>
@@ -413,6 +417,7 @@
         <Filename Value="Locale.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="LocaleDlg"/>
+        <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit43>
     </Units>
