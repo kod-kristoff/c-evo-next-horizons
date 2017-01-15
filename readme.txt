@@ -1,3 +1,24 @@
+C-evo 1.2.0 sources ported to Lazarus/FPC
+
+* Used development enviroment: Lazarus 1.6.2
+* Supported platforms: Windows and Linux
+* Supported architecuters: 32-bit and 64-bit x86
+
+=Code changes to original source=
+
+* Converted from Delphi to Lazarus
+* Merged source code and binaries from installed game
+* Graphics files converted from BMP to PNG
+* Game text files .txt converted to UTF-8
+* Binary .dfm files conveted to text .lfm
+* Removed external Configurator application written in C#. Use ingame config interface.
+* Available localizations included in installed game
+* Used latest Delphi StdAI. Newer is implemented in C#.
+* Added installer scripts for Windows and Ubuntu/Debian Linux.
+
+
+=Original readme content=
+
 The C-evo sources
 
 - Please read the "Module Concept" section of the document 

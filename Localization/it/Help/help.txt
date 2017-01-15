@@ -1,0 +1,1060 @@
+#HELPTITLE_MAIN Manuale
+#HELPTITLE_QUICKSTART Infarinata
+#HELPTITLE_CONCEPTS Concetti
+#HELPTITLE_TECHLIST Progressi
+#HELPTITLE_IMPLIST Edifici
+#HELPTITLE_UNIQUELIST Opere nazionali
+#HELPTITLE_WONDERLIST Meraviglie
+#HELPTITLE_TERLIST Tipi di terreno
+#HELPTITLE_JOBLIST Potenziamenti del terreno
+#HELPTITLE_MODELLIST Unità speciali
+#HELPTITLE_FEATURELIST Caratteristiche delle unità
+#HELPTITLE_FEATURE1LIST Capacità
+#HELPTITLE_FEATURE2LIST Abilità speciali
+#HELPTITLE_FEATURE3LIST Progressi
+#HELPTITLE_GOVLIST Forme di governo
+#HELPTITLE_KEYS Mouse e tastiera
+#HELPTITLE_ABOUT Il gioco
+#HELPTITLE_CREDITS Ringraziamenti
+#HELPTITLE_SEARCHRESULTS Risultati ricerca
+
+#HELPSPEC_TER (tipo di terreno)
+#HELPSPEC_ADV (progresso)
+#HELPSPEC_FUTURE (progresso futuro)
+#HELPSPEC_IMP (edificio)
+#HELPSPEC_NAT (Opera nazionale)
+#HELPSPEC_WONDER (Meraviglia)
+#HELPSPEC_SHIPPART (parte dell'astronave)
+#HELPSPEC_CAP (capacità unità)
+#HELPSPEC_FEATURE (abilità speciale unità)
+#HELPSPEC_STANDARD (miglioramento unità)
+
+#TECHFORMULA %.6g*n*EXP(n/%.6g)
+#PREREQ Requisiti
+#PREREQALT Requisiti (2 su 3 richiesti)
+#BASETECH (progresso chiave)
+#STRENGTHUP %s: fattore potenza +%d
+#COSTUP (fattore costo +%d)
+#COSTMIN (fattore costo aumentato a %d)
+#TRANSUP %s: fattore trasporto +%d
+#ADVEFFECT Effetto pratico
+#EFFECT Effetto
+#COSTS Costi
+#BUILDCOST Costo produzione: %d%%p
+#MAINTCOST Mantenimento: %d%%c per turno
+#REPLACE Rimpiazza
+#REPLACETEXT Col completamento di questo edificio, i seguenti diventano superati e vengono automaticamente svenduti:
+#EXPIRATION Fine effetto
+#EXPWITH L'effetto termina quando una qualunque nazione scopre il progresso %s.
+#EXPSLAVE Tutti gli schiavi diventano liberi e non lavorano più il terreno.
+#REQUIRED Richiede %s
+#RAREREQUIRED La produzione richiede %s.
+#RESFOOD Cibo: %d%%f
+#RESPROD Materie prime: %d%%p
+#RESTRADE Commercio: %d%%t
+#MOREIRR (+%d%%f con irrigazione)
+#MOREMINE (+%d%%p con miniera)
+#MOREROAD (+%d%%t con strada)
+#SPECIAL Risorse speciali
+#SPECIALFOOD , +%d%%f
+#SPECIALPROD , +%d%%p
+#SPECIALTRADE , +%d%%t
+#TRAFO Transformabile in %s
+#MOVEPLAIN Movimento: terreno libero
+#MOVEHEAVY Movimento: terreno accidentato
+#DEFBONUS Bonus difesa: %d%%
+#JOBCOST -Costo di costruzione: %s PM
+#JOBCOSTVAR -Costo di costruzione: vedi Gestione schematica/Potenziamenti terreno.
+#TERIMPEXCLUDE Le irrigazioni, le miniere, le fortezze e le basi militari si escludono a vicenda. Se ad esempio una fortezza viene costruita in una casella già contenente una miniera, la miniera viene rimpiazzata.
+#TERIMPCITY Una casella dove sorge una città conta come se avesse i seguenti potenziamenti per quanto riguarda movimento e produzione:\-Strada\-Ferrovia (se la ferrovia è stata scoperta)\-Canale\-Irrigazione\-Fattorie.
+#HOSTILE Questo è un terreno ostile. Le unità di terra che lo attraversano subiscono danni in proporzione ai PM usati qui. Un turno intero causa il %d%% di danni. L'effetto è annullato se è presente un fiume, oasi, canale o base militare.
+#DEADLANDS Le terre morte non possono essere potenziate, a parte strade e ferrovie.
+#RARE In una mappa casuale, ci sono sempre 12 terre morte in totale. Metà di esse sono in realtà depositi di risorse speciali, esattamente due per ogni tipo.
+#STRENGTH Potenza: %d/%d
+#SPEED Velocità: %s
+#MODELNOTE (alcune unità hanno aspetto e nome diverso per certe nazioni.)
+#COSTBASE Costo base di produzione %s%%p
+#WEIGHT Peso %s%%w
+#BUILDALLOW Permette di costruire
+#MODELALLOW Abilita l'unità speciale
+#FEATALLOW Permette di utilizzare
+#FOLLOWADV Permette di ricercare
+#GOVALLOW Abilita la nuova forma di governo
+#UPGRADEALLOW Benefici militari
+#SEEALSO Vedi anche:
+#FUTURETECHHELP25 Questo progresso rappresenta la scienza del futuro. Si possono scoprire fino a 25 progressi di questa categoria.\\
+Una tecnologia futura richiede un costo di ricerca quadruplo. Inoltre, non si può acquisire da altri giocatori tramite scambi di progressi o tramite la Grande Biblioteca.
+#FUTURETECHHELP100 Questo progresso rappresenta la scienza del futuro. Si possono scoprire fino a 100 progressi di questa categoria.\\
+Una tecnologia futura richiede un costo di ricerca quadruplo. Inoltre, non si può acquisire da altri giocatori tramite scambi di progressi o tramite la Grande Biblioteca.
+#CRED_CAPSOUND Suoni
+#CRED_CAPAI Intelligenza artificiale
+#CRED_CAPLANG Questa traduzione
+#AUTHOR Traduzione in italiano di Filippo Bultrighini.
+#MATCHES Corrispondenze a "%s":
+#NOMATCHES Il termine "%s" non è stato trovato.
+
+
+#CONCEPTS
+$Concetti\
+
+;INTRO Introduzione\\
+;START Uso della schermata iniziale\\
+
+!Fondamenti del gioco\
+;BASICS Regole base\
+;SCIENCE Ricerca\
+;DIPLOMACY Diplomazia\
+;SHIP Vittoria\\
+
+!Concetti unità\
+;MOVEMENT Muovere le unità\
+;COMMANDS Ordini alle unità\
+;SETTLE Colonizzazione\
+;COMBAT Combattimento\
+;SPYMISSIONS Servizi segreti\
+;CLASSES Modelli di unità\\
+
+!Concetti città\
+;CITIES Gestione città\
+;PRODUCTION Produzione\
+;BUILDINGS Edifici\
+;SUPPORT Supporto alle unità\\
+
+!Avanzate\
+;MACRO Gestione schematica\
+;MAPEDIT Disegno di mappe\
+;AIT Torneo I.A.
+
+#ABOUT
+$Il gioco\
+
+&LOGO\\
+
+!Il progetto\
+C-evo è un gioco non commerciale, basato sul famoso "Sid Meier's Civilization" della 
+Microprose. L'ambizione del progetto non è competere con i giochi commerciali per la 
+presentazione più entusiasmante. Inoltre, non punta a divertire introducendo un sacco 
+di nuovi, realistici elementi a ogni versione. Invece l'obiettivo è di creare un gioco 
+di pura strategia, che diverta per una cosa soprattutto: la sfida. Quindi l'interesse 
+centrale è la definizione delle regole e delle IA. Per maggiori informazioni, visita:\
+::E2 c-evo.org\\
+
+!Licenza d'uso\
+C-evo è frutto del lavoro di numerosi autori. Hai il permesso di usare il gioco e 
+distribuirlo gratuitamente anche senza autorizzazione esplicita. Il gioco stesso e 
+tutte le sue parti, eccetto la grafica e i suoni, sono di pubblico dominio. Ovvero puoi farne 
+quello che ti pare. Questo vale anche per il codice binario e i sorgenti, che sono 
+disponibili nel sito del progetto. Per quanto riguarda grafica e suoni, dovresti chiedere 
+ai rispettivi autori prima di usarli per un qualunque scopo che non sia giocare.\
+::C Ringraziamenti\\
+
+!Programmazione I.A.\
+Il gioco ha un'interfaccia aperta per l'intelligenza artificiale, cioè è possibile rimpiazzare 
+l'I.A. ufficiale con altri algoritmi, per tutte o solo per alcune nazioni. 
+E' possibile giocare con fino a 8 I.A. diverse nella stessa partita.
+Se sei un vero nerd e vuoi programmare un'I.A., il modo più semplice è usare il modello in C#
+disponibile nella cartella di installazione del gioco.\
+::E1 Manuale di sviluppo I.A.\\
+
+!Requisiti di sistema\
+-Risoluzione colore almeno 16 bit\
+-Smussamento caratteri consigliato\\
+
+!Opzioni linea di comando\
+--man ... Mostra solo il manuale\\
+
+!Disinstallazione\
+Usa Installazione applicazioni nel Pannello di controllo.\\
+
+!Segnalazione errori\
+
+Per aiutare il progetto, per favore avvisaci se trovi qualche difetto. Ma prima di mandarci un'email:\
+-Leggi bene l'argomento corrispondente del manuale. Forse non si tratta di un errore. Questo gioco non è identico a Civilization II!\
+-Controlla se è uscita una versione più recente del gioco. Magari il problema è già stato risolto, specialmente se è molto evidente.\
+-Guarda la lista di difetti conosciuti nel sito del progetto. Non segnalare errori che conosciamo già...\
+-Assicurati che non sia un problema di installazione, o di espansioni esterne come un'IA alternativa. Nel dubbio, reinstalla il gioco senza espansioni e riprova. Se un problema riguarda un'espansione, contatta l'autore dell'espansione.\\
+
+Prima di segnalare un problema, cerca un modo per farlo riapparire. Una segnalazione di errore è molto più utile se possiamo vedere come è successo. Spesso basta caricare la partita nel turno prima del problema e rifare le stesse cose. Anche se il gioco si è piantato, c'è sempre un salvataggio automatico dell'ultimo turno, è la partita con il nome che inizia per ~.\\
+
+A questo punto manda una descrizione dettagliata all'autore. Usa la pagina:\
+::E3 c-evo.org/_sg/contact\
+Allega la partita salvata, se è necessaria. Puoi trovare il file in questa cartella:\
+&SAVED
+
+#CREDITS
+$Crediti\
+
+@@15\\
+
+!Idea del gioco\
+Il progetto originale di "Sid Meier's Civilization" e "Civilization II" è di Sid Meier
+e Brian Reynolds.\
+I cambiamenti sono basati su suggerimenti degli amanti di Civ.\\
+
+!Programmazione\
+Programmazione di Steffen Gerlach.\\
+
+!Collaudo\
+Numerosi collaudatori. Grazie a tutti!\\
+
+!Altri contributi\
+Varie texture prese da "Mayang's Free Textures".\
+Liste di città di Charles Nadolski.\\
+
+!Grafica\
+La maggior parte delle immagini sono prese dalle modificazioni gratuite di Civ II. Alcuni autori sono sconosciuti o introvabili. Se trovi della roba con diritti d'autore, se è stato utilizzato il tuo lavoro senza permesso o se manca qualche nome nelle liste dei crediti, contattaci.
+
+
+#QUICK
+$Infarinata\
+
+!!Infarinata\
+
+Consigli di base per chi non ha voglia di studiarsi il manuale prima di giocare:\\
+
+-Questo gioco è a turni. Mentre una nazione sta facendo le sue mosse, tutte le altre sono in attesa (tranne quando vengono contattate per negoziare).\
+-Solitamente il tuo turno finisce automaticamente quando hai dato ordini a tutte le unità. Se non ci sono unità in attesa di ordini, il gioco aspetta che premi "Fine turno". Se sembra che il gioco si sia bloccato, forse devi solo premere "Fine turno".\
+-Gli elementi cliccabili generalmente sono evidenziati da una cornice bianca.\
+-Possono esserci più unità nella stessa casella. Nella mappa si vede solo la più forte.\
+-Se un gruppo di unità nella stessa casella viene attaccato, solo la più forte combatte, ma se viene sconfitta l'intero gruppo è distrutto.\
+-Per selezionare un'unità basta cliccarla: a quel punto inizia a lampeggiare. Il pulsante col punto esclamativo apre un menù con gli ordini possibili per l'unità selezionata.\
+-Per muovere le unità usa i tasti frecce o il pulsante destro del mouse.\
+-Clicca una tua città per vederla in dettaglio. La cosa più importante da vedere è il progetto in costruzione. Clicca sull'immaginetta del progetto in mezzo per scegliere un nuovo progetto, per esempio per costruire nuovi coloni.\
+-Quanto velocemente le città costruiscono, crescono, producono denaro e ricerca, dipende dalla tua amministrazione.\
+-In molti casi Shift+Clic su un oggetto apre una finestra di aiuto sull'oggetto.\\
+
+C-evo ricorda molto il caro vecchio Civilization II, ma non è un remake, è diverso sotto molti punti di vista. Vale anche per la filosofia generale, non aspettarti nulla di CIVILE!
+
+#INTRO
+$Introduzione\
+
+@@56\
+!!Benvenuti a C-evo\\
+
+C-evo è un gioco sulla storia della civiltà. Giocare significa governare una nazione a scelta attraverso sei millenni, dal primo insediamento alla colonizzazione dello spazio. Ci saranno molte difficoltà. Le risorse sono limitate, ci vogliono secoli per coltivare le terre selvagge. Carestia e sommosse saranno una minaccia costante per le tue città in crescita.\\
+
+Devi essere molto previdente. Espandi il tuo impero e rafforza le tue città. Costruisci caserme, università e centrali elettriche, o perfino le celebri Meraviglie del mondo. Scopri nuove conoscenze e armi. Esplora costantemente per trovare terre fertili e completare la tua mappa del mondo. Scopri continenti lontani con le navi.\\
+
+Ovviamente la tua nazione non è l'unica sulla terra. Le nazioni di ogni continente stanno sviluppando la loro cultura. Non c'è nessun diritto a esistere: ogni impero può cadere, incluso il tuo.\\
+
+Il tuo primo contatto con un popolo straniero potrebbe non essere piacevole, ma la diplomazia offre tante possibilità. Compra, vendi o scambia ogni tipo di conoscenza. Difendi i tuoi confini o proteggili con dei trattati. Ci si può anche alleare con altre nazioni, ma non ti fidare troppo dei patti, in questo gioco le nazioni possono contestare! Alla fine hanno tutte un solo obiettivo, che solo una può raggiungere: la vittoria.
+
+
+#BASICS
+$Regole base\
+
+!!Regole base\
+
+La tua nazione è formata da unità e città. Le unità esplorano, conquistano e difendono, mentre le città sono la fonte della crescita, della produzione e della ricerca.\\
+
+Il mondo è diviso in caselle quadrate (che sembrano rombi per via della prospettiva). Ogni casella è fatta di un certo tipo di terreno, che definisce le sue proprietà: risorse prodotte, bonus in difesa e costo di movimento per le unità che entrano. Una casella può contenere solo una città, ma unità illimitate di una nazione. Per avere aiuto su una casella, cliccaci tenendo premuto Shift.\
+
+::T Tipi di terreno\\
+
+Il gioco è a turni come il Risiko, quindi gli avversari non faranno mosse finché non hai finito il tuo turno. Normalmente, il turno finisce automaticamente quando hai mosso tutte le unità. Se non ci sono unità mobili o se hai impostato "Aspetta a fine turno", il gioco aspetta che tu prema il pulsante "Fine turno" in basso a destra.\\
+
+#SCIENCE
+$Ricerca\
+
+@@46\
+!!Ricerca\
+
+Puoi scoprire numerosi progressi. La maggior parte di essi rende disponibili certi edifici, caratteristiche di unità, modelli di unità e/o tipi di governo. Per ricercare un certo progresso, è spesso necessario conoscere prima uno o due altri progressi (requisiti).\
+::A Progressi\\
+
+Quando il gioco inizia, ti verrà chiesto il primo progresso da ricercare. Per avere aiuto su un certo progresso della lista cliccalo tenendo premuto Shift.
+La velocità di scoperta dipende dal numero di punti ricerca (%r) che la tua nazione produce. Quando avrai raccolto abbastanza %r scoprirai il progresso e potrai scegliere la ricerca successiva. 
+C'è sempre una sola ricerca alla volta, e non è possibile cambiare l'oggetto della ricerca una volta scelto.
+Il costo di un progresso aumenta col numero di scoperte che la tua nazione ha già fatto.\\
+
+;SCIENCECOST Dettagli sul costo della ricerca
+
+#SCIENCECOST
+$Costo della ricerca\
+
+!Costo della ricerca\
+
+Il costo di un progresso aumenta col numero di scoperte che la tua nazione ha già fatto. La formula esatta (se mai ti può interessare) al tuo livello di difficoltà è:\
+&TECHFORMULA\\
+Il numero n inizia da 4 e aumenta\
+-di 2 quando scopri normalmente un progresso, incluse le tecnologie future\
+-di 1 quando scopri un progresso con la Grande Biblioteca\
+-di 1 quando scopri un progresso ricevuto da un'altra nazione\
+-esclusa la ricerca di unità\
+-esclusa l'informatica futura
+
+
+#DIPLOMACY
+$Diplomazia\
+
+!!Diplomazia\
+
+!Informazioni\
+Due nazioni non si conoscono finché un'unità di terra dell'una non incontra da vicino un'unità di terra o una città dell'altra. Puoi vedere tutte le informazioni che hai su una nazione straniera nella schermata Rapporto nazioni. L'approfondimento di queste informazioni dipende molto dal possesso o meno di un rapporto sulla nazione. Un rapporto include popolazione, superficie, tesoreria, una lista dei progressi scoperti, le relazioni internazionali e tutti i grafici dello sviluppo storico della nazione eccetto quello militare.\\
+
+!Contatto\
+Quando due nazioni sanno della rispettiva esistenza, possono entrare in contatto diplomatico, per commerciare o firmare accordi. Una negoziazioneè una sequenza di frasi scambiate tra i giocatori. Ma il testo non si scrive a mano, le frasi sono generate automaticamente a seconda delle opzioni che clicchi. Queste opzioni comprendono fare/accettare proposte e annullare trattati.\\
+
+La negoziazione finisce quando le due nazioni non hanno più nulla da dirsi, o se una delle due decide di interrompere.\\
+
+!Proposte\
+Quasi tutte le transazioni consistono nel proporre e nell'accettare o meno una proposta. Una proposta è una combinazione di beni offerti e beni richiesti, che possono essere:\
+-Un trattato\
+-Rapporto generale\
+-Rapporto militare\
+-Pagamenti\
+-Progressi\
+-Modelli di unità\
+-Mappa del mondo\
+-Parti di astronave (se hai una base aerospaziale)\\
+
+Se una proposta non contiene richieste di beni, è un regalo. Può comunque non essere accettata. Se al contrario non contiene offerte di beni, è una pretesa.\\
+
+I Progressi ricevuti con una di queste negoziazioni non sono subito utilizzabili. Prima la tua nazione deve comunque fare della ricerca sulla nuova tecnologia per comprenderla appieno. Ma questa ricerca richiede solo metà del tempo, e non richiede requisiti.\\
+
+!Trattati\
+I trattati possibili sono:\\
+
+-Pace:\
+Le unità delle due nazioni non possono attaccarsi né entrare nel territorio dell'altra nazione. Le unità non hanno effetti di assedio sulle città dell'altra nazione.\\
+
+-Collaborazione:\
+Oltre agli effetti del trattato di pace, le nazioni si scambiano rapporti generali ogni turno.\\
+
+-Alleanza:\
+Le nazioni alleate non hanno limiti di movimento delle unità causati dai confini di stato o dalle zone di controllo. Inoltre, gli alleati si scambiano costantemente rapporti generali, militari e mappe, e vedono tutte le unità dell'altro.\\
+
+Un trattato può essere annullato solo durante una negoziazione, o se una nazione rifiuta di ricevere gli ambasciatori dell'altra. Dopo l'annullamento di un trattato, non si può annullare un'altro trattato con la stessa nazione per 3 turni.
+Annullare un trattato di pace con una nazione causa anche l'annullamento della pace con tutti i suoi alleati, inclusi quelli che erano anche tuoi alleati!\\
+
+!Credibilità\
+Puoi giudicare le altre nazioni dalla loro credibilità. I livelli sono:\
+-Rispettabile (100% credibilità)\
+-Isolazionista (da 90% a 99%)\
+-Imprevedibile (da 70% a 89%)\
+-Bugiardo (meno di 70%)\\
+
+Ogni turno di pace aumenta la credibilità di 1, fino al raggiungimento del massimo. Inizialmente il massimo è 100 per tutte le nazioni. Rompere un trattato di pace dimezza la credibilità e riduce il massimo di 10. Rompere un'alleanza diminuisce la credibilità di un quarto. La credibilità di tutte le nazioni conosciute è sempre nota, anche senza un contatto diplomatico diretto.
+
+#SHIP
+$Vincere il gioco\
+
+!!Vincere il gioco\
+
+C'è un solo modo per vincere: colonizzare le stelle! La tua nazione deve essere la prima a completare un'astronave per la colonizzazione interstellare, diretta verso un mondo lontano adatto alla vita. Un'astronave è composta di 12 parti enormi:\\
+
+;:B67 6 componenti spaziali\
+;:B68 4 moduli di potenza\
+;:B69 2 moduli di alloggio\\
+
+La produzione di ciascuno dei 3 tipi richiede grandi quantità di una speciale risorsa moderna. Solo una città che sfrutta una casella contenente la risorsa può produrre la rispettiva struttura. Inoltre la produzione non si può accelerare utilizzando convogli, riciclando edifici o spendendo denaro. Le risorse moderne sono:\
+&MODERN\\
+
+La tua nazione non sa riconoscere le risorse moderne finché non scopre la\
+::A47 Produzione in serie\\
+
+#MOVEMENT
+$Muovere le unità\
+
+!!Muovere le unità\
+
+Le unità sono le pedine mobili della tua nazione. Tutte le mosse e i comandi che ordini si riferiscono all'unità attualmente selezionata, che è quella che lampeggia nella finestra principale, ed è anche indicata con alcune informazioni in più nel pannello in basso. Per muovere usa le frecce o il tastierino numerico, oppure clicca col destro sulla casella di destinazione.\\
+
+!Restrizioni\
+Ogni unità si può spostare su tutte le caselle adiacenti, eccetto in questi casi:\
+-La casella di arrivo è occupata da unità degli altri giocatori.\
+-L'unità non ha abbastanza punti movimento (vedi sotto).\
+-Le unità di terra non possono andare in mare e viceversa.\
+-Le navi non possono andare in mare aperto senza l'abilità di navigazione.\
+-Si attraversa una zona di controllo (vedi sotto).\\
+
+!Velivoli\
+I velivoli devono tornare a terra ogni turno. Se un velivolo non si trova in una città, base militare o portaerei alla fine del turno, andrà distrutto. C'è un modo per ridurre questa restrizione:\
+::F7 la capacità carburante.\\
+
+!Punti movimento\
+Ogni mossa richiede "tempo", cioè consuma punti movimento (PM). Navi, aerei e unità di terra che entrano in caselle piane impiegano 1 PM per ogni passo parallelo alla griglia delle caselle (es. verso nordest), e 1,5 PM per le mosse diagonali (es. verso nord). Unità di terra che vanno su terreni accidentati impiegano il 50% in più se la loro velocità supera 1,5 PM. Sulle montagne, le unità di terra hanno bisogno di tutti i propri PM per 2 turni.\
+::T Tipi di terreno\\
+
+Esempio di utilizzo di PM per alcune mosse:\
+@MoveShot\
+-Sinistra - Unità con 1,5 PM iniziali\
+-Destra - Unità con 3 PM iniziali\\
+
+Muovendosi lungo una strada, fiume o canale, il costo è solo 0,4 PM (o 0,6 PM in diagonale), indipendentemente dal terreno. Lungo una ferrovia, il costo è solo l'8% (12% in diagonale) della velocità dell'unità.\\
+La velocità, ovvero i PM totali di un'unità, dipendono dal modello, e vengono ricaricati all'inizio di ogni turno. Le navi danneggiate perdono velocità in proporzione ai danni, ma mai sotto i 2,5 PM.\\
+Per le mosse lunghe è comodo usare la funzione Vai: basta cliccare col destro sulla destinazione.\\
+
+!Zone di controllo\
+Le unità si differenziano a seconda se hanno zone di controllo (ZdC) o no. Una unità con ZdC non può muoversi tra due caselle di terra che siano entrambe adiacenti a unità avversarie con ZdC, a meno che una delle due caselle sia una propria città o la casella di arrivo sia già occupata da una propria unità. Le navi, gli aerei e gli agenti segreti non hanno ZdC. Le unità trasportate da altre non contano per le ZdC. Le unità senza ZdC non possono assediare caselle.\\
+
+!Conquista di città\
+Le unità di terra con forza in attacco possono entrare in una città nemica indifesa. La città viene occupata e diventa tua, ma rimane in stato di sommossa per 3 turni. Le unità nemiche che erano supportate da questa città schiattano all'istante. La dimensione della città diminuisce di 1, e se scende sotto la dimensione minima di 2 viene distrutta.
+
+
+#COMMANDS
+$Ordini alle unità\
+
+@@16\
+!!Ordini alle unità\
+
+Il menù degli ordini fornisce diversi comandi per l'unità attualmente selezionata, a seconda del suo modello e di dove si trova:\
+
+-Congeda: elimina l'unità!\
+-Integra: fonde l'unità insieme a quella che viene attualmente prodotta nella città in cui si trova\
+-Continua: prosegue il movimento verso la destinazione data in precedenza\
+-Aspetta: seleziona la prossima unità\
+-Nessun ordine: sta ferma e non viene più selezionata automaticamente in questo turno\
+-Rimani qui: sta ferma e non viene più selezionata automaticamente\
+-Guarisci: sta ferma e non viene più selezionata automaticamente finché non ripara tutti i danni\
+-Supporta da qui: la città in cui si trova ora l'unità diventa la sua città di appartenenza\
+-Vai alla città più vicina: torna il prima possibile a una delle proprie città\
+-Centra: centra la finestra principale sull'unità\
+-Saccheggia: distrugge un potenziamento del terreno (costa 1 PM)\\
+
+#SETTLE
+$Colonizzazione\
+
+@@29\
+!!Colonizzazione\
+
+Coloni e ingegneri possono costruire potenziamenti del terreno, che migliorano le proprietà della casella in cui si trovano:\
+
+-Fonda città: i coloni spariscono e comincia la costruzione di una nuova città\
+-Costruisci ...: costruisci un certo potenziamento del terreno, vedi sotto\
+-Disbosca: trasforma una casella di foresta in prateria\
+-Bonifica: trasforma una casella di palude in pascolo\
+-Pianta Foresta: trasforma terreni fertili in foresta\
+-Trasforma: cambiamenti pesanti del terreno, vedi tipi di terreno\
+-Pulisci inquinamento: elimina l'inquinamento\\
+
+Questi lavori richiedono parecchi punti movimento. Questi PM si possono accumulare in diversi turni, anche con più unità che lavorano insieme. Ma per cominciare un lavoro, un'unità ha bisogno di almeno 1 PM. Gli ingegneri lavorano più velocemente dei coloni, semplicemente perché hanno più PM.\
+::J Potenziamenti del terreno\
+::T Tipi di terreno
+
+
+#COMBAT
+$Combattimento\
+
+!!Combattimento\
+
+Puoi attaccare le unità nemiche nelle caselle adiacenti usando la tastiera o il mouse, 
+esattamente come per entrare nelle caselle. Ma non tutti gli attacchi sono permessi.
+Normalmente, le unità di terra non possono attaccare le navi e viceversa. Le navi non
+possono attaccare direttamente da una città o da un canale.
+Gli aerei possono essere attaccati solo da altri aerei, eccetto quando si trovano in una 
+città o base militare. L'unità più debole è sempre distrutta in battaglia, la più forte 
+rimane danneggiata: maggiore è la superiorità, minore è il danno. Puoi avere una previsione esatta del risultato di un attacco tenendo premuto il tasto shift e cliccando col destro sul bersaglio.\\
+
+La forza base in combattimento di un'unità è diversa per l'attacco e per la difesa. I due valori sono comunemente indicati insieme separati da una barra, es. 75/25 significa che il modello ha attacco base 75 e difesa base 25. In ogni singolo combattimento, questi valori sono modificati da vari fattori:\
+
+-Esperienza. Ogni livello aumenta la forza del 25% (vedi sotto).\
+-Bonus terreno (solo unità di terra in difesa). Dipende dal tipo di terreno.\
+-Strutture speciali (solo in difesa), ad esempio mura o fortezze.\
+-Fortificazione (solo in difesa). Le unità di terra che non si sono mosse nel turno precedente e non sono a bordo di un trasporto si fortificano, guadagnando il 50% in difesa.\
+-Gli aerei in città e basi hanno difesa nulla, le navi in città e canali hanno difesa dimezzata.\
+Tutti questi bonus si sommano, non si moltiplicano.\
+
+Se l'attaccante ha meno di 1 PM rimasti, non ha tempo per organizzare bene l'attacco. La sua forza è ridotta in proporzione ai PM.\\
+
+!Attaccare un gruppo di unità\
+Se più unità si trovano sulla stessa casella e vengono attaccate, solo una difenderà. E' l'unica unità che il nemico vede prima di attaccare. Di solito il difensore è l'unità più forte in difesa.\\
+
+;TILEDEF Dettagli sul difensore di una casella\\
+
+Quando il difensore perde e non si trova in una città, fortezza o base militare, tutte le altre unità nella casella vengono distrutte, di qualunque tipo siano.\\
+
+!Esperienza\
+L'esperienza di un'unità aumenta con i danni che subisce in combattimento, anche se poi guarisce: ogni 100% di danni si sale di un livello. I livelli di esperienza sono:\
+&EXPERIENCE\\
+
+!Guarigione\
+Un'unità danneggiata si rigenera in proporzione ai PM che le rimangono a fine turno. Se in un turno non si muove affatto recupera l'8%, o il 20% se si trova in una città non in sommossa o in una base militare. Comunque, la salute totale può al massimo raddoppiare in un turno. Nessuna unità guarisce sull'acqua; gli aerei guariscono solo nelle città o basi militari.\\
+
+!Bombardamento\
+Navi e aerei con forza in attacco possono bombardare le città adiacenti indifese, se hanno almeno 1 PM rimasti. La popolazione della città diminuisce di 1, il che può anche causare la distruzione della città. L'unità non subisce danni. Si bombarda con la tastiera o il mouse, nello stesso modo in cui si muove e si attacca.\\
+
+!Espellere unità\
+Una nazione può espellere dal proprio territorio le unità di un'altra nazione con cui abbia un trattato di pace, usando una propria unità.
+Questa dev'essere di terra o di mare, con almeno 1 PM disponibili, in grado di attaccare l'unità straniera se fossero in guerra. Ordina l'azione come se fosse un attacco.
+
+#TILEDEF
+$Difensore di una casella\
+
+!Difensore di una casella\
+
+Se un gruppo di unità sulla stessa casella viene attaccato, di solito la più forte di quelle unità difende. Ma non è sempre vero, questo è lo schema esatto:\
+-Anzitutto si considera la categoria di unità. I fanatici hanno la precedenza, poi vengono le unità normali con zone di controllo, poi quelle senza ZdC, poi i sottomarini e gli aerei invisibili. Le unità a bordo di trasporti non difendono mai.\
+-Nella categoria più alta, si sceglie l'unità con difesa complessiva più alta, tenendo conto di esperienza, salute e fortificazione. Non vengono però considerati i bonus speciali che hanno effetto solo su particolari nemici.\
+-Nel raro caso di parità, difende l'unità meno costosa.\\
+
+#SPYMISSIONS
+$Servizi segreti\
+
+@@28\
+!!Servizi segreti\
+
+Gli agenti segreti possono fare speciali azioni di spionaggio. Puoi ordinare queste azioni muovendo un agente in una città straniera. Scegli tra 5 tipi di missioni:\
+-Sabotare la produzione: la produzione della città si blocca per un turno.\
+-Spiare le mappe.\
+-Ottenere informazioni su nazioni terze: acquisisci tutte le conoscenze che il nemico ha su altre nazioni.\
+-Stendere rapporto generale: aggiorna la schermata della nazione, compreso il rapporto scientifico e i grafici dettagliati.\
+-Stendere rapporto militare.\\
+
+Un trattato di pace tra due nazioni impedisce azioni di spionaggio reciproco. Comunque, gli agenti segreti possono infiltrarsi in ogni territorio, ignorando i trattati. 
+
+#CLASSES
+$Modelli di unità\
+
+!!Modelli di unità\
+
+Puoi produrre solo unità di modelli conosciuti. Coloni, milizia e guardie cittadine sono conosciuti sin dall'inizio, altre unità speciali diventano disponibili con un certo progresso o Meraviglia.\
+::S Unità speciali\\
+
+Tutti gli altri modelli devono essere sviluppati dai tuoi scienziati. Quando hai raggiunto i progressi di base necessari (es. codice guerriero per progettare nuove unità di terra), puoi scegliere "Ricerca militare" tra le ricerche disponibili, che ti porta a questa schermata:\\
+
+@DraftShot\
+
+Legenda:\
+-1: Peso\
+-2: Fattori dipendenti dalla tecnologia\
+-3: Scegli caratteristiche e abilità speciali qui\
+-4: Selezione categoria\
+-5: Proprietà della nuova unità\\
+
+Le proprietà complessive di un modello dipendono da due cose: anzitutto, quali tecnologie sono disponibili quando inizi la progettazione. Alcuni progressi migliorano gli armamenti di una o più categorie di unità, aumentando il fattore di forza, ma anche il fattore di costo. Esistono anche fattori di trasporto, che influenzano il numero di unità trasportabili.\\
+
+Il modello dipende poi dalle capacità e dalle abilità speciali che scegli tu. Aumenta e diminuisci ogni capacità cliccando i pulsantini sulla sinistra. La maggior parte delle caratteristiche aumentano il costo (%p) e il peso (%w) delle unità. Il peso massimo dipende dalla categoria e dalle tecnologie che hai scoperto. Per avere aiuto su una certa caratteristica, cliccaci tenendo premuto Shift.\
+::F Caratteristiche delle unità\\
+
+Alla fine, forza in attacco, forza in difesa e capacità di trasporto si ottengono moltiplicando il valore base per il fattore. Al livello di difficoltà più facile il costo è ridotto di 1/4, al più difficile è aumentato di 1/4.
+
+
+#CITIES
+$Gestione città\
+
+@@43\
+!!Gestione città\
+
+La funzione principale di una città è raccogliere risorse dalle caselle circostanti e lavorarle. La tua nazione comincia con una sola città, la capitale. Ci sono due modi per acquisire altre città: fondarle con i coloni o conquistarle al nemico. Fondarle è possibile solo nei terreni che permettono l'irrigazione (pascolo, pianura, prateria, colline, tundra).\\
+
+Ogni città ha la sua schermata di amministrazione, che appare quando ci clicchi:\\
+
+@CityShot\
+
+Le parti di questa schermata sono descritte nei paragrafi seguenti.\\
+
+!Cittadini\
+
+La popolazione di una città è suddivisa in grandi gruppi, ciascuno rappresentato da una faccina. La dimensione di una città, misurata in gruppi, è mostrata nell'angolo in alto a sinistra della schermata cittadina. La grandezza minima di una città è 2; se per qualunque motivo la grandezza scende sotto 2, la città è abbandonata. La grandezza massima è 8 ma può essere aumentata costruendo certi edifici.\\
+
+Ogni gruppo può sfruttare una casella nell'area della città (1) per raccoglierne le risorse. Una casella può essere sfruttata da un solo gruppo. Le caselle già sfruttate da un'altra città (propria o estera) non sono disponibili.\\
+
+I gruppi che non sfruttano una casella rimangono in servizio civile per mantenere l'ordine nella città (2) - maggiori informazioni nel prossimo paragrafo.\\
+
+!Felicità\
+
+Il pannello in alto a destra (3) mostra lo stato di felicità della città. Tre elementi sono importanti:\
+
+-Ricchezza (simbolo: %l). E' generata dal commercio, se attivata nelle impostazioni "Economia e tasse". Vedi paragrafo "Commercio" sotto.\
+-Morale (%m). Una città parte sempre con 4 punti morale di base, indicati nella casella della città. Il valore può essere aumentato da alcuni edifici. Inoltre, tutte le Meraviglie del mondo aumentano il morale della città dove sorgono di 2%m ciascuna.\
+-Controllo (%o). Deriva dalla popolazione in servizio civile. Ogni gruppo di cittadini aumenta il controllo di 2%o. Anche l'unità speciale "guardia cittadina" permette di controllare la popolazione.\\
+
+Morale e ricchezza aumentano la felicità della popolazione. E' fondamentale per la stabilità della città che ogni gruppo di cittadini sia felice oppure sotto controllo. Quindi la somma di felicità (morale e ricchezza) e controllo non devono scendere sotto la popolazione totale. In caso contrario, scoppia una sommossa.\\
+
+Sotto alcune forme di governo, anche il malcontento causato da certe situazioni riduce la felicità. Per maggiori informazioni vedi\
+::G Forme di governo\\
+
+!Fede\
+Sotto l'integralismo, tutti gli abitanti sono felici grazie alla fede e non c'è rischio di sommossa. Morale e controllo sono irrilevanti.\\
+
+!Risorse\
+
+Le caselle forniscono le loro risorse all'inizio di ogni turno. Ci sono 3 tipi di risorse di base: cibo (%f), materie prime (%p) e commercio (%t).
+Questi tre tipi sono processati in vari modi, descritti nei tre paragrafi seguenti.\\
+
+Il rendimento di una casella dipende da:\
+::T Tipo di terreno\
+::J Potenziamenti del terreno\
+::G Tipo di governo\\
+
+!Cibo\
+Il cibo (%f) rappresenta ogni tipo di alimenti. Lo stato di questa risorsa è mostrato nel pannello del cibo (4). E' necessario per mantenere la popolazione, poiché ogni gruppo di cittadini consuma 2%f ogni turno. Anche alcune unità come i coloni consumano cibo nella città di appartenenza. Il cibo che manca viene tolto dalle riserve della città. Se le riserve si esauriscono, la città è colpita dalla carestia: un cittadino o un'unità che consuma cibo muore. Ma di solito le città producono più cibo del necessario: quello che avanza viene immagazzinato nelle riserve. 
+Fanno eccezione le grandi città (dimensione 8 o più) quando hanno 1 solo cibo di avanzo: lo convertono in denaro. Quando le riserve sono piene e la dimensione non ha ancora raggiunto il massimo, la città cresce, ovvero aumenta di 1 gruppo di cittadini.\\
+
+!Materie prime\
+Le materie prime (%p) sono una risorsa astratta che rappresenta qualsiasi cosa utilizzabile per la produzione: legna, minerali, petrolio, ecc. Lo stato di questa risorsa è mostrato nel pannello delle materie prime (5). Parte delle materie prime è consumata per il supporto delle unità appartenenti alla città. Il resto viene accumulato per la produzione. Puoi cambiare il progetto in lavorazione nella città (6) cliccandoci. La mappa della città (7) mostra l'attuale stato di produzione della città. Maggiori informazioni nel capitolo "Produzione".\\
+
+!Commercio\
+Il commercio (simbolo: %t) rappresenta ciò che ha un valore mercantile. 
+Solo le caselle intorno alla città producono commercio, non la casella in cui la città stessa è situata, nemmeno se contiene oro. Lo stato del commercio è mostrato nel relativo pannello (8).
+Parte del rendimento del commercio si perde per via della corruzione, che dipende dal tipo di governo e in generale aumenta con la distanda della città dalla capitale. Il resto dei %t viene prima tassato secondo l'attuale rateo di tasse, impostato in "Economia e tasse". Il rimanente viene diviso tra ricerca e ricchezza, come impostato sempre in "Economia e tasse".
+Le tasse (%c) vanno nei fondi monetari, la ricerca (%r) è utilizzata per l'attuale progetto di ricerca della tua nazione, la ricchezza (%l) aumenta la felicità della popolazione. Nota che per produrre commercio, ogni città ha bisogno almeno di un\
+::B49 Municipio.\\
+
+;CORRUPTION Dettagli sul calcolo della corruzione\\
+
+!Assedio\
+Una città non può sfruttare una casella occupata da una unità straniera, se le due nazioni non sono in pace. Le unità nemiche possono quindi assediare le tue città bloccando l'accesso alle risorse. Naturalmente puoi fare lo stesso alle loro città. Se l'area di una tua città si sovrappone a quella di una città nemica, puoi assediare una casella sfruttata dal nemico per liberarla, così potrai sfruttarla tu al turno successivo.\\
+
+!Gestione automatica della popolazione\
+L'assegnazione dei gruppi di cittadini alla lavorazione delle caselle o al servizio civile avviene automaticamente in modo ottimale. Devi solo scegliere la priorità dell'ottimizzazione col selettore primario (9). Ci sono 5 priorità possibili:\
+-Massimizza crescita (default). Massimizza la produzione di cibo, ogni altra risorsa viene sacrificata se si può produrre anche solo una unità di cibo in più.\
+-Massimizza produzione. Massimizza la produzione di materie prime, sebbene anche le tasse sono considerate utili per velocizzare i progetti. Cibo e ricerca vengono sacrificati se si può produrre anche solo una unità di materie prime in più.\
+-Massimizza ricerca. Massimizza il commercio della città (ricerca e tasse), ma con un minimo di compromessi. Il cibo viene maggiormente trascurato.\
+-Favorisci produzione. Un compromesso tra la crescita e gli altri scopi, con precedenza delle materie prime rispetto al commercio.\
+-Favorisci ricerca. Un compromesso tra la crescita e gli altri scopi, con precedenza del commercio rispetto alle materie prime. Per la valutazione, le merci sono considerate tasse, non produzione.\\
+
+;OPTI Dettagli sulle formule\\
+
+Notare che, in certe situazioni, alcune impostazioni non tengono fede al proprio nome perché il loro obiettivo non esiste. Esempi: "Massimizza produzione" quando la città produce merci, "Massimizza crescita" quando la città è già alla dimensione massima, "Massimizza ricerca" quando la città non ha ancora un municipio. L'impostazione rimane valida, ma segue le sue priorità secondarie, il che può dare risultati imprevedibili.\\
+
+Al di là delle impostazioni selezionabili, l'ottimizzazione automatica rispetta sempre tre criteri prima di tutto:\
+-1° priorità: evitare le sommosse\
+-2° priorità: garantire il supporto minimo alle unità\
+-3° priorità: garantire il cibo minimo alla popolazione e alle unità\\
+
+!Controllo totale\
+Se non vuoi usare la gestione automatica della popolazione, puoi disattivarla cliccando il selettore o cliccando nell'area cittadina. Questo ti permette di scegliere liberamente quali caselle sfruttare. Cliccando una casella già sfruttata, il gruppo corrispondente viene assegnato al servizio civile. Cliccando una casella non sfruttata, un gruppo attualmente in servizio civile (se ce n'è almeno uno) viene assegnato alla casella. In questo modo un gruppo può essere spostato da una casella all'altra con due clic.\\
+
+In modalità controllo totale ovviamente devi tener conto da solo di necessità di cibo, supporto alle unità, sommosse, ecc.\\
+
+!Sommossa\
+Quando una città non può più controllare la popolazione scontenta (come descritto nel paragrafo "Felicità" sopra), cade in sommossa e interrompe produzione, ricerca e esazione delle tasse. Nel secondo turno di disordine viene interrotto anche il supporto alle unità, e la città inizia a perdere le proprie unità al ritmo di una per turno, finché non viene ristabilito l'ordine.\\
+
+Con la gestione automatica della popolazione le sommosse sono sempre evitate, a meno che ci sia molto malcontento dovuto alle unità fuori città. Se scoppia una sommossa in una città gestita automaticamente, è necessario spostare o congedare le unità che si trovano in posizioni che causano malcontento.\\
+
+Con il controllo totale devi tener conto tu della felicità; in genere la reazione più immediata a una sommossa è aumentare il servizio civile.
+
+
+#CORRUPTION
+$Calcolo della corruzione\
+
+!Calcolo della corruzione\
+
+L'ammontare esatto della corruzione si calcola con questa formula:\
+@CORRUPTION\
+-T - Commercio prodotto dalla città\
+-C - Fattore di corruzione dipendente dal governo\
+-D - Distanza tra la città e la capitale\
+-Dmax - Massima distanza teoricamente possibile tra due città (tutta l'altezza della mappa e metà della larghezza)\\
+
+Se una nazione non ha una capitale, la corruzione è 100% in tutte le città (50% dove è presente un tribunale), indipendentemente dal tipo di governo.
+
+
+#OPTI
+$Formule di ottimizzazione delle città\
+
+!Formule di ottimizzazione delle città\
+
+Dal punto di vista matematico, le cinque impostazioni di ottimizzazione della gestione automatica della popolazione differiscono solo per il valore m che viene massimizzato.
+Il calcolo considera cibo (c), produzione (p), tasse (t) e ricerca (r) comprensivi di tutti gli effetti amplificanti:\
+-Massimizza crescita: m = c, m2 = 2p + t + r\
+-Massimizza produzione: m = 4p + t, m2 = r, m3 = c\
+-Massimizza ricerca: m = 2r + t + p, m2 = c\
+-Favorisci produzione: m = sqrt(c) * (8p + 2t + r)\
+-Favorisci ricerca: m = sqrt(c) * (r + t + p)
+
+
+#PRODUCTION
+$Produzione\
+
+!!Produzione\
+
+Una città appena acquisita ha la produzione impostata su "Merci", ovvero le materie prime sono convertite direttamente in denaro. Puoi scegliere di costruire qualcos'altro cliccando sull'immagine del progetto in corso. Le possibilità dipendono dal livello di progresso della tua nazione. Per avere aiuto su un certo progetto nella lista, cliccaci tenendo premuto Shift. Hai 3 categorie di produzione tra cui scegliere:\
+-Unità\
+-Edifici e opere nazionali\
+-Meraviglie\\
+
+Se cambi un progetto già iniziato con un'altro della stessa categoria, perderai 1/3 della produzione accumulata. Se cambi anche categoria, la produzione accumulata verrà venduta. Per velocizzare la costruzione di un edificio/opera nazionale puoi riciclarne altri già esistenti nella città, riutilizzando 2/3 del loro costo. Per velocizzare la costruzione di unità (esclusi i convogli) puoi riciclarne altre presenti nella città, riutilizzando 2/3 del loro costo, ridotto in proporzione se l'unità è danneggiata.\
+
+!Emigrazione\
+Coloni, ingegneri, schiavi e militari di leva sono formati dalla popolazione della città, quindi la dimensione della città diminuisce quando unità di questi tipi vengono prodotte. Schiavi e militari di leva richiedono 1 gruppo di cittadini, coloni e ingegneri ne richiedono 2.
+L'emigrazione è reversibile: queste unità possono essere aggiunte a una città, se non ha già la dimensione massima. Ciò fa aumentare la popolazione di 1 o 2 a seconda del tipo di unità.\\
+
+!Leva obbligatoria\
+Puoi arruolare qualunque unità di terra come militari di leva, se l'hai abilitata nella schermata del relativo modello. Questo causa un'emigrazione di 1, e l'unità richiede anche supporto di 1%f Cibo. Il costo di produzione dell'unità diminuisce di 3 volte il suo fattore di costo, ma mai al di sotto del costo base. Creare unità di leva richiede la conoscenza della\
+::A18 Leva obbligatoria\\
+
+!Comprare e vendere progetti\
+Puoi velocizzare la produzione comprando le materie prime mancanti, affinché la costruzione sia già pronta al turno successivo. Ma ti costa 4 unità di denaro per ogni %p! Puoi anche svendere un progetto in corso, basta cambiarlo in "Merci": la produzione accumulata verrà convertita direttamente in denaro.\\
+
+!Inquinamento\
+Ogni punto di materie prime prodotto causa un punto di inquinamento. Ogni gruppo di cittadini tollera 1 punto, l'inquinamento in eccesso si accumula nella discarica. Se la discarica supera 240, una casella nel raggio della città verrà inquinata, perdendo così metà del suo rendimento di tutte le risorse. L'inquinamento può essere ripulito da coloni o ingegneri.
+
+
+#BUILDINGS
+$Costruzioni\
+
+@@67\
+!!Costruzioni\
+
+Ogni costruzione cittadina ha un effetto positivo sulla propria città, e in alcuni casi su tutta la nazione. Ce ne sono 3 tipi, che differiscono per quante se ne possono costruire:\
+-Edifici: se ne può costruire uno in ogni città.\
+-Opere nazionali: ogni nazione ne può possedere una sola per tipo. Se se ne costruisce una seconda, la prima viene subito svenduta.\
+-Meraviglie: si possono costruire solo una volta nella storia. Se una nazione costruisce una certa Meraviglia, le altre nazioni non potranno più costruire quella. Se una Meraviglia viene distrutta (l'unico modo è distruggere la sua città), è perduta per sempre. Tutte le Meraviglie, oltre al loro effetto speciale, producono 2 punti morale nella loro città.\\
+
+::B Edifici\
+::B201 Opere nazionali\
+::B202 Meraviglie\\
+
+Quasi tutti gli edifici e le opere nazionali hanno costi di mantenimento, che sono detratti dai tuoi fondi monetari. Se i soldi non bastano, un edificio a caso viene svenduto.\\
+
+Clicca il pulsante "Mostra edifici" nella schermata cittadina per vedere quali edifici sono stati costruiti qui. Clicca sull'immmagine di uno di essi per svenderlo o riciclarlo. Il rendimento in denaro della vendita è uguale al costo di produzione.
+
+
+#SUPPORT
+$Supporto alle unità\
+
+!!Supporto alle unità\
+
+Ogni unità consuma un %p di supporto ogni turno dalla propria città di appartenenza. Le navi di peso 6%w o più consumano il doppio. Inizialmente, un'unità appartiene alla città dove è stata costruita. Per cambiare la città di appartenenza, porta l'unità nella città desiderata e usa il comando "Supporta da qui". Nelle schermate delle città usa il pulsante "Mostra supporto" per vedere le unità supportate.\\
+
+Alcune unità non richiedono supporto, sono indicate da un simbolo scolorito (%n) al posto del normale simbolo (%p). Il numero di queste unità dipende dal tipo di governo e dalla grandezza della città. Se una città non riesce a supportare tutte le sue unità, una verrà congedata!
+Normalmente è quella di minor valore.\\
+
+Se una città rimane in sommossa per più di un turno, si interrompe anche il supporto alle unità; perciò se la città ha unità da mantenere, ogni turno se ne perde una.
+
+#MACRO
+$Gestione schematica\
+
+!!Gestione schematica\
+
+Giocare dev'essere un divertimento, non una rottura di palle. La gestione schematica ti aiuta a liberarti dei compiti ripetitivi più noiosi. Non fa nulla che non potresti fare anche senza, ma permette di giocare in modo più efficiente. Comunque, si consiglia di usare la gestione schematica solo dopo aver capito bene il funzionamento base di ciò che si vuole gestire.\\
+
+!Potenziamenti del terreno\
+Permette di definire una sequenza fissa di miglioramenti per ogni tipo di terreno. Dopo aver definito una sequenza, puoi farla applicare ai coloni con il comando "Potenzia": i coloni comincieranno a costruire automaticamente i potenziamenti nell'ordine deciso. Con un mouse a 3 pulsanti, puoi unire questa funzione al movimento: basta cliccare con il pulsante centrale sulla casella da potenziare, e il colono andrà automaticamente lì e comincierà il lavoro.\\
+
+!Tipi di città\
+Puoi definire sequenze di produzione per 4 tipi di città. Trascina gli oggetti col mouse per aggiustare l'ordine di costruzione. Per far cominciare una sequenza a una città, scegli il tipo desiderato come progetto in corso. Cambiamenti nella sequenza vengono applicati automaticamente a tutte le città che l'hanno già iniziata. Il singolo progetto attualmente in corso non viene comunque cambiato. Il tipo di città rimane selezionato anche quando tutta la sequenza è stata costruita.
+
+
+#START
+$Schermata di avvio\
+
+!Cominciare il gioco\
+
+La schermata iniziale ha 3 pagine, passa dall'una all'altra cliccando i titoli.
+Per cominciare una nuova partita vai su "Nuova partita". Scegli il numero di nazioni
+straniere e il tuo livello di difficoltà. Se hai delle I.A. alternative installate,
+ne puoi selezionare una al posto di quella standard, cliccando sul riquadro dell'IA.
+Premi "Gioca" per cominciare.\\
+
+!Impostazione dettagliata dei giocatori\
+Se clicchi su "Impostazione dettagliata", hai piena libertà nel definire ogni singolo giocatore.
+Solo da qui puoi impostare più di un giocatore umano (sullo stesso pc), più tipi diversi di IA,
+e le modalità Guardone e Torneo con le IA soltanto.
+Clicca sui 9 riquadri per scegliere i giocatori da un menù.
+I tre riquadri di sinistra hanno ciascuno una ulteriore casellina etichettata "3", che serve per definire 3 nazioni con un solo riquadro, quindi in totale puoi avere fino a 14 avversari.\\
+
+Ogni partecipante ha il suo livello di difficoltà personale, impostabile sulla sinistra 
+del riquadro. Una linea è il livello più facile, 3 il più difficile. Se ad esempio vuoi 
+che il gioco sia il più duro possibile per te, imposta la tua difficoltà a 3 e quella degli 
+avversari a 1.\\
+
+Aumentare la difficoltà significa aumentare la dimensione delle riserve di cibo e il costo della produzione e della ricerca, quindi in generale rallentano la crescita della popolazione, la produzione e la ricerca.\\
+
+!Caricare una partita\
+
+Se interrompi una partita e la salvi, apparirà nella pagina delle partite salvate. Selezionala e premi "Apri" per riprenderla. Un salvataggio contiene tutti i turni di una partita; se vuoi riprendere il gioco da un altro punto precedente all'ultimo turno, specifica l'anno prima di aprire la partita.\\
+
+!Mappe\
+
+Normalmente si gioca su una mappa del mondo casuale, generata automaticamente all'inizio della partita. Nella pagina "Mappa" puoi cambiare 2 parametri del mondo: grandezza e percentuale di terraferma.\\
+
+Alternativamente, è possibile giocare su mappe predisegnate che qualcuno ha creato per C-evo, ad es. una mappa del mondo reale. Il pacchetto di base non contiene mappe, ma ce ne sono parecchie disponibili nel sito del progetto. Metti i file delle mappe nella sottocartella "Maps". La mappa dev'essere selezionata solo per cominciare il gioco, poi viene salvata insieme alla partita.
+
+
+#MAPEDIT
+$Disegno di mappe\
+
+!!Disegno di mappe\
+
+Il gioco contiene un semplice disegnatore di mappe. Per usarlo, vai alla pagina "Mappa" nella schermata iniziale, seleziona la mappa che vuoi modificare e premi "Disegna". Se vuoi creare una mappa nuova, seleziona "Mappa casuale", regola grandezza e massa terrestre, poi avvia il disegnatore.\\
+
+Il funzionamento è molto semplice: scegli un tipo di terreno o un oggetto nella lista in basso, poi disegnalo sulla mappa cliccando col mouse. La differenza tra oceano/coste e tra caselle normali/risorse speciali appare automaticamente, non puoi influenzarla. Non dimenticare di piazzare almeno una casella di ciascuna risorsa moderna, altrimenti nessun giocatore potrà completare l'astronave.\\
+
+E' importante anche piazzare i punti di partenza per i giocatori. Una mappa non può ospitare più nazioni dei propri punti di partenza. Se non ne ha nessuno, non può essere giocata. Se vuoi che il giocatore umano parta in una posizione specifica, definiscila come punto di partenza preferenziale.\\
+
+Le mappe non sono visibili al giocatore nella schermata iniziale, ma puoi fornire un'immagine rappresentativa di una mappa. Dev'essere un file BMP con lo stesso nome della mappa, nella cartella Maps. La grandezza massima dell'immagine è 192x96.
+
+
+#AIT
+$Torneo I.A.\
+
+!!Torneo I.A.\
+
+Se hai diverse IA installate, puoi farle gareggiare l'una contro l'altra in un torneo. Seleziona "Impostazione dettagliata" per i giocatori, scegli "Torneo IA" nel riquadro centrale e avvia una partita. Il gioco si ridurrà a una piccola finestra. Quando premerai il pulsante di partenza, C-evo farà giocare alle IA una serie illimitata di partite, senza mostrarle. I risultati sono semplici statistiche, aggiornate a ogni partita:\\
+
+@AITShot\
+
+I numeri stanno per:\
+
+&AITSTAT
+
+#HOTKEYS
+$Mouse e tastiera\
+
+Funzioni del mouse nella mappa principale:\
+-Tasto sinistro su unità propria - Seleziona unità\
+-Tasto sinistro su città propria - Mostra dettagli città\
+-Tasto sinistro su unità straniera - Informazioni sull'unità\
+-Tasto sinistro su città straniera - Vedi difese della città\
+-Tasto sinistro su casella vuota - Centra la visuale sul punto cliccato\
+-Tasto destro - Muove l'unità selezionata nel punto cliccato\
+-Tasto destro (modalità Guardone) - Crea un'unità\\
+
+Funzioni della tastiera nella mappa principale:\
+-Frecce - Muovi l'unità selezionata\
+-"+" del tastierino numerico - Fine turno\
+-Dall'1 al 7 - Equivalenti ai pulsantini di fianco alla minimappa\
+-Molti tasti di scelta rapida per i menù, vedi i menù
+
+#TRADINGGOODS
+$Merci\
+
+!!Merci\
+
+Quando una città produce merci, le materie prime che normalmente sarebbero usate per la costruzione sono convertite direttamente in denaro.
+
+#MILRES
+$Ricerca militare\
+
+!!Ricerca militare\
+
+Ogni nazione deve fare della ricerca militare per introdurre nuovi modelli di unità.\
+:CLASSES Modelli di unità
+
+#ADVHELP
+Peso massimo delle unità d'aria: 7%w.
+*
+*
+*
+Peso massimo delle unità di terra: 10%w.
+*
+*
+Permette di costruire strade sopra i fiumi.
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+Permette di creare unità di leva.
+Permette di costruire fortezze.\::J Vedi lista potenziamenti del terreno.
+*
+*
+*
+*
+*
+*
+*
+*
+*
++1%t su tutte le caselle pianeggianti con strada.
+Permette di trasformare i terreni e di costruire canali.\::J Vedi lista potenziamenti del terreno.
+Permette di progettare nuove unità d'aria.
+*
+*
+Peso massimo delle unità di terra: 7%w.
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
++1%t su tutte le caselle con fiume.\Permette di progettare nuove unità di mare.
+*
+Rende disponibili le risorse moderne.\Progresso chiave: le altre nazioni vengono informate quando si scopre.
+*
+Permette di costruire basi militari.\::J Vedi lista potenziamenti del terreno.
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+Permette di costruire fattorie.\::J Vedi lista potenziamenti del terreno.
+*
+*
+*
+*
+Permette di costruire ferrovie.\::J Vedi lista potenziamenti del terreno.
+*
+Rende disponibili nuove risorse speciali.\Progresso chiave: le altre nazioni vengono informate quando si scopre.
+*
+Peso massimo delle unità di mare: 7%w.
+*
+*
+*
+Peso massimo delle unità di mare: 9%w.\Aumenta di 1 il massimo di corazza.
+*
+*
+*
+*
+*
+Progresso chiave: le altre nazioni vengono informate quando si scopre.
+*
+*
+Permette di progettare nuove unità di terra.
+*
+*
+*
++5% ricerca nelle città con università\+10% ricerca nelle città con laboratorio
++5% produzione nelle città con fabbrica\+10% produzione nelle città con stabilimento\(non aumenta l'inquinamento)
+*
+*
+
+#IMPHELP
+Abilita l'unità speciale:\\::S7 Schiavi
+La nazione ottiene informazioni generali e un progresso a scelta da ogni città che conquista. I progressi rubati sono trattati come quelli ceduti volontariamente: devono comunque essere ricercati per metà per essere compresi appieno, ma non richiedono requisiti.
+Il deserto può essere trasformato in pianure/pascoli.\Tutte le unità resistono ai terreni ostili.
+Il costo delle Meraviglie diminuisce di 1/4.
+Le caselle di mare producono un %p in più.\\Questa Meraviglia si può costruire solo in città costiere.
+La nazione acquisisce tutti i progressi che sono già noti alla maggioranza delle altre nazioni. I progressi ottenuti in questo modo sono trattati come quelli ceduti volontariamente: devono comunque essere ricercati per metà per essere compresi appieno, ma non richiedono requisiti.
+Per ogni tempio della nazione e di tutte le nazioni con cui si ha contatto, si guadagna 1%c per turno.
+Rende disponibili 3 abilità speciali:
+Fornisce subito punti ricerca corrispondenti a 2 progressi completi. Di solito questo comporta una scoperta immediata e una al turno successivo.\\Inoltre, permette di costruire l'unità speciale:\\::S8 Aliante
+Velocità delle unità navali +2.\\Questa Meraviglia si può costruire solo in città costiere.
+Il costo per il completamento immediato di edifici e Meraviglie è ridotto a 2%c per unità di materie prime mancante.
+*
+La ricerca raddoppia se il governo è la monarchia.
+Le cattedrali producono +2%m.
+*
+Ogni città ha automaticamente il proprio tasso personalizzato di ricchezza e ricerca, in modo da produrre l'esatto quantitativo di ricchezza necessario per mantenere l'ordine.\\Questo generalmente evita le sommosse anche nelle città con controllo manuale, ma non se neppure il 100% di ricchezza è sufficiente.
+L'effetto delle Meraviglie della nazione non termina mai. Anche le Meraviglie già esaurite si riattivano.
+Conta come una centrale idroelettrica in ogni Città.\\Questa Meraviglia si può costruire solo in città adiacenti a fiumi o montagne.
+Movimenti illimitati lungo le ferrovie.
+Comincia la Guerra Fredda. Tutte le attività diplomatiche sono proibite. La Guerra Fredda dura 40 turni.
+Tutto il mondo diventa visibile per un turno. Si ottengono informazioni generali e militari su tutte le nazioni.\\Questa Meraviglia si può costruire solo se la nazione possiede la\::B66 Base aerospaziale
+*
+*
+*
+*
+*
+*
+*
+*
+Tutte le unità di terra costruite qui sono già addestrate. Le unità di terra danneggiate situate nella città raddoppiano la propria energia ogni turno.
+Conserva metà delle riserve di cibo dopo ogni crescita di popolazione.
++2%m.
+Tasse e ricchezza +50%.
+Ricerca +50%.
+Toglie i limiti sul commercio e riduce la corruzione del 50%.
+Difesa +200% contro le unità di terra. La città non perde popolazione quando un difensore è distrutto da un attacco di terra.
+Aumenta la grandezza massima della città da 8 a 12.
+Tasse e ricchezza +75%.
++4%m.
+Ricerca +75%.
++1%f nelle caselle di mare.\\Questo edificio si può costruire solo in città costiere.
++4%m.
+Produzione +50%, inquinamento +50%.
+Produzione +50%, inquinamento +50%.
+Previene l'inquinamento.
+Raddoppia l'effetto di fabbrica e stabilimento.\(ogni città può sfruttare un solo tipo di centrale)\Inquinamento +50%.
+Raddoppia l'effetto di fabbrica e stabilimento.\(ogni città può sfruttare un solo tipo di centrale)\Inquinamento -50%.\\Questo edificio si può costruire solo in città adiacenti a fiumi o montagne.
+Raddoppia l'effetto di fabbrica e stabilimento.\(ogni città può sfruttare un solo tipo di centrale)\Non aumenta l'inquinamento.
++1%p nelle caselle di mare.\\Questo edificio si può costruire solo in città costiere.
+Permette di produrre fino a 3%t per casella. 
+Aumenta la grandezza massima della città a 30.
+Permette di sfruttare le fattorie.
+Raddoppia i benefici della ruota.
+Ricerca +75%.
+Difesa +100% contro le unità d'aria. Impedisce bombardamenti dalle unità d'aria.
+Difesa +100% contro le unità di mare. Impedisce bombardamenti dalle unità di mare.\\Questo edificio si può costruire solo in città costiere.
+Tutte le unità d'aria costruite qui sono già addestrate. Le unità d'aria danneggiate situate nella città raddoppiano l'energia ogni turno.
+Tutte le unità di mare costruite qui sono già addestrate. Le unità di mare danneggiate situate nella città raddoppiano l'energia ogni turno.
+La città diventa la capitale, che influenza la corruzione in tutta la nazione, vedi:\:RESOURCES Risorse\\Nella capitale non ci sono limiti sul commercio e non c'è corruzione.
+Conta come le mura in ogni città della nazione nello stesso continente (i poli non contano come connessioni tra continenti).
+Produce punti morale pari alla dimensione della città.
+Raddoppia la produzione complessiva di ricerca della città.
+Tutte le unità di terra costruite qui sono d'elìte. Le unità di terra danneggiate situate nella città raddoppiano l'energia ogni turno.
+Difesa +100% contro tutte le unità che attaccano la città.
++12%f nella città.
+Raddoppia l'effetto di tutte le banche.
+Rendimento delle risorse speciali +100%.\Rende possibile la costruzione dell'astronave. La perdita della base aerospaziale causa la perdita dell'astronave. Quando una nazione che possiede già una base aerospaziale conquista quella di un'altra, si impadronisce anche della sua astronave. 
+*
+*
+*
+
+#FEATUREHELP
+Valore base di attacco +1.
+Valore base di difesa +1.\Nota: questa abilità si può usare al massimo 2 volte nelle unità di terra, 3 volte in quelle di mare e aria.
+Velocità +0,5.
+Capacità base di trasporto +1.
+Capacità base di trasporto aerei +1.\Include l'abilità radar/sonar.\Gli aerei da trasporto non possono stare sulle portaerei.
+Velocità +2.
+Valore base di attacco +2 nel primo attacco contro un'unità di terra o mare, dopo essere partiti da una città, portaerei o base militare.
+Ogni punto di carburante permette di volare 1 turno in più senza dover tornare a una città, portaerei o base militare.
+Capacità base di trasporto +1.\Gli aerei da trasporto non possono stare sulle portaerei.
+Tutte le navi possono attraversare l'oceano.
+Visibilità di 2 caselle. Vede i sottomarini nelle caselle adiacenti.
+Invisibile al nemico.
+Le unità di terra ignorano l'effetto delle mura e possono attaccare le unità navali sulle caselle di mare adiacenti, tranne i sottomarini.\Le unità di mare possono attaccare le città e le unità di terra sulle coste.
+Muove su ogni terreno come se ci fosse la strada.
+Le unità trasportate danneggiate raddoppiano la salute ogni turno.
+Valore base di attacco e difesa +1. Richiede supporto doppio. Può muovere solo lungo strade, fiumi o canali con costo di movimento doppio, o lungo la ferrovia. Non si può trasportare.
++100% Difesa contro le unità d'aria.
+Può esaminare tutte le città e i gruppi di unità adiacenti, inclusi gli aerei invisibili.
+Velocità +1.\Non più utilizzabile quando diventa disponibile l'energia nucleare.
+Velocità +2.
+Velocità +4.
+Invisibile al nemico.
+Quando l'unità è distrutta in combattimento, infligge comunque il doppio dei danni.\\Le unità fanatiche difendono per prime, anche se sono presenti difensori più forti.\\Non funziona se il governo è repubblica, democrazia o tecnocrazia.
+Quando l'unità vince un combattimento, subisce solo metà dei danni.
+Attacca a piena forza anche se restano meno di 1 PM.
+Tutte le unità di terra hanno visibilità di 2 caselle. Le unità si fortificano subito se hanno ancora almeno metà dei PM.
+Il costo di produzione è dimezzato se un'altra unità dello stesso tipo è stata appena prodotta nella città. Il costo è però doppio altrimenti.
+
+#GOVHELP
+-Tutte le città sono in sommossa.\-Le unità non richiedono supporto.\-Gli edifici non hanno costi di mantenimento.\-Dura 3 turni.
+-Massimo 3%f, 2%p e 2%t per casella.\-Corruzione alta (fattore 3).\-Ogni città supporta gratis una unità per gruppo di cittadini.\-Niente inquinamento.\-I coloni consumano 1%f.
+-Corruzione bassa (fattore 1).\-Ogni città supporta gratis una unità ogni 2 cittadini.\-I coloni consumano 1%f.
+-Tutte le caselle con almeno 1%t aumentano di 1.\-Corruzione media (fattore 2).\-Ogni unità militare (attacco > 0) che alla fine del turno è in territorio nemico causa malcontento nella città di appartenenza, riducendo la felicità di 2.\-I coloni consumano 2%f.
+-Corruzione bassa (fattore 1).\-Le unità non richiedono supporto.\-Fede (tutti i cittadini sono felici).\-Ricerca totale dimezzata.\-I coloni consumano 1%f.
+-Tutte le caselle con almeno 2%p aumentano di 1.\-Niente corruzione.\-Ogni città supporta gratis una unità ogni 2 cittadini.\-I coloni consumano 2%f.
+-Tutte le caselle con almeno 1%t aumentano di 1.\-Niente corruzione.\-Ogni unità militare (attacco > 0) che alla fine del turno non è in territorio nazionale o alleato causa malcontento nella città di appartenenza, riducendo la felicità di 2.\-I coloni consumano 2%f.
+-Tutte le caselle con almeno 1%t aumentano di 1.\-Le tecnologie future hanno costo di ricerca dimezzato.\-Niente corruzione.\-Ogni unità militare (attacco > 0) che alla fine del turno è in territorio nemico causa malcontento nella città di appartenenza, riducendo la felicità di 2.\-Il cibo che avanza è convertito in denaro: la popolazione non cresce.\-I coloni consumano 2%f.
+
+#TECHAGE
+Progressi antichi
+Progressi industriali
+Progressi moderni
+Tecnologie future
+
+#SPECIALMODEL
+-Può fondare città e potenziare i terreni.\-Richiede supporto di cibo dalla città di appartenenza.
+-Può fondare città e potenziare i terreni.\-Richiede supporto di cibo dalla città di appartenenza.\-Immune ai terreni ostili.
+*
+-Difesa +100% quando difende una città.\-Richiede sempre supporto.\-Nelle tirannie, reprime la popolazione rivoltosa: se si trova in una Città, +2%o.
+:SPYMISSIONS Può fare azioni di spionaggio.\-Visibilità di 2 caselle.\-Non ha zone di controllo.\-Può esaminare le città e i gruppi di unità adiacenti, inclusi gli aerei invisibili.\-La sua posizione non causa mai malcontento nella città di appartenenza.
+-Nelle città si può riciclare, aggiungendo 2/3 del suo costo alla produzione di qualunque progetto, escluse le parti dell'astronave.
+-Può trasportare 2 unità.
+-Può potenziare i terreni.
+-Conta come unità d'aria al proprio turno, ma come unità di terra quando tocca agli altri giocatori.\-Può esaminare le città e i gruppi di unità adiacenti.\-Se alla fine del turno si trova su una casella di mare, è perduto.\-Non può essere trasportato dalle navi.
+
+#JOBHELP
+:MOVEMENT Velocizza i movimenti.\::A29 Bonus commercio con la ruota.
+:MOVEMENT Velocizza i movimenti.\-Materie prime +50%.\-Si può costruire solo su caselle che hanno già la strada. La strada rimane, anche se graficamente potrebbe venire nascosta.
+-Permette l'accesso alle navi.\-Protegge dall'ostilità del terreno.\-Non si può costruire su montagne e ghiacci.
+-Bonus cibo, a seconda del tipo di terreno.
+::B51 cibo +50% nelle città con supermercato.\-Si può costruire solo su caselle che hanno già l'irrigazione. L'irrigazione rimane, anche se graficamente viene nascosta.
+-Bonus materie prime, a seconda del tipo di terreno.
+-Difesa +100% alle unità di terra.\-Dà visibilità di 2 caselle.\:COMBAT Altri effetti sul combattimento.
+-Protegge dall'ostilità del terreno.\-Dà visibilità di 2 caselle.\:COMBAT Effetti su combattimento e guarigione.\::F6 Rifornisce gli aerei di bombe.\-Le navi possono accedere a una base militare se c'è un canale.

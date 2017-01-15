@@ -1,0 +1,122 @@
+#CHOOSE ИСПАНЦЫ
+#n Испанцы
+#s Испания
+#a Испанцы
+#COLOR FFFF00
+#SYMBOLS Nation1, 47
+#AGE0 StdCities, 3, StdTextures, 0, Nation1, 37
+#AGE1 StdCities, 3, StdTextures, 2, Nation1, 37
+#AGE2 StdCities, 4, StdTextures, 4, Nation1, 37
+#AGE3 StdCities, 5, StdTextures, 6, Nation1, 37
+
+#CITIES
+    Мадрид
+    Севилья
+    Толедо
+    Кордоба
+    Валенсия
+    Саламанка
+    Барселона
+    Вальядолид
+    Сарагосса
+    Кадиз
+    Бильбао
+    Гренада
+    Малага
+    Памплона
+    Виго
+    Авила
+    Лейн
+    Бургос
+    Овьедо
+    Сантандер
+    Сюидад
+    Калатрава
+    Картахена
+    Мурсия
+    Лас Пальмас
+    Пальма-Де-Майорка
+    Аликантэ
+    Гийон
+    Госпитальер
+    А-Корука
+    Виториа-Гасте
+    Тенерифе
+    Бадалона
+    Эльче
+    Мистоль
+    Сабаделл
+    Jerez de la Frontera
+    Donostia-San Sebastiбn
+    Fuenlabrada
+    Terrassa
+    Leganйs
+    Alcalб de Henares
+    Almerнa
+    Getafe
+    Albacete
+    Alcorcуn
+    Castellуn de la Plana
+    Huelva
+    Badajoz
+    La Laguna
+    Logroсo
+    Santa Coloma de Gramanet
+    Tarragona
+    Lleida
+    Jaйn
+    Marbella
+    Ourense
+    Matarу
+    Algeciras
+    Dos Hermanas
+    Torrejуn de Ardoz
+    Barakaldo
+    Santiago de Compostela
+    Alcobendas
+    Reus
+    Telde
+    Lugo
+    San Fernando
+    Getxo
+    Avilйs
+    Cбceres
+    Cornellб
+    Palencia
+    Ferrol
+    Sant Boi
+    Coslada
+    Parla
+    Lorca
+    El Puerto de Santa Marнa
+    Talavera de la Reina
+    Pontevedra
+    Ceuta
+    Girona
+    Melilla
+    Pozuelo de Alarcуn
+    Guadalajara
+    Zamora
+    Torrent
+    Manresa
+    Ponferrada
+    El Prat
+    Chiclana de la Frontera
+    Sanlъcar de Barrameda
+    Ciudad Real
+    La Lнnea de la Concepciуn
+    Rubн
+    Alcoy
+    Gandнa
+    San Sebastiбn de los Reyes
+    Las Rozas de Madrid
+    Torrevieja
+    Alcalб de Guadaira
+
+#UNITS StdUnits
+    22,    040,    Ополченцы
+
+#UNITS Nation1
+    7,    103,      Мушкетеры
+    17,    133,    Кавалерия
+    27,    201,    Галеон

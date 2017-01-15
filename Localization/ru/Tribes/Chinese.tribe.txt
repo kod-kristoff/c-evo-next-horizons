@@ -1,0 +1,117 @@
+#CHOOSE КИТАЙЦЫ
+#n Китайцы
+#s Китай
+#a Китайцы
+#COLOR 00FFFF
+#SYMBOLS Nation1, 41
+#AGE0 StdCities, 1, StdTextures, 0, Nation1, 31
+#AGE1 StdCities, 1, StdTextures, 2, Nation1, 31
+#AGE2 StdCities, 4, StdTextures, 4, Nation1, 31
+#AGE3 StdCities, 5, StdTextures, 6, Nation1, 31
+
+#CITIES
+    Пекин
+    Шанхай
+    Гуанчжоу
+    Нанкин
+    Циндао
+    Шэньян
+    Ченду
+    Шейгун
+    Тайюань
+    Датонг
+    Макао
+    Аньшань
+    Ханчжоу
+    Шаугуань
+    Хайкоу
+    Урумчи
+    Баотоу
+    Хуаньши
+    Ланьчжоу
+    Шаньтоу
+    Харбин
+    Xi'an
+    Jiulong
+    Wuhan
+    T'aipei
+    Taiyuan
+    Kaohsiung
+    Fushun
+    Anshan
+    Lanzhou
+    Zhengzhou
+    Nanchang
+    Changsha
+    Hangzhou
+    Kunming
+    Urumqi
+    Qiqihar
+    Tangshan
+    Jilin
+    Xianggang)
+    Guiyang
+    Shijiazhuang
+    Baotou
+    Wuxi
+    T'aichung
+    Fuzhou
+    Zibo
+    Handan
+    Xuzhou
+    Benxi
+    Yichun
+    Hefei
+    Luoyang
+    Nanning
+    T'ainan
+    Suzhou
+    Daqing
+    Huainan
+    Hohhot
+    Jinzhou
+    Jixi
+    Fuxin
+    Liuzhou
+    Hengyang
+    Liaoyang
+    Mudanjiang
+    Xining
+    Yingkou
+    Ningbo
+    Zhangjiakou
+    Dandong
+    Changzhou
+    T'aipeihsien
+    Hegang
+    Xiangtan
+    Xiangfan
+    Xinxiang
+    Sha Tin
+    Jiamusi
+    Hunjiang
+    Nantong
+    Tuen Mun
+    Shenzhen
+    Wuhu
+    Pingdingshan
+    Bengbu
+    Zhuzhou
+    Huangshi
+    Panzhihua
+    Yantai
+    Baoji
+    Wenzhou
+    Shuangyashan
+    Xiamen
+    Chungho
+    Jiaozuo
+    Zigong
+    Zhanjiang
+    Chilung
+    Tonghua
+
+#UNITS Nation1
+    1,    040,    Ополченцы
+    11,    104,    Стрелки
+    21,    072,    Джонка

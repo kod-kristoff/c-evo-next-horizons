@@ -1,0 +1,131 @@
+0,	074,	Schiavi
+1,	075,	Liberi cittadini
+3,	071,	Testuggine
+4,	073,	Aliante
+7,	064,	Barcacce
+10,	010,	Coloni
+11,	011,	Ingegneri
+13,	021,	Agente segreto
+14,	030,	Convoglio
+16,	017,	Città in costruzione
+17,	041,	Guardia cittadina
+20,	100,	Guerrieri
+21,	100,	Arcieri
+22,	100,	Guerrieri
+23,	100,	Guerrieri
+24,	101,	Legione
+25,	101,	Picchieri
+26,	101,	Falange
+27,	101,	Arcieri
+30,	102,	Guardie
+31,	102,	Guardie
+32,	102,	Guardie
+33,	102,    Guardie
+34,	103,	Moschettieri
+35,	103,	Moschettieri
+36,	103,	Moschettieri
+37,	103,	Moschettieri
+40,	104,    Fucilieri
+41,	104,    Fucilieri
+42,	104,    Fucilieri
+43,	104,    Fucilieri
+44,	105,    Fanteria
+45,	105,	Fanteria
+46,	105,	Fanteria
+47,	105,	Fanteria
+50,	106,	Marines
+51,	106,	Marines
+52,	106,	Marines
+53,	106,	Marines
+54,	110,	Fanteria motorizzata
+55,	110,	Fanteria motorizzata
+56,	110,	Fanteria motorizzata
+57,	110,	Fanteria motorizzata
+60,	130,    Cavalleggeri
+61,	130,	Cavalleggeri
+62,	130,    Cavalleggeri
+63,	130,    Cavalleggeri
+64,	131,    Cavalleggeri
+65,	131,    Cavalleggeri
+66,	131,    Cavalleggeri
+67,	131,    Cavalleggeri
+70,	132,	Cavalieri
+71,	132,	Cavalieri
+72,	132,	Cavalieri
+73,	132,	Cavalieri
+74,	133,	Dragoni
+75,	133,	Dragoni
+76,	133,	Dragoni
+77,	133,	Dragoni
+80,	134,	Cavalleria
+81,	134,	Cavalleria
+82,	134,	Cavalleria
+83,	134,	Cavalleria
+84,	135,    Carro armato
+85,	135,    Carro armato
+86,	135,    Carro armato
+87,	135,    Carro armato
+90,	136,	Blindato
+91,	136,	Blindato
+92,	136,	Blindato
+93,	136,	Blindato
+100,	170,	Balestra
+101,	170,	Torre da assedio
+102,	170,	Catapulta
+103,	170,	Catapulta
+104,	171,	Cannone
+105,	171,	Cannone
+106,	171,	Cannone
+107,	171,	Cannone
+110,	172,	Obice
+111,	172,	Obice
+112,	172,	Obice
+113,	172,	Obice
+114,	173,	Lanciarazzi
+115,	173,	Lanciarazzi
+116,	173,	Lanciarazzi
+117,	173,	Lanciarazzi
+120,	200,	Nave
+121,	200,	Nave
+122,	200,	Nave
+123,	200,	Nave
+124,	201,	Galeone
+125,	201,	Fregata
+126,	201,    Corvetta
+127,	201,    Corvetta
+130,	202,	Battello
+131,	202,	Cacciatorpediniera
+132,	202,	Incrociatore
+133,	202,	Incrociatore
+134,	203,	Incrociatore a missili
+135,	203,	Corazzata
+136,	203,	Incrociatore pesante
+137,	203,	Corazzata
+140,	210,	Nave da carico
+141,	210,	Nave da carico
+142,	210,	Nave da carico
+143,	210,	Nave da carico
+144,	220,	Portaerei
+145,	220,	Portaerei
+146,	220,	Portaerei
+147,	220,	Portaerei
+150,	240,	Sottomarino
+151,	240,	Sottomarino
+152,	240,	Sottomarino
+153,	240,	Sottomarino
+160,	300,	Aereo
+161,	300,	Aereo
+162,	300,	Aereo
+163,	300,	Aereo
+164,	301,	Caccia
+165,	301,	Caccia
+166,	301,	Elicottero
+167,	301,	Caccia
+170,	310,	Bombardiere
+171,	310,	Bombardiere
+172,	310,	Dirigibile
+173,	310,	Bombardiere
+174,	311,	Bombardiere
+175,	311,	Bombardiere
+176,	311,	Bombardiere
+177,	311,	Bombardiere

@@ -1,0 +1,5 @@
+#NAME Computer standard
+#GAMEVERSION 1.2.0
+#BEGINNER
+#PATH StdAI.dll
+#CREDITS I.A. standard di Steffen Gerlach.

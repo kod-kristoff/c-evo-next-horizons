@@ -1,0 +1,149 @@
+#CHOOSE ФРАНЦУЗЫ
+#n Французы
+#s Франция
+#a Французы
+#COLOR 4B5FB7
+#SYMBOLS Nation1, 43
+#AGE0 StdCities, 2, StdTextures, 0, Nation1, 33
+#AGE1 StdCities, 2, StdTextures, 2, Nation1, 33
+#AGE2 StdCities, 4, StdTextures, 4, Nation1, 33
+#AGE3 StdCities, 5, StdTextures, 6, Nation1, 33
+
+#CITIES
+    Париж
+    Орлеан
+    Лион
+    Реймс
+    Тур
+    Марсель
+    Шартрез
+    Авиньон
+    Безансон
+    Руан
+    Гренобль
+    Дижон
+    Амьен
+    Шербур
+    Пуатье
+    Тулуза
+    Байонна
+    Страсбург
+    Брест
+    Бордо
+    Лилль
+    Ницца
+    Нант
+    Сент-Этьен
+    Монтпелье
+    Рен
+    Гавр
+    Тулон
+    Анжер
+    Ле-Ман
+    Клермон-Ферран
+    Прованс
+    Лемож
+    Ном
+    Виллебранд
+    Метц
+    Каэн
+    Мулхаус
+    Булонь
+    Перпиньян
+    Нанси
+    Рубо
+    Арженте
+    Тоуркуан
+    Монлюсон
+    Saint-Denis
+    Versailles
+    Nanterre
+    Crйteil
+    Aulnay-sous-Bois
+    Pau
+    Vitry-sur-Seine
+    Calais
+    Colombes
+    La Rochelle
+    Asniиres
+    Champigny-sur-Marne
+    Rueil-Malmaison
+    Saint-Maur-des-Fossйs
+    Bourges
+    Antibes
+    Dunkerque
+    Courbevoie
+    Bйziers
+    Cannes
+    Saint-Nazaire
+    Colmar
+    Villeneuve-d'Ascq
+    Valence
+    Lorient
+    Aubervilliers
+    Drancy
+    Mйrignac
+    Troyes
+    La Seyne-sur-Mer
+    Quimper
+    Antony
+    Saint-Quentin
+    Neuilly-sur-Seine
+    Noisy-le-Grand
+    Sarcelles
+    Niort
+    Pessac
+    Vйnissieux
+    Chambйry
+    Charleville-Mйziиres
+    Beauvais
+    Cergy
+    Levallois-Perret
+    Cholet
+    Issy-les-Moulineaux
+    Montauban
+    Vannes
+    Hyиres
+    Йvreux
+    Maisons-Alfort
+    Laval
+    Fontenay-sous-Bois
+    Ivry-sur-Seine
+    Saint-Malo
+    Arles
+    Belfort
+    Annecy
+    Sartrouville
+    Clichy
+    Chalon-sur-Saфne
+    Pantin
+    Chвteauroux
+    Meaux
+    La Roche-sur-Yon
+    Blois
+    Brive-la-Gaillarde
+    Йvry
+    Clamart
+    Villejuif
+    Chвlons-sur-Marne
+    Sevran
+    Le Blanc-Mesnil
+    Bondy
+    Frйjus
+    Narbonne
+    Йpinay-sur-Seine
+    Tarbes
+    Albi
+    Saint-Brieuc
+    Chelles
+    Boulogne-sur-Mer
+    Bobigny
+    Carcassonne
+
+#UNITS StdUnits
+    23,    040,    Ополченцы
+
+#UNITS Nation1
+    3,    103,    Мушкетеры
+    13,    104,    Стрелки
+    23,    134,    Кавалеристы

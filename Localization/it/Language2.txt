@@ -1,0 +1,71 @@
+#BELONG #A
+
+'Controls
+#SHIFTCLICK Shift+Clic su un elemento per info
+#MAPPROP Dimensione %d%%, %d giocatori
+#MENU_ADVTREE Albero tecnologico
+#MENU_VIEWPOINT Visuale
+#MENU_DEBUGMAPOFF No
+#MENU_TELLAI Svela qual è la I.A.
+#BTN_MENU Menù principale
+#BTN_MANAGE Gestione impero
+
+'Tooltips
+#TIP_WORKING Cittadini assegnati all'economia
+#TIP_CIVIL Cittadini alle dipendenze pubbliche
+#TIP_PRIMACY Selettore priorità
+#TIP_PROJECT Produzione attuale
+#TIP_SUPUNITS Mostra unità supportate
+#TIP_TREASURY Tesoreria
+
+'Advance Tree Legend
+#ADVTREE_UP0 Migliora unità di terra
+#ADVTREE_UP1 Migliora unità navali
+#ADVTREE_UP2 Migliora unità aeree
+#ADVTREE_GOV Permette forma di governo
+#ADVTREE_OTHER Altro effetto
+
+'Start Dialog
+#ACTIONHEADER_CONFIG Configuratore
+#ACTION_CONFIG Cambia lingua, aggiungi mappe e I.A.
+#ACTIONHEADER_MANUAL Manuale
+#ACTION_MANUAL Regole e interfaccia in dettaglio
+#ACTIONHEADER_CREDITS Crediti
+#ACTION_CREDITS Chi ha contribuito a questo gioco
+#ACTIONHEADER_AIDEV Sviluppo I.A.
+#ACTION_AIDEV Impara a programmare la tua I.A. per questo gioco
+#ACTIONHEADER_WEB Sul web: c-evo.org
+
+'Message Text
+#BUSY_DEINIT Deinizializzo %s...
+#AGE0 = %s =\Abbiamo fondato un insediamento permanente per l'agricoltura, che è un modo molto più efficiente di sfamarci rispetto a caccia e raccolta. Il cibo in eccesso ha un effetto quasi sconosciuto ai nostri antenati nomadi: la crescita demografica.
+#DISPOSE2 %s\\Dobbiamo smantellare questo edificio per %d%%p?
+#SELL2 %s\\Dobbiamo svendere questo edificio per %d%%c?
+#SHIP_UTILIZE Non si può riciclare per la produzione dell'astronave.
+
+'City Events
+#CITYEVENT_ALLIMPSMADE Tutti i potenziamenti fatti
+
+'Diplomatic Statements, do not use '\'!
+#FRDEMAND_SOFT Apprezzeremmo molto se ci concedeste\-%s
+#FRNOTACCEPTANYOFFER Spiacente, ma non ci potete offrire nulla di valore adeguato.
+#FRNOTACCEPTANYWANT Non vediamo vantaggi nella vostra offerta.
+
+'help.txt additions
+#HELP_WONDERMORALE1 Effetto aggiuntivo: +2%m in questa città (permanente).
+#HELP_WONDERMORALE2 Effetto aggiuntivo: +2%m in questa città.
+
+'future use
+#BTN_MAPPROJECT Progetti città
+#CITYPRIO Dai massima priorità a questa città
+
+#DRAFTDOMAIN
+Unità di terra
+Unità navale
+Unità aerea
+
+#AITSTAT
+N° di vittorie per completamento dell'astronave
+N° di vittorie per eliminazione delle altre nazioni
+N° di sconfitte per eliminazione della propria nazione
+Percentuale del tempo di calcolo totale

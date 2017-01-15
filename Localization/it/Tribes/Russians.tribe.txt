@@ -1,0 +1,122 @@
+#CHOOSE RUSSI
+#n i Russi
+#s Russia
+#a Russo
+#COLOR E70000
+#SYMBOLS Nation2, 94
+#AGE0 StdCities, 2, 0, 0, Nation2, 84
+#AGE1 StdCities, 2, 0, 0, Nation2, 84
+#AGE2 0, 0, 0, 0, Nation2, 84
+#AGE3 0, 0, 0, 0, Nation2, 84
+
+#CITIES
+	Mosca
+	San Pietroburgo
+	Kiev
+	Minsk
+	Odessa
+	Sverdlovsk
+	Vladivostok
+	Novgorod
+	Kharkov
+	Krasnojarsk
+	Rostov-na-Donu
+	Kursk
+	Samara
+	Magnitogorsk
+	Jaroslavl'
+	Novosibirsk
+	Omsk
+	Smolensk
+	Perm'
+	Voronezh
+	Sebastopoli
+	Ufa
+	Krivoy Rog
+	Niznij Novgorod
+	Chel'abinsk
+	Dnipropetrovs'k
+	Donets'k
+	Volgograd
+	Voronezh
+	Saratov
+	Zaporizhzhya
+	Leopoli
+	Togliatti
+	Simbirsk
+	Izhevsk
+	Krasnodar
+	Chabarovsk
+	Irkutsk
+	Barnaul
+	Novokuzneck
+	Penza
+	R'azan'
+	Orenburg
+	Lipeck
+	Naberezhnyje Chelny
+	Mykolayiv
+	Tula
+	Gomel'
+	T'umen'
+	Kemerovo
+	Mariupol'
+	Astrachan'
+	Tomsk
+	Kirov
+	Ivanovo
+	Luhans'k
+	Br'ansk
+	Cheboksary
+	Tver'
+	Nizhnij Tagil
+	Makiyivka
+	Murmansk
+	Mogilev
+	Kurgan
+	Archangel'sk
+	Sochi
+	Vitebsk
+	Vinnytsya
+	Orel
+	Stavropol'
+	Simferopol'
+	Kaluga
+	Vladimir
+	Belgorod
+	Machachkala
+	Kherson
+	Cherepovec
+	Poltava
+	Saransk
+	Tambov
+	Chita
+	Vladikavkaz
+	Grodno
+	Vologda
+	Chernihiv
+	Brèst
+	Komsomol'sk-na-Amure
+	Cherkasy
+	Sumy
+	Horlivka
+	Volzhskij
+	Kostroma
+	Taganrog
+	Zhytomyr
+	Petrozavodsk
+	Dzerzhinsk
+	Surgut
+	Orsk
+	Angarsk
+	Sterlitamak
+
+#UNITS Nation2
+	70,	010,	Coloni
+	71,	040,	Milizia
+	72,	102,	Picchieri
+	73,	104,	Fucilieri
+	74,	133,	Cosacchi
+	75,	134,	Cavalleria
+	76,	135,    T-34
+	77,	301,	Mig

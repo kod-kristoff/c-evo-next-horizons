@@ -1,0 +1,166 @@
+#CHOOSE TEDESCHI
+#n i Tedeschi
+#s Germania
+#a Tedesco
+#COLOR AFAFAF
+#SYMBOLS Nation1, 44
+#AGE0 StdCities, 2, 0, 0, Nation1, 34
+#AGE1 StdCities, 2, 0, 0, Nation1, 34
+#AGE2 0, 0, 0, 0, Nation1, 34
+#AGE3 0, 0, 0, 0, Nation1, 34
+
+#CITIES
+	Berlino
+	Colonia
+	Aquisgrana
+	Francoforte
+	Treviri
+	Ratisbona
+	Amburgo
+	Königsberg
+	Stettino
+	Dortmund
+	Augusta
+	Monaco
+	Brema
+	Norimberga
+	Lubecca
+	Stoccarda
+	Düsseldorf
+	Dresda
+	Hannover
+	Duisburg
+	Lipsia
+	Essen
+	Chemnitz
+	Karlsruhe
+	Münster
+	Bochum
+	Wuppertal
+	Bielefeld
+	Mannheim
+	Bonn
+	Gelsenkirchen
+	Halle
+	Wiesbaden
+	Mönchengladbach
+	Braunschweig
+	Krefeld
+	Magdeburg
+	Kiel
+	Oberhausen
+	Rostock
+	Hagen
+	Erfurt
+	Friburgo
+	Kassel
+	Saarbrücken
+	Magonza
+	Hamm
+	Herne
+	Mülheim
+	Osnabrück
+	Ludwigshafen
+	Solingen
+	Leverkusen
+	Oldenburg
+	Neuss
+	Heidelberg
+	Darmstadt
+	Potsdam
+	Paderborn
+	Gottinga
+	Bremerhaven
+	Würzburg
+	Recklinghausen
+	Wolfsburg
+	Bottrop
+	Heilbronn
+	Remscheid
+	Gera
+	Cottbus
+	Pforzheim
+	Offenbach
+	Ulm
+	Salzgitter
+	Ingolstadt
+	Siegen
+	Schwerin
+	Reutlingen
+	Fürth
+	Koblenz
+	Moers
+	Bergisch Gladbach
+	Hildesheim
+	Witten
+	Kaiserslautern
+	Zwickau
+	Erlangen
+	Iserlohn
+	Jena
+	Gütersloh
+	Marl
+	Lünen
+	Velbert
+	Düren
+	Ratingen
+	Esslingen
+	Wilhelmshaven
+	Dessau
+	Hanau
+	Ludwigsburg
+	Flensburg
+	Minden
+	Brandeburgo
+	Lüdenscheid
+	Neumünster
+	Tübingen
+	Dorsten
+	Villingen-Schwenningen
+	Worms
+	Castrop-Rauxel
+	Gladbeck
+	Arnsberg
+	Delmenhorst
+	Francoforte sull'Oder
+	Costanza
+	Neubrandenburg
+	Viersen
+	Marburg
+	Rheine
+	Detmold
+	Bayreuth
+	Celle
+	Gießen
+	Bocholt
+	Troisdorf
+	Norderstedt
+	Dinslaken
+	Bamberg
+	Herten
+	Neuwied
+	Unna
+	Aschaffenburg
+	Lippstadt
+	Plauen
+	Aalen
+	Lüneburg
+	Herford
+	Kempten
+	Grevenbroich
+	Görlitz
+	Garbsen
+	Stralsund
+	Schwäbisch Gmünd
+	Kerpen
+	Dormagen
+	Fulda
+	Weimar
+
+#UNITS StdUnits
+	20,	040,	Milizia
+
+#UNITS Nation1
+	4,	105,	Fanteria
+	14,	106,	Sturmtruppen
+	24,	300,	Fokker

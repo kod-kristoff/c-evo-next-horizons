@@ -1,0 +1,129 @@
+#CHOOSE ВИКИНГИ
+#n Викинги
+#s Викинги
+#a Викинги
+#COLOR 9FBB8B
+#SYMBOLS Nation2, 93
+#AGE0 StdCities, 2, StdTextures, 0, Nation2, 83
+#AGE1 StdCities, 2, StdTextures, 2, Nation2, 83
+#AGE2 StdCities, 4, StdTextures, 4, Nation2, 83
+#AGE3 StdCities, 5, StdTextures, 6, Nation2, 83
+
+#CITIES
+    Тронхейм
+    Коппанг
+    Упсала
+    Хладир
+    Орхус
+    Выборг
+    Роскильде
+    Удал
+    Линдхольм
+    Йорвик
+    Вестнесс
+    Скара
+    Боксхольм
+    Бирка
+    Ярлшов
+    Сигтуна
+    Оденсе
+    Лунде
+    Ларне
+    Хедеби
+    Альдеберг
+    Ноннебаккен
+    Стокгольм
+    Осло
+    Кобенхавн
+    Гетеборг
+    Мальмё
+    Берген
+    Ольборг
+    Линчеппинг
+    Вестерес
+    Эребру
+    Норрчепинг
+    Нельсинборг
+    Янчепинг
+    Рейкъявик
+    Ставангер
+    Уми
+    Борум
+    Борес
+    Сундсвааль
+    Говле
+    Фредриксберг
+    Ескилстуна
+    Хальмстаадт
+    Худдинга
+    Эсбьерг
+    Карлштаадт
+    Содертелье
+    Нака
+    Кристианштаадт
+    Vдxjц
+    Botkyrka
+    Skellefteе
+    Luleе
+    Kristiansand
+    Haninge
+    Gentofte
+    Fredrikstad
+    Kungsbacka
+    Randers
+    Gladsakse
+    Kolding
+    Karlskrona
+    Jдrfдlla
+    Tдby
+    Kalmar
+    Helsingшr
+    Цstersund
+    Tromsш
+    Sollentuna
+    Herning
+    Gotland
+    Solna
+    Horsens
+    Mцlndal
+    Цrnskцldsvik
+    Falun
+    Drammen
+    Vejle
+    Trollhдttan
+    Varberg
+    Norrtдlje
+    Silkeborg
+    Sandnes
+    Lyngby-Tеrbжk
+    Skien
+    Skцvde
+    Hvidovre
+    Nykцping
+    Uddevalla
+    Hдssleholm
+    Asker
+    Fredericia
+    Greve
+    Borlдnge
+    Sarpsborg
+    Nжstved
+    Hшje Tеstrup
+    Ballerup
+    Svendborg
+    Lillehammer
+    Kуpavogur
+    Hafnarfjцrрur
+    Akureyrн
+    Godthеb
+    Holsteinsborg
+
+#UNITS Nation2
+    60,    010,    Поселенцы
+    61,    040,    Ополченцы
+    62,    101,    Копийщики
+    63,    101,    Наемники
+    64,    102,    Лучники
+    65,    102,    Меченосецы
+    66,    102,    Берсерки
+    67,    133,    Драгуны

@@ -1,0 +1,89 @@
+#CHOOSE ROMANI
+#n i Romani
+#s Roma
+#a Romano
+#COLOR FFFFFF
+#SYMBOLS Nation1, 49
+#AGE0 StdCities, 6, 0, 0, Nation1, 39
+#AGE1 StdCities, 6, 0, 0, Nation1, 39
+#AGE2 0, 0, 0, 0, Nation1, 39
+#AGE3 0, 0, 0, 0, Nation1, 39
+
+#CITIES
+	Roma
+	Ostia
+	Paestum
+	Capua
+	Tarquinia
+	Napoli
+	Pompei
+	Ercolano
+	Alba Longa
+	Aquileia
+	Terracina
+	Cassino
+	Benevento
+	Saturnia
+	Chiusi
+	Arezzo
+	Casilinum
+	Genova
+	Milano
+	Sabatia
+	Ascoli
+	Populonia
+	Castronovo
+	Fano
+	Venusia
+	Brindisi
+	Canosa
+	Palermo
+	Oderzo
+	Altino
+	Padova
+	Reggio
+	Torino
+	Cremona
+	Modena
+	Forlì
+	Fossombrone
+	Firenze
+	Pisa
+	Rieti
+	Amiternum
+	Taranto
+	Pomezia
+	Tusculum
+	Nomentum
+	Lavinium
+	Signia
+	Anzio
+	Velletri
+	Preneste
+	Aquilonia
+	Bonomia
+	Volterra
+	Vetulonia
+	Potenza
+	Pesaro
+	Aeclanum
+	Grumentum
+	Liternum
+	Pozzuoli
+	Fabrateria Nova
+	Siponto
+	Buxentum
+	Catanzaro
+	Minerbio
+	Aosta
+	Brescia
+	Siena
+	Spello
+
+#UNITS StdUnits
+	22,	040,	Milizia
+
+#UNITS Nation1
+	9,	101,	Principi
+	19,	131,	Celeri
+	29,	200,	Galea

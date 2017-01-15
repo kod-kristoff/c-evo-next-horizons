@@ -1,0 +1,166 @@
+#CHOOSE НЕМЦЫ
+#n Немцы
+#s Германия
+#a Немцы
+#COLOR AFAFAF
+#SYMBOLS Nation1, 44
+#AGE0 StdCities, 2, StdTextures, 0, Nation1, 34
+#AGE1 StdCities, 2, StdTextures, 2, Nation1, 34
+#AGE2 StdCities, 4, StdTextures, 4, Nation1, 34
+#AGE3 StdCities, 5, StdTextures, 6, Nation1, 34
+
+#CITIES
+    Берлин
+    Кельн
+    Аахен
+    Франкфурт
+    Триер
+    Рейнсбург
+    Гамбург
+    Кенигсберг
+    Штетин
+    Дортмунд
+    Аугсбург
+    Мюнхен
+    Бремен
+    Нюрнберг
+    Любек
+    Штутгард
+    Дюссельдорф
+    Дресден
+    Ганновер
+    Дуйсбург
+    Лейпциг
+    Эссен
+    Чемниц
+    Карлсруэ
+    Мюнстер
+    Бохум
+    Вупперталь
+    Бейлфилд
+    Мангейм
+    Бонн
+    Гельцеркирхен
+    Галле
+    Висбаден
+    Мюнхенгладбах
+    Брауншвейг
+    Крефельд
+    Магдебург
+    Киль
+    Оберхаузен
+    Росток
+    Хаген
+    Эрфурт
+    Фрайбург
+    Кёссель
+    Саарбрюккен
+    Майнц
+    Гамм
+    Герне
+    Малхейм
+    Оснабрюк
+    Людвигсшафен
+    Золинген
+    Леверкузен
+    Олденбург
+    Ноусс
+    Хейдельберг
+    Дормштадт
+    Потсдам
+    Paderborn
+    Gцttingen
+    Bremerhaven
+    Wьrzburg
+    Recklinghausen
+    Wolfsburg
+    Bottrop
+    Heilbronn
+    Remscheid
+    Gera
+    Cottbus
+    Pforzheim
+    Offenbach
+    Ulm
+    Salzgitter
+    Ingolstadt
+    Siegen
+    Schwerin
+    Reutlingen
+    Fьrth
+    Koblenz
+    Moers
+    Bergisch Gladbach
+    Hildesheim
+    Witten
+    Kaiserslautern
+    Zwickau
+    Erlangen
+    Iserlohn
+    Jena
+    Gьtersloh
+    Marl
+    Lьnen
+    Velbert
+    Dьren
+    Ratingen
+    Esslingen
+    Wilhelmshaven
+    Dessau
+    Hanau
+    Ludwigsburg
+    Flensburg
+    Minden
+    Brandenburg
+    Lьdenscheid
+    Neumьnster
+    Tьbingen
+    Dorsten
+    Villingen-Schwenningen
+    Worms
+    Castrop-Rauxel
+    Gladbeck
+    Arnsberg
+    Delmenhorst
+    Frankfurt/Oder
+    Konstanz
+    Neubrandenburg
+    Viersen
+    Marburg
+    Rheine
+    Detmold
+    Bayreuth
+    Celle
+    GieЯen
+    Bocholt
+    Troisdorf
+    Norderstedt
+    Dinslaken
+    Bamberg
+    Herten
+    Neuwied
+    Unna
+    Aschaffenburg
+    Lippstadt
+    Plauen
+    Aalen
+    Lьneburg
+    Herford
+    Kempten
+    Grevenbroich
+    Gцrlitz
+    Garbsen
+    Stralsund
+    Schwдbisch Gmьnd
+    Kerpen
+    Dormagen
+    Fulda
+    Weimar
+
+#UNITS StdUnits
+    20,    040,    Полиция
+
+#UNITS Nation1
+    4,    105,    Пехота
+    14,    106,    Пехота
+    24,    300,    Мессершмит

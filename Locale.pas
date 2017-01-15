@@ -89,8 +89,10 @@ begin
   Languages := TLanguages.Create;
   Languages.AddItem('', 'System');
   Languages.AddItem('cs', 'Czech');
-  Languages.AddItem('de', 'Deutch');
+  Languages.AddItem('de', 'German');
   Languages.AddItem('en', 'English');
+  Languages.AddItem('it', 'Italian');
+  Languages.AddItem('ru', 'Russian');
 
   OKBtn.Caption := Phrases.Lookup('BTN_OK');
   CancelBtn.Caption := Phrases.Lookup('BTN_CANCEL');

@@ -1,0 +1,74 @@
+#CHOOSE ФИНИКИЙЦЫ
+#n Финикийцы
+#s Финикия
+#a Финикийцы
+#COLOR B3FF00
+#SYMBOLS Nation1, 40
+#AGE0 StdCities, 3, StdTextures, 0, Nation1, 30
+#AGE1 StdCities, 3, StdTextures, 2, Nation1, 30
+#AGE2 StdCities, 4, StdTextures, 4, Nation1, 30
+#AGE3 StdCities, 5, StdTextures, 6, Nation1, 30
+
+#CITIES
+    Карфаген
+    Библус
+    Сидон
+    Тир
+    Бейрут
+    Триполи
+    Баальбек
+    Арабус
+    Джаппа
+    Ашкалон
+    Акра
+    Угарит
+    Симира
+    Сарабанд
+    Гадис
+    Утика
+    Малака
+    Бария
+    Кармона
+    Секси
+    Абдере
+    Гаралис
+    Панормус
+    Лептус-Парва
+    Картенна
+    Русикаде
+    Русукурру
+    Гирба
+    Лептус-Магна
+    Оуа
+    Sabratha
+    Carthago Nova
+    Wy't
+    Tinx
+    Rusaddit
+    Theveste
+    Bulla Regia
+    Thugga
+    Hadrumetum
+    Zama Regia
+    Thysdris
+    Madauros
+    Hippou Akra
+    Cirta
+    Cuicul
+    Tipasa
+    Lix
+    Volubilis
+    Ilici
+    Hispalis
+    Eryx
+    Motya
+    Drepanon
+    Lilybaion
+    Icosium
+    Iol
+    Eivissa
+
+#UNITS Nation1
+    0,    040,    Стража
+    10,    131,    Боевые слоны
+    20,    201,    Каравелла

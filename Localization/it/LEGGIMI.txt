@@ -1,0 +1,19 @@
+Traduzione in italiano per C-Evo 1.2
+di Bultro, marzo 2015
+
+[Se non si usa il Configuratore automatico]
+Scompattate lo Zip nella cartella di C-evo, dite di si quando vi
+chiede se deve sovrascrivere. Tutti i file dovrebbero andare 
+automaticamente al posto giusto, ossia:
+
+language.txt -> in C-evo\
+language2.txt -> in C-evo\
+help.txt -> in C-evo\Help\
+StdUnits.txt -> in C-evo\Tribes\
+*.tribe.txt -> in C-evo\Tribes\
+StdAI.bmp -> in C-evo\
+StdAI.ai -> in C-evo\
+
+Cercherò di mantenere aggiornata la traduzione su http://c-evo.org
+Segnalate eventuali errori a bultro@libero.it
+Ora andate e moltiplicatevi!

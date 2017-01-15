@@ -1,0 +1,93 @@
+#CHOOSE ЕГИПТЯНЕ
+#n Египтяне
+#s Египет
+#a Египтяне
+#COLOR 37CFAF
+#SYMBOLS Nation1, 42
+#AGE0 StdCities, 0, StdTextures, 0, Nation1, 32
+#AGE1 StdCities, 0, StdTextures, 2, Nation1, 32
+#AGE2 StdCities, 4, StdTextures, 4, Nation1, 32
+#AGE3 StdCities, 5, StdTextures, 6, Nation1, 32
+
+#CITIES
+    Тиба
+    Мемфис
+    Гелиополис
+    Элефантин
+    Александрия
+    Пирамес
+    Гиза
+    Библос
+    Эль-Амарна
+    Гераконполис
+    Абидо
+    Каир
+    Асьют
+    Аварис
+    Лихт
+    Буто
+    Эдфу
+    Пифом
+    Бесирия
+    Кахун
+    Атрибис
+    Мендес
+    Эль-Ашмунейн
+    Танис
+    Наукратис
+    Сьен
+    Мединет-Хабу
+    Бухен
+    Хатнуб
+    Ель-Харга
+    Куифт
+    Quessir
+    Fawakhir
+    Deir El-Medina
+    Fayyum
+    Sais
+    Maidum
+    Abusir
+    Zawyet al-Aryan
+    Saqqara
+    Mazghuma
+    Hawara
+    Saylah
+    Dara
+    Tukh
+    El-Kula
+    Karnak
+    Kom Ombo
+    Phile
+    Rosetta
+    Tjel
+    Edwa
+    Gebel el-Tarif
+    Hipponius
+    Dishasha
+    Kafr Hammar
+    Tarkhan
+    Esna
+    Armant
+    Naga ed-Dair
+    Deir el-Bahari
+    Naqada
+    El-Ballas
+    Tentyra
+    Qaw el-Kebir
+    Ikkur    
+    Quban
+    Kumma
+    Semma
+    Uronarti
+    Shalfak
+    Mirgissa
+    Faras
+    Abu Simbel
+    Bir Nakhlai
+    Aniba
+
+#UNITS Nation1
+    2,    040,    Ополченцы
+    12,    101,    Лучники
+    22,    102,    Копейщики
