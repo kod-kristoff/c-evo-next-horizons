@@ -1,8 +1,8 @@
 C-evo 1.2.0 sources ported to Lazarus/FPC
 
-* Used development enviroment: Lazarus 1.6.2
+* Used development environment: Lazarus 1.6.2
 * Supported platforms: Windows and Linux
-* Supported architecuters: 32-bit and 64-bit x86
+* Supported architectures: 32-bit and 64-bit x86
 
 =Code changes to original source=
 
@@ -10,12 +10,12 @@ C-evo 1.2.0 sources ported to Lazarus/FPC
 * Merged source code and binaries from installed game
 * Graphics files converted from BMP to PNG
 * Game text files .txt converted to UTF-8
-* Binary .dfm files conveted to text .lfm
+* Binary .dfm files converted to text .lfm
 * Removed external Configurator application written in C#. Use ingame config interface.
 * Available localizations included in installed game
 * Used latest Delphi StdAI. Newer is implemented in C#.
 * Added installer scripts for Windows and Ubuntu/Debian Linux.
-
+* Design time components converted to Lazarus package (cevocomponenets.lpk)
 
 =Original readme content=
 
