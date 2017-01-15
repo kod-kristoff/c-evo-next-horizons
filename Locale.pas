@@ -87,9 +87,10 @@ begin
   Canvas.Brush.Style := bsClear;
 
   Languages := TLanguages.Create;
-  Languages.AddItem('', 'English');
+  Languages.AddItem('', 'System');
   Languages.AddItem('cs', 'Czech');
   Languages.AddItem('de', 'Deutch');
+  Languages.AddItem('en', 'English');
 
   OKBtn.Caption := Phrases.Lookup('BTN_OK');
   CancelBtn.Caption := Phrases.Lookup('BTN_CANCEL');
