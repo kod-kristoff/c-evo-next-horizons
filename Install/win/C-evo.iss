@@ -17,7 +17,7 @@
 AppId={{6B40AF4D-C38C-4474-9614-8F0C4376C1CF}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
-;AppVerName={#MyAppName} {#MyAppVersion}
+AppVerName={#MyAppName} {#MyAppVersion}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
@@ -40,8 +40,11 @@ ArchitecturesInstallIn64BitMode=x64
 ; since it's capable of running 32-bit code too).
 
 [Languages]
-Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "czech"; MessagesFile: "compiler:Languages\Czech.isl"
+Name: "english"; MessagesFile: "compiler:Default.isl"
+Name: "german"; MessagesFile: "compiler:Languages\German.isl"
+Name: "italian"; MessagesFile: "compiler:Languages\Italian.isl"
+Name: "russian"; MessagesFile: "compiler:Languages\Russian.isl"
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags:
@@ -68,7 +71,7 @@ Source: "{#MyAppSubDir}\Language.txt"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#MyAppSubDir}\Language2.txt"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#MyAppSubDir}\AI\lib\x86_64-win64\StdAI.dll"; DestDir: "{app}\AI"; DestName: "StdAI-win64.dll"; Flags: ignoreversion; Check: Is64BitInstallMode
 Source: "{#MyAppSubDir}\AI\lib\i386-win32\StdAI.dll"; DestDir: "{app}\AI"; DestName: "StdAI-win32.dll"; Flags: ignoreversion; Check: not Is64BitInstallMode
-Source: "{#MyAppSubDir}\AI\StdAI.bmp"; DestDir: "{app}\AI"; Flags: ignoreversion; 
+Source: "{#MyAppSubDir}\AI\StdAI.png"; DestDir: "{app}\AI"; Flags: ignoreversion; 
 Source: "{#MyAppSubDir}\AI\StdAI.ai.txt"; DestDir: "{app}\AI"; Flags: ignoreversion;
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
