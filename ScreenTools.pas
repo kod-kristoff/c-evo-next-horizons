@@ -214,6 +214,7 @@ var
     Phrases2FallenBackToEnglish: boolean;
 
   UniFont: array [TFontType] of TFont;
+  AppRegistryKey: string = '\SOFTWARE\C-evo';
 
 implementation
 
@@ -1515,10 +1516,10 @@ end;
 
 procedure UnitInit;
 begin
-  Reg := TRegistry.create;
+  Reg := TRegistry.Create;
   with Reg do
   try
-    OpenKey('SOFTWARE\cevo\RegVer9', true);
+    OpenKey(AppRegistryKey, True);
     if ValueExists('Gamma') then
       Gamma := ReadInteger('Gamma')
       else begin
@@ -1633,8 +1634,9 @@ begin
   Reg := TRegistry.create;
   with Reg do
   try
-    OpenKey('SOFTWARE\cevo\RegVer9', true);
+    OpenKey(AppRegistryKey, True);
     WriteString('Locale', LocaleCode);
+    WriteInteger('Gamma', Gamma);
   finally
     Free;
   end;

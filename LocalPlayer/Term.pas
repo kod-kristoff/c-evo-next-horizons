@@ -3410,7 +3410,7 @@ begin
   Reg := TRegistry.Create;
   with Reg do
   try
-    OpenKey('SOFTWARE\cevo\RegVer9', false);
+    OpenKey(AppRegistryKey, false);
     if ValueExists('TileWidth') then xxt := ReadInteger('TileWidth') div 2
       else xxt := 48;
     if ValueExists('TileHeight') then yyt := ReadInteger('TileHeight') div 2
@@ -3422,7 +3422,6 @@ begin
     if ValueExists('CityReport') then CityRepMask := Cardinal(ReadInteger('CityReport'))
       else CityRepMask := Cardinal(not chPopIncrease and not chNoGrowthWarning and
           not chCaptured);
-    CloseKey;
     if OptionChecked and (7 shl 16) = 0 then
       OptionChecked := OptionChecked or (1 shl 16);
       // old regver with no scrolling
@@ -7992,13 +7991,12 @@ begin
   Reg := TRegistry.Create;
   with Reg do
   try
-    OpenKey('SOFTWARE\cevo\RegVer9', true);
+    OpenKey(AppRegistryKey, true);
     WriteInteger('TileWidth', xxt * 2);
     WriteInteger('TileHeight', yyt * 2);
     WriteInteger('OptionChecked', OptionChecked);
     WriteInteger('MapOptionChecked', MapOptionChecked);
     WriteInteger('CityReport', integer(CityRepMask));
-    CloseKey;
   finally
     Free;
   end;

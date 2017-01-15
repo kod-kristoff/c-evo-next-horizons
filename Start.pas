@@ -185,29 +185,23 @@ var
   DefaultAI, s: string;
   r0, r1: HRgn;
   Reg: TRegistry;
-  FirstStart: Boolean;
   Location: TPoint;
 begin
   Reg := TRegistry.Create;
-  FirstStart := not Reg.KeyExists('SOFTWARE\cevo\RegVer9\Start');
-
-  if FirstStart then
-  with Reg do begin
+  with Reg do try
     // initialize AI assignment
-    OpenKey('SOFTWARE\cevo\RegVer9\Start', true);
-    for I := 0 to nPlOffered - 1 do
-    begin
+    OpenKey(AppRegistryKey + '\AI', True);
+    for I := 0 to nPlOffered - 1 do begin
       if i = 0 then s := ':StdIntf'
         else s := 'StdAI';
-      WriteString('Control' + IntToStr(i), s);
-      WriteInteger('Diff' + IntToStr(i), 2);
+      if not ValueExists('Control' + IntToStr(i)) then
+        WriteString('Control' + IntToStr(i), s);
+      if not ValueExists('Diff' + IntToStr(i)) then
+        WriteInteger('Diff' + IntToStr(i), 2);
     end;
     WriteInteger('MultiControl', 0);
-    CloseKey;
-  end;
 
-  with Reg do begin
-    OpenKey('SOFTWARE\cevo\RegVer9\Start', False);
+    OpenKey(AppRegistryKey, True);
     if ValueExists('WorldSize') then WorldSize := Reg.ReadInteger('WorldSize')
       else WorldSize := DefaultWorldSize;
     if ValueExists('LandMass') then StartLandMass := Reg.ReadInteger('LandMass')
@@ -220,12 +214,7 @@ begin
       else AutoEnemies := 8;
     if ValueExists('AutoDiff') then AutoDiff := Reg.ReadInteger('AutoDiff')
       else AutoDiff := 1;
-    CloseKey;
-  end;
 
-  FullScreen := true;
-  with Reg do begin
-    OpenKey('SOFTWARE\cevo\RegVer9', False);
     if ValueExists('ScreenMode') then
       ScreenMode := ReadInteger('ScreenMode')
       else ScreenMode := 1;
@@ -243,9 +232,9 @@ begin
       ChangeResolution(ResolutionX, ResolutionY, ResolutionBPP,
         ResolutionFreq);
     {$ENDIF}
-    CloseKey;
+  finally
+    Free;
   end;
-  Reg.Free;
 
   ActionsOffered := [maManual, maCredits, maWeb];
   Include(ActionsOffered, maConfig);
@@ -890,79 +879,71 @@ begin
         end;
 
         Reg := TRegistry.Create;
-        Reg.OpenKey('SOFTWARE\cevo\RegVer9\Start', true);
-        if Reg.ValueExists('GameCount') then GameCount := Reg.ReadInteger('GameCount')
-          else GameCount := 0;
+        with Reg do
+        try
+          OpenKey(AppRegistryKey, true);
+          if ValueExists('GameCount') then GameCount := ReadInteger('GameCount')
+            else GameCount := 0;
 
-        if (AutoDiff < 0) and (bixView[0] = bixNoTerm) then
-          FileName := 'Round' + IntToStr(GetProcessID())
-        else
-        begin
-          inc(GameCount);
-          FileName := Format(Phrases.Lookup('GAME'), [GameCount]);
-        end;
+          if (AutoDiff < 0) and (bixView[0] = bixNoTerm) then
+            FileName := 'Round' + IntToStr(GetProcessID())
+          else begin
+            inc(GameCount);
+            FileName := Format(Phrases.Lookup('GAME'), [GameCount]);
+          end;
 
-        // save settings and AI assignment
-        if Page = pgStartRandom then
-        begin
-          Reg.WriteInteger('WorldSize', WorldSize);
-          Reg.WriteInteger('LandMass', StartLandMass);
-          if AutoDiff < 0 then
-            for i := 0 to nPlOffered - 1 do
-            begin
-              if bixView[i] = -1 then
-                Reg.WriteString('Control' + IntToStr(i), '')
-              else
-                Reg.WriteString('Control' + IntToStr(i),
+          // save settings and AI assignment
+          if Page = pgStartRandom then begin
+            WriteInteger('WorldSize', WorldSize);
+            WriteInteger('LandMass', StartLandMass);
+
+            OpenKey(AppRegistryKey + '\AI', True);
+            if AutoDiff < 0 then
+              for i := 0 to nPlOffered - 1 do begin
+                if bixView[i] = -1 then
+                  Reg.WriteString('Control' + IntToStr(i), '')
+                else Reg.WriteString('Control' + IntToStr(i),
                   Brain[bixView[i]].FileName);
-              Reg.WriteInteger('Diff' + IntToStr(i), Difficulty[i]);
-            end;
-          Reg.WriteInteger('MultiControl', MultiControl);
-        end;
+                WriteInteger('Diff' + IntToStr(i), Difficulty[i]);
+              end;
+            WriteInteger('MultiControl', MultiControl);
+          end;
 
-        if AutoDiff > 0 then
-        begin
-          Reg.WriteString('DefaultAI', Brain[bixDefault].FileName);
-          SlotAvailable := 0; // bixView will be invalid hereafter
-          bixView[0] := bixTerm;
-          Difficulty[0] := PlayerAutoDiff[AutoDiff];
-          for i := 1 to nPl - 1 do
-            if (Page = pgStartRandom) and (i <= AutoEnemies) or
-              (Page = pgStartMap) and (i < nMapStartPositions) then
-            begin
-              if AutoDiff = 1 then
-                bixView[i] := bixBeginner
-              else
-                bixView[i] := bixDefault;
-              Difficulty[i] := EnemyAutoDiff[AutoDiff];
-            end
-            else
-              bixView[i] := -1;
-        end
-        else
-        begin
-          for i := 6 to 8 do
-            if (bixView[0] <> bixNoTerm) and (MultiControl and (1 shl i) <> 0)
-            then
-            begin
-              bixView[i + 3] := bixView[i];
-              Difficulty[i + 3] := Difficulty[i];
-              bixView[i + 6] := bixView[i];
-              Difficulty[i + 6] := Difficulty[i];
-            end
-            else
-            begin
-              bixView[i + 3] := -1;
-              bixView[i + 6] := -1;
-            end
-        end;
+          OpenKey(AppRegistryKey, True);
+          if AutoDiff > 0 then
+          begin
+            WriteString('DefaultAI', Brain[bixDefault].FileName);
+            SlotAvailable := 0; // bixView will be invalid hereafter
+            bixView[0] := bixTerm;
+            Difficulty[0] := PlayerAutoDiff[AutoDiff];
+            for i := 1 to nPl - 1 do
+              if (Page = pgStartRandom) and (i <= AutoEnemies) or
+                (Page = pgStartMap) and (i < nMapStartPositions) then begin
+                if AutoDiff = 1 then bixView[i] := bixBeginner
+                  else bixView[i] := bixDefault;
+                Difficulty[i] := EnemyAutoDiff[AutoDiff];
+              end  else bixView[i] := -1;
+          end else begin
+            for i := 6 to 8 do
+              if (bixView[0] <> bixNoTerm) and (MultiControl and (1 shl i) <> 0)
+              then begin
+                bixView[i + 3] := bixView[i];
+                Difficulty[i + 3] := Difficulty[i];
+                bixView[i + 6] := bixView[i];
+                Difficulty[i + 6] := Difficulty[i];
+              end else begin
+                bixView[i + 3] := -1;
+                bixView[i + 6] := -1;
+              end
+          end;
 
-        Reg.WriteInteger('AutoDiff', AutoDiff);
-        Reg.WriteInteger('AutoEnemies', AutoEnemies);
-        Reg.WriteInteger('MaxTurn', MaxTurn);
-        Reg.WriteInteger('GameCount', GameCount);
-        Reg.closekey;
-        Reg.Free;
+          WriteInteger('AutoDiff', AutoDiff);
+          WriteInteger('AutoEnemies', AutoEnemies);
+          WriteInteger('MaxTurn', MaxTurn);
+          WriteInteger('GameCount', GameCount);
+        finally
+          Free;
+        end;
 
         StartNewGame(DataDir + 'Saved' + DirectorySeparator, FileName + '.cevo', MapFileName,
           lxpre[WorldSize], lypre[WorldSize], StartLandMass, MaxTurn);
@@ -975,14 +956,16 @@ begin
     pgEditRandom: // new map
       begin
         Reg := TRegistry.Create;
-        Reg.OpenKey('SOFTWARE\cevo\RegVer9\Start', true);
-        if Reg.ValueExists('MapCount') then
-          MapCount := Reg.ReadInteger('MapCount')
-          else  MapCount := 0;
-        inc(MapCount);
-        Reg.WriteInteger('MapCount', MapCount);
-        Reg.closekey;
-        Reg.Free;
+        with Reg do
+        try
+          OpenKey(AppRegistryKey, True);
+          if ValueExists('MapCount') then MapCount := ReadInteger('MapCount')
+            else MapCount := 0;
+          Inc(MapCount);
+          WriteInteger('MapCount', MapCount);
+        finally
+          Free;
+        end;
         MapFileName := Format(Phrases.Lookup('MAP'), [MapCount]) + '.cevo map';
         EditMap(MapFileName, lxpre[WorldSize], lypre[WorldSize], StartLandMass);
       end
@@ -1417,20 +1400,22 @@ begin
           if Page = pgStartRandom then
           begin // restore AI assignment of last start
             Reg := TRegistry.Create;
-            Reg.OpenKey('SOFTWARE\cevo\RegVer9\Start', false);
-            for p1 := 0 to nPlOffered - 1 do
-            begin
-              bixView[p1] := -1;
-              s := Reg.ReadString('Control' + IntToStr(p1));
-              Difficulty[p1] := Reg.ReadInteger('Diff' + IntToStr(p1));
-              if s <> '' then
-                for j := 0 to nBrain - 1 do
-                  if AnsiCompareFileName(s, Brain[j].FileName) = 0 then
-                    bixView[p1] := j;
+            with Reg do
+            try
+              OpenKey(AppRegistryKey + '\AI', True);
+              for p1 := 0 to nPlOffered - 1 do begin
+                bixView[p1] := -1;
+                s := ReadString('Control' + IntToStr(p1));
+                Difficulty[p1] := ReadInteger('Diff' + IntToStr(p1));
+                if s <> '' then
+                  for j := 0 to nBrain - 1 do
+                    if AnsiCompareFileName(s, Brain[j].FileName) = 0 then
+                      bixView[p1] := j;
+              end;
+              MultiControl := Reg.ReadInteger('MultiControl');
+            finally
+              Free;
             end;
-            MultiControl := Reg.ReadInteger('MultiControl');
-            Reg.closekey;
-            Reg.Free;
           end
           else
             for p1 := 1 to nPl - 1 do
