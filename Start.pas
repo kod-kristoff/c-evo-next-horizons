@@ -329,35 +329,28 @@ begin
     CustomizeBtn.ButtonIndex := 2;
 
   BrainPicture[0] := TBitmap.Create;
-  BrainPicture[0].width := 64;
-  BrainPicture[0].height := 64;
+  BrainPicture[0].SetSize(64, 64);
   BitBlt(BrainPicture[0].Canvas.Handle, 0, 0, 64, 64,
     GrExt[HGrSystem2].Data.Canvas.Handle, 1, 111, SRCCOPY);
   BrainPicture[1] := TBitmap.Create;
-  BrainPicture[1].width := 64;
-  BrainPicture[1].height := 64;
+  BrainPicture[1].SetSize(64, 64);
   BitBlt(BrainPicture[1].Canvas.Handle, 0, 0, 64, 64,
     GrExt[HGrSystem2].Data.Canvas.Handle, 66, 111, SRCCOPY);
   BrainPicture[2] := TBitmap.Create;
-  BrainPicture[2].width := 64;
-  BrainPicture[2].height := 64;
+  BrainPicture[2].SetSize(64, 64);
   BitBlt(BrainPicture[2].Canvas.Handle, 0, 0, 64, 64,
     GrExt[HGrSystem2].Data.Canvas.Handle, 131, 111, SRCCOPY);
   BrainPicture[3] := TBitmap.Create;
-  BrainPicture[3].width := 64;
-  BrainPicture[3].height := 64;
+  BrainPicture[3].SetSize(64, 64);
   BitBlt(BrainPicture[3].Canvas.Handle, 0, 0, 64, 64,
     GrExt[HGrSystem2].Data.Canvas.Handle, 131, 46, SRCCOPY);
-  for i := bixFirstAI to nBrain - 1 do
-  begin
+  for i := bixFirstAI to nBrain - 1 do begin
     BrainPicture[i] := TBitmap.Create;
-    if not LoadGraphicFile(BrainPicture[i], HomeDir + 'AI' + DirectorySeparator + Brain[i].FileName,
-      gfNoError) then
-    begin
+    if not LoadGraphicFile(BrainPicture[i], HomeDir + 'AI' + DirectorySeparator + Brain[i].FileName + '.png',
+      gfNoError) then begin
       BrainPicture[i].width := 64;
       BrainPicture[i].height := 64;
-      with BrainPicture[i].Canvas do
-      begin
+      with BrainPicture[i].Canvas do begin
         Brush.Color := $904830;
         FillRect(Rect(0, 0, 64, 64));
         Font.Assign(UniFont[ftTiny]);
@@ -365,8 +358,8 @@ begin
         Font.Color := $5FDBFF;
         Textout(32 - TextWidth(Brain[i].FileName) div 2,
           32 - TextHeight(Brain[i].FileName) div 2, Brain[i].FileName);
-      end
-    end
+      end;
+    end;
   end;
 
   EmptyPicture := TBitmap.Create;
@@ -1167,7 +1160,7 @@ begin
         if Page = pgEditMap then
           MapFileName := List.Items[List.ItemIndex] + '.cevo map';
         if LoadGraphicFile(Mini, DataDir + 'Maps' + DirectorySeparator + Copy(MapFileName, 1,
-          Length(MapFileName) - 9), gfNoError) then
+          Length(MapFileName) - 9) + '.png', gfNoError) then
         begin
           if Mini.width div 2 > MaxWidthMapLogo then
             Mini.width := MaxWidthMapLogo * 2;
@@ -1764,8 +1757,8 @@ begin
       if Page <> pgLoad then
         try // rename map picture
           AssignFile(f, DataDir + 'Maps'+ DirectorySeparator + List.Items[List.ItemIndex]
-            + '.bmp');
-          Rename(f, DataDir + 'Maps'+ DirectorySeparator + NewName + '.bmp');
+            + '.png');
+          Rename(f, DataDir + 'Maps'+ DirectorySeparator + NewName + '.png');
         except
         end;
       if ok then

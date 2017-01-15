@@ -110,11 +110,11 @@ var
   Border: boolean;
 begin
   result := false;
-  HGrTerrainNew := LoadGraphicSet(Format('Terrain%dx%d',
+  HGrTerrainNew := LoadGraphicSet(Format('Terrain%dx%d.png',
     [xxtNew * 2, yytNew * 2]));
   if HGrTerrainNew < 0 then
     exit;
-  HGrCitiesNew := LoadGraphicSet(Format('Cities%dx%d',
+  HGrCitiesNew := LoadGraphicSet(Format('Cities%dx%d.png',
     [xxtNew * 2, yytNew * 2]));
   if HGrCitiesNew < 0 then
     exit;
@@ -333,7 +333,6 @@ begin
   LandMore.Free;
   OceanMore.Free;
   DitherMask.Free;
-  //LandPatch.Savetofile('landpatch.bmp');
 
   // reduce size of terrain icons
   Mask24 := TBitmap.Create;

@@ -9,7 +9,7 @@ uses
   {$ENDIF}
   Protocol, ClientTools, Term, ScreenTools, IsoEngine, BaseWin,
   LCLIntf, LCLType, Messages, SysUtils, Classes, Graphics, Controls, Forms, ExtCtrls,
-  ButtonA, ButtonC, Area;
+  ButtonA, ButtonC, Area, GraphType;
 
 const
   WM_PLAYSOUND = WM_USER;
@@ -216,15 +216,15 @@ begin
   Back.SetSize(ClientWidth, ClientHeight);
   Back.Canvas.FillRect(0, 0, Back.Width, Back.Height);
   Template := TBitmap.Create;
-  LoadGraphicFile(Template, HomeDir + 'Graphics' + DirectorySeparator + 'City', gfNoGamma);
-  Template.PixelFormat := pf8bit;
+  Template.PixelFormat := pf24bit;
+  LoadGraphicFile(Template, HomeDir + 'Graphics' + DirectorySeparator + 'City.png', gfNoGamma);
   CityMapTemplate := TBitmap.Create;
-  LoadGraphicFile(CityMapTemplate, HomeDir + 'Graphics' + DirectorySeparator + 'BigCityMap', gfNoGamma);
-  CityMapTemplate.PixelFormat := pf8bit;
+  CityMapTemplate.PixelFormat := pf24bit;
+  LoadGraphicFile(CityMapTemplate, HomeDir + 'Graphics' + DirectorySeparator + 'BigCityMap.png', gfNoGamma);
   SmallCityMapTemplate := TBitmap.Create;
-  LoadGraphicFile(SmallCityMapTemplate, HomeDir + 'Graphics' + DirectorySeparator + 'SmallCityMap',
-    gfNoGamma);
   SmallCityMapTemplate.PixelFormat := pf24bit;
+  LoadGraphicFile(SmallCityMapTemplate, HomeDir + 'Graphics' + DirectorySeparator + 'SmallCityMap.png',
+    gfNoGamma);
   SmallCityMap := TBitmap.Create;
   SmallCityMap.PixelFormat := pf24bit;
   SmallCityMap.SetSize(98, 74);

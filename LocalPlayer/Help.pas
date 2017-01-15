@@ -967,7 +967,7 @@ var
             inc(p)
           until (p > length(s)) or (s[p] = '\');
           if LoadGraphicFile(ExtPic, LocalizedFilePath('Help' +
-            DirectorySeparator + copy(s, 2, p - 2))) then
+            DirectorySeparator + copy(s, 2, p - 2)) + '.png') then
           begin
             MainText.AddLine('', pkExternal);
             for i := 0 to (ExtPic.Height - 12) div 24 do

@@ -8,7 +8,7 @@ uses
   Windows,
   {$ENDIF}
   StringTables, LCLIntf, LCLType, SysUtils, Classes, Graphics, Controls,
-  Forms, Menus;
+  Forms, Menus, GraphType;
 
 type
   TTexture = record
@@ -41,7 +41,7 @@ type
     procedure NextPixel; inline; // Move pointer to next pixel
     procedure SetXY(X, Y: Integer); inline; // Set pixel position relative to base
     procedure SetX(X: Integer); inline; // Set horizontal pixel position relative to base
-    procedure Init(Bitmap: TBitmap; BaseX: Integer = 0; BaseY: Integer = 0); inline;
+    procedure Init(Bitmap: TRasterImage; BaseX: Integer = 0; BaseY: Integer = 0); inline;
   end;
   PPixelPointer = ^TPixelPointer;
 
@@ -187,7 +187,6 @@ const
   // LoadGraphicFile options
   gfNoError = $01;
   gfNoGamma = $02;
-  gfJPG = $04;
 
 type
   TGrExtDescr = record { don't use dynamic strings here! }
@@ -410,66 +409,107 @@ begin
       GammaLUT[$10 * HexCharToInt(s[5]) + HexCharToInt(s[6])];
 end;
 
-function LoadGraphicFile(bmp: TBitmap; Path: string; Options: integer): boolean;
+procedure ApplyGammaToBitmap(Bitmap: TBitmap);
 var
   PixelPtr: TPixelPointer;
-  jtex: tjpegimage;
   X, Y: Integer;
 begin
-  result := true;
-  if Options and gfJPG <> 0 then
-  begin
+  Bitmap.BeginUpdate;
+  PixelPtr.Init(Bitmap);
+  for Y := 0 to Bitmap.Height - 1 do begin
+    for X := 0 to Bitmap.Width - 1 do begin
+      PixelPtr.Pixel^.B := GammaLUT[PixelPtr.Pixel^.B];
+      PixelPtr.Pixel^.G := GammaLUT[PixelPtr.Pixel^.G];
+      PixelPtr.Pixel^.R := GammaLUT[PixelPtr.Pixel^.R];
+      PixelPtr.NextPixel;
+    end;
+    PixelPtr.NextLine;
+  end;
+  Bitmap.EndUpdate;
+end;
+
+procedure CopyGray8BitTo24bitBitmap(Dst, Src: TRasterImage);
+var
+  SrcPtr, DstPtr: TPixelPointer;
+  X, Y: Integer;
+begin
+  //Dst.SetSize(Src.Width, Src.Height);
+  SrcPtr.Init(Src);
+  DstPtr.Init(Dst);
+  for Y := 0 to Src.Height - 1 do begin
+    for X := 0 to Src.Width - 1 do begin
+      DstPtr.Pixel^.B := SrcPtr.Pixel^.B;
+      DstPtr.Pixel^.G := SrcPtr.Pixel^.B;
+      DstPtr.Pixel^.R := SrcPtr.Pixel^.B;
+      SrcPtr.NextPixel;
+      DstPtr.NextPixel;
+    end;
+    SrcPtr.NextLine;
+    DstPtr.NextLine;
+  end;
+end;
+
+function LoadGraphicFile(bmp: TBitmap; Path: string; Options: integer): boolean;
+var
+  jtex: tjpegimage;
+  Png: TPortableNetworkGraphic;
+begin
+  Result := True;
+  if ExtractFileExt(Path) = '.jpg' then begin
     jtex := tjpegimage.create;
     try
-      jtex.loadfromfile(Path + '.jpg');
+      jtex.LoadFromFile(Path);
     except
-      result := false;
+      Result := False;
     end;
-    if result then
-    begin
-      if Options and gfNoGamma = 0 then
-        bmp.PixelFormat := pf24bit;
-      bmp.Width := jtex.Width;
-      bmp.Height := jtex.Height;
-      bmp.Canvas.draw(0, 0, jtex);
+    if result then begin
+      if Options and gfNoGamma = 0 then bmp.PixelFormat := pf24bit;
+      Bmp.SetSize(jtex.Width, jtex.Height);
+      Bmp.Canvas.Draw(0, 0, jtex);
     end;
     jtex.Free;
-  end
-  else
-  begin
+  end else
+  if ExtractFileExt(Path) = '.png' then begin
+    Png := TPortableNetworkGraphic.Create;
+    Png.PixelFormat := Bmp.PixelFormat;
     try
-      bmp.loadfromfile(Path + '.bmp');
+      Png.LoadFromFile(Path);
     except
-      result := false;
+      Result := False;
     end;
-    if result then
-    begin
+    if Result then begin
+      if Options and gfNoGamma = 0 then bmp.PixelFormat := pf24bit;
+      bmp.SetSize(Png.Width, Png.Height);
+      if (Png.RawImage.Description.Format = ricfGray) then begin
+        // LCL doesn't support 8-bit colors properly. Use 24-bit instead.
+        Bmp.PixelFormat := pf24bit;
+        CopyGray8BitTo24bitBitmap(Bmp, Png)
+      end else Bmp.Canvas.draw(0, 0, Png);
+    end;
+    Png.Free;
+  end else
+  if ExtractFileExt(Path) = '.bmp' then begin
+    try
+      bmp.LoadFromFile(Path);
+    except
+      Result := False;
+    end;
+    if Result then begin
       if Options and gfNoGamma = 0 then
         bmp.PixelFormat := pf24bit;
     end
-  end;
-  if not result then
-  begin
+  end else
+    raise Exception.Create('Unsupported image file type ' + ExtractFileExt(Path));
+
+  if not Result then begin
     if Options and gfNoError = 0 then
       Application.MessageBox(PChar(Format(Phrases.Lookup('FILENOTFOUND'),
         [Path])), 'C-evo', 0);
-    exit;
+    Exit;
   end;
+
   if (Options and gfNoGamma = 0) and (Gamma <> 100) then
-  begin
-    Bmp.BeginUpdate;
-    PixelPtr.Init(bmp);
-    for Y := 0 to Bmp.Height - 1 do begin
-      for X := 0 to Bmp.Width - 1 do begin
-        PixelPtr.Pixel^.B := GammaLUT[PixelPtr.Pixel^.B];
-        PixelPtr.Pixel^.G := GammaLUT[PixelPtr.Pixel^.G];
-        PixelPtr.Pixel^.R := GammaLUT[PixelPtr.Pixel^.R];
-        PixelPtr.NextPixel;
-      end;
-      PixelPtr.NextLine;
-    end;
-    Bmp.EndUpdate;
-  end
+    ApplyGammaToBitmap(Bmp);
 end;
 
 function LoadGraphicSet(Name: string): integer;
@@ -483,25 +523,20 @@ begin
   while (i < nGrExt) and (GrExt[i].Name <> Name) do
     inc(i);
   result := i;
-  if i = nGrExt then
-  begin
-    FileName := HomeDir + 'Graphics' + DirectorySeparator + Name + '.bmp';
+  if i = nGrExt then begin
     Source := TBitmap.Create;
-    try
-      Source.LoadFromFile(FileName)
-    except
+    Source.PixelFormat := pf24bit;
+    FileName := HomeDir + 'Graphics' + DirectorySeparator + Name;
+    if not LoadGraphicFile(Source, FileName) then begin
       Result := -1;
-      Application.MessageBox(PChar(Format(Phrases.Lookup('FILENOTFOUND'),
-        [FileName])), 'C-evo', 0);
-      exit;
+      Exit;
     end;
 
     GetMem(GrExt[nGrExt], SizeOf(TGrExtDescrSize) + Source.Height div 49 * 10);
     GrExt[nGrExt].Name := Name;
 
     xmax := Source.Width - 1; // allows 4-byte access even for last pixel
-    if xmax > 970 then
-      xmax := 970;
+    if xmax > 970 then xmax := 970;
 
     GrExt[nGrExt].Data := Source;
     GrExt[nGrExt].Data.PixelFormat := pf24bit;
@@ -1395,7 +1430,7 @@ begin
         begin
           MainTextureAge := Age;
           LoadGraphicFile(Image, HomeDir + 'Graphics' + DirectorySeparator + 'Texture' +
-            IntToStr(Age + 1), gfJPG);
+            IntToStr(Age + 1) + '.jpg');
           clBevelLight := Colors.Canvas.Pixels[clkAge0 + Age, cliBevelLight];
           clBevelShade := Colors.Canvas.Pixels[clkAge0 + Age, cliBevelShade];
           clTextLight := Colors.Canvas.Pixels[clkAge0 + Age, cliTextLight];
@@ -1441,7 +1476,7 @@ begin
   Pixel := Pointer(Line) + X * BytesPerPixel;
 end;
 
-procedure TPixelPointer.Init(Bitmap: TBitmap; BaseX: Integer = 0; BaseY: Integer = 0); inline;
+procedure TPixelPointer.Init(Bitmap: TRasterImage; BaseX: Integer = 0; BaseY: Integer = 0); inline;
 begin
   BytesPerLine := Bitmap.RawImage.Description.BytesPerLine;
   BytesPerPixel := Bitmap.RawImage.Description.BitsPerPixel shr 3;
@@ -1570,22 +1605,25 @@ begin
   end;
 
   nGrExt := 0;
-  HGrSystem := LoadGraphicSet('System');
-  HGrSystem2 := LoadGraphicSet('System2');
-  Templates := TBitmap.create;
-  LoadGraphicFile(Templates, HomeDir + 'Graphics' + DirectorySeparator + 'Templates', gfNoGamma);
+  HGrSystem := LoadGraphicSet('System.png');
+  HGrSystem2 := LoadGraphicSet('System2.png');
+  Templates := TBitmap.Create;
   Templates.PixelFormat := pf24bit;
-  Colors := TBitmap.create;
-  LoadGraphicFile(Colors, HomeDir + 'Graphics' + DirectorySeparator + 'Colors');
-  Paper := TBitmap.create;
-  LoadGraphicFile(Paper, HomeDir + 'Graphics' + DirectorySeparator + 'Paper', gfJPG);
-  BigImp := TBitmap.create;
-  LoadGraphicFile(BigImp, HomeDir + 'Graphics' + DirectorySeparator + 'Icons');
-  MainTexture.Image := TBitmap.create;
+  LoadGraphicFile(Templates, HomeDir + 'Graphics' + DirectorySeparator + 'Templates.png', gfNoGamma);
+  Colors := TBitmap.Create;
+  Colors.PixelFormat := pf24bit;
+  LoadGraphicFile(Colors, HomeDir + 'Graphics' + DirectorySeparator + 'Colors.png');
+  Paper := TBitmap.Create;
+  Paper.PixelFormat := pf24bit;
+  LoadGraphicFile(Paper, HomeDir + 'Graphics' + DirectorySeparator + 'Paper.jpg');
+  BigImp := TBitmap.Create;
+  BigImp.PixelFormat := pf24bit;
+  LoadGraphicFile(BigImp, HomeDir + 'Graphics' + DirectorySeparator + 'Icons.png');
+  MainTexture.Image := TBitmap.Create;
   MainTextureAge := -2;
   ClickFrameColor := GrExt[HGrSystem].Data.Canvas.Pixels[187, 175];
-  InitOrnamentDone := false;
-  GenerateNames := true;
+  InitOrnamentDone := False;
+  GenerateNames := True;
 end;
 
 procedure UnitDone;

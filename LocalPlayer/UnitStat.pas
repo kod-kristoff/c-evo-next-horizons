@@ -81,8 +81,8 @@ begin
   Back.SetSize(5 * wCommon, hMax);
   Back.Canvas.FillRect(0, 0, Back.Width,Back.Height);
   Template := TBitmap.Create;
-  LoadGraphicFile(Template, HomeDir + 'Graphics' + DirectorySeparator + 'Unit', gfNoGamma);
-  Template.PixelFormat := pf8bit;
+  Template.PixelFormat := pf24bit;
+  LoadGraphicFile(Template, HomeDir + 'Graphics' + DirectorySeparator + 'Unit.png', gfNoGamma);
 end;
 
 procedure TUnitStatDlg.FormDestroy(Sender: TObject);

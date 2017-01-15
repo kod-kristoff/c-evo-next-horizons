@@ -38,23 +38,18 @@ end;
 procedure TBackground.FormShow(Sender: TObject);
 begin
   img := nil;
-  if FullScreen then
-  begin
-    if FileExists(HomeDir + 'Graphics' + DirectorySeparator + 'Background.bmp') or
-      FileExists(HomeDir + 'Graphics' + DirectorySeparator + 'Background.png') then
-    begin
+  if FullScreen then begin
+    if FileExists(HomeDir + 'Graphics' + DirectorySeparator + 'Background.png') then begin
       img := TBitmap.Create;
-      LoadGraphicFile(img, HomeDir + 'Graphics' + DirectorySeparator + 'Background');
-    end
-  end
-  else
-  begin
+      LoadGraphicFile(img, HomeDir + 'Graphics' + DirectorySeparator + 'Background.png');
+    end;
+  end else begin
     WindowState := wsNormal;
     Width := StartDlg.Width + 16;
     Height := StartDlg.Height + 16;
     Left := StartDlg.Left - 8;
     Top := StartDlg.Top - 8;
-  end
+  end;
 end;
 
 procedure TBackground.FormDestroy(Sender: TObject);
@@ -74,8 +69,7 @@ end;
 
 procedure TBackground.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-  if img <> nil then
-  begin
+  if img <> nil then begin
     img.Free;
     img := nil
   end;

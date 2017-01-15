@@ -91,8 +91,8 @@ begin
   Back.SetSize(ClientWidth, ClientHeight);
   Back.Canvas.FillRect(0, 0, Back.Width, Back.Height);
   Template := TBitmap.Create;
-  LoadGraphicFile(Template, HomeDir + 'Graphics' + DirectorySeparator + 'Nation', gfNoGamma);
-  Template.PixelFormat := pf8bit;
+  Template.PixelFormat := pf24bit;
+  LoadGraphicFile(Template, HomeDir + 'Graphics' + DirectorySeparator + 'Nation.png', gfNoGamma);
 end;
 
 procedure TNatStatDlg.FormDestroy(Sender: TObject);

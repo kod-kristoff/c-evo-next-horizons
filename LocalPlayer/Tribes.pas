@@ -300,7 +300,7 @@ type
         Delete(Input, 1, 9);
         Item := Get;
         sympix := GetNum;
-        symHGr := LoadGraphicSet(Item);
+        symHGr := LoadGraphicSet(Item + '.png');
       end
     end;
     FillChar(ModelPicture, SizeOf(ModelPicture), 0);
@@ -424,7 +424,7 @@ type
                     Item := 'Nation2';
                   end
               end;
-            cHGr := LoadGraphicSet(Item);
+            cHGr := LoadGraphicSet(Item + '.png');
             for x := 0 to 3 do
               with CityPicture[x] do
               begin
@@ -444,7 +444,7 @@ type
             faceHGr := -1
           else
           begin
-            faceHGr := LoadGraphicSet(Item);
+            faceHGr := LoadGraphicSet(Item + '.png');
             facepix := GetNum;
             if GrExt[faceHGr].Data.Canvas.Pixels[facepix mod 10 * 65,
               facepix div 10 * 49 + 48] = $00FFFF then
@@ -476,7 +476,7 @@ type
           while (i >= 0) and (PictureList[i].Hash <> Info.Hash) do
             dec(i);
           assert(i >= 0);
-          assert(PictureList[i].HGr = LoadGraphicSet(GrName));
+          assert(PictureList[i].HGr = LoadGraphicSet(GrName + '.png'));
           assert(PictureList[i].pix = pix);
           ModelPicture[mix].HGr := PictureList[i].HGr;
           ModelPicture[mix].pix := PictureList[i].pix;
@@ -486,7 +486,7 @@ type
         begin
           with ModelPicture[mix] do
           begin
-            HGr := LoadGraphicSet(GrName);
+            HGr := LoadGraphicSet(GrName + '.png');
             pix := Info.pix;
             inc(GrExt[HGr].pixUsed[pix]);
           end;

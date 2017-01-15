@@ -587,7 +587,6 @@ begin
   end;
   SmallImp.EndUpdate;
   FreeMem(resampled);
-  // smallimp.savetofile(homedir+'smallimp.bmp'); //!!!
 end;
 
 procedure ImpImage(ca: TCanvas; x, y, iix: integer; Government: integer;
@@ -673,7 +672,7 @@ begin
   else
     with Tribe[p].ModelPicture[mix] do
     begin
-      HGr := LoadGraphicSet(Picture.GrName);
+      HGr := LoadGraphicSet(Picture.GrName + '.png');
       pix := Picture.pix;
     end;
 end;
@@ -1202,7 +1201,7 @@ begin
   begin
     if AILogo[p] = nil then
       AILogo[p] := TBitmap.Create;
-    if not LoadGraphicFile(AILogo[p], HomeDir + Name, gfNoError) then
+    if not LoadGraphicFile(AILogo[p], HomeDir + Name + '.png', gfNoError) then
     begin
       AILogo[p].free;
       AILogo[p] := nil
@@ -1466,7 +1465,7 @@ procedure TMainScreen.Client(Command, NewPlayer: integer; var Data);
     MainMap := TIsoMap.Create;
     MainMap.SetOutput(offscreen);
 
-    HGrStdUnits := LoadGraphicSet('StdUnits');
+    HGrStdUnits := LoadGraphicSet('StdUnits.png');
     SmallImp := TBitmap.Create;
     SmallImp.PixelFormat := pf24bit;
     InitSmallImp;
