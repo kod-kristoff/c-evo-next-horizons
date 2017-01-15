@@ -35,7 +35,7 @@ var
   T: string;
 begin
   // Win32 user may decide to override locale with LANG variable.
-  Lang := GetEnvironmentVariableUTF8('LANG');
+  Lang := Copy(GetEnvironmentVariableUTF8('LANG'), 1, 2);
 
   if Lang = '' then begin
       for i := 1 to Paramcount - 1 do
