@@ -908,9 +908,13 @@ const
     (adComposites, preNone, preNone), // futArmorTechnology
     (adSmartWeapons, preNone, preNone)); // futMissileTechnology
 
-Imp:
-array [0 .. nImp - 1] of // city improvements
-  record Kind, Preq, Cost, Maint, Expiration: integer;
+Imp: array [0 .. nImp - 1] of // city improvements
+record
+  Kind: Integer;
+  Preq: Integer;
+  Cost: Integer;
+  Maint: Integer;
+  Expiration: integer;
 end
 = ((Kind: ikWonder; Preq: adMathematics; Cost: 400; Maint: 0;
   Expiration: adDemocracy), // woPyramids
@@ -934,12 +938,11 @@ end
   // woMagellan
   (Kind: ikWonder; Preq: adMonotheism; Cost: 400; Maint: 0; Expiration: - 1),
   // woMich
-  (Kind: ikNA; Preq: preNA), // {11}
-  (Kind: ikWonder; Preq: adTheoryOfGravity; Cost: 400; Maint: 0;
-  Expiration: - 1), // woNewton
+  (Kind: ikNA; Preq: preNA; Cost: 0; Maint: 0; Expiration: 0), // {11}
+  (Kind: ikWonder; Preq: adTheoryOfGravity; Cost: 400; Maint: 0; Expiration: - 1), // woNewton
   (Kind: ikWonder; Preq: adTheology; Cost: 400; Maint: 0; Expiration: - 1),
   // woBach
-  (Kind: ikNA; Preq: preNA), // {14}
+  (Kind: ikNA; Preq: preNA; Cost: 0; Maint: 0; Expiration: 0), // {14}
   (Kind: ikWonder; Preq: adDemocracy; Cost: 500; Maint: 0; Expiration: - 1),
   // woLiberty
   (Kind: ikWonder; Preq: adSteel; Cost: 800; Maint: 0; Expiration: - 1),
@@ -952,62 +955,63 @@ end
   Expiration: - 1), // woManhattan
   (Kind: ikWonder; Preq: adSpaceFlight; Cost: 800; Maint: 0; Expiration: - 1),
   // woMir
-  (Kind: ikNA; Preq: preNA), // {21}
-  (Kind: ikNA; Preq: preNA), // {22}
-  (Kind: ikNA; Preq: preNA), // {23}
-  (Kind: ikNA; Preq: preNA), // {24}
-  (Kind: ikNA; Preq: preNA), // {25}
-  (Kind: ikNA; Preq: preNA), // {26}
-  (Kind: ikNA; Preq: preNA), // {27}
-  (Kind: ikTrGoods; Preq: preNone; Cost: 0; Maint: 0), // imTrGoods
-  (Kind: ikCommon; Preq: adWarriorCode; Cost: 40; Maint: 1), // imBarracks
-  (Kind: ikCommon; Preq: adPottery; Cost: 60; Maint: 1), // imGranary
-  (Kind: ikCommon; Preq: adCeremonialBurial; Cost: 40; Maint: 1), // imTemple
-  (Kind: ikCommon; Preq: adCurrency; Cost: 60; Maint: 1), // imMarket
-  (Kind: ikCommon; Preq: adWriting; Cost: 80; Maint: 3), // imLibrary
-  (Kind: ikCommon; Preq: adCodeOfLaws; Cost: 80; Maint: 2), // imCourt
-  (Kind: ikCommon; Preq: adMasonry; Cost: 80; Maint: 1), // imWalls
-  (Kind: ikCommon; Preq: adConstruction; Cost: 80; Maint: 1), // imAqueduct
-  (Kind: ikCommon; Preq: adBanking; Cost: 120; Maint: 2), // imBank
-  (Kind: ikCommon; Preq: adMonotheism; Cost: 100; Maint: 1), // imCathedral
-  (Kind: ikCommon; Preq: adUniversity; Cost: 160; Maint: 5), // imUniversity
-  (Kind: ikCommon; Preq: adSeafaring; Cost: 60; Maint: 1), // imHarbor
-  (Kind: ikCommon; Preq: adPoetry; Cost: 60; Maint: 2), // imTheater
-  (Kind: ikCommon; Preq: adIndustrialization; Cost: 200; Maint: 3), // imFactory
-  (Kind: ikCommon; Preq: adRobotics; Cost: 320; Maint: 5), // imMfgPlant
-  (Kind: ikCommon; Preq: adRecycling; Cost: 320; Maint: 4), // imRecycling
-  (Kind: ikCommon; Preq: adElectricity; Cost: 120; Maint: 2), // imPower
-  (Kind: ikCommon; Preq: adEnvironmentalism; Cost: 120; Maint: 1), // imHydro
-  (Kind: ikCommon; Preq: adNuclearPower; Cost: 240; Maint: 2), // imNuclear
-  (Kind: ikCommon; Preq: adRefining; Cost: 160; Maint: 2), // imPlatform
-  (Kind: ikCommon; Preq: preNone; Cost: 40; Maint: 1), // imTownHall
-  (Kind: ikCommon; Preq: adSanitation; Cost: 120; Maint: 2), // imSewer
-  (Kind: ikCommon; Preq: adRefrigeration; Cost: 80; Maint: 2), // imSupermarket
-  (Kind: ikCommon; Preq: adAutomobile; Cost: 160; Maint: 4), // imHighways
-  (Kind: ikCommon; Preq: adComputers; Cost: 240; Maint: 7), // imResLab
-  (Kind: ikCommon; Preq: adAdvancedRocketry; Cost: 100; Maint: 1),
+  (Kind: ikNA; Preq: preNA; Cost: 0; Maint: 0; Expiration: 0), // {21}
+  (Kind: ikNA; Preq: preNA; Cost: 0; Maint: 0; Expiration: 0), // {22}
+  (Kind: ikNA; Preq: preNA; Cost: 0; Maint: 0; Expiration: 0), // {23}
+  (Kind: ikNA; Preq: preNA; Cost: 0; Maint: 0; Expiration: 0), // {24}
+  (Kind: ikNA; Preq: preNA; Cost: 0; Maint: 0; Expiration: 0), // {25}
+  (Kind: ikNA; Preq: preNA; Cost: 0; Maint: 0; Expiration: 0), // {26}
+  (Kind: ikNA; Preq: preNA; Cost: 0; Maint: 0; Expiration: 0), // {27}
+  (Kind: ikTrGoods; Preq: preNone; Cost: 0; Maint: 0; Expiration: 0), // imTrGoods
+  (Kind: ikCommon; Preq: adWarriorCode; Cost: 40; Maint: 1; Expiration: 0), // imBarracks
+  (Kind: ikCommon; Preq: adPottery; Cost: 60; Maint: 1; Expiration: 0), // imGranary
+  (Kind: ikCommon; Preq: adCeremonialBurial; Cost: 40; Maint: 1; Expiration: 0), // imTemple
+  (Kind: ikCommon; Preq: adCurrency; Cost: 60; Maint: 1; Expiration: 0), // imMarket
+  (Kind: ikCommon; Preq: adWriting; Cost: 80; Maint: 3; Expiration: 0), // imLibrary
+  (Kind: ikCommon; Preq: adCodeOfLaws; Cost: 80; Maint: 2; Expiration: 0), // imCourt
+  (Kind: ikCommon; Preq: adMasonry; Cost: 80; Maint: 1; Expiration: 0), // imWalls
+  (Kind: ikCommon; Preq: adConstruction; Cost: 80; Maint: 1; Expiration: 0), // imAqueduct
+  (Kind: ikCommon; Preq: adBanking; Cost: 120; Maint: 2; Expiration: 0), // imBank
+  (Kind: ikCommon; Preq: adMonotheism; Cost: 100; Maint: 1; Expiration: 0), // imCathedral
+  (Kind: ikCommon; Preq: adUniversity; Cost: 160; Maint: 5; Expiration: 0), // imUniversity
+  (Kind: ikCommon; Preq: adSeafaring; Cost: 60; Maint: 1; Expiration: 0), // imHarbor
+  (Kind: ikCommon; Preq: adPoetry; Cost: 60; Maint: 2; Expiration: 0), // imTheater
+  (Kind: ikCommon; Preq: adIndustrialization; Cost: 200; Maint: 3; Expiration: 0), // imFactory
+  (Kind: ikCommon; Preq: adRobotics; Cost: 320; Maint: 5; Expiration: 0), // imMfgPlant
+  (Kind: ikCommon; Preq: adRecycling; Cost: 320; Maint: 4; Expiration: 0), // imRecycling
+  (Kind: ikCommon; Preq: adElectricity; Cost: 120; Maint: 2; Expiration: 0), // imPower
+  (Kind: ikCommon; Preq: adEnvironmentalism; Cost: 120; Maint: 1; Expiration: 0), // imHydro
+  (Kind: ikCommon; Preq: adNuclearPower; Cost: 240; Maint: 2; Expiration: 0), // imNuclear
+  (Kind: ikCommon; Preq: adRefining; Cost: 160; Maint: 2; Expiration: 0), // imPlatform
+  (Kind: ikCommon; Preq: preNone; Cost: 40; Maint: 1; Expiration: 0), // imTownHall
+  (Kind: ikCommon; Preq: adSanitation; Cost: 120; Maint: 2; Expiration: 0), // imSewer
+  (Kind: ikCommon; Preq: adRefrigeration; Cost: 80; Maint: 2; Expiration: 0), // imSupermarket
+  (Kind: ikCommon; Preq: adAutomobile; Cost: 160; Maint: 4; Expiration: 0), // imHighways
+  (Kind: ikCommon; Preq: adComputers; Cost: 240; Maint: 7; Expiration: 0), // imResLab
+  (Kind: ikCommon; Preq: adAdvancedRocketry; Cost: 100; Maint: 1; Expiration: 0),
   // imMissileBat
-  (Kind: ikCommon; Preq: adMetallurgy; Cost: 80; Maint: 1), // imCoastalFort
-  (Kind: ikCommon; Preq: adAdvancedFlight; Cost: 160; Maint: 1), // imAirport
-  (Kind: ikCommon; Preq: adAmphibiousWarfare; Cost: 80; Maint: 1), // imDockyard
-  (Kind: ikNatLocal; Preq: preNone; Cost: 100; Maint: 0), // imPalace
-  (Kind: ikNatLocal; Preq: adEngineering; Cost: 400; Maint: 4), // imGrWall
-  (Kind: ikNatLocal; Preq: adConstruction; Cost: 200; Maint: 4), // imColosseum
-  (Kind: ikNatLocal; Preq: adAstronomy; Cost: 300; Maint: 4), // imObservatory
-  (Kind: ikNatLocal; Preq: adTactics; Cost: 100; Maint: 4), // imMilAcademy
-  (Kind: ikNatLocal; Preq: adSteel; Cost: 200; Maint: 2), // imBunker
-  (Kind: ikNatLocal; Preq: adSyntheticFood; Cost: 120; Maint: 2), // imAlgae
-  (Kind: ikNatGlobal; Preq: adTheCorporation; Cost: 320; Maint: 4), // imStockEx
-  (Kind: ikNatLocal; Preq: adSpaceFlight; Cost: 400; Maint: 0), // imSpacePort
-  (Kind: ikShipPart; Preq: adTransstellarColonization; Cost: 240; Maint: 0),
+  (Kind: ikCommon; Preq: adMetallurgy; Cost: 80; Maint: 1; Expiration: 0), // imCoastalFort
+  (Kind: ikCommon; Preq: adAdvancedFlight; Cost: 160; Maint: 1; Expiration: 0), // imAirport
+  (Kind: ikCommon; Preq: adAmphibiousWarfare; Cost: 80; Maint: 1; Expiration: 0), // imDockyard
+  (Kind: ikNatLocal; Preq: preNone; Cost: 100; Maint: 0; Expiration: 0), // imPalace
+  (Kind: ikNatLocal; Preq: adEngineering; Cost: 400; Maint: 4; Expiration: 0), // imGrWall
+  (Kind: ikNatLocal; Preq: adConstruction; Cost: 200; Maint: 4; Expiration: 0), // imColosseum
+  (Kind: ikNatLocal; Preq: adAstronomy; Cost: 300; Maint: 4; Expiration: 0), // imObservatory
+  (Kind: ikNatLocal; Preq: adTactics; Cost: 100; Maint: 4; Expiration: 0), // imMilAcademy
+  (Kind: ikNatLocal; Preq: adSteel; Cost: 200; Maint: 2; Expiration: 0), // imBunker
+  (Kind: ikNatLocal; Preq: adSyntheticFood; Cost: 120; Maint: 2; Expiration: 0), // imAlgae
+  (Kind: ikNatGlobal; Preq: adTheCorporation; Cost: 320; Maint: 4; Expiration: 0), // imStockEx
+  (Kind: ikNatLocal; Preq: adSpaceFlight; Cost: 400; Maint: 0; Expiration: 0), // imSpacePort
+  (Kind: ikShipPart; Preq: adTransstellarColonization; Cost: 240; Maint: 0; Expiration: 0),
   // imShipComp
-  (Kind: ikShipPart; Preq: adImpulseDrive; Cost: 600; Maint: 0), // imShipPow
-  (Kind: ikShipPart; Preq: adSelfContainedEnvironment; Cost: 800; Maint: 0));
+  (Kind: ikShipPart; Preq: adImpulseDrive; Cost: 600; Maint: 0; Expiration: 0), // imShipPow
+  (Kind: ikShipPart; Preq: adSelfContainedEnvironment; Cost: 800; Maint: 0; Expiration: 0));
 // imShipHab
 
 nImpReplacement = 5;
-ImpReplacement:
-array [0 .. nImpReplacement - 1] of record NewImp, OldImp: integer;
+ImpReplacement: array [0 .. nImpReplacement - 1] of record
+  NewImp: Integer;
+  OldImp: Integer;
 end
 = ((NewImp: imSewer; OldImp: imAqueduct), (NewImp: imCourt; OldImp: imTownHall),
   (NewImp: imPalace; OldImp: imTownHall), (NewImp: imPalace; OldImp: imCourt),
@@ -1018,72 +1022,78 @@ nShipPart = 3;
 spComp = 0;
 spPow = 1;
 spHab = 2;
-ShipNeed:
-array [0 .. nShipPart - 1] of integer = (6, 4, 2);
-ShipImpIndex:
-array [0 .. nShipPart - 1] of integer = (imShipComp, imShipPow, imShipHab);
+ShipNeed: array [0 .. nShipPart - 1] of integer = (6, 4, 2);
+ShipImpIndex: array [0 .. nShipPart - 1] of integer = (imShipComp, imShipPow, imShipHab);
 
-GovPreq:
-array [1 .. nGov - 1] of integer = { government prerequisites }
+GovPreq: array [1 .. nGov - 1] of integer = { government prerequisites }
   (preNone, adMonarchy, adTheRepublic, adTheology, adCommunism, adDemocracy,
   adInternet);
 
-AgePreq:
-array [1 .. 3] of integer = (adScience, adMassProduction,
+AgePreq: array [1 .. 3] of integer = (adScience, adMassProduction,
   adTransstellarColonization);
 
-Terrain:
-array [0 .. 11] of record MoveCost, Defense, ClearTerrain, IrrEff, IrrClearWork,
-  AfforestTerrain, MineEff, MineAfforestWork, TransTerrain, TransWork: integer;
-FoodRes, ProdRes, TradeRes: array [0 .. 2] of integer;
-Filler:
-array [0 .. 12] of integer;
+Terrain: array [0 .. 11] of record
+  MoveCost: Integer;
+  Defense: Integer;
+  ClearTerrain: Integer;
+  IrrEff: Integer;
+  IrrClearWork: Integer;
+  AfforestTerrain: Integer;
+  MineEff: Integer;
+  MineAfforestWork: Integer;
+  TransTerrain: Integer;
+  TransWork: Integer;
+  FoodRes, ProdRes, TradeRes: array [0 .. 2] of Integer;
+  Filler: array [0 .. 12] of Integer;
 end
 = ((MoveCost: 1; Defense: 4; ClearTerrain: - 1; IrrEff: 0; IrrClearWork: 0;
   AfforestTerrain: - 1; MineEff: 0; MineAfforestWork: 0; TransTerrain: - 1;
   TransWork: 0; FoodRes: (0, 0, 0); ProdRes: (0, 0, 0);
-  TradeRes: (0, 0, 0)), { Ocn }
+  TradeRes: (0, 0, 0); Filler: (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)), { Ocn }
   (MoveCost: 1; Defense: 4; ClearTerrain: - 1; IrrEff: 0; IrrClearWork: 0;
   AfforestTerrain: - 1; MineEff: 0; MineAfforestWork: 0; TransTerrain: - 1;
   TransWork: 0; FoodRes: (1, 5, 1); ProdRes: (0, 0, 5);
-  TradeRes: (3, 3, 3)), { Sho }
+  TradeRes: (3, 3, 3); Filler: (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)), { Sho }
   (MoveCost: 1; Defense: 4; ClearTerrain: - 1; IrrEff: 1; IrrClearWork: 600;
   AfforestTerrain: fForest; MineEff: 0; MineAfforestWork: 1800;
   TransTerrain: fHills; TransWork: 3000; FoodRes: (3, 2, 2); ProdRes: (0, 1, 0);
-  TradeRes: (1, 1, 1)), { Gra }
+  TradeRes: (1, 1, 1); Filler: (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)), { Gra }
   (MoveCost: 1; Defense: 4; ClearTerrain: fGrass; IrrEff: 0; IrrClearWork: 1800;
   AfforestTerrain: - 1; MineEff: 1; MineAfforestWork: 600;
   TransTerrain: fPrairie; TransWork: 3000; FoodRes: (0, 3, 0);
-  ProdRes: (1, 1, 4); TradeRes: (1, 1, 1)), { Dst }
+  ProdRes: (1, 1, 4); TradeRes: (1, 1, 1); Filler: (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)), { Dst }
   (MoveCost: 1; Defense: 4; ClearTerrain: - 1; IrrEff: 1; IrrClearWork: 600;
   AfforestTerrain: fForest; MineEff: 0; MineAfforestWork: 2400;
   TransTerrain: - 1; TransWork: 0; FoodRes: (1, 3, 1); ProdRes: (1, 1, 3);
-  TradeRes: (1, 1, 1)), { Pra }
+  TradeRes: (1, 1, 1); Filler: (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)), { Pra }
   (MoveCost: 1; Defense: 4; ClearTerrain: - 1; IrrEff: 1; IrrClearWork: 600;
   AfforestTerrain: - 1; MineEff: 0; MineAfforestWork: 0; TransTerrain: fGrass;
   TransWork: 3000; FoodRes: (1, 1, 1); ProdRes: (0, 0, 4);
-  TradeRes: (1, 6, 1)), { Tun }
+  TradeRes: (1, 6, 1); Filler: (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)), { Tun }
   (MoveCost: 2; Defense: 4; ClearTerrain: - 1; IrrEff: 0; IrrClearWork: 0;
   AfforestTerrain: - 1; MineEff: 3; MineAfforestWork: 1800; TransTerrain: - 1;
   TransWork: 0; FoodRes: (0, 3, 0); ProdRes: (1, 1, 0);
-  TradeRes: (0, 4, 0)), { Arc }
+  TradeRes: (0, 4, 0); Filler: (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)), { Arc }
   (MoveCost: 2; Defense: 6; ClearTerrain: fGrass; IrrEff: 0; IrrClearWork: 2400;
   AfforestTerrain: fForest; MineEff: 0; MineAfforestWork: 2400;
   TransTerrain: fHills; TransWork: 3000; FoodRes: (1, 1, 1); ProdRes: (0, 4, 1);
-  TradeRes: (1, 1, 5)), { Swa }
-  (), { - }
+  TradeRes: (1, 1, 5); Filler: (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)), { Swa }
+  (MoveCost: 0; Defense: 0; ClearTerrain: 0; IrrEff: 0;
+  IrrClearWork: 0; AfforestTerrain: 0; MineEff: 0; MineAfforestWork: 0;
+  TransTerrain: 0; TransWork: 0; FoodRes: (0, 0, 0); ProdRes: (0, 0, 0);
+  TradeRes: (0, 0, 0); Filler: (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)), { - }
   (MoveCost: 2; Defense: 6; ClearTerrain: fPrairie; IrrEff: 0;
   IrrClearWork: 600; AfforestTerrain: - 1; MineEff: 0; MineAfforestWork: 0;
   TransTerrain: - 1; TransWork: 0; FoodRes: (1, 3, 1); ProdRes: (2, 2, 2);
-  TradeRes: (1, 1, 4)), { For }
+  TradeRes: (1, 1, 4); Filler: (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)), { For }
   (MoveCost: 2; Defense: 8; ClearTerrain: - 1; IrrEff: 1; IrrClearWork: 600;
   AfforestTerrain: - 1; MineEff: 3; MineAfforestWork: 1200;
   TransTerrain: fGrass; TransWork: 6000; FoodRes: (1, 1, 1); ProdRes: (0, 0, 2);
-  TradeRes: (0, 4, 0)), { Hil }
+  TradeRes: (0, 4, 0); Filler: (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)), { Hil }
   (MoveCost: 3; Defense: 12; ClearTerrain: - 1; IrrEff: 0; IrrClearWork: 0;
   AfforestTerrain: - 1; MineEff: 2; MineAfforestWork: 1200; TransTerrain: - 1;
   TransWork: 0; FoodRes: (0, 0, 0); ProdRes: (1, 4, 1);
-  TradeRes: (0, 0, 7))); { Mou }
+  TradeRes: (0, 0, 7); Filler: (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0))); { Mou }
 
 // settler work required MP
 PillageWork = 100;
@@ -1103,41 +1113,57 @@ PollWork = 1800;
 // cost values accumulate if prerequisite is future tech / are maximized if not
 nUpgrade = 15;
 upgrade:
-array [0 .. nDomains - 1, 0 .. nUpgrade - 1] of record Preq, Strength, Trans,
-  Cost: integer
+array [0 .. nDomains - 1, 0 .. nUpgrade - 1] of record
+  Preq: Integer;
+  Strength: Integer;
+  Trans: Integer;
+  Cost: integer;
 end
-= (((Preq: adWarriorCode; Strength: 4; Trans: 0;
-  Cost: 3), (Preq: adBronzeWorking; Strength: 2; Trans: 0;
-  Cost: 4), (Preq: adIronWorking; Strength: 2; Trans: 0;
-  Cost: 5), (Preq: adChivalry; Strength: 2; Trans: 0;
-  Cost: 5), (Preq: adMonotheism; Strength: 3; Trans: 0;
-  Cost: 7), (Preq: adGunpowder; Strength: 3; Trans: 0;
-  Cost: 8), (Preq: adExplosives; Strength: 4; Trans: 0;
-  Cost: 9), (Preq: adTactics; Strength: 5; Trans: 0; Cost: 10), (Preq: adRadio;
-  Strength: 6; Trans: 0; Cost: 11), (Preq: adDemocracy; Strength: 6; Trans: 0;
-  Cost: 5), (Preq: adMobileWarfare; Strength: 7; Trans: 0;
-  Cost: 12), (Preq: adRobotics; Strength: 8; Trans: 0;
-  Cost: 15), (Preq: adComposites; Strength: 8; Trans: 0;
-  Cost: 15), (Preq: adTheLaser; Strength: 8; Trans: 0;
-  Cost: 14), (Preq: futMaterialTechnology; Strength: 10; Trans: 0; Cost: 2)),
-  ((Preq: adMapMaking; Strength: 4; Trans: 1; Cost: 8), (Preq: adNavigation;
-  Strength: 4; Trans: 0; Cost: 10), (Preq: adEngineering; Strength: 0; Trans: 1;
-  Cost: 8), (Preq: adGunpowder; Strength: 8; Trans: 0;
-  Cost: 12), (Preq: adMagnetism; Strength: 12; Trans: 1;
-  Cost: 20), (Preq: adExplosives; Strength: 16; Trans: 0;
-  Cost: 24), (Preq: adSteamEngine; Strength: 24; Trans: 0;
-  Cost: 28), (Preq: adAmphibiousWarfare; Strength: 24; Trans: 1;
-  Cost: 18), (Preq: adAdvancedRocketry; Strength: 32; Trans: 0;
-  Cost: 38), (Preq: futMaterialTechnology; Strength: 14; Trans: 0;
-  Cost: 4), (Preq: futArtificialIntelligence; Strength: 14; Trans: 0;
-  Cost: 4), (Preq: preNA), (Preq: preNA), (Preq: preNA), (Preq: preNA)),
-  ((Preq: adFlight; Strength: 12; Trans: 1; Cost: 14), (Preq: adTactics;
-  Strength: 6; Trans: 0; Cost: 17), (Preq: adElectronics; Strength: 6; Trans: 0;
-  Cost: 20), (Preq: adMin; Strength: 8; Trans: 0; Cost: 24),
-  (Preq: adComposites; Strength: 8; Trans: 0; Cost: 26), (Preq: adSmartWeapons;
-  Strength: 11; Trans: 0; Cost: 32), (Preq: futArtificialIntelligence;
-  Strength: 7; Trans: 0; Cost: 4), (Preq: preNA), (Preq: preNA), (Preq: preNA),
-  (Preq: preNA), (Preq: preNA), (Preq: preNA), (Preq: preNA), (Preq: preNA)));
+= (((Preq: adWarriorCode; Strength: 4; Trans: 0; Cost: 3),
+  (Preq: adBronzeWorking; Strength: 2; Trans: 0; Cost: 4),
+  (Preq: adIronWorking; Strength: 2; Trans: 0; Cost: 5),
+  (Preq: adChivalry; Strength: 2; Trans: 0; Cost: 5),
+  (Preq: adMonotheism; Strength: 3; Trans: 0; Cost: 7),
+  (Preq: adGunpowder; Strength: 3; Trans: 0; Cost: 8),
+  (Preq: adExplosives; Strength: 4; Trans: 0; Cost: 9),
+  (Preq: adTactics; Strength: 5; Trans: 0; Cost: 10),
+  (Preq: adRadio; Strength: 6; Trans: 0; Cost: 11),
+  (Preq: adDemocracy; Strength: 6; Trans: 0; Cost: 5),
+  (Preq: adMobileWarfare; Strength: 7; Trans: 0; Cost: 12),
+  (Preq: adRobotics; Strength: 8; Trans: 0; Cost: 15),
+  (Preq: adComposites; Strength: 8; Trans: 0; Cost: 15),
+  (Preq: adTheLaser; Strength: 8; Trans: 0; Cost: 14),
+  (Preq: futMaterialTechnology; Strength: 10; Trans: 0; Cost: 2)),
+  ((Preq: adMapMaking; Strength: 4; Trans: 1; Cost: 8),
+  (Preq: adNavigation; Strength: 4; Trans: 0; Cost: 10),
+  (Preq: adEngineering; Strength: 0; Trans: 1; Cost: 8),
+  (Preq: adGunpowder; Strength: 8; Trans: 0; Cost: 12),
+  (Preq: adMagnetism; Strength: 12; Trans: 1; Cost: 20),
+  (Preq: adExplosives; Strength: 16; Trans: 0; Cost: 24),
+  (Preq: adSteamEngine; Strength: 24; Trans: 0; Cost: 28),
+  (Preq: adAmphibiousWarfare; Strength: 24; Trans: 1; Cost: 18),
+  (Preq: adAdvancedRocketry; Strength: 32; Trans: 0; Cost: 38),
+  (Preq: futMaterialTechnology; Strength: 14; Trans: 0; Cost: 4),
+  (Preq: futArtificialIntelligence; Strength: 14; Trans: 0; Cost: 4),
+  (Preq: preNA; Strength: 0; Trans: 0; Cost: 0),
+  (Preq: preNA; Strength: 0; Trans: 0; Cost: 0),
+  (Preq: preNA; Strength: 0; Trans: 0; Cost: 0),
+  (Preq: preNA; Strength: 0; Trans: 0; Cost: 0)),
+  ((Preq: adFlight; Strength: 12; Trans: 1; Cost: 14),
+  (Preq: adTactics; Strength: 6; Trans: 0; Cost: 17),
+  (Preq: adElectronics; Strength: 6; Trans: 0; Cost: 20),
+  (Preq: adMin; Strength: 8; Trans: 0; Cost: 24),
+  (Preq: adComposites; Strength: 8; Trans: 0; Cost: 26),
+  (Preq: adSmartWeapons; Strength: 11; Trans: 0; Cost: 32),
+  (Preq: futArtificialIntelligence; Strength: 7; Trans: 0; Cost: 4),
+  (Preq: preNA; Strength: 0; Trans: 0; Cost: 0),
+  (Preq: preNA; Strength: 0; Trans: 0; Cost: 0),
+  (Preq: preNA; Strength: 0; Trans: 0; Cost: 0),
+  (Preq: preNA; Strength: 0; Trans: 0; Cost: 0),
+  (Preq: preNA; Strength: 0; Trans: 0; Cost: 0),
+  (Preq: preNA; Strength: 0; Trans: 0; Cost: 0),
+  (Preq: preNA; Strength: 0; Trans: 0; Cost: 0),
+  (Preq: preNA; Strength: 0; Trans: 0; Cost: 0)));
 
 { model features }
 nFeature = 27;
@@ -1169,12 +1195,11 @@ mcWill = 24;
 mcAcademy = 25;
 mcLine = 26;
 mcFirstNonCap = mcNav;
-AutoFeature:
-Set of mcFirstNonCap .. nFeature - 1 = [mcNav, mcSE, mcNP, mcJet, mcAcademy];
+AutoFeature: set of mcFirstNonCap .. nFeature - 1 = [mcNav, mcSE, mcNP, mcJet,
+  mcAcademy];
 // unit class advances, automatically applied if available
 
-Feature:
-array [0 .. nFeature - 1] of { unit model features }
+Feature: array [0 .. nFeature - 1] of { unit model features }
   record Domains, Preq, Weight, Cost: integer;
 end
 = ((Domains: 7; Preq: preNone; Weight: 1; Cost: 1), { mcOffense }
@@ -1205,11 +1230,9 @@ end
   (Domains: 1; Preq: preSun; Weight: 0; Cost: 0), { mcAcademy }
   (Domains: 7; Preq: adMassProduction; Weight: 0; Cost: 0)); { mcLine }
 
-WeightPreq7:
-array [0 .. nDomains - 1] of integer = (adHorsebackRiding, adSeafaring,
+WeightPreq7: array [0 .. nDomains - 1] of integer = (adHorsebackRiding, adSeafaring,
   adAdvancedFlight);
-WeightPreq10:
-array [0 .. nDomains - 1] of integer = (adAutomobile, adSteel, preNA);
+WeightPreq10: array [0 .. nDomains - 1] of integer = (adAutomobile, adSteel, preNA);
 
 INFIN = 999999;
 
@@ -1306,9 +1329,11 @@ type
     Job, // current terrain improvement job
     Exp, { micro experience, the level is Exp div ExpCost }
     Load: Byte; { number of transported units }
-    Flags: word end;
+    Flags: word;
+  end;
 
-    TCityInfo = packed record Loc, Status, // free for AI use
+  TCityInfo = packed record
+    Loc, Status, // free for AI use
     SavedStatus: LongInt; // for server internal use only
     Owner, // last known owner, even if not alive anymore!
     ID, // founding player <<12 + number, never changes, unique within the whole game
@@ -1371,8 +1396,11 @@ type
   end;
 
   TTileInfo = record
-    Food, Prod, Trade, ExplCity: integer end;
-    TCityReport = record HypoTiles, HypoTax, HypoLux, Working, Happy, FoodRep,
+    Food, Prod, Trade, ExplCity: integer;
+  end;
+
+  TCityReport = record
+    HypoTiles, HypoTax, HypoLux, Working, Happy, FoodRep,
       ProdRep, Trade, PollRep, Corruption, Tax, Lux, Science, Support, Eaten,
       ProdCost, Storage, Deployed: integer;
   end;
@@ -1405,15 +1433,19 @@ type
 
   TGetCityData = record
     Owner: integer;
-    c: TCity end;
-    TCityAreaInfo = record Available: array [0 .. 26] of integer;
+    c: TCity;
+  end;
+
+  TCityAreaInfo = record
+    Available: array [0 .. 26] of integer;
   end;
 
   TUnitReport = record
     FoodSupport, ProdSupport, ReportFlags: integer;
   end;
 
-  TJobProgressData = array [0 .. nJob - 1] of record Required, Done,
+  TJobProgressData = array [0 .. nJob - 1] of record
+    Required, Done,
     NextTurnPlus: integer;
   end;
   TBattleForecast = record
@@ -1433,7 +1465,8 @@ type
     Reason, Ship1Owner, Ship2Owner: integer;
     Ship1Change, Ship2Change: array [0 .. nShipPart - 1] of integer;
   end;
-  TOffer = record nDeliver, nCost: integer;
+  TOffer = record
+    nDeliver, nCost: integer;
     Price: array [0 .. 11] of Cardinal;
   end;
   TChart = array [0 .. INFIN] of integer;
@@ -1599,9 +1632,9 @@ const
     { preLeo,preLighthouse, } preLeo);
 
 procedure MakeUnitInfo(p: integer; const u: TUn; var ui: TUnitInfo);
-  procedure MakeModelInfo(p, mix: integer; const m: TModel; var mi: TModelInfo);
-    function IsSameModel(const mi1, mi2: TModelInfo): boolean;
-      function SpecialTile(Loc, TerrType, lx: integer): integer;
+procedure MakeModelInfo(p, mix: integer; const m: TModel; var mi: TModelInfo);
+function IsSameModel(const mi1, mi2: TModelInfo): boolean;
+function SpecialTile(Loc, TerrType, lx: integer): integer;
 
 implementation
 
