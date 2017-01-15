@@ -34,20 +34,20 @@ type
     Base: PPixel32;
     Pixel: PPixel32;
     Line: PPixel32;
+    RelLine: PPixel32;
     BytesPerPixel: Integer;
     BytesPerLine: Integer;
-    procedure NextLine; inline;
-    procedure NextPixel; inline;
-    procedure SetXY(X, Y: Integer); inline;
-    procedure SetX(X: Integer); inline;
-    procedure Init(Bitmap: TBitmap; X: Integer = 0; Y: Integer = 0); inline;
+    procedure NextLine; inline; // Move pointer to start of new base line
+    procedure NextPixel; inline; // Move pointer to next pixel
+    procedure SetXY(X, Y: Integer); inline; // Set pixel position relative to base
+    procedure SetX(X: Integer); inline; // Set horizontal pixel position relative to base
+    procedure Init(Bitmap: TBitmap; BaseX: Integer = 0; BaseY: Integer = 0); inline;
   end;
   PPixelPointer = ^TPixelPointer;
 
 {$IFDEF WINDOWS}
 function ChangeResolution(x, y, bpp, freq: integer): boolean;
 {$ENDIF}
-function GetBitmapPixelPtr(Bitmap: TBitmap; X, Y: Integer): PPixel32;
 procedure RestoreResolution;
 function Play(Item: string; Index: integer = -1): boolean;
 procedure PreparePlay(Item: string; Index: integer = -1);
@@ -297,11 +297,6 @@ begin
 {$ENDIF}
 end;
 
-function GetBitmapPixelPtr(Bitmap: TBitmap; X, Y: Integer): PPixel32;
-begin
-  Result := Pointer(Bitmap.RawImage.Data) + X * (Bitmap.RawImage.Description.BitsPerPixel shr 3) + Y * Bitmap.RawImage.Description.BytesPerLine;
-end;
-
 procedure EmptyMenu(MenuItems: TMenuItem; Keep: integer = 0);
 var
   m: TMenuItem;
@@ -463,7 +458,7 @@ begin
   if (Options and gfNoGamma = 0) and (Gamma <> 100) then
   begin
     Bmp.BeginUpdate;
-    PixelPtr.Init(bmp, 0, 0);
+    PixelPtr.Init(bmp);
     for Y := 0 to Bmp.Height - 1 do begin
       for X := 0 to Bmp.Width - 1 do begin
         PixelPtr.Pixel^.B := GammaLUT[PixelPtr.Pixel^.B];
@@ -482,7 +477,7 @@ var
   i, x, y, xmax, OriginalColor: integer;
   FileName: string;
   Source: TBitmap;
-  DataPixel, MaskPixel: PPixel32;
+  DataPixel, MaskPixel: TPixelPointer;
 begin
   i := 0;
   while (i < nGrExt) and (GrExt[i].Name <> Name) do
@@ -516,30 +511,27 @@ begin
 
     GrExt[nGrExt].Data.BeginUpdate;
     GrExt[nGrExt].Mask.BeginUpdate;
-    for y := 0 to Source.Height - 1 do
-    begin
-      for x := 0 to xmax - 1 do
-      begin
-        DataPixel := GetBitmapPixelPtr(GrExt[nGrExt].Data, x, y);
-        MaskPixel := GetBitmapPixelPtr(GrExt[nGrExt].Mask, x, Y);
-
-        OriginalColor := DataPixel^.ARGB and $FFFFFF;
-        if (OriginalColor = $FF00FF) or (OriginalColor = $7F007F) then
-        begin // transparent
-          MaskPixel^.ARGB := $FFFFFF;
-          DataPixel^.ARGB := DataPixel^.ARGB and $FF000000
-        end
-        else
-        begin
-          MaskPixel^.ARGB := $000000; // non-transparent
-          if Gamma <> 100 then
-          begin
-            DataPixel^.B := GammaLUT[DataPixel^.B];
-            DataPixel^.G := GammaLUT[DataPixel^.G];
-            DataPixel^.R := GammaLUT[DataPixel^.R];
-          end
-        end
-      end
+    DataPixel.Init(GrExt[nGrExt].Data);
+    MaskPixel.Init(GrExt[nGrExt].Mask);
+    for y := 0 to Source.Height - 1 do begin
+      for x := 0 to xmax - 1 do begin
+        OriginalColor := DataPixel.Pixel^.ARGB and $FFFFFF;
+        if (OriginalColor = $FF00FF) or (OriginalColor = $7F007F) then begin // transparent
+          MaskPixel.Pixel^.ARGB := $FFFFFF;
+          DataPixel.Pixel^.ARGB := DataPixel.Pixel^.ARGB and $FF000000
+        end else begin
+          MaskPixel.Pixel^.ARGB := $000000; // non-transparent
+          if Gamma <> 100 then begin
+            DataPixel.Pixel^.B := GammaLUT[DataPixel.Pixel^.B];
+            DataPixel.Pixel^.G := GammaLUT[DataPixel.Pixel^.G];
+            DataPixel.Pixel^.R := GammaLUT[DataPixel.Pixel^.R];
+          end;
+        end;
+        DataPixel.NextPixel;
+        MaskPixel.NextPixel;
+      end;
+      DataPixel.NextLine;
+      MaskPixel.NextLine;
     end;
     GrExt[nGrExt].Data.EndUpdate;
     GrExt[nGrExt].Mask.EndUpdate;
@@ -561,7 +553,7 @@ var
   PixelPtr: TPixelPointer;
 begin
   Dst.BeginUpdate;
-  PixelPtr.Init(Dst, 0, 0);
+  PixelPtr.Init(Dst);
   for yy := 0 to h - 1 do begin
     for xx := 0 to w - 1 do begin
       PixelPtr.Pixel^.B := PixelPtr.Pixel^.B div 2;
@@ -579,11 +571,13 @@ procedure ImageOp_B(dst, Src: TBitmap; xDst, yDst, xSrc, ySrc, w, h: integer);
 // X channel = background amp (old Dst content), 128=original brightness
 var
   X, Y: Integer;
-  Brightness, test: integer;
-  PixelSrc: ^Byte;
-  PixelDst: PPixel32;
+  Brightness, Test: Integer;
+  PixelSrc: TPixelPointer;
+  PixelDst: TPixelPointer;
+  pf: TPixelFormat;
 begin
-  //TODO Assert(Src.PixelFormat = pf8bit);
+  pf := src.PixelFormat;
+  //Assert(Src.PixelFormat = pf8bit);
   Assert(dst.PixelFormat = pf24bit);
   if xDst < 0 then
   begin
@@ -606,25 +600,25 @@ begin
 
   dst.BeginUpdate;
   Src.BeginUpdate;
+  PixelDst.Init(Dst, xDst, yDst);
+  PixelSrc.Init(Src, xSrc, ySrc);
   for Y := 0 to h - 1 do begin
-    PixelDst := GetBitmapPixelPtr(dst, xDst, yDst + Y);
-    PixelSrc := Pointer(GetBitmapPixelPtr(Src, xSrc, ySrc + Y));
     for X := 0 to w - 1 do begin
-      Brightness := PixelSrc^;
-      test := (PixelDst^.R * Brightness) shr 7;
-      if test >= 256 then PixelDst^.R := 255
-        else PixelDst^.R := test; // Red
-      test := (PixelDst^.G * Brightness) shr 7;
-      if test >= 256 then PixelDst^.G := 255
-        else PixelDst^.G := test; // Green
-      test := (PixelDst^.B * Brightness) shr 7;
-      if test >= 256 then
-        PixelDst^.R := 255
-      else
-        PixelDst^.B := test; // Blue
-      PixelDst := Pointer(PixelDst) + (Dst.RawImage.Description.BitsPerPixel shr 3);
-      PixelSrc := Pointer(PixelSrc) + (Src.RawImage.Description.BitsPerPixel shr 3);
+      Brightness := PixelSrc.Pixel^.B; // One byte for 8-bit color
+      test := (PixelDst.Pixel^.R * Brightness) shr 7;
+      if test >= 256 then PixelDst.Pixel^.R := 255
+        else PixelDst.Pixel^.R := test; // Red
+      test := (PixelDst.Pixel^.G * Brightness) shr 7;
+      if test >= 256 then PixelDst.Pixel^.G := 255
+        else PixelDst.Pixel^.G := test; // Green
+      test := (PixelDst.Pixel^.B * Brightness) shr 7;
+      if test >= 256 then PixelDst.Pixel^.R := 255
+        else PixelDst.Pixel^.B := Test; // Blue
+      PixelDst.NextPixel;
+      PixelSrc.NextPixel;
     end;
+    PixelDst.NextLine;
+    PixelSrc.NextLine;
   end;
   src.EndUpdate;
   dst.EndUpdate;
@@ -638,7 +632,7 @@ procedure ImageOp_BCC(dst, Src: TBitmap; xDst, yDst, xSrc, ySrc, w, h, Color1,
 // R channel = Color2 amp, 128=original brightness
 var
   ix, iy, amp1, amp2, trans, Value: integer;
-  SrcPixel, DstPixel: PPixel32;
+  SrcPixel, DstPixel: TPixelPointer;
 begin
   if xDst < 0 then begin
     w := w + xDst;
@@ -659,31 +653,32 @@ begin
 
   Src.BeginUpdate;
   dst.BeginUpdate;
-  for iy := 0 to h - 1 do
-  begin
-    for ix := 0 to w - 1 do
-    begin
-      SrcPixel := GetBitmapPixelPtr(Src, xSrc + ix, ySrc + iy);
-      DstPixel := GetBitmapPixelPtr(Dst, xDst + ix, yDst + iy);
-      trans := SrcPixel^.B * 2; // green channel = transparency
-      amp1 := SrcPixel^.G * 2;
-      amp2 := SrcPixel^.R * 2;
-      if trans <> $FF then
-      begin
-        Value := (DstPixel^.B * trans + ((Color2 shr 16) and $FF) * amp2
+  SrcPixel.Init(Src, xSrc, ySrc);
+  DstPixel.Init(Dst, xDst, yDst);
+  for iy := 0 to h - 1 do begin
+    for ix := 0 to w - 1 do begin
+      trans := SrcPixel.Pixel^.B * 2; // green channel = transparency
+      amp1 := SrcPixel.Pixel^.G * 2;
+      amp2 := SrcPixel.Pixel^.R * 2;
+      if trans <> $FF then begin
+        Value := (DstPixel.Pixel^.B * trans + ((Color2 shr 16) and $FF) * amp2
           + ((Color1 shr 16) and $FF) * amp1) div $FF;
-        if Value < 256 then DstPixel^.B := Value
-        else DstPixel^.B := 255;
-        Value := (DstPixel^.G * trans + ((Color2 shr 8) and $FF) * amp2
+        if Value < 256 then DstPixel.Pixel^.B := Value
+          else DstPixel.Pixel^.B := 255;
+        Value := (DstPixel.Pixel^.G * trans + ((Color2 shr 8) and $FF) * amp2
           + ((Color1 shr 8) and $FF) * amp1) div $FF;
-        if Value < 256 then DstPixel^.G := Value
-          else DstPixel^.G := 255;
-        Value := (DstPixel^.R * trans + (Color2 and $FF) * amp2 +
+        if Value < 256 then DstPixel.Pixel^.G := Value
+          else DstPixel.Pixel^.G := 255;
+        Value := (DstPixel.Pixel^.R * trans + (Color2 and $FF) * amp2 +
           (Color1 and $FF) * amp1) div $FF;
-        if Value < 256 then DstPixel^.R := Value
-          else DstPixel^.R := 255;
+        if Value < 256 then DstPixel.Pixel^.R := Value
+          else DstPixel.Pixel^.R := 255;
       end;
+      SrcPixel.NextPixel;
+      DstPixel.NextPixel;
     end;
+    SrcPixel.NextLine;
+    DstPixel.NextLine;
   end;
   Src.EndUpdate;
   dst.EndUpdate;
@@ -697,29 +692,28 @@ procedure ImageOp_CCC(bmp: TBitmap; x, y, w, h, Color0, Color1,
 // R channel = Color2 amp, 128=original brightness
 var
   i, Red, Green: integer;
-  Pixel: PPixel32;
+  PixelPtr: TPixelPointer;
 begin
   bmp.BeginUpdate;
   assert(bmp.PixelFormat = pf24bit);
   h := y + h;
-  while y < h do
-  begin
-    Pixel := GetBitmapPixelPtr(Bmp, x, y);
-    for i := 0 to w - 1 do
-    begin
-      Red := ((Pixel^.B * (Color0 and $0000FF) + Pixel^.G * (Color1 and $0000FF)
-        + Pixel^.R * (Color2 and $0000FF)) shr 8) and $ff;
-      Green := ((Pixel^.B * ((Color0 shr 8) and $0000FF) + Pixel^.G *
-        ((Color1 shr 8) and $0000FF) + Pixel^.R * ((Color2 shr 8) and
+  PixelPtr.Init(Bmp, x, y);
+  while y < h do begin
+    for i := 0 to w - 1 do  begin
+      Red := ((PixelPtr.Pixel^.B * (Color0 and $0000FF) + PixelPtr.Pixel^.G * (Color1 and $0000FF)
+        + PixelPtr.Pixel^.R * (Color2 and $0000FF)) shr 8) and $ff;
+      Green := ((PixelPtr.Pixel^.B * ((Color0 shr 8) and $0000FF) + PixelPtr.Pixel^.G *
+        ((Color1 shr 8) and $0000FF) + PixelPtr.Pixel^.R * ((Color2 shr 8) and
         $0000FF)) shr 8) and $ff;
-      Pixel^.B := ((Pixel^.B * ((Color0 shr 16) and $0000FF) + Pixel^.G *
-        ((Color1 shr 16) and $0000FF) + Pixel^.R * ((Color2 shr 16) and $0000FF))
+      PixelPtr.Pixel^.B := ((PixelPtr.Pixel^.B * ((Color0 shr 16) and $0000FF) + PixelPtr.Pixel^.G *
+        ((Color1 shr 16) and $0000FF) + PixelPtr.Pixel^.R * ((Color2 shr 16) and $0000FF))
         shr 8) and $ff; // Blue
-      Pixel^.G := Green;
-      Pixel^.R := Red;
-      Pixel := pointer(Pixel) + (Bmp.RawImage.Description.BitsPerPixel shr 3);
+      PixelPtr.Pixel^.G := Green;
+      PixelPtr.Pixel^.R := Red;
+      PixelPtr.NextPixel;
     end;
     inc(y);
+    PixelPtr.NextLine;
   end;
   bmp.EndUpdate;
 end;
@@ -748,6 +742,7 @@ begin
   Assert(Rop = SRCCOPY);
   DestCanvas.CopyRect(Rect(X, Y, X + Width, Y + Height), SrcCanvas,
     Rect(XSrc, YSrc, XSrc + Width, YSrc + Height));
+  Result := True;
 end;
 
 procedure SLine(ca: TCanvas; x0, x1, y: integer; cl: TColor);
@@ -1446,12 +1441,12 @@ begin
   Pixel := Pointer(Line) + X * BytesPerPixel;
 end;
 
-procedure TPixelPointer.Init(Bitmap: TBitmap; X: Integer = 0; Y: Integer = 0); inline;
+procedure TPixelPointer.Init(Bitmap: TBitmap; BaseX: Integer = 0; BaseY: Integer = 0); inline;
 begin
-  Base := PPixel32(Bitmap.RawImage.Data);
   BytesPerLine := Bitmap.RawImage.Description.BytesPerLine;
   BytesPerPixel := Bitmap.RawImage.Description.BitsPerPixel shr 3;
-  SetXY(X, Y);
+  Base := PPixel32(Bitmap.RawImage.Data + BaseX * BytesPerPixel + BaseY * BytesPerLine);
+  SetXY(0, 0);
 end;
 
 procedure LoadPhrases;

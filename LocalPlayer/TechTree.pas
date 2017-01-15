@@ -122,7 +122,7 @@ procedure TTechTreeDlg.FormShow(Sender: TObject);
 var
   X, Y, ad, TexWidth, TexHeight: Integer;
   s: string;
-  SrcPixel, DstPixel: PPixel32;
+  SrcPixel, DstPixel: TPixelPointer;
 begin
   if Image = nil then
   begin
@@ -164,21 +164,21 @@ begin
 
     // texturize background
     Image.BeginUpdate;
-    TexWidth := Paper.width;
-    TexHeight := Paper.height;
-    for Y := 0 to Image.height - 1 do
-    begin
-      for X := 0 to Image.width - 1 do
-      begin
-        DstPixel := GetBitmapPixelPtr(Image, X, Y);
-        if (DstPixel^.ARGB and $FFFFFF) = $7F007F then // transparent
-        begin
-          SrcPixel := GetBitmapPixelPtr(Paper, X mod TexWidth, Y mod TexHeight);
-          DstPixel^.B := SrcPixel^.B;
-          DstPixel^.G := SrcPixel^.G;
-          DstPixel^.R := SrcPixel^.R;
+    TexWidth := Paper.Width;
+    TexHeight := Paper.Height;
+    DstPixel.Init(Image);
+    SrcPixel.Init(Paper);
+    for Y := 0 to Image.Height - 1 do begin
+      for X := 0 to Image.Width - 1 do begin
+        if (DstPixel.Pixel^.ARGB and $FFFFFF) = $7F007F then begin // transparent
+          SrcPixel.SetXY(X mod TexWidth, Y mod TexHeight);
+          DstPixel.Pixel^.B := SrcPixel.Pixel^.B;
+          DstPixel.Pixel^.G := SrcPixel.Pixel^.G;
+          DstPixel.Pixel^.R := SrcPixel.Pixel^.R;
         end;
+        DstPixel.NextPixel;
       end;
+      DstPixel.NextLine;
     end;
     Image.EndUpdate;
   end;

@@ -81,24 +81,28 @@ procedure TWondersDlg.OffscreenPaint;
   procedure DarkIcon(i: Integer);
   var
     X, Y, ch, x0Dst, y0Dst, x0Src, y0Src, darken, c: Integer;
-    Src, Dst: PPixel32;
+    Src, Dst: TPixelPointer;
   begin
     x0Dst := ClientWidth div 2 - xSizeBig div 2 + RingPosition[i, 0];
     y0Dst := ClientHeight div 2 - ySizeBig div 2 + RingPosition[i, 1];
     x0Src := (i mod 7) * xSizeBig;
     y0Src := (i div 7 + SystemIconLines) * ySizeBig;
+    Src.Init(BigImp, x0Src, y0Src);
+    Dst.Init(Offscreen, x0Dst, y0Dst);
     for Y := 0 to ySizeBig - 1 do begin
       for X := 0 to xSizeBig - 1 do begin
-        Src := GetBitmapPixelPtr(BigImp, x0Src + X, y0Src + Y);
-        Dst := GetBitmapPixelPtr(Offscreen, x0Dst + X, y0Dst + Y);
-        darken := ((255 - Src^.B) * 3 + (255 - Src^.G) *
-          15 + (255 - Src^.R) * 9) div 128;
+        Darken := ((255 - Src.Pixel^.B) * 3 + (255 - Src.Pixel^.G) *
+          15 + (255 - Src.Pixel^.R) * 9) div 128;
         for ch := 0 to 2 do begin
-          c := Dst^.Planes[ch] - darken;
-          if c < 0 then Dst^.Planes[ch] := 0
-            else Dst^.Planes[ch] := c;
-        end
-      end
+          c := Dst.Pixel^.Planes[ch] - Darken;
+          if c < 0 then Dst.Pixel^.Planes[ch] := 0
+            else Dst.Pixel^.Planes[ch] := c;
+        end;
+        Src.NextPixel;
+        Dst.NextPixel;
+      end;
+      Src.NextLine;
+      Dst.NextLine;
     end;
   end;
 
@@ -121,7 +125,7 @@ const
 var
   i, X, Y, r, ax, ch, c: Integer;
   HaveWonder: boolean;
-  Line: array [0 .. 1] of PPixel32;
+  Line: array [0..1] of TPixelPointer;
   s: string;
 begin
   if (OffscreenUser <> nil) and (OffscreenUser <> self) then
@@ -152,6 +156,8 @@ begin
   Offscreen.BeginUpdate;
   xm := ClientWidth div 2;
   ym := ClientHeight div 2;
+  Line[0].Init(Offscreen);
+  Line[1].Init(Offscreen);
   for Y := 0 to 127 do begin
     for X := 0 to 179 do begin
       r := X * X * (32 * 32) + Y * Y * (45 * 45);
@@ -162,20 +168,16 @@ begin
         ((ax < amax1 * X) or (ax > amin3 * X))) then
         for i := 0 to 1 do
           for ch := 0 to 2 do begin
-            Line[0] := GetBitmapPixelPtr(Offscreen, xm + X, ym + Y);
-            Line[1] := GetBitmapPixelPtr(Offscreen, xm + X, ym - 1 - Y);
-            c := Line[i]^.Planes[ch] - darken;
-            if c < 0 then
-              Line[i]^.Planes[ch] := 0
-            else
-              Line[i]^.Planes[ch] := c;
-            Line[0] := GetBitmapPixelPtr(Offscreen, xm - 1 - X, ym + Y);
-            Line[1] := GetBitmapPixelPtr(Offscreen, xm - 1 - X, ym - 1 - Y);
-            c := Line[i]^.Planes[ch] - darken;
-            if c < 0 then
-              Line[i]^.Planes[ch] := 0
-            else
-              Line[i]^.Planes[ch] := c;
+            Line[0].SetXY(xm + X, ym + Y);
+            Line[1].SetXY(xm + X, ym - 1 - Y);
+            c := Line[i].Pixel^.Planes[ch] - darken;
+            if c < 0 then Line[i].Pixel^.Planes[ch] := 0
+              else Line[i].Pixel^.Planes[ch] := c;
+            Line[0].SetXY(xm - 1 - X, ym + Y);
+            Line[1].SetXY(xm - 1 - X, ym - 1 - Y);
+            c := Line[i].Pixel^.Planes[ch] - darken;
+            if c < 0 then Line[i].Pixel^.Planes[ch] := 0
+              else Line[i].Pixel^.Planes[ch] := c;
           end;
     end;
   end;

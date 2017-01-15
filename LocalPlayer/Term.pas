@@ -4053,7 +4053,7 @@ end;
 procedure TMainScreen.MiniPaint;
 var
   uix, cix, x, y, Loc, i, hw, xm, cm, cmPolOcean, cmPolNone: integer;
-  PrevMiniPixel, MiniPixel: PPixel32;
+  PrevMiniPixel, MiniPixel: TPixelPointer;
 begin
   cmPolOcean := GrExt[HGrSystem].Data.Canvas.Pixels[101, 67];
   cmPolNone := GrExt[HGrSystem].Data.Canvas.Pixels[102, 67];
@@ -4064,6 +4064,8 @@ begin
     FillRect(Rect(0, 0, Mini.width, Mini.height));
   end;
   Mini.BeginUpdate;
+  MiniPixel.Init(Mini);
+  PrevMiniPixel.Init(Mini);
   for y := 0 to G.ly - 1 do
   begin
     for x := 0 to G.lx - 1 do
@@ -4073,7 +4075,7 @@ begin
         for i := 0 to 1 do
         begin
           xm := ((x - xwMini) * 2 + i + y and 1 - hw + G.lx * 5) mod (G.lx * 2);
-          MiniPixel := GetBitmapPixelPtr(Mini, xm, y);
+          MiniPixel.SetXY(xm, y);
           cm := MiniColors[MyMap[Loc] and fTerrain, i];
           if ClientMode = cEditMap then
           begin
@@ -4098,10 +4100,10 @@ begin
             cm := $808080 or cm shr 1; { increase brightness }
             if y > 0 then begin
               // 2x2 city dot covers two lines
-              PrevMiniPixel := GetBitmapPixelPtr(Mini, xm, y - 1);
-              PrevMiniPixel^.B := cm shr 16;
-              PrevMiniPixel^.G := cm shr 8 and $FF;
-              PrevMiniPixel^.R := cm and $FF;
+              PrevMiniPixel.SetXY(xm, y - 1);
+              PrevMiniPixel.Pixel^.B := cm shr 16;
+              PrevMiniPixel.Pixel^.G := cm shr 8 and $FF;
+              PrevMiniPixel.Pixel^.R := cm and $FF;
             end
           end
           else if (i = 0) and (MyMap[Loc] and fUnit <> 0) then
@@ -4130,9 +4132,9 @@ begin
             else
               cm := Tribe[MyRO.Territory[Loc]].Color;
           end;
-          MiniPixel^.B := cm shr 16;
-          MiniPixel^.G := cm shr 8 and $FF;
-          MiniPixel^.R := cm and $FF;
+          MiniPixel.Pixel^.B := cm shr 16;
+          MiniPixel.Pixel^.G := cm shr 8 and $FF;
+          MiniPixel.Pixel^.R := cm and $FF;
         end;
       end;
   end;

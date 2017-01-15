@@ -821,7 +821,7 @@ end;
 procedure TStartDlg.FormShow(Sender: TObject);
 var
   x, y: integer;
-  PicturePixel: PPixel32;
+  PicturePixel: TPixelPointer;
 begin
   SetMainTextureByAge(-1);
   List.Font.Color := MainTexture.clMark;
@@ -829,15 +829,16 @@ begin
 
   Fill(EmptyPicture.Canvas, 0, 0, 64, 64, (wMaintexture - 64) div 2,
     (hMaintexture - 64) div 2);
-  for y := 0 to 63 do
-  begin // darken texture for empty slot
-    for x := 0 to 64 - 1 do
-    begin
-      PicturePixel := GetBitmapPixelPtr(EmptyPicture, x, y);
-      PicturePixel^.B := Max(PicturePixel^.B - 28, 0);
-      PicturePixel^.G := Max(PicturePixel^.G - 28, 0);
-      PicturePixel^.R := Max(PicturePixel^.R - 28, 0);
-    end
+  // darken texture for empty slot
+  PicturePixel.Init(EmptyPicture);
+  for y := 0 to 63 do begin
+    for x := 0 to 64 - 1 do begin
+      PicturePixel.Pixel^.B := Max(PicturePixel.Pixel^.B - 28, 0);
+      PicturePixel.Pixel^.G := Max(PicturePixel.Pixel^.G - 28, 0);
+      PicturePixel.Pixel^.R := Max(PicturePixel.Pixel^.R - 28, 0);
+      PicturePixel.NextPixel;
+    end;
+    PicturePixel.NextLine;
   end;
   EmptyPicture.EndUpdate;
 
@@ -1000,7 +1001,7 @@ procedure TStartDlg.PaintInfo;
   procedure PaintRandomMini(Brightness: integer);
   var
     i, x, y, xm, cm: integer;
-    MiniPixel: PPixel32;
+    MiniPixel: TPixelPointer;
     Map: ^TTileList;
   begin
     Map := PreviewMap(StartLandMass);
@@ -1010,20 +1011,22 @@ procedure TStartDlg.PaintInfo;
     Mini.PixelFormat := pf24bit;
     Mini.SetSize(MiniWidth * 2, MiniHeight);
     Mini.BeginUpdate;
+    MiniPixel.Init(Mini);
     for y := 0 to MiniHeight - 1 do begin
       for x := 0 to MiniWidth - 1 do begin
         for i := 0 to 1 do begin
           xm := (x * 2 + i + y and 1) mod (MiniWidth * 2);
-          MiniPixel := GetBitmapPixelPtr(Mini, xm, y);
+          MiniPixel.SetX(xm);
           cm := MiniColors
             [Map[x * lxmax div MiniWidth + lxmax *
             ((y * (lymax - 1) + MiniHeight div 2) div (MiniHeight - 1))] and
             fTerrain, i];
-          MiniPixel^.B := ((cm shr 16) and $FF) * Brightness div 3;
-          MiniPixel^.G := ((cm shr 8) and $FF) * Brightness div 3;
-          MiniPixel^.R := ((cm shr 0) and $FF) * Brightness div 3;
+          MiniPixel.Pixel^.B := ((cm shr 16) and $FF) * Brightness div 3;
+          MiniPixel.Pixel^.G := ((cm shr 8) and $FF) * Brightness div 3;
+          MiniPixel.Pixel^.R := ((cm shr 0) and $FF) * Brightness div 3;
         end;
       end;
+      MiniPixel.NextLine;
     end;
     Mini.EndUpdate;
   end;
@@ -1034,7 +1037,7 @@ var
   procedure PaintFileMini;
   var
     i, x, y, xm, cm, Tile, OwnColor, EnemyColor: integer;
-    MiniPixel, PrevMiniPixel: PPixel32;
+    MiniPixel, PrevMiniPixel: TPixelPointer;
   begin
     OwnColor := GrExt[HGrSystem].Data.Canvas.Pixels[95, 67];
     EnemyColor := GrExt[HGrSystem].Data.Canvas.Pixels[96, 67];
@@ -1044,11 +1047,13 @@ var
     if MiniMode = mmPicture then
     begin
       Mini.BeginUpdate;
+      MiniPixel.Init(Mini);
+      PrevMiniPixel.Init(Mini, 0, -1);
       for y := 0 to MiniHeight - 1 do begin
         for x := 0 to MiniWidth - 1 do begin
           for i := 0 to 1 do begin
             xm := (x * 2 + i + y and 1) mod (MiniWidth * 2);
-            MiniPixel := GetBitmapPixelPtr(Mini, xm, y);
+            MiniPixel.SetX(xm);
             Tile := SaveMap[x + MiniWidth * y];
             if Tile and fTerrain = fUNKNOWN then
               cm := $000000
@@ -1060,10 +1065,10 @@ var
                 cm := EnemyColor;
               if y > 0 then begin
                 // 2x2 city dot covers two lines
-                PrevMiniPixel := GetBitmapPixelPtr(Mini, xm, y - 1);
-                PrevMiniPixel^.B := cm shr 16;
-                PrevMiniPixel^.G:= cm shr 8 and $FF;
-                PrevMiniPixel^.R := cm and $FF;
+                PrevMiniPixel.SetX(xm);
+                PrevMiniPixel.Pixel^.B := cm shr 16;
+                PrevMiniPixel.Pixel^.G:= cm shr 8 and $FF;
+                PrevMiniPixel.Pixel^.R := cm and $FF;
               end
             end
             else if (i = 0) and (Tile and smUnit <> 0) then
@@ -1073,9 +1078,9 @@ var
                 cm := EnemyColor
             else
               cm := MiniColors[Tile and fTerrain, i];
-            MiniPixel^.B := cm shr 16;
-            MiniPixel^.G:= cm shr 8 and $FF;
-            MiniPixel^.R := cm and $FF;
+            MiniPixel.Pixel^.B := cm shr 16;
+            MiniPixel.Pixel^.G:= cm shr 8 and $FF;
+            MiniPixel.Pixel^.R := cm and $FF;
           end;
         end;
       end;

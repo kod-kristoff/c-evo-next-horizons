@@ -437,22 +437,20 @@ procedure TCityDlg.OffscreenPaint;
   var
     XX, YY: Integer;
     Gray: Integer;
-    PixelPtr: PPixel32;
-    LinePtr: PPixel32;
+    PixelPtr: TPixelPointer;
   begin
     Offscreen.BeginUpdate;
-    LinePtr := GetBitmapPixelPtr(Offscreen, X, Y);
+    PixelPtr.Init(Offscreen, X, Y);
     for YY := 0 to h - 1 do begin
-      PixelPtr := LinePtr;
       for XX := 0 to w - 1 do begin
-        Gray := (Integer(PixelPtr^.B) + Integer(PixelPtr^.G) + Integer(PixelPtr^.R)
-          ) * 85 shr 8;
-        PixelPtr^.B := 0;
-        PixelPtr^.G := 0;
-        PixelPtr^.R := Gray; // 255-(255-gray) div 2;
-        PixelPtr := Pointer(PixelPtr) + (Offscreen.RawImage.Description.BitsPerPixel shr 3);
+        Gray := (Integer(PixelPtr.Pixel^.B) + Integer(PixelPtr.Pixel^.G) +
+        Integer(PixelPtr.Pixel^.R)) * 85 shr 8;
+        PixelPtr.Pixel^.B := 0;
+        PixelPtr.Pixel^.G := 0;
+        PixelPtr.Pixel^.R := Gray; // 255-(255-gray) div 2;
+        PixelPtr.NextPixel;
       end;
-      LinePtr := Pointer(LinePtr) + Offscreen.RawImage.Description.BytesPerLine;
+      PixelPtr.NextLine;
     end;
     Offscreen.EndUpdate;
   end;
