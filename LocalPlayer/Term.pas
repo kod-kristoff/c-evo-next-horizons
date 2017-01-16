@@ -7765,10 +7765,6 @@ begin
   Timer1.Enabled := true;
   Left := 0;
   Top := 0;
-  if FullScreen then begin
-    BoundsRect := Screen.MonitorFromWindow(Handle).BoundsRect;
-    FormStyle := fsStayOnTop;
-  end;
 end;
 
 procedure TMainScreen.FormClose(Sender: TObject; var Action: TCloseAction);

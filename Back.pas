@@ -43,8 +43,6 @@ begin
       img := TBitmap.Create;
       LoadGraphicFile(img, HomeDir + 'Graphics' + DirectorySeparator + 'Background.png');
     end;
-    BoundsRect := Screen.MonitorFromWindow(Handle).BoundsRect;
-    FormStyle := fsStayOnTop;
   end else begin
     WindowState := wsNormal;
     Width := StartDlg.Width + 16;
