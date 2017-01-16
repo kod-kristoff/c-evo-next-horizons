@@ -3366,9 +3366,7 @@ end; { <<<client }
 procedure TMainScreen.CreateParams(var p: TCreateParams);
 begin
   inherited;
-
-  if FullScreen then
-  begin
+  if FullScreen then begin
     p.Style := $87000000;
     BorderStyle := bsNone;
     BorderIcons := [];
@@ -7767,6 +7765,10 @@ begin
   Timer1.Enabled := true;
   Left := 0;
   Top := 0;
+  if FullScreen then begin
+    BoundsRect := Screen.MonitorFromWindow(Handle).BoundsRect;
+    FormStyle := fsStayOnTop;
+  end;
 end;
 
 procedure TMainScreen.FormClose(Sender: TObject; var Action: TCloseAction);

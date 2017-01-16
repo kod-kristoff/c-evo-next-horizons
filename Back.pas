@@ -4,7 +4,7 @@ unit Back;
 interface
 
 uses
-  LCLIntf, LCLType, SysUtils, Classes, Graphics, Forms;
+  LCLIntf, LCLType, SysUtils, Classes, Graphics, Forms, Controls;
 
 type
 
@@ -43,6 +43,8 @@ begin
       img := TBitmap.Create;
       LoadGraphicFile(img, HomeDir + 'Graphics' + DirectorySeparator + 'Background.png');
     end;
+    BoundsRect := Screen.MonitorFromWindow(Handle).BoundsRect;
+    FormStyle := fsStayOnTop;
   end else begin
     WindowState := wsNormal;
     Width := StartDlg.Width + 16;
