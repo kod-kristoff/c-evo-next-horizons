@@ -58,9 +58,9 @@ function MovementToString(Movement: integer): string;
 procedure BtnFrame(ca: TCanvas; p: TRect; const T: TTexture);
 procedure EditFrame(ca: TCanvas; p: TRect; const T: TTexture);
 function HexStringToColor(s: string): integer;
-function LoadGraphicFile(bmp: TBitmap; Path: string;
+function LoadGraphicFile(bmp: TBitmap; const Path: string;
   Options: integer = 0): boolean;
-function LoadGraphicSet(Name: string): integer;
+function LoadGraphicSet(const Name: string): integer;
 procedure Dump(dst: TBitmap; HGr, xDst, yDst, Width, Height, xGr, yGr: integer);
 procedure Sprite(Canvas: TCanvas; HGr, xDst, yDst, Width, Height, xGr,
   yGr: integer); overload;
@@ -450,7 +450,7 @@ begin
   end;
 end;
 
-function LoadGraphicFile(bmp: TBitmap; Path: string; Options: integer): boolean;
+function LoadGraphicFile(bmp: TBitmap; const Path: string; Options: integer): boolean;
 var
   jtex: tjpegimage;
   Png: TPortableNetworkGraphic;
@@ -504,27 +504,26 @@ begin
 
   if not Result then begin
     if Options and gfNoError = 0 then
-      Application.MessageBox(PChar(Format(Phrases.Lookup('FILENOTFOUND'),
-        [Path])), 'C-evo', 0);
-    Exit;
+      raise Exception.Create(Format(Phrases.Lookup('FILENOTFOUND'),
+        [Path]));
   end;
 
   if (Options and gfNoGamma = 0) and (Gamma <> 100) then
     ApplyGammaToBitmap(Bmp);
 end;
 
-function LoadGraphicSet(Name: string): integer;
+function LoadGraphicSet(const Name: string): integer;
 var
-  i, x, y, xmax, OriginalColor: integer;
+  I, x, y, xmax, OriginalColor: integer;
   FileName: string;
   Source: TBitmap;
   DataPixel, MaskPixel: TPixelPointer;
 begin
-  i := 0;
-  while (i < nGrExt) and (GrExt[i].Name <> Name) do
-    inc(i);
-  result := i;
-  if i = nGrExt then begin
+  I := 0;
+  while (I < nGrExt) and (GrExt[i].Name <> Name) do
+    Inc(I);
+  Result := I;
+  if I = nGrExt then begin
     Source := TBitmap.Create;
     Source.PixelFormat := pf24bit;
     FileName := HomeDir + 'Graphics' + DirectorySeparator + Name;

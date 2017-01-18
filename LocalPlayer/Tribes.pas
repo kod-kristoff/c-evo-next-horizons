@@ -476,7 +476,7 @@ type
           while (i >= 0) and (PictureList[i].Hash <> Info.Hash) do
             dec(i);
           assert(i >= 0);
-          assert(PictureList[i].HGr = LoadGraphicSet(GrName + '.png'));
+          assert(PictureList[i].HGr = LoadGraphicSet(GrName));
           assert(PictureList[i].pix = pix);
           ModelPicture[mix].HGr := PictureList[i].HGr;
           ModelPicture[mix].pix := PictureList[i].pix;
@@ -486,7 +486,7 @@ type
         begin
           with ModelPicture[mix] do
           begin
-            HGr := LoadGraphicSet(GrName + '.png');
+            HGr := LoadGraphicSet(GrName);
             pix := Info.pix;
             inc(GrExt[HGr].pixUsed[pix]);
           end;
@@ -595,7 +595,7 @@ type
       TestPic := Picture;
       LeastUsed := MaxInt;
 
-      TestPic.GrName := 'StdUnits';
+      TestPic.GrName := 'StdUnits.png';
       HGr := HGrStdUnits;
       for i := 0 to StdUnitScript.Count - 1 do
       begin // look through StdUnits
@@ -610,7 +610,7 @@ type
         if Copy(Input, 1, 6) = '#UNITS' then
         begin
           ok := true;
-          TestPic.GrName := Copy(Input, 8, 255);
+          TestPic.GrName := Copy(Input, 8, 255) + '.png';
           HGr := nGrExt - 1;
           while (HGr >= 0) and (GrExt[HGr].Name <> TestPic.GrName) do
             dec(HGr);

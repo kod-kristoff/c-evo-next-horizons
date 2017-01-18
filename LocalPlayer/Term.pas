@@ -652,7 +652,7 @@ begin
     else
       Picture.pix := pixNoSlaves;
     Picture.Hash := 0;
-    Picture.GrName := 'StdUnits';
+    Picture.GrName := 'StdUnits.png';
     IsNew := true;
   end
   else
@@ -672,7 +672,7 @@ begin
   else
     with Tribe[p].ModelPicture[mix] do
     begin
-      HGr := LoadGraphicSet(Picture.GrName + '.png');
+      HGr := LoadGraphicSet(Picture.GrName);
       pix := Picture.pix;
     end;
 end;
@@ -1708,7 +1708,7 @@ const
             else
               pix := pixNoSlaves;
             Hash := 0;
-            GrName := 'StdUnits';
+            GrName := 'StdUnits.png';
             Tribe[p1].SetModelPicture(Picture, true);
           end
     end;
