@@ -101,8 +101,8 @@ procedure TListDlg.FormCreate(Sender: TObject);
 begin
   inherited;
   Canvas.Font.Assign(UniFont[ftNormal]);
-  sb := TPVScrollbar.Create;
-  sb.Setup(36, 10, 36, Self);
+  sb := TPVScrollbar.Create(Self);
+  sb.SetBorderSpacing(36, 10, 36);
   sb.OnUpdate := ScrollBarUpdate;
   InitButtons();
   Kind := kMission;
@@ -134,10 +134,12 @@ end;
 
 procedure TListDlg.OnScroll(var m: TMessage);
 begin
+  { TODO: Handled by MouseWheel event
   if sb.Process(m) then  begin
     Sel := -2;
     SmartUpdateContent(true);
   end;
+  }
 end;
 
 procedure TListDlg.OnMouseLeave(var Msg: TMessage);
@@ -233,10 +235,10 @@ var
   s, number: string;
   CanGrow: boolean;
 begin
-  lix := code[Layer, sb.si.npos + l];
+  lix := code[Layer, sb.Position + l];
   y0 := 2 + (l + 1) * LineDistance;
-  if sb.si.npos + l >= FirstShrinkedLine[Layer] then
-    ofs := (sb.si.npos + l - FirstShrinkedLine[Layer]) and 1 * 33
+  if sb.Position + l >= FirstShrinkedLine[Layer] then
+    ofs := (sb.Position + l - FirstShrinkedLine[Layer]) and 1 * 33
   else { if FirstShrinkedLine[Layer]<Lines[Layer] then }
     ofs := 33;
 
@@ -467,7 +469,7 @@ begin
           if MainScreen.mNames.Checked then
           begin
             s := Tribe[mox.Owner].ModelName[mox.mix];
-            if (Kind = kAllEModels) and (code[1, sb.si.npos + l] = 0) then
+            if (Kind = kAllEModels) and (code[1, sb.Position + l] = 0) then
               s := Format(Tribe[mox.Owner].TPhrase('OWNED'), [s]);
           end
           else
@@ -752,7 +754,7 @@ begin
         end;
       end;
     for i := -1 to DispLines do
-      if (i + sb.si.npos >= 0) and (i + sb.si.npos < Lines[Layer]) then
+      if (i + sb.Position >= 0) and (i + sb.Position < Lines[Layer]) then
         Self.line(offscreen.Canvas, i, true, false)
   end;
   MarkUsedOffscreen(InnerWidth, 8 + 48 + DispLines * LineDistance);
@@ -765,7 +767,7 @@ var
   s: string;
 begin
   y := y - TitleHeight;
-  i0 := sb.si.npos;
+  i0 := sb.Position;
   Sel0 := Sel;
   if (x >= SideFrame) and (x < SideFrame + InnerWidth) and (y >= 0) and
     (y < InnerHeight) and (y mod LineDistance >= 4) and (y mod LineDistance < 20)
@@ -890,8 +892,8 @@ procedure TListDlg.PaintBox1MouseDown(Sender: TObject; Button: TMouseButton;
 var
   lix: integer;
 begin
-  if sb.si.npos + Sel >= 0 then
-    lix := code[Layer, sb.si.npos + Sel];
+  if sb.Position + Sel >= 0 then
+    lix := code[Layer, sb.Position + Sel];
   if Kind in [kScience, kCities, kCityEvents, kModels, kEModels, kAllEModels]
   then
     include(Shift, ssShift); // don't close list window
@@ -919,7 +921,7 @@ begin
               wmPersistent, lix);
         kEModels:
           UnitStatDlg.ShowNewContent_EnemyModel(FWindowMode or wmPersistent,
-            code[1, sb.si.npos + Sel]);
+            code[1, sb.Position + Sel]);
         kAllEModels, kChooseEModel:
           if lix <> mixAll then
             UnitStatDlg.ShowNewContent_EnemyModel(FWindowMode or
@@ -1598,9 +1600,11 @@ begin
   CloseBtn.Left := ClientWidth - 38;
   CaptionLeft := ToggleBtn.Left + ToggleBtn.Width;
   CaptionRight := CloseBtn.Left;
+  { TODO:
   SetWindowPos(sb.ScrollBar.Handle, 0, SideFrame + InnerWidth - GetSystemMetrics(SM_CXVSCROLL),
     TitleHeight, GetSystemMetrics(SM_CXVSCROLL), LineDistance * DispLines + 48,
     SWP_NOZORDER or SWP_NOREDRAW);
+  }
 
   if WindowMode = wmModal then
   begin { center on screen }

@@ -1473,7 +1473,7 @@ procedure TMainScreen.Client(Command, NewPlayer: integer; var Data);
     StartRunning := false;
     StayOnTop_Ensured := false;
 
-    sb.Setup(0, 0, 0, Self);
+    sb := TPVScrollbar.Create(Self);
     sb.OnUpdate := ScrollBarUpdate;
   end; { InitModule }
 
@@ -3434,7 +3434,6 @@ begin
   else
     SoundMode := smOn;
 
-  sb := TPVScrollbar.Create;
 {$IFDEF WINDOWS}{ TODO }
   Screen.Cursors[crImpDrag] := LoadCursor(HInstance, 'DRAG');
   Screen.Cursors[crFlatHand] := LoadCursor(HInstance, 'FLATHAND');
@@ -3575,11 +3574,11 @@ begin
   MovieSpeed4Btn.Left := ClientWidth div 2 - 62 + 3 * 29 + 12;
   EOT.Top := ClientHeight - 64;
   EOT.Left := ClientWidth - 62;
-  sb.ScrollBar.BorderSpacing.Top := ClientHeight - yTroop - 24;
-  sb.ScrollBar.BorderSpacing.Right := ClientWidth - xRightPanel + 8;
-  sb.ScrollBar.BorderSpacing.Bottom := 8;
+  sb.SetBorderSpacing(ClientHeight - yTroop - 24, ClientWidth - xRightPanel + 8, 8);
+  {TODO:
   SetWindowPos(sb.ScrollBar.Handle, 0, xRightPanel + 10 - 14 - GetSystemMetrics(SM_CXVSCROLL),
     ClientHeight - MidPanelHeight + 8, 0, 0, SWP_NOSIZE or SWP_NOZORDER);
+    }
   MapBtn0.Left := xMini + G.lx - 44;
   MapBtn0.Top := ClientHeight - 15;
   MapBtn1.Left := xMini + G.lx - 28;
@@ -4413,11 +4412,11 @@ begin
       Count := 0;
       for i := 0 to nBrushTypes - 1 do
       begin // display terrain types
-        if (Count >= TrRow * sb.si.npos) and (Count < TrRow * (sb.si.npos + 1))
+        if (Count >= TrRow * sb.Position) and (Count < TrRow * (sb.Position + 1))
         then
         begin
-          trix[Count - TrRow * sb.si.npos] := BrushTypes[i];
-          x := (Count - TrRow * sb.si.npos) * TrPitch;
+          trix[Count - TrRow * sb.Position] := BrushTypes[i];
+          x := (Count - TrRow * sb.Position) * TrPitch;
           xSrcBase := -1;
           case BrushTypes[i] of
             0 .. 8:
@@ -4645,12 +4644,12 @@ begin
                   unx := MyUn[uix];
                   if unx.Loc = TroopLoc then
                   begin
-                    if (Count >= TrRow * sb.si.npos) and
-                      (Count < TrRow * (sb.si.npos + 1)) then
+                    if (Count >= TrRow * sb.Position) and
+                      (Count < TrRow * (sb.Position + 1)) then
                     begin
-                      trix[Count - TrRow * sb.si.npos] := uix;
+                      trix[Count - TrRow * sb.Position] := uix;
                       MakeUnitInfo(me, unx, UnitInfo);
-                      x := (Count - TrRow * sb.si.npos) * TrPitch;
+                      x := (Count - TrRow * sb.Position) * TrPitch;
                       if uix = UnFocus then
                       begin
                         ScreenTools.Frame(Panel.Canvas, xTroop + 4 + x,
@@ -4699,10 +4698,10 @@ begin
             PanelHeight - 24, Phrases.Lookup('PRESENT'));
           Server(sGetUnits, me, TroopLoc, Count);
           for i := 0 to Count - 1 do
-            if (i >= TrRow * sb.si.npos) and (i < TrRow * (sb.si.npos + 1)) then
+            if (i >= TrRow * sb.Position) and (i < TrRow * (sb.Position + 1)) then
             begin // display enemy units
-              trix[i - TrRow * sb.si.npos] := i;
-              x := (i - TrRow * sb.si.npos) * TrPitch;
+              trix[i - TrRow * sb.Position] := i;
+              x := (i - TrRow * sb.Position) * TrPitch;
               NoMap.SetOutput(Panel);
               NoMap.PaintUnit(xTroop + 2 + x, yTroop + 1,
                 MyRO.EnemyUn[MyRO.nEnemyUn + i], 0);
@@ -6347,14 +6346,9 @@ begin
   else
   begin
     sb.Init((TrCnt + TrRow - 1) div TrRow - 1, 1);
-    with sb.si do
-      if (nMax >= integer(nPage)) and (trixFocus >= 0) then
-      begin
-        sb.si.npos := trixFocus div TrRow;
-        sb.si.FMask := SIF_POS;
-        SetScrollInfo(sb.ScrollBar.Handle, SB_CTL, sb.si, true);
-      end
-  end
+    if (sb.Max >= sb.PageSize) and (trixFocus >= 0) then
+      sb.Position := trixFocus div TrRow;
+  end;
 end;
 
 (* procedure TMainScreen.ShowMoveHint(ToLoc: integer; Force: boolean = false);

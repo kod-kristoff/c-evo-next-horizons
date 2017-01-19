@@ -204,8 +204,8 @@ begin
   MainText.OwnsObjects := True;
   SearchResult := THyperText.Create;
   SearchResult.OwnsObjects := True;
-  sb := TPVScrollbar.Create;
-  sb.Setup(36, 9, 11, Self);
+  sb := TPVScrollbar.Create(Self);
+  sb.SetBorderSpacing(36, 9, 11);
   sb.OnUpdate := ScrollBarUpdate;
 
   HelpText := TStringTable.Create;
@@ -267,10 +267,12 @@ end;
 
 procedure THelpDlg.OnScroll(var m: TMessage);
 begin
+  { TODO: Handled by MouseWheel event
   if sb.Process(m) then begin
     Sel := -1;
     SmartUpdateContent(true)
-  end
+  end;
+  }
 end;
 
 procedure THelpDlg.OnMouseLeave(var Msg: TMessage);
@@ -293,7 +295,7 @@ var
   TextSize: TSize;
   s: string;
 begin
-  s := MainText[sb.si.npos + i];
+  s := MainText[sb.Position + i];
   if s = '' then
     exit;
   x := x0[i];
@@ -303,7 +305,7 @@ begin
     x := x + SideFrame;
     y := y + WideFrame
   end;
-  if THelpLineInfo(MainText.Objects[sb.si.npos + i]).Format
+  if THelpLineInfo(MainText.Objects[sb.Position + i]).Format
     in [pkCaption, pkBigTer, pkRightIcon, pkBigFeature] then
   begin
     ca.Font.Assign(CaptionFont);
@@ -319,7 +321,7 @@ begin
     BiColorTextOut(ca, CaptionColor, $7F007F, x + 24, y - 3, copy(s, 2, 255));
     ca.Font.Assign(UniFont[ftNormal]);
   end
-  else if THelpLineInfo(MainText.Objects[sb.si.npos + i]).Format = pkSection
+  else if THelpLineInfo(MainText.Objects[sb.Position + i]).Format = pkSection
   then
   begin
     ca.Font.Assign(CaptionFont);
@@ -338,7 +340,7 @@ begin
       if y + TextSize.cy >= WideFrame + InnerHeight then
         TextSize.cy := WideFrame + InnerHeight - y;
       FillSeamless(ca, x, y, TextSize.cx, TextSize.cy, -SideFrame,
-        sb.si.npos * 24 - WideFrame, Paper);
+        sb.Position * 24 - WideFrame, Paper);
     end;
     BiColorTextOut(ca, TextColor, $7F007F, x, y, s);
     if lit then
@@ -440,14 +442,14 @@ begin
   inherited;
   CaptionColor := Colors.Canvas.Pixels[clkMisc, cliPaperCaption];
   FillSeamless(OffScreen.Canvas, 0, 0, InnerWidth, InnerHeight, 0,
-    sb.si.npos * 24, Paper);
+    sb.Position * 24, Paper);
   with OffScreen.Canvas do
   begin
     Font.Assign(UniFont[ftNormal]);
-    for i := -sb.si.npos to InnerHeight div 24 do
-      if sb.si.npos + i < MainText.Count then
+    for i := -sb.Position to InnerHeight div 24 do
+      if sb.Position + i < MainText.Count then
       begin
-        HelpLineInfo := THelpLineInfo(MainText.Objects[sb.si.npos + i]);
+        HelpLineInfo := THelpLineInfo(MainText.Objects[sb.Position + i]);
         if HelpLineInfo.Format = pkExternal then
         begin
           yl := ExtPic.Height;
@@ -458,9 +460,9 @@ begin
         end;
       end;
     for i := -2 to InnerHeight div 24 do
-      if (sb.si.npos + i >= 0) and (sb.si.npos + i < MainText.Count) then
+      if (sb.Position + i >= 0) and (sb.Position + i < MainText.Count) then
       begin
-        HelpLineInfo := THelpLineInfo(MainText.Objects[sb.si.npos + i]);
+        HelpLineInfo := THelpLineInfo(MainText.Objects[sb.Position + i]);
         if HelpLineInfo.Link <> 0 then
         begin
           if (Kind = hkMisc) and (no = miscSearchResult) then
@@ -1869,7 +1871,7 @@ begin
     begin
       HistKind[nHist - 1] := Kind;
       HistNo[nHist - 1] := no;
-      HistPos[nHist - 1] := sb.si.npos;
+      HistPos[nHist - 1] := sb.Position;
       HistSearchContent[nHist - 1] := SearchContent
     end
   end;
@@ -1887,7 +1889,7 @@ var
   i0, Sel0: integer;
 begin
   y := y - WideFrame;
-  i0 := sb.si.npos;
+  i0 := sb.Position;
   Sel0 := Sel;
   if (x >= SideFrame) and (x < SideFrame + InnerWidth) and (y >= 0) and
     (y < InnerHeight) and (y mod 24 >= 8) then
@@ -1910,7 +1912,7 @@ procedure THelpDlg.PaintBox1MouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; x, y: integer);
 begin
   if Sel >= 0 then
-    with THelpLineInfo(MainText.Objects[Sel + sb.si.npos]) do
+    with THelpLineInfo(MainText.Objects[Sel + sb.Position]) do
       if Link shr 8 and $3F = hkInternet then
         case Link and $FF of
           1: OpenDocument(pchar(HomeDir + 'AI Template' + DirectorySeparator + 'AI development manual.html'));
