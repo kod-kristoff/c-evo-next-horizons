@@ -152,7 +152,7 @@ end;
 procedure TPVScrollBar.SetMax(AValue: Integer);
 begin
   FMax := AValue;
-  ScrollBar.Max := Max{$IFDEF LINUX} - PageSize + 1{$ENDIF};
+  ScrollBar.Max := Math.Max(0, Max{$IFDEF LINUX} - PageSize + 1{$ENDIF});
 end;
 
 procedure TPVScrollBar.SetPageSize(AValue: Integer);
