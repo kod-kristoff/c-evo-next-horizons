@@ -12,7 +12,7 @@ uses
 {$ENDIF}
   Protocol, Tribes, PVSB, ClientTools, ScreenTools, BaseWin, Messg, ButtonBase,
   LCLIntf, LCLType, SysUtils, Classes, Graphics, Controls,
-  Forms, Menus, ExtCtrls, dateutils, Platform, ButtonB, ButtonC, EOTButton, Area;
+  Forms, Menus, ExtCtrls, dateutils, Platform, ButtonB, ButtonC, EOTButton, Area, Types;
 
 const
   WM_EOT = WM_USER;
@@ -172,6 +172,8 @@ type
     mRep14: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure FormMouseWheel(Sender: TObject; Shift: TShiftState;
+      WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
     procedure Timer1Timer(Sender: TObject);
     procedure MapBoxMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; x, y: integer);
@@ -3516,6 +3518,15 @@ begin
   for i := 0 to nPl - 1 do
     if AILogo[i] <> nil then
       FreeAndNil(AILogo[i]);
+end;
+
+procedure TMainScreen.FormMouseWheel(Sender: TObject; Shift: TShiftState;
+  WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
+begin
+  if sb.ProcessMouseWheel(WheelDelta) then begin
+    PanelPaint;
+    Update;
+  end;
 end;
 
 procedure TMainScreen.FormResize(Sender: TObject);

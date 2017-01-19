@@ -24,11 +24,12 @@ object MainScreen: TMainScreen
   OnMouseDown = FormMouseDown
   OnMouseMove = FormMouseMove
   OnMouseUp = FormMouseUp
+  OnMouseWheel = FormMouseWheel
   OnPaint = FormPaint
   OnResize = FormResize
   OnShow = FormShow
   Position = poDefault
-  LCLVersion = '1.6.2.0'
+  LCLVersion = '1.6.0.4'
   WindowState = wsMaximized
   object UnitBtn: TButtonB
     Tag = 14
