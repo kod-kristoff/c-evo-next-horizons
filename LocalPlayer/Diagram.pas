@@ -58,11 +58,9 @@ procedure PaintColonyShip(canvas: TCanvas; Player, Left, Width, Top: integer);
 var
   i, x, r, nComp, nPow, nHab: integer;
 begin
-  with canvas do
-  begin
-    Brush.Color := $000000;
-    FillRect(Rect(Left, Top, Left + Width, Top + 200));
-    Brush.Style := bsClear;
+  Canvas.Brush.Color := $000000;
+  Canvas.FillRect(Rect(Left, Top, Left + Width, Top + 200));
+  Canvas.Brush.Style := bsClear;
     ScreenTools.Frame(canvas, Left - 1, Top - 1, Left + Width, Top + 200,
       MainTexture.clBevelShade, MainTexture.clBevelLight);
     RFrame(canvas, Left - 2, Top - 2, Left + Width + 1, Top + 200 + 1,
@@ -74,7 +72,7 @@ begin
     begin
       x := Random((Width - 16) * 200);
       r := Random(13) + 28;
-      Pixels[x div 200 + 8, x mod 200 + Top] :=
+      Canvas.Pixels[x div 200 + 8, x mod 200 + Top] :=
         (r * r * r * r div 10001) * $10101;
     end;
 
@@ -124,7 +122,6 @@ begin
     if nComp = 3 then
       Sprite(canvas, HGrSystem2, Left + Width div 2 + xComp[4],
         Top + 100 + 7 + yComp[4], 16, 27, 18, 82);
-  end
 end;
 
 procedure TDiaDlg.FormCreate(Sender: TObject);
