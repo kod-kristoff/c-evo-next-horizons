@@ -17,7 +17,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
-    img: TBitmap;
+    Img: TBitmap;
   end;
 
 var
@@ -32,15 +32,15 @@ uses
 
 procedure TBackground.FormCreate(Sender: TObject);
 begin
-  img := nil;
+  Img := nil;
 end;
 
 procedure TBackground.FormShow(Sender: TObject);
 begin
-  img := nil;
+  Img := nil;
   if FullScreen then begin
     if FileExists(HomeDir + 'Graphics' + DirectorySeparator + 'Background.png') then begin
-      img := TBitmap.Create;
+      Img := TBitmap.Create;
       LoadGraphicFile(img, HomeDir + 'Graphics' + DirectorySeparator + 'Background.png');
     end;
   end else begin
@@ -54,25 +54,19 @@ end;
 
 procedure TBackground.FormDestroy(Sender: TObject);
 begin
-  // TODO Why FormClose is not executed?
-  if img <> nil then
-    FreeAndNil(img);
+  if Assigned(Img) then FreeAndNil(Img);
 end;
 
 procedure TBackground.FormPaint(Sender: TObject);
 begin
-  if img <> nil then
-    BitBlt(Canvas.Handle, Screen.Width - img.Width - (Screen.Width - 800) *
-      3 div 8, (Screen.Height - 600) div 3, img.Width, img.Height,
-      img.Canvas.Handle, 0, 0, SRCCOPY);
+  if Assigned(Img) then
+    BitBlt(Canvas.Handle, Screen.Width - Img.Width - (Screen.Width - 800) *
+      3 div 8, (Screen.Height - 600) div 3, Img.Width, Img.Height,
+      Img.Canvas.Handle, 0, 0, SRCCOPY);
 end;
 
 procedure TBackground.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-  if img <> nil then begin
-    img.Free;
-    img := nil
-  end;
 end;
 
 end.
