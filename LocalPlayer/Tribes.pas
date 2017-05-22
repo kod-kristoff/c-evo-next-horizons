@@ -4,8 +4,7 @@ unit Tribes;
 interface
 
 uses
-  Protocol, ScreenTools,
-
+  Protocol, ScreenTools, LazFileUtils,
   Classes, Graphics, SysUtils;
 
 type
@@ -19,9 +18,11 @@ type
 
   TModelPictureInfo = record
     trix, mix, pix, Hash: integer;
-    GrName: ShortString end;
+    GrName: ShortString;
+  end;
 
-    TTribe = class symHGr, sympix, faceHGr, facepix, cHGr, cpix,
+  TTribe = class
+    symHGr, sympix, faceHGr, facepix, cHGr, cpix,
     // symbol and city graphics
     cAge, mixSlaves: integer;
     Color: TColor;
@@ -497,7 +498,7 @@ type
           for i := 0 to Script.Count - 1 do
           begin
             Input := Script[i];
-            if Input = '#UNITS ' + GrName then
+            if Input = '#UNITS ' + ExtractFileNameOnly(GrName) then
               ok := true
             else if (Input <> '') and (Input[1] = '#') then
               ok := false
