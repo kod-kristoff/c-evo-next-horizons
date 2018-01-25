@@ -26,6 +26,7 @@ var
   f: TSearchRec;
 begin
   result := FindFirst(path, faDirectory, f) = 0;
+  FindClose(f);
 end;
 
 function GetLocale: string;
@@ -93,11 +94,14 @@ begin
         (dst.Time < src.Time) then
         CopyFile(PChar(HomeDir + 'AppData' + DirectorySeparator + 'Saved' + DirectorySeparator + src.Name),
           PChar(DataDir + 'Saved' + DirectorySeparator + src.Name), false);
+      FindClose(dst);
     until FindNext(src) <> 0;
+  FindClose(src);
 end;
 
 initialization
 
 InitUnit;
+
 
 end.

@@ -272,6 +272,7 @@ begin
         ((Brain[nBrain].Flags and fDotNet = 0) or (@DotNetClient <> nil)) then
         inc(nBrain);
     until FindNext(f) <> 0;
+  FindClose(F);
 end;
 
 procedure Done;
@@ -4498,6 +4499,7 @@ end; { <<<server }
 initialization
 
 FindFirst(ParamStr(0), $21, ExeInfo);
+FindClose(ExeInfo);
 
 {$IFOPT O-}nHandoverStack := 0; {$ENDIF}
 

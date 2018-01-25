@@ -36,12 +36,16 @@ begin
 end;
 
 procedure TBackground.FormShow(Sender: TObject);
+var
+  FileName: string;
 begin
-  Img := nil;
   if FullScreen then begin
-    if FileExists(HomeDir + 'Graphics' + DirectorySeparator + 'Background.png') then begin
-      Img := TBitmap.Create;
-      LoadGraphicFile(img, HomeDir + 'Graphics' + DirectorySeparator + 'Background.png');
+    if not Assigned(Img) then begin
+      FileName := HomeDir + 'Graphics' + DirectorySeparator + 'Background.png';
+      if FileExists(FileName) then begin
+        Img := TBitmap.Create;
+        LoadGraphicFile(img, FileName);
+      end;
     end;
   end else begin
     WindowState := wsNormal;

@@ -264,13 +264,13 @@ begin
     r0 := CreateRectRgn(0, 0, Width, Height);
     r1 := CreateRectRgn(TabOffset + 4 * TabSize + 2, 0, Width, TabHeight);
     CombineRgn(r0, r0, r1, RGN_DIFF);
-    // DeleteObject(r1);
+    DeleteObject(r1);
     r1 := CreateRectRgn(QuitBtn.left, QuitBtn.top, QuitBtn.left + QuitBtn.width,
       QuitBtn.top + QuitBtn.height);
     CombineRgn(r0, r0, r1, RGN_OR);
-    // DeleteObject(r1);
+    DeleteObject(r1);
     SetWindowRgn(Handle, r0, false);
-    // DeleteObject(r0); // causes crash with Windows 95
+    DeleteObject(r0); // causes crash with Windows 95
   end
   else
   begin
@@ -1342,6 +1342,7 @@ begin
       FormerGames.InsertObject(i, Copy(f.Name, 1, Length(f.Name) - 5),
         TObject(f.Time));
     until FindNext(f) <> 0;
+  FindClose(f);
   ListIndex[2] := FormerGames.Count - 1;
   if (ShowTab = 2) and (FormerGames.Count > 0) then
     ShowTab := 3;
@@ -1357,6 +1358,7 @@ begin
     repeat
       Maps.Add(Copy(f.Name, 1, Length(f.Name) - 9));
     until FindNext(f) <> 0;
+  FindClose(F);
   Maps.Sort;
   Maps.Insert(0, Phrases.Lookup('RANMAP'));
   ListIndex[0] := Maps.IndexOf(Copy(MapFileName, 1, Length(MapFileName) - 9));
