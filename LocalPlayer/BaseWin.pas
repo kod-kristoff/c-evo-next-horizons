@@ -97,7 +97,7 @@ procedure TBufferedDrawDlg.FormPaint(Sender: TObject);
 begin
   if OffscreenUser <> self then
     OffscreenPaint;
-  VPaint
+  VPaint;
 end;
 
 procedure TBufferedDrawDlg.FormKeyDown(Sender: TObject; var Key: Word;
