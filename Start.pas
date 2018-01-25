@@ -257,12 +257,12 @@ begin
   begin
     Location := Point(Screen.Width, Screen.Height);
     Location := Point((Screen.width - 800) * 3 div 8,
-      Screen.height - ClientHeight - (Screen.height - 600) div 3);
+      Screen.height - Height - (Screen.height - 600) div 3);
     Left := Location.X;
     Top := Location.Y;
 
-    r0 := CreateRectRgn(0, 0, ClientWidth, ClientHeight);
-    r1 := CreateRectRgn(TabOffset + 4 * TabSize + 2, 0, ClientWidth, TabHeight);
+    r0 := CreateRectRgn(0, 0, Width, Height);
+    r1 := CreateRectRgn(TabOffset + 4 * TabSize + 2, 0, Width, TabHeight);
     CombineRgn(r0, r0, r1, RGN_DIFF);
     // DeleteObject(r1);
     r1 := CreateRectRgn(QuitBtn.left, QuitBtn.top, QuitBtn.left + QuitBtn.width,

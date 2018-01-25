@@ -35,7 +35,7 @@ procedure TInputDlg.FormCreate(Sender: TObject);
 begin
   Canvas.Font.Assign(UniFont[ftNormal]);
   Canvas.Brush.Style := bsClear;
-  TitleHeight := ClientHeight;
+  TitleHeight := Height;
   InitButtons();
   Center := true;
 end;

@@ -122,8 +122,10 @@ begin
   with Canvas do
     if FGraphic <> nil then
     begin
-      BitBlt(Buffer.Canvas.Handle, 0, 0, 48, 48, Back.Canvas.Handle, 0,
-        0, SRCCOPY);
+      // TODO: For some reason BitBlt is not working with gray background here
+      //BitBlt(Buffer.Canvas.Handle, 0, 0, 48, 48, Back.Canvas.Handle, 0,
+      //  0, SRCCOPY);
+      Buffer.Canvas.Draw(0, 0, Back);
       ImageOp_CBC(Buffer, Template, 0, 0, 133, 149 + 48 * Byte(FDown), 48, 48,
         $000000, $FFFFFF);
       if FIndex >= 0 then

@@ -88,7 +88,7 @@ begin
 
   Back := TBitmap.Create;
   Back.PixelFormat := pf24bit;
-  Back.SetSize(ClientWidth, ClientHeight);
+  Back.SetSize(Width, Height);
   Back.Canvas.FillRect(0, 0, Back.Width, Back.Height);
   Template := TBitmap.Create;
   Template.PixelFormat := pf24bit;

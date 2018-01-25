@@ -155,7 +155,7 @@ end;
 
 procedure TBaseMessgDlg.FormCreate(Sender: TObject);
 begin
-  Left := (Screen.Width - ClientWidth) div 2;
+  Left := (Screen.Width - Width) div 2;
   Canvas.Font.Assign(UniFont[ftNormal]);
   Canvas.Brush.Style := bsClear;
   MessgText := '';

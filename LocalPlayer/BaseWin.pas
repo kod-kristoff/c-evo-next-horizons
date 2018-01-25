@@ -235,8 +235,8 @@ begin
   TexOverride := false;
   ModalIndication := true;
   Canvas.Brush.Style := bsClear;
-  InnerWidth := ClientWidth - 2 * SideFrame;
-  InnerHeight := ClientHeight - TitleHeight - NarrowFrame;
+  InnerWidth := Width - 2 * SideFrame;
+  InnerHeight := Height - TitleHeight - NarrowFrame;
 end;
 
 procedure TFramedDlg.SmartInvalidate;
