@@ -6771,7 +6771,7 @@ procedure TMainScreen.MenuClick(Sender: TObject);
 var
   i, uix, NewFocus, Loc0, OldMaster, Destination, cix, cixOldHome,
     ServerResult: integer;
-  AltGovs, Changed: boolean;
+  AltGovs, RevolutionChanged: boolean;
   QueryText: string;
 
 begin
@@ -6820,7 +6820,7 @@ begin
       SoundMessage(Phrases.Lookup('NOALTGOVS'), 'MSG_DEFAULT')
     else
     begin
-      Changed := false;
+      RevolutionChanged := false;
       if MyRO.Happened and phChangeGov <> 0 then
       begin
         ModalSelectDlg.ShowNewContent(wmModal, kGov);
@@ -6829,11 +6829,11 @@ begin
           Play('NEWGOV');
           Server(sSetGovernment, me, ModalSelectDlg.result, nil^);
           CityOptimizer_BeginOfTurn;
-          Changed := true;
+          RevolutionChanged := true;
         end
       end
       else
-      // TODO with MessgExDlg do
+      with MessgExDlg do
       begin // revolution!
         MessgExDlg.MessgText := Tribe[me].TPhrase('REVOLUTION');
         MessgExDlg.Kind := mkYesNo;
@@ -6844,14 +6844,14 @@ begin
         begin
           Play('REVOLUTION');
           Server(sRevolution, me, 0, nil^);
-          Changed := true;
+          RevolutionChanged := true;
           if NatStatDlg.Visible then
             NatStatDlg.Close;
           if CityDlg.Visible then
             CityDlg.Close;
         end
       end;
-      if Changed then
+      if RevolutionChanged then
         UpdateViews(true);
     end
   end
