@@ -1,5 +1,8 @@
 #!/usr/bin/make -f
 
+# Set temporary HOME for lazarus primary config directory
+export HOME=$(CURDIR)/tmphome
+
 ROOT = $(CURDIR)/debian/c-evo
 
 override_dh_auto_clean:
