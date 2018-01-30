@@ -58,7 +58,7 @@ function MovementToString(Movement: integer): string;
 procedure BtnFrame(ca: TCanvas; p: TRect; const T: TTexture);
 procedure EditFrame(ca: TCanvas; p: TRect; const T: TTexture);
 function HexStringToColor(s: string): integer;
-function LoadGraphicFile(bmp: TBitmap; const Path: string;
+function LoadGraphicFile(bmp: TBitmap; Path: string;
   Options: integer = 0): boolean;
 function LoadGraphicSet(const Name: string): integer;
 procedure Dump(dst: TBitmap; HGr, xDst, yDst, Width, Height, xGr, yGr: integer);
@@ -450,12 +450,13 @@ begin
   end;
 end;
 
-function LoadGraphicFile(bmp: TBitmap; const Path: string; Options: integer): boolean;
+function LoadGraphicFile(bmp: TBitmap; Path: string; Options: integer): boolean;
 var
   jtex: tjpegimage;
   Png: TPortableNetworkGraphic;
 begin
   Result := True;
+  if ExtractFileExt(Path) = '' then Path := Path + '.png';
   if ExtractFileExt(Path) = '.jpg' then begin
     jtex := tjpegimage.create;
     try
