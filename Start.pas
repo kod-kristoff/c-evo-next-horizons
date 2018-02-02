@@ -1853,7 +1853,7 @@ end;
 
 procedure TStartDlg.QuitBtnClick(Sender: TObject);
 begin
-  Close
+  Close;
 end;
 
 procedure TStartDlg.FormKeyDown(Sender: TObject; var Key: Word;
@@ -1895,7 +1895,7 @@ end;
 procedure TStartDlg.FormMouseUp(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; x, y: integer);
 begin
-  Tracking := false
+  Tracking := false;
 end;
 
 procedure TStartDlg.FormMouseMove(Sender: TObject; Shift: TShiftState;

@@ -16,19 +16,6 @@ implementation
 uses
   FileUtil, LCLIntf, LCLType, LCLProc, LazUTF8, SysUtils;
 
-var
-  AppDataDir: string;
-  src, dst: TSearchRec;
-
-
-function DirectoryExists(path: string): boolean;
-var
-  f: TSearchRec;
-begin
-  result := FindFirst(path, faDirectory, f) = 0;
-  FindClose(f);
-end;
-
 function GetLocale: string;
 var
   Lang: string;
@@ -69,6 +56,9 @@ begin
 end;
 
 procedure InitUnit;
+var
+  AppDataDir: string;
+  src, dst: TSearchRec;
 begin
   LocaleCode := '';
   HomeDir := ExtractFilePath(ParamStr(0));

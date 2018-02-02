@@ -9,6 +9,7 @@ object StartDlg: TStartDlg
   ClientHeight = 326
   ClientWidth = 556
   Color = clBtnFace
+  DesignTimePPI = 125
   Font.Color = clWindowText
   Font.Height = -13
   Font.Name = 'MS Sans Serif'
@@ -23,7 +24,7 @@ object StartDlg: TStartDlg
   OnMouseUp = FormMouseUp
   OnPaint = FormPaint
   OnShow = FormShow
-  LCLVersion = '1.6.2.0'
+  LCLVersion = '1.8.0.6'
   object StartBtn: TButtonA
     Tag = 15104
     Left = 389
@@ -194,8 +195,10 @@ object StartDlg: TStartDlg
     ItemHeight = 0
     OnClick = ListClick
     ParentFont = False
+    ScrollWidth = 266
     TabOrder = 0
     TabStop = False
+    TopIndex = -1
     Visible = False
   end
   object PopupMenu1: TPopupMenu

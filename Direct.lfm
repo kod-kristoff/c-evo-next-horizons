@@ -1,21 +1,20 @@
 object DirectDlg: TDirectDlg
   Left = 188
+  Height = 64
   Top = 198
+  Width = 360
   BorderIcons = []
   BorderStyle = bsNone
   Caption = 'C-evo'
-  ClientHeight = 64
-  ClientWidth = 360
   Color = clBtnFace
-  Font.Charset = DEFAULT_CHARSET
+  DesignTimePPI = 125
   Font.Color = clWindowText
   Font.Height = -13
   Font.Name = 'MS Sans Serif'
-  Font.Style = []
   FormStyle = fsStayOnTop
   OnClose = FormClose
   OnCreate = FormCreate
   OnPaint = FormPaint
   OnShow = FormShow
-  PixelsPerInch = 96
+  LCLVersion = '1.8.0.6'
 end

@@ -106,7 +106,7 @@ begin
     ntEndInfo:
       begin
         Hide;
-        background.Update
+        background.Update;
       end;
     ntLoadError:
       begin
@@ -136,7 +136,7 @@ begin
       if not Quick then
       begin
         StartDlg.Hide;
-        background.Update
+        background.Update;
       end;
     ntStartGo, ntStartGoRefresh, ntStartGoRefreshMaps:
       if Quick then
