@@ -4,11 +4,12 @@
 
 unit CevoComponents;
 
+{$warn 5023 off : no warning about unused units}
 interface
 
 uses
-  Area, ButtonA, ButtonB, ButtonC, ButtonN, EOTButton, ButtonBase, 
-  LazarusPackageIntf;
+  Area, ButtonA, ButtonB, ButtonC, ButtonN, EOTButton, ButtonBase, DrawDlg, 
+  Sound, LazarusPackageIntf;
 
 implementation
 
@@ -20,6 +21,7 @@ begin
   RegisterUnit('ButtonC', @ButtonC.Register);
   RegisterUnit('ButtonN', @ButtonN.Register);
   RegisterUnit('EOTButton', @EOTButton.Register);
+  RegisterUnit('DrawDlg', @DrawDlg.Register);
 end;
 
 initialization

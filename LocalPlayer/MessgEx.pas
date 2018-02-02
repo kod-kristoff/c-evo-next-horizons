@@ -6,7 +6,7 @@ interface
 uses
   Messg, Protocol, ScreenTools, Platform, DateUtils,
   LCLIntf, LCLType, Messages, SysUtils, Classes, Graphics, Controls, Forms, ButtonA,
-  ButtonB, StdCtrls;
+  ButtonB, StdCtrls, DrawDlg;
 
 type
   TMessgExDlg = class(TBaseMessgDlg)

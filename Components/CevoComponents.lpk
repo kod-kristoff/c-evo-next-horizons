@@ -14,27 +14,30 @@
         <SyntaxOptions>
           <SyntaxMode Value="Delphi"/>
           <CStyleOperator Value="False"/>
+          <IncludeAssertionCode Value="True"/>
           <AllowLabel Value="False"/>
           <CPPInline Value="False"/>
         </SyntaxOptions>
       </Parsing>
       <CodeGeneration>
+        <Checks>
+          <IOChecks Value="True"/>
+          <RangeChecks Value="True"/>
+          <OverflowChecks Value="True"/>
+          <StackChecks Value="True"/>
+        </Checks>
+        <VerifyObjMethodCallValidity Value="True"/>
         <Optimizations>
           <OptimizationLevel Value="0"/>
         </Optimizations>
       </CodeGeneration>
-      <Linking>
-        <Debugging>
-          <GenerateDebugInfo Value="False"/>
-        </Debugging>
-      </Linking>
       <Other>
         <CompilerMessages>
           <IgnoredMessages idx5024="True"/>
         </CompilerMessages>
       </Other>
     </CompilerOptions>
-    <Files Count="7">
+    <Files Count="12">
       <Item1>
         <Filename Value="Area.pas"/>
         <HasRegisterProc Value="True"/>
@@ -69,6 +72,27 @@
         <Filename Value="ButtonBase.pas"/>
         <UnitName Value="ButtonBase"/>
       </Item7>
+      <Item8>
+        <Filename Value="DrawDlg.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="DrawDlg"/>
+      </Item8>
+      <Item9>
+        <Filename Value="ScreenTools.pas"/>
+        <Type Value="Include"/>
+      </Item9>
+      <Item10>
+        <Filename Value="Directories.pas"/>
+        <Type Value="Include"/>
+      </Item10>
+      <Item11>
+        <Filename Value="StringTables.pas"/>
+        <Type Value="Include"/>
+      </Item11>
+      <Item12>
+        <Filename Value="Sound.pas"/>
+        <UnitName Value="Sound"/>
+      </Item12>
     </Files>
     <RequiredPkgs Count="2">
       <Item1>

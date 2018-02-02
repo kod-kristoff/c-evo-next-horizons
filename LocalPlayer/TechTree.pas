@@ -4,10 +4,8 @@ unit TechTree;
 interface
 
 uses
-  ScreenTools, Messg, LCLIntf, LCLType,
-
-  Messages, SysUtils, Classes, Graphics, Controls, Forms,
-  ButtonBase, ButtonB;
+  ScreenTools, Messg, LCLIntf, LCLType, Messages, SysUtils, Classes, Graphics,
+  Controls, Forms, ButtonBase, ButtonB, DrawDlg;
 
 type
   TTechTreeDlg = class(TDrawDlg)

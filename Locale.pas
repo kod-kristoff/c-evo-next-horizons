@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  ScreenTools, Messg, ButtonA, Registry, fgl, Directories;
+  ScreenTools, Messg, ButtonA, Registry, fgl, Directories, DrawDlg;
 
 type
   TLanguage = class

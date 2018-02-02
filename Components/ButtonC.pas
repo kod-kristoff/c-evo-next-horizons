@@ -10,8 +10,8 @@ type
   TButtonC = class(TButtonBase)
     constructor Create(aOwner: TComponent); override;
   private
-    FIndex: integer;
-    procedure SetIndex(x: integer);
+    FIndex: Integer;
+    procedure SetIndex(x: Integer);
   published
     property Visible;
     property ButtonIndex: integer read FIndex write SetIndex;
@@ -32,7 +32,7 @@ end;
 constructor TButtonC.Create(aOwner: TComponent);
 begin
   inherited Create(aOwner);
-  ShowHint := true;
+  ShowHint := True;
   SetBounds(0, 0, 12, 12);
 end;
 
@@ -54,8 +54,8 @@ begin
   if x <> FIndex then
   begin
     FIndex := x;
-    Invalidate
-  end
+    Invalidate;
+  end;
 end;
 
 end.

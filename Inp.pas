@@ -5,7 +5,7 @@ interface
 
 uses
   ScreenTools, Messg,
-  LCLIntf, LCLType, SysUtils, Classes, Graphics, Controls, Forms,
+  LCLIntf, LCLType, SysUtils, Classes, Graphics, Controls, Forms, DrawDlg,
   ButtonA, StdCtrls;
 
 type

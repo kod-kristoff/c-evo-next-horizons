@@ -11,8 +11,8 @@ uses
   LMessages, Messages,
 {$ENDIF}
   Protocol, Tribes, PVSB, ClientTools, ScreenTools, BaseWin, Messg, ButtonBase,
-  LCLIntf, LCLType, SysUtils, Classes, Graphics, Controls,
-  Forms, Menus, ExtCtrls, dateutils, Platform, ButtonB, ButtonC, EOTButton, Area, Types;
+  LCLIntf, LCLType, SysUtils, Classes, Graphics, Controls, DrawDlg, Types,
+  Forms, Menus, ExtCtrls, dateutils, Platform, ButtonB, ButtonC, EOTButton, Area;
 
 const
   WM_EOT = WM_USER;

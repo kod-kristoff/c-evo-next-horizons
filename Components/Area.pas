@@ -25,15 +25,18 @@ end;
 constructor TArea.Create(AOwner: TComponent);
 begin
   inherited;
-  Enabled:=false;
-  ShowHint:=true;
+  Enabled := false;
+  ShowHint := true;
 end;
 
 procedure TArea.Paint;
 begin
   if csDesigning in ComponentState then
     with Canvas do
-      begin Brush.Color:=$FF0000; FrameRect(Rect(0,0,width,height)) end
+      begin
+        Brush.Color := $FF0000;
+        FrameRect(Rect(0, 0, width, height));
+      end;
 end;
 
 end.

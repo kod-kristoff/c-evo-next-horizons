@@ -1,4 +1,3 @@
-{$INCLUDE Switches.inc}
 unit Directories;
 
 interface
@@ -9,6 +8,7 @@ var
   LocaleCodeAuto: string = '';
 
 function LocalizedFilePath(const Path: string): string;
+procedure InitUnit;
 
 
 implementation
@@ -98,10 +98,5 @@ begin
     until FindNext(src) <> 0;
   FindClose(src);
 end;
-
-initialization
-
-InitUnit;
-
 
 end.

@@ -5,7 +5,7 @@ interface
 
 uses
   ScreenTools, Protocol, Messg, ButtonBase, ButtonA, Types, LCLIntf, LCLType,
-  SysUtils, Classes, Graphics, Controls, Forms;
+  SysUtils, Classes, Graphics, Controls, Forms, DrawDlg;
 
 type
   TBattleDlg = class(TDrawDlg)

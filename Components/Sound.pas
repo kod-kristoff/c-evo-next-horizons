@@ -6,9 +6,6 @@ uses
   Messages, SysUtils, Classes, Graphics, Controls, Forms, fgl
   {$IFDEF WINDOWS}, MMSystem, Windows{$ENDIF};
 
-function PrepareSound(FileName: string): integer;
-procedure PlaySound(FileName: string);
-
 type
   TSoundPlayer = class(TForm)
   private
@@ -16,6 +13,9 @@ type
     procedure OnMCI(var m: TMessage); message MM_MCINOTIFY;
     {$ENDIF}
   end;
+
+function PrepareSound(FileName: string): integer;
+procedure PlaySound(FileName: string);
 
 implementation
 
@@ -32,6 +32,7 @@ type
     procedure Stop;
     procedure Reset;
   end;
+
 
 constructor TSound.Create(const FileName: string);
 {$IFDEF WINDOWS}

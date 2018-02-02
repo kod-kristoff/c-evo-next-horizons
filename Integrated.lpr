@@ -3,8 +3,6 @@ program Integrated;
 
 uses
   Forms, Interfaces, SysUtils,
-  StringTables in 'StringTables.pas',
-  Directories in 'Directories.pas',
   Protocol in 'Protocol.pas',
   CmdList in 'CmdList.pas',
   Database in 'Database.pas',
@@ -12,7 +10,6 @@ uses
   CityProcessing in 'CityProcessing.pas',
   UnitProcessing in 'UnitProcessing.pas',
   Direct in 'Direct.pas' {DirectDlg} ,
-  ScreenTools in 'ScreenTools.pas',
   Start in 'Start.pas' {StartDlg} ,
   Messg in 'Messg.pas' {MessgDlg} ,
   Inp in 'Inp.pas' {InputDlg} ,
@@ -39,10 +36,10 @@ uses
   CityType in 'LocalPlayer\CityType.pas' {CityTypeDlg} ,
   Enhance in 'LocalPlayer\Enhance.pas' {EnhanceDlg} ,
   NoTerm in 'NoTerm.pas' {NoTermDlg} ,
-  Sound in 'Sound.pas' {SoundPlayer} ,
   Battle in 'LocalPlayer\Battle.pas' {BattleDlg} ,
   Rates in 'LocalPlayer\Rates.pas' {RatesDlg} ,
-  TechTree in 'LocalPlayer\TechTree.pas' {TechTreeDlg};
+  TechTree in 'LocalPlayer\TechTree.pas' {TechTreeDlg},
+  ScreenTools, Directories;
 
 {$R cevo.res}
 
@@ -63,6 +60,8 @@ begin
   DotNetClient := nil;
   Application.Initialize;
   Application.Title := 'c-evo';
+  Directories.InitUnit;
+  ScreenTools.UnitInit;
   Application.CreateForm(TDirectDlg, DirectDlg);
   Application.CreateForm(TStartDlg, StartDlg);
   Application.CreateForm(TMessgDlg, MessgDlg);
@@ -70,5 +69,5 @@ begin
   Application.CreateForm(TBackground, Background);
   Application.CreateForm(TLogDlg, LogDlg);
   Application.Run;
-
+  ScreenTools.UnitDone;
 end.

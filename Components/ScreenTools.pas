@@ -1,4 +1,3 @@
-{$INCLUDE Switches.inc}
 unit ScreenTools;
 
 interface
@@ -215,6 +214,9 @@ var
 
   UniFont: array [TFontType] of TFont;
   AppRegistryKey: string = '\SOFTWARE\C-evo';
+
+procedure UnitInit;
+procedure UnitDone;
 
 implementation
 
@@ -1664,10 +1666,10 @@ end;
 
 initialization
 
-UnitInit;
+//UnitInit;
 
 finalization
 
-UnitDone;
+//UnitDone;
 
 end.

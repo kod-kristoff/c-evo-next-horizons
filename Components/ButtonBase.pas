@@ -121,7 +121,7 @@ end;
 procedure TButtonBase.SetDown(x: boolean);
 begin
   FDown := x;
-  Invalidate
+  Invalidate;
 end;
 
 // procedure TButtonBase.PlayDownSound;

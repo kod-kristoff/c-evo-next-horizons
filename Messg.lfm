@@ -1,41 +1,40 @@
 object MessgDlg: TMessgDlg
   Left = 493
+  Height = 134
   Top = 431
+  Width = 418
   BorderIcons = []
   BorderStyle = bsNone
   Caption = 'C-evo'
   ClientHeight = 134
   ClientWidth = 418
   Color = clBtnFace
-  Font.Charset = DEFAULT_CHARSET
+  DesignTimePPI = 125
   Font.Color = clWindowText
   Font.Height = -13
   Font.Name = 'MS Sans Serif'
-  Font.Style = []
   FormStyle = fsStayOnTop
   OnCreate = FormCreate
   OnKeyPress = FormKeyPress
   OnPaint = FormPaint
   OnShow = FormShow
-  PixelsPerInch = 96
+  LCLVersion = '1.8.0.6'
   object Button1: TButtonA
     Left = 101
+    Height = 25
     Top = 104
     Width = 100
-    Height = 25
     Down = False
     Permanent = False
     OnClick = Button1Click
-    Caption = ''
   end
   object Button2: TButtonA
     Left = 217
+    Height = 25
     Top = 104
     Width = 100
-    Height = 25
     Down = False
     Permanent = False
     OnClick = Button2Click
-    Caption = ''
   end
 end
