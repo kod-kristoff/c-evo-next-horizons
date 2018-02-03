@@ -3,8 +3,23 @@
 if not defined LAZDIR (
   set LAZDIR=C:\lazarus
 )
-SET PROJECTNAME=Integrated
 
+rem Build AI
+SET PROJECTNAME=AIProject
+SET MAIN_DLL=..\..\AI\StdAI.dll
+SET WIN32_DLL=..\..\AI\lib\i386-win32-Release\StdAI.dll
+SET WIN64_DLL=..\..\AI\lib\x86_64-win64-Release\StdAI.dll
+IF EXIST %MAIN_DLL% del %MAIN_DLL%
+IF EXIST %WIN32_DLL% del %WIN32_DLL%
+IF EXIST %WIN64_DLL% del %WIN64_DLL%
+
+%LAZDIR%\lazbuild.exe --lazarusdir=%LAZDIR% --build-mode="Release" --cpu=i386 --operating-system=Win32 ..\..\AI\%PROJECTNAME%.lpi
+copy %MAIN_DLL% %WIN32_DLL%
+%LAZDIR%\lazbuild.exe --lazarusdir=%LAZDIR% --build-mode="Release" --cpu=x86_64 --operating-system=Win64 ..\..\AI\%PROJECTNAME%.lpi
+copy %MAIN_DLL% %WIN64_DLL%
+
+rem Build game
+SET PROJECTNAME=Integrated
 SET MAIN_EXE=..\..\c-evo.exe
 SET WIN32_EXE=..\..\lib\i386-win32-Release\c-evo.exe
 SET WIN64_EXE=..\..\lib\x86_64-win64-Release\c-evo.exe
