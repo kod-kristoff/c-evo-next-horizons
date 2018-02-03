@@ -73,6 +73,8 @@ Source: "{#MyAppSubDir}\AI\lib\x86_64-win64\StdAI.dll"; DestDir: "{app}\AI"; Des
 Source: "{#MyAppSubDir}\AI\lib\i386-win32\StdAI.dll"; DestDir: "{app}\AI"; DestName: "StdAI-win32.dll"; Flags: ignoreversion; Check: not Is64BitInstallMode
 Source: "{#MyAppSubDir}\AI\StdAI.png"; DestDir: "{app}\AI"; Flags: ignoreversion; 
 Source: "{#MyAppSubDir}\AI\StdAI.ai.txt"; DestDir: "{app}\AI"; Flags: ignoreversion;
+Source: "{#MyAppSubDir}\Maps\*.*"; DestDir: "{localappdata}\c-evo\Maps"; Flags: ignoreversion createallsubdirs recursesubdirs comparetimestamp
+Source: "{#MyAppSubDir}\Saved\*.*"; DestDir: "{localappdata}\c-evo\Saved"; Flags: ignoreversion createallsubdirs recursesubdirs comparetimestamp
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
