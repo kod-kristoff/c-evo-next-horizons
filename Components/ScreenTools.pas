@@ -1599,7 +1599,7 @@ begin
               end;
             // 0.8 constant is compensation for Lazarus as size of fonts against Delphi differs
             UniFont[section].size :=
-              round(size * 72 / UniFont[section].PixelsPerInch * 0.8);
+              round(size * Screen.PixelsPerInch / UniFont[section].PixelsPerInch * 0.8);
           end;
         end;
     end;
