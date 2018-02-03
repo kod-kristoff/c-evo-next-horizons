@@ -43,7 +43,7 @@ uses
 
 {$R cevo.res}
 
-{$IFDEF DEBUG}
+{$if declared(UseHeapTrace)}
 const
   HeapTraceLog = 'heaptrclog.trc';
 {$ENDIF}
@@ -51,7 +51,7 @@ const
 {$R *.res}
 
 begin
-  {$IFDEF DEBUG}
+  {$if declared(UseHeapTrace)}
   // Heap trace
   DeleteFile(ExtractFilePath(ParamStr(0)) + HeapTraceLog);
   SetHeapTraceOutput(ExtractFilePath(ParamStr(0)) + HeapTraceLog);

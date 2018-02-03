@@ -1018,8 +1018,7 @@ var
     OwnColor := GrExt[HGrSystem].Data.Canvas.Pixels[95, 67];
     EnemyColor := GrExt[HGrSystem].Data.Canvas.Pixels[96, 67];
     Mini.PixelFormat := pf24bit;
-    Mini.width := MiniWidth * 2;
-    Mini.height := MiniHeight;
+    Mini.SetSize(MiniWidth * 2, MiniHeight);
     if MiniMode = mmPicture then
     begin
       Mini.BeginUpdate;
@@ -1059,6 +1058,8 @@ var
             MiniPixel.Pixel^.R := cm and $FF;
           end;
         end;
+        MiniPixel.NextLine;
+        PrevMiniPixel.NextLine;
       end;
       Mini.EndUpdate;
     end;
