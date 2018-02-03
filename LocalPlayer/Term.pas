@@ -2556,8 +2556,7 @@ begin { >>>client }
         HelpDlg.ClearHistory;
         CityDlg.Reset;
 
-        Mini.width := G.lx * 2;
-        Mini.height := G.ly;
+        Mini.SetSize(G.lx * 2, G.ly);
         for i := 0 to nPl - 1 do
         begin
           Tribe[i] := nil;
@@ -3547,10 +3546,8 @@ begin
     MapOffset := (ClientWidth - MapWidth) div 2;
   end;
   MapHeight := ClientHeight - TopBarHeight - PanelHeight + overlap;
-  Panel.width := ClientWidth;
-  Panel.height := PanelHeight;
-  TopBar.width := ClientWidth;
-  TopBar.height := TopBarHeight;
+  Panel.SetSize(ClientWidth, PanelHeight);
+  TopBar.SetSize(ClientWidth, TopBarHeight);
   MiniFrame := (lxmax_xxx - G.ly) div 2;
   xMidPanel := (G.lx + MiniFrame) * 2 + 1;
   xRightPanel := ClientWidth - LeftPanelWidth - 10;

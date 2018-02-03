@@ -4,9 +4,8 @@ unit BaseWin;
 interface
 
 uses
-  ScreenTools, Messg,
-
-  LCLIntf, LCLType, SysUtils, Classes, Graphics, Controls, Forms, DrawDlg;
+  ScreenTools, LCLIntf, LCLType, SysUtils, Classes, Graphics, Controls, Forms,
+  DrawDlg;
 
 type
   TBufferedDrawDlg = class(TDrawDlg)
@@ -470,11 +469,10 @@ begin
     exit;
   Offscreen := TBitmap.Create;
   Offscreen.PixelFormat := pf24bit;
-  Offscreen.Width := Screen.Width;
   if Screen.Height - yUnused < 480 then
-    Offscreen.Height := 480
+    Offscreen.SetSize(Screen.Width, 480)
   else
-    Offscreen.Height := Screen.Height - yUnused;
+    Offscreen.SetSize(Screen.Width, Screen.Height - yUnused);
   Offscreen.Canvas.FillRect(0, 0, Offscreen.Width, OffScreen.Height);
   Offscreen.Canvas.Brush.Style := bsClear;
 end;

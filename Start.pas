@@ -337,8 +337,7 @@ begin
     BrainPicture[i] := TBitmap.Create;
     if not LoadGraphicFile(BrainPicture[i], HomeDir + 'AI' + DirectorySeparator + Brain[i].FileName + '.png',
       gfNoError) then begin
-      BrainPicture[i].width := 64;
-      BrainPicture[i].height := 64;
+      BrainPicture[i].SetSize(64, 64);
       with BrainPicture[i].Canvas do begin
         Brush.Color := $904830;
         FillRect(Rect(0, 0, 64, 64));

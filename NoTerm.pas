@@ -146,8 +146,7 @@ begin
         Server := TInitModuleData(Data).Server;
         TInitModuleData(Data).Flags := aiThreaded;
         Shade := TBitmap.Create;
-        Shade.Width := 64;
-        Shade.Height := 64;
+        Shade.SetSize(64, 64);
         for x := 0 to 63 do
           for y := 0 to 63 do
             if Odd(x + y) then
@@ -155,8 +154,7 @@ begin
             else
               Shade.Canvas.Pixels[x, y] := $000000;
         State := TBitmap.Create;
-        State.Width := 192;
-        State.Height := 20;
+        State.SetSize(192, 20);
         State.Canvas.Brush.Style := bsClear;
         State.Canvas.Font.Assign(UniFont[ftSmall]);
         NewStat;
@@ -165,7 +163,7 @@ begin
     cReleaseModule:
       begin
         Shade.Free;
-        State.Free
+        State.Free;
       end;
 
     cNewGame, cLoadGame:
