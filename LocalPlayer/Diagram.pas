@@ -67,11 +67,11 @@ begin
       MainTexture.clBevelShade, MainTexture.clBevelLight);
 
     // stars
-    RandSeed := Player * 11111;
+    DelphiRandSeed := Player * 11111;
     for i := 1 to Width - 16 do
     begin
-      x := Random((Width - 16) * 200);
-      r := Random(13) + 28;
+      x := DelphiRandom((Width - 16) * 200);
+      r := DelphiRandom(13) + 28;
       Canvas.Pixels[x div 200 + 8, x mod 200 + Top] :=
         (r * r * r * r div 10001) * $10101;
     end;

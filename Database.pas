@@ -651,7 +651,7 @@ begin
   begin
 {$IFNDEF SCR} if x = 1 then
       v := pi / 2 { first wave goes horizontal }
-    else {$ENDIF} v := Random * 2 * pi;
+    else {$ENDIF} v := DelphiRandom * 2 * pi;
     sa[x] := sin(v) / lx;
     ca[x] := cos(v) / ly;
     f1[x] := 2 * pi * exp(Detail * (x - 1));
@@ -785,7 +785,7 @@ begin
               if Cnt <= RareMaxWater then // inner land
               begin
                 inc(AreaCount[xBlock, yBlock]);
-                if Random(AreaCount[xBlock, yBlock]) = 0 then
+                if DelphiRandom(AreaCount[xBlock, yBlock]) = 0 then
                   RareByArea[xBlock, yBlock] := Loc0
               end
             end;
@@ -856,7 +856,7 @@ begin
           else if (RareAdjacent[x, y] = RareAdjacent[xworst, yworst]) then
           begin
             inc(Cnt);
-            if Random(Cnt) = 0 then
+            if DelphiRandom(Cnt) = 0 then
             begin
               xworst := x;
               yworst := y;
@@ -907,7 +907,7 @@ begin
               if Dist[i, j] >= MinDist then
               begin
                 inc(Cnt);
-                if Random(Cnt) = 0 then
+                if DelphiRandom(Cnt) = 0 then
                 begin
                   iBest := i;
                   jbest := j
@@ -995,7 +995,7 @@ const
     begin
       p := Zone[z0, i] * (1 - ZPlus) + Zone[z0 + 1, i] * ZPlus;
       { weight between zones z0 and z0+1 }
-      if Random * p0 < p then
+      if DelphiRandom * p0 < p then
       begin
         RndLow := i;
         Break
@@ -1135,7 +1135,7 @@ begin
     plus := 36 * 56 * 20 * ShTestRiver div (LandMass * 100);
     if plus > MapSize then
       plus := MapSize;
-    Loc0 := Random(MapSize);
+    Loc0 := DelphiRandom(MapSize);
     for n := 0 to plus - 1 do
     begin
       if (RealMap[Loc0] and fTerrain >= fGrass) and (Loc0 >= lx) and
@@ -1146,7 +1146,7 @@ begin
   end;
 
   for Loc0 := 0 to MapSize - 1 do
-    if (RealMap[Loc0] = fGrass) and (Random(100) < ShRandHills) then
+    if (RealMap[Loc0] = fGrass) and (DelphiRandom(100) < ShRandHills) then
       RealMap[Loc0] := RealMap[Loc0] or fHills;
 
   // make terrain types coherent
@@ -1155,16 +1155,16 @@ begin
 
   for n := 0 to unification * MapSize div 100 do
   begin
-    y := Random(ly);
-    if abs(y - (ly shr 1)) > ly div 4 + Random(ly * hotunification div 100) then
+    y := DelphiRandom(ly);
+    if abs(y - (ly shr 1)) > ly div 4 + DelphiRandom(ly * hotunification div 100) then
       if y < ly shr 1 then
         y := ly shr 1 - y
       else
         y := 3 * ly shr 1 - y;
-    Loc0 := lx * y + Random(lx);
+    Loc0 := lx * y + DelphiRandom(lx);
     if RealMap[Loc0] and fTerrain = fGrass then
     begin
-      Dir := Random(4);
+      Dir := DelphiRandom(4);
       Loc1 := dLoc(Loc0, Dir and 1 * 2 - 1, Dir shr 1 * 2 - 1);
       if (Loc1 >= 0) and (RealMap[Loc1] and fTerrain = fGrass) then
       begin
@@ -1197,7 +1197,7 @@ begin
   for Loc0 := 0 to MapSize - 1 do
     if RealMap[Loc0] and fTerrain = fGrass then
     begin // change grassland to swamp
-      if Random(100) < ShSwamp then
+      if DelphiRandom(100) < ShSwamp then
         RealMap[Loc0] := RealMap[Loc0] and not fTerrain or fSwamp;
     end;
 
@@ -1372,7 +1372,7 @@ begin
       MinGood := 6
     end;
     FillChar(nCityLoc, SizeOf(nCityLoc), 0);
-    Loc := Random(MapSize);
+    Loc := DelphiRandom(MapSize);
     for i := 0 to MapSize - 1 do
     begin
       if ((Loc >= 4 * lx) and (Loc < MapSize - 4 * lx) or (CountGood >= cgLand))
@@ -1413,7 +1413,7 @@ begin
   for c := 1 to nsc do
   begin // for all start continents
     if sccount[c] = 1 then
-      StartLoc0[p1] := CityLoc[c, Random(nCityLoc[c])]
+      StartLoc0[p1] := CityLoc[c, DelphiRandom(nCityLoc[c])]
     else
     begin
       BestDist := 0;
@@ -1430,7 +1430,7 @@ begin
         begin
           if nRest = 0 then
             Break;
-          j := Random(nRest);
+          j := DelphiRandom(nRest);
           TestStartLoc[i] := RestLoc[j];
           RestLoc[j] := RestLoc[nRest - 1];
           dec(nRest);
@@ -1493,7 +1493,7 @@ begin
         Loc1 := Radius[V21];
         if (Loc1 >= 0) and (Loc1 < MapSize) and
           (RealMap[Loc1] and fDeadLands = 0) then
-          if IsGoodTile(Loc1) and (Random(CntGood) < MinGood - CntGoodGrass + 1)
+          if IsGoodTile(Loc1) and (DelphiRandom(CntGood) < MinGood - CntGoodGrass + 1)
           then
           begin
             RealMap[Loc1] := RealMap[Loc1] and not(fTerrain or fSpecial)
@@ -1503,7 +1503,7 @@ begin
           else if RealMap[Loc1] and fTerrain = fDesert then
             RealMap[Loc1] := RealMap[Loc1] and not fTerrain or fPrairie
           else if (RealMap[Loc1] and fTerrain in [fPrairie, fTundra, fSwamp])
-            and (Random(2) = 0) then
+            and (DelphiRandom(2) = 0) then
             RealMap[Loc1] := RealMap[Loc1] and not fTerrain or fForest;
       end;
 
@@ -1525,7 +1525,7 @@ begin
       i := nIrrLoc;
     while i > 0 do
     begin
-      j := Random(nIrrLoc);
+      j := DelphiRandom(nIrrLoc);
       RealMap[IrrLoc[j]] := RealMap[IrrLoc[j]] or tiIrrigation;
       IrrLoc[j] := IrrLoc[nIrrLoc - 1];
       dec(nIrrLoc);
@@ -1538,7 +1538,7 @@ begin
     if 1 shl p1 and GAlive <> 0 then
     begin
       repeat
-        i := Random(nAlive) + 1
+        i := DelphiRandom(nAlive) + 1
       until StartLoc0[i] >= 0;
       StartLoc[p1] := StartLoc0[i];
       StartLoc0[i] := -1
@@ -1579,7 +1579,7 @@ begin
         else if TestDist = BestDist then
         begin
           inc(n);
-          if Random(n) = 0 then
+          if DelphiRandom(n) = 0 then
             StartLoc2[p1] := Loc1;
         end;
       end
@@ -1636,7 +1636,7 @@ begin
           dec(nPrefStartLoc0);
           imax := nPrefStartLoc0;
         end;
-        i := Random(imax + 1);
+        i := DelphiRandom(imax + 1);
         StartLoc[p1] := StartLoc0[i];
         StartLoc2[p1] := StartLoc0[i];
         StartLoc0[i] := StartLoc0[imax];
@@ -1656,11 +1656,11 @@ begin
 
   { !!!for Loc1:=0 to MapSize-1 do
     if RealMap[Loc1] and fterrain>=fGrass then
-    if random(3)=0 then RealMap[Loc1]:=RealMap[Loc1] or fRoad
-    else if random(3)=0 then RealMap[Loc1]:=RealMap[Loc1] or fRR;
+    if Delphirandom(3)=0 then RealMap[Loc1]:=RealMap[Loc1] or fRoad
+    else if Delphirandom(3)=0 then RealMap[Loc1]:=RealMap[Loc1] or fRR;
     {random Road and Railroad }
   { !!!for Loc1:=0 to MapSize-1 do
-    if (RealMap[Loc1] and fterrain>=fGrass) and (random(20)=0) then
+    if (RealMap[Loc1] and fterrain>=fGrass) and (Delphirandom(20)=0) then
     RealMap[Loc1]:=RealMap[Loc1] or fPoll; }
 
   FillChar(Occupant, MapSize, Byte(-1));
@@ -1781,7 +1781,7 @@ end; // InitGame
 
 procedure InitRandomGame;
 begin
-  RandSeed := RND;
+  DelphiRandSeed := RND;
   CalculatePrimitive;
   CreateElevation;
   CreateMap(false);
@@ -1791,7 +1791,7 @@ end; { InitRandomGame }
 
 procedure InitMapGame(Human: integer);
 begin
-  RandSeed := RND;
+  DelphiRandSeed := RND;
   FindContinents;
   PredefinedStartPositions(Human);
   InitGame;
@@ -2769,6 +2769,8 @@ procedure ExpandTerritory(OriginLoc: integer);
 var
   i, dx, dy, dxMax, dyMax, Loc, NewOwner: integer;
 begin
+  if OriginLoc = -1 then
+    raise Exception.Create('Location error');
   i := 0;
   dyMax := 0;
   while (dyMax + 1) + (dyMax + 1) shr 1 <= CountryRadius do

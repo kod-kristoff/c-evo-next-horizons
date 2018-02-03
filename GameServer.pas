@@ -294,7 +294,7 @@ begin
   ly := lymax;
   MapSize := lx * ly;
   LandMass := lm;
-  RandSeed := PreviewRND;
+  DelphiRandSeed := PreviewRND;
   if not PreviewElevation then
   begin
     CreateElevation;
@@ -713,7 +713,7 @@ begin
       if nBrain <= bixFirstAI then
         bix[p1] := -1
       else
-        bix[p1] := bixFirstAI + random(nBrain - bixFirstAI)
+        bix[p1] := bixFirstAI + Delphirandom(nBrain - bixFirstAI)
     else
       bix[p1] := bixView[p1];
     if bixView[p1] < 0 then
@@ -837,7 +837,7 @@ begin
         else
           RW[p].DefaultDebugMap := nil;
 
-        { !!!for i:=0 to nShipPart-1 do GShip[p].Parts[i]:=random((3-i)*2);{ }
+        { !!!for i:=0 to nShipPart-1 do GShip[p].Parts[i]:=Delphirandom((3-i)*2);{ }
       end;
 
   if LandMass > 0 then
@@ -1370,8 +1370,8 @@ begin
   else
     LandMass := NewLandMass;
   MaxTurn := NewMaxTurn;
-  Randomize;
-  RND := RandSeed;
+  DelphiRandomize;
+  RND := DelphiRandSeed;
   Mode := moPlaying;
   CL := TCmdList.Create;
   StartGame;
@@ -1415,7 +1415,7 @@ begin
   Difficulty[0] := 0;
   InitBrain(bixTerm);
 
-  Randomize;
+  DelphiRandomize;
   GAlive := 0;
   GWatching := 1;
   if not LoadMap(MapFileName) then

@@ -1321,7 +1321,7 @@ procedure TMainScreen.Client(Command, NewPlayer: integer; var Data);
       if ColorDistance = BestColorDistance then
       begin
         inc(CountBest);
-        if random(CountBest) = 0 then
+        if DelphiRandom(CountBest) = 0 then
           result := j
       end
     end;
@@ -3501,7 +3501,7 @@ begin
   for i := 0 to nPl - 1 do
     AILogo[i] := nil;
   Canvas.Font.Assign(UniFont[ftSmall]);
-  InitButtons();
+  InitButtons;
   EOT.Template := Templates;
 end;
 

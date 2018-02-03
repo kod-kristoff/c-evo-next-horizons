@@ -1282,6 +1282,8 @@ type
     Flags: Cardinal;
   end;
 
+  { TCity }
+
   TCity = packed record
     Loc, { location }
     Status, // free for AI use
@@ -1631,10 +1633,16 @@ const
       adCombustionEngine, *) adMapMaking, preBuilder,
     { preLeo,preLighthouse, } preLeo);
 
+var
+  DelphiRandSeed: Integer;
+
 procedure MakeUnitInfo(p: integer; const u: TUn; var ui: TUnitInfo);
 procedure MakeModelInfo(p, mix: integer; const m: TModel; var mi: TModelInfo);
 function IsSameModel(const mi1, mi2: TModelInfo): boolean;
 function SpecialTile(Loc, TerrType, lx: integer): integer;
+function DelphiRandom(const pi_Max: Integer): Integer; overload;
+function DelphiRandom: Extended; overload;
+procedure DelphiRandomize;
 
 implementation
 
@@ -1754,6 +1762,26 @@ begin
   Assert(SizeOf(TPlayerContext) = 1936 + 28 * SizeOf(Pointer));
   Assert(SizeOf(TModel) - 2 * SizeOf(LongInt) - 4 * SizeOf(Word)
   = sIntSetDevModel and $F * 4);
+end;
+
+function DelphiRandom(const pi_Max: Integer): Integer;
+var
+  Temp: LongInt;
+begin
+  Temp := LongInt(134775813 * DelphiRandSeed + 1);
+  DelphiRandSeed := Temp;
+  Result := (UInt64(Cardinal(pi_Max)) * UInt64(Cardinal(Temp))) shr 32;
+end;
+
+function DelphiRandom: Extended; overload;
+begin
+  Result := DelphiRandom(High(LongInt)) / High(LongInt);
+end;
+
+procedure DelphiRandomize;
+begin
+  Randomize;
+  DelphiRandSeed := RandSeed;
 end;
 
 initialization
