@@ -128,7 +128,7 @@ procedure TDiaDlg.FormCreate(Sender: TObject);
 begin
   inherited;
   TitleHeight := WideFrame + 20;
-  InnerHeight := ClientHeight - TitleHeight - NarrowFrame;
+  InnerHeight := Height - TitleHeight - NarrowFrame;
   CaptionRight := CloseBtn.Left;
   CaptionLeft := ToggleBtn.Left + ToggleBtn.Width;
   InitButtons();

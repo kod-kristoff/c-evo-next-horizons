@@ -1,0 +1,7 @@
+I've made a map of the world, with some concessions to playability. 
+Starting positions are within normal range for random maps, but are chosen to be unevenly distributed.
+I used to test AI behavior in different conditions (room to expand, existence of neighbors).
+The human player starts in Italy, which I think is the most interesting starting position (in a normal game).
+Experienced players (interested in economy) should try the New Zealand starting position some time (by making it the favorite starting position)
+To show that New Zealand is playable, and to show the potential power of my favorite Wonder (The Lighthouse) I included a game against SETI instances.
+PS Sorry Argentineans, for cutting off a big chunk of the southern hemisphere

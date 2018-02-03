@@ -78,12 +78,23 @@ begin
     CreateDir(DataDir + 'Maps');
 
   // Copy appdata if not done yet
-  if FindFirst(HomeDir + 'AppData' + DirectorySeparator + 'Saved' + DirectorySeparator + '*.cevo', $21, src) = 0 then
+  if FindFirst(HomeDir + 'Saved' + DirectorySeparator + '*.cevo', $21, src) = 0 then
     repeat
       if (FindFirst(DataDir + 'Saved' + DirectorySeparator + src.Name, $21, dst) <> 0) or
         (dst.Time < src.Time) then
-        CopyFile(PChar(HomeDir + 'AppData' + DirectorySeparator + 'Saved' + DirectorySeparator + src.Name),
+        CopyFile(PChar(HomeDir + 'Saved' + DirectorySeparator + src.Name),
           PChar(DataDir + 'Saved' + DirectorySeparator + src.Name), false);
+      FindClose(dst);
+    until FindNext(src) <> 0;
+  FindClose(src);
+
+  // Copy appdata if not done yet
+  if FindFirst(HomeDir + 'Maps' + DirectorySeparator + '*.*', $21, src) = 0 then
+    repeat
+      if (FindFirst(DataDir + 'Maps' + DirectorySeparator + src.Name, $21, dst) <> 0) or
+        (dst.Time < src.Time) then
+        CopyFile(PChar(HomeDir + 'Maps' + DirectorySeparator + src.Name),
+          PChar(DataDir + 'Maps' + DirectorySeparator + src.Name), false);
       FindClose(dst);
     until FindNext(src) <> 0;
   FindClose(src);
