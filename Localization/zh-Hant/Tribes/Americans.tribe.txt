@@ -1,0 +1,120 @@
+#CHOOSE 美國
+#n 美國人
+#s 美國
+#a 美利堅
+#COLOR FFAFAF
+#SYMBOLS Nation1, 48
+#AGE0 StdCities, 6, StdTextures, 0, Nation1, 38
+#AGE1 StdCities, 6, StdTextures, 2, Nation1, 38
+#AGE2 StdCities, 4, StdTextures, 4, Nation1, 38
+#AGE3 StdCities, 5, StdTextures, 6, Nation1, 38
+
+#CITIES
+	Washington
+	New York
+	Boston
+	Philadelphia
+	Atlanta
+	Chicago
+	San Francisco
+	Buffalo
+	St. Louis
+	Detroit
+	New Orleans
+	Baltimore
+	Denver
+	Cincinnati
+	Dallas
+	Los Angeles
+	Kansas City
+	San Diego
+	Richmond
+	Las Vegas
+	Phoenix
+	Seattle
+	Albuquerque
+	Portland
+	Minneapolis
+	Houston
+	Riverside
+	Anaheim
+	Nassau-Suffolk
+	Tampa
+	Oakland
+	Pittsburgh
+	St. Louis
+	Cleveland
+	Newark
+	Fort Worth
+	San Jose
+	Orlando
+	Sacramento
+	Fort Lauderdale
+	Indianapolis
+	San Antonio
+	Norfolk
+	Columbus
+	Milwaukee
+	Charlotte
+	Paterson
+	Salt Lake City
+	Greensboro
+	Austin
+	Nashville-Davidson
+	Providence
+	Raleigh
+	Hartford
+	New Brunswick
+	Memphis
+	West Palm Beach
+	Long Branch
+	Jacksonville
+	Rochester
+	Grand Rapids
+	Oklahoma City
+	Louisville
+	Greenville
+	Dayton
+	Fresno
+	Birmingham
+	Honolulu
+	Albany
+	Tucson
+	Tulsa
+	Oxnard
+	Syracuse
+	Omaha
+	Tacoma
+	Akron
+	Knoxville
+	El Paso
+	Bakersfield
+	Allentown
+	Gary
+	Harrisburg
+	Scranton
+	Toledo
+	Jersey City
+	Baton Rouge
+	Youngstown
+	Springfield
+	Sarasota
+	Wilmington
+	Little Rock
+	Ann Arbor
+	McAllen
+	Stockton
+	Charleston
+	Wichita
+	New Haven
+	Mobile
+	Columbia
+	Colorado Springs
+
+#UNITS StdUnits
+	20,	040,	民兵
+
+#UNITS Nation1
+	8,	134,	輕騎兵
+	18,	136,	謝爾曼坦克
+	28,	202,	鐵甲艦

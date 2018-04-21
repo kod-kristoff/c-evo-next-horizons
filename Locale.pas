@@ -93,6 +93,8 @@ begin
   Languages.AddItem('en', 'English');
   Languages.AddItem('it', 'Italian');
   Languages.AddItem('ru', 'Russian');
+  Languages.AddItem('zh-Hant', 'Traditional Chinese');
+  Languages.AddItem('zh-Hans', 'Simplified Chinese');
 
   OKBtn.Caption := Phrases.Lookup('BTN_OK');
   CancelBtn.Caption := Phrases.Lookup('BTN_CANCEL');

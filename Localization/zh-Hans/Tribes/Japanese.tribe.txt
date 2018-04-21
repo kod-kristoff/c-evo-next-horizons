@@ -1,0 +1,117 @@
+#CHOOSE 日本
+#n 日本人
+#s 日本
+#a 日本
+#COLOR 57AB27
+#SYMBOLS Nation1, 45
+#AGE0 StdCities, 1, StdTextures, 0, Nation1, 35
+#AGE1 StdCities, 1, StdTextures, 2, Nation1, 35
+#AGE2 StdCities, 4, StdTextures, 4, Nation1, 35
+#AGE3 StdCities, 5, StdTextures, 6, Nation1, 35
+
+#CITIES
+	京都
+	大阪
+	东京
+	萨摩
+	鹿儿岛
+	奈良
+	名古屋
+	神户
+	长崎
+	横滨
+	下关
+	松山
+	札幌
+	函馆
+	伊势
+	富山
+	福岛
+	福冈
+	仙台
+	广岛
+	Suo
+	Bizen
+	Echizen
+	Izumi
+	Omi
+	Echigo
+	Kozuke
+	Sado
+	Izumo
+	Kawasaki
+	Kitakyushu
+	Chiba
+	Sakai
+	Kumamoto
+	Okayama
+	Sagamihara
+	Hamamatsu
+	Funabashi
+	Higashiosaka
+	Hachioji
+	Niigata
+	Amagasaki
+	Shizuoka
+	Himeji
+	Matsudo
+	Kanazawa
+	Urawa
+	Kawaguchi
+	Ichikawa
+	Utsunomiya
+	Omiya
+	Yokosuka
+	Oita
+	Kurashiki
+	Gifu
+	Hirakata
+	Toyonaka
+	Wakayama
+	Nishinomiya
+	Fukuyama
+	Fujisawa
+	Takatsuki
+	Asahikawa
+	Machida
+	Iwaki
+	Nagano
+	Toyohashi
+	Suita
+	Toyota
+	Takamatsu
+	Koriyama
+	Kawagoe
+	Okazaki
+	Kochi
+	Tokorozawa
+	Kashiwa
+	Akita
+	Naha
+	Miyazaki
+	Koshigaya
+	Aomori
+	Akashi
+	Morioka
+	Yokkaichi
+	Maebashi
+	Kasugai
+	Ichihara
+	Yao
+	Otsu
+	Tokushima
+	Ichinomiya
+	Kakogawa
+	Neyagawa
+	Ibaraki
+	Fukui
+	Yamagata
+	Hiratsuka
+	Mito
+	Sasebo
+
+#UNITS Nation1
+	1,	040,	民兵
+	5,	101,	武士
+	15,	102,	忍者
+	25,	300,	零式机

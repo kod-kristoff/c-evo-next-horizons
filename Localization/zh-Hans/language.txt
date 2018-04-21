@@ -1,0 +1,961 @@
+#GAME 进度 %d
+#MAP 地图 %d
+#BC 公元前 %d 年
+#AD 公元 %d 年
+#SHARE %d/%d
+#SHORTNAME #S
+#OWNED #A %s
+#GENCITY #S %d
+#GENMODEL #A 模块 %d
+#TILESIZE %dx%d
+
+'City Screen Text
+#HAPPINESS 安定
+#CONTROL 戒严
+#FAITH 信仰
+#UNREST 不安
+#HAPPINESSDEMAND 人口
+#HAPPINESSPLUS 剩余
+#STORAGE 存粮
+#FOOD 粮食
+#DEMAND 需求
+#SURPLUS 多余
+#LACK 缺乏
+#MATERIAL 原料
+#PROD 生产
+#POLL 污染
+#SUPPORT 维持
+#PROFIT 利润
+#TRADE 贸易
+#CORR 腐败
+#SCIENCE 科研
+#TAX 税收
+#LUX 奢侈
+#DUMP 废料
+#SUPUNITS 隶属部队
+
+'Class Screen Text
+#UNITOWNER (#A)
+#UNITSPEED 机动
+#UNITSTRENGTH 战斗
+#UNITTRANSPORT 运输
+#UNITCOST 造价
+#UNITBUILT 编制
+#UNITINTRO 始创于
+#UNITADOPT 引进于
+#UNITLOST 牺牲
+#UNITDESTROYED 阵亡
+#UNITAVAILABLE 现役
+#UNITINPROD 在建
+#UNITKNOWN 在役总计
+#UNITSPECIAL 特殊部队
+
+'Diplomacy Screen Text
+#FRSTATGOV 政体: %s
+#FRSTATPOP 人口: %d百万
+#FRSTATTER 领土: %d百万平方公里
+#FRSTATTECH 科技: %d%%
+#FRSTATEXP 探索: %d%%
+#FRLASTCONTACT 上次接触:
+#FRNOCONTACT 未曾接触，仅凭传闻
+#FRNOVISIT 尚未拜访
+#FROLDCIVILREP (从%s处获得)
+#FRNOCIVILREP (尚无国家报告)
+#FROURATT 我方态度: %s
+#FREXTINCT 灭绝于
+#FRTREATY 关系:
+#FRAND ,
+#FRCREDIBILITY (%d%% 信用度)
+#FRTREASURY 国库: %d%%c
+#FRRELATIONS 他国关系:
+
+'Other Dialog Text
+#PRESENT 当前部队
+#SHOWSTRENGTH 战斗力: %d/%d
+#RIVER 河流
+#INITUNIT 部队研发
+#TECHFOCUS 目标：%s
+#NEXUS 连接
+#SCIENCEREPORT_EXTINCT %s (灭绝)
+#MODELDRAFT 新部队研发 (%s)
+#TAXRATE 税收
+#MONEYGAINPOS +%d%%c
+#MONEYGAINNEG %d%%c
+#TECHGAIN +%d%%r
+#TECHWAIT %s (%d 回合)
+#COSTDIFF1 入门难度: -25%
+#COSTDIFF2 中间难度: ?
+#COSTDIFF3 变态难度: +25%
+#NATEXISTS (%s)
+#CONSCRIPTS 征募 %s
+#WONDEROF %s (%s)
+#WONDEROWNER (#A)
+#EXPIRED (已过期)
+#DESTROYED (已被毁)
+#NOWONDER 尚无奇迹建成
+#BUILDORDER 先选定城市类型，再设定建设次序：
+#BUILDREST 尚未设定次序的设施:
+#ENHANCE %s: %s 行动点
+#SHIPCOMP 飞船组件
+#SHIPPOW 动力舱
+#SHIPHAB 居住舱
+#SEARCH 搜索
+#RANMAP 随机地图
+#TWOTERRAINS %s / %s
+#MPMAP 多人模式
+#NOGAMES 尚无进度
+#AIT_ROUND 第%d回合,
+
+'Dialog Titles
+#TITLE_TRIBE 选择种族
+#TITLE_GOV 选择政府
+#TITLE_TECHSELECT 请指定科研项目(按住Shift单击看帮助)
+#TITLE_FARTECH 请设定科研目标
+#TITLE_CITIES #A城市
+#TITLE_EVENTS 在%s发生事件
+#TITLE_MODELS #A部队
+#TITLE_DIAGRAMS 历史图表
+#TITLE_SHIPS 殖民飞船
+#TITLE_SHIP #A 殖民飞船
+#TITLE_EMODELS 其他势力研发部队
+#TITLE_EDEFENSE 城市防御
+#TITLE_RATES 经济
+#TITLE_DRAFT 部队研发
+#TITLE_WONDERS 世界奇迹
+#TITLE_ENHANCE 地形改造
+#TITLE_CITYTYPES 城市类型
+#TITLE_PROJECT 请指定要建设的单位
+#TITLE_CITYNAME 城市名称
+#TITLE_MODELNAME 新型部队名称
+#TITLE_ERROR 错误
+#TITLE_SCIENCE 科技报告
+#TITLE_OFFERDELIVER 添加提议
+#TITLE_OFFERCOST 添加需求
+#TITLE_NUMBER 数字
+#TITLE_AMOUNT 数量
+#TITLE_CHOOSETECH 选择科技
+#TITLE_CHOOSEMODEL 选择设计单位
+#TITLE_CHOOSESHIPPART 选择类别
+#TITLE_CHOOSECITY 选择城市
+#TITLE_BOOKNAME 游戏名称
+#TITLE_MAPNAME 地图名称
+#TITLE_NATION #N
+#TITLE_SPYMISSION 秘密行动
+#TITLE_SUICIDE 自杀行动
+#FRMILREP 军事报告
+
+'Message Text
+#NOALTAI 未安装任何AI模块.\请到游戏官方网站下载相关AI模块, 或自行创建AI模块
+#REVOLUTION 在建立新政体之前, #a帝国将处于无政府状态, 这是革命前必经的阵痛, 是否确定革命?
+#AUTOREVOLUTION 新政体已经完成: \%s\\为了转换至该政体,必须废弃当前的政体形式, 经历一段无政府时期. 是否开始革命?
+#NOALTGOVS 发动一场革命, 可以将当前的政体 更换为其他政体. 但目前我们只拥有 奴隶专制一种政体形式, 无法更换新的政体.
+#AGE0 = %s =\石器时代已近尾声, 为了克服游牧生活的不便, 我们决定在这片沃土 上建立自己的家园, 永久定居于此, 并定名为%s.
+#AGE1 = %s =\千百年来, 统治阶层为了紧握特权, 关于这个世界的知识 一直由宗族长老传授支配. 现在一切都已改变. 由宗教信仰描绘的旧世界观, 已被经验和理性知识取代, 这就是最初的"科学"
+#AGE2 = %s =\大规模生产的出现, 使得自古以来权贵主宰财富的规律\被彻底打破.  生产的萌芽四处开花, 急速扩张的市场将\大量民间资金尽数纳入网中.  一个全新时代就此诞生.
+#AGE3 = %s =\人类古老的梦想终于成为现实. \我们现在的技术已经可以\将移民送往遥远的天外星球. \研究表明, 此项宏伟项目完成的关键\是特种金属资源的开放利用.
+#ENDTURN 本回合所有部队都已结束行动.\请选择结束回合, 进入下一回合.
+#CREDUP 我国的信用已升级为 "%s".
+#CREDDOWN 我国的信用已降级为 "%s".
+#FOREIGNCITY 最近所知隶属国:\#N\(最近情报获取于%s)
+#EXTINCTCITY 最近所知隶属国:\灭绝\(最近情报获取于%s)
+#CAPTURE #N占领了%s!
+#BOMBARD #N正在轰炸不设防的%s!
+#EXPEL #a领土上的其他势力部队已被驱逐.
+#DISPOSE %s\\将此建筑推倒重建？
+#SPDESTRUCTQUERY \(注意: 如果拆除太空港, 此地的殖民飞船项目将被废除!) 
+#SELL %s\\将此建筑变卖套现？
+#LOSEMAT 若完全更改建设类型, 当前建设中的项目将被变卖. %d%%p 的变卖价格为 %d%%c.
+#LOSEMAT3 若要更改为同类型的其他建设项目, 将损失1/3的建设进度. 是否继续?
+#DOUBLESTATEIMP %s\\%s已建有此项城市设施. 是否将在当前的城市重建该设施, 建成后变卖原有的同名设施? 
+#READY 该建设将在下回合开始时完成
+#NOMONEY 现有金钱不足,\无法提前完工.\(需要%d%%c, 现有%d%%c)
+#BUY 支付%d%%c, 让此项目在下回合完工?
+#EMIGRATE 继续征募移民部队, 有可能导致本城市荒废. 是否暂缓征募计划, 等到城市人口增长到 一定规模后再行征募?
+#ADDTOMAXSIZE 此城市的规模已达上限.
+#CITYMANAGEOFF 取消城市资源的自动分配?
+#GLIDERLOST 我方滑翔机在海面坠毁
+#PLANELOST 我方飞机燃油耗尽
+#DAMAGED_UTILIZE 整编受损的部队,所获效果将相应降低. 是否继续?
+#NOBB 我们尚未掌握在河流上搭建桥梁的科技
+#NOCITY 此地形不适合定居建城. 另觅一块可灌溉的土地定居吧.
+#NOCAPTURER 平民单位无法占领其他势力的城市.
+#NOBOMBARDER 没有携带武器, 不能轰炸城市.
+#ZOC 该部队不能在敌方控制的地区随意移动.
+#FASTATTACK 以%d%%的力量攻击目标么？
+#NOTIMELOADGROUND 该部队所剩行动点不足%s, 无法完成装运/卸运.
+#NOTIMELOADAIR 该飞机所剩行动点不足100, 无法在母舰上起降.
+#NOTIMEBOMBARD 轰炸城市需要100行动点.
+#NOTIMEEXPEL 该部队所剩行动点不足100, 无法驱逐.
+#NOROAD 该部队只能沿着道路或铁路移动.
+#NONAV 该船只没有远洋航行能力.
+#NOTRANSPORT 该船只没有运输能力.
+#FULLTRANSPORT 该船只的运载空间已满.
+#LOWFUEL 这架飞机燃油即将耗尽. 如果继续前行, 将无法返航. 是否继续前行?
+#LOWFUEL_GLIDER 这架滑翔机必须在回合结束时回到陆地, 如果继续向前, 有坠毁的危险. 是否继续?
+#UNREST_FOREIGN %s\\这里已是#a的地界. 如果继续向前, 将导致该部队隶属城市的居民不安. 是否继续?
+#UNREST_NOTOWN %s\\如果离开#s的领土, 将导致该部队隶属城市的居民不安. 是否继续?
+#NOATTACKER 此部队不是军事单位, 无法展开攻击.
+#ATTACKSUB 无法确定敌方潜艇的位置.
+#ATTACKSTEALTH 无法确定敌方隐形飞机的位置.
+#PEACE_NOATTACK 我们与#n签订了和约.
+#PEACE_NOMOVE 我们与#n签订了和约, 不能进入对方领土.
+#PEACE_NOWORK 这里是#a的领土!\我们和该国签有和约, 不得侵犯.
+#NOFOREIGNINFO 未发现新的情报.
+#FOREIGNINFO 获得新的情报, 内容如下:
+#DOSSIER_PREPARED 我们获得了#a的国家情报,包括#a的统计图表以及该国当前的科研报告.
+#VIOLATION 我方部队侵犯了#a的领土!\#N要求我们在%s之前将部队撤离.
+#EVIOLATION #N因违反和约条款一事 特向我方道歉. 他们答应在%s之前撤走部队.
+#WITHDRAW 我方部队被勒令从#a领土上撤离.
+#WONDERBUILT #N建成了新的世界奇迹:\%s
+#WONDERBUILTEXP 某国建成了新的世界奇迹:\%s\\但这项奇迹已经过时, 没有任何现实意义.
+#WONDERBUILTOWN 我国建成了新的世界奇迹:\%s
+#WONDERCAPT #N占领了一项世界奇迹:\%s
+#WONDERCAPTOWN 我国占领了一项世界奇迹:\%s
+#WONDEREXP 世界奇迹: %s 的效果已不复存在.
+#WONDERDEST 一项世界奇迹被摧毁了:\%s
+#COLDWAR 由于核战的世界性威胁, 所有势力的外交立场变得难以动摇, 交涉已不再有效. 全球冷战开始了.
+#COLDWAREND 冷战结束了.
+#SHIPBUILT #N刚完成了殖民飞船的某部件生产.
+#SHIPBITRADE1 #S 和
+#SHIPBITRADE2 #s 交换了各自的殖民飞船部件.
+#SHIPUNITRADE1 #N 从 #s 处获得了
+#SHIPUNITRADE2 件殖民飞船部件。
+#SHIPCAPTURE1 #N夺取了
+#SHIPCAPTURE2 #a的殖民飞船部件!
+#SHIPDESTROYED #N的殖民飞船项目被废除了
+#LOWFUNDS 国库已近枯竭, 如果不尽快采取措施, 我们只能靠变卖城市设施度日.\是否继续行动?
+#DISORDER %s将陷入骚乱.\是否继续行动?
+#DISORDER_UNREST 由于城市不安人口变为多数, %s将陷入无政府状态.\是否继续行动?
+#FAMINE %s有爆发饥荒的危险.\是否继续行动?
+#FAMINE_TILES %s有爆发饥荒的危险. 本城所属地块出产的粮食不足.\是否继续行动?
+#FAMINE_UNREST %s有爆发饥荒的危险. 为了控制民众不安情绪, 部分人口从资源生产转为城市戒严部队, 此举措将使本城所属地块出产的粮食不足.\\是否继续行动?
+#LOWSUPPORT 以%s的生产水平, 无法保证隶属部队的最低供给.\是否继续行动?
+#LOWSUPPORT_TILES 以%s的生产水平, 无法保证隶属部队的最低供给. 本城所属地块出产的原料不足.\是否继续行动?
+#LOWSUPPORT_UNREST 以%s的生产水平, 无法保证隶属部队的最低供给. 为了控制民众不安情绪, 部分人口从资源生产转为城市戒严部队, 此举措将使本城所属地块出产的原料不足.\\是否继续行动?
+#RESIGN 即将关闭此游戏.\是否保存当前的进度?
+#ENDTOUR 是否保存进度, 以便今后在超级用户模式中重新打开?
+#MODELAVAILABLE 新部队研发成功, 可随时投入生产.
+#RESEARCH_GENERAL 我方最新科研成果：%s！
+#GRLIB_GENERAL 从大图书馆中，我们获得了 %s 的知识！
+#ORACLEINCOME 收入: %d%%c
+#NOSELLAGAIN %s\\一回合内，每座城市只能变卖 或重建一种建筑
+#OUTOFCONTROL %s\\这座城市尚未恢复正常秩序
+#NOCHANGEINANARCHY 我国正处于无政府状态，所有城市建筑暂时失效.
+#EXTINCT = %s =\#n帝国毁灭了, 他们的光辉文明 从此被封存在传说中.
+#EXTINCTALL \\我们成为地球上唯一留存的文明
+#GAMEOVER #N 所有城市都已失守\\游戏结束
+#TIMEUP 游戏时间到.\尽管#n经济繁荣, 科技领先, 在世界各国中取得了一定的影响, 但终究没能掌握终极文明.\\游戏结束
+#TIMEUPSUPER 游戏时间到.\没有一个国家完成殖民飞船的建设.
+#SPACESHIP1 #N的殖民飞船已发射升空.\
+#SPACESHIP2 星际殖民计划的成功, 印证了该国文明的全面领先优势.\\游戏结束
+#MYSPACESHIP 历经无数的贫穷灾难, 无数的流血牺牲, 无数的时代更迭, 人类古老的梦想终于在我们手中变为现实. 我们的飞船向着太空中未知的世界飞去, 为后代的生活寻找全新的家园.\\恭喜赢得游戏胜利
+#SHAREDWIN (与 %s 共享胜利)
+#SHAREDWIN_CONCAT %s, %s
+#NOAI 未发现安装的AI插件！
+#FILENOTFOUND 未发现名为 "%s" 的文件. 
+#AIEXCEPTION AI插件%s中出现严重错误！
+#LOADERR 此游戏进度与当前的游戏版本不能兼容
+#NOFILENAME 无效的游戏进度名; 不允许出现字符'%s'
+#DLLERROR  %s 无法读取
+#AIERROR 未发现以 %s 为名的AI插件
+#MISSDEACT 玩家%d异常退出, 中止了游戏
+#CLIENTERROR 无法找到用户%s
+#LOADERROR 该游戏进度存在内部错误, 可能无法正常进行游戏.\\可将此进度发送给设计者, 上报错误.\是否登陆网站, 发送错误反馈信息?
+#NOSTARTPOS 该地图未定义玩家起始位置, 无法用其进行游戏.
+#TOOFEWTRIBES 竞争对手的数目不得超过游戏中定义的国家数量.
+#DELETEQUERY 游戏进度已删除
+#MAPDELETEQUERY 地图已删除
+#TURN #N\%s
+#SUPERTURN 超级用户\%s
+#FRNEWNATION 我们已同#n建立了外交联系.
+#FRCONTACT #n的使节想觐见大人.\是否接见?
+#FRREJECTED #N不愿接见我方使节.
+#FRCANCELQUERY_CEASEFIRE 撕毁停火条约?
+#FRCANCELQUERY_PEACE 向对方宣战么？
+#FRCANCELQUERY_FRIENDLY 终止与对方的和平条约?
+#FRCANCELQUERY_ALLIANCE 终止与对方的盟约?
+#FRCANCELBYREJECT_PEACE #使节:\我们的耐心已经耗尽.\准备迎战吧!
+#FRCANCELBYREJECT_FRIENDLY #使节:\从今日起, 和平条约已变成一纸空文!
+#FRCANCELBYREJECT_ALLIANCE #使节:\既然你方不肯合作, 那我们的盟约也无法继续了. 是你让我们没了选择的.
+#FRMYALLIANCE1 #N已向我方盟友开战, 宣战对象为
+#FRMYALLIANCE2 #n. 我们可以选择支持#a, 反对野蛮的战争行为.
+#FRENEMYALLIANCE #N决定支持其盟友, 加入与我方的战争. 我方先前与#N的条约自动失效.
+#FRANARCHY #a处于无政府状态, 我方使节找不到途径与对方当局接触.
+#FRMYANARCHY 我们正处于无政府状态, 必须等到局势稳定后, 才能开展外交活动.
+#FRCOLDWAR 目前处于冷战期, 无法与其他势力交涉.
+#MAX2WANTS 一回合交涉中最多提出两项要求.
+#MAX2OFFERS 一回合交涉中最多给出两项提议.
+#NOOFFER 该提议无效！
+#CANCELTREATYRUSH 在3个回合内，与同一国家最多终止一项外交协议.
+#NOSPACEPORT 我方没有太空港, 无法正常接收对方的飞船部件, 是否执意接收?
+#SUICIDE 让这些可怜的家伙\踏上黄泉不归路?
+#RATES 请制定国民经济的分配比例 
+#NORATES 自由女神像\已经生效.
+
+'Diplomatic Statements, do not use '\'!
+#FRSTART_NOTREATY 谨代表#n民来此与贵国交涉.
+#FRSTART_PEACE 谨代表#n向阁下致敬, 有些事情想请阁下斟酌.
+#FRCANCELTREATY_PEACE 我们正式向贵国宣战.
+#FRCANCELTREATY_FRIENDLY 我们要与贵国终止友好关系.
+#FRCANCELTREATY_ALLIANCE 两国继续结盟已毫无意义, 从今起正式解除盟约.
+#FRNOTICE 我们再也不愿忍受 尔等反复小人的卑劣行径.
+#FRBREAK 没必要继续谈判了. 下次再约时间吧.
+#FROFFER 我们愿意用\-%s\来交换贵国的\-%s
+#FRPRESENT 我们愿将:\-%s 奉送给贵国作为礼物.
+#FRDEMAND_STRONG 把\-%s 交出来，\否则有你们受的!
+#FRDONE 还有别的要说么?
+#FRCEASEFIRE 我们想签署停战协议.
+#FRPEACE 为解决两国间无休止的纷争, 互相承认对方的国界, 我方建议签署一份永久性和平条约. 是否愿意签字?
+#FRFRIENDLY 我们对#a 先进的文化技术仰慕已久. 让我们共署友好条约, 在友善的基础上交流发展吧.
+#FRALLIANCE 为了加强两国人民的紧密合作, 是否愿意与我方签署同盟协定, 今后联手对抗来犯的敌人?
+#FRACCEPTCEASEFIRE 我们接受你的条件, 暂缓行动.
+#FRACCEPTTREATY 我们答应你, 希望这份条约能在两国 交流史上写下崭新的篇章.
+#FRNOTACCEPTTREATY 若与贵国签署条约, 对#n而言并无好处.
+#FRENDTREATY_PEACE 终止和平条约
+#FRENDTREATY_FRIENDLY 终止友好条约
+#FRENDTREATY_ALLIANCE 终止盟约
+#FRACCEPTOFFER 这条件很公平, 我们同意了.
+#FRACCEPTPRESENT #N很高兴收下这份礼物.
+#FRACCEPTDEMAND_STRONG 为了维持彼此的友好关系, 我们决定同意你的条件.
+#FRNOTACCEPTOFFER 这项提议对我方并无助益.
+#FRNOTACCEPTPRESENT #N不需要这样一份礼物.
+#FRNOTACCEPTDEMAND_STRONG 你太贪婪, 别白日做梦了.
+#FRDELCHOICE 我们对贵国的\-%s 非常感兴趣.\请问贵国的交换条件是什么?
+#FRCOSTCHOICE 如果诚心要我们的\-%s,\请问贵国想拿什么来交换呢?
+#FRBYE 现在不行, 本次谈判就此为止. 再见.
+#PRICE_CHOOSE 选择的价格
+#PRICE_CIVIL #n的国家情报
+#PRICE_MIL #n的军事情报
+#PRICE_MAP #a的世界地图
+#PRICE_SHIPCOMP %d 殖民飞船组件
+#PRICE_SHIPPOW %d 动力舱
+#PRICE_SHIPHAB %d 居住舱
+#PRICE_TRIBUTE 每回合%d%%c
+#PRICE_ALLTECH #a所有的科技成果
+#PRICE_ALLMODEL #a所有的研发部队
+#PRICE_CONCAT %s\-%s
+#PRICECAT_ALLTECH 所有科技成果
+#PRICECAT_ALLMODEL 所有部队研发
+
+'Button Captions
+#BTN_OK 确定
+#BTN_CANCEL 取消
+#BTN_YES 是
+#BTN_NO 否
+#BTN_INFO 帮助
+
+'Button Tooltips
+#BTN_SELECT 选择
+#BTN_PAGE 下页
+#BTN_SUPPORT 隶属部队
+#BTN_IMPRS 城市设施
+#BTN_CLASSES 部队
+#BTN_WONDERS 奇迹
+#BTN_BUY 购买
+#BTN_DELETE 删除
+#BTN_RENAME 更名
+#BTN_OBSOLETE 停止生产
+#BTN_NONOBSOLETE 允许生产
+#BTN_ALLOWCONSCRIPTS 允许征募
+#BTN_NOCONSCRIPTS 停止征募
+#BTN_ENDTURN 结束回合！
+#BTN_SKIP 不再显示其他势力移动
+#BTN_NOAUTOMOVE 停止向目标移动
+#BTN_STOP 停止
+#BTN_NEGO 继续谈判
+#BTN_DIALOG 联络此国
+#BTN_BREAK 终止本次谈判
+#BTN_PASS 结束本方提议
+#BTN_CNTREATY 撕毁协议
+#BTN_ACCEPT 接受提议
+#BTN_NOTICE 已获悉决定
+#BTN_REPLAY 历史重放
+#BTN_RENGAME 游戏更名
+#BTN_DELGAME 游戏删除
+#BTN_RENMAP 地图更名
+#BTN_DELMAP 地图删除
+#BTN_CONTENTS 目录
+#BTN_BACK 返回
+#BTN_SEARCH 搜索
+#BTN_WANTCEASEFIRE 要求停火
+#BTN_OFFERCEASEFIRE 提议停火
+#BTN_WANTPEACE 要求和平
+#BTN_OFFERPEACE 提议和平
+#BTN_WANTENDPEACE 要求中止和平
+#BTN_OFFERENDPEACE 提议中止和平
+#BTN_WANTFRIENDLY 要求友好相处
+#BTN_OFFERFRIENDLY 提议友好相处
+#BTN_WANTALLIANCE 要求联盟
+#BTN_OFFERALLIANCE 提议联盟
+#BTN_WANTENDALLIANCE 要求解除联盟
+#BTN_OFFERENDALLIANCE 提议解除联盟
+#BTN_NEGOEARLIER 早先的部分
+#BTN_NEGOLATER 后来的部分
+
+'Morphing Menu Entries
+#SUPER 超级用户
+#HUMAN 本地玩家
+#AIT 电脑对决
+#RANDOMAI 随机选择AI模块
+#BTN_FOUND 定居
+#BTN_ADD 加入城市
+#BTN_SETHOME 改为本城部队
+#BTN_MOVEHOME 返回最近城市
+#BTN_BUILDROAD 修建道路
+#BTN_BUILDBRIDGE 架设道路桥
+#BTN_BUILDRR 修建铁路
+#BTN_BUILDRRBRIDGE 架设铁路桥
+#BTN_CLEAR 清除森林
+#BTN_DRAIN 抽干沼泽
+#BTN_UNDESERT 整为平原
+#FARTECH 设定目标
+#NOFARTECH 没有目标
+#UTILIZE 参建
+#INTEGRATE 整编
+
+'Busy Messages
+#BUSY_START 创建世界…
+#BUSY_MOD %s载入中…
+#BUSY_MODLH 图形初始化…
+#BUSY_INIT 玩家初始化…
+#BUSY_LOAD 载入游戏进度…
+
+'Map Editor
+#MAP_START 电脑种族初始位置
+#MAP_PREFSTART 玩家种族初始位置
+#MAP_RANDOM 放弃当前的地图, 重新随机生成新的地图？
+#MAP_CLOSE 选择关闭当前的地图。\是否保存？
+
+#STARTCONTROLS
+退出
+开始
+读取
+新建游戏
+读取进度
+世界尺寸：
+陆地比例：
+自定义玩家
+年代：
+%s的难度
+年限：
+地图编辑
+编辑
+帮助
+难度：
+竞争种族：
+AI模块：
+
+#AUTODIFF
+入门
+简单
+正常
+困难
+变态
+
+#CONTROLS
+取消命令
+关闭
+经济及税收…
+长城保护区域
+查看地形
+世界奇迹…
+游戏指南
+测试
+军事情报…
+AI测试信息…
+城市类型…
+界面居中
+目标移动
+部队命令
+部队信息
+建立军事基地
+更换地形
+清除污染
+掠夺
+建造要塞
+历史图表…
+驻防警戒
+开辟运河
+搭乘运输工具
+稍后行动
+原地等待
+显示方位代码
+地形建设
+选项
+部队移动
+窗口模式显示
+回合结束提示
+视野外地区变暗
+城市报告选项
+城市名称
+国家边界
+城市报告…
+科研报告…
+地形改造
+地形改造…
+殖民飞船…
+快速宏操作
+引水灌溉
+开辟农场
+植树造林
+开采矿藏
+创建部队
+网格
+AI测试地图
+外国部队…
+政治版图
+只显示攻击及占领行动
+不显示
+跳过20回合
+国家情报…
+作弊
+所有科技研发成功
+每回合生产快速完工
+每回合科技快速研得
+每回合城市持续增长
+打开所有地图
+所有国家相识
+运行至游戏结束
+他国城市…
+城市报告列表
+城市报告屏幕
+名称
+无需现代资源
+恢复休整
+放出运输部队
+随机地图
+解散
+装载运输部队
+对手移动
+慢速
+快速
+极快
+慢速
+快速
+音效
+关闭
+开启(默认音效)
+开启(替代音效)
+滚屏
+慢速
+快速
+关闭
+访问官方网站
+发动政体革命！
+盟军行动
+慢速
+快速
+不显示
+只显示巡逻、攻击及占领行动
+只显示巡逻、攻击及占领行动
+地块尺寸
+
+#ADVANCES
+智能飞行
+两栖作战
+天文学
+原子学说
+汽车
+弹道学
+银行业
+桥梁建设
+青铜铸造
+葬礼仪式
+化学
+骑士制度
+复合材料
+法律条文
+组合兵种
+内燃机
+共产主义
+计算机
+征兵制度
+建筑
+企业结构
+星际飞行
+货币
+民主主义
+经济学
+发电
+电子学
+工程学
+环境保护
+车轮
+炸药
+飞行
+情报工作
+火药
+骑术
+脉冲驱动
+产业化
+智能武器
+发明
+铸铁冶炼
+激光
+核能
+文学
+互联网
+电磁学
+地图绘制
+制砖
+规模量产
+数学
+医药
+冶金
+小型化
+机动作战
+君主政治
+神秘主义
+海上导航
+核裂变
+哲学
+物理
+塑料
+诗歌
+制陶
+无线电
+再循环
+低温冷却
+一神论
+共和主义
+机器人
+喷气驱动
+铁路
+卫生设施
+科学
+书写
+航海
+模拟生态
+隐形技术
+蒸汽引擎
+钢铁
+人造食品
+战术
+神学
+重力学说
+贸易
+星际殖民
+大学
+智能火箭
+尚武习俗
+字母
+多神论
+提纯
+电脑科技
+纳米技术
+材料科学
+人工智能
+
+#IMPROVEMENTS
+金字塔
+宙斯神庙
+空中花园
+太阳神像
+巨型灯塔
+大图书馆
+神谕启示
+孙武学院
+达芬奇工房
+麦哲伦远征
+圣母礼拜堂
+*
+牛顿大学
+巴赫大教堂
+*
+自由女神像
+埃菲尔铁塔
+三峡大坝
+新干线特快
+曼哈顿计划
+近地空间站
+*
+*
+*
+*
+*
+*
+*
+商品贸易
+兵营
+谷仓
+寺庙
+市场
+图书馆
+法院
+城墙
+水渠
+银行
+教堂
+大学
+港口
+剧院
+工厂
+特区
+回收站
+火电站
+水电站
+核电站
+海上平台
+市政厅
+排污管
+超市
+立交
+实验室
+防空炮
+碉堡
+机场
+船坞
+宫殿
+长城
+大剧场
+天文台
+军事学校
+作战掩体
+水藻农场
+股票交易
+太空港
+殖民飞船组件
+飞船动力舱
+飞船居住舱
+
+#FEATURES
+武器(攻)
+装甲(防)
+机动(移)
+海运
+母舰
+涡轮
+空袭
+燃油
+空运
+海上导航
+雷达声纳
+水下潜航
+远程炮击
+快速行军
+船上救生
+额外负重
+防空武器
+间谍飞机
+蒸汽动力
+核子动力
+喷气引擎
+隐形技术
+狂热分子
+一击制敌
+气吞斗牛
+久经沙场
+流水作业
+
+#TERRAIN
+远洋
+近海
+草场
+沙漠
+荒地
+苔原
+冰原
+沼泽
+丛林
+森林
+丘陵
+高山
+*
+渔场
+平原
+绿洲
+小麦
+黄金
+兽皮
+泥炭
+水果
+猎物
+美酒
+铁矿
+*
+锰矿
+*
+石油
+铝土
+燃气
+*
+*
+乌木
+矿泉
+煤炭
+钻石
+恶土
+钴矿
+铀矿
+水银
+
+#DOMAIN
+陆军
+海军
+空军
+
+#EXPERIENCE
+新兵
+受训
+历练
+老兵
+精锐
+
+#UNITSTATUS
+驻防状态
+轰炸装备
+山区移动
+征募部队
+撤离部队
+*
+*
+*
+运载部队
+导致不安
+原地停留
+*
+向指定目标移动
+地形改造
+受损恢复
+
+#GOVERNMENT
+无政府
+奴隶制
+君主制
+共和制
+宗教制
+共产制
+民主制
+未来制
+
+#TREATY
+交战
+停战
+和平
+友好
+联盟
+
+#HAVETREATY
+与#n建交
+与#n停战
+与#n和平
+与#n友好
+#与#n联盟
+
+#ATTITUDE
+敌对
+冷淡
+不合
+中立
+接受
+友善
+热情
+
+#CREDIBILITY
+言而无信
+捉摸不定
+重诺守信
+言出必行
+
+#CITYEVENTS
+市民骚乱
+生产完工
+人口增长
+人口减少
+部队解散
+设施变卖
+生产遭毁
+达到上限
+出现污染
+城市被围
+奇迹重复
+移民延期
+城市建立
+城市安复
+城市被占
+无效城市类型
+
+#CITYTYPE
+普通型城市
+科技型城市
+工业型城市
+超级大都市
+
+#DIAGRAM
+人口
+领土
+军事
+科技
+探索
+耕作
+
+#JOBRESULT
+*
+道路
+铁路
+清除森林
+灌溉
+农场
+植树造林
+采矿
+运河
+地形更改
+要塞
+清除污染
+军事基地
+掠夺
+定居
+道路桥
+铁路桥
+移除设施
+变为平原
+抽干沼泽
+
+#ARMYLOST
+#A部队被歼灭
+#A舰队被歼灭
+#A部队集群被歼灭
+
+#SPYMISSION
+破坏生产
+窃取地图
+获得第三国情报
+打听国家情报
+打听军事情报
+
+#WANT
+索要国家情报
+索要军事情报
+索要世界地图
+*
+索要科技成果
+索要部队研发
+索要礼金
+*
+*
+*
+索要飞船部件
+让对方自行出价
+
+#OFFER
+奉送国家情报
+奉送军事情报
+奉送世界地图
+*
+奉送科技成果
+奉送部队研发
+奉送礼金
+*
+*
+*
+奉送飞船部件
+让对方自行要价
+
+#CITYMANAGETYPE
+手动分配
+科研最大化
+科研优先
+增长最大化
+生产优先
+生产最大化
+

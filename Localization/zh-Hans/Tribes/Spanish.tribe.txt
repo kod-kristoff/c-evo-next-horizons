@@ -1,0 +1,122 @@
+#CHOOSE 西班牙
+#n 西班牙人
+#s 西班牙
+#a 西班牙
+#COLOR FFFF00
+#SYMBOLS Nation1, 47
+#AGE0 StdCities, 3, StdTextures, 0, Nation1, 37
+#AGE1 StdCities, 3, StdTextures, 2, Nation1, 37
+#AGE2 StdCities, 4, StdTextures, 4, Nation1, 37
+#AGE3 StdCities, 5, StdTextures, 6, Nation1, 37
+
+#CITIES
+	马德里
+	塞维利亚
+	托莱多
+	科多巴
+	瓦伦西亚
+	萨拉曼卡
+	巴塞罗那
+	瓦拉多利德
+	萨拉戈萨
+	卡迪兹
+	毕尔巴鄂
+	格林纳达
+	马拉加
+	潘普罗那
+	维戈
+	阿维拉
+	列昂
+	穆尔西亚
+	奥维耶多
+	桑坦德
+	Burgos
+	Ciudad Rodrigo
+	Calatrava
+	Cartagena
+	Las Palmas
+	Palma de Mallorca
+	Alicante
+	Gijon
+	L'Hospitalet
+	A Coruna
+	Vitoria-Gasteiz
+	Santa Cruz de Tenerife
+	Badalona
+	Elche
+	Mostoles
+	Sabadell
+	Jerez de la Frontera
+	Donostia-San Sebastian
+	Fuenlabrada
+	Terrassa
+	Leganes
+	Alcala de Henares
+	Almeria
+	Getafe
+	Albacete
+	Alcorcon
+	Castellon de la Plana
+	Huelva
+	Badajoz
+	La Laguna
+	Logrono
+	Santa Coloma de Gramanet
+	Tarragona
+	Lleida
+	Jaen
+	Marbella
+	Ourense
+	Mataro
+	Algeciras
+	Dos Hermanas
+	Torrejon de Ardoz
+	Barakaldo
+	Santiago de Compostela
+	Alcobendas
+	Reus
+	Telde
+	Lugo
+	San Fernando
+	Getxo
+	Aviles
+	Caceres
+	Cornella
+	Palencia
+	Ferrol
+	Sant Boi
+	Coslada
+	Parla
+	Lorca
+	El Puerto de Santa Maria
+	Talavera de la Reina
+	Pontevedra
+	Ceuta
+	Girona
+	Melilla
+	Pozuelo de Alarcon
+	Guadalajara
+	Zamora
+	Torrent
+	Manresa
+	Ponferrada
+	El Prat
+	Chiclana de la Frontera
+	Sanlucar de Barrameda
+	Ciudad Real
+	La Linea de la Concepcion
+	Rubi
+	Alcoy
+	Gandia
+	San Sebastian de los Reyes
+	Las Rozas de Madrid
+	Torrevieja
+	Alcala de Guadaira
+
+#UNITS StdUnits
+	22,	040,	民兵
+
+#UNITS Nation1
+	7,	103,	火枪手
+	17,	133,	轻骑兵
+	27,	201,	军舰

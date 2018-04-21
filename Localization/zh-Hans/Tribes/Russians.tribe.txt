@@ -1,0 +1,121 @@
+#CHOOSE 俄国
+#n 俄国人
+#s 俄国
+#a 俄罗斯
+#COLOR E70000
+#SYMBOLS Nation2, 94
+#AGE0 StdCities, 2, StdTextures, 0, Nation2, 84
+#AGE1 StdCities, 2, StdTextures, 2, Nation2, 84
+#AGE2 StdCities, 4, StdTextures, 4, Nation2, 84
+#AGE3 StdCities, 5, StdTextures, 6, Nation2, 84
+
+#CITIES
+	莫斯科
+	圣彼得堡
+	基辅
+	明斯克
+	敖德萨
+	斯维尔德洛夫斯克
+	海参崴
+	诺夫哥罗德
+	哈尔科夫
+	克拉斯诺亚斯克
+	罗斯托夫
+	库尔斯克
+	萨马拉
+	马格尼托哥尔斯克
+	雅罗斯拉沃
+	新西伯利亚
+	鄂木斯克
+	斯摩棱斯克
+	彼尔姆
+	沃罗涅什
+	Sevastopol
+	Ufa
+	Krivoy Rog
+	Niznij Novgorod
+	Chelabinsk
+	Dnipropetrovsk
+	Donetsk
+	Volgograd
+	Voronezh
+	Saratov
+	Zaporizhzhya
+	Lviv
+	Toljatti
+	Simbirsk
+	Izhevsk
+	Krasnodar
+	Chabarovsk
+	Irkutsk
+	Barnaul
+	Novokuzneck
+	Penza
+	Razan
+	Orenburg
+	Lipeck
+	Naberezhnyje Chelny
+	Mykolayiv
+	Tula
+	Gomel
+	Tumen
+	Kemerovo
+	Mariupol
+	Astrachan
+	Tomsk
+	Kirov
+	Ivanovo
+	Luhansk
+	Bransk
+	Cheboksary
+	Tver
+	Nizhnij Tagil
+	Makiyivka
+	Murmansk
+	Mogilev
+	Kurgan
+	Archangelsk
+	Sochi
+	Vitebsk
+	Vinnytsya
+	Orel
+	Stavropol
+	Simferopol
+	Kaluga
+	Vladimir
+	Belgorod
+	Machachkala
+	Kherson
+	Cherepovec
+	Poltava
+	Saransk
+	Tambov
+	Chita
+	Vladikavkaz
+	Grodno
+	Vologda
+	Chernihiv
+	Komsomolsk-na-Amure
+	Cherkasy
+	Sumy
+	Horlivka
+	Volzhskij
+	Kostroma
+	Taganrog
+	Zhytomyr
+	Petrozavodsk
+	Dzerzhinsk
+	Surgut
+	Orsk
+	Angarsk
+	Sterlitamak
+
+#UNITS Nation2
+	70,	010,	移民者
+	71,	040,	民兵
+	72,	102,	长矛手
+	73,	104,	步枪手
+	74,	133,	哥萨克骑兵
+	75,	134,	轻骑兵
+	76,	135,	T-34坦克
+	77,	301,	米格-29

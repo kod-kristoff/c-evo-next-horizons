@@ -1,0 +1,121 @@
+#CHOOSE 俄國
+#n 俄國人
+#s 俄國
+#a 俄羅斯
+#COLOR E70000
+#SYMBOLS Nation2, 94
+#AGE0 StdCities, 2, StdTextures, 0, Nation2, 84
+#AGE1 StdCities, 2, StdTextures, 2, Nation2, 84
+#AGE2 StdCities, 4, StdTextures, 4, Nation2, 84
+#AGE3 StdCities, 5, StdTextures, 6, Nation2, 84
+
+#CITIES
+	Moskva
+	Sankt-Peterburg
+	Kiev
+	Minsk
+	Odesa
+	Sverdlovsk
+	Vladivostok
+	Novgorod
+	Kharkov
+	Krasnojarsk
+	Rostov-na-Donu
+	Kursk
+	Samara
+	Magnitogorsk
+	Jaroslavl
+	Novosibirsk
+	Omsk
+	Smolensk
+	Perm
+	Voronezh
+	Sevastopol
+	Ufa
+	Krivoy Rog
+	Niznij Novgorod
+	Chelabinsk
+	Dnipropetrovsk
+	Donetsk
+	Volgograd
+	Voronezh
+	Saratov
+	Zaporizhzhya
+	Lviv
+	Toljatti
+	Simbirsk
+	Izhevsk
+	Krasnodar
+	Chabarovsk
+	Irkutsk
+	Barnaul
+	Novokuzneck
+	Penza
+	Razan
+	Orenburg
+	Lipeck
+	Naberezhnyje Chelny
+	Mykolayiv
+	Tula
+	Gomel
+	Tumen
+	Kemerovo
+	Mariupol
+	Astrachan
+	Tomsk
+	Kirov
+	Ivanovo
+	Luhansk
+	Bransk
+	Cheboksary
+	Tver
+	Nizhnij Tagil
+	Makiyivka
+	Murmansk
+	Mogilev
+	Kurgan
+	Archangelsk
+	Sochi
+	Vitebsk
+	Vinnytsya
+	Orel
+	Stavropol
+	Simferopol
+	Kaluga
+	Vladimir
+	Belgorod
+	Machachkala
+	Kherson
+	Cherepovec
+	Poltava
+	Saransk
+	Tambov
+	Chita
+	Vladikavkaz
+	Grodno
+	Vologda
+	Chernihiv
+	Komsomolsk-na-Amure
+	Cherkasy
+	Sumy
+	Horlivka
+	Volzhskij
+	Kostroma
+	Taganrog
+	Zhytomyr
+	Petrozavodsk
+	Dzerzhinsk
+	Surgut
+	Orsk
+	Angarsk
+	Sterlitamak
+
+#UNITS Nation2
+	70,	010,	移民者
+	71,	040,	民兵
+	72,	102,	長矛手
+	73,	104,	步槍手
+	74,	133,	哥薩克騎兵
+	75,	134,	輕騎兵
+	76,	135,	T-34坦克
+	77,	301,	米格-29

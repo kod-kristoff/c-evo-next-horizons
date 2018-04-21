@@ -1,0 +1,120 @@
+#CHOOSE 美国
+#n 美国人
+#s 美国
+#a 美利坚
+#COLOR FFAFAF
+#SYMBOLS Nation1, 48
+#AGE0 StdCities, 6, StdTextures, 0, Nation1, 38
+#AGE1 StdCities, 6, StdTextures, 2, Nation1, 38
+#AGE2 StdCities, 4, StdTextures, 4, Nation1, 38
+#AGE3 StdCities, 5, StdTextures, 6, Nation1, 38
+
+#CITIES
+	华盛顿
+	纽约
+	波士顿
+	费城
+	亚特兰大
+	芝加哥
+	旧金山
+	布法罗
+	洛杉矶
+	底特律
+	新奥尔良
+	巴尔的摩
+	丹佛
+	辛辛那提
+	达拉斯
+	迈阿密
+	堪萨斯
+	圣迭戈
+	里士满
+	拉斯维加斯
+	Phoenix
+	Seattle
+	Albuquerque
+	Portland
+	Minneapolis
+	Houston
+	Riverside
+	Anaheim
+	Nassau-Suffolk
+	Tampa
+	Oakland
+	Pittsburgh
+	St. Louis
+	Cleveland
+	Newark
+	Fort Worth
+	San Jose
+	Orlando
+	Sacramento
+	Fort Lauderdale
+	Indianapolis
+	San Antonio
+	Norfolk
+	Columbus
+	Milwaukee
+	Charlotte
+	Paterson
+	Salt Lake City
+	Greensboro
+	Austin
+	Nashville-Davidson
+	Providence
+	Raleigh
+	Hartford
+	New Brunswick
+	Memphis
+	West Palm Beach
+	Long Branch
+	Jacksonville
+	Rochester
+	Grand Rapids
+	Oklahoma City
+	Louisville
+	Greenville
+	Dayton
+	Fresno
+	Birmingham
+	Honolulu
+	Albany
+	Tucson
+	Tulsa
+	Oxnard
+	Syracuse
+	Omaha
+	Tacoma
+	Akron
+	Knoxville
+	El Paso
+	Bakersfield
+	Allentown
+	Gary
+	Harrisburg
+	Scranton
+	Toledo
+	Jersey City
+	Baton Rouge
+	Youngstown
+	Springfield
+	Sarasota
+	Wilmington
+	Little Rock
+	Ann Arbor
+	McAllen
+	Stockton
+	Charleston
+	Wichita
+	New Haven
+	Mobile
+	Columbia
+	Colorado Springs
+
+#UNITS StdUnits
+	20,	040,	民兵
+
+#UNITS Nation1
+	8,	134,	轻骑兵
+	18,	136,	谢尔曼坦克
+	28,	202,	铁甲舰

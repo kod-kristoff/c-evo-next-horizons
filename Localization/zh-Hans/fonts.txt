@@ -1,0 +1,14 @@
+#NORMAL
+Î¢ÈíÑÅºÚ, 15
+
+#SMALL
+Î¢ÈíÑÅºÚ, 13
+
+#TINY
+Î¢ÈíÑÅºÚ, 11B
+
+#CAPTION
+Î¢ÈíÑÅºÚ, 17
+
+#BUTTON
+Î¢ÈíÑÅºÚ, 17B

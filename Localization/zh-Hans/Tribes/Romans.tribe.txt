@@ -1,0 +1,90 @@
+#CHOOSE 古罗马
+#n 罗马人
+#s 罗马
+#a 罗马
+#COLOR FFFFFF
+#SYMBOLS Nation1, 49
+#AGE0 StdCities, 6, StdTextures, 0, Nation1, 39
+#AGE1 StdCities, 6, StdTextures, 2, Nation1, 39
+#AGE2 StdCities, 4, StdTextures, 4, Nation1, 39
+#AGE3 StdCities, 5, StdTextures, 6, Nation1, 39
+
+#CITIES
+	罗马
+	奥斯蒂亚
+	帕伊斯滕
+	卡普阿
+	塔奎尼亚
+	尼阿波利斯
+	庞培
+	厄考拉农
+	阿巴隆加
+	阿奎雷亚
+	塔拉西纳
+	卡西嫩
+	贝内文屯
+	萨图尼亚
+	克卢修
+	阿雷田
+	卡西里嫩
+	热努亚
+	梅迪奥拉农
+	萨巴蒂亚
+	Asculum
+	Populonia
+	Castrum Novum
+	Fanum Fortunae
+	Venusia
+	Brundisium
+	Canusium
+	Panormus
+	Opitergium
+	Altinum
+	Patavium
+	Regium Lepicum
+	Augusta Taurinorum
+	Cremona
+	Mutina
+	Forum Livi
+	Forum Sempronii
+	Florentia
+	Pisae
+	Reate
+	Amiternum
+	Tarentum
+	Pometia
+	Tusculum
+	Nomentum
+	Lavinium
+	Signia
+	Antium
+	Velitrae
+	Praeneste
+	Aquilonia
+	Bonomia
+	Patavium
+	Volaterrae
+	Vetulonia
+	Potentia
+	Pisaurum
+	Aeclanum
+	Grumentum
+	Liternum
+	Puteoli
+	Fabrateria Nova
+	Sipontum
+	Buxentum
+	Castrum Hannibalis
+	Minervium
+	Augusta Praetoria
+	Brixia
+	Sena Iulia
+	Hispellum
+
+#UNITS StdUnits
+	22,	040,	民兵
+
+#UNITS Nation1
+	9,	101,	罗马步兵
+	19,	131,	罗马骑兵
+	29,	200,	多桨船

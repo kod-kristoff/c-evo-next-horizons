@@ -1,0 +1,149 @@
+#CHOOSE 法兰西
+#n 法兰西人
+#s 法国
+#a 法兰西
+#COLOR 576FC7
+#SYMBOLS Nation1, 43
+#AGE0 StdCities, 2, StdTextures, 0, Nation1, 33
+#AGE1 StdCities, 2, StdTextures, 2, Nation1, 33
+#AGE2 StdCities, 4, StdTextures, 4, Nation1, 33
+#AGE3 StdCities, 5, StdTextures, 6, Nation1, 33
+
+#CITIES
+	巴黎
+	奥尔良
+	里昂
+	兰斯
+	图尔
+	马赛
+	沙特尔
+	阿维尼翁
+	摩纳哥
+	鲁昂
+	格勒诺布尔
+	第戎
+	亚眠
+	瑟堡
+	波瓦第尔
+	图卢兹
+	巴约讷
+	斯特拉斯堡
+	布雷斯特
+	波尔多
+	里尔
+	尼斯
+	南特
+	圣埃蒂安
+	蒙彼利埃
+	雷恩
+	勒阿弗尔
+	土伦
+	Angers
+	Le Mans
+	Clermont-Ferrand
+	Aix-en-Provence
+	Limoges
+	Nimes
+	Villeurbanne
+	Metz
+	Caen
+	Mulhouse
+	Boulogne-Billancourt
+	Perpignan
+	Nancy
+	Roubaix
+	Argenteuil
+	Tourcoing
+	Montreuil
+	Saint-Denis
+	Versailles
+	Nanterre
+	Creteil
+	Aulnay-sous-Bois
+	Pau
+	Vitry-sur-Seine
+	Calais
+	Colombes
+	La Rochelle
+	Asnieres
+	Champigny-sur-Marne
+	Rueil-Malmaison
+	Saint-Maur-des-Fosses
+	Bourges
+	Antibes
+	Dunkerque
+	Courbevoie
+	Beziers
+	Cannes
+	Saint-Nazaire
+	Colmar
+	Villeneuve-d'Ascq
+	Valence
+	Lorient
+	Aubervilliers
+	Drancy
+	Merignac
+	Troyes
+	La Seyne-sur-Mer
+	Quimper
+	Antony
+	Saint-Quentin
+	Neuilly-sur-Seine
+	Noisy-le-Grand
+	Sarcelles
+	Niort
+	Pessac
+	Venissieux
+	Chambery
+	Charleville-Mezieres
+	Beauvais
+	Cergy
+	Levallois-Perret
+	Cholet
+	Issy-les-Moulineaux
+	Montauban
+	Vannes
+	Hyeres
+	Evreux
+	Maisons-Alfort
+	Laval
+	Fontenay-sous-Bois
+	Ivry-sur-Seine
+	Saint-Malo
+	Arles
+	Belfort
+	Annecy
+	Sartrouville
+	Clichy
+	Chalon-sur-Sa鬾e
+	Pantin
+	Chateauroux
+	Meaux
+	La Roche-sur-Yon
+	Blois
+	Brive-la-Gaillarde
+	Evry
+	Clamart
+	Villejuif
+	Chalons-sur-Marne
+	Sevran
+	Le Blanc-Mesnil
+	Bondy
+	Frejus
+	Narbonne
+	Epinay-sur-Seine
+	Tarbes
+	Albi
+	Saint-Brieuc
+	Chelles
+	Boulogne-sur-Mer
+	Bobigny
+	Carcassonne
+
+#UNITS StdUnits
+	23,	040,	民兵
+
+#UNITS Nation1
+	3,	103,	火枪手
+	13,	104,	国民卫队
+	23,	134,	步骑兵

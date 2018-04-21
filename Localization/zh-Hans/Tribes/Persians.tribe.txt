@@ -1,0 +1,66 @@
+#CHOOSE 波斯
+#n 波斯人
+#s 波斯
+#a 波斯
+#COLOR EB830B
+#SYMBOLS Nation1, 46
+#AGE0 StdCities, 0, StdTextures, 0, Nation1, 36
+#AGE1 StdCities, 0, StdTextures, 2, Nation1, 36
+#AGE2 StdCities, 4, StdTextures, 4, Nation1, 36
+#AGE3 StdCities, 5, StdTextures, 6, Nation1, 36
+
+#CITIES
+	波斯波利斯
+	伊斯法罕
+	苏萨
+	布哈拉
+	大不里士
+	喀布尔
+	霍尔木兹
+	克尔曼
+	塔什干
+	设拉子
+	坎大哈
+	阿瓦士
+	阿贝拉
+	巴士拉
+	扎黑丹
+	阿什哈巴德
+	阿巴斯
+	哈马丹
+	拉什特
+	乌尔米耶
+	Zanjan
+	Borazjan
+	Artacoana
+	Phrada
+	Dakyanus
+	Bampur
+	Tureng Tepe
+	Nishapur
+	Ctesiphon
+	Hatra
+	Rhagae
+	Hecatompylos
+	Maracanda
+	Khorasan
+	Kyreshata
+	Bisitun
+	Jiruft
+	Darabgird
+	Siraf
+	Gur
+	Shushtar
+	Tepe Hissar
+	Kashan
+	Anshan
+	Dezful
+	Mohammerah
+	Awan
+	Simash
+	Tepe Sialk
+
+#UNITS Nation1
+	6,	040,	民兵
+	16,	101,	长矛手
+	26,	102,	弯刀手

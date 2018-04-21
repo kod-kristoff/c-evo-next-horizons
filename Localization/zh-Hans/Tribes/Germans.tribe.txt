@@ -1,0 +1,166 @@
+#CHOOSE 日耳曼
+#n 日耳曼人
+#s 德国
+#a 日耳曼
+#COLOR AFAFAF
+#SYMBOLS Nation1, 44
+#AGE0 StdCities, 2, StdTextures, 0, Nation1, 34
+#AGE1 StdCities, 2, StdTextures, 2, Nation1, 34
+#AGE2 StdCities, 4, StdTextures, 4, Nation1, 34
+#AGE3 StdCities, 5, StdTextures, 6, Nation1, 34
+
+#CITIES
+	柏林
+	科隆
+	亚琛
+	法兰克福
+	特里尔
+	雷根斯堡
+	汉堡
+	比勒菲尔德
+	曼海姆
+	波恩
+	多特蒙德
+	慕尼黑
+	不莱梅
+	纽伦堡
+	斯图加特
+	杜塞尔多夫
+	德累斯顿
+	汉诺威
+	杜伊斯堡
+	莱比锡
+	埃森
+	开姆尼斯
+	卡尔斯鲁厄
+	波鸿
+	Augsburg
+	Lubeck
+	Munster
+	Konigsberg
+	Stettin
+	Wuppertal
+	Gelsenkirchen
+	Halle
+	Wiesbaden
+	Monchengladbach
+	Braunschweig
+	Krefeld
+	Magdeburg
+	Kiel
+	Oberhausen
+	Rostock
+	Hagen
+	Erfurt
+	Freiburg
+	Kassel
+	Saarbrucken
+	Mainz
+	Hamm
+	Herne
+	Mulheim
+	Osnabruck
+	Ludwigshafen
+	Solingen
+	Leverkusen
+	Oldenburg
+	Neuss
+	Heidelberg
+	Darmstadt
+	Potsdam
+	Paderborn
+	Gottingen
+	Bremerhaven
+	Wurzburg
+	Recklinghausen
+	Wolfsburg
+	Bottrop
+	Heilbronn
+	Remscheid
+	Gera
+	Cottbus
+	Pforzheim
+	Offenbach
+	Ulm
+	Salzgitter
+	Ingolstadt
+	Siegen
+	Schwerin
+	Reutlingen
+	Furth
+	Koblenz
+	Moers
+	Bergisch Gladbach
+	Hildesheim
+	Witten
+	Kaiserslautern
+	Zwickau
+	Erlangen
+	Iserlohn
+	Jena
+	Gutersloh
+	Marl
+	Lunen
+	Velbert
+	Duren
+	Ratingen
+	Esslingen
+	Wilhelmshaven
+	Dessau
+	Hanau
+	Ludwigsburg
+	Flensburg
+	Minden
+	Brandenburg
+	Ludenscheid
+	Neumunster
+	Tubingen
+	Dorsten
+	Villingen-Schwenningen
+	Worms
+	Castrop-Rauxel
+	Gladbeck
+	Arnsberg
+	Delmenhorst
+	Frankfurt/Oder
+	Konstanz
+	Neubrandenburg
+	Viersen
+	Marburg
+	Rheine
+	Detmold
+	Bayreuth
+	Celle
+	Giessen
+	Bocholt
+	Troisdorf
+	Norderstedt
+	Dinslaken
+	Bamberg
+	Herten
+	Neuwied
+	Unna
+	Aschaffenburg
+	Lippstadt
+	Plauen
+	Aalen
+	Luneburg
+	Herford
+	Kempten
+	Grevenbroich
+	Gorlitz
+	Garbsen
+	Stralsund
+	Schwabisch Gmund
+	Kerpen
+	Dormagen
+	Fulda
+	Weimar
+
+#UNITS StdUnits
+	20,	040,	民兵
+
+#UNITS Nation1
+	4,	105,	步兵
+	14,	106,	突击队
+	24,	300,	福克战斗机
