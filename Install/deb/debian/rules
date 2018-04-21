@@ -10,8 +10,8 @@ override_dh_auto_clean:
 	$(RM) lib c-evo
 
 override_dh_auto_build:
-	cd AI && lazbuild --build-mode=Release AIProject.lpi
-	mv AI/libstdai.so AI/libstdai-$(DEB_HOST_ARCH).so
+	cd AI/StdAI && lazbuild --build-mode=Release AIProject.lpi
+	mv AI/StdAI/libstdai.so AI/StdAI/libstdai-$(DEB_HOST_ARCH).so
 	lazbuild --build-mode=Release Integrated.lpi
 
 override_dh_auto_install:
@@ -23,8 +23,8 @@ override_dh_auto_install:
 	install -m 755 Install/deb/c-evo.desktop $(ROOT)/usr/share/applications
 	install -d -m 755 $(ROOT)/usr/share/pixmaps
 	install -m 644 Graphics/c-evo_64x64.png $(ROOT)/usr/share/pixmaps/c-evo.png
-	install -d -m 755 $(ROOT)/usr/share/c-evo/AI
-	install -m 644 AI/libstdai-$(DEB_HOST_ARCH).so $(ROOT)/usr/share/c-evo/AI
+	install -d -m 755 $(ROOT)/usr/share/c-evo/AI/StdAI
+	install -m 644 AI/StdAI/libstdai-$(DEB_HOST_ARCH).so $(ROOT)/usr/share/c-evo/AI/StdAI
 	
 %:
 	dh $@
