@@ -1,0 +1,51 @@
+Crystal (19 July 2008) for cEvo 1.1.1
+++++++++++++++++++++++++++++++++++++++
+
+
+Concept
+=======
+Sign treaties with other tribes to prevent
+conflict and to fight common foes.
+Trade knowledge to speed up advancement.
+
+
+Recommendations
+===============
+Play on a map with at least 75% land mass: Crystal does not know boats.
+Put the Crystal players at the lowest difficulty (1 bar).
+
+
+Diplomacy
+=========
+Crystal trades 1 tech for 1 tech.
+If you dont like diplomacy, you can reject contact.
+Crystal will get upset and not contact you again.
+If you want to make it happy again, you can give it
+your civil report and next some technology.
+
+
+Modifying Crystal settings
+==========================
+You can edit the file Crystal.ini to alter Crystal's behaviour.
+
+For example, if you change the line "buildWonders=1" into
+"buildWonders=0", Crystal wont't build any world wonders.
+
+Most settings can only have the value 1 or 0.
+1 means True/On
+0 means False/Off
+
+If you have messed up the Crystal.ini file,
+you can delete it. A new file will be generated.
+
+Regarding Crystal research:
+Advances with a higher value are researched first.
+The values are modified +1 or -1 during the game:
++1 : advance has been acquired by trade
+-1 : advance can be acquired by trade (so delay research)
+
+
+Contact
+=======
+programming: Ferenc van den Ham
+forum: www.c-evo.org

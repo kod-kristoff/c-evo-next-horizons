@@ -1,0 +1,4 @@
+#NAME CapitalAI B
+#GAMEVERSION 1.1.0
+#PATH CapitalAIB.dll
+#CREDITS Capital AI by Retudin.

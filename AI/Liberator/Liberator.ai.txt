@@ -1,0 +1,5 @@
+#NAME Liberator AI
+#GAMEVERSION 1.2.0
+#BEGINNER
+#PATH Liberator.dll
+#CREDITS Liberator AI by Dirk (http://c-evo.org/bb/viewtopic.php?f=5&t=162).

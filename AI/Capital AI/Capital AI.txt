@@ -1,0 +1,16 @@
+Capital AI
+
+Fast reasearch, esp. when in contact with other instances; does not found cities.
+
+This versions contains:
+
+Fixes w.r.t. newer game version(s)
+- Diplomacy fixed.
+No offering of removed cease fire treaty;
+-> Capital AI instances can cooperate again
+Capital AI will not contact opponents that refused contact, until contacted again by that opponent
+(Attitude (used earlier) is removed from the game afaik.)
+
+Several small tweaks
+
+

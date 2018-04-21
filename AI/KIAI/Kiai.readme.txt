@@ -1,0 +1,48 @@
+kIAi Version 0.01 for C-evo 1.0.x
+
+The aim of that AI is to get the technologie as fast as possible (by using diplomacy or by war with uncooperativ nations) and to defend its territories as well as possible. Of course the only aim is to build the space ship fisrt, if necessary  
+- by declaring and conducting war  or  
+- by sharing the victory with allies...
+Playing against multiple instance of this AI should be an interresting challenge.
+
+If you want to help in the developement, you can send me bug report to jean67m-cevo@yahoo.fr 
+Please send bug-reports only about the most recent version of the AI (check http://c-evo.org/) and if possible include the book generating the bug.
+
+See the at the end of the history file to find out what is new in this version. What I plan to develop in the future is in the "kiai.future" file.
+
+If you delete the .ini file, a new inifile will be generated.
+
+If you change the name of the Kiai***.DLL file (for example to Kiai_Ver_new_ini.dll), a new inifile will be generated corresponding to the new name (and make the corresponding change in the xxx.ai.txt). This allows playing with KIAI with different ini files.
+
+If you find better values than the default values let me know...
+
+The configuration file has the following entries:
+
+
+[city]
+
+config_wall=2 //put it to 0 if you don´t want KIAI to build walls, the heigher the number the greater the chance of building walls (to win agaisnt Civ seed walls are needed)...
+
+cityworthfounding=12 // minimun value of a tile to considered for founding a city: increase this value if you think KIAI builds to many cities, decrease it so that KIAI uses the smallest peace of land to found a city (optimisation of land uasge on a small island)
+
+foundingbonus=12 // the higher the number, the more KIAI thinks of founding new cities (but then do less terrain improvement to existing cities)
+
+
+[naval]
+
+buildship=1 //put it to 0 if you don´t want KIAI to build ships (then he can concentrate on building army...)
+
+designship=1 //put it to 0 if you don´t want KIAI to develop new ships (then he can concentrate on reseaching technology)
+
+design_heavyship=1 //put it to 0 if you don´t want KIAI to develop heavy ships i.e with steel weitgh of 9 (then he can concentrate on reseaching technology; building such ships is anyway very long)
+
+search_Navigation=0 //put it to 1 if you don´t want KIAI to search Navigation (then he reseachs other technology slower)
+
+
+[Diplomacy]
+
+reduce_ask_science_PL_0=0 //this indicates the nimimun number of turns KIAI will wait before requesting technology from the human player (5 is a good value no to be annoyed if you have a friendly contact).
+
+reduceDiplomacy_PL_0=0 //put it to 1 if you want KIAI to contact the human player less often.
+
+

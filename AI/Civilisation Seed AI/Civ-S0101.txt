@@ -1,0 +1,55 @@
+*******************************************************************************
+* Civilisation Seed AI
+* Release 0.101 - 30 January 2006, cEvo 0.14.X
+*******************************************************************************
+
+Brief Description:
+
+Civ-S will attempt to win by either defeating all other nations or by completing the
+transstellar colony ship, whichever comes first, in a stand-alone fashion (see below
+note on Diplomacy).  Features include overseas attack, invasion and colonisation, and
+use of sea-, air- and ground-based military forces.
+
+Tested one on one against other AIs, on standard size maps - landmass 30% and 70%.
+
+Change Log 0.101:
+
+> various bug fixes [reported by users]
+> concentrate research in the capital up to future gov. stage (inspired from Capital AI)
+> improved empire expansion - grows markedly faster & wider than previous version
+> builds early wonders significantly faster
+> numerous other improvements/changes in handling units.
+
+Thanks to those of you who bothered to send feedbacks of game crashes.
+
+----------------------------------------------------------------------------------------------
+Notes on Diplomacy and (un)Cooperative Behaviour:
+
+> CivS does never cooperate with other players
+> CivS will never attempt to contact any other player
+> when contacted CivS will accept to exchange basic information
+> treaties are not evaluated and are automatically rejected
+----------------------------------------------------------------------------------------------
+
+Enjoy, and please send me the save files for games in which Civ-S crashed the
+server or did something particularly silly.
+
+I am looking forward to receiving your feedback.
+
+steve.barth@excite.com
+
+TIP:
+
+In case of a repeatable fatal crash and in order to continue your game you can
+temporarily replace the defaulting AI by StdAI for instance. This should make
+it possible to pass the crash bottleneck.
+
+i.e. 0-crash occurs and is repeatable
+     1-overwrite defaulting AI
+     2-reload the ~saved game
+     3-play 1 turn and save game
+     4-restore defaulting AI
+     5-reload game 
+
+It would then be appreciated to send the crashed ~saved game to the author of
+the AI. Only repeatable crashes are of any use.

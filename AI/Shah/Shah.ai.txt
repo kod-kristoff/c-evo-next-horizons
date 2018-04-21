@@ -1,0 +1,5 @@
+#NAME Shah V00.01
+#GAMEVERSION 0.14.0
+#PATH Shah.dll
+#MULTIPLE
+#CREDITS Shah by Rassim Eminli

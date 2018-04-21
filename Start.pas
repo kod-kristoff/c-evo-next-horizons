@@ -335,7 +335,8 @@ begin
     GrExt[HGrSystem2].Data.Canvas.Handle, 131, 46, SRCCOPY);
   for i := bixFirstAI to nBrain - 1 do begin
     BrainPicture[i] := TBitmap.Create;
-    if not LoadGraphicFile(BrainPicture[i], HomeDir + 'AI' + DirectorySeparator + Brain[i].FileName + '.png',
+    if not LoadGraphicFile(BrainPicture[i], HomeDir + 'AI' + DirectorySeparator +
+      Brain[i].FileName + DirectorySeparator + Brain[i].FileName + '.png',
       gfNoError) then begin
       BrainPicture[i].SetSize(64, 64);
       with BrainPicture[i].Canvas do begin

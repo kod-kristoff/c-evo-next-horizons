@@ -1,0 +1,22 @@
+I am currently wondering what to improve next: 
+- better defence strategy.
+- better stategy in choosing what to build (units or not).
+- organize attack: capture needed cities
+
+plans for later Versions 
+- build great wall
+- test the cities to see if one of then is ready to produce wonder, bank, univercity... and do the appropriate research.
+- better diplomatic stategy to cancel peace treaty when strong enough...
+
+If I am motivated enough:
+- use glider,spyplane, and spies to inventigate stacked units (and cities to attack)
+- use spies to spy (steal report)
+
+plans for the final Version
+- improve the choise of gournement
+- improved looking for modern resources
+- better stategy in choosing where to build state project and Wonders (and new cities)
+
+plans that will probably never become reality due to the amont of work involved (I have no idea how to implement then or the satisfaction it would give me is too low compared to the work to be done):
+- build plane to help defend and to attack.
+- unit transportation on other island

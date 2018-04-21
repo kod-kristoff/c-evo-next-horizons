@@ -184,6 +184,8 @@ var
   s: string;
   Key: string;
   Value: string;
+  BasePath: string;
+  AIFileName: string;
 begin
   Notify := NotifyFunction;
   PreviewElevation := false;
@@ -204,19 +206,23 @@ begin
   Brain[bixRandom].Initialized := false;
   nBrain := bixFirstAI;
   bixBeginner := bixFirstAI;
-  if FindFirst(HomeDir + 'AI' + DirectorySeparator + '*.ai.txt', $21, f) = 0 then
-    repeat
-      with Brain[nBrain] do
-      begin
-        FileName := Copy(f.Name, 1, Length(f.Name) - 7);
-        DLLName := HomeDir + 'AI' + DirectorySeparator + FileName;
-        Name := Copy(f.Name, 1, Length(f.Name) - 7);
+  if FindFirst(HomeDir + 'AI' + DirectorySeparator + '*', faDirectory or faArchive or faReadOnly, f) = 0 then
+  repeat
+    if (f.Name <> '.') and (f.Name <> '..') then begin
+      with Brain[nBrain] do begin
+        BasePath := HomeDir + 'AI' + DirectorySeparator + f.Name;
+        FileName := f.Name;
+        DLLName := BasePath + DirectorySeparator + FileName + '.dll';
+        AIFileName := BasePath + DirectorySeparator + f.Name + '.ai.txt';
+        Name := f.Name;
         Credits := '';
         Flags := fMultiple;
         Client := nil;
         Initialized := false;
         ServerVersion := 0;
-        AssignFile(T, HomeDir + 'AI' + DirectorySeparator + f.Name);
+        if not FileExists(AIFileName) then
+          raise Exception.Create(Format('AI specification file %s not found', [AIFileName]));
+        AssignFile(T, AIFileName);
         Reset(T);
         while not EOF(T) do
         begin
@@ -236,22 +242,22 @@ begin
           else if Key = '#BEGINNER' then
             bixBeginner := nBrain
           else if Key = '#PATH' then
-            DLLName := HomeDir + 'AI' + DirectorySeparator + Value
+            DLLName := BasePath + DirectorySeparator + Value
           {$IFDEF WINDOWS}{$IFDEF CPU32}
           else if Key = '#PATH_WIN32' then
-            DLLName := HomeDir + 'AI' + DirectorySeparator + Value
+            DLLName := BasePath + DirectorySeparator + Value
           {$ENDIF}{$ENDIF}
           {$IFDEF WINDOWS}{$IFDEF CPU64}
           else if Key = '#PATH_WIN64' then
-            DLLName := HomeDir + 'AI' + DirectorySeparator + Value
+            DLLName := BasePath + DirectorySeparator + Value
           {$ENDIF}{$ENDIF}
           {$IFDEF LINUX}{$IFDEF CPU32}
           else if Key = '#PATH_LINUX32' then
-            DLLName := HomeDir + 'AI' + DirectorySeparator + Value
+            DLLName := BasePath + DirectorySeparator + Value
           {$ENDIF}{$ENDIF}
           {$IFDEF LINUX}{$IFDEF CPU64}
           else if Key = '#PATH_LINUX64' then
-            DLLName := HomeDir + 'AI' + DirectorySeparator + Value
+            DLLName := BasePath + DirectorySeparator + Value
           {$ENDIF}{$ENDIF}
           else if Key = '#GAMEVERSION' then
             for i := 1 to Length(Value) do
@@ -271,8 +277,12 @@ begin
         (Brain[nBrain].ServerVersion <= Version) and
         ((Brain[nBrain].Flags and fDotNet = 0) or (@DotNetClient <> nil)) then
         inc(nBrain);
-    until FindNext(f) <> 0;
+    end;
+  until FindNext(f) <> 0;
   FindClose(F);
+
+  if nBrain = 0 then
+    raise Exception.Create(Format('No AI libraries found in directory %s', [HomeDir + 'AI']));
 end;
 
 procedure Done;

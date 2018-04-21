@@ -1,0 +1,5 @@
+#NAME K IA I  for C-evo 1  (06-2006)
+#GAMEVERSION 1.0.0
+#PATH KiaI.dll
+#MULTIPLE
+#CREDITS  kIAi by Jean S. 

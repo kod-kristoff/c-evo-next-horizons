@@ -1,7 +1,7 @@
 object StartDlg: TStartDlg
   Left = 246
   Height = 326
-  Top = 109
+  Top = 120
   Width = 556
   BorderIcons = []
   BorderStyle = bsNone
@@ -24,7 +24,7 @@ object StartDlg: TStartDlg
   OnMouseUp = FormMouseUp
   OnPaint = FormPaint
   OnShow = FormShow
-  LCLVersion = '1.8.0.6'
+  LCLVersion = '1.8.2.0'
   object StartBtn: TButtonA
     Tag = 15104
     Left = 389

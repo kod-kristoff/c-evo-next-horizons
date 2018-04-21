@@ -1,0 +1,9 @@
+Version 00.00:
+	My first attempt to create AI.
+
+Version 00.01:
+	Some major bugs are fixed. Wrong sequence of advances research and omission of some unit design were also fixed.
+
+In the event of errors detection, please inform me.
+
+e-mail: RassimE@RISK.Az

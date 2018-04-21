@@ -1,0 +1,100 @@
+
+SETI - AI V0.3 for C-evo 1.0.X, 09/2007
+
+Overwiew:
+Seti uses all important aspects to win the game, it:
++ signs up treaties and exchanges technology
++ attacks enemies with land and air units
++ tries to build wonders
++ tries to build the space ship
+- is helpless against naval attacks until aircrafts become available
+It is designed for big maps with many different opponents. Use it on random maps with at least 40 % landmass.
+It has been tested on WIN 98 SE and WIN XP mainly against other AIs.
+
+
+No Cheating:
+I did not test Seti with cheat options like "see everything" or "get all advances". Cheating is not supported by this AI.
+
+Sea Maps - Oversea Expansion:
+- Seti does not use transport ships. If Seti starts on an island, it will not start oversea expansion before transport aircrafts become available. 
+- Seti will not develop or build warships or transport ships.
+
+Main Strategy - Peaceful Expansion:
+Seti will use different strategies under different conditions.  In peaceful times its main goal is to expand (see charts: population and territory in a supervisor game). In war times Seti will build many new units, which will slow down (or stop) expansion.
+
+Diplomacy:
++ Seti will usually respond to diplomatic offers and tends to be cooperative.
++ Seti will usually exchange civil reports and will accept treaties in most cases.
++ Seti will usually accept technology exchanges, but there are some technologies that Seti does not need (it does not know to use these advances), therefore Seti will never accept an offer of these technologies.
++ If there is more than one Seti engine in a game, all Seti engines will cooperate and exchange technologies in the beginning of the game.
++ If a number of conditions are met, Seti will cancel treaties.
+- The diplomacy interface is simple and needs to be improved upon, as it only evaluates treaty offers and technology exchange offers (no unit design exchanges, no map exchanges, no spaceship part exchanges)
+
+Attack and Defense:
++ Basic algorithms for attack and defense have been implemented, but these algorithms will never be perfect (against humans).
+
+Space Ship:
++ Seti will build space ship parts, but Seti can only win if it has cities near all the special resources, as it will not exchange ship parts via diplomacy.
+
+
+Some other details:
+
+Execution Speed:
+The execution speed is fast in the beginning of the game (but not as fast as StdAI or Crystal f.e.). After aircrafts become available, the execution speed will slow down. This depends on the empire size and on the number of owned units.
+
+Unit Design:
+- There are only ground unit and air figher unit designs (along with an exploration ship). In later versions, Seti will develop more unit types.
+
+City Improvement:
++ Seti uses all city improvements except shipyards.
++ Seti will try to purchase city improvements with money, if there is enough money left.
++ Tile improvement works fine, though it still needs some improvement.
+
+Wonders:
++ Seti uses all wonders except The Pyramids and The Manhatten Project.
++ Seti will try to build wonders early in the game.
+
+National Projects:
+- Only the palace, great wall, stock market, space port and command bunker are used. This needs to be improved upon.
+
+- Unused Game Concepts:
+some government forms, slaves, freight, conscription, glider, diver, submarines, carriers, spies, spy planes, stealth planes
+
+
+Development started in March 2005.
+
+It is basically built upon Charles Nadolski´s C++ Template. Seti uses small parts of the HAL Source and of the AI_UO Source.
+
+Thanks to:
+- Charles Nadolski for the C++ Template, for the Hal Source and for the C-evo Mods.
+- Ulrich Olderdissen for the AI_UO Source.
+- All developers of C-evo-AI-engines.
+
+Special thanks to:
+Steffen Gerlach for the great C-evo project.
+
+
+Changes:
+V0.11
+- it is now possible that Seti cancels a treaty
+- Setis now contact each other and exchange technologies
+*** first release of Seti V0.11 (Nov 2005) *** 
+V0.2
+- Seti now uses transport aircrafts to capture empty enemy cities and to transport settlers.
+- Seti will connect its cities with roads and railroads.
+- overworked: technology tree, tax system (use of luxury rate in the beginning of the game), attack and defense algorithms, aerial reconnaissance
+*** release of Seti V0.2 (April 2006) *** 
+V0.3
+- C-evo 1.0-Rules (not complete, but works fine with C-eco 1.0)
+- overworked: technology tree, tax system (faster research), unit support system, rebuilding of units, ...
+- new unit designs (cheap defenders, ...)
+- bug fixes
+*** release of Seti V0.3 (Sept 2007) *** 
+
+
+Search for intelligence?
+Beam me up Scotty, there is (still) no intelligent life down here!
+
+
+Frank Mierse
+

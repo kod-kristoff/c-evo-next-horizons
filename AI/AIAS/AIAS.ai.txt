@@ -1,0 +1,5 @@
+#NAME AS - Artificial Stupidity in Delphi v0.07.07b
+#GAMEVERSION 1.01.1
+#PATH AIAS0707b.dll
+#MULTIPLE
+#CREDITS Artificial (mail:artificial2010-cevo@yahoo.de)

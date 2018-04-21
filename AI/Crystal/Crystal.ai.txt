@@ -1,0 +1,5 @@
+#NAME Crystal (19 July 2008)
+#GAMEVERSION 1.1.0
+#PATH Crystal.dll
+#MULTIPLE
+#CREDITS Crystal AI by Ferenc van den Ham

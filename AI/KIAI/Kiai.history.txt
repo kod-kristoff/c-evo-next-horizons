@@ -1,0 +1,76 @@
+KIAI History:
+Version 0.0 was a first try based of the devollopement kit 0.13.2.
+Version 0.1 have added:
+- defend the cities
+- chose the best technology
+- no reschearch of boat or plane
+- city building, no national project or wonder
+- use all types of gouvernement 
+
+Version 0.2 and 0.3 used use kit version 0.14.0 and added
+- found city near dead land / modern resource
+- build state project and Wonders
+- build space ship
+
+Version 0.4 was the fisrt good version for C-evo 0.14.0 
+- improved defence against Civ-seed
+- corrected lots of bugs du to new rules 
+
+Version 0.5 have added:
+- settlers do not go to work in a war region
+- army stop to rest if wounded
+- army consider attacking even with less than 100 MP
+- founding city near needed modern resource is a priority
+- all diplomatic proposition are evaluated
+- make diplomatic proposition for collaborative victory
+
+The following devellopement took place:
+- attack the weakest opponent(s)
+**A version was put on the server the 24-01-2005 
+- use path finding (influance map for each city) for better evaluate the imminent menace on each city and to know the time defenders need to come.
+- improved defences for important cities
+- boat building to be used for fast exploration and sink ennemy boat
+- use special unit town defender to maintain order in the cities under despotism
+- use an ini file
+**A version was put on the server the 12-02-2005 
+- correct bug with the ini file and add some entries in it
+**A version was put on the server the 14-02-2005 
+- use kamicaze and long range gun for land unit
+- use radar for sea unit
+- boat with long range guns to attack and defend
+- use of long range guns to sink ennemy boats
+- use a segmentation of the map so that cities alone produce their own defenders....
+**A version was put on the server the 6-03-2005 
+- corrected a bug link with the railroad
+- increase the chance of building Newton College
+- more agressive behavior 
+**A version was put on the server the 13-03-2005 
+- improve allies terrain,irrigation et farmland dependent of attitude
+- small modifications in diplomacy
+- better coordination of attacking units
+- expluse allied units dependent of attitude
+**A version was put on the server the 10-04-2005 
+- colaboration of several units to detroy a single ennemy unit
+- coordination of units to attack cities
+- use engeneer for teraforming hills
+- better ini file
+**A version was put on the server the  26-04-2005 
+- use kit version 0.14.1
+- use path finding also for settlers
+- use concription and freight
+**A version was put on the server the  19-06-2005
+- stop building for urgent defender
+- use concription for building fast units
+- better unit allocation for city defence
+**A version was put on the server the  01-08-2005
+- improve attack
+**A version was put on the server the 04-09-2005
+- modified diplomatic behaviour
+**A version was put on the server the 19-12-2005
+- optimise tax and luxury rate to maximise research at long term
+- cancel peace treaty when strong enough and ennemy have a needed modern resource...
+**A version was put on the server the 08-02-2006
+- only bug correction
+**A version was put on the server the 28-02-2006
+Adaptation to C-evo 1.0.0
+**A version was put on the server the 18-06-2006
