@@ -208,9 +208,9 @@ begin
   bixBeginner := bixFirstAI;
   if FindFirst(HomeDir + 'AI' + DirectorySeparator + '*', faDirectory or faArchive or faReadOnly, f) = 0 then
   repeat
-    if (f.Name <> '.') and (f.Name <> '..') then begin
+    BasePath := HomeDir + 'AI' + DirectorySeparator + f.Name;
+    if (f.Name <> '.') and (f.Name <> '..') and DirectoryExists(BasePath) then begin
       with Brain[nBrain] do begin
-        BasePath := HomeDir + 'AI' + DirectorySeparator + f.Name;
         FileName := f.Name;
         DLLName := BasePath + DirectorySeparator + FileName + '.dll';
         AIFileName := BasePath + DirectorySeparator + f.Name + '.ai.txt';
