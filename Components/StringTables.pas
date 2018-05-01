@@ -45,7 +45,13 @@ end;
 
 function TStringTable.LoadFromFile(const FileName: String): boolean;
 begin
-  Lines.LoadFromFile(FileName);
+  Result := True;
+  Lines.Clear;
+  try
+    Lines.LoadFromFile(FileName);
+  except
+    Result := False;
+  end;
 end;
 
 function TStringTable.GetHandle(const Item: AnsiString): integer;

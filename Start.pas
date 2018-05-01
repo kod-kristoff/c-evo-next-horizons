@@ -364,7 +364,7 @@ begin
   for x := 0 to 11 do
     for y := 0 to 1 do
       MiniColors[x, y] := GrExt[HGrSystem].Data.Canvas.Pixels[66 + x, 67 + y];
-  InitButtons();
+  InitButtons;
 
   bixView[0] := bixTerm;
   SlotAvailable := -1;
