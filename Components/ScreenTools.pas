@@ -614,7 +614,7 @@ var
   PixelPtr: TPixelPointer;
 begin
   Dst.BeginUpdate;
-  PixelPtr.Init(Dst);
+  PixelPtr.Init(Dst, X, Y);
   for yy := 0 to h - 1 do
   begin
     for xx := 0 to w - 1 do
