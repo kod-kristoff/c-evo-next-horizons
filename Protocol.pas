@@ -1768,8 +1768,8 @@ function DelphiRandom(const pi_Max: Integer): Integer;
 var
   Temp: LongInt;
 begin
-  Temp := LongInt(134775813 * DelphiRandSeed + 1);
-  DelphiRandSeed := Temp;
+  Temp := LongInt(Int64(134775813) * Int64(DelphiRandSeed) + 1);
+  DelphiRandSeed := LongInt(Temp);
   Result := (UInt64(Cardinal(pi_Max)) * UInt64(Cardinal(Temp))) shr 32;
 end;
 
