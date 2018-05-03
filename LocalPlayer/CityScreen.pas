@@ -89,9 +89,7 @@ var
 implementation
 
 uses
-  Select, Messg, MessgEx, Help, Tribes, Directories,
-
-  Math;
+  Select, Messg, MessgEx, Help, Tribes, Directories, Math;
 
 {$R *.lfm}
 
@@ -257,15 +255,19 @@ begin
   if MainTextureAge <> AgePrepared then
   begin
     AgePrepared := MainTextureAge;
+
+    // TODO: FillRect should not be needed as BitBlt is with SRCCOPY
+    Back.Canvas.FillRect(0, 0, ClientWidth, ClientHeight);
+
     bitblt(Back.Canvas.Handle, 0, 0, ClientWidth, ClientHeight,
       MainTexture.Image.Canvas.Handle, 0, 0, SRCCOPY);
     ImageOp_B(Back, Template, 0, 0, 0, 0, ClientWidth, ClientHeight);
-  end
+  end;
 end;
 
 procedure TCityDlg.CloseBtnClick(Sender: TObject);
 begin
-  Close
+  Close;
 end;
 
 procedure TCityDlg.InitSmallCityMap;
@@ -318,7 +320,7 @@ begin
             3 + 12 * (i mod 18 div 3), 13 + 16 * (i mod 3) + 48 * (i div 18),
             11 + 12 * (i mod 18 div 3)));
           break;
-        end
+        end;
     end;
     i := 30;
     for iix := 0 to nImp do
@@ -344,11 +346,11 @@ begin
           FillRect(Rect(5 + 16 * (i mod 3) + 48 * (i div 18),
             3 + 12 * (i mod 18 div 3), 13 + 16 * (i mod 3) + 48 * (i div 18),
             11 + 12 * (i mod 18 div 3)));
-        end
-      end
+        end;
+      end;
     end;
     brush.style := bsClear;
-  end
+  end;
 end;
 
 procedure TCityDlg.InitZoomCityMap;
@@ -369,7 +371,7 @@ begin
         1504 + wZoomEnvironment * byte(IsPort), 112 * (ZoomArea - 3),
         wZoomEnvironment, hZoomMap);
     end;
-  end
+  end;
 end;
 
 procedure TCityDlg.OffscreenPaint;
@@ -430,7 +432,7 @@ procedure TCityDlg.OffscreenPaint;
         xGr := 66 + 22;
       Sprite(offscreen, HGrSystem, x + xxt - 5 + d * (2 * i + 1 - Total),
         y + yyt - 5, 10, 10, xGr, yGr);
-    end
+    end;
   end;
 
   procedure MakeRed(X, Y, W, H: Integer);
@@ -491,7 +493,7 @@ var
       RisedTextOut(offscreen.Canvas, xmOpt + 40, ymOpt - 1 - 8 * MessageCount +
         16 * line, s);
       inc(line)
-    end
+    end;
   end;
 
 var
@@ -601,8 +603,8 @@ begin
           ymOpt - 17, copy(s, 1, j - 1));
         LoweredTextout(offscreen.Canvas, -1, MainTexture, xmOpt + 40, ymOpt - 1,
           copy(s, j + 1, 255));
-      end
-    end
+      end;
+    end;
   end;
 
   rx := (192 + xxt * 2 - 1) div (xxt * 2);
@@ -998,7 +1000,7 @@ begin
         FillRect(Rect(xView + 9, yView + 5, xView + 1 + 72 - 8,
           yView + 5 + 40));
         brush.style := bsClear;
-      end
+      end;
     end
     else if AllowChange and (c.Status and 7 <> 0) then
     begin // city type autobuild
@@ -1302,11 +1304,11 @@ begin
                     SmartUpdateContent;
                     if WindowMode <> wmModal then
                       MainScreen.UpdateViews;
-                  end
-                end
-              end
-            end
-      end
+                  end;
+                end;
+              end;
+            end;
+      end;
     end
     else if (Mode = mSupp) and (x >= xZoomMap) and (x < xZoomMap + wZoomMap) and
       (y >= yZoomMap) and (y < yZoomMap + hZoomMap) then
@@ -1325,7 +1327,7 @@ begin
           CloseAction := None;
           Close;
           MainScreen.CityClosed(imix[i], false, true);
-        end
+        end;
     end
     else if (x >= xmArea - 192) and (x < xmArea + 192) and (y >= ymArea - 96)
       and (y < ymArea + 96) then
@@ -1374,8 +1376,8 @@ begin
             SmartUpdateContent;
             if WindowMode <> wmModal then
               MainScreen.UpdateViews;
-          end
-        end
+          end;
+        end;
     end
     else if (ClientMode < scContact) and (cGov <> gAnarchy) and
       (c.Flags and chCaptured = 0) and (x >= xmOpt - 32) and (x < xmOpt + 32)
@@ -1412,8 +1414,8 @@ begin
           SmartUpdateContent;
           if WindowMode <> wmModal then
             MainScreen.UpdateViews;
-        end
-      end
+        end;
+      end;
     end;
 end; { FormMouseDown }
 
@@ -1507,7 +1509,7 @@ begin
               QueryOk := SimpleQuery(mkOkCancel, Phrases.Lookup('LOSEMAT3'),
                 'MSG_DEFAULT') = mrOK
           end;
-        end
+        end;
       end;
       if not QueryOk then
         exit;
@@ -1580,9 +1582,9 @@ begin
         SmartUpdateContent;
         if WindowMode <> wmModal then
           MainScreen.UpdateViews;
-      end
-    end
-  end
+      end;
+    end;
+  end;
 end;
 
 procedure TCityDlg.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -1650,8 +1652,8 @@ begin
       else
         ImpImage(Canvas, xView + 9, yView + 5, c.Project0 and cpIndex,
           cGov, true);
-    end
-  end
+    end;
+  end;
 end;
 
 procedure TCityDlg.FormPaint(Sender: TObject);
@@ -1740,7 +1742,7 @@ begin
     (WindowMode = wmPersistent) then
     ChangeCity(+1)
   else
-    inherited
+    inherited;
 end;
 
 { procedure TCityDlg.AdviceBtnClick(Sender: TObject);
@@ -1757,7 +1759,7 @@ begin
   begin
     dec(Page);
     SmartUpdateContent
-  end
+  end;
 end;
 
 procedure TCityDlg.PageDownBtnClick(Sender: TObject);
@@ -1766,7 +1768,7 @@ begin
   begin
     inc(Page);
     SmartUpdateContent
-  end
+  end;
 end;
 
 procedure TCityDlg.ChangeResourceWeights(iResourceWeights: integer);
@@ -1784,7 +1786,7 @@ begin
     Server(sGetCityTileAdvice, me, cix, Advice);
     if Advice.Tiles <> MyCity[cix].Tiles then
       Server(sSetCityTiles, me, cix, Advice.Tiles);
-  end
+  end;
 end;
 
 initialization
@@ -1797,7 +1799,7 @@ for i := 0 to nImp - 2 do
     begin
       k := ImpSorted[i];
       ImpSorted[i] := ImpSorted[j];
-      ImpSorted[j] := k
+      ImpSorted[j] := k;
     end;
 
 end.
