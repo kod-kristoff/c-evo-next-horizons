@@ -38,7 +38,7 @@ procedure PaintColonyShip(canvas: TCanvas; Player, Left, Width, Top: integer);
 implementation
 
 uses
-  Protocol, ScreenTools, ClientTools, Term, Tribes;
+  Protocol, ScreenTools, ClientTools, Tribes;
 
 {$R *.lfm}
 
@@ -140,8 +140,6 @@ begin
 end;
 
 procedure TDiaDlg.OffscreenPaint;
-type
-  TLine = array [0 .. 99999, 0 .. 2] of Byte;
 var
   p, T, max, x, y, y0, Stop, r, RoundRange, LineStep: integer;
   s: string;

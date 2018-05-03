@@ -97,7 +97,7 @@ type
     procedure ChangeTab(NewTab: integer);
     procedure UnlistBackupFile(FileName: string);
     procedure SmartInvalidate(x0, y0, x1, y1: integer;
-      invalidateTab0: boolean = false);
+      invalidateTab0: boolean = false); overload;
   end;
 
 var

@@ -135,9 +135,6 @@ begin
     PlayingSound.Play(SoundPlayer.Handle);
 end;
 
-var
-  i: integer;
-
 procedure UnitInit;
 begin
   SoundList := TFPGObjectList<TSound>.Create;

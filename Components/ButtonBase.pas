@@ -7,7 +7,6 @@ uses
 
 type
   TButtonBase = class(TGraphicControl)
-    constructor Create(aOwner: TComponent); override;
   protected
     FDown, FPermanent: boolean;
     FGraphic: TBitmap;
@@ -25,6 +24,7 @@ type
   private
     Active: boolean;
   public
+    constructor Create(aOwner: TComponent); override;
     property Graphic: TBitmap read FGraphic write FGraphic;
     // property DownSound: string read FDownSound write FDownSound;
     // property UpSound: string read FUpSound write FUpSound;
