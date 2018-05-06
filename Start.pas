@@ -41,8 +41,9 @@ type
     procedure StartBtnClick(Sender: TObject);
     procedure FormPaint(Sender: TObject);
     procedure FormShow(Sender: TObject);
-    procedure FormDestroy(Sender: TObject);
+    procedure FormHide(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
     procedure BrainClick(Sender: TObject);
     procedure FormMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; x, y: integer);
@@ -56,7 +57,6 @@ type
     procedure MultiBtnClick(Sender: TObject);
     procedure Up2BtnClick(Sender: TObject);
     procedure Down2BtnClick(Sender: TObject);
-    procedure FormHide(Sender: TObject);
     procedure QuitBtnClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure CustomizeBtnClick(Sender: TObject);
@@ -91,6 +91,7 @@ type
     MiniMode: (mmNone, mmPicture, mmMultiPlayer);
     ActionsOffered: set of 0 .. nMainActions - 1;
     TurnValid, Tracking: boolean;
+    DefaultAI: string;
     procedure InitPopup(PopupIndex: integer);
     procedure PaintInfo;
     procedure ChangePage(NewPage: integer);
@@ -98,6 +99,7 @@ type
     procedure UnlistBackupFile(FileName: string);
     procedure SmartInvalidate(x0, y0, x1, y1: integer;
       invalidateTab0: boolean = false); overload;
+    procedure LoadConfig;
   end;
 
 var
@@ -180,61 +182,11 @@ const
 
 procedure TStartDlg.FormCreate(Sender: TObject);
 var
-  x, y, i, ResolutionX, ResolutionY, ResolutionBPP, ResolutionFreq: Integer;
-  ScreenMode: Integer;
-  DefaultAI, s: string;
+  x, y, i: Integer;
   r0, r1: HRgn;
-  Reg: TRegistry;
   Location: TPoint;
 begin
-  Reg := TRegistry.Create;
-  with Reg do try
-    // initialize AI assignment
-    OpenKey(AppRegistryKey + '\AI', True);
-    for I := 0 to nPlOffered - 1 do begin
-      if i = 0 then s := ':StdIntf'
-        else s := 'StdAI';
-      if not ValueExists('Control' + IntToStr(i)) then
-        WriteString('Control' + IntToStr(i), s);
-      if not ValueExists('Diff' + IntToStr(i)) then
-        WriteInteger('Diff' + IntToStr(i), 2);
-    end;
-    WriteInteger('MultiControl', 0);
-
-    OpenKey(AppRegistryKey, True);
-    if ValueExists('WorldSize') then WorldSize := Reg.ReadInteger('WorldSize')
-      else WorldSize := DefaultWorldSize;
-    if ValueExists('LandMass') then StartLandMass := Reg.ReadInteger('LandMass')
-      else StartLandMass := DefaultLandMass;
-    if ValueExists('MaxTurn') then MaxTurn := Reg.ReadInteger('MaxTurn')
-      else MaxTurn := 800;
-    if ValueExists('DefaultAI') then DefaultAI := Reg.ReadString('DefaultAI')
-      else DefaultAI := 'StdAI';
-    if ValueExists('AutoEnemies') then AutoEnemies := Reg.ReadInteger('AutoEnemies')
-      else AutoEnemies := 8;
-    if ValueExists('AutoDiff') then AutoDiff := Reg.ReadInteger('AutoDiff')
-      else AutoDiff := 1;
-
-    if ValueExists('ScreenMode') then
-      ScreenMode := ReadInteger('ScreenMode')
-      else ScreenMode := 1;
-    FullScreen := ScreenMode > 0;
-    if ValueExists('ResolutionX') then
-      ResolutionX := ReadInteger('ResolutionX');
-    if ValueExists('ResolutionY') then
-      ResolutionY := ReadInteger('ResolutionY');
-    if ValueExists('ResolutionBPP') then
-      ResolutionBPP := ReadInteger('ResolutionBPP');
-    if ValueExists('ResolutionFreq') then
-      ResolutionFreq := ReadInteger('ResolutionFreq');
-    {$IFDEF WINDOWS}
-    if ScreenMode = 2 then
-      ChangeResolution(ResolutionX, ResolutionY, ResolutionBPP,
-        ResolutionFreq);
-    {$ENDIF}
-  finally
-    Free;
-  end;
+  LoadConfig;
 
   ActionsOffered := [maManual, maCredits, maWeb];
   Include(ActionsOffered, maConfig);
@@ -250,14 +202,13 @@ begin
   if (bixDefault < 0) and (nBrain > bixFirstAI) then
     bixDefault := bixFirstAI; // default AI not found, use any
 
-  DirectDlg.left := (screen.width - DirectDlg.width) div 2;
-  DirectDlg.top := (screen.height - DirectDlg.height) div 2;
+  DirectDlg.Left := (Screen.Width - DirectDlg.Width) div 2;
+  DirectDlg.Top := (screen.Height - DirectDlg.Height) div 2;
 
   if FullScreen then
   begin
-    Location := Point(Screen.Width, Screen.Height);
-    Location := Point((Screen.width - 800) * 3 div 8,
-      Screen.height - Height - (Screen.height - 600) div 3);
+    Location := Point((Screen.Width - 800) * 3 div 8,
+      Screen.Height - Height - (Screen.Height - 600) div 3);
     Left := Location.X;
     Top := Location.Y;
 
@@ -265,17 +216,17 @@ begin
     r1 := CreateRectRgn(TabOffset + 4 * TabSize + 2, 0, Width, TabHeight);
     CombineRgn(r0, r0, r1, RGN_DIFF);
     DeleteObject(r1);
-    r1 := CreateRectRgn(QuitBtn.left, QuitBtn.top, QuitBtn.left + QuitBtn.width,
-      QuitBtn.top + QuitBtn.height);
+    r1 := CreateRectRgn(QuitBtn.Left, QuitBtn.Top, QuitBtn.Left + QuitBtn.Width,
+      QuitBtn.top + QuitBtn.Height);
     CombineRgn(r0, r0, r1, RGN_OR);
     DeleteObject(r1);
-    SetWindowRgn(Handle, r0, false);
+    SetWindowRgn(Handle, r0, False);
     DeleteObject(r0); // causes crash with Windows 95
   end
   else
   begin
-    left := (screen.width - width) div 2;
-    top := (screen.height - height) div 2;
+    Left := (Screen.Width - Width) div 2;
+    Top := (Screen.Height - Height) div 2;
   end;
 
   Canvas.Font.Assign(UniFont[ftNormal]);
@@ -416,6 +367,64 @@ begin
   end;
   InvalidateRgn(Handle, r0, false);
   DeleteObject(r0);
+end;
+
+procedure TStartDlg.LoadConfig;
+var
+  Reg: TRegistry;
+  I: Integer;
+  S: string;
+  ResolutionX, ResolutionY, ResolutionBPP, ResolutionFreq: Integer;
+  ScreenMode: Integer;
+begin
+  Reg := TRegistry.Create;
+  with Reg do try
+    // Initialize AI assignment
+    OpenKey(AppRegistryKey + '\AI', True);
+    for I := 0 to nPlOffered - 1 do begin
+      if I = 0 then S := ':StdIntf'
+        else S := 'StdAI';
+      if not ValueExists('Control' + IntToStr(I)) then
+        WriteString('Control' + IntToStr(I), S);
+      if not ValueExists('Diff' + IntToStr(I)) then
+        WriteInteger('Diff' + IntToStr(I), 2);
+    end;
+    WriteInteger('MultiControl', 0);
+
+    OpenKey(AppRegistryKey, True);
+    if ValueExists('WorldSize') then WorldSize := Reg.ReadInteger('WorldSize')
+      else WorldSize := DefaultWorldSize;
+    if ValueExists('LandMass') then StartLandMass := Reg.ReadInteger('LandMass')
+      else StartLandMass := DefaultLandMass;
+    if ValueExists('MaxTurn') then MaxTurn := Reg.ReadInteger('MaxTurn')
+      else MaxTurn := 800;
+    if ValueExists('DefaultAI') then DefaultAI := Reg.ReadString('DefaultAI')
+      else DefaultAI := 'StdAI';
+    if ValueExists('AutoEnemies') then AutoEnemies := Reg.ReadInteger('AutoEnemies')
+      else AutoEnemies := 8;
+    if ValueExists('AutoDiff') then AutoDiff := Reg.ReadInteger('AutoDiff')
+      else AutoDiff := 1;
+
+    if ValueExists('ScreenMode') then
+      ScreenMode := ReadInteger('ScreenMode')
+      else ScreenMode := 1;
+    FullScreen := ScreenMode > 0;
+    if ValueExists('ResolutionX') then
+      ResolutionX := ReadInteger('ResolutionX');
+    if ValueExists('ResolutionY') then
+      ResolutionY := ReadInteger('ResolutionY');
+    if ValueExists('ResolutionBPP') then
+      ResolutionBPP := ReadInteger('ResolutionBPP');
+    if ValueExists('ResolutionFreq') then
+      ResolutionFreq := ReadInteger('ResolutionFreq');
+    {$IFDEF WINDOWS}
+    if ScreenMode = 2 then
+      ChangeResolution(ResolutionX, ResolutionY, ResolutionBPP,
+        ResolutionFreq);
+    {$ENDIF}
+  finally
+    Free;
+  end;
 end;
 
 procedure TStartDlg.FormPaint(Sender: TObject);
