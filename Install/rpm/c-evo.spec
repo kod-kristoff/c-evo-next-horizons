@@ -23,6 +23,7 @@ Turn-based empire building game inspired by Civilization.
 %build
 (cd AI/StdAI ; lazbuild --build-mode=Release AIProject.lpi)
 mv AI/StdAI/libstdai.so AI/StdAI/libstdai-%{_target_cpu}.so
+sed -i 's/libstdai-i386.so/libstdai-%{_target_cpu}.so/g' AI/StdAI/StdAI.ai.txt
 sed -i 's/libstdai-amd64.so/libstdai-%{_target_cpu}.so/g' AI/StdAI/StdAI.ai.txt
 lazbuild --build-mode=Release Integrated.lpi
 
