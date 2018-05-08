@@ -69,16 +69,31 @@ type
     procedure AutoEnemyDownBtnClick(Sender: TObject);
     procedure ReplayBtnClick(Sender: TObject);
   public
-    BrainPicture: array [0 .. maxBrain - 1] of TBitmap;
     EmptyPicture: TBitmap;
     procedure UpdateFormerGames;
     procedure UpdateMaps;
   private
-    WorldSize, StartLandMass, MaxTurn, AutoEnemies, AutoDiff, MultiControl,
-      MiniWidth, MiniHeight, SelectedAction, Page, ShowTab, Tab, Diff0,
-      bixDefault, nMapLandTiles, nMapStartPositions, LoadTurn, LastTurn,
+    WorldSize: Integer;
+    StartLandMass: Integer;
+    MaxTurn: Integer;
+    AutoEnemies: Integer;
+    AutoDiff: Integer;
+    MultiControl: Integer;
+    MiniWidth: Integer;
+    MiniHeight: Integer;
+    SelectedAction: Integer;
+    Page: Integer;
+    ShowTab: Integer;
+    Tab: Integer;
+    Diff0: Integer;
+    bixDefault: Integer;
+    nMapLandTiles: Integer;
+    nMapStartPositions: Integer;
+    LoadTurn: Integer;
+    LastTurn: Integer;
     { last turn of selected former game }
-    SlotAvailable, bixPopup: integer; { brain concerned by brain context menu }
+    SlotAvailable: Integer;
+    bixPopup: Integer; { brain concerned by brain context menu }
     ListIndex: array [0 .. 3] of integer;
     MapFileName: string;
     FormerGames, Maps: TStringList;
@@ -185,6 +200,7 @@ var
   x, y, i: Integer;
   r0, r1: HRgn;
   Location: TPoint;
+  AIBrains: TBrains;
 begin
   LoadConfig;
 
@@ -194,13 +210,18 @@ begin
     Include(ActionsOffered, maAIDev);
 
   bixDefault := -1;
-  for i := bixRandom to nBrain - 1 do
-    if AnsiCompareFileName(DefaultAI, Brain[i].FileName) = 0 then
+  for i := Brains.IndexOf(BrainRandom) to Brains.Count - 1 do
+    if AnsiCompareFileName(DefaultAI, Brains[i].FileName) = 0 then
       bixDefault := i;
-  if (bixDefault = bixRandom) and (nBrain < bixFirstAI + 2) then
+  if (bixDefault = Brains.IndexOf(BrainRandom)) and (Brains.GetKindCount(btAI) < 2) then
     bixDefault := -1;
-  if (bixDefault < 0) and (nBrain > bixFirstAI) then
-    bixDefault := bixFirstAI; // default AI not found, use any
+  if (bixDefault < 0) and (Brains.GetKindCount(btAI) > 0) then
+    begin
+      AIBrains := TBrains.Create(False);
+      Brains.GetByKind(btAI, AIBrains);
+      bixDefault := Brains.IndexOf(Brains[0]);
+      AIBrains.Free;
+    end; // default AI not found, use any
 
   DirectDlg.Left := (Screen.Width - DirectDlg.Width) div 2;
   DirectDlg.Top := (screen.Height - DirectDlg.Height) div 2;
@@ -268,39 +289,44 @@ begin
   else
     CustomizeBtn.ButtonIndex := 2;
 
-  BrainPicture[0] := TBitmap.Create;
-  BrainPicture[0].SetSize(64, 64);
-  BitBlt(BrainPicture[0].Canvas.Handle, 0, 0, 64, 64,
+  Brains[0].Picture := TBitmap.Create;
+  Brains[0].Picture.SetSize(64, 64);
+  BitBlt(Brains[0].Picture.Canvas.Handle, 0, 0, 64, 64,
     GrExt[HGrSystem2].Data.Canvas.Handle, 1, 111, SRCCOPY);
-  BrainPicture[1] := TBitmap.Create;
-  BrainPicture[1].SetSize(64, 64);
-  BitBlt(BrainPicture[1].Canvas.Handle, 0, 0, 64, 64,
+  Brains[1].Picture := TBitmap.Create;
+  Brains[1].Picture.SetSize(64, 64);
+  BitBlt(Brains[1].Picture.Canvas.Handle, 0, 0, 64, 64,
     GrExt[HGrSystem2].Data.Canvas.Handle, 66, 111, SRCCOPY);
-  BrainPicture[2] := TBitmap.Create;
-  BrainPicture[2].SetSize(64, 64);
-  BitBlt(BrainPicture[2].Canvas.Handle, 0, 0, 64, 64,
+  Brains[2].Picture := TBitmap.Create;
+  Brains[2].Picture.SetSize(64, 64);
+  BitBlt(Brains[2].Picture.Canvas.Handle, 0, 0, 64, 64,
     GrExt[HGrSystem2].Data.Canvas.Handle, 131, 111, SRCCOPY);
-  BrainPicture[3] := TBitmap.Create;
-  BrainPicture[3].SetSize(64, 64);
-  BitBlt(BrainPicture[3].Canvas.Handle, 0, 0, 64, 64,
+  Brains[3].Picture := TBitmap.Create;
+  Brains[3].Picture.SetSize(64, 64);
+  BitBlt(Brains[3].Picture.Canvas.Handle, 0, 0, 64, 64,
     GrExt[HGrSystem2].Data.Canvas.Handle, 131, 46, SRCCOPY);
-  for i := bixFirstAI to nBrain - 1 do begin
-    BrainPicture[i] := TBitmap.Create;
-    if not LoadGraphicFile(BrainPicture[i], HomeDir + 'AI' + DirectorySeparator +
-      Brain[i].FileName + DirectorySeparator + Brain[i].FileName + '.png',
-      gfNoError) then begin
-      BrainPicture[i].SetSize(64, 64);
-      with BrainPicture[i].Canvas do begin
+
+  AIBrains := TBrains.Create(False);
+  Brains.GetByKind(btAI, AIBrains);
+  for i := 0 to AIBrains.Count - 1 do
+  with AIBrains[I] do
+  begin
+    AIBrains[i].Picture := TBitmap.Create;
+    if not LoadGraphicFile(AIBrains[i].Picture, HomeDir + 'AI' + DirectorySeparator +
+      FileName + DirectorySeparator + FileName + '.png', gfNoError) then begin
+      AIBrains[i].Picture.SetSize(64, 64);
+      with AIBrains[i].Picture.Canvas do begin
         Brush.Color := $904830;
         FillRect(Rect(0, 0, 64, 64));
         Font.Assign(UniFont[ftTiny]);
         Font.Style := [];
         Font.Color := $5FDBFF;
-        Textout(32 - TextWidth(Brain[i].FileName) div 2,
-          32 - TextHeight(Brain[i].FileName) div 2, Brain[i].FileName);
+        Textout(32 - TextWidth(FileName) div 2,
+          32 - TextHeight(FileName) div 2, FileName);
       end;
     end;
   end;
+  AIBrains.Free;
 
   EmptyPicture := TBitmap.Create;
   EmptyPicture.PixelFormat := pf24bit;
@@ -317,7 +343,7 @@ begin
       MiniColors[x, y] := GrExt[HGrSystem].Data.Canvas.Pixels[66 + x, 67 + y];
   InitButtons;
 
-  bixView[0] := bixTerm;
+  bixView[0] := Brains.IndexOf(BrainTerm);
   SlotAvailable := -1;
   Tab := 2;
   Diff0 := 2;
@@ -332,16 +358,12 @@ begin
 end;
 
 procedure TStartDlg.FormDestroy(Sender: TObject);
-var
-  i: integer;
 begin
   FreeAndNil(FormerGames);
   FreeAndNil(Maps);
   FreeAndNil(Mini);
   FreeAndNil(EmptyPicture);
   FreeAndNil(LogoBuffer);
-  for i := 0 to nBrain - 1 do
-    FreeAndNil(BrainPicture[i]);
 end;
 
 procedure TStartDlg.SmartInvalidate(x0, y0, x1, y1: integer;
@@ -623,12 +645,12 @@ begin
         if 1 shl i and SlotAvailable <> 0 then
         begin
           if bixView[i] >= 0 then
-            FrameImage(Canvas, BrainPicture[bixView[i]], xBrain[i], yBrain[i],
+            FrameImage(Canvas, Brains[bixView[i]].Picture, xBrain[i], yBrain[i],
               64, 64, 0, 0, true)
           else
             FrameImage(Canvas, EmptyPicture, xBrain[i], yBrain[i], 64, 64,
               0, 0, true);
-          if bixView[i] >= bixTerm then
+          if Brains[bixView[i]].Kind in [btTerm, btRandom, btAI] then
           begin
             BitBlt(Canvas.Handle, xBrain[i] - 18, yBrain[i] + 19, 12, 14,
               GrExt[HGrSystem].Data.Canvas.Handle, 134 + (Difficulty[i] - 1) *
@@ -657,7 +679,7 @@ begin
           if bixView[i] >= 0 then
           begin
             DiffUpBtn[i].Hint := Format(Phrases.Lookup('STARTCONTROLS', 9),
-              [Brain[bixView[i]].Name]);
+              [Brains[bixView[i]].Name]);
             DiffDownBtn[i].Hint := DiffUpBtn[i].Hint;
           end
         end;
@@ -680,10 +702,10 @@ begin
       RisedTextOut(Canvas, 24 { x0Brain+32-BiColorTextWidth(Canvas,s) div 2 } ,
         yMain + 164 { y0Mini-77 } , Phrases.Lookup('STARTCONTROLS', 16));
       if AutoDiff = 1 then
-        FrameImage(Canvas, BrainPicture[bixBeginner], xDefault, yDefault, 64,
+        FrameImage(Canvas, BrainBeginner.Picture, xDefault, yDefault, 64,
           64, 0, 0, false)
       else
-        FrameImage(Canvas, BrainPicture[bixDefault], xDefault, yDefault, 64, 64,
+        FrameImage(Canvas, Brains[bixDefault].Picture, xDefault, yDefault, 64, 64,
           0, 0, true);
       DLine(Canvas, 56, 272, y0Mini + 61 + 19, MainTexture.clBevelLight,
         MainTexture.clBevelShade);
@@ -894,7 +916,7 @@ begin
           if ValueExists('GameCount') then GameCount := ReadInteger('GameCount')
             else GameCount := 0;
 
-          if (AutoDiff < 0) and (bixView[0] = bixNoTerm) then
+          if (AutoDiff < 0) and (Brains[bixView[0]].Kind = btNoTerm) then
             FileName := 'Round' + IntToStr(GetProcessID())
           else begin
             inc(GameCount);
@@ -912,7 +934,7 @@ begin
                 if bixView[i] = -1 then
                   Reg.WriteString('Control' + IntToStr(i), '')
                 else Reg.WriteString('Control' + IntToStr(i),
-                  Brain[bixView[i]].FileName);
+                  Brains[bixView[i]].FileName);
                 WriteInteger('Diff' + IntToStr(i), Difficulty[i]);
               end;
             WriteInteger('MultiControl', MultiControl);
@@ -921,20 +943,20 @@ begin
           OpenKey(AppRegistryKey, True);
           if AutoDiff > 0 then
           begin
-            WriteString('DefaultAI', Brain[bixDefault].FileName);
+            WriteString('DefaultAI', Brains[bixDefault].FileName);
             SlotAvailable := 0; // bixView will be invalid hereafter
-            bixView[0] := bixTerm;
+            bixView[0] := Brains.IndexOf(BrainTerm);
             Difficulty[0] := PlayerAutoDiff[AutoDiff];
             for i := 1 to nPl - 1 do
               if (Page = pgStartRandom) and (i <= AutoEnemies) or
                 (Page = pgStartMap) and (i < nMapStartPositions) then begin
-                if AutoDiff = 1 then bixView[i] := bixBeginner
+                if AutoDiff = 1 then bixView[i] := Brains.IndexOf(BrainBeginner)
                   else bixView[i] := bixDefault;
                 Difficulty[i] := EnemyAutoDiff[AutoDiff];
               end  else bixView[i] := -1;
           end else begin
             for i := 6 to 8 do
-              if (bixView[0] <> bixNoTerm) and (MultiControl and (1 shl i) <> 0)
+              if (Brains[bixView[0]].Kind <> btNoTerm) and (MultiControl and (1 shl i) <> 0)
               then begin
                 bixView[i + 3] := bixView[i];
                 Difficulty[i + 3] := Difficulty[i];
@@ -1217,18 +1239,18 @@ begin
   end
   else
   begin
-    Brain[bixView[bixPopup]].Flags := Brain[bixView[bixPopup]].Flags and
+    Brains[bixView[bixPopup]].Flags := Brains[bixView[bixPopup]].Flags and
       not fUsed;
     bixView[bixPopup] := TMenuItem(Sender).Tag;
-    DiffUpBtn[bixPopup].Visible := bixView[bixPopup] >= bixTerm;
-    DiffDownBtn[bixPopup].Visible := bixView[bixPopup] >= bixTerm;
+    DiffUpBtn[bixPopup].Visible := Brains[bixView[bixPopup]].Kind in [btTerm, btRandom, btAI];
+    DiffDownBtn[bixPopup].Visible := Brains[bixView[bixPopup]].Kind in [btTerm, btRandom, btAI];
     if bixPopup in OfferMultiple then
     begin
-      MultiBtn[bixPopup].Visible := bixView[bixPopup] >= bixTerm;
+      MultiBtn[bixPopup].Visible := Brains[bixView[bixPopup]].Kind in [btTerm, btRandom, btAI];
       MultiBtn[bixPopup].ButtonIndex := 2 + (MultiControl shr bixPopup) and 1;
     end;
-    Brain[bixView[bixPopup]].Flags := Brain[bixView[bixPopup]].Flags or fUsed;
-    if bixView[bixPopup] < bixTerm then
+    Brains[bixView[bixPopup]].Flags := Brains[bixView[bixPopup]].Flags or fUsed;
+    if Brains[bixView[bixPopup]].Kind in [btNoTerm, btSuperVirtual] then
       Difficulty[bixPopup] := 0 { supervisor }
     else
       Difficulty[bixPopup] := 2;
@@ -1237,10 +1259,10 @@ begin
       MultiControl := MultiControl and not(1 shl bixPopup);
     if (bixPopup = 0) and (MapFileName <> '') then
       ChangePage(Page);
-    if bixView[bixPopup] = bixNoTerm then
+    if Brains[bixView[bixPopup]].Kind = btNoTerm then
     begin // turn all local players off
       for i := 1 to nPlOffered - 1 do
-        if bixView[i] = bixTerm then
+        if Brains[bixView[i]].Kind = btTerm then
         begin
           bixView[i] := -1;
           DiffUpBtn[i].Visible := false;
@@ -1255,7 +1277,7 @@ begin
           SmartInvalidate(xBrain[i] - 31, yBrain[i] - 1, xBrain[i] + 64,
             DiffUpBtn[i].top + 25);
         end;
-      Brain[bixTerm].Flags := Brain[bixTerm].Flags and not fUsed;
+      BrainTerm.Flags := BrainTerm.Flags and not fUsed;
     end;
     SmartInvalidate(xBrain[bixPopup] - 31, yBrain[bixPopup] - 1,
       xBrain[bixPopup] + 64, DiffUpBtn[bixPopup].top + 25);
@@ -1266,6 +1288,7 @@ procedure TStartDlg.InitPopup(PopupIndex: integer);
 var
   i, FixedLines: integer;
   m: TMenuItem;
+  AIBrains: TBrains;
 
   procedure OfferBrain(Index: integer);
   var
@@ -1275,7 +1298,7 @@ var
     if Index < 0 then
       m.Caption := Phrases.Lookup('NOMOD')
     else
-      m.Caption := Brain[Index].Name;
+      m.Caption := Brains[Index].Name;
     m.Tag := Index;
     m.OnClick := BrainClick;
     j := FixedLines;
@@ -1296,14 +1319,17 @@ begin
   if bixPopup < 0 then
   begin // select default AI
     FixedLines := 0;
-    if nBrain >= bixFirstAI + 2 then
+    if Brains.GetKindCount(btAI) >= 2 then
     begin
-      OfferBrain(bixRandom);
+      OfferBrain(Brains.IndexOf(BrainRandom));
       inc(FixedLines)
     end;
-    for i := bixFirstAI to nBrain - 1 do // offer available AIs
-      if Brain[i].Flags and fMultiple <> 0 then
-        OfferBrain(i);
+    AIBrains := TBrains.Create(False);
+    Brains.GetByKind(btAI, AIBrains);
+    for i := 0 to AIBrains.Count - 1 do // offer available AIs
+      if AIBrains[i].Flags and fMultiple <> 0 then
+        OfferBrain(Brains.IndexOf(AIBrains[i]));
+    AIBrains.Free;
   end
   else
   begin
@@ -1313,8 +1339,8 @@ begin
       OfferBrain(-1);
       inc(FixedLines);
     end;
-    for i := bixTerm downto 0 do // offer game interfaces
-      if (bixPopup = 0) or (i = bixTerm) and (bixView[0] <> bixNoTerm) then
+    for i := Brains.IndexOf(BrainTerm) downto 0 do // offer game interfaces
+      if (bixPopup = 0) or (Brains[i].Kind = btTerm) and (Brains[bixView[0]].Kind <> btNoTerm) then
       begin
         OfferBrain(i);
         inc(FixedLines);
@@ -1325,15 +1351,18 @@ begin
       m.Caption := '-';
       PopupMenu1.Items.Add(m);
       inc(FixedLines);
-      if nBrain >= bixFirstAI + 2 then
+      if Brains.GetKindCount(btAI) >= 2 then
       begin
-        OfferBrain(bixRandom);
+        OfferBrain(Brains.IndexOf(BrainRandom));
         inc(FixedLines);
       end;
-      for i := bixFirstAI to nBrain - 1 do // offer available AIs
-        if (Brain[i].Flags and fMultiple <> 0) or (Brain[i].Flags and fUsed = 0)
+      AIBrains := TBrains.Create(False);
+      Brains.GetByKind(btAI, AIBrains);
+      for i := 0 to AIBrains.Count - 1 do // offer available AIs
+        if (AIBrains[i].Flags and fMultiple <> 0) or (AIBrains[i].Flags and fUsed = 0)
           or (i = bixView[bixPopup]) then
-          OfferBrain(i);
+          OfferBrain(Brains.IndexOf(AIBrains[i]));
+      AIBrains.Free;
     end;
   end
 end;
@@ -1396,10 +1425,10 @@ begin
           i := nMapStartPositions;
           if i = 0 then
           begin
-            bixView[0] := bixSuper_Virtual;
+            bixView[0] := Brains.IndexOf(BrainSuperVirtual);
             Difficulty[0] := 0
           end;
-          if bixView[0] < bixTerm then
+          if Brains[bixView[0]].Kind in [btNoTerm, btSuperVirtual] then
             inc(i);
           if i > nPl then
             i := nPl;
@@ -1420,8 +1449,8 @@ begin
                 s := ReadString('Control' + IntToStr(p1));
                 Difficulty[p1] := ReadInteger('Diff' + IntToStr(p1));
                 if s <> '' then
-                  for j := 0 to nBrain - 1 do
-                    if AnsiCompareFileName(s, Brain[j].FileName) = 0 then
+                  for j := 0 to Brains.Count - 1 do
+                    if AnsiCompareFileName(s, Brains[j].FileName) = 0 then
                       bixView[p1] := j;
               end;
               MultiControl := Reg.ReadInteger('MultiControl');
@@ -1440,7 +1469,7 @@ begin
                 bixView[p1] := -1;
         SlotAvailable := InitAlive[i];
         for i := 0 to nPlOffered - 1 do
-          if (AutoDiff < 0) and (bixView[i] >= bixTerm) then
+          if (AutoDiff < 0) and (Brains[bixView[i]].Kind in [btTerm, btRandom, btAI]) then
           begin
             DiffUpBtn[i].Tag := 768;
             DiffDownBtn[i].Tag := 768;
@@ -1451,7 +1480,7 @@ begin
             DiffDownBtn[i].Tag := 0;
           end;
         for i := 6 to 8 do
-          if (AutoDiff < 0) and (bixView[i] >= bixTerm) then
+          if (AutoDiff < 0) and (Brains[bixView[i]].Kind in [btTerm, btRandom, btAI]) then
           begin
             MultiBtn[i].Tag := 768;
             MultiBtn[i].ButtonIndex := 2 + (MultiControl shr i) and 1;
@@ -1592,7 +1621,7 @@ begin
   else if (AutoDiff > 1) and ((Page = pgStartRandom) or (Page = pgStartMap)) and
     (x >= xDefault) and (y >= yDefault) and (x < xDefault + 64) and
     (y < yDefault + 64) then
-    if nBrain < bixFirstAI + 2 then
+    if Brains.GetKindCount(btAI) < 2 then
       SimpleMessage(Phrases.Lookup('NOALTAI'))
     else
     begin

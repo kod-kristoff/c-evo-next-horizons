@@ -42,7 +42,8 @@ procedure Client(Command, Player: integer; var Data); stdcall;
 
 implementation
 
-uses GameServer, log, Start;
+uses
+  GameServer, log;
 
 {$R *.lfm}
 
@@ -326,7 +327,7 @@ begin
       Frame(Canvas, xBrain[i] - 24, yBrain[i] - 8 - 16, xBrain[i] - 24 + 111,
         yBrain[i] - 8 - 16 + 111, MainTexture.clBevelShade,
         MainTexture.clBevelShade);
-      FrameImage(Canvas, StartDlg.BrainPicture[bixView[i]], xBrain[i],
+      FrameImage(Canvas, Brains[bixView[i]].Picture, xBrain[i],
         yBrain[i] - 16, 64, 64, 0, 0);
       if 1 shl i and G.RO[me].Alive = 0 then
         BitBlt(Canvas.Handle, xBrain[i], yBrain[i] - 16, 64, 64,

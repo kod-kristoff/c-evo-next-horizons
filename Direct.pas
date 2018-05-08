@@ -52,8 +52,8 @@ end;
 
 procedure TDirectDlg.DlgNotify(ID: integer);
 var
-  hMem: Cardinal;
-  p: pointer;
+//  hMem: Cardinal;
+//  p: pointer;
   s: string;
 begin
   case ID of
@@ -70,7 +70,7 @@ begin
       if visible then
       begin
         s := Format(Phrases.Lookup('BUSY_MOD'),
-          [Brain[ID - ntInitModule].Name]);
+          [Brains[ID - ntInitModule].Name]);
         while BiColorTextWidth(Canvas, s) + 64 > ClientWidth do
           Delete(s, Length(s), 1);
         SetInfo(s);
@@ -97,12 +97,12 @@ begin
       SetState(ID - ntLoadState);
     ntDLLError .. ntDLLError + 128:
       SimpleMessage(Format(Phrases.Lookup('DLLERROR'),
-        [Brain[ID - ntDLLError].FileName]));
+        [Brains[ID - ntDLLError].FileName]));
     ntAIError:
       SimpleMessage(Format(Phrases.Lookup('AIERROR'), [NotifyMessage]));
     ntClientError .. ntClientError + 128:
       SimpleMessage(Format(Phrases.Lookup('CLIENTERROR'),
-        [Brain[ID - ntClientError].FileName]));
+        [Brains[ID - ntClientError].FileName]));
     ntEndInfo:
       begin
         Hide;
@@ -156,7 +156,7 @@ begin
     ntDeinitModule .. ntDeinitModule + maxBrain - 1:
       begin
         Info := Format(Phrases2.Lookup('BUSY_DEINIT'),
-          [Brain[ID - ntDeinitModule].Name]);
+          [Brains[ID - ntDeinitModule].Name]);
         while BiColorTextWidth(Canvas, Info) + 64 > ClientWidth do
           Delete(Info, Length(Info), 1);
         SetMainTextureByAge(-1);
@@ -182,13 +182,13 @@ begin
   State := -1;
   Info := '';
   GameServer.Init(Notify);
-  Brain[bixNoTerm].Client := NoTerm.Client;
-  Brain[bixSuper_Virtual].Client := nil;
-  Brain[bixTerm].Client := LocalPlayer.Client;
-  Brain[bixNoTerm].Name := Phrases.Lookup('AIT');
-  Brain[bixSuper_Virtual].Name := Phrases.Lookup('SUPER');
-  Brain[bixTerm].Name := Phrases.Lookup('HUMAN');
-  Brain[bixRandom].Name := Phrases.Lookup('RANDOMAI');
+  BrainNoTerm.Client := NoTerm.Client;
+  BrainNoTerm.Name := Phrases.Lookup('AIT');
+  BrainSuperVirtual.Client := nil;
+  BrainSuperVirtual.Name := Phrases.Lookup('SUPER');
+  BrainTerm.Client := LocalPlayer.Client;
+  BrainTerm.Name := Phrases.Lookup('HUMAN');
+  BrainRandom.Name := Phrases.Lookup('RANDOMAI');
   Canvas.Font.Assign(UniFont[ftNormal]);
   Canvas.Brush.Style := bsClear;
 end;
@@ -213,7 +213,7 @@ var
   s: string;
 begin
   Hide;
-  if nBrain = 3 then
+  if Brains.Count = 3 then
   begin
     Application.MessageBox(PChar(Phrases.Lookup('NOAI')), 'C-evo', 0);
     Close;
@@ -267,7 +267,7 @@ end;
 procedure TDirectDlg.OnAIException(var Msg: TMessage);
 begin
   Application.MessageBox(PChar(Format(Phrases.Lookup('AIEXCEPTION'),
-    [Brain[Msg.WParam].Name])), 'C-evo', 0);
+    [Brains[Msg.WParam].Name])), 'C-evo', 0);
 end;
 
 procedure TDirectDlg.FormPaint(Sender: TObject);

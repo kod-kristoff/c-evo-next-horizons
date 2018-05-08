@@ -6,7 +6,7 @@ unit GameServer;
 interface
 
 uses
-  Protocol, Database, dynlibs, Platform, dateutils;
+  Protocol, Database, dynlibs, Platform, dateutils, fgl, FileUtil, Graphics;
 
 const
   Version = $010200;
@@ -49,21 +49,39 @@ const
   smCity = $80;
 
   maxBrain = 255;
-  bixNoTerm = 0;
-  bixSuper_Virtual = 1;
-  bixTerm = 2;
-  bixRandom = 3;
-  bixFirstAI = 4;
 
 type
   TNotifyFunction = procedure(ID: integer);
 
-  TBrainInfo = record
-    FileName, DLLName, Name, Credits: string; { filename and full name }
+  TBrainType = (btNoTerm, btSuperVirtual, btTerm, btRandom, btAI);
+
+  { TBrain }
+
+  TBrain = class
+    FileName: string;
+    DLLName: string;
+    Name: string;
+    Credits: string; { filename and full name }
     hm: TLibHandle; { module handle }
-    Flags, ServerVersion, DataVersion, DataSize: integer;
+    Flags: Integer;
+    ServerVersion: Integer;
+    DataVersion: Integer;
+    DataSize: Integer;
     Client: TClientCall; { client function address }
-    Initialized: boolean;
+    Initialized: Boolean;
+    Kind: TBrainType;
+    Picture: TBitmap;
+    procedure LoadFromFile(AIFileName: string);
+    constructor Create;
+    destructor Destroy; override;
+  end;
+
+  { TBrains }
+
+  TBrains = class(TFPGObjectList<TBrain>)
+    function AddNew: TBrain;
+    function GetKindCount(Kind: TBrainType): Integer;
+    procedure GetByKind(Kind: TBrainType; Brains: TBrains);
   end;
 
 var
@@ -74,10 +92,14 @@ var
 
   // READ ONLY
   DotNetClient: TClientCall;
-  bixBeginner, // AI to use for beginner level
-  nBrain: integer; { number of brains available }
-  Brain: array [-1 .. maxBrain - 1] of TBrainInfo; { available brains }
+  Brains: TBrains; // { available brains }
   NotifyMessage: string;
+
+  BrainNoTerm: TBrain;
+  BrainSuperVirtual: TBrain;
+  BrainTerm: TBrain;
+  BrainRandom: TBrain;
+  BrainBeginner: TBrain; // AI to use for beginner level
 
 procedure Init(NotifyFunction: TNotifyFunction);
 procedure Done;
@@ -144,7 +166,7 @@ begin
     HandoverStack[nHandoverStack] := p;
     HandoverStack[nHandoverStack + 1] := Command;
     inc(nHandoverStack, 2);
-    Brain[bix[p]].Client(Command, p, Data);
+    Brains[bix[p]].Client(Command, p, Data);
     dec(nHandoverStack, 2);
 {$ELSE}
     try
@@ -164,7 +186,7 @@ begin
     HandoverStack[nHandoverStack] := bix;
     HandoverStack[nHandoverStack + 1] := Command;
     inc(nHandoverStack, 2);
-    Brain[bix].Client(Command, -1, Data);
+    Brains[bix].Client(Command, -1, Data);
     dec(nHandoverStack, 2);
 {$ELSE}
     try
@@ -178,124 +200,70 @@ end;
 
 procedure Init(NotifyFunction: TNotifyFunction);
 var
-  i: integer;
   f: TSearchRec;
-  T: TextFile;
-  s: string;
-  Key: string;
-  Value: string;
   BasePath: string;
-  AIFileName: string;
+  NewBrain: TBrain;
 begin
   Notify := NotifyFunction;
   PreviewElevation := false;
 
   { get available brains }
-  Brain[bixNoTerm].FileName := ':AIT';
-  Brain[bixNoTerm].Flags := 0;
-  Brain[bixNoTerm].Initialized := false;
-  Brain[bixSuper_Virtual].FileName := ':Supervisor';
-  Brain[bixSuper_Virtual].Flags := 0;
-  Brain[bixSuper_Virtual].Initialized := false;
-  Brain[bixTerm].FileName := ':StdIntf';
-  Brain[bixTerm].Flags := fMultiple;
-  Brain[bixTerm].Initialized := false;
-  Brain[bixTerm].ServerVersion := Version;
-  Brain[bixRandom].FileName := ':Random';
-  Brain[bixRandom].Flags := fMultiple;
-  Brain[bixRandom].Initialized := false;
-  nBrain := bixFirstAI;
-  bixBeginner := bixFirstAI;
+  Brains := TBrains.Create;
+  BrainNoTerm := Brains.AddNew;
+  BrainNoTerm.FileName := ':AIT';
+  BrainNoTerm.Flags := 0;
+  BrainNoTerm.Initialized := false;
+  BrainNoTerm.Kind := btNoTerm;
+  BrainSuperVirtual := Brains.AddNew;
+  BrainSuperVirtual.FileName := ':Supervisor';
+  BrainSuperVirtual.Flags := 0;
+  BrainSuperVirtual.Initialized := false;
+  BrainSuperVirtual.Kind := btSuperVirtual;
+  BrainTerm := Brains.AddNew;
+  BrainTerm.FileName := ':StdIntf';
+  BrainTerm.Flags := fMultiple;
+  BrainTerm.Initialized := false;
+  BrainTerm.ServerVersion := Version;
+  BrainTerm.Kind := btTerm;
+  BrainRandom := Brains.AddNew;
+  BrainRandom.FileName := ':Random';
+  BrainRandom.Flags := fMultiple;
+  BrainRandom.Initialized := false;
+  BrainRandom.Kind := btRandom;
+
+  BrainBeginner := nil;
+
   if FindFirst(HomeDir + 'AI' + DirectorySeparator + '*', faDirectory or faArchive or faReadOnly, f) = 0 then
   repeat
     BasePath := HomeDir + 'AI' + DirectorySeparator + f.Name;
     if (f.Name <> '.') and (f.Name <> '..') and DirectoryExists(BasePath) then begin
-      with Brain[nBrain] do begin
-        FileName := f.Name;
-        DLLName := BasePath + DirectorySeparator + FileName + '.dll';
-        AIFileName := BasePath + DirectorySeparator + f.Name + '.ai.txt';
-        Name := f.Name;
-        Credits := '';
-        Flags := fMultiple;
-        Client := nil;
-        Initialized := false;
-        ServerVersion := 0;
-        if not FileExists(AIFileName) then
-          raise Exception.Create(Format('AI specification file %s not found', [AIFileName]));
-        AssignFile(T, AIFileName);
-        Reset(T);
-        while not EOF(T) do
-        begin
-          ReadLn(T, s);
-          s := trim(s);
-          if Pos(' ', S) > 0 then begin
-            Key := Copy(S, 1, Pos(' ', S) - 1);
-            Value := Trim(Copy(S, Pos(' ', S) + 1, Length(S)));
-          end else begin
-            Key := S;
-            Value := '';
-          end;
-          if Key = '#NAME' then
-            Name := Value
-          else if Key = '#.NET' then
-            Flags := Flags or fDotNet
-          else if Key = '#BEGINNER' then
-            bixBeginner := nBrain
-          else if Key = '#PATH' then
-            DLLName := BasePath + DirectorySeparator + Value
-          {$IFDEF WINDOWS}{$IFDEF CPU32}
-          else if Key = '#PATH_WIN32' then
-            DLLName := BasePath + DirectorySeparator + Value
-          {$ENDIF}{$ENDIF}
-          {$IFDEF WINDOWS}{$IFDEF CPU64}
-          else if Key = '#PATH_WIN64' then
-            DLLName := BasePath + DirectorySeparator + Value
-          {$ENDIF}{$ENDIF}
-          {$IFDEF LINUX}{$IFDEF CPU32}
-          else if Key = '#PATH_LINUX32' then
-            DLLName := BasePath + DirectorySeparator + Value
-          {$ENDIF}{$ENDIF}
-          {$IFDEF LINUX}{$IFDEF CPU64}
-          else if Key = '#PATH_LINUX64' then
-            DLLName := BasePath + DirectorySeparator + Value
-          {$ENDIF}{$ENDIF}
-          else if Key = '#GAMEVERSION' then
-            for i := 1 to Length(Value) do
-              case Value[i] of
-                '0' .. '9':
-                  ServerVersion := ServerVersion and $FFFF00 + ServerVersion and
-                    $FF * 10 + ord(Value[i]) - 48;
-                '.':
-                  ServerVersion := ServerVersion shl 8;
-              end
-          else if Key = '#CREDITS' then
-            Credits := Value
-        end;
-        CloseFile(T);
-      end;
-      if (Brain[nBrain].ServerVersion >= FirstAICompatibleVersion) and
-        (Brain[nBrain].ServerVersion <= Version) and
-        ((Brain[nBrain].Flags and fDotNet = 0) or (@DotNetClient <> nil)) then
-        inc(nBrain);
+      NewBrain := Brains.AddNew;
+      NewBrain.Kind := btAI;
+      NewBrain.LoadFromFile(BasePath + DirectorySeparator + F.Name + '.ai.txt');
+      if (NewBrain.ServerVersion >= FirstAICompatibleVersion) and
+        (NewBrain.ServerVersion <= Version) and
+        ((NewBrain.Flags and fDotNet = 0) or (@DotNetClient <> nil)) then begin
+        end else Brains.Delete(Brains.Count - 1);
     end;
   until FindNext(f) <> 0;
   FindClose(F);
 
-  if nBrain = 0 then
+  if Brains.GetKindCount(btAI) = 0 then
     raise Exception.Create(Format('No AI libraries found in directory %s', [HomeDir + 'AI']));
 end;
 
 procedure Done;
 var
-  i: integer;
+  I: Integer;
 begin
-  for i := 0 to nBrain - 1 do
-    if Brain[i].Initialized then
-    begin
-      CallClient(i, cReleaseModule, nil^);
-      if (i >= bixFirstAI) and (Brain[i].Flags and fDotNet = 0) then
-        FreeLibrary(Brain[i].hm);
+  for I := 0 to Brains.Count - 1 do
+  with Brains[I] do
+    if Initialized then begin
+      CallClient(I, cReleaseModule, nil^);
+      if (Kind = btAI) and ((Flags and fDotNet) = 0) then
+        FreeLibrary(hm);
     end;
+  Brains.Free;
 end;
 
 function PreviewMap(lm: integer): pointer;
@@ -326,7 +294,7 @@ end;
 
 procedure PutMessage(Level: integer; Text: string);
 begin
-  Brain[bix[0]].Client(cDebugMessage, Level, pchar(Text)^);
+  Brains[bix[0]].Client(cDebugMessage, Level, pchar(Text)^);
 end;
 
 procedure ForceClientDeactivation;
@@ -361,7 +329,7 @@ begin
     [(T - LastClientTime) / OneMillisecond]));
   LastClientTime := T;
   PutMessage(1 shl 16 + 2, Format('CLIENT: calling %d (%s)',
-    [CCPlayer, Brain[bix[CCPlayer]].Name]));
+    [CCPlayer, Brains[bix[CCPlayer]].Name]));
   if CCCommand = cTurn then
     for p := 0 to nPl - 1 do
       if (p <> CCPlayer) and (1 shl p and GWatching <> 0) then
@@ -370,7 +338,7 @@ begin
   p := CCPlayer;
   CCPlayer := -1;
   CallPlayer(CCCommand, p, CCData);
-  if (Mode = moPlaying) and (Brain[bix[p]].Flags and aiThreaded = 0) and
+  if (Mode = moPlaying) and (Brains[bix[p]].Flags and aiThreaded = 0) and
     (CCPlayer < 0) then
   begin
     Notify(ntDeactivationMissing + p);
@@ -448,11 +416,11 @@ begin
             SavedStatus := Status
           end;
       // log data changes
-      if Brain[bix[p]].DataSize > 0 then
+      if Brains[bix[p]].DataSize > 0 then
       begin
         CL.PutDataChanges(sIntDataChange, p, SavedData[p], RW[p].Data,
-          Brain[bix[p]].DataSize);
-        move(RW[p].Data^, SavedData[p]^, Brain[bix[p]].DataSize * 4);
+          Brains[bix[p]].DataSize);
+        move(RW[p].Data^, SavedData[p]^, Brains[bix[p]].DataSize * 4);
       end
     end;
 end;
@@ -476,8 +444,8 @@ begin
       for ix := 0 to RW[p].nEnemyCity - 1 do
         with RW[p].EnemyCity[ix] do
           SavedStatus := Status;
-      if Brain[bix[p]].DataSize > 0 then
-        move(RW[p].Data^, SavedData[p]^, Brain[bix[p]].DataSize * 4);
+      if Brains[bix[p]].DataSize > 0 then
+        move(RW[p].Data^, SavedData[p]^, Brains[bix[p]].DataSize * 4);
     end;
 end;
 
@@ -506,7 +474,7 @@ begin
       if (Loc >= 0) and (SavedStatus <> Status) then
         result := true;
   if RW[p].Data <> nil then
-    for ix := 0 to Brain[bix[p]].DataSize - 1 do
+    for ix := 0 to Brains[bix[p]].DataSize - 1 do
       if PDWortList(SavedData[p])[ix] <> PDWortList(RW[p].Data)[ix] then
         result := true
 end;
@@ -515,12 +483,11 @@ procedure InitBrain(bix: integer);
 var
   InitModuleData: TInitModuleData;
 begin
-  assert(bix <> bixSuper_Virtual);
-  with Brain[bix] do
-  begin
+  assert(Brains[bix].Kind <> btSuperVirtual);
+  with Brains[bix] do begin
     if Initialized then
       exit;
-    if bix >= bixFirstAI then
+    if Kind = btAI then
     begin { get client function }
       Notify(ntInitModule + bix);
       if Flags and fDotNet > 0 then
@@ -634,7 +601,7 @@ var
 begin
   nLocal := 0;
   for i := 0 to nPl - 1 do
-    if bix[i] = bixTerm then
+    if (bix[i] <> -1) and (Brains[bix[i]].Kind = btTerm) then
       inc(nLocal);
   if Difficulty[0] = 0 then
     nLocal := 0;
@@ -682,10 +649,10 @@ begin
       LogFile.write(zero, 4)
     else
     begin
-      if bixView[i] >= bixRandom then
-        s := Brain[bix[i]].FileName
+      if Brains[bixView[i]].Kind in [btRandom, btAI] then
+        s := Brains[bix[i]].FileName
       else
-        s := Brain[bixView[i]].FileName;
+        s := Brains[bixView[i]].FileName;
       move(zero, s[Length(s) + 1], 4);
       LogFile.write(s, (Length(s) div 4 + 1) * 4);
       LogFile.write(OriginalDataVersion[i], 4);
@@ -714,44 +681,47 @@ var
   // GameEx: TNewGameExData;
   Path: shortstring;
   BrainUsed: Set of 0 .. 254; { used brains }
+  AIBrains: TBrains;
 begin
-  for p1 := 0 to nPl - 1 do
-  begin
-    if bixView[p1] = bixSuper_Virtual then
-      bix[p1] := bixTerm // supervisor and local human use same module
-    else if bixView[p1] = bixRandom then
-      if nBrain <= bixFirstAI then
+  for p1 := 0 to nPl - 1 do begin
+    if (bixView[p1] <> -1) and (Brains[bixView[p1]].Kind = btSuperVirtual) then
+      bix[p1] := Brains.IndexOf(BrainTerm) // supervisor and local human use same module
+    else if (bixView[p1] <> -1) and (Brains[bixView[p1]].Kind = btRandom) then
+      if Brains.GetKindCount(btAI) = 0 then
         bix[p1] := -1
-      else
-        bix[p1] := bixFirstAI + Delphirandom(nBrain - bixFirstAI)
+      else begin
+        AIBrains := TBrains.Create(False);
+        bix[p1] := Brains.IndexOf(AIBrains[DelphiRandom(AIBrains.Count)]);
+        AIBrains.Free;
+      end
     else
       bix[p1] := bixView[p1];
     if bixView[p1] < 0 then
       Difficulty[p1] := -1;
   end;
 
-  if bix[0] <> bixNoTerm then
+  if Brains[bix[0]].Kind <> btNoTerm then
     Notify(ntInitLocalHuman);
   BrainUsed := [];
   for p := 0 to nPl - 1 do
     if (bix[p] >= 0) and ((Mode <> moMovie) or (p = 0)) then
     begin { initiate selected control module }
-      AIInfo[p] := Brain[bix[p]].Name + #0;
+      AIInfo[p] := Brains[bix[p]].Name + #0;
       InitBrain(bix[p]);
       if Mode = moPlaying then
       begin // new game, this data version is original
-        OriginalDataVersion[p] := Brain[bix[p]].DataVersion;
+        OriginalDataVersion[p] := Brains[bix[p]].DataVersion;
         ProcessClientData[p] := true;
       end
       else // loading game, compare with data version read from file
         ProcessClientData[p] := ProcessClientData[p] and
-          (OriginalDataVersion[p] = Brain[bix[p]].DataVersion);
-      if @Brain[bix[p]].Client = nil then // client function not found
-        if bix[0] = bixNoTerm then
+          (OriginalDataVersion[p] = Brains[bix[p]].DataVersion);
+      if @Brains[bix[p]].Client = nil then // client function not found
+        if Brains[bix[0]].Kind = btNoTerm then
           bix[p] := -1
         else
         begin
-          bix[p] := bixTerm;
+          bix[p] := Brains.IndexOf(BrainTerm);
           OriginalDataVersion[p] := -1;
           ProcessClientData[p] := false;
         end;
@@ -772,16 +742,16 @@ begin
     begin
       if Mode <> moMovie then
         inc(GWatching, 1 shl p1);
-      if bix[p1] >= bixFirstAI then
+      if Brains[bix[p1]].Kind = btAI then
         inc(GAI, 1 shl p1);
       if Difficulty[p1] > 0 then
       begin
         inc(GAlive, 1 shl p1);
         inc(nAlive);
       end;
-      ServerVersion[p1] := Brain[bix[p1]].ServerVersion;
+      ServerVersion[p1] := Brains[bix[p1]].ServerVersion;
     end;
-  WinOnAlone := (bix[0] = bixNoTerm) and (nAlive > 1);
+  WinOnAlone := (Brains[bix[0]].Kind = btNoTerm) and (nAlive > 1);
   GWinner := 0;
   GColdWarStart := -ColdWarTurns - 1;
   uixSelectedTransport := -1;
@@ -816,12 +786,12 @@ begin
         DevModelTurn[p] := -1;
         OracleIncome := 0;
 
-        if Brain[bix[p]].DataSize > 0 then
+        if Brains[bix[p]].DataSize > 0 then
         begin
-          GetMem(SavedData[p], Brain[bix[p]].DataSize * 4);
-          GetMem(Data, Brain[bix[p]].DataSize * 4);
-          FillChar(SavedData[p]^, Brain[bix[p]].DataSize * 4, 0);
-          FillChar(Data^, Brain[bix[p]].DataSize * 4, 0);
+          GetMem(SavedData[p], Brains[bix[p]].DataSize * 4);
+          GetMem(Data, Brains[bix[p]].DataSize * 4);
+          FillChar(SavedData[p]^, Brains[bix[p]].DataSize * 4, 0);
+          FillChar(Data^, Brains[bix[p]].DataSize * 4, 0);
         end
         else
         begin
@@ -838,7 +808,7 @@ begin
           else } BorderHelper := nil;
         for i := 0 to nStat - 1 do
           GetMem(Stat[i, p], 4 * (MaxTurn + 1));
-        if Brain[bix[p]].Flags and fDotNet <> 0 then
+        if Brains[bix[p]].Flags and fDotNet <> 0 then
         begin
           GetMem(RW[p].DefaultDebugMap, MapSize * 4);
           FillChar(RW[p].DefaultDebugMap^, MapSize * 4, 0);
@@ -864,7 +834,7 @@ begin
     move(RealMap, MapField^, MapSize * 4);
     Human := 0;
     for p1 := 0 to nPl - 1 do
-      if bix[p1] = bixTerm then
+      if Brains[bix[p1]].Kind = btTerm then
         inc(Human, 1 shl p1);
     InitMapGame(Human);
   end;
@@ -875,7 +845,7 @@ begin
       Inform(p);
 
   pTurn := -1;
-  if bix[0] <> bixNoTerm then
+  if Brains[bix[0]].Kind <> btNoTerm then
     Notify(ntInitLocalHuman);
   Game.lx := lx;
   Game.ly := ly;
@@ -886,11 +856,12 @@ begin
   // GameEx.MaxTurn:=MaxTurn; GameEx.RND:=RND;
   // move(Difficulty,GameEx.Difficulty,SizeOf(Difficulty));
   AICredits := '';
-  for i := 0 to nBrain - 1 do
-    if Brain[i].Initialized then
+  for i := 0 to Brains.Count - 1 do
+  with Brains[I] do begin
+    if Initialized then
       if i in BrainUsed then
       begin
-        if i >= bixFirstAI then
+        if Kind = btAI then
           Notify(ntInitPlayers);
         for p := 0 to nPl - 1 do
         begin
@@ -898,14 +869,14 @@ begin
             Game.RO[p] := @RW[p]
           else
             Game.RO[p] := nil;
-          if (i = bixTerm) and (Difficulty[0] = 0) and (bix[p] >= 0) then
+          if (Kind = btTerm) and (Difficulty[0] = 0) and (bix[p] >= 0) then
             Game.SuperVisorRO[p] := @RW[p]
           else
             Game.SuperVisorRO[p] := nil;
         end;
-        if Brain[i].Flags and fDotNet > 0 then
+        if Flags and fDotNet > 0 then
         begin
-          Path := Brain[i].DLLName;
+          Path := DLLName;
           move(Path[1], Game.AssemblyPath, Length(Path));
           Game.AssemblyPath[Length(Path)] := #0;
         end
@@ -919,40 +890,41 @@ begin
           moPlaying:
             CallClient(i, cNewGame, Game);
         end;
-        if (i >= bixFirstAI) and (Brain[i].Credits <> '') then
+        if (Kind = btAI) and (Credits <> '') then
           if AICredits = '' then
-            AICredits := Brain[i].Credits
+            AICredits := Credits
           else
-            AICredits := AICredits + '\' + Brain[i].Credits
+            AICredits := AICredits + '\' + Credits;
       end
       else
       begin { module no longer used -- unload }
         CallClient(i, cReleaseModule, nil^);
-        if i >= bixFirstAI then
+        if Kind = btAI then
         begin
-          if Brain[i].Flags and fDotNet = 0 then
-            FreeLibrary(Brain[i].hm);
-          Brain[i].Client := nil;
+          if Flags and fDotNet = 0 then
+            FreeLibrary(hm);
+          Client := nil;
         end;
-        Brain[i].Initialized := false;
+        Initialized := false;
       end;
+  end;
   AICredits := AICredits + #0;
 
-  if bix[0] <> bixNoTerm then
+  if Brains[bix[0]].Kind <> btNoTerm then
   begin
     // uni ai?
     bixUni := -1;
     for p1 := 0 to nPl - 1 do
-      if bix[p1] >= bixFirstAI then
+      if (bix[p1] <> - 1) and (Brains[bix[p1]].Kind = btAI) then
         if bixUni = -1 then
           bixUni := bix[p1]
         else if bixUni <> bix[p1] then
           bixUni := -2;
     for p1 := 0 to nPl - 1 do
-      if bix[p1] >= bixFirstAI then
+      if (bix[p1] <> -1) and (Brains[bix[p1]].Kind = btAI) then
       begin
         if bixUni = -2 then
-          NotifyMessage := Brain[bix[p1]].FileName
+          NotifyMessage := Brains[bix[p1]].FileName
         else
           NotifyMessage := '';
         Notify(ntSetAIName + p1);
@@ -1158,20 +1130,20 @@ begin
         LogFile.read(OriginalDataVersion[p1], 4);
         LogFile.read(d, 4); { behavior }
         LogFile.read(Difficulty[p1], 4);
-        j := nBrain - 1;
-        while (j >= 0) and (AnsiCompareFileName(Brain[j].FileName, s) <> 0) do
+        j := Brains.Count - 1;
+        while (j >= 0) and (AnsiCompareFileName(Brains[j].FileName, s) <> 0) do
           dec(j);
         if j < 0 then
         begin // ai not found -- replace by local player
           ProcessClientData[p1] := false;
           NotifyMessage := s;
           Notify(ntAIError);
-          j := bixTerm;
+          j := Brains.IndexOf(BrainTerm);
         end
         else
           ProcessClientData[p1] := true;
-        if j = bixNoTerm then
-          j := bixSuper_Virtual;
+        if Brains[j].Kind = btNoTerm then
+          j := Brains.IndexOf(BrainSuperVirtual);
         // crashed tournament -- load as supervisor
         bixView[p1] := j;
       end;
@@ -1204,7 +1176,7 @@ begin
   StartGame;
   if MovieMode then
   begin
-    Brain[bix[0]].Client(cShowGame, 0, nil^);
+    Brains[bix[0]].Client(cShowGame, 0, nil^);
     Notify(ntBackOff);
   end
   else
@@ -1256,7 +1228,7 @@ begin
     begin
 {$IFDEF TEXTLOG}LoadPos0 := CL.State.LoadPos; {$ENDIF}
       if ProcessClientData[p1] then
-        CL.GetDataChanges(RW[p1].Data, Brain[bix[p1]].DataSize)
+        CL.GetDataChanges(RW[p1].Data, Brains[bix[p1]].DataSize)
       else
         CL.GetDataChanges(nil, 0);
 {$IFDEF TEXTLOG}WriteLn(TextLog, Format('Data Changes P%d (%d Bytes)', [p1, CL.State.LoadPos - LoadPos0])); {$ENDIF}
@@ -1280,7 +1252,7 @@ begin
   if MovieMode then
   begin
     Notify(ntBackOn);
-    Brain[bix[0]].Client(cBreakGame, -1, nil^);
+    Brains[bix[0]].Client(cBreakGame, -1, nil^);
     EndGame;
     Notify(ntStartGo);
     result := false;
@@ -1325,7 +1297,7 @@ begin
     NotifyMessage := SavePath + LogFileName;
     Notify(ntLoadError);
   end;
-  Brain[bix[0]].Client(cShowGame, 0, nil^);
+  Brains[bix[0]].Client(cShowGame, 0, nil^);
   Notify(ntBackOff);
   Inform(pTurn);
   ChangeClientWhenDone(cResume, 0, nil^, 0);
@@ -1396,7 +1368,7 @@ begin
   GenerateStat(pTurn);
   nLogOpened := -1;
   LastEndClientCommand := -1;
-  Brain[bix[0]].Client(cShowGame, 0, nil^);
+  Brains[bix[0]].Client(cShowGame, 0, nil^);
   Notify(ntBackOff);
   Inform(pTurn);
   ChangeClientWhenDone(cTurn, 0, nil^, 0)
@@ -1404,8 +1376,8 @@ end;
 
 procedure DirectHelp(Command: integer);
 begin
-  InitBrain(bixTerm);
-  Brain[bixTerm].Client(Command, -1, nil^);
+  InitBrain(Brains.IndexOf(BrainTerm));
+  BrainTerm.Client(Command, -1, nil^);
   AICredits := #0;
 end;
 
@@ -1421,9 +1393,9 @@ begin
   ly := Newly;
   MapSize := lx * ly;
   LandMass := NewLandMass;
-  bix[0] := bixTerm;
+  bix[0] := Brains.IndexOf(BrainTerm);
   Difficulty[0] := 0;
-  InitBrain(bixTerm);
+  InitBrain(Brains.IndexOf(BrainTerm));
 
   DelphiRandomize;
   GAlive := 0;
@@ -1445,11 +1417,11 @@ begin
     Game.RO[p1] := nil;
     Game.Difficulty[p1] := -1
   end;
-  Brain[bixTerm].Client(cNewMap, -1, Game);
+  BrainTerm.Client(cNewMap, -1, Game);
 
   DiscoverAll(0, lObserveSuper);
   Notify(ntEndInfo);
-  Brain[bix[0]].Client(cShowGame, 0, nil^);
+  Brains[bix[0]].Client(cShowGame, 0, nil^);
   Notify(ntBackOff);
   ChangeClientWhenDone(cEditMap, 0, nil^, 0)
 end;
@@ -1904,7 +1876,7 @@ begin
     if (GTestFlags and tfUncover <> 0) or (Difficulty[pTurn] = 0)
     then { supervisor - all tiles visible }
     begin
-      if (bix[pTurn] <> bixNoTerm) and
+      if (Brains[bix[pTurn]].Kind <> btNoTerm) and
         ((Difficulty[pTurn] > 0) or (Mode > moLoading_Fast)) then
         DiscoverAll(pTurn, lObserveSuper)
     end
@@ -2101,7 +2073,7 @@ begin
         else
           ShowMove.Flags := ShowMove.Flags or umShipLoading;
       for p1 := 0 to nPl - 1 do
-        if (1 shl p1 and GWatching <> 0) and ((p1 <> p) or (bix[p1] = bixTerm))
+        if (1 shl p1 and GWatching <> 0) and ((p1 <> p) or (Brains[bix[p1]].Kind = btTerm))
         then
         begin
           if PModel.Cap[mcStealth] > 0 then
@@ -2272,7 +2244,7 @@ begin
 
     if Mode >= moMovie then { show after-move in interface modules }
       for p1 := 0 to nPl - 1 do
-        if (1 shl p1 and GWatching <> 0) and ((p1 <> p) or (bix[p1] = bixTerm))
+        if (1 shl p1 and GWatching <> 0) and ((p1 <> p) or (Brains[bix[p1]].Kind = btTerm))
         then
         begin
           if PModel.Cap[mcStealth] > 0 then
@@ -2380,7 +2352,7 @@ begin
       end; }
     if Mode >= moMovie then { show attack in interface modules }
       for p1 := 0 to nPl - 1 do
-        if (1 shl p1 and GWatching <> 0) and ((p1 <> p) or (bix[p1] = bixTerm))
+        if (1 shl p1 and GWatching <> 0) and ((p1 <> p) or (Brains[bix[p1]].Kind = btTerm))
         then
         begin
           SeeFrom := ObserveLevel[FromLoc] shr (2 * p1) and
@@ -2542,7 +2514,7 @@ begin
         with RW[p].EnemyModel[i] do
           Lost := Destroyed[p, Owner, mix];
       for p1 := 0 to nPl - 1 do { show after-attack in interface modules }
-        if (1 shl p1 and GWatching <> 0) and ((p1 <> p) or (bix[p1] = bixTerm))
+        if (1 shl p1 and GWatching <> 0) and ((p1 <> p) or (Brains[bix[p1]].Kind = btTerm))
         then
         begin
           SeeFrom := ObserveLevel[FromLoc] shr (2 * p1) and
@@ -2806,7 +2778,7 @@ begin { >>>server }
       ____________________________________________________________________
     }
     sMessage:
-      Brain[bix[0]].Client(cDebugMessage, Subject, Data);
+      Brains[bix[0]].Client(cDebugMessage, Subject, Data);
 
     sSetDebugMap:
       DebugMap[Player] := @Data;
@@ -2823,7 +2795,7 @@ begin { >>>server }
       else result:=eInvalid; }
 
     sRefreshDebugMap:
-      Brain[bix[0]].Client(cRefreshDebugMap, -1, Player);
+      Brains[bix[0]].Client(cRefreshDebugMap, -1, Player);
 
     sGetChart .. sGetChart + (nStat - 1) shl 4:
       if (Subject >= 0) and (Subject < nPl) and (bix[Subject] >= 0) then
@@ -3120,7 +3092,7 @@ begin { >>>server }
       begin
         AllHumansDead := true;
         for p1 := 0 to nPl - 1 do
-          if (1 shl p1 and GAlive <> 0) and (bix[p1] = bixTerm) then
+          if (1 shl p1 and GAlive <> 0) and (Brains[bix[p1]].Kind = btTerm) then
             AllHumansDead := false;
         if (pDipActive >= 0) // still in negotiation mode
           or (pTurn = 0) and ((GWinner > 0) or (GTurn = MaxTurn) or
@@ -3237,10 +3209,10 @@ begin { >>>server }
       begin
         if Command = sReload then
         begin
-          ok := (Difficulty[0] = 0) and (bix[0] <> bixNoTerm) and
+          ok := (Difficulty[0] = 0) and (Brains[bix[0]].Kind <> btNoTerm) and
             (integer(Data) >= 0) and (integer(Data) < GTurn);
           for p1 := 1 to nPl - 1 do
-            if bix[p1] = bixTerm then
+            if Brains[bix[p1]].Kind = btTerm then
               ok := false;
           // allow reload in AI-only games only
         end
@@ -3250,10 +3222,10 @@ begin { >>>server }
         begin
           if (Command = sBreak) or (Command = sResign) then
             Notify(ntBackOn);
-          for i := 0 to nBrain - 1 do
-            if Brain[i].Initialized then
+          for i := 0 to Brains.Count - 1 do
+            if Brains[i].Initialized then
             begin
-              if i >= bixFirstAI then
+              if Brains[i].Kind = btAI then
                 Notify(ntDeinitModule + i);
               CallClient(i, cBreakGame, nil^);
             end;
@@ -3288,7 +3260,7 @@ begin { >>>server }
         if Command = sSaveMap then
           SaveMap(MapFileName);
         Notify(ntBackOn);
-        Brain[bixTerm].Client(cBreakGame, -1, nil^);
+        BrainTerm.Client(cBreakGame, -1, nil^);
         ReleaseMapEditor;
         if Command = sSaveMap then
           Notify(ntStartGoRefreshMaps)
@@ -3468,7 +3440,7 @@ begin { >>>server }
                 pSender := pDipActive;
                 pTarget := p1;
                 Action := Command;
-                Brain[bix[0]].Client(cShowNego, 1 shl 16 + 3, ShowNegoData);
+                Brains[bix[0]].Client(cShowNego, 1 shl 16 + 3, ShowNegoData);
               end;
             pDipActive := p1;
             ChangeClientWhenDone(Command, pDipActive, nil^, 0);
@@ -3569,7 +3541,7 @@ begin { >>>server }
                   pTarget := p1;
                   Action := Command;
                   Offer := TOffer(Data);
-                  Brain[bix[0]].Client(cShowNego, 1 shl 16 + 3, ShowNegoData);
+                  Brains[bix[0]].Client(cShowNego, 1 shl 16 + 3, ShowNegoData);
                 end;
               LastOffer := TOffer(Data);
               // show offered things to receiver
@@ -4505,6 +4477,117 @@ begin { >>>server }
     LastEndClientCommand := Command;
 {$IFOPT O-}dec(nHandoverStack, 2); {$ENDIF}
 end; { <<<server }
+
+{ TBrain }
+
+procedure TBrain.LoadFromFile(AIFileName: string);
+var
+  T: Text;
+  Key: string;
+  Value: string;
+  S: string;
+  BasePath: string;
+  I: Integer;
+begin
+  BasePath := ExtractFileDir(AIFileName);
+  FileName := ExtractFileName(ExtractFileNameWithoutExt(ExtractFileNameWithoutExt(AIFileName)));
+  Name := FileName;
+  DLLName := BasePath + DirectorySeparator + Name + '.dll';
+  Credits := '';
+  Flags := fMultiple;
+  Client := nil;
+  Initialized := false;
+  ServerVersion := 0;
+  if not FileExists(AIFileName) then
+    raise Exception.Create(Format('AI specification file %s not found', [AIFileName]));
+  AssignFile(T, AIFileName);
+  Reset(T);
+  while not EOF(T) do
+  begin
+    ReadLn(T, s);
+    s := trim(s);
+    if Pos(' ', S) > 0 then begin
+      Key := Copy(S, 1, Pos(' ', S) - 1);
+      Value := Trim(Copy(S, Pos(' ', S) + 1, Length(S)));
+    end else begin
+      Key := S;
+      Value := '';
+    end;
+    if Key = '#NAME' then
+      Name := Value
+    else if Key = '#.NET' then
+      Flags := Flags or fDotNet
+    else if Key = '#BEGINNER' then
+      BrainBeginner := Self
+    else if Key = '#PATH' then
+      DLLName := BasePath + DirectorySeparator + Value
+    {$IFDEF WINDOWS}{$IFDEF CPU32}
+    else if Key = '#PATH_WIN32' then
+      DLLName := BasePath + DirectorySeparator + Value
+    {$ENDIF}{$ENDIF}
+    {$IFDEF WINDOWS}{$IFDEF CPU64}
+    else if Key = '#PATH_WIN64' then
+      DLLName := BasePath + DirectorySeparator + Value
+    {$ENDIF}{$ENDIF}
+    {$IFDEF LINUX}{$IFDEF CPU32}
+    else if Key = '#PATH_LINUX32' then
+      DLLName := BasePath + DirectorySeparator + Value
+    {$ENDIF}{$ENDIF}
+    {$IFDEF LINUX}{$IFDEF CPU64}
+    else if Key = '#PATH_LINUX64' then
+      DLLName := BasePath + DirectorySeparator + Value
+    {$ENDIF}{$ENDIF}
+    else if Key = '#GAMEVERSION' then
+      for i := 1 to Length(Value) do
+        case Value[i] of
+          '0' .. '9':
+            ServerVersion := ServerVersion and $FFFF00 + ServerVersion and
+              $FF * 10 + ord(Value[i]) - 48;
+          '.':
+          ServerVersion := ServerVersion shl 8;
+      end
+    else if Key = '#CREDITS' then
+      Credits := Value;
+  end;
+  CloseFile(T);
+end;
+
+constructor TBrain.Create;
+begin
+  Picture := nil;
+end;
+
+destructor TBrain.Destroy;
+begin
+  if Assigned(Picture) then Picture.Free;
+  inherited Destroy;
+end;
+
+{ TBrains }
+
+function TBrains.AddNew: TBrain;
+begin
+  Result := TBrain.Create;
+  Add(Result);
+end;
+
+function TBrains.GetKindCount(Kind: TBrainType): Integer;
+var
+  I: Integer;
+begin
+  Result := 0;
+  for I := 0 to Count - 1 do
+    if Items[I].Kind = Kind then Inc(Result);
+end;
+
+procedure TBrains.GetByKind(Kind: TBrainType; Brains: TBrains);
+var
+  I: Integer;
+begin
+  Brains.Clear;
+  for I := 0 to Count - 1 do
+    if Items[I].Kind = Kind then Brains.Add(Items[I]);
+end;
 
 initialization
 
