@@ -50,7 +50,7 @@ function ChangeResolution(x, y, bpp, freq: integer): boolean;
 procedure RestoreResolution;
 function Play(Item: string; Index: integer = -1): boolean;
 procedure PreparePlay(Item: string; Index: integer = -1);
-procedure EmptyMenu(MenuItems: TMenuItem; Keep: integer = 0);
+procedure EmptyMenu(MenuItems: TMenuItem; Keep: Integer = 0);
 function turntoyear(Turn: integer): integer;
 function TurnToString(Turn: integer): string;
 function MovementToString(Movement: integer): string;
@@ -294,15 +294,14 @@ begin
 {$ENDIF}
 end;
 
-procedure EmptyMenu(MenuItems: TMenuItem; Keep: integer = 0);
+procedure EmptyMenu(MenuItems: TMenuItem; Keep: Integer = 0);
 var
-  m: TMenuItem;
+  MenuItem: TMenuItem;
 begin
-  while MenuItems.Count > Keep do
-  begin
-    m := MenuItems[MenuItems.Count - 1];
+  while MenuItems.Count > Keep do begin
+    MenuItem := MenuItems[MenuItems.Count - 1];
     MenuItems.Delete(MenuItems.Count - 1);
-    m.Free;
+    MenuItem.Free;
   end;
 end;
 

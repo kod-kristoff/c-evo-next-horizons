@@ -30,13 +30,20 @@ const
   CityOwnTile = 13;
 
 var
-  GAlive, { players alive; bitset of 1 shl p }
-  GWatching, GInitialized, GAI, RND, { world map randseed }
-  lx, ly, MapSize, // = lx*ly
-  LandMass,
+  GAlive: Integer; { players alive; bitset of 1 shl p }
+  GWatching: Integer;
+  GInitialized: Integer;
+  GAI: Integer;
+  RND: Integer; { world map randseed }
+  lx: Integer;
+  ly: Integer;
+  MapSize: Integer; // = lx*ly
+  LandMass: Integer;
 {$IFOPT O-}InvalidTreatyMap, {$ENDIF}
-  SaveMapCenterLoc, PeaceEnded, GTurn, { current turn }
-  GTestFlags: integer;
+  SaveMapCenterLoc: Integer;
+  PeaceEnded: Integer;
+  GTurn: Integer; { current turn }
+  GTestFlags: Integer;
   Mode: (moLoading_Fast, moLoading, moMovie, moPlaying);
   GWonder: array [0 .. 27] of TWonderInfo;
   ServerVersion: array [0 .. nPl - 1] of integer;

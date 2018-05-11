@@ -6,7 +6,7 @@ interface
 uses
   GameServer, Messg, ButtonBase, ButtonA, ButtonC, ButtonB, Area, Math,
   LCLIntf, LCLType, SysUtils, Classes, Graphics, Controls, Forms, StdCtrls,
-  Menus, Registry, DrawDlg;
+  Menus, Registry, DrawDlg, fgl;
 
 const
   // main actions
@@ -18,6 +18,17 @@ const
   maWeb = 4;
 
 type
+  TPlayerSlot = class
+    DiffUpBtn: TButtonC;
+    DiffDownBtn: TButtonC;
+    MultiBtn: TButtonC;
+    OfferMultiple: Boolean;
+    Rect: TRect;
+  end;
+
+  TPlayerSlots = class(TFPGObjectList<TPlayerSlot>)
+
+  end;
 
   { TStartDlg }
 
@@ -86,28 +97,26 @@ type
     ShowTab: Integer;
     Tab: Integer;
     Diff0: Integer;
-    bixDefault: Integer;
+    BrainDefault: TBrain;
     nMapLandTiles: Integer;
     nMapStartPositions: Integer;
     LoadTurn: Integer;
     LastTurn: Integer;
     { last turn of selected former game }
     SlotAvailable: Integer;
-    bixPopup: Integer; { brain concerned by brain context menu }
+    PlayerPopupIndex: Integer; { brain concerned by brain context menu }
     ListIndex: array [0 .. 3] of integer;
     MapFileName: string;
     FormerGames, Maps: TStringList;
     LogoBuffer, Mini: TBitmap; { game world sample preview }
     MiniColors: array [0 .. 11, 0 .. 1] of TColor;
     // BookDate: string;
-    DiffUpBtn: array [0 .. 8] of TButtonC;
-    DiffDownBtn: array [0 .. 8] of TButtonC;
-    MultiBtn: array [6 .. 8] of TButtonC;
+    PlayerSlots: TPlayerSlots;
     MiniMode: (mmNone, mmPicture, mmMultiPlayer);
     ActionsOffered: set of 0 .. nMainActions - 1;
     TurnValid, Tracking: boolean;
     DefaultAI: string;
-    procedure InitPopup(PopupIndex: integer);
+    procedure InitPopup(PlayerIndex: Integer);
     procedure PaintInfo;
     procedure ChangePage(NewPage: integer);
     procedure ChangeTab(NewTab: integer);
@@ -190,8 +199,6 @@ const
   pgEditMap = 5;
   pgMain = 6;
 
-  OfferMultiple = [6, 7, 8];
-
   PlayerAutoDiff: array [1 .. 5] of integer = (1, 1, 2, 2, 3);
   EnemyAutoDiff: array [1 .. 5] of integer = (4, 3, 2, 1, 1);
 
@@ -201,7 +208,15 @@ var
   r0, r1: HRgn;
   Location: TPoint;
   AIBrains: TBrains;
+  PlayerSlot: TPlayerSlot;
 begin
+  PlayerSlots := TPlayerSlots.Create;
+  PlayerSlots.Count := nPlOffered;
+  for I := 0 to PlayerSlots.Count - 1 do begin
+    PlayerSlot := TPlayerSlot.Create;
+    PlayerSlot.Rect := Bounds(xBrain[I], YBrain[I], 0, 0);
+    PlayerSlots[I] := PlayerSlot;
+  end;
   LoadConfig;
 
   ActionsOffered := [maManual, maCredits, maWeb];
@@ -209,17 +224,17 @@ begin
   if FileExists(HomeDir + 'AI Template' + DirectorySeparator + 'AI development manual.html') then
     Include(ActionsOffered, maAIDev);
 
-  bixDefault := -1;
+  BrainDefault := nil;
   for i := Brains.IndexOf(BrainRandom) to Brains.Count - 1 do
     if AnsiCompareFileName(DefaultAI, Brains[i].FileName) = 0 then
-      bixDefault := i;
-  if (bixDefault = Brains.IndexOf(BrainRandom)) and (Brains.GetKindCount(btAI) < 2) then
-    bixDefault := -1;
-  if (bixDefault < 0) and (Brains.GetKindCount(btAI) > 0) then
+      BrainDefault := Brains[i];
+  if (BrainDefault = BrainRandom) and (Brains.GetKindCount(btAI) < 2) then
+    BrainDefault := nil;
+  if (not Assigned(BrainDefault)) and (Brains.GetKindCount(btAI) > 0) then
     begin
       AIBrains := TBrains.Create(False);
       Brains.GetByKind(btAI, AIBrains);
-      bixDefault := Brains.IndexOf(Brains[0]);
+      BrainDefault := Brains[0];
       AIBrains.Free;
     end; // default AI not found, use any
 
@@ -255,31 +270,33 @@ begin
 
   QuitBtn.Hint := Phrases.Lookup('STARTCONTROLS', 0);
   ReplayBtn.Hint := Phrases.Lookup('BTN_REPLAY');
-  for i := 0 to nPlOffered - 1 do
-  begin
-    DiffUpBtn[i] := TButtonC.Create(self);
-    DiffUpBtn[i].Graphic := GrExt[HGrSystem].Data;
-    DiffUpBtn[i].left := xBrain[i] - 18;
-    DiffUpBtn[i].top := yBrain[i] + 39;
-    DiffUpBtn[i].ButtonIndex := 1;
-    DiffUpBtn[i].Parent := self;
-    DiffUpBtn[i].OnClick := DiffBtnClick;
-    DiffDownBtn[i] := TButtonC.Create(self);
-    DiffDownBtn[i].Graphic := GrExt[HGrSystem].Data;
-    DiffDownBtn[i].left := xBrain[i] - 18;
-    DiffDownBtn[i].top := yBrain[i] + 51;
-    DiffDownBtn[i].ButtonIndex := 0;
-    DiffDownBtn[i].Parent := self;
-    DiffDownBtn[i].OnClick := DiffBtnClick;
+  PlayerSlots.Count := nPlOffered;
+  for i := 0 to PlayerSlots.Count - 1 do
+  with PlayerSlots[i] do begin
+    DiffUpBtn := TButtonC.Create(self);
+    DiffUpBtn.Graphic := GrExt[HGrSystem].Data;
+    DiffUpBtn.left := xBrain[i] - 18;
+    DiffUpBtn.top := yBrain[i] + 39;
+    DiffUpBtn.ButtonIndex := 1;
+    DiffUpBtn.Parent := self;
+    DiffUpBtn.OnClick := DiffBtnClick;
+    DiffDownBtn := TButtonC.Create(self);
+    DiffDownBtn.Graphic := GrExt[HGrSystem].Data;
+    DiffDownBtn.left := xBrain[i] - 18;
+    DiffDownBtn.top := yBrain[i] + 51;
+    DiffDownBtn.ButtonIndex := 0;
+    DiffDownBtn.Parent := self;
+    DiffDownBtn.OnClick := DiffBtnClick;
   end;
   for i := 6 to 8 do
-  begin
-    MultiBtn[i] := TButtonC.Create(self);
-    MultiBtn[i].Graphic := GrExt[HGrSystem].Data;
-    MultiBtn[i].left := xBrain[i] - 18;
-    MultiBtn[i].top := yBrain[i];
-    MultiBtn[i].Parent := self;
-    MultiBtn[i].OnClick := MultiBtnClick;
+  with PlayerSlots[i] do begin
+    MultiBtn := TButtonC.Create(self);
+    MultiBtn.Graphic := GrExt[HGrSystem].Data;
+    MultiBtn.left := xBrain[i] - 18;
+    MultiBtn.top := yBrain[i];
+    MultiBtn.Parent := self;
+    MultiBtn.OnClick := MultiBtnClick;
+    OfferMultiple := True;
   end;
 
   x := BiColorTextWidth(Canvas, Phrases.Lookup('STARTCONTROLS', 7)) div 2;
@@ -343,7 +360,7 @@ begin
       MiniColors[x, y] := GrExt[HGrSystem].Data.Canvas.Pixels[66 + x, 67 + y];
   InitButtons;
 
-  bixView[0] := Brains.IndexOf(BrainTerm);
+  PlayersBrain[0] := BrainTerm;
   SlotAvailable := -1;
   Tab := 2;
   Diff0 := 2;
@@ -364,6 +381,7 @@ begin
   FreeAndNil(Mini);
   FreeAndNil(EmptyPicture);
   FreeAndNil(LogoBuffer);
+  FreeAndNil(PlayerSlots);
 end;
 
 procedure TStartDlg.SmartInvalidate(x0, y0, x1, y1: integer;
@@ -644,21 +662,21 @@ begin
       for i := 0 to nPlOffered - 1 do
         if 1 shl i and SlotAvailable <> 0 then
         begin
-          if bixView[i] >= 0 then
-            FrameImage(Canvas, Brains[bixView[i]].Picture, xBrain[i], yBrain[i],
+          if Assigned(PlayersBrain[i]) then
+            FrameImage(Canvas, PlayersBrain[i].Picture, xBrain[i], yBrain[i],
               64, 64, 0, 0, true)
           else
             FrameImage(Canvas, EmptyPicture, xBrain[i], yBrain[i], 64, 64,
               0, 0, true);
-          if Brains[bixView[i]].Kind in [btTerm, btRandom, btAI] then
+          if Assigned(PlayersBrain[I]) and (PlayersBrain[i].Kind in [btTerm, btRandom, btAI]) then
           begin
             BitBlt(Canvas.Handle, xBrain[i] - 18, yBrain[i] + 19, 12, 14,
               GrExt[HGrSystem].Data.Canvas.Handle, 134 + (Difficulty[i] - 1) *
               13, 28, SRCCOPY);
             Frame(Canvas, xBrain[i] - 19, yBrain[i] + 18, xBrain[i] - 18 + 12,
               yBrain[i] + (19 + 14), $000000, $000000);
-            RFrame(Canvas, DiffUpBtn[i].left - 1, DiffUpBtn[i].top - 1,
-              DiffUpBtn[i].left + 12, DiffUpBtn[i].top + 24,
+            RFrame(Canvas, PlayerSlots[i].DiffUpBtn.left - 1, PlayerSlots[i].DiffUpBtn.top - 1,
+              PlayerSlots[i].DiffUpBtn.left + 12, PlayerSlots[i].DiffUpBtn.top + 24,
               MainTexture.clBevelShade, MainTexture.clBevelLight);
             with Canvas do
             begin
@@ -667,20 +685,20 @@ begin
                 yBrain[i] + 27));
               Brush.Style := bsClear;
             end;
-            if i in OfferMultiple then
+            if PlayerSlots[I].OfferMultiple then
             begin
-              RFrame(Canvas, MultiBtn[i].left - 1, MultiBtn[i].top - 1,
-                MultiBtn[i].left + 12, MultiBtn[i].top + 12,
+              RFrame(Canvas, PlayerSlots[I].MultiBtn.left - 1, PlayerSlots[I].MultiBtn.top - 1,
+                PlayerSlots[I].MultiBtn.left + 12, PlayerSlots[I].MultiBtn.top + 12,
                 MainTexture.clBevelShade, MainTexture.clBevelLight);
               BitBlt(Canvas.Handle, xBrain[i] - 31, yBrain[i], 13, 12,
                 GrExt[HGrSystem].Data.Canvas.Handle, 88, 47, SRCCOPY);
             end
           end;
-          if bixView[i] >= 0 then
+          if Assigned(PlayersBrain[i]) then
           begin
-            DiffUpBtn[i].Hint := Format(Phrases.Lookup('STARTCONTROLS', 9),
-              [Brains[bixView[i]].Name]);
-            DiffDownBtn[i].Hint := DiffUpBtn[i].Hint;
+            PlayerSlots[i].DiffUpBtn.Hint := Format(Phrases.Lookup('STARTCONTROLS', 9),
+              [PlayersBrain[i].Name]);
+            PlayerSlots[i].DiffDownBtn.Hint := PlayerSlots[i].DiffUpBtn.Hint;
           end
         end;
     end
@@ -705,7 +723,7 @@ begin
         FrameImage(Canvas, BrainBeginner.Picture, xDefault, yDefault, 64,
           64, 0, 0, false)
       else
-        FrameImage(Canvas, Brains[bixDefault].Picture, xDefault, yDefault, 64, 64,
+        FrameImage(Canvas, BrainDefault.Picture, xDefault, yDefault, 64, 64,
           0, 0, true);
       DLine(Canvas, 56, 272, y0Mini + 61 + 19, MainTexture.clBevelLight,
         MainTexture.clBevelShade);
@@ -900,7 +918,7 @@ begin
       end;
 
     pgStartRandom, pgStartMap:
-      if bixView[0] >= 0 then
+      if Assigned(PlayersBrain[0]) then
       begin
         if (Page = pgStartMap) and (nMapStartPositions = 0) and (AutoDiff > 0)
         then
@@ -916,7 +934,7 @@ begin
           if ValueExists('GameCount') then GameCount := ReadInteger('GameCount')
             else GameCount := 0;
 
-          if (AutoDiff < 0) and (Brains[bixView[0]].Kind = btNoTerm) then
+          if (AutoDiff < 0) and (PlayersBrain[0].Kind = btNoTerm) then
             FileName := 'Round' + IntToStr(GetProcessID())
           else begin
             inc(GameCount);
@@ -931,10 +949,10 @@ begin
             OpenKey(AppRegistryKey + '\AI', True);
             if AutoDiff < 0 then
               for i := 0 to nPlOffered - 1 do begin
-                if bixView[i] = -1 then
+                if not Assigned(PlayersBrain[i]) then
                   Reg.WriteString('Control' + IntToStr(i), '')
                 else Reg.WriteString('Control' + IntToStr(i),
-                  Brains[bixView[i]].FileName);
+                  PlayersBrain[i].FileName);
                 WriteInteger('Diff' + IntToStr(i), Difficulty[i]);
               end;
             WriteInteger('MultiControl', MultiControl);
@@ -943,28 +961,28 @@ begin
           OpenKey(AppRegistryKey, True);
           if AutoDiff > 0 then
           begin
-            WriteString('DefaultAI', Brains[bixDefault].FileName);
+            WriteString('DefaultAI', BrainDefault.FileName);
             SlotAvailable := 0; // bixView will be invalid hereafter
-            bixView[0] := Brains.IndexOf(BrainTerm);
+            PlayersBrain[0] := BrainTerm;
             Difficulty[0] := PlayerAutoDiff[AutoDiff];
             for i := 1 to nPl - 1 do
               if (Page = pgStartRandom) and (i <= AutoEnemies) or
                 (Page = pgStartMap) and (i < nMapStartPositions) then begin
-                if AutoDiff = 1 then bixView[i] := Brains.IndexOf(BrainBeginner)
-                  else bixView[i] := bixDefault;
+                if AutoDiff = 1 then PlayersBrain[i] := BrainBeginner
+                  else PlayersBrain[i] := BrainDefault;
                 Difficulty[i] := EnemyAutoDiff[AutoDiff];
-              end  else bixView[i] := -1;
+              end  else PlayersBrain[i] := nil;
           end else begin
             for i := 6 to 8 do
-              if (Brains[bixView[0]].Kind <> btNoTerm) and (MultiControl and (1 shl i) <> 0)
+              if (PlayersBrain[0].Kind <> btNoTerm) and (MultiControl and (1 shl i) <> 0)
               then begin
-                bixView[i + 3] := bixView[i];
+                PlayersBrain[i + 3] := PlayersBrain[i];
                 Difficulty[i + 3] := Difficulty[i];
-                bixView[i + 6] := bixView[i];
+                PlayersBrain[i + 6] := PlayersBrain[i];
                 Difficulty[i + 6] := Difficulty[i];
               end else begin
-                bixView[i + 3] := -1;
-                bixView[i + 6] := -1;
+                PlayersBrain[i + 3] := nil;
+                PlayersBrain[i + 6] := nil;
               end
           end;
 
@@ -1232,139 +1250,137 @@ var
   i: integer;
 begin
   // Play('BUTTON_UP');
-  if bixPopup < 0 then
+  if PlayerPopupIndex < 0 then
   begin // change default AI
-    bixDefault := TMenuItem(Sender).Tag;
+    BrainDefault := Brains[TMenuItem(Sender).Tag];
     SmartInvalidate(xDefault, yDefault, xDefault + 64, yDefault + 64);
   end
   else
   begin
-    Brains[bixView[bixPopup]].Flags := Brains[bixView[bixPopup]].Flags and
-      not fUsed;
-    bixView[bixPopup] := TMenuItem(Sender).Tag;
-    DiffUpBtn[bixPopup].Visible := Brains[bixView[bixPopup]].Kind in [btTerm, btRandom, btAI];
-    DiffDownBtn[bixPopup].Visible := Brains[bixView[bixPopup]].Kind in [btTerm, btRandom, btAI];
-    if bixPopup in OfferMultiple then
-    begin
-      MultiBtn[bixPopup].Visible := Brains[bixView[bixPopup]].Kind in [btTerm, btRandom, btAI];
-      MultiBtn[bixPopup].ButtonIndex := 2 + (MultiControl shr bixPopup) and 1;
-    end;
-    Brains[bixView[bixPopup]].Flags := Brains[bixView[bixPopup]].Flags or fUsed;
-    if Brains[bixView[bixPopup]].Kind in [btNoTerm, btSuperVirtual] then
-      Difficulty[bixPopup] := 0 { supervisor }
-    else
-      Difficulty[bixPopup] := 2;
-    if (Page = pgStartRandom) and (bixPopup in OfferMultiple) and
-      (bixView[bixPopup] < 0) then
-      MultiControl := MultiControl and not(1 shl bixPopup);
-    if (bixPopup = 0) and (MapFileName <> '') then
-      ChangePage(Page);
-    if Brains[bixView[bixPopup]].Kind = btNoTerm then
-    begin // turn all local players off
-      for i := 1 to nPlOffered - 1 do
-        if Brains[bixView[i]].Kind = btTerm then
-        begin
-          bixView[i] := -1;
-          DiffUpBtn[i].Visible := false;
-          DiffUpBtn[i].Tag := 0;
-          DiffDownBtn[i].Visible := false;
-          DiffDownBtn[i].Tag := 0;
-          if i in OfferMultiple then
-          begin
-            MultiBtn[i].Visible := false;
-            MultiBtn[i].Tag := 0;
+    if Assigned(PlayersBrain[PlayerPopupIndex]) then
+      PlayersBrain[PlayerPopupIndex].Flags := PlayersBrain[PlayerPopupIndex].Flags and not fUsed;
+    if TMenuItem(Sender).Tag = -1 then begin
+      PlayersBrain[PlayerPopupIndex] := nil;
+      PlayerSlots[PlayerPopupIndex].DiffUpBtn.Visible := False;
+      PlayerSlots[PlayerPopupIndex].DiffDownBtn.Visible := False;
+      if PlayerSlots[PlayerPopupIndex].OfferMultiple then begin
+        PlayerSlots[PlayerPopupIndex].MultiBtn.Visible := False;
+        PlayerSlots[PlayerPopupIndex].MultiBtn.ButtonIndex := 2 + (MultiControl shr PlayerPopupIndex) and 1;
+      end;
+      MultiControl := MultiControl and not (1 shl PlayerPopupIndex);
+    end else begin
+      PlayersBrain[PlayerPopupIndex] := Brains[TMenuItem(Sender).Tag];
+      PlayerSlots[PlayerPopupIndex].DiffUpBtn.Visible := PlayersBrain[PlayerPopupIndex].Kind in [btTerm, btRandom, btAI];
+      PlayerSlots[PlayerPopupIndex].DiffDownBtn.Visible := PlayersBrain[PlayerPopupIndex].Kind in [btTerm, btRandom, btAI];
+      if PlayerSlots[PlayerPopupIndex].OfferMultiple then begin
+        PlayerSlots[PlayerPopupIndex].MultiBtn.Visible := PlayersBrain[PlayerPopupIndex].Kind in [btTerm, btRandom, btAI];
+        PlayerSlots[PlayerPopupIndex].MultiBtn.ButtonIndex := 2 + (MultiControl shr PlayerPopupIndex) and 1;
+      end;
+      PlayersBrain[PlayerPopupIndex].Flags := PlayersBrain[PlayerPopupIndex].Flags or fUsed;
+      if PlayersBrain[PlayerPopupIndex].Kind in [btNoTerm, btSuperVirtual] then
+        Difficulty[PlayerPopupIndex] := 0 { supervisor }
+      else
+        Difficulty[PlayerPopupIndex] := 2;
+      if (Page = pgStartRandom) and (PlayerSlots[PlayerPopupIndex].OfferMultiple) and
+        (not Assigned(PlayersBrain[PlayerPopupIndex])) then
+        MultiControl := MultiControl and not (1 shl PlayerPopupIndex);
+      if (PlayerPopupIndex = 0) and (MapFileName <> '') then
+        ChangePage(Page);
+      if PlayersBrain[PlayerPopupIndex].Kind = btNoTerm then
+      begin // turn all local players off
+        for I := 1 to PlayerSlots.Count - 1 do
+          if PlayersBrain[I].Kind = btTerm then begin
+            PlayersBrain[i] := nil;
+            PlayerSlots[i].DiffUpBtn.Visible := false;
+            PlayerSlots[i].DiffUpBtn.Tag := 0;
+            PlayerSlots[i].DiffDownBtn.Visible := false;
+            PlayerSlots[i].DiffDownBtn.Tag := 0;
+            if PlayerSlots[i].OfferMultiple then begin
+              PlayerSlots[i].MultiBtn.Visible := false;
+              PlayerSlots[i].MultiBtn.Tag := 0;
+            end;
+            SmartInvalidate(xBrain[i] - 31, yBrain[i] - 1, xBrain[i] + 64,
+              PlayerSlots[i].DiffUpBtn.top + 25);
           end;
-          SmartInvalidate(xBrain[i] - 31, yBrain[i] - 1, xBrain[i] + 64,
-            DiffUpBtn[i].top + 25);
-        end;
-      BrainTerm.Flags := BrainTerm.Flags and not fUsed;
+        BrainTerm.Flags := BrainTerm.Flags and not fUsed;
+      end;
     end;
-    SmartInvalidate(xBrain[bixPopup] - 31, yBrain[bixPopup] - 1,
-      xBrain[bixPopup] + 64, DiffUpBtn[bixPopup].top + 25);
+    SmartInvalidate(xBrain[PlayerPopupIndex] - 31, yBrain[PlayerPopupIndex] - 1,
+      xBrain[PlayerPopupIndex] + 64, PlayerSlots[PlayerPopupIndex].DiffUpBtn.top + 25);
   end
 end;
 
-procedure TStartDlg.InitPopup(PopupIndex: integer);
+procedure TStartDlg.InitPopup(PlayerIndex: Integer);
 var
-  i, FixedLines: integer;
-  m: TMenuItem;
+  I: Integer;
+  FixedLines: integer;
+  MenuItem: TMenuItem;
   AIBrains: TBrains;
 
-  procedure OfferBrain(Index: integer);
+  procedure OfferBrain(Brain: TBrain);
   var
-    j: integer;
+    J: Integer;
   begin
-    m := TMenuItem.Create(PopupMenu1);
-    if Index < 0 then
-      m.Caption := Phrases.Lookup('NOMOD')
-    else
-      m.Caption := Brains[Index].Name;
-    m.Tag := Index;
-    m.OnClick := BrainClick;
-    j := FixedLines;
-    while (j < PopupMenu1.Items.Count) and
-      (StrIComp(pchar(m.Caption), pchar(PopupMenu1.Items[j].Caption)) > 0) do
-      inc(j);
-    m.RadioItem := true;
-    if bixPopup < 0 then
-      m.Checked := bixDefault = Index
-    else
-      m.Checked := bixView[bixPopup] = Index;
-    PopupMenu1.Items.Insert(j, m);
+    MenuItem := TMenuItem.Create(PopupMenu1);
+    if not Assigned(Brain) then MenuItem.Caption := Phrases.Lookup('NOMOD')
+      else MenuItem.Caption := Brain.Name;
+    MenuItem.Tag := Brains.IndexOf(Brain);
+    MenuItem.OnClick := BrainClick;
+    J := FixedLines;
+    while (J < PopupMenu1.Items.Count) and
+      (StrIComp(pchar(MenuItem.Caption), pchar(PopupMenu1.Items[J].Caption)) > 0) do
+      Inc(J);
+    MenuItem.RadioItem := True;
+    if (PlayerPopupIndex < 0) then MenuItem.Checked := BrainDefault = Brain
+      else MenuItem.Checked := PlayersBrain[PlayerPopupIndex] = Brain;
+    PopupMenu1.Items.Insert(J, MenuItem);
   end;
 
 begin
-  bixPopup := PopupIndex;
+  PlayerPopupIndex := PlayerIndex;
   EmptyMenu(PopupMenu1.Items);
-  if bixPopup < 0 then
-  begin // select default AI
+  if PlayerPopupIndex < 0 then begin // select default AI
     FixedLines := 0;
-    if Brains.GetKindCount(btAI) >= 2 then
-    begin
-      OfferBrain(Brains.IndexOf(BrainRandom));
-      inc(FixedLines)
+    if Brains.GetKindCount(btAI) >= 2 then begin
+      OfferBrain(BrainRandom);
+      Inc(FixedLines);
     end;
     AIBrains := TBrains.Create(False);
     Brains.GetByKind(btAI, AIBrains);
-    for i := 0 to AIBrains.Count - 1 do // offer available AIs
-      if AIBrains[i].Flags and fMultiple <> 0 then
-        OfferBrain(Brains.IndexOf(AIBrains[i]));
+    for I := 0 to AIBrains.Count - 1 do // offer available AIs
+      if AIBrains[I].Flags and fMultiple <> 0 then
+        OfferBrain(AIBrains[I]);
     AIBrains.Free;
-  end
-  else
-  begin
+  end else begin
     FixedLines := 0;
-    if bixPopup > 0 then
-    begin
-      OfferBrain(-1);
-      inc(FixedLines);
+    if PlayerPopupIndex > 0 then begin
+      OfferBrain(nil);
+      Inc(FixedLines);
     end;
-    for i := Brains.IndexOf(BrainTerm) downto 0 do // offer game interfaces
-      if (bixPopup = 0) or (Brains[i].Kind = btTerm) and (Brains[bixView[0]].Kind <> btNoTerm) then
-      begin
-        OfferBrain(i);
-        inc(FixedLines);
+    for I := Brains.IndexOf(BrainTerm) downto 0 do // offer game interfaces
+      if (PlayerPopupIndex = 0) or (Brains[i].Kind = btTerm) and
+        (PlayersBrain[0].Kind <> btNoTerm) then begin
+        OfferBrain(Brains[I]);
+        Inc(FixedLines);
       end;
-    if bixPopup > 0 then
-    begin
-      m := TMenuItem.Create(PopupMenu1);
-      m.Caption := '-';
-      PopupMenu1.Items.Add(m);
-      inc(FixedLines);
-      if Brains.GetKindCount(btAI) >= 2 then
-      begin
-        OfferBrain(Brains.IndexOf(BrainRandom));
-        inc(FixedLines);
+    if PlayerPopupIndex > 0 then begin
+      MenuItem := TMenuItem.Create(PopupMenu1);
+      MenuItem.Caption := '-';
+      PopupMenu1.Items.Add(MenuItem);
+      Inc(FixedLines);
+      if Brains.GetKindCount(btAI) >= 2 then begin
+        OfferBrain(BrainRandom);
+        Inc(FixedLines);
       end;
       AIBrains := TBrains.Create(False);
       Brains.GetByKind(btAI, AIBrains);
-      for i := 0 to AIBrains.Count - 1 do // offer available AIs
-        if (AIBrains[i].Flags and fMultiple <> 0) or (AIBrains[i].Flags and fUsed = 0)
-          or (i = bixView[bixPopup]) then
-          OfferBrain(Brains.IndexOf(AIBrains[i]));
+      for I := 0 to AIBrains.Count - 1 do // offer available AIs
+        if (AIBrains[I].Flags and fMultiple <> 0) or (AIBrains[I].Flags and fUsed = 0)
+          or (Brains[I] = PlayersBrain[PlayerPopupIndex]) then
+          OfferBrain(AIBrains[i]);
       AIBrains.Free;
     end;
-  end
+  end;
 end;
 
 procedure TStartDlg.UpdateFormerGames;
@@ -1425,10 +1441,10 @@ begin
           i := nMapStartPositions;
           if i = 0 then
           begin
-            bixView[0] := Brains.IndexOf(BrainSuperVirtual);
+            PlayersBrain[0] := BrainSuperVirtual;
             Difficulty[0] := 0
           end;
-          if Brains[bixView[0]].Kind in [btNoTerm, btSuperVirtual] then
+          if PlayersBrain[0].Kind in [btNoTerm, btSuperVirtual] then
             inc(i);
           if i > nPl then
             i := nPl;
@@ -1445,13 +1461,13 @@ begin
             try
               OpenKey(AppRegistryKey + '\AI', True);
               for p1 := 0 to nPlOffered - 1 do begin
-                bixView[p1] := -1;
+                PlayersBrain[p1] := nil;
                 s := ReadString('Control' + IntToStr(p1));
                 Difficulty[p1] := ReadInteger('Diff' + IntToStr(p1));
                 if s <> '' then
                   for j := 0 to Brains.Count - 1 do
                     if AnsiCompareFileName(s, Brains[j].FileName) = 0 then
-                      bixView[p1] := j;
+                      PlayersBrain[p1] := Brains[j];
               end;
               MultiControl := Reg.ReadInteger('MultiControl');
             finally
@@ -1462,32 +1478,34 @@ begin
             for p1 := 1 to nPl - 1 do
               if 1 shl p1 and InitAlive[i] <> 0 then
               begin
-                bixView[p1] := bixDefault;
+                PlayersBrain[p1] := BrainDefault;
                 Difficulty[p1] := 2;
               end
               else
-                bixView[p1] := -1;
+                PlayersBrain[p1] := nil;
         SlotAvailable := InitAlive[i];
         for i := 0 to nPlOffered - 1 do
-          if (AutoDiff < 0) and (Brains[bixView[i]].Kind in [btTerm, btRandom, btAI]) then
+          if (AutoDiff < 0) and Assigned(PlayersBrain[i]) and
+            (PlayersBrain[i].Kind in [btTerm, btRandom, btAI]) then
           begin
-            DiffUpBtn[i].Tag := 768;
-            DiffDownBtn[i].Tag := 768;
+            PlayerSlots[i].DiffUpBtn.Tag := 768;
+            PlayerSlots[i].DiffDownBtn.Tag := 768;
           end
           else
           begin
-            DiffUpBtn[i].Tag := 0;
-            DiffDownBtn[i].Tag := 0;
+            PlayerSlots[i].DiffUpBtn.Tag := 0;
+            PlayerSlots[i].DiffDownBtn.Tag := 0;
           end;
         for i := 6 to 8 do
-          if (AutoDiff < 0) and (Brains[bixView[i]].Kind in [btTerm, btRandom, btAI]) then
+          if (AutoDiff < 0) and Assigned(PlayersBrain[i]) and
+            (PlayersBrain[i].Kind in [btTerm, btRandom, btAI]) then
           begin
-            MultiBtn[i].Tag := 768;
-            MultiBtn[i].ButtonIndex := 2 + (MultiControl shr i) and 1;
-            MultiBtn[i].Enabled := Page = pgStartRandom
+            PlayerSlots[i].MultiBtn.Tag := 768;
+            PlayerSlots[i].MultiBtn.ButtonIndex := 2 + (MultiControl shr i) and 1;
+            PlayerSlots[i].MultiBtn.Enabled := Page = pgStartRandom
           end
           else
-            MultiBtn[i].Tag := 0;
+            PlayerSlots[i].MultiBtn.Tag := 0;
         if (AutoDiff > 0) and (Page <> pgStartMap) then
         begin
           AutoEnemyUpBtn.Tag := 768;
@@ -1507,7 +1525,7 @@ begin
         begin
           AutoDiffUpBtn.Tag := 0;
           AutoDiffDownBtn.Tag := 0;
-        end
+        end;
       end;
 
     pgNoLoad, pgLoad:
@@ -1858,10 +1876,10 @@ var
   i: integer;
 begin
   for i := 0 to nPlOffered - 1 do
-    if (Sender = DiffUpBtn[i]) and (Difficulty[i] < 3) or
-      (Sender = DiffDownBtn[i]) and (Difficulty[i] > 1) then
+    if (Sender = PlayerSlots[i].DiffUpBtn) and (Difficulty[i] < 3) or
+      (Sender = PlayerSlots[i].DiffDownBtn) and (Difficulty[i] > 1) then
     begin
-      if Sender = DiffUpBtn[i] then
+      if Sender = PlayerSlots[i].DiffUpBtn then
         inc(Difficulty[i])
       else
         dec(Difficulty[i]);
@@ -1875,7 +1893,7 @@ var
   i: integer;
 begin
   for i := 6 to 8 do
-    if Sender = MultiBtn[i] then
+    if Sender = PlayerSlots[i].MultiBtn then
     begin
       MultiControl := MultiControl xor (1 shl i);
       TButtonC(Sender).ButtonIndex := 2 + (MultiControl shr i) and 1;

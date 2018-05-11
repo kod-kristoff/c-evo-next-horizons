@@ -233,7 +233,7 @@ begin
         else if G.RO[me].Happened and phGameEnd <> 0 then
         begin // game ended, update statistics
           for p := 1 to nPlOffered - 1 do
-            if bixView[p] >= 0 then
+            if Assigned(PlayersBrain[p]) then
               if 1 shl p and G.RO[me].Alive = 0 then
                 inc(ExtStat[p]) // extinct
               else if G.RO[me].Alive = 1 shl p then
@@ -322,12 +322,12 @@ begin
     7, Caption);
   Canvas.Font.Assign(UniFont[ftSmall]);
   for i := 1 to nPlOffered - 1 do
-    if bixView[i] >= 0 then
+    if Assigned(PlayersBrain[i]) then
     begin
       Frame(Canvas, xBrain[i] - 24, yBrain[i] - 8 - 16, xBrain[i] - 24 + 111,
         yBrain[i] - 8 - 16 + 111, MainTexture.clBevelShade,
         MainTexture.clBevelShade);
-      FrameImage(Canvas, Brains[bixView[i]].Picture, xBrain[i],
+      FrameImage(Canvas, PlayersBrain[i].Picture, xBrain[i],
         yBrain[i] - 16, 64, 64, 0, 0);
       if 1 shl i and G.RO[me].Alive = 0 then
         BitBlt(Canvas.Handle, xBrain[i], yBrain[i] - 16, 64, 64,

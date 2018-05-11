@@ -303,120 +303,145 @@ type
     NewName: ShortString end;
     TPriceSet = Set of $00 .. $FF;
 
-  const
-    crImpDrag = 2;
-    crFlatHand = 3;
+const
+  crImpDrag = 2;
+  crFlatHand = 3;
 
-    xxu = 32;
-    yyu = 24; // half of unit slot size x/y
-    yyu_anchor = 32;
-    xxc = 32;
-    yyc = 16; // 1/2 of city slot size in x, 1/2 of ground tile size in y (=1/3 of slot)
+  xxu = 32;
+  yyu = 24; // half of unit slot size x/y
+  yyu_anchor = 32;
+  xxc = 32;
+  yyc = 16; // 1/2 of city slot size in x, 1/2 of ground tile size in y (=1/3 of slot)
 
-    // layout
-    TopBarHeight = 41;
-    PanelHeight = 168;
-    MidPanelHeight = 120;
-    // TopBarHeight+MidPanelHeight should be same as BaseWin.yUnused
-    MapCenterUp = (MidPanelHeight - TopBarHeight) div 2;
+  // layout
+  TopBarHeight = 41;
+  PanelHeight = 168;
+  MidPanelHeight = 120;
+  // TopBarHeight+MidPanelHeight should be same as BaseWin.yUnused
+  MapCenterUp = (MidPanelHeight - TopBarHeight) div 2;
 
-    nCityType = 4;
+  nCityType = 4;
 
-    { client exclusive commands: }
-    cSetTribe = $9000;
-    cSetNewModelPicture = $9100;
-    cSetModelName = $9110;
-    cSetModelPicture = $9120;
-    cSetSlaveIndex = $9131;
-    cSetCityName = $9200;
+  { client exclusive commands: }
+  cSetTribe = $9000;
+  cSetNewModelPicture = $9100;
+  cSetModelName = $9110;
+  cSetModelPicture = $9120;
+  cSetSlaveIndex = $9131;
+  cSetCityName = $9200;
 
-    // city status flags
-    csTypeMask = $0007;
-    csToldDelay = $0008;
-    csResourceWeightsMask = $00F0;
-    csToldBombard = $0100;
+  // city status flags
+  csTypeMask = $0007;
+  csToldDelay = $0008;
+  csResourceWeightsMask = $00F0;
+  csToldBombard = $0100;
 
-    { unit status flags }
-    usStay = $01;
-    usWaiting = $02;
-    usGoto = $04;
-    usEnhance = $08;
-    usRecover = $10;
-    usToldNoReturn = $100;
-    usPersistent = usStay or usGoto or usEnhance or usRecover or
-      integer($FFFF0000);
+  { unit status flags }
+  usStay = $01;
+  usWaiting = $02;
+  usGoto = $04;
+  usEnhance = $08;
+  usRecover = $10;
+  usToldNoReturn = $100;
+  usPersistent = usStay or usGoto or usEnhance or usRecover or
+    integer($FFFF0000);
 
-    { model status flags }
-    msObsolete = $1;
-    msAllowConscripts = $2;
+  { model status flags }
+  msObsolete = $1;
+  msAllowConscripts = $2;
 
-    { additional city happened flags }
-    chTypeDel = $8000;
-    chAllImpsMade = $4000;
+  { additional city happened flags }
+  chTypeDel = $8000;
+  chAllImpsMade = $4000;
 
-    adNone = $801;
-    adFar = $802;
-    adNexus = $803;
+  adNone = $801;
+  adFar = $802;
+  adNexus = $803;
 
-    SpecialModelPictureCode: array [0 .. nSpecialModel - 1] of integer = (10,
-      11, 40, 41, 21, 30, { 50,51, } 64, 74, { 71, } 73);
+  SpecialModelPictureCode: array [0 .. nSpecialModel - 1] of integer = (10,
+    11, 40, 41, 21, 30, { 50,51, } 64, 74, { 71, } 73);
 
-    pixSlaves = 0;
-    pixNoSlaves = 1; // index of slaves in StdUnits
+  pixSlaves = 0;
+  pixNoSlaves = 1; // index of slaves in StdUnits
 
-    // icons.bmp properties
-    xSizeSmall = 36;
-    ySizeSmall = 20;
-    SystemIconLines = 2;
-    // lines of system icons in icons.bmp before improvements
+  // icons.bmp properties
+  xSizeSmall = 36;
+  ySizeSmall = 20;
+  SystemIconLines = 2;
+  // lines of system icons in icons.bmp before improvements
 
-    // save options apart from what's defined by SaveOption
-    soTellAI = 30;
-    soExtraMask = $40000000;
+  // save options apart from what's defined by SaveOption
+  soTellAI = 30;
+  soExtraMask = $40000000;
 
-    nCityEventPriority = 16;
-    CityEventPriority: array [0 .. nCityEventPriority - 1] of integer =
-      (chDisorder, chImprovementLost, chUnitLost, chAllImpsMade, chProduction,
-      chOldWonder, chNoSettlerProd, chPopDecrease, chProductionSabotaged,
-      chNoGrowthWarning, chPollution, chTypeDel, chFounded, chSiege,
-      chAfterCapture, chPopIncrease);
+  nCityEventPriority = 16;
+  CityEventPriority: array [0 .. nCityEventPriority - 1] of integer =
+    (chDisorder, chImprovementLost, chUnitLost, chAllImpsMade, chProduction,
+    chOldWonder, chNoSettlerProd, chPopDecrease, chProductionSabotaged,
+    chNoGrowthWarning, chPollution, chTypeDel, chFounded, chSiege,
+    chAfterCapture, chPopIncrease);
 
-    CityEventSoundItem: array [0 .. 15] of string = ('CITY_DISORDER', '',
-      'CITY_POPPLUS', 'CITY_POPMINUS', 'CITY_UNITLOST', 'CITY_IMPLOST',
-      'CITY_SABOTAGE', 'CITY_GROWTHNEEDSIMP', 'CITY_POLLUTION', 'CITY_SIEGE',
-      'CITY_WONDEREX', 'CITY_EMDELAY', 'CITY_FOUNDED', 'CITY_FOUNDED', '',
-      'CITY_INVALIDTYPE');
+  CityEventSoundItem: array [0 .. 15] of string = ('CITY_DISORDER', '',
+    'CITY_POPPLUS', 'CITY_POPMINUS', 'CITY_UNITLOST', 'CITY_IMPLOST',
+    'CITY_SABOTAGE', 'CITY_GROWTHNEEDSIMP', 'CITY_POLLUTION', 'CITY_SIEGE',
+    'CITY_WONDEREX', 'CITY_EMDELAY', 'CITY_FOUNDED', 'CITY_FOUNDED', '',
+    'CITY_INVALIDTYPE');
 
-  type
-    TPersistentData = record
-      FarTech, ToldAge, ToldModels, ToldAlive, ToldContact, ToldOwnCredibility,
-        ColdWarStart, PeaceEvaHappened: integer;
-      EnhancementJobs: TEnhancementJobs;
-      ImpOrder: array [0 .. nCityType - 1] of TImpOrder;
-      ToldWonders: array [0 .. 27] of TWonderInfo;
-      ToldTech: array [0 .. nAdv - 1] of ShortInt;
-    end;
+type
+  TPersistentData = record
+    FarTech: Integer;
+    ToldAge: Integer;
+    ToldModels: Integer;
+    ToldAlive: Integer;
+    ToldContact: Integer;
+    ToldOwnCredibility: Integer;
+    ColdWarStart: Integer;
+    PeaceEvaHappened: Integer;
+    EnhancementJobs: TEnhancementJobs;
+    ImpOrder: array [0 .. nCityType - 1] of TImpOrder;
+    ToldWonders: array [0 .. 27] of TWonderInfo;
+    ToldTech: array [0 .. nAdv - 1] of ShortInt;
+  end;
 
-  var
-    MyData: ^TPersistentData;
-    AdvIcon: array [0 .. nAdv - 1] of integer;
-    { icons displayed with the technologies }
-    xxt, yyt, // half of tile size x/y
-    GameMode, ClientMode, Age, UnFocus, OptionChecked, MapOptionChecked,
-      nLostArmy, ScienceSum, TaxSum, SoundPreloadDone, MarkCityLoc, HGrTerrain,
-      HGrCities, MovieSpeed: integer;
-    CityRepMask: Cardinal;
-    ReceivedOffer: TOffer;
-    Buffer, SmallImp: TBitmap;
-    BlinkON, DestinationMarkON, StartRunning, StayOnTop_Ensured,
-      supervising: boolean;
-    UnusedTribeFiles, TribeNames: tstringlist;
-    TribeOriginal: array [0 .. nPl - 1] of boolean;
-    LostArmy: array [0 .. nPl * nMmax - 1] of integer;
-    DipMem: array [0 .. nPl - 1] of record pContact, SentCommand,
-      FormerTreaty: integer;
+var
+  MyData: ^TPersistentData;
+  AdvIcon: array [0 .. nAdv - 1] of Integer;
+  { icons displayed with the technologies }
+  xxt, yyt, // half of tile size x/y
+  GameMode: Integer;
+  ClientMode: Integer;
+  Age: Integer;
+  UnFocus: Integer;
+  OptionChecked: Integer;
+  MapOptionChecked: Integer;
+  nLostArmy: Integer;
+  ScienceSum: Integer;
+  TaxSum: Integer;
+  SoundPreloadDone: Integer;
+  MarkCityLoc: Integer;
+  HGrTerrain: Integer;
+  HGrCities: Integer;
+  MovieSpeed: Integer;
+  CityRepMask: Cardinal;
+  ReceivedOffer: TOffer;
+  Buffer: TBitmap;
+  SmallImp: TBitmap;
+  BlinkON: Boolean;
+  DestinationMarkON: Boolean;
+  StartRunning: Boolean;
+  StayOnTop_Ensured: Boolean;
+  Supervising: Boolean;
+  UnusedTribeFiles: TStringList;
+  TribeNames: TStringList;
+  TribeOriginal: array [0 .. nPl - 1] of Boolean;
+  LostArmy: array [0 .. nPl * nMmax - 1] of Integer;
+  DipMem: array [0 .. nPl - 1] of record
+    pContact: Integer;
+    SentCommand: Integer;
+    FormerTreaty: Integer;
     SentOffer: TOffer;
-    DeliveredPrices, ReceivedPrices: TPriceSet;
+    DeliveredPrices: TPriceSet;
+    ReceivedPrices: TPriceSet;
   end;
 
 function CityEventName(i: integer): string;

@@ -86,7 +86,7 @@ type
 
 var
   // PARAMETERS
-  bixView: array [0 .. nPl - 1] of integer; { brain index of the players }
+  PlayersBrain: TBrains; { brain index of the players }
   Difficulty: array [0 .. nPl - 1] of integer absolute Database.Difficulty;
   { difficulty }
 
@@ -123,15 +123,22 @@ uses
   LCLIntf, LCLType, LMessages, Classes, SysUtils;
 
 var
-  MaxTurn, LoadTurn, { turn where to stop loading }
-  nLogOpened, { nLog of opened book }
+  MaxTurn: Integer;
+  LoadTurn: Integer; { turn where to stop loading }
+  nLogOpened: Integer; { nLog of opened book }
 {$IFOPT O-}nHandoverStack, {$ENDIF}
-  LastEndClientCommand, pContacted, // player contacted for negotiation
-  pDipActive, // player who's to speak in a negotiation
-  pTurn, { player who's turn it is }
-  GWinner, GColdWarStart, GStealFrom, SpyMission, ZOCTile, CCCommand,
-    CCPlayer: integer;
-  DebugMap: array [0 .. nPl - 1] of pointer;
+  LastEndClientCommand: Integer;
+  pContacted: Integer; // player contacted for negotiation
+  pDipActive: Integer; // player who's to speak in a negotiation
+  pTurn: Integer; { player who's turn it is }
+  GWinner: Integer;
+  GColdWarStart: Integer;
+  GStealFrom: Integer;
+  SpyMission: Integer;
+  ZOCTile: Integer;
+  CCCommand: Integer;
+  CCPlayer: Integer;
+  DebugMap: array [0 .. nPl - 1] of Pointer;
   ExeInfo: TSearchRec;
   Stat: array [0 .. nStat - 1, 0 .. nPl - 1] of ^TChart;
   AutoSaveState: TCmdListState;
@@ -143,14 +150,19 @@ var
   OriginalDataVersion: array [0 .. nPl - 1] of integer;
   SavedTiles { , SavedResourceWeights } : array [0 .. ncmax - 1] of Cardinal;
   SavedData: array [0 .. nPl - 1] of pointer;
-  LogFileName, SavePath, { name of file for saving the current game }
-  MapFileName, // name of map to use, empty for random
+  LogFileName: string;
+  SavePath: string; { name of file for saving the current game }
+  MapFileName: string; // name of map to use, empty for random
   AICredits: string;
   AIInfo: array [0 .. nPl - 1] of string;
   Notify: TNotifyFunction;
   LastClientTime: TDateTime;
 {$IFOPT O-}HandoverStack: array [0 .. 31] of Cardinal; {$ENDIF}
-  AutoSaveExists, LoadOK, WinOnAlone, PreviewElevation, MovieStopped: boolean;
+  AutoSaveExists: Boolean;
+  LoadOK: Boolean;
+  WinOnAlone: Boolean;
+  PreviewElevation: Boolean;
+  MovieStopped: Boolean;
 
 const
   PreviewRND = 41601260; { randseed for preview map }
@@ -203,9 +215,14 @@ var
   f: TSearchRec;
   BasePath: string;
   NewBrain: TBrain;
+  I: Integer;
 begin
   Notify := NotifyFunction;
   PreviewElevation := false;
+  PlayersBrain := TBrains.Create(False);
+  PlayersBrain.Count := nPl;
+  for I := 0 to nPl - 1 do
+    PlayersBrain[I] := nil;
 
   { get available brains }
   Brains := TBrains.Create;
@@ -263,6 +280,7 @@ begin
       if (Kind = btAI) and ((Flags and fDotNet) = 0) then
         FreeLibrary(hm);
     end;
+  PlayersBrain.Free;
   Brains.Free;
 end;
 
@@ -649,10 +667,10 @@ begin
       LogFile.write(zero, 4)
     else
     begin
-      if Brains[bixView[i]].Kind in [btRandom, btAI] then
+      if PlayersBrain[i].Kind in [btRandom, btAI] then
         s := Brains[bix[i]].FileName
       else
-        s := Brains[bixView[i]].FileName;
+        s := PlayersBrain[i].FileName;
       move(zero, s[Length(s) + 1], 4);
       LogFile.write(s, (Length(s) div 4 + 1) * 4);
       LogFile.write(OriginalDataVersion[i], 4);
@@ -684,19 +702,20 @@ var
   AIBrains: TBrains;
 begin
   for p1 := 0 to nPl - 1 do begin
-    if (bixView[p1] <> -1) and (Brains[bixView[p1]].Kind = btSuperVirtual) then
+    if Assigned(PlayersBrain[p1]) and (PlayersBrain[p1].Kind = btSuperVirtual) then
       bix[p1] := Brains.IndexOf(BrainTerm) // supervisor and local human use same module
-    else if (bixView[p1] <> -1) and (Brains[bixView[p1]].Kind = btRandom) then
+    else if Assigned(PlayersBrain[p1]) and (PlayersBrain[p1].Kind = btRandom) then
       if Brains.GetKindCount(btAI) = 0 then
         bix[p1] := -1
       else begin
         AIBrains := TBrains.Create(False);
+        Brains.GetByKind(btAI, AIBrains);
         bix[p1] := Brains.IndexOf(AIBrains[DelphiRandom(AIBrains.Count)]);
         AIBrains.Free;
       end
     else
-      bix[p1] := bixView[p1];
-    if bixView[p1] < 0 then
+      bix[p1] := Brains.IndexOf(PlayersBrain[p1]);
+    if not Assigned(PlayersBrain[p1]) then
       Difficulty[p1] := -1;
   end;
 
@@ -1085,7 +1104,8 @@ end;
 function LoadGame(const Path, FileName: string; Turn: integer;
   MovieMode: boolean): boolean;
 var
-  i, j, ix, d, p1, Command, Subject: integer;
+  j: TBrain;
+  i, ix, d, p1, Command, Subject: integer;
 {$IFDEF TEXTLOG}LoadPos0: integer; {$ENDIF}
   Data: pointer;
   LogFile: TFileStream;
@@ -1123,29 +1143,29 @@ begin
     begin
       LogFile.read(s[0], 4);
       if s[0] = #0 then
-        bixView[p1] := -1
+        PlayersBrain[p1] := nil
       else
       begin
         LogFile.read(s[4], Byte(s[0]) div 4 * 4);
         LogFile.read(OriginalDataVersion[p1], 4);
         LogFile.read(d, 4); { behavior }
         LogFile.read(Difficulty[p1], 4);
-        j := Brains.Count - 1;
-        while (j >= 0) and (AnsiCompareFileName(Brains[j].FileName, s) <> 0) do
-          dec(j);
-        if j < 0 then
+        j := Brains.Last;
+        while Assigned(J) and (AnsiCompareFileName(j.FileName, s) <> 0) do
+          J := PlayersBrain[PlayersBrain.IndexOf(J) - 1];
+        if not Assigned(j) then
         begin // ai not found -- replace by local player
           ProcessClientData[p1] := false;
           NotifyMessage := s;
           Notify(ntAIError);
-          j := Brains.IndexOf(BrainTerm);
+          j := BrainTerm;
         end
         else
           ProcessClientData[p1] := true;
-        if Brains[j].Kind = btNoTerm then
-          j := Brains.IndexOf(BrainSuperVirtual);
+        if j.Kind = btNoTerm then
+          j := BrainSuperVirtual;
         // crashed tournament -- load as supervisor
-        bixView[p1] := j;
+        PlayersBrain[p1] := j;
       end;
     end;
   end
