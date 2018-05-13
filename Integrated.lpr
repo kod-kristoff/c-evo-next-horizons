@@ -41,8 +41,6 @@ uses
   TechTree in 'LocalPlayer\TechTree.pas' {TechTreeDlg},
   ScreenTools, Directories;
 
-{$R cevo.res}
-
 {$if declared(UseHeapTrace)}
 const
   HeapTraceLog = 'heaptrclog.trc';

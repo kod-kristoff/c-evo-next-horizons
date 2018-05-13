@@ -43,7 +43,7 @@ const
   NoCityRecovery = 8;
   MaxMoneyPrice = $FFFF;
   MaxShipPartPrice = 100;
-  BombardmentDestroysCity = false;
+  BombardmentDestroysCity = False;
   StartMoney = 0;
   InitialCredibility = 95;
 
@@ -52,10 +52,10 @@ const
 
   // difficulty settings
   MaxDiff = 4; { maximum difficulty level }
-  StorageSize: array [1 .. MaxDiff] of integer = (30, 40, 50, 60);
-  TechFormula_M: array [1 .. MaxDiff] of single = (2.0, 2.3, 2.6, 4.0);
-  TechFormula_D: array [1 .. MaxDiff] of single = (102.0, 80.0, 64.0, 64.0);
-  BuildCostMod: array [1 .. MaxDiff] of integer = (9, 12, 15, 18); // in 1/12
+  StorageSize: array [1 .. MaxDiff] of Integer = (30, 40, 50, 60);
+  TechFormula_M: array [1 .. MaxDiff] of Single = (2.0, 2.3, 2.6, 4.0);
+  TechFormula_D: array [1 .. MaxDiff] of Single = (102.0, 80.0, 64.0, 64.0);
+  BuildCostMod: array [1 .. MaxDiff] of Integer = (9, 12, 15, 18); // in 1/12
 
   // test flags
   nTestFlags = 7; // max. 11
@@ -794,9 +794,9 @@ const
   imShipPow = 68;
   imShipHab = 69;
 
-  SettlerFood: array [0 .. nGov - 1] of integer = (1, 1, 1, 2, 1, 2, 2, 2);
-  CorrLevel: array [0 .. nGov - 1] of integer = (3, 3, 1, 2, 1, 0, 0, 0);
-  SupportFree: array [0 .. nGov - 1] of integer = (2, 2, 1, 0, 2, 1, 0, 0);
+  SettlerFood: array [0 .. nGov - 1] of Integer = (1, 1, 1, 2, 1, 2, 2, 2);
+  CorrLevel: array [0 .. nGov - 1] of Integer = (3, 3, 1, 2, 1, 0, 0, 0);
+  SupportFree: array [0 .. nGov - 1] of Integer = (2, 2, 1, 0, 2, 1, 0, 0);
   // in 1/2*city size
 
   // special prerequisite values
@@ -807,11 +807,11 @@ const
   preBuilder = -5;
   preNA = -$FF;
 
-  JobPreq: array [0 .. nJob - 1] of integer = (preNone, preNone, adRailroad,
+  JobPreq: array [0 .. nJob - 1] of Integer = (preNone, preNone, adRailroad,
     preNone, preNone, adRefrigeration, preNone, preNone, adExplosives,
     adExplosives, adConstruction, preNone, adMedicine, preNone, preNone);
 
-  AdvPreq: array [0 .. nAdv - 1, 0 .. 2] of integer = { advance prerequisites }
+  AdvPreq: array [0 .. nAdv - 1, 0 .. 2] of Integer = { advance prerequisites }
     ((adFlight, adRobotics, preNone), // adAdvancedFlight
     (adNavigation, adTactics, preNone), // adAmphibiousWarfare
     (adMysticism, adAlphabet, preNone), // adAstronomy
@@ -1022,14 +1022,14 @@ nShipPart = 3;
 spComp = 0;
 spPow = 1;
 spHab = 2;
-ShipNeed: array [0 .. nShipPart - 1] of integer = (6, 4, 2);
-ShipImpIndex: array [0 .. nShipPart - 1] of integer = (imShipComp, imShipPow, imShipHab);
+ShipNeed: array [0 .. nShipPart - 1] of Integer = (6, 4, 2);
+ShipImpIndex: array [0 .. nShipPart - 1] of Integer = (imShipComp, imShipPow, imShipHab);
 
-GovPreq: array [1 .. nGov - 1] of integer = { government prerequisites }
+GovPreq: array [1 .. nGov - 1] of Integer = { government prerequisites }
   (preNone, adMonarchy, adTheRepublic, adTheology, adCommunism, adDemocracy,
   adInternet);
 
-AgePreq: array [1 .. 3] of integer = (adScience, adMassProduction,
+AgePreq: array [1 .. 3] of Integer = (adScience, adMassProduction,
   adTransstellarColonization);
 
 Terrain: array [0 .. 11] of record
@@ -1043,7 +1043,9 @@ Terrain: array [0 .. 11] of record
   MineAfforestWork: Integer;
   TransTerrain: Integer;
   TransWork: Integer;
-  FoodRes, ProdRes, TradeRes: array [0 .. 2] of Integer;
+  FoodRes: array [0 .. 2] of Integer;
+  ProdRes: array [0 .. 2] of Integer;
+  TradeRes: array [0 .. 2] of Integer;
   Filler: array [0 .. 12] of Integer;
 end
 = ((MoveCost: 1; Defense: 4; ClearTerrain: - 1; IrrEff: 0; IrrClearWork: 0;
@@ -1200,8 +1202,12 @@ AutoFeature: set of mcFirstNonCap .. nFeature - 1 = [mcNav, mcSE, mcNP, mcJet,
 // unit class advances, automatically applied if available
 
 Feature: array [0 .. nFeature - 1] of { unit model features }
-  record Domains, Preq, Weight, Cost: integer;
-end
+  record
+    Domains: Integer;
+    Preq: Integer;
+    Weight: Integer;
+    Cost: Integer;
+  end
 = ((Domains: 7; Preq: preNone; Weight: 1; Cost: 1), { mcOffense }
   (Domains: 7; Preq: preNone; Weight: 1; Cost: 1), { mcDefense }
   (Domains: 1; Preq: adHorsebackRiding; Weight: 1; Cost: 1), { mcMob }
@@ -1230,9 +1236,9 @@ end
   (Domains: 1; Preq: preSun; Weight: 0; Cost: 0), { mcAcademy }
   (Domains: 7; Preq: adMassProduction; Weight: 0; Cost: 0)); { mcLine }
 
-WeightPreq7: array [0 .. nDomains - 1] of integer = (adHorsebackRiding, adSeafaring,
+WeightPreq7: array [0 .. nDomains - 1] of Integer = (adHorsebackRiding, adSeafaring,
   adAdvancedFlight);
-WeightPreq10: array [0 .. nDomains - 1] of integer = (adAutomobile, adSteel, preNA);
+WeightPreq10: array [0 .. nDomains - 1] of Integer = (adAutomobile, adSteel, preNA);
 
 INFIN = 999999;
 
@@ -1260,24 +1266,24 @@ mcLongRange = mcArtillery;
 mcHospital = mcSupplyShip;
 
 type
-  TServerCall = function(Command, Player, Subject: integer; var Data)
-    : integer; stdcall;
-  TClientCall = procedure(Command, Player: integer; var Data); stdcall;
+  TServerCall = function (Command, Player, Subject: Integer; var Data)
+    : Integer; stdcall;
+  TClientCall = procedure (Command, Player: Integer; var Data); stdcall;
 
   TUn = packed record
-    Loc, { location }
-    Status, // free for AI use
+    Loc: LongInt; { location }
+    Status: LongInt; // free for AI use
     SavedStatus: LongInt; // for server internal use only
-    ID: word; // unit number, never changes, unique within this nation
-    mix, { model index }
-    Home, { home city index, -1 if none }
-    Master, { index of transporting unit, -1 if none }
+    ID: Word; // unit number, never changes, unique within this nation
+    mix: SmallInt; { model index }
+    Home: SmallInt; { home city index, -1 if none }
+    Master: SmallInt; { index of transporting unit, -1 if none }
     Movement: SmallInt; { movement left for this turn }
-    Health, // = 100-Damage
+    Health: ShortInt; // = 100-Damage
     Fuel: ShortInt;
-    Job, { current terrain improvement job }
-    Exp, { micro experience, the level is Exp div ExpCost }
-    TroopLoad, { number of transported ground units }
+    Job: Byte; { current terrain improvement job }
+    Exp: Byte; { micro experience, the level is Exp div ExpCost }
+    TroopLoad: Byte; { number of transported ground units }
     AirLoad: Byte; // number of transported air units
     Flags: Cardinal;
   end;
@@ -1285,20 +1291,20 @@ type
   { TCity }
 
   TCity = packed record
-    Loc, { location }
-    Status, // free for AI use
+    Loc: LongInt; { location }
+    Status: LongInt; // free for AI use
     SavedStatus: LongInt; // for server internal use only
-    ID, // founding player shl 12 + number, never changes, unique within the whole game
-    Size: word;
-    Project, // current production project, see city project flags
-    Project0, // for server use only
-    Food, // collected food in storage
-    Pollution, // collected pollution in dump
-    Prod, // for project collected production points
+    ID: Word; // founding player shl 12 + number, never changes, unique within the whole game
+    Size: Word;
+    Project: SmallInt; // current production project, see city project flags
+    Project0: SmallInt; // for server use only
+    Food: SmallInt; // collected food in storage
+    Pollution: SmallInt; // collected pollution in dump
+    Prod: SmallInt; // for project collected production points
     Prod0: SmallInt;
     // for project collected production points in the beginning of the turn
-    Flags, // what happened within the last turnaround
-    Tiles, { currently by city exploited tiles, bitset with index
+    Flags: Cardinal; // what happened within the last turnaround
+    Tiles: Cardinal; { currently by city exploited tiles, bitset with index
       (dy+3) shl 2+(dx+3) shr 1, (dx,dy) relative to central tile }
     N1: Cardinal; // reserved for future use
     Built: array [0 .. (nImp + 3) div 4 * 4 - 1] of ShortInt;
@@ -1306,177 +1312,278 @@ type
   end;
 
   TModel = packed record
-    Status, // free for AI use
+    Status: LongInt; // free for AI use
     SavedStatus: LongInt; // for server internal use only
-    ID, // developing player shl 12 + number, never changes, unique within the whole game
-    IntroTurn, Built, // units built with this model
-    Lost: word; // units of this model lost in combat
-    Kind, Domain: Byte;
-    Attack, Defense, Speed, Cost, MStrength: word;
+    ID: Word; // developing player shl 12 + number, never changes, unique within the whole game
+    IntroTurn: Word;
+    Built: Word; // units built with this model
+    Lost: Word; // units of this model lost in combat
+    Kind: Byte;
+    Domain: Byte;
+    Attack: Word;
+    Defense: Word;
+    Speed: Word;
+    Cost: Word;
+    MStrength: Word;
     // construction time multipliers, only valid if kind is mkSelfDeveloped or mkEnemyDeveloped
-    MTrans, MCost, Weight, MaxWeight: Byte;
+    MTrans: Byte;
+    MCost: Byte;
+    Weight: Byte;
+    MaxWeight: Byte;
     // weight and maximum weight (construction time)
-    Upgrades, // bitarray indicating all upgrades
+    Upgrades: Cardinal; // bitarray indicating all upgrades
     Flags: Cardinal;
     Cap: array [0 .. (nFeature + 3) div 4 * 4 - 1] of Byte; // special features
   end;
 
   TUnitInfo = packed record
     Loc: LongInt;
-    mix, // index of unit model for its owner
-    emix: word; // index in enemy model list
+    mix: Word; // index of unit model for its owner
+    emix: Word; // index in enemy model list
     Owner: Byte;
-    Health, // = 100-Damage
+    Health: ShortInt; // = 100-Damage
     Fuel: ShortInt;
-    Job, // current terrain improvement job
-    Exp, { micro experience, the level is Exp div ExpCost }
+    Job: Byte; // current terrain improvement job
+    Exp: Byte; { micro experience, the level is Exp div ExpCost }
     Load: Byte; { number of transported units }
-    Flags: word;
+    Flags: Word;
   end;
 
   TCityInfo = packed record
-    Loc, Status, // free for AI use
+    Loc: LongInt;
+    Status: LongInt; // free for AI use
     SavedStatus: LongInt; // for server internal use only
-    Owner, // last known owner, even if not alive anymore!
-    ID, // founding player <<12 + number, never changes, unique within the whole game
-    Size, Flags: word;
+    Owner: Word; // last known owner, even if not alive anymore!
+    ID: Word; // founding player <<12 + number, never changes, unique within the whole game
+    Size: Word;
+    Flags: Word;
   end;
 
   TModelInfo = packed record
-    Owner, // Player which owns the model
-    mix, // index of unit model for its owner
-    ID: word; // developing player shl 12 + number, never changes, unique within the whole game
-    Kind, Domain: Byte;
-    Attack, Defense, Speed, Cost: word;
-    TTrans, // ground unit transport capability
+    Owner: Word; // Player which owns the model
+    mix: Word; // index of unit model for its owner
+    ID: Word; // developing player shl 12 + number, never changes, unique within the whole game
+    Kind: Byte;
+    Domain: Byte;
+    Attack: Word;
+    Defense: Word;
+    Speed: Word;
+    Cost: Word;
+    TTrans: Byte; // ground unit transport capability
     ATrans_Fuel: Byte; // air unit transport capability resp. fuel
-    Bombs: word; // additional attack with bombs
+    Bombs: Word; // additional attack with bombs
     Cap: Cardinal; // special features, bitset with index Feature-mcFirstNonCap
-    MaxUpgrade, // maximum used upgrade
+    MaxUpgrade: Byte; // maximum used upgrade
     Weight: Byte;
-    Lost: word;
+    Lost: Word;
   end;
 
   TBattle = packed record
-    Enemy, Flags: Byte;
-    Turn, mix, mixEnemy: word;
-    ToLoc, FromLoc: integer;
+    Enemy: Byte;
+    Flags: Byte;
+    Turn: Word;
+    mix: Word;
+    mixEnemy: Word;
+    ToLoc: Integer;
+    FromLoc: Integer;
   end;
 
   TWonderInfo = record
-    CityID, // -2 if destroyed, -1 if never completed, >=0 ID of city
-    EffectiveOwner: integer
+    CityID: Integer; // -2 if destroyed, -1 if never completed, >=0 ID of city
+    EffectiveOwner: Integer;
     // owning player if effective, -1 if expired or not built
-    end;
+  end;
 
-    TShipInfo = record Parts: array [0 .. nShipPart - 1] of integer;
+  TShipInfo = record
+    Parts: array [0 .. nShipPart - 1] of Integer;
   end;
 
   TEnemyReport = record
-    TurnOfContact, TurnOfCivilReport, TurnOfMilReport, Attitude,
-      Credibility: integer; // 0..100, last update: ToC
-    Treaty: array [0 .. nPl - 1] of integer;
+    TurnOfContact: Integer;
+    TurnOfCivilReport: Integer;
+    TurnOfMilReport: Integer;
+    Attitude: Integer;
+    Credibility: Integer; // 0..100, last update: ToC
+    Treaty: array [0 .. nPl - 1] of Integer;
     // diplomatic status with other nations, last update: ToCR
-    Government, // gAnarchy..gDemocracy, last update: ToCR
-    Money, // last update: ToCR
-    ResearchTech, ResearchDone: integer; // last update: ToCR
+    Government: Integer; // gAnarchy..gDemocracy, last update: ToCR
+    Money: Integer; // last update: ToCR
+    ResearchTech: Integer; // last update: ToCR
+    ResearchDone: Integer; // last update: ToCR
     Tech: array [0 .. (nAdv + 3) div 4 * 4 - 1] of ShortInt;
     // tech status indicator, last update: ToCR
-    nModelCounted: integer;
+    nModelCounted: Integer;
     // number of models with info in UnCount, last update: ToMR
-    UnCount: array [0 .. INFIN] of word;
+    UnCount: array [0 .. INFIN] of Word;
     // number of available units for each model, last update: ToMR
   end;
 
   TMoveAdviceData = record
-    ToLoc, nStep, MoreTurns, MaxHostile_MovementLeft: integer;
-    dx, dy: array [0 .. 24] of integer;
+    ToLoc: Integer;
+    nStep: Integer;
+    MoreTurns: Integer;
+    MaxHostile_MovementLeft: Integer;
+    dx: array [0 .. 24] of Integer;
+    dy: array [0 .. 24] of Integer;
   end;
 
   TPlaneReturnData = record
-    Loc, Fuel, Movement: integer;
+    Loc: Integer;
+    Fuel: Integer;
+    Movement: Integer;
   end;
 
   TTileInfo = record
-    Food, Prod, Trade, ExplCity: integer;
+    Food: Integer;
+    Prod: Integer;
+    Trade: Integer;
+    ExplCity: Integer;
   end;
 
   TCityReport = record
-    HypoTiles, HypoTax, HypoLux, Working, Happy, FoodRep,
-      ProdRep, Trade, PollRep, Corruption, Tax, Lux, Science, Support, Eaten,
-      ProdCost, Storage, Deployed: integer;
+    HypoTiles: Integer;
+    HypoTax: Integer;
+    HypoLux: Integer;
+    Working: Integer;
+    Happy: Integer;
+    FoodRep: Integer;
+    ProdRep: Integer;
+    Trade: Integer;
+    PollRep: Integer;
+    Corruption: Integer;
+    Tax: Integer;
+    Lux: Integer;
+    Science: Integer;
+    Support: Integer;
+    Eaten: Integer;
+    ProdCost: Integer;
+    Storage: Integer;
+    Deployed: Integer;
   end;
 
   TCityReportNew = record
-    HypoTiles,
+    HypoTiles: Integer;
     // tiles that should be considered as exploited (for the current adjustment, set this to -1 or to TCity.Tiles of the city)
-    HypoTaxRate, HypoLuxuryRate,
+    HypoTaxRate: Integer;
+    HypoLuxuryRate: Integer;
     // tax and luxury rate that should be assumed (for current rates, set this to -1 or to RO.TaxRate resp. RO.LuxRate)
-    Morale, FoodSupport, MaterialSupport,
+    Morale: Integer;
+    FoodSupport: Integer;
+    MaterialSupport: Integer;
     // food and material taken for unit support
-    ProjectCost, // material cost of current project
-    Storage, // size of food storage
-    Deployed, // number of units causing unrest (unrest=2*deployed)
-    CollectedControl, CollectedFood, CollectedMaterial, CollectedTrade,
+    ProjectCost: Integer; // material cost of current project
+    Storage: Integer; // size of food storage
+    Deployed: Integer; // number of units causing unrest (unrest=2*deployed)
+    CollectedControl: Integer;
+    CollectedFood: Integer;
+    CollectedMaterial: Integer;
+    CollectedTrade: Integer;
     // raw control, food, material and trade as collected by the citizens
-    Working, // number of exploited tiles including city tile
-    FoodSurplus, Production, AddPollution,
+    Working: Integer; // number of exploited tiles including city tile
+    FoodSurplus: Integer;
+    Production: Integer;
+    AddPollution: Integer;
     // food surplus, production gain and pollution after all effects
-    Corruption, Tax, Science, Luxury,
+    Corruption: Integer;
+    Tax: Integer;
+    Science: Integer;
+    Luxury: Integer;
     // corruption, tax, science and wealth after all effects
-    HappinessBalance: integer;
+    HappinessBalance: Integer;
     // = (Morale+Wealth+Control) - (Size+Unrest), value < 0 means disorder
   end;
 
   TCityTileAdviceData = record
-    ResourceWeights, Tiles: Cardinal;
+    ResourceWeights: Cardinal;
+    Tiles: Cardinal;
     CityReport: TCityReport;
   end;
 
   TGetCityData = record
-    Owner: integer;
+    Owner: Integer;
     c: TCity;
   end;
 
   TCityAreaInfo = record
-    Available: array [0 .. 26] of integer;
+    Available: array [0 .. 26] of Integer;
   end;
 
   TUnitReport = record
-    FoodSupport, ProdSupport, ReportFlags: integer;
+    FoodSupport: Integer;
+    ProdSupport: Integer;
+    ReportFlags: Integer;
   end;
 
   TJobProgressData = array [0 .. nJob - 1] of record
     Required, Done,
-    NextTurnPlus: integer;
+    NextTurnPlus: Integer;
   end;
+
   TBattleForecast = record
-    pAtt, mixAtt, HealthAtt, ExpAtt, FlagsAtt, Movement,
-    EndHealthDef, EndHealthAtt: integer;
+    pAtt: Integer;
+    mixAtt: Integer;
+    HealthAtt: Integer;
+    ExpAtt: Integer;
+    FlagsAtt: Integer;
+    Movement: Integer;
+    EndHealthDef: Integer;
+    EndHealthAtt: Integer;
   end;
+
   TBattleForecastEx = record
-    pAtt, mixAtt, HealthAtt, ExpAtt, FlagsAtt, Movement,
-    EndHealthDef, EndHealthAtt: integer; // must be same as in TBattleForecast
-    AStr, DStr, ABaseDamage, DBaseDamage: integer;
+    pAtt: Integer;
+    mixAtt: Integer;
+    HealthAtt: Integer;
+    ExpAtt: Integer;
+    FlagsAtt: Integer;
+    Movement: Integer;
+    EndHealthDef: Integer;
+    EndHealthAtt: Integer; // must be same as in TBattleForecast
+    AStr: Integer;
+    DStr: Integer;
+    ABaseDamage: Integer;
+    DBaseDamage: Integer;
   end;
+
   TShowMove = record
-    Owner, Health, mix, emix, Flags, FromLoc, dx, dy, EndHealth,
-    EndHealthDef, Fuel, Exp, Load: integer;
+    Owner: Integer;
+    Health: Integer;
+    mix: Integer;
+    emix: Integer;
+    Flags: Integer;
+    FromLoc: Integer;
+    dx: Integer;
+    dy: Integer;
+    EndHealth: Integer;
+    EndHealthDef: Integer;
+    Fuel: Integer;
+    Exp: Integer;
+    Load: Integer;
   end;
+
   TShowShipChange = record
-    Reason, Ship1Owner, Ship2Owner: integer;
-    Ship1Change, Ship2Change: array [0 .. nShipPart - 1] of integer;
+    Reason: Integer;
+    Ship1Owner: Integer;
+    Ship2Owner: Integer;
+    Ship1Change: array [0 .. nShipPart - 1] of Integer;
+    Ship2Change: array [0 .. nShipPart - 1] of Integer;
   end;
+
   TOffer = record
-    nDeliver, nCost: integer;
+    nDeliver: Integer;
+    nCost: Integer;
     Price: array [0 .. 11] of Cardinal;
   end;
-  TChart = array [0 .. INFIN] of integer;
+
+  TChart = array [0 .. INFIN] of Integer;
   TEditTileData = record
-    Loc, NewTile: integer
+    Loc: Integer;
+    NewTile: Integer;
   end;
   TCreateUnitData = record
-    Loc, p, mix: integer;
+    Loc: Integer;
+    p: Integer;
+    mix: Integer;
   end;
 
   TTileList = array [0 .. INFIN] of Cardinal;
@@ -1493,7 +1600,7 @@ type
   TBattleList = array [0 .. INFIN] of TBattle;
 
   TPlayerContext = record
-    Data: pointer;
+    Data: Pointer;
     Map: ^TTileList;
     { the playground, a list of tiles with index = location, see tile flags }
     MapObservedLast: ^TTileObservedLastList;
@@ -1507,64 +1614,81 @@ type
     EnemyModel: ^TEnemyModelList; // known unit models of enemy players
     EnemyReport: array [0 .. nPl - 1] of ^TEnemyReport;
 
-    TestFlags, // options turned on in the "Manipulation" menu
-    Turn, // current turn
-    Alive, { bitset of IDs of players still alive, flag 1 shl p for player p }
-    Happened, // flags indicate what happened within the last turnaround
-    AnarchyStart, // start turn of anarchy, <0 if not in anarchy
-    Credibility, // own credibility
-    MaxCredibility, // maximum credibility still to achieve
-    nUn, { number of units }
-    nCity, { number of cities }
-    nModel, { number of developed unit models }
-    nEnemyUn, nEnemyCity, nEnemyModel, Government, { gAnarchy..gDemocracy }
-    Money, TaxRate, LuxRate, Research,
+    TestFlags: Integer; // options turned on in the "Manipulation" menu
+    Turn: Integer; // current turn
+    Alive: Integer; { bitset of IDs of players still alive, flag 1 shl p for player p }
+    Happened: Integer; // flags indicate what happened within the last turnaround
+    AnarchyStart: Integer; // start turn of anarchy, <0 if not in anarchy
+    Credibility: Integer; // own credibility
+    MaxCredibility: Integer; // maximum credibility still to achieve
+    nUn: Integer; { number of units }
+    nCity: Integer; { number of cities }
+    nModel: Integer; { number of developed unit models }
+    nEnemyUn: Integer;
+    nEnemyCity: Integer;
+    nEnemyModel: Integer;
+    Government: Integer; { gAnarchy..gDemocracy }
+    Money: Integer;
+    TaxRate: Integer;
+    LuxRate: Integer;
+    Research: Integer;
     { collected research points for currently researched tech }
-    ResearchTech: integer; // currently researched tech
+    ResearchTech: Integer; // currently researched tech
     DevModel: TModel; { unit model currently under development }
     Tech: array [0 .. (nAdv + 3) div 4 * 4 - 1] of ShortInt; { tech status indicator }
-    Attitude: array [0 .. nPl - 1] of integer; // attitude to other nations
-    Treaty: array [0 .. nPl - 1] of integer; // treaty with other nations
-    EvaStart: array [0 .. nPl - 1] of integer; // peace treaty: start of evacuation period
-    Tribute: array [0 .. nPl - 1] of integer; // no longer in use
-    TributePaid: array [0 .. nPl - 1] of integer; // no longer in use
+    Attitude: array [0 .. nPl - 1] of Integer; // attitude to other nations
+    Treaty: array [0 .. nPl - 1] of Integer; // treaty with other nations
+    EvaStart: array [0 .. nPl - 1] of Integer; // peace treaty: start of evacuation period
+    Tribute: array [0 .. nPl - 1] of Integer; // no longer in use
+    TributePaid: array [0 .. nPl - 1] of Integer; // no longer in use
     Wonder: array [0 .. 27] of TWonderInfo;
     Ship: array [0 .. nPl - 1] of TShipInfo;
     NatBuilt: array [28 .. (nImp + 3) div 4 * 4 - 1] of ShortInt;
-    nBattleHistory: integer;
+    nBattleHistory: Integer;
     BattleHistory: ^TBattleList; // complete list of all my battles in the whole game
     BorderHelper: ^TByteList;
-    LastCancelTreaty: array [0 .. nPl - 1] of integer; // turn of last treaty cancel
-    OracleIncome: integer;
+    LastCancelTreaty: array [0 .. nPl - 1] of Integer; // turn of last treaty cancel
+    OracleIncome: Integer;
     DefaultDebugMap: ^TIntList;
     Filler: array [0 .. 879] of Byte;
   end;
 
   TInitModuleData = record
     Server: TServerCall;
-    DataVersion, DataSize, Flags: integer;
+    DataVersion: Integer;
+    DataSize: Integer;
+    Flags: Integer;
   end;
 
   TNewGameData = record
-    lx, ly, LandMass, MaxTurn: integer;
-    Difficulty: array [0 .. nPl - 1] of integer;
+    lx: Integer;
+    ly: Integer;
+    LandMass: Integer;
+    MaxTurn: Integer;
+    Difficulty: array [0 .. nPl - 1] of Integer;
     { difficulty levels of the players, if it's 0 this player is the supervisor,
       -1 for unused slots }
     RO: array [0 .. nPl - 1] of ^TPlayerContext;
-    AssemblyPath: array [0 .. 255] of char;
+    AssemblyPath: array [0 .. 255] of Char;
     SuperVisorRO: array [0 .. nPl - 1] of ^TPlayerContext;
   end;
 
   TNewGameExData = record
-    lx, ly, LandMass, MaxTurn, RND: integer;
-    Difficulty: array [0 .. nPl - 1] of integer;
+    lx: Integer;
+    ly: Integer;
+    LandMass: Integer;
+    MaxTurn: Integer;
+    RND: Integer;
+    Difficulty: array [0 .. nPl - 1] of Integer;
     { difficulty levels of the players, if it's 0 this player is the supervisor,
       -1 for unused slots }
-    Controlled: integer;
+    Controlled: Integer;
   end;
 
   TShowNegoData = record
-    pSender, pTarget, Action: integer;
+    pSender: Integer;
+    pTarget: Integer;
+    Action: Integer;
     Offer: TOffer;
   end;
 
@@ -1636,17 +1760,17 @@ const
 var
   DelphiRandSeed: Integer;
 
-procedure MakeUnitInfo(p: integer; const u: TUn; var ui: TUnitInfo);
-procedure MakeModelInfo(p, mix: integer; const m: TModel; var mi: TModelInfo);
-function IsSameModel(const mi1, mi2: TModelInfo): boolean;
-function SpecialTile(Loc, TerrType, lx: integer): integer;
+procedure MakeUnitInfo(p: Integer; const u: TUn; var ui: TUnitInfo);
+procedure MakeModelInfo(p, mix: Integer; const m: TModel; var mi: TModelInfo);
+function IsSameModel(const mi1, mi2: TModelInfo): Boolean;
+function SpecialTile(Loc, TerrType, lx: Integer): Integer;
 function DelphiRandom(const pi_Max: Integer): Integer; overload;
 function DelphiRandom: Extended; overload;
 procedure DelphiRandomize;
 
 implementation
 
-procedure MakeUnitInfo(p: integer; const u: TUn; var ui: TUnitInfo);
+procedure MakeUnitInfo(p: Integer; const u: TUn; var ui: TUnitInfo);
 begin
   ui.Owner := p;
   ui.Loc := u.Loc;
@@ -1659,9 +1783,9 @@ begin
   ui.Flags := u.Flags;
 end;
 
-procedure MakeModelInfo(p, mix: integer; const m: TModel; var mi: TModelInfo);
+procedure MakeModelInfo(p, mix: Integer; const m: TModel; var mi: TModelInfo);
 var
-  i: integer;
+  i: Integer;
 begin
   mi.Owner := p;
   mi.mix := mix;
@@ -1698,7 +1822,7 @@ begin
   mi.Lost := 0;
 end;
 
-function IsSameModel(const mi1, mi2: TModelInfo): boolean;
+function IsSameModel(const mi1, mi2: TModelInfo): Boolean;
 type
   TModelInfo_Compare = array [0 .. 5] of Cardinal;
 var
@@ -1711,9 +1835,9 @@ begin
     (Compare1[4] = Compare2[4]) and (Compare1[5] = Compare2[5])
 end;
 
-function SpecialTile(Loc, TerrType, lx: integer): integer;
+function SpecialTile(Loc, TerrType, lx: Integer): Integer;
 var
-  x, y, qx, qy, a: integer;
+  x, y, qx, qy, a: Integer;
 begin
   if TerrType = fOcean then
     result := 0
