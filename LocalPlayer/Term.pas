@@ -463,7 +463,6 @@ uses
   Battle, Rates, TechTree, Registry;
 
 {$R *.lfm}
-{ TODO {$R Res1.res }
 
 const
   lxmax_xxx = 130;
@@ -3460,7 +3459,7 @@ begin
   else
     SoundMode := smOn;
 
-{$IFDEF WINDOWS}{ TODO }
+{$IFDEF WINDOWS}
   Screen.Cursors[crImpDrag] := LoadCursor(HInstance, 'DRAG');
   Screen.Cursors[crFlatHand] := LoadCursor(HInstance, 'FLATHAND');
 {$ENDIF}
