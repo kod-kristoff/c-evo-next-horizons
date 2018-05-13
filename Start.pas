@@ -962,7 +962,7 @@ begin
           if AutoDiff > 0 then
           begin
             WriteString('DefaultAI', BrainDefault.FileName);
-            SlotAvailable := 0; // bixView will be invalid hereafter
+            SlotAvailable := 0; // PlayerSlot will be invalid hereafter
             PlayersBrain[0] := BrainTerm;
             Difficulty[0] := PlayerAutoDiff[AutoDiff];
             for i := 1 to nPl - 1 do
