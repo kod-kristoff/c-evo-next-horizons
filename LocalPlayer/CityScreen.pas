@@ -755,7 +755,7 @@ begin
           Phrases.Lookup('PROD'), Report.Production, MainTexture)
     else
     begin
-      MakeRed(xProd + dxBar - 6, yProd + dyBar, wBar + 10, 38);
+      MakeRed(xProd + dxBar - 6, yProd + dyBar + 17, wBar + 10, 38);
       CountBar(offscreen, xProd + dxBar, yProd + dyBar + 16, wBar, 3,
         Phrases.Lookup('LACK'), -Report.Production, RedTex);
     end;

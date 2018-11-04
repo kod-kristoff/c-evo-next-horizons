@@ -1110,15 +1110,16 @@ end;
 function LoadGame(const Path, FileName: string; Turn: integer;
   MovieMode: boolean): boolean;
 var
-  j: TBrain;
+  J: TBrain;
   i, ix, d, p1, Command, Subject: integer;
+  K: Integer;
 {$IFDEF TEXTLOG}LoadPos0: integer; {$ENDIF}
   Data: pointer;
   LogFile: TFileStream;
   FormerCLState: TCmdListState;
   s: string[255];
   SaveMap: array [0 .. lxmax * lymax - 1] of Byte;
-  started, StatRequest: boolean;
+  Started, StatRequest: boolean;
 begin
   SavePath := Path;
   LogFileName := FileName;
@@ -1126,45 +1127,48 @@ begin
   LogFile := TFileStream.Create(SavePath + LogFileName, fmOpenRead or
     fmShareExclusive);
   LogFile.Position := 0;
-  LogFile.read(s[1], 8); { file id }
-  LogFile.read(i, 4); { c-evo version }
-  LogFile.read(j, 4); { exe time }
+  LogFile.Read(s[1], 8); { file id }
+  LogFile.Read(i, 4); { c-evo version }
+  LogFile.Read(J, 4); { exe time }
 
   if (i >= FirstBookCompatibleVersion) and (i <= Version) then
   begin
     result := true;
-    LogFile.read(lx, 4);
-    LogFile.read(ly, 4);
+    LogFile.Read(lx, 4);
+    LogFile.Read(ly, 4);
     MapSize := lx * ly;
-    LogFile.read(LandMass, 4);
+    LogFile.Read(LandMass, 4);
     if LandMass = 0 then
-      LogFile.read(RealMap, MapSize * 4); // use predefined map
-    LogFile.read(MaxTurn, 4);
-    LogFile.read(RND, 4);
-    LogFile.read(GTurn, 4);
-    LogFile.read(SaveMap, 4);
+      LogFile.Read(RealMap, MapSize * 4); // use predefined map
+    LogFile.Read(MaxTurn, 4);
+    LogFile.Read(RND, 4);
+    LogFile.Read(GTurn, 4);
+    LogFile.Read(SaveMap, 4);
     if SaveMap[0] <> $80 then
       LogFile.read(SaveMap[4], ((MapSize - 1) div 4 + 1) * 4 - 4);
     for p1 := 0 to nPl - 1 do
     begin
-      LogFile.read(s[0], 4);
+      LogFile.Read(s[0], 4);
       if s[0] = #0 then
         PlayersBrain[p1] := nil
       else
       begin
-        LogFile.read(s[4], Byte(s[0]) div 4 * 4);
-        LogFile.read(OriginalDataVersion[p1], 4);
-        LogFile.read(d, 4); { behavior }
-        LogFile.read(Difficulty[p1], 4);
-        j := Brains.Last;
-        while Assigned(J) and (AnsiCompareFileName(j.FileName, s) <> 0) do
-          J := PlayersBrain[PlayersBrain.IndexOf(J) - 1];
-        if not Assigned(j) then
+        LogFile.Read(s[4], Byte(s[0]) div 4 * 4);
+        LogFile.Read(OriginalDataVersion[p1], 4);
+        LogFile.Read(d, 4); { behavior }
+        LogFile.Read(Difficulty[p1], 4);
+        J := Brains.Last;
+        while Assigned(J) and (AnsiCompareFileName(J.FileName, s) <> 0) do begin
+          K := PlayersBrain.IndexOf(J) - 1;
+          if K >= 0 then J := PlayersBrain[K]
+            else J := nil;
+        end;
+        if not Assigned(J) then
         begin // ai not found -- replace by local player
           ProcessClientData[p1] := false;
           NotifyMessage := s;
           Notify(ntAIError);
-          j := BrainTerm;
+          J := BrainTerm;
         end
         else
           ProcessClientData[p1] := true;
@@ -1176,16 +1180,15 @@ begin
     end;
   end
   else
-    result := false;
+    Result := false;
 
-  if result then
-  begin
+  if Result then begin
     CL := TCmdList.Create;
     CL.LoadFromFile(LogFile);
   end;
   LogFile.Free;
   if not result then
-    exit;
+    Exit;
 
   Notify(ntStartDone);
   if LoadTurn < 0 then
