@@ -11,6 +11,8 @@ uses
 type
   TInitEnemyModelEvent = function(emix: integer): boolean;
 
+  { TIsoMap }
+
   TIsoMap = class
     constructor Create;
     procedure SetOutput(Output: TBitmap);
@@ -28,11 +30,16 @@ type
     procedure AttackEffect(const ShowMove: TShowMove);
     procedure AttackEnd;
 
+  private
+    procedure CityGrid(xm, ym: integer; CityAllowClick: Boolean);
+    function IsShoreTile(Loc: integer): boolean;
+    procedure MakeDark(Line: PPixelPointer; Length: Integer);
+    procedure ShadeOutside(x0, y0, x1, y1, xm, ym: integer);
   protected
     FOutput: TBitmap;
     FLeft, FTop, FRight, FBottom, RealTop, RealBottom, AttLoc, DefLoc,
       DefHealth, FAdviceLoc: integer;
-    OutDC, DataDC, MaskDC: HDC;
+    DataDC, MaskDC: HDC;
     function Connection4(Loc, Mask, Value: integer): integer;
     function Connection8(Loc, Mask: integer): integer;
     function OceanConnection(Loc: integer): integer;
@@ -78,6 +85,29 @@ implementation
 const
   ShoreDither = fGrass;
   TerrainIconLines = 21;
+  TerrainIconCols = 9;
+
+  // sprites indexes
+  spDeadLands = 2 * TerrainIconCols + 6;
+  spBlink1 = 1 * TerrainIconCols + 8;
+  spBlink2 = 2 * TerrainIconCols + 8;
+  spPrefStartPos = 1 * TerrainIconCols;
+  spStartPos = 2 * TerrainIconCols;
+  spPlain = 2 * TerrainIconCols + 7;
+  spForest = 3 * TerrainIconCols;
+  spRoad = 9 * TerrainIconCols;
+  spRailRoad = 10 * TerrainIconCols;
+  spCanal = 11 * TerrainIconCols;
+  spIrrigation = 12 * TerrainIconCols;
+  spFarmLand = 12 * TerrainIconCols + 1;
+  spMine = 12 * TerrainIconCols + 2;
+  spFortFront = 12 * TerrainIconCols + 3;
+  spBase = 12 * TerrainIconCols + 4;
+  spSpacePort = 12 * TerrainIconCols + 5;
+  spPollution = 12 * TerrainIconCols + 6;
+  spFortBack = 12 * TerrainIconCols + 7;
+  spRiver = 13 * TerrainIconCols;
+  spJungle = 18 * TerrainIconCols;
 
 var
   BordersOK: integer;
@@ -530,9 +560,9 @@ begin
   if (Width <= 0) or (Height <= 0) then
     exit;
 
-  LCLIntf.BitBlt(OutDC, xDst, yDst, Width, Height, MaskDC, xSrc, ySrc, SRCAND);
+  LCLIntf.BitBlt(FOutput.Canvas.Handle, xDst, yDst, Width, Height, MaskDC, xSrc, ySrc, SRCAND);
   if not PureBlack then
-    LCLIntf.BitBlt(OutDC, xDst, yDst, Width, Height, DataDC, xSrc, ySrc,
+    LCLIntf.BitBlt(FOutput.Canvas.Handle, xDst, yDst, Width, Height, DataDC, xSrc, ySrc,
       SRCPAINT);
 end;
 
@@ -589,8 +619,7 @@ begin
         Sprite(HGr, x, y, 64, 48, pix mod 10 * 65 + 1, pix div 10 * 49 + 1);
       if Flags and unFortified <> 0 then
       begin
-        { OutDC:=FOutput.Canvas.Handle;
-          DataDC:=GrExt[HGrTerrain].Data.Canvas.Handle;
+        { DataDC:=GrExt[HGrTerrain].Data.Canvas.Handle;
           MaskDC:=GrExt[HGrTerrain].Mask.Canvas.Handle;
           TSprite(x,y+16,12*9+7); }
         Sprite(HGrStdUnits, x, y, xxu * 2, yyu * 2, 1 + 6 * (xxu * 2 + 1), 1);
@@ -828,39 +857,39 @@ begin
   begin
     yLoc := Loc div G.lx;
     if IsJungle(yLoc) then
-      yGr := 18
+      yGr := spJungle
     else
-      yGr := 3;
+      yGr := spForest;
     Conn := Connection4(Loc, fTerrain, Tile and fTerrain);
     if (yLoc = (G.ly - 2) div 4) or (G.ly - 1 - yLoc = (G.ly + 2) div 4) then
       Conn := Conn and not 6 // no connection to south
     else if (yLoc = (G.ly + 2) div 4) or (G.ly - 1 - yLoc = (G.ly - 2) div 4)
     then
       Conn := Conn and not 9; // no connection to north
-    TSprite(x, y, Conn mod 8 + (yGr + Conn div 8) * 9);
+    TSprite(x, y, yGr + Conn mod 8 + (Conn div 8) * TerrainIconCols);
   end
   else if Tile and fTerrain in [fHills, fMountains, fForest] then
   begin
     yGr := 3 + 2 * (Tile and fTerrain - fForest);
     Conn := Connection4(Loc, fTerrain, Tile and fTerrain);
-    TSprite(x, y, Conn mod 8 + (yGr + Conn div 8) * 9);
+    TSprite(x, y, Conn mod 8 + (yGr + Conn div 8) * TerrainIconCols);
   end
   else if Tile and fDeadLands <> 0 then
-    TSprite(x, y, 2 * 9 + 6);
+    TSprite(x, y, spDeadLands);
 
   if ShowObjects then
   begin
     if Tile and fTerImp = tiFarm then
-      TSprite(x, y, 109) { farmland }
+      TSprite(x, y, spFarmLand)
     else if Tile and fTerImp = tiIrrigation then
-      TSprite(x, y, 108); // irrigation
+      TSprite(x, y, spIrrigation);
   end;
   if Tile and fRiver <> 0 then
   begin
     Conn := Connection4(Loc, fRiver, fRiver) or
       Connection4(Loc, fTerrain, fShore) or Connection4(Loc, fTerrain,
       fUNKNOWN);
-    TSprite(x, y, Conn mod 8 + (13 + Conn div 8) * 9);
+    TSprite(x, y, spRiver + Conn mod 8 + (Conn div 8) * TerrainIconCols);
   end;
 
   if Tile and fTerrain < fGrass then
@@ -868,13 +897,13 @@ begin
     Conn := Connection4(Loc, fRiver, fRiver);
     for Dir := 0 to 3 do
       if Conn and (1 shl Dir) <> 0 then { river mouths }
-        TSprite(x, y, 15 * 9 + Dir);
+        TSprite(x, y, 15 * TerrainIconCols + Dir);
     if ShowObjects then
     begin
       Conn := Connection8(Loc, fCanal);
       for Dir := 0 to 7 do
         if Conn and (1 shl Dir) <> 0 then { canal mouths }
-          TSprite(x, y, 20 * 9 + 1 + Dir);
+          TSprite(x, y, 20 * TerrainIconCols + 1 + Dir);
     end
   end;
 
@@ -888,12 +917,12 @@ begin
       if Conn = 0 then
       begin
         if Tile and fCanal <> 0 then
-          TSprite(x, y, 99)
+          TSprite(x, y, spCanal)
       end
       else
         for Dir := 0 to 7 do
           if (1 shl Dir) and Conn <> 0 then
-            TSprite(x, y, 100 + Dir);
+            TSprite(x, y, spCanal + 1 + Dir);
     end;
     if Tile and (fRR or fCity) <> 0 then
       RRConn := Connection8(Loc, fRR or fCity)
@@ -903,19 +932,19 @@ begin
     begin // paint road connections
       Conn := Connection8(Loc, fRoad or fRR or fCity) and not RRConn;
       if (Conn = 0) and (Tile and (fRR or fCity) = 0) then
-        TSprite(x, y, 81)
+        TSprite(x, y, spRoad)
       else if Conn > 0 then
         for Dir := 0 to 7 do
           if (1 shl Dir) and Conn <> 0 then
-            TSprite(x, y, 82 + Dir);
+            TSprite(x, y, spRoad + 1 + Dir);
     end;
     // paint railroad connections
     if (Tile and fRR <> 0) and (RRConn = 0) then
-      TSprite(x, y, 90)
+      TSprite(x, y, spRailRoad)
     else if RRConn > 0 then
       for Dir := 0 to 7 do
         if (1 shl Dir) and RRConn <> 0 then
-          TSprite(x, y, 91 + Dir);
+          TSprite(x, y, spRailRoad + 1 + Dir);
   end;
 end;
 
@@ -927,6 +956,8 @@ var
   CityInfo: TCityInfo;
   UnitInfo: TUnitInfo;
   fog: boolean;
+  SpecialRow: Integer;
+  SpecialCol: Integer;
 
   procedure NameCity;
   var
@@ -959,7 +990,7 @@ var
   begin
     if ShowObjects and (Options and (1 shl moEditMode) = 0) and
       (Tile and fCity <> 0) and (CityInfo.Flags and ciSpacePort <> 0) then
-      TSprite(x + xxt, y - 6, 12 * 9 + 5);
+      TSprite(x + xxt, y - 6, spSpacePort);
   end;
 
   procedure PaintBorder;
@@ -1049,38 +1080,39 @@ begin
     PaintBorder;
 
   if (Loc >= 0) and (Loc < G.lx * G.ly) and (Loc = FAdviceLoc) then
-    TSprite(x, y, 7 + 9 * 2);
+    TSprite(x, y, spPlain);
 
   if (Loc >= 0) and (Loc < G.lx * G.ly) and (Tile and fSpecial <> 0)
-  then { special ressources }
+  then { special resources }
   begin
     dy := Loc div G.lx;
-    if Tile and fTerrain < fForest then
-      TSprite(x, y, Tile and fTerrain + (Tile and fSpecial shr 5) * 9)
-    else if (Tile and fTerrain = fForest) and IsJungle(dy) then
-      TSprite(x, y, 8 + 17 * 9 + (Tile and fSpecial shr 5) * 9)
+    SpecialCol := Tile and fTerrain;
+    SpecialRow := Tile and fSpecial shr 5;
+    if SpecialCol < fForest then
+      TSprite(x, y, SpecialCol + SpecialRow * TerrainIconCols)
+    else if (SpecialCol = fForest) and IsJungle(dy) then
+      TSprite(x, y, 8 + 17 * TerrainIconCols + SpecialRow * TerrainIconCols)
     else
-      TSprite(x, y, 8 + 2 * 9 + ((Tile and fTerrain - fForest) * 2 + Tile and
-        fSpecial shr 5) * 9);
+      TSprite(x, y, 8 + 2 * TerrainIconCols + (SpecialCol - fForest) * 2 + SpecialRow * TerrainIconCols);
   end;
 
   if ShowObjects then
   begin
     if Tile and fTerImp = tiMine then
-      TSprite(x, y, 2 + 9 * 12);
+      TSprite(x, y, spMine);
     if Tile and fTerImp = tiBase then
-      TSprite(x, y, 4 + 9 * 12);
+      TSprite(x, y, spBase);
     if Tile and fPoll <> 0 then
-      TSprite(x, y, 6 + 9 * 12);
+      TSprite(x, y, spPollution);
     if Tile and fTerImp = tiFort then
     begin
-      TSprite(x, y, 7 + 9 * 12);
+      TSprite(x, y, spFortBack);
       if Tile and fObserved = 0 then
-        TSprite(x, y, 3 + 9 * 12);
+        TSprite(x, y, spFortFront);
     end;
   end;
   if Tile and fDeadLands <> 0 then
-    TSprite(x, y, (12 + Tile shr 25 and 3) * 9 + 8);
+    TSprite(x, y, (12 + Tile shr 25 and 3) * TerrainIconCols + 8);
 
   if Options and (1 shl moEditMode) <> 0 then
     fog := (Loc < 0) or (Loc >= G.lx * G.ly)
@@ -1098,7 +1130,7 @@ begin
       Sprite(HGrTerrain, x, y, xxt * 2, yyt, 1 + 6 * (xxt * 2 + 1),
         1 + yyt + 15 * (yyt * 3 + 1))
     else
-      TSprite(x, y, 6 + 9 * 15, xxt <> 33);
+      TSprite(x, y, 6 + TerrainIconCols * 15, xxt <> 33);
 
   if FoW and (Tile and fObserved = 0) then
     PaintBorder;
@@ -1111,17 +1143,17 @@ begin
     Destination := MyUn[UnFocus].Status shr 16;
     if (Destination = Loc) and (Destination <> MyUn[UnFocus].Loc) then
       if not UseBlink or BlinkOn then
-        TSprite(x, y, 8 + 9 * 1)
+        TSprite(x, y, spBlink1)
       else
-        TSprite(x, y, 8 + 9 * 2)
+        TSprite(x, y, spBlink2)
   end;
 {$ENDIF}
   if Options and (1 shl moEditMode) <> 0 then
   begin
     if Tile and fPrefStartPos <> 0 then
-      TSprite(x, y, 0 + 9 * 1)
+      TSprite(x, y, spPrefStartPos)
     else if Tile and fStartPos <> 0 then
-      TSprite(x, y, 0 + 9 * 2);
+      TSprite(x, y, spStartPos);
   end
   else if ShowObjects then
   begin
@@ -1178,7 +1210,7 @@ begin
 
   if ShowObjects and (Tile and fTerImp = tiFort) and (Tile and fObserved <> 0)
   then
-    TSprite(x, y, 3 + 9 * 12);
+    TSprite(x, y, spFortFront);
 
   if (Loc >= 0) and (Loc < G.lx * G.ly) then
     if ShowLoc then
@@ -1268,98 +1300,96 @@ begin
   end;
 end;
 
+function TIsoMap.IsShoreTile(Loc: integer): boolean;
+const
+  Dirx: array [0 .. 7] of integer = (1, 2, 1, 0, -1, -2, -1, 0);
+  Diry: array [0 .. 7] of integer = (-1, 0, 1, 2, 1, 0, -1, -2);
+var
+  Dir, ConnLoc: integer;
+begin
+  result := false;
+  for Dir := 0 to 7 do
+  begin
+    ConnLoc := dLoc(Loc, Dirx[Dir], Diry[Dir]);
+    if (ConnLoc < 0) or (ConnLoc >= G.lx * G.ly) or
+      ((MyMap[ConnLoc] - 2) and fTerrain < 13) then
+      result := true
+  end
+end;
+
+procedure TIsoMap.MakeDark(Line: PPixelPointer; Length: Integer);
+var
+  I: Integer;
+begin
+  for I := 0 to Length - 1 do begin
+    Line^.Pixel^.B := (Line^.Pixel^.B shr 1) and $7f;
+    Line^.Pixel^.G := (Line^.Pixel^.G shr 1) and $7f;
+    Line^.Pixel^.R := (Line^.Pixel^.R shr 1) and $7f;
+    Line^.NextPixel;
+  end;
+end;
+
+procedure TIsoMap.ShadeOutside(x0, y0, x1, y1, xm, ym: integer);
+const
+  rShade = 3.75;
+var
+  y, wBright: integer;
+  y_n, w_n: single;
+  Line: TPixelPointer;
+begin
+  FOutput.BeginUpdate;
+  for y := y0 to y1 - 1 do begin
+    Line.Init(FOutput, 0, y);
+    y_n := (y - ym) / yyt;
+    if abs(y_n) < rShade then begin
+      // Darken left and right parts of elipsis
+      w_n := sqrt(sqr(rShade) - sqr(y_n));
+      wBright := trunc(w_n * xxt + 0.5);
+      Line.SetX(x0);
+      MakeDark(@Line, xm - x0 - wBright);
+      Line.SetX(xm + wBright);
+      MakeDark(@Line, x1 - xm - wBright);
+    end else begin
+      // Darken entire line
+      Line.SetX(x0);
+      MakeDark(@Line, x1 - x0);
+    end;
+  end;
+  FOutput.EndUpdate;
+end;
+
+procedure TIsoMap.CityGrid(xm, ym: integer; CityAllowClick: Boolean);
+var
+  i: integer;
+begin
+  with FOutput.Canvas do
+  begin
+    if CityAllowClick then
+      pen.Color := $FFFFFF
+    else
+      pen.Color := $000000;
+    pen.Width := 1;
+    for i := 0 to 3 do
+    begin
+      moveto(xm - xxt * (4 - i), ym + yyt * (1 + i));
+      lineto(xm + xxt * (1 + i), ym - yyt * (4 - i));
+      moveto(xm - xxt * (4 - i), ym - yyt * (1 + i));
+      lineto(xm + xxt * (1 + i), ym + yyt * (4 - i));
+    end;
+    moveto(xm - xxt * 4, ym + yyt * 1);
+    lineto(xm - xxt * 1, ym + yyt * 4);
+    moveto(xm + xxt * 1, ym + yyt * 4);
+    lineto(xm + xxt * 4, ym + yyt * 1);
+    moveto(xm - xxt * 4, ym - yyt * 1);
+    lineto(xm - xxt * 1, ym - yyt * 4);
+    moveto(xm + xxt * 1, ym - yyt * 4);
+    lineto(xm + xxt * 4, ym - yyt * 1);
+    pen.Width := 1;
+  end
+end;
+
 procedure TIsoMap.Paint(x, y, Loc, nx, ny, CityLoc, CityOwner: integer;
   UseBlink: boolean; CityAllowClick: boolean);
-
-  function IsShoreTile(Loc: integer): boolean;
-  const
-    Dirx: array [0 .. 7] of integer = (1, 2, 1, 0, -1, -2, -1, 0);
-    Diry: array [0 .. 7] of integer = (-1, 0, 1, 2, 1, 0, -1, -2);
-  var
-    Dir, ConnLoc: integer;
-  begin
-    result := false;
-    for Dir := 0 to 7 do
-    begin
-      ConnLoc := dLoc(Loc, Dirx[Dir], Diry[Dir]);
-      if (ConnLoc < 0) or (ConnLoc >= G.lx * G.ly) or
-        ((MyMap[ConnLoc] - 2) and fTerrain < 13) then
-        result := true
-    end
-  end;
-
-  procedure ShadeOutside(x0, y0, x1, y1, xm, ym: integer);
-
-    procedure MakeDark(Line: PPixelPointer; Length: Integer);
-    var
-      I: Integer;
-    begin
-      for I := 0 to Length - 1 do begin
-        Line^.Pixel^.B := (Line^.Pixel^.B shr 1) and $7f;
-        Line^.Pixel^.G := (Line^.Pixel^.G shr 1) and $7f;
-        Line^.Pixel^.R := (Line^.Pixel^.R shr 1) and $7f;
-        Line^.NextPixel;
-      end;
-    end;
-
-  const
-    rShade = 3.75;
-  var
-    y, wBright: integer;
-    y_n, w_n: single;
-    Line: TPixelPointer;
-  begin
-    FOutput.BeginUpdate;
-    for y := y0 to y1 - 1 do begin
-      Line.Init(FOutput, 0, y);
-      y_n := (y - ym) / yyt;
-      if abs(y_n) < rShade then begin
-        // Darken left and right parts of elipsis
-        w_n := sqrt(sqr(rShade) - sqr(y_n));
-        wBright := trunc(w_n * xxt + 0.5);
-        Line.SetX(x0);
-        MakeDark(@Line, xm - x0 - wBright);
-        Line.SetX(xm + wBright);
-        MakeDark(@Line, x1 - xm - wBright);
-      end else begin
-        // Darken entire line
-        Line.SetX(x0);
-        MakeDark(@Line, x1 - x0);
-      end;
-    end;
-    FOutput.EndUpdate;
-  end;
-
-  procedure CityGrid(xm, ym: integer);
-  var
-    i: integer;
-  begin
-    with FOutput.Canvas do
-    begin
-      if CityAllowClick then
-        pen.Color := $FFFFFF
-      else
-        pen.Color := $000000;
-      pen.Width := 1;
-      for i := 0 to 3 do
-      begin
-        moveto(xm - xxt * (4 - i), ym + yyt * (1 + i));
-        lineto(xm + xxt * (1 + i), ym - yyt * (4 - i));
-        moveto(xm - xxt * (4 - i), ym - yyt * (1 + i));
-        lineto(xm + xxt * (1 + i), ym + yyt * (4 - i));
-      end;
-      moveto(xm - xxt * 4, ym + yyt * 1);
-      lineto(xm - xxt * 1, ym + yyt * 4);
-      moveto(xm + xxt * 1, ym + yyt * 4);
-      lineto(xm + xxt * 4, ym + yyt * 1);
-      moveto(xm - xxt * 4, ym - yyt * 1);
-      lineto(xm - xxt * 1, ym - yyt * 4);
-      moveto(xm + xxt * 1, ym - yyt * 4);
-      lineto(xm + xxt * 4, ym - yyt * 1);
-      pen.Width := 1;
-    end
-  end;
-
 var
   dx, dy, xm, ym, ALoc, BLoc, ATer, BTer, Aix, bix: integer;
 begin
@@ -1517,7 +1547,6 @@ begin
           end
       end;
 
-  OutDC := FOutput.Canvas.Handle;
   DataDC := GrExt[HGrTerrain].Data.Canvas.Handle;
   MaskDC := GrExt[HGrTerrain].Mask.Canvas.Handle;
   for dy := -2 to ny + 1 do
@@ -1547,7 +1576,7 @@ begin
     xm := x + (dx + 1) * xxt;
     ym := y + (dy + 1) * yyt + yyt;
     ShadeOutside(FLeft, FTop, FRight, FBottom, xm, ym);
-    CityGrid(xm, ym);
+    CityGrid(xm, ym, CityAllowClick);
     for dy := -2 to ny + 1 do
       for dx := -2 to nx + 1 do
         if (dx + dy) and 1 = 0 then

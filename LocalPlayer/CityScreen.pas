@@ -443,8 +443,8 @@ procedure TCityDlg.OffscreenPaint;
   begin
     Offscreen.BeginUpdate;
     PixelPtr.Init(Offscreen, X, Y);
-    for YY := 0 to h - 1 do begin
-      for XX := 0 to w - 1 do begin
+    for YY := 0 to H - 1 do begin
+      for XX := 0 to W - 1 do begin
         Gray := (Integer(PixelPtr.Pixel^.B) + Integer(PixelPtr.Pixel^.G) +
         Integer(PixelPtr.Pixel^.R)) * 85 shr 8;
         PixelPtr.Pixel^.B := 0;
