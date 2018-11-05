@@ -3459,10 +3459,9 @@ begin
   else
     SoundMode := smOn;
 
-{$IFDEF WINDOWS}
   Screen.Cursors[crImpDrag] := LoadCursor(HInstance, 'DRAG');
   Screen.Cursors[crFlatHand] := LoadCursor(HInstance, 'FLATHAND');
-{$ENDIF}
+
   // tag-controlled language
   for i := 0 to ComponentCount - 1 do
     if Components[i].Tag and $FF <> 0 then
