@@ -1159,8 +1159,8 @@ begin
         LogFile.Read(Difficulty[p1], 4);
         J := Brains.Last;
         while Assigned(J) and (AnsiCompareFileName(J.FileName, s) <> 0) do begin
-          K := PlayersBrain.IndexOf(J) - 1;
-          if K >= 0 then J := PlayersBrain[K]
+          K := Brains.IndexOf(J) - 1;
+          if K >= 0 then J := Brains[K]
             else J := nil;
         end;
         if not Assigned(J) then
