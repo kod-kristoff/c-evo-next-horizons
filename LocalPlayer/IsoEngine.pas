@@ -1091,9 +1091,9 @@ begin
     if SpecialCol < fForest then
       TSprite(x, y, SpecialCol + SpecialRow * TerrainIconCols)
     else if (SpecialCol = fForest) and IsJungle(dy) then
-      TSprite(x, y, 8 + 17 * TerrainIconCols + SpecialRow * TerrainIconCols)
+      TSprite(x, y, spJungle - 1 + SpecialRow * TerrainIconCols)
     else
-      TSprite(x, y, 8 + 2 * TerrainIconCols + (SpecialCol - fForest) * 2 + SpecialRow * TerrainIconCols);
+      TSprite(x, y, spForest - 1 + ((SpecialCol - fForest) * 2 + SpecialRow) * TerrainIconCols);
   end;
 
   if ShowObjects then
