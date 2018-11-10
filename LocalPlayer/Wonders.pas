@@ -8,6 +8,9 @@ uses
   LCLIntf, LCLType, SysUtils, Classes, Graphics, Controls, Forms, ButtonB;
 
 type
+
+  { TWondersDlg }
+
   TWondersDlg = class(TBufferedDrawDlg)
     CloseBtn: TButtonB;
     procedure FormCreate(Sender: TObject);
@@ -16,13 +19,14 @@ type
     procedure FormShow(Sender: TObject);
     procedure FormMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
-
+  private
+    xm, ym, Selection: Integer;
+    procedure DarkIcon(i: Integer);
+    procedure Glow(i, GlowColor: Integer);
+    procedure PaintBackgroundShape;
   public
     procedure OffscreenPaint; override;
     procedure ShowNewContent(NewMode: Integer);
-
-  private
-    xm, ym, Selection: Integer;
   end;
 
 var
@@ -76,43 +80,7 @@ begin
   inherited ShowNewContent(NewMode);
 end;
 
-procedure TWondersDlg.OffscreenPaint;
-
-  procedure DarkIcon(i: Integer);
-  var
-    X, Y, ch, x0Dst, y0Dst, x0Src, y0Src, darken, c: Integer;
-    Src, Dst: TPixelPointer;
-  begin
-    x0Dst := ClientWidth div 2 - xSizeBig div 2 + RingPosition[i, 0];
-    y0Dst := ClientHeight div 2 - ySizeBig div 2 + RingPosition[i, 1];
-    x0Src := (i mod 7) * xSizeBig;
-    y0Src := (i div 7 + SystemIconLines) * ySizeBig;
-    Src.Init(BigImp, x0Src, y0Src);
-    Dst.Init(Offscreen, x0Dst, y0Dst);
-    for Y := 0 to ySizeBig - 1 do begin
-      for X := 0 to xSizeBig - 1 do begin
-        Darken := ((255 - Src.Pixel^.B) * 3 + (255 - Src.Pixel^.G) *
-          15 + (255 - Src.Pixel^.R) * 9) div 128;
-        for ch := 0 to 2 do begin
-          c := Dst.Pixel^.Planes[ch] - Darken;
-          if c < 0 then Dst.Pixel^.Planes[ch] := 0
-            else Dst.Pixel^.Planes[ch] := c;
-        end;
-        Src.NextPixel;
-        Dst.NextPixel;
-      end;
-      Src.NextLine;
-      Dst.NextLine;
-    end;
-  end;
-
-  procedure Glow(i, GlowColor: Integer);
-  begin
-    GlowFrame(Offscreen, ClientWidth div 2 - xSizeBig div 2 + RingPosition[i,
-      0], ClientHeight div 2 - ySizeBig div 2 + RingPosition[i, 1], xSizeBig,
-      ySizeBig, GlowColor);
-  end;
-
+procedure TWondersDlg.PaintBackgroundShape;
 const
   darken = 24;
   // space=pi/120;
@@ -123,9 +91,85 @@ const
   amax2 = 221246; // 1 shl 16*tan(5*pi/12-space);
   amin3 = 272977; // 1 shl 16*tan(5*pi/12+space);
 var
-  i, X, Y, r, ax, ch, c: Integer;
-  HaveWonder: boolean;
+  X: Integer;
+  Y: Integer;
+  ax: Integer;
+  R: Integer;
+  I: Integer;
+  C: Integer;
+  Ch: Integer;
   Line: array [0..1] of TPixelPointer;
+begin
+  Offscreen.BeginUpdate;
+  Line[0].Init(Offscreen);
+  Line[1].Init(Offscreen);
+  for Y := 0 to 127 do begin
+    for X := 0 to 179 do begin
+      r := X * X * (32 * 32) + Y * Y * (45 * 45);
+      ax := ((1 shl 16 div 32) * 45) * Y;
+      if (r < 8 * 128 * 180 * 180) and
+        ((r >= 32 * 64 * 90 * 90) and (ax < amax2 * X) and
+        ((ax < amax0 * X) or (ax > amin2 * X)) or (ax > amin1 * X) and
+        ((ax < amax1 * X) or (ax > amin3 * X))) then
+        for i := 0 to 1 do
+          for ch := 0 to 2 do begin
+            Line[0].SetXY(xm + X, ym + Y);
+            Line[1].SetXY(xm + X, ym - 1 - Y);
+            c := Line[i].Pixel^.Planes[ch] - darken;
+            if c < 0 then Line[i].Pixel^.Planes[ch] := 0
+              else Line[i].Pixel^.Planes[ch] := c;
+            Line[0].SetXY(xm - 1 - X, ym + Y);
+            Line[1].SetXY(xm - 1 - X, ym - 1 - Y);
+            c := Line[i].Pixel^.Planes[ch] - darken;
+            if c < 0 then Line[i].Pixel^.Planes[ch] := 0
+              else Line[i].Pixel^.Planes[ch] := c;
+          end;
+    end;
+  end;
+  Offscreen.EndUpdate;
+end;
+
+procedure TWondersDlg.DarkIcon(i: Integer);
+var
+  X, Y, ch, x0Dst, y0Dst, x0Src, y0Src, darken, c: Integer;
+  Src, Dst: TPixelPointer;
+begin
+  Offscreen.BeginUpdate;
+  x0Dst := ClientWidth div 2 - xSizeBig div 2 + RingPosition[i, 0];
+  y0Dst := ClientHeight div 2 - ySizeBig div 2 + RingPosition[i, 1];
+  x0Src := (i mod 7) * xSizeBig;
+  y0Src := (i div 7 + SystemIconLines) * ySizeBig;
+  Src.Init(BigImp, x0Src, y0Src);
+  Dst.Init(Offscreen, x0Dst, y0Dst);
+  for Y := 0 to ySizeBig - 1 do begin
+    for X := 0 to xSizeBig - 1 do begin
+      Darken := ((255 - Src.Pixel^.B) * 3 + (255 - Src.Pixel^.G) *
+        15 + (255 - Src.Pixel^.R) * 9) div 128;
+      for ch := 0 to 2 do begin
+        c := Dst.Pixel^.Planes[ch] - Darken;
+        if c < 0 then Dst.Pixel^.Planes[ch] := 0
+          else Dst.Pixel^.Planes[ch] := c;
+      end;
+      Src.NextPixel;
+      Dst.NextPixel;
+    end;
+    Src.NextLine;
+    Dst.NextLine;
+  end;
+  Offscreen.EndUpdate;
+end;
+
+procedure TWondersDlg.Glow(i, GlowColor: Integer);
+begin
+  GlowFrame(Offscreen, ClientWidth div 2 - xSizeBig div 2 + RingPosition[i,
+    0], ClientHeight div 2 - ySizeBig div 2 + RingPosition[i, 1], xSizeBig,
+    ySizeBig, GlowColor);
+end;
+
+procedure TWondersDlg.OffscreenPaint;
+var
+  i: Integer;
+  HaveWonder: boolean;
   s: string;
 begin
   if (OffscreenUser <> nil) and (OffscreenUser <> self) then
@@ -153,35 +197,36 @@ begin
     (ClientWidth - BiColorTextWidth(Offscreen.Canvas, s)) div 2 - 1, 7, s);
   Offscreen.Canvas.Font.Assign(UniFont[ftNormal]);
 
-  Offscreen.BeginUpdate;
   xm := ClientWidth div 2;
   ym := ClientHeight div 2;
-  Line[0].Init(Offscreen);
-  Line[1].Init(Offscreen);
-  for Y := 0 to 127 do begin
-    for X := 0 to 179 do begin
-      r := X * X * (32 * 32) + Y * Y * (45 * 45);
-      ax := ((1 shl 16 div 32) * 45) * Y;
-      if (r < 8 * 128 * 180 * 180) and
-        ((r >= 32 * 64 * 90 * 90) and (ax < amax2 * X) and
-        ((ax < amax0 * X) or (ax > amin2 * X)) or (ax > amin1 * X) and
-        ((ax < amax1 * X) or (ax > amin3 * X))) then
-        for i := 0 to 1 do
-          for ch := 0 to 2 do begin
-            Line[0].SetXY(xm + X, ym + Y);
-            Line[1].SetXY(xm + X, ym - 1 - Y);
-            c := Line[i].Pixel^.Planes[ch] - darken;
-            if c < 0 then Line[i].Pixel^.Planes[ch] := 0
-              else Line[i].Pixel^.Planes[ch] := c;
-            Line[0].SetXY(xm - 1 - X, ym + Y);
-            Line[1].SetXY(xm - 1 - X, ym - 1 - Y);
-            c := Line[i].Pixel^.Planes[ch] - darken;
-            if c < 0 then Line[i].Pixel^.Planes[ch] := 0
-              else Line[i].Pixel^.Planes[ch] := c;
+
+  PaintBackgroundShape;
+
+  for i := 0 to 20 do
+    if Imp[i].Preq <> preNA then
+    begin
+      case MyRO.Wonder[i].CityID of
+        - 1: // not built yet
+          begin
+            Fill(Offscreen.Canvas, xm - xSizeBig div 2 + RingPosition[i, 0] - 3,
+              ym - ySizeBig div 2 + RingPosition[i, 1] - 3, xSizeBig + 6,
+              ySizeBig + 6, (wMaintexture - ClientWidth) div 2,
+              (hMaintexture - ClientHeight) div 2);
+            DarkIcon(i);
           end;
+        -2: // destroyed
+          begin
+            Glow(i, $000000);
+          end;
+      else
+        begin
+          if MyRO.Wonder[i].EffectiveOwner >= 0 then
+            Glow(i, Tribe[MyRO.Wonder[i].EffectiveOwner].Color)
+          else
+            Glow(i, $000000);
+        end
+      end
     end;
-  end;
-  Offscreen.EndUpdate;
 
   HaveWonder := false;
   for i := 0 to 20 do
@@ -199,7 +244,6 @@ begin
         -2: // destroyed
           begin
             HaveWonder := true;
-            Glow(i, $000000);
             BitBlt(Offscreen.Canvas.Handle, xm - xSizeBig div 2 + RingPosition
               [i, 0], ym - ySizeBig div 2 + RingPosition[i, 1], xSizeBig,
               ySizeBig, BigImp.Canvas.Handle, 0, (SystemIconLines + 3) *
@@ -208,10 +252,6 @@ begin
       else
         begin
           HaveWonder := true;
-          if MyRO.Wonder[i].EffectiveOwner >= 0 then
-            Glow(i, Tribe[MyRO.Wonder[i].EffectiveOwner].Color)
-          else
-            Glow(i, $000000);
           BitBlt(Offscreen.Canvas.Handle, xm - xSizeBig div 2 + RingPosition[i,
             0], ym - ySizeBig div 2 + RingPosition[i, 1], xSizeBig, ySizeBig,
             BigImp.Canvas.Handle, (i mod 7) * xSizeBig,

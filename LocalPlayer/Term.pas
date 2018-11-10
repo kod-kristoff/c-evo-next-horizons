@@ -274,6 +274,9 @@ type
     procedure OnScroll(var m: TMessage); message WM_VSCROLL;
     procedure OnEOT(var Msg: TMessage); message WM_EOT;
   public
+    UsedOffscreenWidth, UsedOffscreenHeight: integer;
+    Offscreen: TBitmap;
+    OffscreenUser: TForm;
     procedure CreateParams(var p: TCreateParams); override;
     procedure Client(Command, NewPlayer: integer; var Data);
     procedure SetAIName(p: integer; Name: string);
@@ -3404,6 +3407,8 @@ var
   Reg: TRegistry;
   i, j: integer;
 begin
+  BaseWin.CreateOffscreen(Offscreen);
+
    // define which menu settings to save
   SaveOption[0] := mAlEffectiveMovesOnly.Tag;
   SaveOption[1] := mEnMoves.Tag;
@@ -3540,6 +3545,7 @@ begin
   for i := 0 to nPl - 1 do
     if AILogo[i] <> nil then
       FreeAndNil(AILogo[i]);
+  FreeAndNil(Offscreen);
 end;
 
 procedure TMainScreen.FormMouseWheel(Sender: TObject; Shift: TShiftState;

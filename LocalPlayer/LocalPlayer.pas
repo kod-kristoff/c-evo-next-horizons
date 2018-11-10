@@ -23,7 +23,6 @@ begin
   if not FormsCreated then
   begin
     FormsCreated := true;
-    BaseWin.CreateOffscreen;
     // TODO: Changing application name in runtime will cause change of Linux XML registry file path
 //    Application.MainForm := MainScreen;
     Application.CreateForm(TMainScreen, MainScreen);

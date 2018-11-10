@@ -8,10 +8,14 @@ uses
   DrawDlg;
 
 type
+
+  { TBufferedDrawDlg }
+
   TBufferedDrawDlg = class(TDrawDlg)
   public
     UserLeft, UserTop: integer;
     constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormPaint(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -26,6 +30,9 @@ type
     procedure OffscreenPaint; virtual;
     procedure VPaint; virtual;
   public
+    UsedOffscreenWidth, UsedOffscreenHeight: integer;
+    Offscreen: TBitmap;
+    OffscreenUser: TForm;
     property WindowMode: integer read FWindowMode;
   end;
 
@@ -54,20 +61,16 @@ const
   WideFrame = 36;
   SideFrame = 9;
 
-var
-  UsedOffscreenWidth, UsedOffscreenHeight: integer;
-  Offscreen: TBitmap;
-  OffscreenUser: TForm;
-
-procedure CreateOffscreen;
+procedure CreateOffscreen(var Offscreen: TBitmap);
 
 implementation
 
 uses
   Term, Help, ButtonBase, Area;
 
-constructor TBufferedDrawDlg.Create;
+constructor TBufferedDrawDlg.Create(AOwner: TComponent);
 begin
+  BaseWin.CreateOffscreen(Offscreen);
   OnClose := FormClose;
   OnPaint := FormPaint;
   OnKeyDown := FormKeyDown;
@@ -79,6 +82,12 @@ begin
   ModalFrameIndent := 45;
   UserLeft := (Screen.Width - Width) div 2;
   UserTop := (Screen.Height - Height) div 2;
+end;
+
+destructor TBufferedDrawDlg.Destroy;
+begin
+  Offscreen.Free;
+  inherited Destroy;
 end;
 
 procedure TBufferedDrawDlg.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -463,7 +472,7 @@ begin
     TitleHeight + (hMaintexture - ClientHeight) div 2);
 end;
 
-procedure CreateOffscreen;
+procedure CreateOffscreen(var Offscreen: TBitmap);
 begin
   if Offscreen <> nil then
     exit;
@@ -479,11 +488,6 @@ end;
 
 initialization
 
-Offscreen := nil;
-OffscreenUser := nil;
-
 finalization
-
-Offscreen.Free;
 
 end.

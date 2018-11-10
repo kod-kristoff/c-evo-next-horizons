@@ -919,11 +919,12 @@ var
   DstPtr: TPixelPointer;
 begin
   dst.BeginUpdate;
+  DstPtr.Init(dst, x0, y0);
   for y := -GlowRange + 1 to Height - 1 + GlowRange - 1 do
   begin
     for x := -GlowRange + 1 to Width - 1 + GlowRange - 1 do
     begin
-      DstPtr.Init(dst, x0 + x, y0 + y);
+      DstPtr.SetXY(x, y);
       if x < 0 then
         if y < 0 then
           r := round(sqrt(sqr(x) + sqr(y)))
