@@ -4,8 +4,8 @@ unit Wonders;
 interface
 
 uses
-  ScreenTools, BaseWin, Protocol,
-  LCLIntf, LCLType, SysUtils, Classes, Graphics, Controls, Forms, ButtonB;
+  ScreenTools, BaseWin, Protocol, LCLIntf, LCLType, SysUtils, Classes, Graphics,
+  Controls, Forms, ButtonB;
 
 type
 
@@ -20,7 +20,8 @@ type
     procedure FormMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
   private
-    xm, ym, Selection: Integer;
+    Selection: Integer;
+    Center: TPoint;
     procedure DarkIcon(i: Integer);
     procedure Glow(i, GlowColor: Integer);
     procedure PaintBackgroundShape;
@@ -32,6 +33,7 @@ type
 var
   WondersDlg: TWondersDlg;
 
+
 implementation
 
 uses
@@ -40,33 +42,35 @@ uses
 {$R *.lfm}
 
 const
-  RingPosition: array [0 .. 20, 0 .. 1] of Integer = ((-80, -32), // Pyramids
-    (80, -32), // Zeus
-    (0, -64), // Gardens
-    (0, 0), // Colossus
-    (0, 64), // Lighthouse
-    (-80, 32), // GrLibrary
-    (-90, 114), // Oracle
-    (80, 32), // Sun
-    (90, -114), // Leo
-    (-180, 0), // Magellan
-    (90, 114), // Mich
-    (0, 0), // {11;}
-    (180, 0), // Newton
-    (-90, -114), // Bach
-    (0, 0), // {14;}
-    (-160, -64), // Liberty
-    (0, 128), // Eiffel
-    (160, -64), // Hoover
-    (-160, 64), // Shinkansen
-    (0, -128), // Manhattan
-    (160, 64)); // Mir
+  RingPosition: array [0 .. 20] of TPoint = (
+    (X: -80; Y: -32), // Pyramids
+    (X: 80; Y: -32), // Zeus
+    (X: 0; Y: -64), // Gardens
+    (X: 0; Y: 0), // Colossus
+    (X: 0; Y: 64), // Lighthouse
+    (X: -80; Y: 32), // GrLibrary
+    (X: -90; Y: 114), // Oracle
+    (X: 80; Y: 32), // Sun
+    (X: 90; Y: -114), // Leo
+    (X: -180; Y: 0), // Magellan
+    (X: 90; Y: 114), // Mich
+    (X: 0; Y: 0), // {11;}
+    (X: 180; Y: 0), // Newton
+    (X: -90; Y: -114), // Bach
+    (X: 0; Y: 0), // {14;}
+    (X: -160; Y: -64), // Liberty
+    (X: 0; Y: 128), // Eiffel
+    (X: 160; Y: -64), // Hoover
+    (X: -160; Y: 64), // Shinkansen
+    (X: 0; Y: -128), // Manhattan
+    (X: 160; Y: 64) // Mir
+  );
 
 procedure TWondersDlg.FormCreate(Sender: TObject);
 begin
   Canvas.Font.Assign(UniFont[ftNormal]);
   Canvas.Brush.Style := bsClear;
-  InitButtons();
+  InitButtons;
 end;
 
 procedure TWondersDlg.FormShow(Sender: TObject);
@@ -113,13 +117,13 @@ begin
         ((ax < amax1 * X) or (ax > amin3 * X))) then
         for i := 0 to 1 do
           for ch := 0 to 2 do begin
-            Line[0].SetXY(xm + X, ym + Y);
-            Line[1].SetXY(xm + X, ym - 1 - Y);
+            Line[0].SetXY(Center.X + X, Center.Y + Y);
+            Line[1].SetXY(Center.X + X, Center.Y - 1 - Y);
             c := Line[i].Pixel^.Planes[ch] - darken;
             if c < 0 then Line[i].Pixel^.Planes[ch] := 0
               else Line[i].Pixel^.Planes[ch] := c;
-            Line[0].SetXY(xm - 1 - X, ym + Y);
-            Line[1].SetXY(xm - 1 - X, ym - 1 - Y);
+            Line[0].SetXY(Center.X - 1 - X, Center.Y + Y);
+            Line[1].SetXY(Center.X - 1 - X, Center.Y - 1 - Y);
             c := Line[i].Pixel^.Planes[ch] - darken;
             if c < 0 then Line[i].Pixel^.Planes[ch] := 0
               else Line[i].Pixel^.Planes[ch] := c;
@@ -135,8 +139,8 @@ var
   Src, Dst: TPixelPointer;
 begin
   Offscreen.BeginUpdate;
-  x0Dst := ClientWidth div 2 - xSizeBig div 2 + RingPosition[i, 0];
-  y0Dst := ClientHeight div 2 - ySizeBig div 2 + RingPosition[i, 1];
+  x0Dst := ClientWidth div 2 - xSizeBig div 2 + RingPosition[i].X;
+  y0Dst := ClientHeight div 2 - ySizeBig div 2 + RingPosition[i].Y;
   x0Src := (i mod 7) * xSizeBig;
   y0Src := (i div 7 + SystemIconLines) * ySizeBig;
   Src.Init(BigImp, x0Src, y0Src);
@@ -161,21 +165,22 @@ end;
 
 procedure TWondersDlg.Glow(i, GlowColor: Integer);
 begin
-  GlowFrame(Offscreen, ClientWidth div 2 - xSizeBig div 2 + RingPosition[i,
-    0], ClientHeight div 2 - ySizeBig div 2 + RingPosition[i, 1], xSizeBig,
-    ySizeBig, GlowColor);
+  GlowFrame(Offscreen,
+    ClientWidth div 2 - xSizeBig div 2 + RingPosition[i].X,
+    ClientHeight div 2 - ySizeBig div 2 + RingPosition[i].Y,
+    xSizeBig, ySizeBig, GlowColor);
 end;
 
 procedure TWondersDlg.OffscreenPaint;
 var
-  i: Integer;
-  HaveWonder: boolean;
-  s: string;
+  I: Integer;
+  HaveWonder: Boolean;
+  S: string;
 begin
-  if (OffscreenUser <> nil) and (OffscreenUser <> self) then
+  if (OffscreenUser <> nil) and (OffscreenUser <> Self) then
     OffscreenUser.Update;
   // complete working with old owner to prevent rebound
-  OffscreenUser := self;
+  OffscreenUser := Self;
 
   Fill(Offscreen.Canvas, 3, 3, ClientWidth - 6, ClientHeight - 6,
     (wMaintexture - ClientWidth) div 2, (hMaintexture - ClientHeight) div 2);
@@ -192,79 +197,81 @@ begin
   BtnFrame(Offscreen.Canvas, CloseBtn.BoundsRect, MainTexture);
 
   Offscreen.Canvas.Font.Assign(UniFont[ftCaption]);
-  s := Phrases.Lookup('TITLE_WONDERS');
+  S := Phrases.Lookup('TITLE_WONDERS');
   RisedTextOut(Offscreen.Canvas,
-    (ClientWidth - BiColorTextWidth(Offscreen.Canvas, s)) div 2 - 1, 7, s);
+    (ClientWidth - BiColorTextWidth(Offscreen.Canvas, S)) div 2 - 1, 7, S);
   Offscreen.Canvas.Font.Assign(UniFont[ftNormal]);
 
-  xm := ClientWidth div 2;
-  ym := ClientHeight div 2;
+  Center := Point(ClientWidth div 2, ClientHeight div 2);
 
   PaintBackgroundShape;
 
-  for i := 0 to 20 do
-    if Imp[i].Preq <> preNA then
+  for I := 0 to 20 do
+    if Imp[I].Preq <> preNA then
     begin
-      case MyRO.Wonder[i].CityID of
+      case MyRO.Wonder[I].CityID of
         - 1: // not built yet
           begin
-            Fill(Offscreen.Canvas, xm - xSizeBig div 2 + RingPosition[i, 0] - 3,
-              ym - ySizeBig div 2 + RingPosition[i, 1] - 3, xSizeBig + 6,
+            Fill(Offscreen.Canvas, Center.X - xSizeBig div 2 + RingPosition[I].X - 3,
+              Center.Y - ySizeBig div 2 + RingPosition[I].Y - 3, xSizeBig + 6,
               ySizeBig + 6, (wMaintexture - ClientWidth) div 2,
               (hMaintexture - ClientHeight) div 2);
-            DarkIcon(i);
+            DarkIcon(I);
           end;
         -2: // destroyed
           begin
-            Glow(i, $000000);
+            Glow(I, $000000);
           end;
       else
         begin
-          if MyRO.Wonder[i].EffectiveOwner >= 0 then
-            Glow(i, Tribe[MyRO.Wonder[i].EffectiveOwner].Color)
+          if MyRO.Wonder[I].EffectiveOwner >= 0 then
+            Glow(I, Tribe[MyRO.Wonder[I].EffectiveOwner].Color)
           else
-            Glow(i, $000000);
-        end
-      end
+            Glow(I, $000000);
+        end;
+      end;
     end;
 
-  HaveWonder := false;
-  for i := 0 to 20 do
-    if Imp[i].Preq <> preNA then
+  HaveWonder := False;
+  for I := 0 to 20 do
+    if Imp[I].Preq <> preNA then
     begin
-      case MyRO.Wonder[i].CityID of
+      case MyRO.Wonder[I].CityID of
         - 1: // not built yet
           begin
-            Fill(Offscreen.Canvas, xm - xSizeBig div 2 + RingPosition[i, 0] - 3,
-              ym - ySizeBig div 2 + RingPosition[i, 1] - 3, xSizeBig + 6,
+            Fill(Offscreen.Canvas, Center.X - xSizeBig div 2 + RingPosition[I].X - 3,
+              Center.Y - ySizeBig div 2 + RingPosition[I].Y - 3, xSizeBig + 6,
               ySizeBig + 6, (wMaintexture - ClientWidth) div 2,
               (hMaintexture - ClientHeight) div 2);
-            DarkIcon(i);
+            DarkIcon(I);
           end;
         -2: // destroyed
           begin
-            HaveWonder := true;
-            BitBlt(Offscreen.Canvas.Handle, xm - xSizeBig div 2 + RingPosition
-              [i, 0], ym - ySizeBig div 2 + RingPosition[i, 1], xSizeBig,
+            HaveWonder := True;
+            BitBlt(Offscreen.Canvas.Handle,
+              Center.X - xSizeBig div 2 + RingPosition[I].X,
+              Center.Y - ySizeBig div 2 + RingPosition[I].Y, xSizeBig,
               ySizeBig, BigImp.Canvas.Handle, 0, (SystemIconLines + 3) *
               ySizeBig, SRCCOPY);
           end;
       else
         begin
-          HaveWonder := true;
-          BitBlt(Offscreen.Canvas.Handle, xm - xSizeBig div 2 + RingPosition[i,
-            0], ym - ySizeBig div 2 + RingPosition[i, 1], xSizeBig, ySizeBig,
-            BigImp.Canvas.Handle, (i mod 7) * xSizeBig,
-            (i div 7 + SystemIconLines) * ySizeBig, SRCCOPY);
-        end
-      end
+          HaveWonder := True;
+          BitBlt(Offscreen.Canvas.Handle,
+            Center.X - xSizeBig div 2 + RingPosition[I].X,
+            Center.Y - ySizeBig div 2 + RingPosition[I].Y, xSizeBig, ySizeBig,
+            BigImp.Canvas.Handle, (I mod 7) * xSizeBig,
+            (I div 7 + SystemIconLines) * ySizeBig, SRCCOPY);
+        end;
+      end;
     end;
 
   if not HaveWonder then
   begin
-    s := Phrases.Lookup('NOWONDER');
-    RisedTextOut(Offscreen.Canvas, xm - BiColorTextWidth(Offscreen.Canvas, s)
-      div 2, ym - Offscreen.Canvas.TextHeight(s) div 2, s);
+    S := Phrases.Lookup('NOWONDER');
+    RisedTextOut(Offscreen.Canvas,
+      Center.X - BiColorTextWidth(Offscreen.Canvas, S) div 2,
+      Center.Y - Offscreen.Canvas.TextHeight(S) div 2, S);
   end;
 
   MarkUsedOffscreen(ClientWidth, ClientHeight);
@@ -272,25 +279,26 @@ end; { OffscreenPaint }
 
 procedure TWondersDlg.CloseBtnClick(Sender: TObject);
 begin
-  Close
+  Close;
 end;
 
 procedure TWondersDlg.FormMouseMove(Sender: TObject; Shift: TShiftState;
   X, Y: Integer);
 var
-  i, OldSelection: Integer;
-  s: string;
+  I, OldSelection: Integer;
+  S: string;
 begin
   OldSelection := Selection;
   Selection := -1;
-  for i := 0 to 20 do
-    if (Imp[i].Preq <> preNA) and (X >= xm - xSizeBig div 2 + RingPosition[i, 0]
-      ) and (X < xm + xSizeBig div 2 + RingPosition[i, 0]) and
-      (Y >= ym - ySizeBig div 2 + RingPosition[i, 1]) and
-      (Y < ym + ySizeBig div 2 + RingPosition[i, 1]) then
+  for I := 0 to 20 do
+    if (Imp[I].Preq <> preNA) and
+      (X >= Center.X - xSizeBig div 2 + RingPosition[I].X) and
+      (X < Center.X + xSizeBig div 2 + RingPosition[I].X) and
+      (Y >= Center.Y - ySizeBig div 2 + RingPosition[I].Y) and
+      (Y < Center.Y + ySizeBig div 2 + RingPosition[I].Y) then
     begin
-      Selection := i;
-      break
+      Selection := I;
+      Break;
     end;
   if Selection <> OldSelection then
   begin
@@ -300,38 +308,37 @@ begin
     begin
       if MyRO.Wonder[Selection].CityID = -1 then
       begin // not built yet
-        { s:=Phrases.Lookup('IMPROVEMENTS',Selection);
+        { S:=Phrases.Lookup('IMPROVEMENTS',Selection);
           Canvas.Font.Color:=$000000;
           Canvas.TextOut(
-          (ClientWidth-BiColorTextWidth(Canvas,s)) div 2+1,
-          ClientHeight-3-36+1, s);
+          (ClientWidth-BiColorTextWidth(Canvas,S)) div 2+1,
+          ClientHeight-3-36+1, S);
           Canvas.Font.Color:=MainTexture.clBevelLight;
           Canvas.TextOut(
-          (ClientWidth-BiColorTextWidth(Canvas,s)) div 2,
-          ClientHeight-3-36, s); }
+          (ClientWidth-BiColorTextWidth(Canvas,S)) div 2,
+          ClientHeight-3-36, S); }
       end
       else
       begin
-        s := Phrases.Lookup('IMPROVEMENTS', Selection);
+        S := Phrases.Lookup('IMPROVEMENTS', Selection);
         if MyRO.Wonder[Selection].CityID <> -2 then
-          s := Format(Phrases.Lookup('WONDEROF'),
-            [s, CityName(MyRO.Wonder[Selection].CityID)]);
+          S := Format(Phrases.Lookup('WONDEROF'),
+            [S, CityName(MyRO.Wonder[Selection].CityID)]);
         LoweredTextOut(Canvas, -1, MainTexture,
-          (ClientWidth - BiColorTextWidth(Canvas, s)) div 2,
-          ClientHeight - 3 - 36 - 10, s);
+          (ClientWidth - BiColorTextWidth(Canvas, S)) div 2,
+          ClientHeight - 3 - 36 - 10, S);
         if MyRO.Wonder[Selection].CityID = -2 then
-          s := Phrases.Lookup('DESTROYED')
+          S := Phrases.Lookup('DESTROYED')
         else if MyRO.Wonder[Selection].EffectiveOwner < 0 then
-          s := Phrases.Lookup('EXPIRED')
+          S := Phrases.Lookup('EXPIRED')
         else
-          s := Tribe[MyRO.Wonder[Selection].EffectiveOwner]
-            .TPhrase('WONDEROWNER');
+          S := Tribe[MyRO.Wonder[Selection].EffectiveOwner].TPhrase('WONDEROWNER');
         LoweredTextOut(Canvas, -1, MainTexture,
-          (ClientWidth - BiColorTextWidth(Canvas, s)) div 2,
-          ClientHeight - 3 - 36 + 10, s);
-      end
+          (ClientWidth - BiColorTextWidth(Canvas, S)) div 2,
+          ClientHeight - 3 - 36 + 10, S);
+      end;
     end;
-  end
+  end;
 end;
 
 procedure TWondersDlg.FormMouseDown(Sender: TObject; Button: TMouseButton;
