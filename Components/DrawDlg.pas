@@ -65,33 +65,36 @@ end;
 
 procedure TDrawDlg.OnHitTest(var Msg: TMessage);
 var
-  i: integer;
+  I: integer;
   ControlBounds: TRect;
+  Pos: TPoint;
 begin
   if BorderStyle <> bsNone then
     inherited
   else
   begin
-    if integer((Msg.LParam shr 16) and $ffff) >= Top + TitleHeight then
-      Msg.result := HTCLIENT
+    Pos := Point(Integer(Msg.LParam and $ffff),
+      Integer((Msg.LParam shr 16) and $ffff));
+    if Pos.Y >= Top + TitleHeight then
+      Msg.Result := HTCLIENT
     else
     begin
-      for i := 0 to ControlCount - 1 do
-        if Controls[i].Visible then
+      for I := 0 to ControlCount - 1 do
+        if Controls[I].Visible then
         begin
-          ControlBounds := Controls[i].BoundsRect;
-          if (integer(Msg.LParam and $ffff) >= Left + ControlBounds.Left) and
-            (integer(Msg.LParam and $ffff) < Left + ControlBounds.Right) and
-            (integer((Msg.LParam shr 16 ) and $ffff) >= Top + ControlBounds.Top) and
-            (integer((Msg.LParam shr 16) and $ffff) < Top + ControlBounds.Bottom) then
+          ControlBounds := Controls[I].BoundsRect;
+          if (Pos.X >= Left + ControlBounds.Left) and
+            (Pos.X < Left + ControlBounds.Right) and
+            (Pos.Y >= Top + ControlBounds.Top) and
+            (Pos.Y < Top + ControlBounds.Bottom) then
           begin
             Msg.result := HTCLIENT;
-            exit;
+            Exit;
           end;
         end;
-      Msg.result := HTCAPTION
+      Msg.Result := HTCAPTION
     end;
-  end
+  end;
 end;
 
 procedure TDrawDlg.InitButtons;
