@@ -5,7 +5,7 @@ if not defined LAZDIR (
 )
 
 rem Build AI
-SET PROJECTNAME=AIProject
+SET PROJECTNAME=StdAI
 SET MAIN_DLL=..\..\AI\StdAI\StdAI.dll
 SET WIN32_DLL=..\..\AI\StdAI\lib\i386-win32-Release\StdAI.dll
 SET WIN64_DLL=..\..\AI\StdAI\lib\x86_64-win64-Release\StdAI.dll

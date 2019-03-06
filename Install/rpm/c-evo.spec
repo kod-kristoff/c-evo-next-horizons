@@ -5,7 +5,7 @@ Summary:        Empire building game
 
 Group:          Development/Languages
 License:        Public Domain
-URL:            http://svn.zdechov.net/trac/c-evo
+URL:            https://app.zdechov.net/c-evo
 Source0:        c-evo.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -21,7 +21,7 @@ Turn-based empire building game inspired by Civilization.
 
 
 %build
-(cd AI/StdAI ; lazbuild --build-mode=Release AIProject.lpi)
+(cd AI/StdAI ; lazbuild --build-mode=Release StdAI.lpi)
 mv AI/StdAI/libstdai.so AI/StdAI/libstdai-%{_target_cpu}.so
 sed -i 's/libstdai-i386.so/libstdai-%{_target_cpu}.so/g' AI/StdAI/StdAI.ai.txt
 sed -i 's/libstdai-amd64.so/libstdai-%{_target_cpu}.so/g' AI/StdAI/StdAI.ai.txt

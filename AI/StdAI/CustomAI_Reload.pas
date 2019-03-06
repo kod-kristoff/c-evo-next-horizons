@@ -1,4 +1,4 @@
-{$INCLUDE Switches.inc}
+{$INCLUDE switches.pas}
 unit CustomAI;
 
 interface
@@ -59,7 +59,6 @@ protected
   function SetNewModelFeature(F, Count: integer): integer;
   function AdvanceResearchable(Advance: integer): boolean;
   function AdvanceStealable(Advance: integer): boolean;
-  function GetJobProgress(Loc: integer; var JobProgress: TJobProgressData): boolean;
   function DebugMessage(Level: integer; Text: string): boolean;
   function SetDebugMap(var DebugMap): boolean;
 
@@ -78,7 +77,6 @@ protected
   function Unit_SetHomeHere(uix: integer): integer;
   function Unit_Load(uix: integer): integer;
   function Unit_Unload(uix: integer): integer;
-  function Unit_SelectTransport(uix: integer): integer;
   function Unit_AddToCity(uix: integer): integer;
 
   // city functions
@@ -90,8 +88,6 @@ protected
   function City_GetTileInfo(cix,TileLoc: integer; var TileInfo: TTileInfo): integer;
   function City_GetReport(cix: integer; var Report: TCityReport): integer;
   function City_GetHypoReport(cix, HypoTiles, HypoTax, HypoLux: integer; var Report: TCityReport): integer;
-  function City_GetReportNew(cix: integer; var Report: TCityReportNew): integer;
-  function City_GetHypoReportNew(cix, HypoTiles, HypoTaxRate, HypoLuxuryRate: integer; var Report: TCityReportNew): integer;
   function City_GetAreaInfo(cix: integer; var AreaInfo: TCityAreaInfo): integer;
   function City_StartUnitProduction(cix,mix: integer): integer;
   function City_StartEmigration(cix,mix: integer; AllowDisbandCity, AsConscripts: boolean): integer;
@@ -102,7 +98,6 @@ protected
   function City_SellImprovement(cix,iix: integer): integer;
   function City_RebuildImprovement(cix,iix: integer): integer;
   function City_SetTiles(cix,NewTiles: integer): integer;
-  procedure City_OptimizeTiles(cix: integer; ResourceWeights: cardinal = rwMaxGrowth);
 
   // negotiation
   function Nego_CheckMyAction: integer;
@@ -144,7 +139,6 @@ procedure ab_to_V21(a,b: integer; var V21: integer);
 procedure V21_to_ab(V21: integer; var a,b: integer);
 procedure V8_to_Loc(Loc0: integer; var VicinityLoc: TVicinity8Loc);
 procedure V21_to_Loc(Loc0: integer; var VicinityLoc: TVicinity21Loc);
-function Distance(Loc0,Loc1: integer): integer;
 
 
 implementation
@@ -348,16 +342,6 @@ for dy:=0 to 6 do
     end
 end;
 
-function Distance(Loc0,Loc1: integer): integer;
-var
-a,b,dx,dy: integer;
-begin
-Loc_to_ab(Loc0,Loc1,a,b);
-dx:=abs(a-b);
-dy:=abs(a+b);
-result:=dx+dy+abs(dx-dy) shr 1;
-end;
-
 
 procedure Init(NewGameData: TNewGameData);
 {$IFDEF DEBUG}var Loc: integer;{$ENDIF}
@@ -465,7 +449,17 @@ case Command of
         end;
       Server(sSetResearch,me,NewResearch,nodata^)
       end;
-    if Server(sTurn,me,0,nodata^)<rExecuted then
+    if (me=1) and (RO.Turn=800) then
+      begin
+      count:=0;
+      Server(sReload,me,0,count)
+      end
+    else if (RO.Turn>10) and (random(1000)=0) then
+      begin
+      count:=RO.Turn-10;
+      Server(sReload,me,0,count)
+      end
+    else if Server(sTurn,me,0,nodata^)<rExecuted then
       assert(false);
     end;
   scContact:
@@ -485,13 +479,8 @@ case Command of
     begin
     OppoAction:=Command;
     if Command=scDipOffer then OppoOffer:=TOffer(Data);
-    if Command=scDipStart then
-      MyLastAction:=scContact
-    else
-      begin
-      MyLastAction:=MyAction;
-      MyLastOffer:=MyOffer;
-      end;
+    MyLastAction:=MyAction;
+    MyLastOffer:=MyOffer;
     if (OppoAction=scDipCancelTreaty) or (OppoAction=scDipBreak) then
       MyAction:=scDipNotice
     else begin MyAction:=scDipOffer; MyOffer.nDeliver:=0; MyOffer.nCost:=0; end;
@@ -584,8 +573,7 @@ end;
 
 function TCustomAI.IsResearched(Advance: integer): boolean;
 begin
-result:= (Advance=preNone)
-  or (Advance<>preNA) and (RO.Tech[Advance]>=tsApplicable)
+result:= RO.Tech[Advance]>=tsApplicable
 end;
 
 function TCustomAI.ResearchCost: integer;
@@ -626,11 +614,6 @@ end;
 function TCustomAI.AdvanceStealable(Advance: integer): boolean;
 begin
 result:= Server(sStealTech-sExecute,me,Advance,nodata^)>=rExecuted;
-end;
-
-function TCustomAI.GetJobProgress(Loc: integer; var JobProgress: TJobProgressData): boolean;
-begin
-result:= Server(sGetJobProgress,me,Loc,JobProgress)>=rExecuted;
 end;
 
 function TCustomAI.DebugMessage(Level: integer; Text: string): boolean;
@@ -785,7 +768,6 @@ else
   end
 end;
 
-// negative RemainingHealth is remaining helth of defender if lost
 function TCustomAI.Unit_AttackForecast(uix,ToLoc,AttackMovement: integer;
   var RemainingHealth: integer): boolean;
 var
@@ -870,11 +852,6 @@ begin
 result:=Server(sAddToCity,me,uix,nodata^)
 end;
 
-function TCustomAI.Unit_SelectTransport(uix: integer): integer;
-begin
-result:=Server(sSelectTransport,me,uix,nodata^)
-end;
-
 
 procedure TCustomAI.City_FindMyCity(Loc: integer; var cix: integer);
 begin
@@ -944,23 +921,6 @@ Report.HypoLux:=HypoLux;
 result:=Server(sGetCityReport,me,cix,Report)
 end;
 
-function TCustomAI.City_GetReportNew(cix: integer; var Report: TCityReportNew): integer;
-begin
-Report.HypoTiles:=-1;
-Report.HypoTaxRate:=-1;
-Report.HypoLuxuryRate:=-1;
-result:=Server(sGetCityReportNew,me,cix,Report)
-end;
-
-function TCustomAI.City_GetHypoReportNew(cix, HypoTiles, HypoTaxRate, HypoLuxuryRate: integer;
-  var Report: TCityReportNew): integer;
-begin
-Report.HypoTiles:=HypoTiles;
-Report.HypoTaxRate:=HypoTaxRate;
-Report.HypoLuxuryRate:=HypoLuxuryRate;
-result:=Server(sGetCityReportNew,me,cix,Report)
-end;
-
 function TCustomAI.City_GetAreaInfo(cix: integer; var AreaInfo: TCityAreaInfo): integer;
 begin
 result:=Server(sGetCityAreaInfo,me,cix,AreaInfo)
@@ -968,9 +928,7 @@ end;
 
 function TCustomAI.City_StartUnitProduction(cix,mix: integer): integer;
 begin
-if (MyCity[cix].Project and (cpImp+cpIndex)<>mix) then
-  // not already producing that
-  result:=Server(sSetCityProject,me,cix,mix)
+result:=Server(sSetCityProject,me,cix,mix)
 end;
 
 function TCustomAI.City_StartEmigration(cix,mix: integer;
@@ -989,9 +947,7 @@ var
 NewProject: integer;
 begin
 NewProject:=iix+cpImp;
-if (MyCity[cix].Project and (cpImp+cpIndex)<>NewProject) then
-  // not already producing that
-  result:=Server(sSetCityProject,me,cix,NewProject)
+result:=Server(sSetCityProject,me,cix,NewProject)
 end;
 
 function TCustomAI.City_Improvable(cix,iix: integer): boolean;
@@ -1028,15 +984,6 @@ end;
 function TCustomAI.City_SetTiles(cix,NewTiles: integer): integer;
 begin
 result:=Server(sSetCityTiles,me,cix,NewTiles)
-end;
-
-procedure TCustomAI.City_OptimizeTiles(cix: integer; ResourceWeights: cardinal);
-var
-Advice: TCityTileAdviceData;
-begin
-Advice.ResourceWeights:=ResourceWeights;
-Server(sGetCityTileAdvice, me, cix, Advice);
-City_SetTiles(cix, Advice.Tiles);
 end;
 
 

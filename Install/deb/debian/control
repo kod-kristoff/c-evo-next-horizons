@@ -9,4 +9,4 @@ Package: c-evo
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends},
 Description: Empire building game
-HomePage: http://svn.zdechov.net/trac/c-evo
+HomePage: https://app.zdechov.net/c-evo

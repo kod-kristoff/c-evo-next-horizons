@@ -5,7 +5,7 @@
 #define MyAppVersion "1.2.0"
 #define MyAppPublisher "Chronosoft"
 #define MyAppPublisherShort "Chronosoft"
-#define MyAppURL "http://svn.zdechov.net/trac/c-evo"
+#define MyAppURL "https://app.zdechov.net/c-evo"
 #define MyAppExeName "C-evo.exe"
 #define MyAppDebugName "C-evo.dbg"
 #define MyAppSubDir "../.."

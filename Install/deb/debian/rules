@@ -10,7 +10,7 @@ override_dh_auto_clean:
 	$(RM) lib c-evo
 
 override_dh_auto_build:
-	cd AI/StdAI && lazbuild --build-mode=Release AIProject.lpi
+	cd AI/StdAI && lazbuild --build-mode=Release StdAI.lpi
 	mv AI/StdAI/libstdai.so AI/StdAI/libstdai-$(DEB_HOST_ARCH).so
 	lazbuild --build-mode=Release Integrated.lpi
 
