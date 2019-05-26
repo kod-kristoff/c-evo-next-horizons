@@ -51,12 +51,12 @@ procedure RestoreResolution;
 function Play(Item: string; Index: integer = -1): boolean;
 procedure PreparePlay(Item: string; Index: integer = -1);
 procedure EmptyMenu(MenuItems: TMenuItem; Keep: Integer = 0);
-function turntoyear(Turn: integer): integer;
+function TurnToYear(Turn: integer): integer;
 function TurnToString(Turn: integer): string;
 function MovementToString(Movement: integer): string;
 procedure BtnFrame(ca: TCanvas; p: TRect; const T: TTexture);
 procedure EditFrame(ca: TCanvas; p: TRect; const T: TTexture);
-function HexStringToColor(s: string): integer;
+function HexStringToColor(S: string): integer;
 function LoadGraphicFile(bmp: TBitmap; Path: string; Options: integer = 0): boolean;
 function LoadGraphicSet(const Name: string): integer;
 procedure Dump(dst: TBitmap; HGr, xDst, yDst, Width, Height, xGr, yGr: integer);
@@ -225,8 +225,8 @@ var
   ResolutionChanged: boolean;
   {$ENDIF}
 
-  Gamma: integer; // global gamma correction (cent)
-  GammaLUT: array [0 .. 255] of byte;
+  Gamma: Integer; // global gamma correction (cent)
+  GammaLookupTable: array [0 .. 255] of Byte;
 
 {$IFDEF WINDOWS}
 function ChangeResolution(x, y, bpp, freq: integer): boolean;
@@ -259,7 +259,7 @@ end;
 function Play(Item: string; Index: integer = -1): boolean;
 {$IFNDEF DEBUG}
 var
-  WAVFileName: string;
+  WavFileName: string;
 {$ENDIF}
 begin
   Result := False;
@@ -267,30 +267,30 @@ begin
   if (Sounds = nil) or (SoundMode = smOff) or (Item = '') then
   begin
     Result := True;
-    exit;
+    Exit;
   end;
-  WAVFileName := Sounds.Lookup(Item, Index);
-  assert(WAVFileName[1] <> '[');
-  Result := (WAVFileName <> '') and (WAVFileName[1] <> '[') and (WAVFileName <> '*');
+  WavFileName := Sounds.Lookup(Item, Index);
+  Assert(WavFileName[1] <> '[');
+  Result := (WavFileName <> '') and (WavFileName[1] <> '[') and (WavFileName <> '*');
   if Result then
-    // SndPlaySound(pchar(HomeDir+'Sounds' +DirectorySeparator+WAVFileName+'.wav'),SND_ASYNC)
-    PlaySound(HomeDir + 'Sounds' + DirectorySeparator + WAVFileName);
+    // SndPlaySound(pchar(HomeDir+'Sounds' +DirectorySeparator+WavFileName+'.wav'),SND_ASYNC)
+    PlaySound(HomeDir + 'Sounds' + DirectorySeparator + WavFileName);
 {$ENDIF}
 end;
 
-procedure PreparePlay(Item: string; Index: integer = -1);
+procedure PreparePlay(Item: string; Index: Integer = -1);
 {$IFNDEF DEBUG}
 var
-  WAVFileName: string;
+  WavFileName: string;
 {$ENDIF}
 begin
 {$IFNDEF DEBUG}
   if (Sounds = nil) or (SoundMode = smOff) or (Item = '') then
-    exit;
-  WAVFileName := Sounds.Lookup(Item, Index);
-  assert(WAVFileName[1] <> '[');
-  if (WAVFileName <> '') and (WAVFileName[1] <> '[') and (WAVFileName <> '*') then
-    PrepareSound(HomeDir + 'Sounds' + DirectorySeparator + WAVFileName);
+    Exit;
+  WavFileName := Sounds.Lookup(Item, Index);
+  Assert(WavFileName[1] <> '[');
+  if (WavFileName <> '') and (WavFileName[1] <> '[') and (WavFileName <> '*') then
+    PrepareSound(HomeDir + 'Sounds' + DirectorySeparator + WavFileName);
 {$ENDIF}
 end;
 
@@ -305,59 +305,53 @@ begin
   end;
 end;
 
-function turntoyear(Turn: integer): integer;
+function TurnToYear(Turn: Integer): Integer;
 var
-  i: integer;
+  I: Integer;
 begin
   Result := -4000;
-  for i := 1 to Turn do
-    if Result < -1000 then
-      Inc(Result, 50) // 0..60
-    else if Result < 0 then
-      Inc(Result, 25) // 60..100
-    else if Result < 1500 then
-      Inc(Result, 20) // 100..175
-    else if Result < 1750 then
-      Inc(Result, 10) // 175..200
-    else if Result < 1850 then
-      Inc(Result, 2) // 200..250
-    else
-      Inc(Result);
+  for I := 1 to Turn do
+    if Result < -1000 then Inc(Result, 50) // 0..60
+    else if Result < 0 then Inc(Result, 25) // 60..100
+    else if Result < 1500 then Inc(Result, 20) // 100..175
+    else if Result < 1750 then Inc(Result, 10) // 175..200
+    else if Result < 1850 then Inc(Result, 2) // 200..250
+    else Inc(Result);
 end;
 
-function TurnToString(Turn: integer): string;
+function TurnToString(Turn: Integer): string;
 var
-  year: integer;
+  Year: Integer;
 begin
   if GenerateNames then
   begin
-    year := turntoyear(Turn);
-    if year < 0 then
-      Result := Format(Phrases.Lookup('BC'), [-year])
+    Year := TurnToYear(Turn);
+    if Year < 0 then
+      Result := Format(Phrases.Lookup('BC'), [-Year])
     else
-      Result := Format(Phrases.Lookup('AD'), [year]);
+      Result := Format(Phrases.Lookup('AD'), [Year]);
   end
   else
     Result := IntToStr(Turn);
 end;
 
-function MovementToString(Movement: integer): string;
+function MovementToString(Movement: Integer): string;
 begin
   if Movement >= 1000 then
   begin
-    Result := char(48 + Movement div 1000);
+    Result := Char(48 + Movement div 1000);
     Movement := Movement mod 1000;
   end
   else
     Result := '';
-  Result := Result + char(48 + Movement div 100);
+  Result := Result + Char(48 + Movement div 100);
   Movement := Movement mod 100;
   if Movement > 0 then
   begin
-    Result := Result + '.' + char(48 + Movement div 10);
+    Result := Result + '.' + Char(48 + Movement div 10);
     Movement := Movement mod 10;
     if Movement > 0 then
-      Result := Result + char(48 + Movement);
+      Result := Result + Char(48 + Movement);
   end;
 end;
 
@@ -376,50 +370,48 @@ begin
     T.clBevelLight);
 end;
 
-function HexStringToColor(s: string): integer;
-
-  function HexCharToInt(x: char): integer;
-  begin
-    case x of
-      '0' .. '9':
-        Result := Ord(x) - 48;
-      'A' .. 'F':
-        Result := Ord(x) - 65 + 10;
-      'a' .. 'f':
-        Result := Ord(x) - 97 + 10;
-      else
-        Result := 0
-    end;
-  end;
-
+function HexCharToInt(X: Char): Integer;
 begin
-  while (Length(s) > 0) and (s[1] = ' ') do
-    Delete(s, 1, 1);
-  s := s + '000000';
+  case x of
+    '0' .. '9': Result := Ord(X) - Ord('0');
+    'A' .. 'F': Result := Ord(X) - Ord('A') + 10;
+    'a' .. 'f': Result := Ord(X) - Ord('a') + 10;
+    else Result := 0
+  end;
+end;
+
+function HexStringToColor(S: string): Integer;
+begin
+  while (Length(S) > 0) and (S[1] = ' ') do
+    Delete(S, 1, 1);
+  S := S + '000000';
   if Gamma = 100 then
-    Result := $10 * HexCharToInt(s[1]) + $1 * HexCharToInt(s[2]) +
-      $1000 * HexCharToInt(s[3]) + $100 * HexCharToInt(s[4]) + $100000 *
-      HexCharToInt(s[5]) + $10000 * HexCharToInt(s[6])
+    Result := $10 * HexCharToInt(S[1]) + $1 * HexCharToInt(S[2]) +
+      $1000 * HexCharToInt(S[3]) + $100 * HexCharToInt(S[4]) +
+      $100000 * HexCharToInt(S[5]) + $10000 * HexCharToInt(S[6])
   else
-    Result := GammaLUT[$10 * HexCharToInt(s[1]) + HexCharToInt(s[2])] +
-      $100 * GammaLUT[$10 * HexCharToInt(s[3]) + HexCharToInt(s[4])] +
-      $10000 * GammaLUT[$10 * HexCharToInt(s[5]) + HexCharToInt(s[6])];
+    Result := GammaLookupTable[$10 * HexCharToInt(S[1]) + HexCharToInt(S[2])] +
+      $100 * GammaLookupTable[$10 * HexCharToInt(S[3]) + HexCharToInt(S[4])] +
+      $10000 * GammaLookupTable[$10 * HexCharToInt(S[5]) + HexCharToInt(S[6])];
+end;
+
+function ApplyGammaToPixel(Pixel: TPixel32): TPixel32;
+begin
+  Result.R := GammaLookupTable[Pixel.R];
+  Result.G := GammaLookupTable[Pixel.G];
+  Result.B := GammaLookupTable[Pixel.B];
 end;
 
 procedure ApplyGammaToBitmap(Bitmap: TBitmap);
 var
   PixelPtr: TPixelPointer;
-  X, Y: integer;
+  X, Y: Integer;
 begin
   Bitmap.BeginUpdate;
   PixelPtr.Init(Bitmap);
-  for Y := 0 to Bitmap.Height - 1 do
-  begin
-    for X := 0 to Bitmap.Width - 1 do
-    begin
-      PixelPtr.Pixel^.B := GammaLUT[PixelPtr.Pixel^.B];
-      PixelPtr.Pixel^.G := GammaLUT[PixelPtr.Pixel^.G];
-      PixelPtr.Pixel^.R := GammaLUT[PixelPtr.Pixel^.R];
+  for Y := 0 to Bitmap.Height - 1 do begin
+    for X := 0 to Bitmap.Width - 1 do begin
+      PixelPtr.Pixel^ := ApplyGammaToPixel(PixelPtr.Pixel^);
       PixelPtr.NextPixel;
     end;
     PixelPtr.NextLine;
@@ -430,15 +422,13 @@ end;
 procedure CopyGray8BitTo24bitBitmap(Dst, Src: TRasterImage);
 var
   SrcPtr, DstPtr: TPixelPointer;
-  X, Y: integer;
+  X, Y: Integer;
 begin
   //Dst.SetSize(Src.Width, Src.Height);
   SrcPtr.Init(Src);
   DstPtr.Init(Dst);
-  for Y := 0 to Src.Height - 1 do
-  begin
-    for X := 0 to Src.Width - 1 do
-    begin
+  for Y := 0 to Src.Height - 1 do begin
+    for X := 0 to Src.Width - 1 do begin
       DstPtr.Pixel^.B := SrcPtr.Pixel^.B;
       DstPtr.Pixel^.G := SrcPtr.Pixel^.B;
       DstPtr.Pixel^.R := SrcPtr.Pixel^.B;
@@ -450,16 +440,15 @@ begin
   end;
 end;
 
-function LoadGraphicFile(bmp: TBitmap; Path: string; Options: integer): boolean;
+function LoadGraphicFile(bmp: TBitmap; Path: string; Options: Integer): Boolean;
 var
-  jtex: tjpegimage;
+  jtex: TJpegImage;
   Png: TPortableNetworkGraphic;
 begin
   Result := True;
   if ExtractFileExt(Path) = '' then
     Path := Path + '.png';
-  if ExtractFileExt(Path) = '.jpg' then
-  begin
+  if ExtractFileExt(Path) = '.jpg' then begin
     jtex := tjpegimage.Create;
     try
       jtex.LoadFromFile(Path);
@@ -476,8 +465,7 @@ begin
     jtex.Free;
   end
   else
-  if ExtractFileExt(Path) = '.png' then
-  begin
+  if ExtractFileExt(Path) = '.png' then begin
     Png := TPortableNetworkGraphic.Create;
     Png.PixelFormat := Bmp.PixelFormat;
     try
@@ -502,15 +490,13 @@ begin
     Png.Free;
   end
   else
-  if ExtractFileExt(Path) = '.bmp' then
-  begin
+  if ExtractFileExt(Path) = '.bmp' then begin
     try
       bmp.LoadFromFile(Path);
     except
       Result := False;
     end;
-    if Result then
-    begin
+    if Result then begin
       if Options and gfNoGamma = 0 then
         bmp.PixelFormat := pf24bit;
     end;
@@ -518,8 +504,7 @@ begin
   else
     raise Exception.Create('Unsupported image file type ' + ExtractFileExt(Path));
 
-  if not Result then
-  begin
+  if not Result then begin
     if Options and gfNoError = 0 then
       raise Exception.Create(Format(Phrases.Lookup('FILENOTFOUND'), [Path]));
   end;
@@ -528,9 +513,9 @@ begin
     ApplyGammaToBitmap(Bmp);
 end;
 
-function LoadGraphicSet(const Name: string): integer;
+function LoadGraphicSet(const Name: string): Integer;
 var
-  I, x, y, xmax, OriginalColor: integer;
+  I, x, y, xmax, OriginalColor: Integer;
   FileName: string;
   Source: TBitmap;
   DataPixel, MaskPixel: TPixelPointer;
@@ -539,13 +524,11 @@ begin
   while (I < nGrExt) and (GrExt[i].Name <> Name) do
     Inc(I);
   Result := I;
-  if I = nGrExt then
-  begin
+  if I = nGrExt then begin
     Source := TBitmap.Create;
     Source.PixelFormat := pf24bit;
     FileName := HomeDir + 'Graphics' + DirectorySeparator + Name;
-    if not LoadGraphicFile(Source, FileName) then
-    begin
+    if not LoadGraphicFile(Source, FileName) then begin
       Result := -1;
       Exit;
     end;
@@ -567,25 +550,18 @@ begin
     GrExt[nGrExt].Mask.BeginUpdate;
     DataPixel.Init(GrExt[nGrExt].Data);
     MaskPixel.Init(GrExt[nGrExt].Mask);
-    for y := 0 to Source.Height - 1 do
-    begin
-      for x := 0 to xmax - 1 do
-      begin
+    for y := 0 to Source.Height - 1 do begin
+      for x := 0 to xmax - 1 do begin
         OriginalColor := DataPixel.Pixel^.ARGB and $FFFFFF;
         if (OriginalColor = $FF00FF) or (OriginalColor = $7F007F) then
         begin // transparent
           MaskPixel.Pixel^.ARGB := $FFFFFF;
           DataPixel.Pixel^.ARGB := DataPixel.Pixel^.ARGB and $FF000000;
         end
-        else
-        begin
+        else begin
           MaskPixel.Pixel^.ARGB := $000000; // non-transparent
           if Gamma <> 100 then
-          begin
-            DataPixel.Pixel^.B := GammaLUT[DataPixel.Pixel^.B];
-            DataPixel.Pixel^.G := GammaLUT[DataPixel.Pixel^.G];
-            DataPixel.Pixel^.R := GammaLUT[DataPixel.Pixel^.R];
-          end;
+            DataPixel.Pixel^ := ApplyGammaToPixel(DataPixel.Pixel^);
         end;
         DataPixel.NextPixel;
         MaskPixel.NextPixel;
@@ -614,10 +590,8 @@ var
 begin
   Dst.BeginUpdate;
   PixelPtr.Init(Dst, X, Y);
-  for yy := 0 to h - 1 do
-  begin
-    for xx := 0 to w - 1 do
-    begin
+  for yy := 0 to h - 1 do begin
+    for xx := 0 to w - 1 do begin
       PixelPtr.Pixel^.B := PixelPtr.Pixel^.B div 2;
       PixelPtr.Pixel^.G := PixelPtr.Pixel^.G div 2;
       PixelPtr.Pixel^.R := PixelPtr.Pixel^.R div 2;
@@ -628,25 +602,23 @@ begin
   Dst.EndUpdate;
 end;
 
-procedure ImageOp_B(dst, Src: TBitmap; xDst, yDst, xSrc, ySrc, w, h: integer);
+procedure ImageOp_B(dst, Src: TBitmap; xDst, yDst, xSrc, ySrc, w, h: Integer);
 // Src is template
 // X channel = background amp (old Dst content), 128=original brightness
 var
-  X, Y: integer;
-  Brightness, Test: integer;
+  X, Y: Integer;
+  Brightness, Test: Integer;
   PixelSrc: TPixelPointer;
   PixelDst: TPixelPointer;
 begin
   //Assert(Src.PixelFormat = pf8bit);
   Assert(dst.PixelFormat = pf24bit);
-  if xDst < 0 then
-  begin
+  if xDst < 0 then begin
     w := w + xDst;
     xSrc := xSrc - xDst;
     xDst := 0;
   end;
-  if yDst < 0 then
-  begin
+  if yDst < 0 then begin
     h := h + yDst;
     ySrc := ySrc - yDst;
     yDst := 0;
@@ -662,10 +634,8 @@ begin
   Src.BeginUpdate;
   PixelDst.Init(Dst, xDst, yDst);
   PixelSrc.Init(Src, xSrc, ySrc);
-  for Y := 0 to h - 1 do
-  begin
-    for X := 0 to w - 1 do
-    begin
+  for Y := 0 to h - 1 do begin
+    for X := 0 to w - 1 do  begin
       Brightness := PixelSrc.Pixel^.B; // One byte for 8-bit color
       test := (PixelDst.Pixel^.R * Brightness) shr 7;
       if test >= 256 then
@@ -702,14 +672,12 @@ var
   ix, iy, amp1, amp2, trans, Value: integer;
   SrcPixel, DstPixel: TPixelPointer;
 begin
-  if xDst < 0 then
-  begin
+  if xDst < 0 then begin
     w := w + xDst;
     xSrc := xSrc - xDst;
     xDst := 0;
   end;
-  if yDst < 0 then
-  begin
+  if yDst < 0 then begin
     h := h + yDst;
     ySrc := ySrc - yDst;
     yDst := 0;
@@ -725,15 +693,12 @@ begin
   dst.BeginUpdate;
   SrcPixel.Init(Src, xSrc, ySrc);
   DstPixel.Init(Dst, xDst, yDst);
-  for iy := 0 to h - 1 do
-  begin
-    for ix := 0 to w - 1 do
-    begin
+  for iy := 0 to h - 1 do begin
+    for ix := 0 to w - 1 do begin
       trans := SrcPixel.Pixel^.B * 2; // green channel = transparency
       amp1 := SrcPixel.Pixel^.G * 2;
       amp2 := SrcPixel.Pixel^.R * 2;
-      if trans <> $FF then
-      begin
+      if trans <> $FF then begin
         Value := (DstPixel.Pixel^.B * trans + ((Color2 shr 16) and $FF) *
           amp2 + ((Color1 shr 16) and $FF) * amp1) div $FF;
         if Value < 256 then
@@ -763,23 +728,21 @@ begin
   dst.EndUpdate;
 end;
 
-procedure ImageOp_CCC(bmp: TBitmap; x, y, w, h, Color0, Color1, Color2: integer);
+procedure ImageOp_CCC(bmp: TBitmap; x, y, w, h, Color0, Color1, Color2: Integer);
 // Bmp is template
 // B channel = Color0 amp, 128=original brightness
 // G channel = Color1 amp, 128=original brightness
 // R channel = Color2 amp, 128=original brightness
 var
-  i, Red, Green: integer;
+  i, Red, Green: Integer;
   PixelPtr: TPixelPointer;
 begin
   bmp.BeginUpdate;
   assert(bmp.PixelFormat = pf24bit);
   h := y + h;
   PixelPtr.Init(Bmp, x, y);
-  while y < h do
-  begin
-    for i := 0 to w - 1 do
-    begin
+  while y < h do begin
+    for i := 0 to w - 1 do begin
       Red := ((PixelPtr.Pixel^.B * (Color0 and $0000FF) + PixelPtr.Pixel^.G *
         (Color1 and $0000FF) + PixelPtr.Pixel^.R * (Color2 and $0000FF)) shr 8) and $ff;
       Green := ((PixelPtr.Pixel^.B * ((Color0 shr 8) and $0000FF) +
@@ -825,8 +788,7 @@ end;
 
 procedure SLine(ca: TCanvas; x0, x1, y: integer; cl: TColor);
 begin
-  with ca do
-  begin
+  with ca do begin
     Pen.Color := cl;
     MoveTo(x0, y);
     LineTo(x1 + 1, y);
@@ -835,8 +797,7 @@ end;
 
 procedure DLine(ca: TCanvas; x0, x1, y: integer; cl0, cl1: TColor);
 begin
-  with ca do
-  begin
+  with ca do begin
     Pen.Color := cl0;
     MoveTo(x0, y);
     LineTo(x1, y);
@@ -850,8 +811,7 @@ end;
 
 procedure Frame(ca: TCanvas; x0, y0, x1, y1: integer; cl0, cl1: TColor);
 begin
-  with ca do
-  begin
+  with ca do begin
     MoveTo(x0, y1);
     Pen.Color := cl0;
     LineTo(x0, y0);
@@ -864,8 +824,7 @@ end;
 
 procedure RFrame(ca: TCanvas; x0, y0, x1, y1: integer; cl0, cl1: TColor);
 begin
-  with ca do
-  begin
+  with ca do begin
     Pen.Color := cl0;
     MoveTo(x0, y0 + 1);
     LineTo(x0, y1);
@@ -881,8 +840,7 @@ end;
 
 procedure CFrame(ca: TCanvas; x0, y0, x1, y1, Corner: integer; cl: TColor);
 begin
-  with ca do
-  begin
+  with ca do begin
     Pen.Color := cl;
     MoveTo(x0, y0 + Corner - 1);
     LineTo(x0, y0);
@@ -902,28 +860,24 @@ end;
 procedure FrameImage(ca: TCanvas; Src: TBitmap;
   x, y, Width, Height, xSrc, ySrc: integer; IsControl: boolean = False);
 begin
-  if IsControl then
-  begin
+  if IsControl then begin
     Frame(ca, x - 1, y - 1, x + Width, y + Height, $B0B0B0, $FFFFFF);
     RFrame(ca, x - 2, y - 2, x + Width + 1, y + Height + 1, $FFFFFF, $B0B0B0);
-  end
-  else
+  end else
     Frame(ca, x - 1, y - 1, x + Width, y + Height, $000000, $000000);
   BitBlt(ca.Handle, x, y, Width, Height, Src.Canvas.Handle, xSrc, ySrc,
     SRCCOPY);
 end;
 
-procedure GlowFrame(dst: TBitmap; x0, y0, Width, Height: integer; cl: TColor);
+procedure GlowFrame(dst: TBitmap; x0, y0, Width, Height: Integer; cl: TColor);
 var
-  x, y, ch, r: integer;
+  x, y, ch, r: Integer;
   DstPtr: TPixelPointer;
 begin
   dst.BeginUpdate;
   DstPtr.Init(dst, x0, y0);
-  for y := -GlowRange + 1 to Height - 1 + GlowRange - 1 do
-  begin
-    for x := -GlowRange + 1 to Width - 1 + GlowRange - 1 do
-    begin
+  for y := -GlowRange + 1 to Height - 1 + GlowRange - 1 do begin
+    for x := -GlowRange + 1 to Width - 1 + GlowRange - 1 do begin
       DstPtr.SetXY(x, y);
       if x < 0 then
         if y < 0 then
@@ -959,29 +913,27 @@ end;
 
 procedure InitOrnament;
 var
-  x, y, p, light, shade: integer;
+  x, y, p, Light, Shade: Integer;
 begin
-  if InitOrnamentDone then
-    exit;
-  light := MainTexture.clBevelLight;
+  if InitOrnamentDone then Exit;
+  Light := MainTexture.clBevelLight;
   // and $FCFCFC shr 2*3+MainTexture.clBevelShade and $FCFCFC shr 2;
-  shade := MainTexture.clBevelShade and $FCFCFC shr 2 * 3 +
+  Shade := MainTexture.clBevelShade and $FCFCFC shr 2 * 3 +
     MainTexture.clBevelLight and $FCFCFC shr 2;
   for x := 0 to wOrna - 1 do
-    for y := 0 to hOrna - 1 do
-    begin
+    for y := 0 to hOrna - 1 do begin
       p := GrExt[HGrSystem2].Data.Canvas.Pixels[xOrna + x, yOrna + y];
       if p = $0000FF then
-        GrExt[HGrSystem2].Data.Canvas.Pixels[xOrna + x, yOrna + y] := light
+        GrExt[HGrSystem2].Data.Canvas.Pixels[xOrna + x, yOrna + y] := Light
       else if p = $FF0000 then
-        GrExt[HGrSystem2].Data.Canvas.Pixels[xOrna + x, yOrna + y] := shade;
+        GrExt[HGrSystem2].Data.Canvas.Pixels[xOrna + x, yOrna + y] := Shade;
     end;
   InitOrnamentDone := True;
 end;
 
 procedure InitCityMark(const T: TTexture);
 var
-  x, y, intensity: integer;
+  x, y, intensity: Integer;
 begin
   for x := 0 to 9 do
     for y := 0 to 9 do
@@ -998,7 +950,7 @@ begin
     GrExt[HGrSystem].Mask.Canvas.Handle, 66, 47, SRCCOPY);
 end;
 
-procedure Fill(ca: TCanvas; Left, Top, Width, Height, xOffset, yOffset: integer);
+procedure Fill(ca: TCanvas; Left, Top, Width, Height, xOffset, yOffset: Integer);
 begin
   Assert((Left + xOffset >= 0) and (Left + xOffset + Width <= wMainTexture) and
     (Top + yOffset >= 0) and (Top + yOffset + Height <= hMainTexture));
@@ -1006,45 +958,45 @@ begin
     Left + xOffset, Top + yOffset, SRCCOPY);
 end;
 
-procedure FillLarge(ca: TCanvas; x0, y0, x1, y1, xm: integer);
+procedure FillLarge(ca: TCanvas; x0, y0, x1, y1, xm: Integer);
 
-  function band(i: integer): integer;
+  function Band(I: Integer): Integer;
   var
     n: integer;
   begin
     n := ((hMainTexture div 2) div (y1 - y0)) * 2;
-    while hMainTexture div 2 + (i + 1) * (y1 - y0) > hMainTexture do
-      Dec(i, n);
-    while hMainTexture div 2 + i * (y1 - y0) < 0 do
-      Inc(i, n);
-    Result := i;
+    while hMainTexture div 2 + (I + 1) * (y1 - y0) > hMainTexture do
+      Dec(I, n);
+    while hMainTexture div 2 + I * (y1 - y0) < 0 do
+      Inc(I, n);
+    Result := I;
   end;
 
 var
-  i: integer;
+  I: Integer;
 begin
-  for i := 0 to (x1 - xm) div wMainTexture - 1 do
-    BitBlt(ca.Handle, xm + i * wMainTexture, y0, wMainTexture, y1 - y0,
-      MainTexture.Image.Canvas.Handle, 0, hMainTexture div 2 + band(i) *
+  for I := 0 to (x1 - xm) div wMainTexture - 1 do
+    BitBlt(ca.Handle, xm + I * wMainTexture, y0, wMainTexture, y1 - y0,
+      MainTexture.Image.Canvas.Handle, 0, hMainTexture div 2 + Band(I) *
       (y1 - y0), SRCCOPY);
   BitBlt(ca.Handle, xm + ((x1 - xm) div wMainTexture) * wMainTexture, y0,
     x1 - (xm + ((x1 - xm) div wMainTexture) * wMainTexture), y1 - y0,
-    MainTexture.Image.Canvas.Handle, 0, hMainTexture div 2 + band(
+    MainTexture.Image.Canvas.Handle, 0, hMainTexture div 2 + Band(
     (x1 - xm) div wMainTexture) * (y1 - y0), SRCCOPY);
-  for i := 0 to (xm - x0) div wMainTexture - 1 do
-    BitBlt(ca.Handle, xm - (i + 1) * wMainTexture, y0, wMainTexture, y1 - y0,
+  for I := 0 to (xm - x0) div wMainTexture - 1 do
+    BitBlt(ca.Handle, xm - (I + 1) * wMainTexture, y0, wMainTexture, y1 - y0,
       MainTexture.Image.Canvas.Handle, 0, hMainTexture div 2 +
-      band(-i - 1) * (y1 - y0), SRCCOPY);
+      Band(-I - 1) * (y1 - y0), SRCCOPY);
   BitBlt(ca.Handle, x0, y0, xm - ((xm - x0) div wMainTexture) *
     wMainTexture - x0, y1 - y0, MainTexture.Image.Canvas.Handle,
     ((xm - x0) div wMainTexture + 1) * wMainTexture - (xm - x0),
-    hMainTexture div 2 + band(-(xm - x0) div wMainTexture - 1) * (y1 - y0), SRCCOPY);
+    hMainTexture div 2 + Band(-(xm - x0) div wMainTexture - 1) * (y1 - y0), SRCCOPY);
 end;
 
-procedure FillSeamless(ca: TCanvas; Left, Top, Width, Height, xOffset, yOffset: integer;
+procedure FillSeamless(ca: TCanvas; Left, Top, Width, Height, xOffset, yOffset: Integer;
   const Texture: TBitmap);
 var
-  x, y, x0cut, y0cut, x1cut, y1cut: integer;
+  x, y, x0cut, y0cut, x1cut, y1cut: Integer;
 begin
   while xOffset < 0 do
     Inc(xOffset, Texture.Width);
@@ -1076,19 +1028,19 @@ begin
   end;
 end;
 
-procedure FillRectSeamless(ca: TCanvas; x0, y0, x1, y1, xOffset, yOffset: integer;
+procedure FillRectSeamless(ca: TCanvas; x0, y0, x1, y1, xOffset, yOffset: Integer;
   const Texture: TBitmap);
 begin
   FillSeamless(ca, x0, y0, x1 - x0, y1 - y0, xOffset, yOffset, Texture);
 end;
 
-procedure PaintBackground(Form: TForm; Left, Top, Width, Height: integer);
+procedure PaintBackground(Form: TForm; Left, Top, Width, Height: Integer);
 begin
   Fill(Form.Canvas, Left, Top, Width, Height, (wMainTexture - Form.ClientWidth) div
     2, (hMainTexture - Form.ClientHeight) div 2);
 end;
 
-procedure Corner(ca: TCanvas; x, y, Kind: integer; const T: TTexture);
+procedure Corner(ca: TCanvas; x, y, Kind: Integer; const T: TTexture);
 begin
   { BitBlt(ca.Handle,x,y,8,8,GrExt[T.HGr].Mask.Canvas.Handle,
     T.xGr+29+Kind*9,T.yGr+89,SRCAND);
@@ -1096,9 +1048,9 @@ begin
     T.xGr+29+Kind*9,T.yGr+89,SRCPAINT); }
 end;
 
-procedure BiColorTextOut(ca: TCanvas; clMain, clBack: TColor; x, y: integer; s: string);
+procedure BiColorTextOut(ca: TCanvas; clMain, clBack: TColor; x, y: Integer; s: string);
 
-  procedure PaintIcon(x, y, Kind: integer);
+  procedure PaintIcon(x, y, Kind: Integer);
   begin
     BitBlt(ca.Handle, x, y + 6, 10, 10, GrExt[HGrSystem].Mask.Canvas.Handle,
       66 + Kind mod 11 * 11, 115 + Kind div 11 * 11, SRCAND);
@@ -1107,9 +1059,9 @@ procedure BiColorTextOut(ca: TCanvas; clMain, clBack: TColor; x, y: integer; s: 
   end;
 
 var
-  p, xp: integer;
+  p, xp: Integer;
   sp: string;
-  shadow: boolean;
+  shadow: Boolean;
 begin
   Inc(x);
   Inc(y);
@@ -1129,7 +1081,7 @@ begin
             (sp[p + 1] in ['c', 'f', 'l', 'm', 'n', 'o', 'p', 'r', 't', 'w']) then
           begin
             ca.Textout(xp, y, sp);
-            break;
+            Break;
           end
           else
           begin
@@ -1137,62 +1089,52 @@ begin
             Inc(xp, ca.TextWidth(copy(sp, 1, p - 1)));
             if not shadow then
               case sp[p + 1] of
-                'c':
-                  PaintIcon(xp + 1, y, 6);
-                'f':
-                  PaintIcon(xp + 1, y, 0);
-                'l':
-                  PaintIcon(xp + 1, y, 8);
-                'm':
-                  PaintIcon(xp + 1, y, 17);
-                'n':
-                  PaintIcon(xp + 1, y, 7);
-                'o':
-                  PaintIcon(xp + 1, y, 16);
-                'p':
-                  PaintIcon(xp + 1, y, 2);
-                'r':
-                  PaintIcon(xp + 1, y, 12);
-                't':
-                  PaintIcon(xp + 1, y, 4);
-                'w':
-                  PaintIcon(xp + 1, y, 13);
+                'c': PaintIcon(xp + 1, y, 6);
+                'f': PaintIcon(xp + 1, y, 0);
+                'l': PaintIcon(xp + 1, y, 8);
+                'm': PaintIcon(xp + 1, y, 17);
+                'n': PaintIcon(xp + 1, y, 7);
+                'o': PaintIcon(xp + 1, y, 16);
+                'p': PaintIcon(xp + 1, y, 2);
+                'r': PaintIcon(xp + 1, y, 12);
+                't': PaintIcon(xp + 1, y, 4);
+                'w': PaintIcon(xp + 1, y, 13);
               end;
             Inc(xp, 10);
             Delete(sp, 1, p + 1);
-          end
+          end;
         until False;
         Dec(x);
         Dec(y);
       end;
 end;
 
-function BiColorTextWidth(ca: TCanvas; s: string): integer;
+function BiColorTextWidth(ca: TCanvas; s: string): Integer;
 var
-  p: integer;
+  P: Integer;
 begin
   Result := 1;
   repeat
-    p := pos('%', s);
-    if (p = 0) or (p = Length(s)) then
+    P := Pos('%', s);
+    if (P = 0) or (P = Length(s)) then
     begin
       Inc(Result, ca.TextWidth(s));
-      break;
+      Break;
     end
     else
     begin
-      if not (s[p + 1] in ['c', 'f', 'l', 'm', 'n', 'o', 'p', 'r', 't', 'w'])
+      if not (s[P + 1] in ['c', 'f', 'l', 'm', 'n', 'o', 'p', 'r', 't', 'w'])
       then
-        Inc(Result, ca.TextWidth(copy(s, 1, p + 1)))
+        Inc(Result, ca.TextWidth(copy(s, 1, P + 1)))
       else
-        Inc(Result, ca.TextWidth(copy(s, 1, p - 1)) + 10);
-      Delete(s, 1, p + 1);
-    end
+        Inc(Result, ca.TextWidth(copy(s, 1, P - 1)) + 10);
+      Delete(s, 1, P + 1);
+    end;
   until False;
 end;
 
 procedure LoweredTextOut(ca: TCanvas; cl: TColor; const T: TTexture;
-  x, y: integer; s: string);
+  x, y: Integer; s: string);
 begin
   if cl = -2 then
     BiColorTextOut(ca, (T.clBevelShade and $FEFEFE) shr 1,
@@ -1208,10 +1150,10 @@ begin
   BiColorTextOut(ca, $FFFFFF, $000000, x, y, s);
 end;
 
-procedure Gradient(ca: TCanvas; x, y, dx, dy, Width, Height, Color: integer;
+procedure Gradient(ca: TCanvas; x, y, dx, dy, Width, Height, Color: Integer;
   Brightness: array of integer);
 var
-  i, r, g, b: integer;
+  i, r, g, b: Integer;
 begin
   begin
     for i := 0 to 15 do
@@ -1242,7 +1184,7 @@ begin
   end;
 end;
 
-procedure LightGradient(ca: TCanvas; x, y, Width, Color: integer);
+procedure LightGradient(ca: TCanvas; x, y, Width, Color: Integer);
 const
   Brightness: array [0 .. 15] of integer =
     (16, 12, 8, 4, 0, -4, -8, -12, -16, -20, -24, -28, -32, -36, -40, -44);
@@ -1250,7 +1192,7 @@ begin
   Gradient(ca, x, y, 0, 1, Width, 0, Color, Brightness);
 end;
 
-procedure DarkGradient(ca: TCanvas; x, y, Width, Kind: integer);
+procedure DarkGradient(ca: TCanvas; x, y, Width, Kind: Integer);
 const
   Brightness: array [0 .. 15] of integer =
     (16, 12, 8, 4, 0, -4, -8, -12 - 24, -16 + 16, -20, -24, -28, -32, -36, -40, -44);
@@ -1259,7 +1201,7 @@ begin
     [187, 137 + Kind], Brightness);
 end;
 
-procedure VLightGradient(ca: TCanvas; x, y, Height, Color: integer);
+procedure VLightGradient(ca: TCanvas; x, y, Height, Color: Integer);
 const
   Brightness: array [0 .. 15] of integer =
     (16, 12, 8, 4, 0, -4, -8, -12, -16, -20, -24, -28, -32, -36, -40, -44);
@@ -1267,7 +1209,7 @@ begin
   Gradient(ca, x, y, 1, 0, 0, Height, Color, Brightness);
 end;
 
-procedure VDarkGradient(ca: TCanvas; x, y, Height, Kind: integer);
+procedure VDarkGradient(ca: TCanvas; x, y, Height, Kind: Integer);
 const
   Brightness: array [0 .. 15] of integer =
     (16, 12, 8, 4, 0, -4, -8, -12 - 24, -16 + 16, -20, -24, -28, -32, -36, -40, -44);
@@ -1277,7 +1219,7 @@ begin
 end;
 
 procedure NumberBar(dst: TBitmap; x, y: integer; Cap: string;
-  val: integer; const T: TTexture);
+  val: Integer; const T: TTexture);
 var
   s: string;
 begin
@@ -1292,16 +1234,16 @@ begin
   end;
 end;
 
-procedure CountBar(dst: TBitmap; x, y, w: integer; Kind: integer;
-  Cap: string; val: integer; const T: TTexture);
+procedure CountBar(dst: TBitmap; x, y, w: Integer; Kind: Integer;
+  Cap: string; val: Integer; const T: TTexture);
 var
-  i, sd, ld, cl, xIcon, yIcon: integer;
+  i, sd, ld, cl, xIcon, yIcon: Integer;
   s: string;
 begin
   // val:=random(40); //!!!
   if val = 0 then
-    exit;
-  assert(Kind >= 0);
+    Exit;
+  Assert(Kind >= 0);
   with dst.Canvas do
   begin
     // xIcon:=x+100;
@@ -1386,12 +1328,12 @@ begin
       end;
     end;
   end;
-end; // CountBar
+end;
 
-procedure PaintProgressBar(ca: TCanvas; Kind, x, y, pos, Growth, max: integer;
+procedure PaintProgressBar(ca: TCanvas; Kind, x, y, pos, Growth, max: Integer;
   const T: TTexture);
 var
-  i: integer;
+  i: Integer;
 begin
   if pos > max then
     pos := max;
@@ -1442,7 +1384,7 @@ end;
 
 // pos and growth are relative to max, set size independent
 procedure PaintRelativeProgressBar(ca: TCanvas;
-  Kind, x, y, size, pos, Growth, max: integer; IndicateComplete: boolean;
+  Kind, x, y, size, pos, Growth, max: Integer; IndicateComplete: Boolean;
   const T: TTexture);
 begin
   if Growth > 0 then
@@ -1455,7 +1397,7 @@ begin
     Sprite(ca, HGrSystem, x + size - 10, y - 7, 23, 16, 1, 129);
 end;
 
-procedure PaintLogo(ca: TCanvas; x, y, clLight, clShade: integer);
+procedure PaintLogo(ca: TCanvas; x, y, clLight, clShade: Integer);
 begin
   BitBltCanvas(LogoBuffer.Canvas, 0, 0, wLogo, hLogo, ca, x,
     y, SRCCOPY);
@@ -1465,11 +1407,10 @@ begin
     0, SRCCOPY);
 end;
 
-function SetMainTextureByAge(Age: integer): boolean;
+function SetMainTextureByAge(Age: Integer): Boolean;
 begin
   if Age <> MainTextureAge then
-    with MainTexture do
-    begin
+    with MainTexture do begin
       MainTextureAge := Age;
       LoadGraphicFile(Image, HomeDir + 'Graphics' + DirectorySeparator +
         'Texture' + IntToStr(Age + 1) + '.jpg');
@@ -1500,18 +1441,18 @@ begin
   Pixel := Pointer(Pixel) + BytesPerPixel;
 end;
 
-procedure TPixelPointer.SetXY(X, Y: integer); inline;
+procedure TPixelPointer.SetXY(X, Y: Integer); inline;
 begin
   Line := Pointer(Base) + Y * BytesPerLine;
   SetX(X);
 end;
 
-procedure TPixelPointer.SetX(X: integer); inline;
+procedure TPixelPointer.SetX(X: Integer); inline;
 begin
   Pixel := Pointer(Line) + X * BytesPerPixel;
 end;
 
-procedure TPixelPointer.Init(Bitmap: TRasterImage; BaseX: integer = 0;
+procedure TPixelPointer.Init(Bitmap: TRasterImage; BaseX: Integer = 0;
   BaseY: integer = 0); inline;
 begin
   BytesPerLine := Bitmap.RawImage.Description.BytesPerLine;
@@ -1568,12 +1509,10 @@ begin
   AssignFile(FontScript, LocalizedFilePath('Fonts.txt'));
   try
     Reset(fontscript);
-    while not EOF(FontScript) do
-    begin
+    while not EOF(FontScript) do begin
       ReadLn(FontScript, s);
       if s <> '' then
-        if s[1] = '#' then
-        begin
+        if s[1] = '#' then begin
           s := TrimRight(s);
           if s = '#SMALL' then
             Section := ftSmall
@@ -1585,12 +1524,9 @@ begin
             Section := ftButton
           else
             Section := ftNormal;
-        end
-        else
-        begin
+        end else begin
           p := Pos(',', s);
-          if p > 0 then
-          begin
+          if p > 0 then begin
             UniFont[section].Name := Trim(Copy(s, 1, p - 1));
             Size := 0;
             for i := p + 1 to Length(s) do
@@ -1621,10 +1557,21 @@ begin
     FreeAndNil(UniFont[section]);
 end;
 
+procedure InitGammaLookupTable;
+var
+  I: Integer;
+  P: Integer;
+begin
+  GammaLookupTable[0] := 0;
+  for I := 1 to 255 do begin
+    P := Round(255.0 * Exp(Ln(I / 255.0) * 100.0 / Gamma));
+    Assert((P >= 0) and (P < 256));
+    GammaLookupTable[I] := P;
+  end;
+end;
+
 procedure UnitInit;
 var
-  I: integer;
-  P: integer;
   Reg: TRegistry;
 begin
   Reg := TRegistry.Create;
@@ -1646,16 +1593,7 @@ begin
       Free;
     end;
 
-  if Gamma <> 100 then
-  begin
-    GammaLUT[0] := 0;
-    for i := 1 to 255 do
-    begin
-      p := Round(255.0 * exp(ln(i / 255.0) * 100.0 / Gamma));
-      Assert((p >= 0) and (p < 256));
-      GammaLUT[i] := p;
-    end;
-  end;
+  if Gamma <> 100 then InitGammaLookupTable;
 
   {$IFDEF WINDOWS}
   EnumDisplaySettings(nil, $FFFFFFFF, StartResolution);
@@ -1709,8 +1647,7 @@ begin
     end;
 
   RestoreResolution;
-  for I := 0 to nGrExt - 1 do
-  begin
+  for I := 0 to nGrExt - 1 do begin
     GrExt[I].Data.Free;
     GrExt[I].Mask.Free;
     FreeMem(GrExt[I]);
@@ -1729,14 +1666,5 @@ begin
   FreeAndNil(Colors);
   FreeAndNil(MainTexture.Image);
 end;
-
-
-initialization
-
-  //UnitInit;
-
-finalization
-
-  //UnitDone;
 
 end.
