@@ -88,7 +88,7 @@
     <RequiredPackages Count="2">
       <Item1>
         <PackageName Value="CevoComponents"/>
-        <DefaultFilename Value="Components\CevoComponents.lpk" Prefer="True"/>
+        <DefaultFilename Value="Packages\CevoComponents\CevoComponents.lpk" Prefer="True"/>
       </Item1>
       <Item2>
         <PackageName Value="LCL"/>
