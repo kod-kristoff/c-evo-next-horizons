@@ -29,7 +29,7 @@ implementation
 
 procedure Register;
 begin
-  RegisterComponents('Samples', [TButtonB]);
+  RegisterComponents('C-evo', [TButtonB]);
 end;
 
 constructor TButtonB.Create(aOwner: TComponent);

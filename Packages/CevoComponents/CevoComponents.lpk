@@ -34,6 +34,8 @@
         </CompilerMessages>
       </Other>
     </CompilerOptions>
+    <Description Value="C-evo components"/>
+    <Version Major="1" Minor="2"/>
     <Files Count="12">
       <Item1>
         <Filename Value="Area.pas"/>

@@ -19,7 +19,7 @@ implementation
 
 procedure Register;
 begin
-  RegisterComponents('Samples', [TArea]);
+  RegisterComponents('C-evo', [TArea]);
 end;
 
 constructor TArea.Create(AOwner: TComponent);

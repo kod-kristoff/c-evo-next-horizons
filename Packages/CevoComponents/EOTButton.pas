@@ -40,7 +40,7 @@ implementation
 
 procedure Register;
 begin
-  RegisterComponents('Samples', [TEOTButton]);
+  RegisterComponents('C-evo', [TEOTButton]);
 end;
 
 procedure ImageOp_CBC(Dst, Src: TBitmap; xDst, yDst, xSrc, ySrc, w, h, Color0,

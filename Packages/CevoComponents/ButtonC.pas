@@ -26,7 +26,7 @@ implementation
 
 procedure Register;
 begin
-  RegisterComponents('Samples', [TButtonC]);
+  RegisterComponents('C-evo', [TButtonC]);
 end;
 
 constructor TButtonC.Create(aOwner: TComponent);
