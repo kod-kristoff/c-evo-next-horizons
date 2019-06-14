@@ -941,3 +941,6 @@ Hurry\Research
 Maximize\Growth
 Hurry\Production
 Maximize\Production
+
+#SETTINGS
+Full screen

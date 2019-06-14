@@ -959,3 +959,6 @@ beschleunigte\Forschung
 maximales\Wachstum
 beschleunigte\Produktion
 maximale\Produktion
+
+#SETTINGS
+Full screen

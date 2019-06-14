@@ -941,3 +941,6 @@ Uspíšit\výzkum
 Maximální\růst
 Uspíšit\produkci
 Maximální\produkce
+
+#SETTINGS
+Celá obrazovka

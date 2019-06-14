@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  ScreenTools, Messg, ButtonA, Registry, fgl, Directories, DrawDlg;
+  ScreenTools, Messg, ButtonA, Registry, fgl, Directories, DrawDlg, ButtonC;
 
 type
   TLanguage = class
@@ -26,9 +26,11 @@ type
   { TLocaleDlg }
 
   TLocaleDlg = class(TDrawDlg)
+    ButtonFullscreen: TButtonC;
     List: TListBox;
     OKBtn: TButtonA;
     CancelBtn: TButtonA;
+    procedure ButtonFullscreenClick(Sender: TObject);
     procedure CancelBtnClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -100,11 +102,21 @@ begin
   CancelBtn.Caption := Phrases.Lookup('BTN_CANCEL');
   OkBtn.Graphic := GrExt[HGrSystem].Data;
   CancelBtn.Graphic := GrExt[HGrSystem].Data;
+
+  ButtonFullscreen.Graphic := GrExt[HGrSystem].Data;
+  if FullScreen then ButtonFullscreen.ButtonIndex := 3
+    else ButtonFullscreen.ButtonIndex := 2;
 end;
 
 procedure TLocaleDlg.CancelBtnClick(Sender: TObject);
 begin
   ModalResult := mrOk;
+end;
+
+procedure TLocaleDlg.ButtonFullscreenClick(Sender: TObject);
+begin
+  FullScreen := not FullScreen;
+  ButtonFullscreen.ButtonIndex := ButtonFullscreen.ButtonIndex xor 1;
 end;
 
 procedure TLocaleDlg.FormDestroy(Sender: TObject);
@@ -113,6 +125,9 @@ begin
 end;
 
 procedure TLocaleDlg.FormPaint(Sender: TObject);
+var
+  S: string;
+  W: Integer;
 begin
   PaintBackground(self, 3, 3, ClientWidth - 6, ClientHeight - 6);
   Frame(Canvas, 0, 0, ClientWidth - 1, ClientHeight - 1, 0, 0);
@@ -123,6 +138,14 @@ begin
   EditFrame(Canvas, List.BoundsRect, MainTexture);
   BtnFrame(Canvas, OKBtn.BoundsRect, MainTexture);
   BtnFrame(Canvas, CancelBtn.BoundsRect, MainTexture);
+
+  RFrame(Canvas, ButtonFullscreen.Left - 1, ButtonFullscreen.Top - 1,
+    ButtonFullscreen.Left + 12, ButtonFullscreen.Top + 12, MainTexture.clBevelShade,
+    MainTexture.clBevelLight);
+
+  s := Phrases.Lookup('SETTINGS', 0);
+  LoweredTextOut(Canvas, -2, MainTexture, ButtonFullscreen.Left + 32,
+    ButtonFullscreen.Top - 4, s);
 end;
 
 procedure TLocaleDlg.FormShow(Sender: TObject);

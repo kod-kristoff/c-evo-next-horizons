@@ -931,3 +931,6 @@ Favorisci\ricerca
 Massimizza\crescita
 Favorisci\produzione
 Massimizza\produzione
+
+#SETTINGS
+Full screen

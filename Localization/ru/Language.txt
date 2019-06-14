@@ -967,3 +967,5 @@ Recycling
 Быстро\Производить
 Максимум\Производства
 
+#SETTINGS
+Full screen

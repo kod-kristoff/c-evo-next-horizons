@@ -206,7 +206,7 @@ var
   HGrSystem, HGrSystem2, ClickFrameColor, SoundMode, MainTextureAge: integer;
   MainTexture: TTexture;
   Templates, Colors, Paper, BigImp, LogoBuffer: TBitmap;
-  FullScreen, GenerateNames, InitOrnamentDone, Phrases2FallenBackToEnglish: boolean;
+  FullScreen, GenerateNames, InitOrnamentDone, Phrases2FallenBackToEnglish: Boolean;
 
   UniFont: array [TFontType] of TFont;
   AppRegistryKey: string = '\SOFTWARE\C-evo';
@@ -1642,6 +1642,8 @@ begin
       OpenKey(AppRegistryKey, True);
       WriteString('Locale', LocaleCode);
       WriteInteger('Gamma', Gamma);
+      if FullScreen then WriteInteger('ScreenMode', 1)
+        else WriteInteger('ScreenMode', 0);
     finally
       Free;
     end;

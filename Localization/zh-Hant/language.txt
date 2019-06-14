@@ -959,3 +959,5 @@ AI測試地圖
 生產优先
 生產最大化
 
+#SETTINGS
+Full screen
