@@ -15,12 +15,21 @@ type
   public
     constructor Create(AOwner: TComponent); override;
     procedure SmartInvalidate; virtual;
+  private
+    MoveFormPos: TPoint;
+    MoveMousePos: TPoint;
+    MoveActive: Boolean;
   protected
-    TitleHeight: integer;
+    TitleHeight: Integer;
     // defines area to grip the window for moving (from top)
     procedure InitButtons;
     procedure OnEraseBkgnd(var m: TMessage); message WM_ERASEBKGND;
     procedure OnHitTest(var Msg: TMessage); message WM_NCHITTEST;
+    procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+      override;
+    procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
+    procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
+    procedure MouseLeave; override;
   end;
 
   { TBaseMessgDlg }
@@ -95,6 +104,50 @@ begin
       Msg.Result := HTCAPTION
     end;
   end;
+end;
+
+procedure TDrawDlg.MouseDown(Button: TMouseButton; Shift: TShiftState; X,
+  Y: Integer);
+var
+  MousePosNew: TPoint;
+begin
+  inherited;
+  {$IFDEF LINUX}
+  // HitTest is not supported under Linux GTK2 so use form inside move mechanizm
+  MoveMousePos := ClientToScreen(Point(X, Y));
+  MoveFormPos := Point(Left, Top);
+  MousePosNew := Mouse.CursorPos;
+  // Activate move only if mouse position was not changed during inherited call
+  if (MousePosNew.X = MoveMousePos.X) and (MousePosNew.Y = MoveMousePos.Y) then begin
+    MoveActive := True;
+  end;
+  {$ENDIF}
+end;
+
+procedure TDrawDlg.MouseMove(Shift: TShiftState; X, Y: Integer);
+var
+  MousePos: TPoint;
+begin
+  inherited;
+  if MoveActive then begin
+    MousePos := ClientToScreen(Point(X, Y));
+    SetBounds(MoveFormPos.X + MousePos.X - MoveMousePos.X,
+      MoveFormPos.Y + MousePos.Y - MoveMousePos.Y,
+      Width, Height);
+  end;
+end;
+
+procedure TDrawDlg.MouseUp(Button: TMouseButton; Shift: TShiftState; X,
+  Y: Integer);
+begin
+  MoveActive := False;
+  inherited;
+end;
+
+procedure TDrawDlg.MouseLeave;
+begin
+  MoveActive := False;
+  inherited;
 end;
 
 procedure TDrawDlg.InitButtons;
