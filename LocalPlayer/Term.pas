@@ -3407,6 +3407,7 @@ var
   Reg: TRegistry;
   i, j: integer;
 begin
+  MainFormKeyDown := FormKeyDown;
   BaseWin.CreateOffscreen(Offscreen);
 
    // define which menu settings to save
@@ -3535,16 +3536,17 @@ end;
 
 procedure TMainScreen.FormDestroy(Sender: TObject);
 var
-  i: integer;
+  I: Integer;
 begin
+  MainFormKeyDown := nil;
   FreeAndNil(sb);
   FreeAndNil(TopBar);
   FreeAndNil(Mini);
   FreeAndNil(Buffer);
   FreeAndNil(Panel);
-  for i := 0 to nPl - 1 do
+  for I := 0 to nPl - 1 do
     if AILogo[i] <> nil then
-      FreeAndNil(AILogo[i]);
+      FreeAndNil(AILogo[I]);
   FreeAndNil(Offscreen);
 end;
 

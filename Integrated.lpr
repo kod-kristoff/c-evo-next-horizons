@@ -23,7 +23,6 @@ uses
   IsoEngine in 'LocalPlayer\IsoEngine.pas',
   Term in 'LocalPlayer\Term.pas' {MainScreen} ,
   MessgEx in 'LocalPlayer\MessgEx.pas' {MessgExDlg} ,
-  BaseWin in 'LocalPlayer\BaseWin.pas',
   Help in 'LocalPlayer\Help.pas' {HelpDlg} ,
   Select in 'LocalPlayer\Select.pas' {ListDlg} ,
   CityScreen in 'LocalPlayer\CityScreen.pas' {CityDlg} ,

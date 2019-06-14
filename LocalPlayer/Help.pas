@@ -88,6 +88,7 @@ type
     procedure ScrollBarUpdate(Sender: TObject);
     procedure line(ca: TCanvas; i: integer; lit: boolean);
     procedure Prepare(sbPos: integer = 0);
+    procedure ShowNewContentProcExecute(NewMode: Integer; HelpContext: string);
     procedure WaterSign(x0, y0, iix: integer);
     procedure Search(SearchString: string);
     procedure OnScroll(var m: TMessage); message WM_VSCROLL;
@@ -233,6 +234,14 @@ begin
   TerrIcon.Canvas.FillRect(0, 0, TerrIcon.Width, TerrIcon.Height);
   SearchContent := '';
   nHist := -1;
+  ShowNewContentProc := ShowNewContentProcExecute;
+end;
+
+procedure THelpDlg.ShowNewContentProcExecute(NewMode: Integer;
+  HelpContext: string);
+begin
+  HelpDlg.ShowNewContent(NewMode, hkText,
+    HelpDlg.TextIndex(HelpContext))
 end;
 
 procedure THelpDlg.ClearHistory;
@@ -242,6 +251,7 @@ end;
 
 procedure THelpDlg.FormDestroy(Sender: TObject);
 begin
+  ShowNewContentProc := nil;
   FreeAndNil(sb);
   FreeAndNil(MainText);
   FreeAndNil(SearchResult);

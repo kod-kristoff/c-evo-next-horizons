@@ -36,7 +36,7 @@
     </CompilerOptions>
     <Description Value="C-evo components"/>
     <Version Major="1" Minor="2"/>
-    <Files Count="12">
+    <Files Count="13">
       <Item1>
         <Filename Value="Area.pas"/>
         <HasRegisterProc Value="True"/>
@@ -92,6 +92,10 @@
         <Filename Value="Sound.pas"/>
         <UnitName Value="Sound"/>
       </Item12>
+      <Item13>
+        <Filename Value="BaseWin.pas"/>
+        <HasRegisterProc Value="True"/>
+      </Item13>
     </Files>
     <RequiredPkgs Count="2">
       <Item1>

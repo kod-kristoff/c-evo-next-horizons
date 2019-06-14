@@ -1,4 +1,3 @@
-{$INCLUDE Switches.inc}
 unit BaseWin;
 
 interface
@@ -8,6 +7,7 @@ uses
   DrawDlg;
 
 type
+  TShowNewContent = procedure (NewMode: Integer; HelpContext: string) of object;
 
   { TBufferedDrawDlg }
 
@@ -49,6 +49,10 @@ type
     procedure FillOffscreen(Left, Top, Width, Height: integer);
   end;
 
+var
+  ShowNewContentProc: TShowNewContent;
+  MainFormKeyDown: TKeyEvent;
+
 const
   // window modes
   wmNone = 0;
@@ -62,11 +66,20 @@ const
   SideFrame = 9;
 
 procedure CreateOffscreen(var Offscreen: TBitmap);
+procedure Register;
+
 
 implementation
 
 uses
-  Term, Help, ButtonBase, Area;
+  ButtonBase, Area;
+
+procedure Register;
+begin
+  RegisterNoIcon([TBufferedDrawDlg]);
+  RegisterNoIcon([TFramedDlg]);
+end;
+
 
 constructor TBufferedDrawDlg.Create(AOwner: TComponent);
 begin
@@ -121,11 +134,13 @@ begin
     if fsModal in FormState then
       ModalResult := mrOK
   end
-  else if Key = VK_F1 then
-    HelpDlg.ShowNewContent(FWindowMode or wmPersistent, hkText,
-      HelpDlg.TextIndex(HelpContext))
-  else if FWindowMode = wmPersistent then
-    MainScreen.FormKeyDown(Sender, Key, Shift);
+  else if Key = VK_F1 then begin
+    if Assigned(ShowNewContentProc) then
+      ShowNewContentProc(FWindowMode or wmPersistent, HelpContext);
+  end else if FWindowMode = wmPersistent then begin
+    if Assigned(MainFormKeyDown) then
+      MainFormKeyDown(Sender, Key, Shift);
+  end;
 end;
 
 procedure TBufferedDrawDlg.FormDeactivate(Sender: TObject);
@@ -487,6 +502,9 @@ begin
 end;
 
 initialization
+
+ShowNewContentProc := nil;
+MainFormKeyDown := nil;
 
 finalization
 

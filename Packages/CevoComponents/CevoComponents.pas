@@ -9,7 +9,7 @@ interface
 
 uses
   Area, ButtonA, ButtonB, ButtonC, ButtonN, EOTButton, ButtonBase, DrawDlg, 
-  Sound, LazarusPackageIntf;
+  Sound, BaseWin, LazarusPackageIntf;
 
 implementation
 
@@ -22,6 +22,7 @@ begin
   RegisterUnit('ButtonN', @ButtonN.Register);
   RegisterUnit('EOTButton', @EOTButton.Register);
   RegisterUnit('DrawDlg', @DrawDlg.Register);
+  RegisterUnit('BaseWin', @BaseWin.Register);
 end;
 
 initialization
