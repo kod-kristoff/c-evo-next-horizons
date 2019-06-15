@@ -106,7 +106,7 @@ var
 implementation
 
 uses
-  Directories, ClientTools, Term, Tribes, Inp, Messg;
+  Directories, ClientTools, Term, Tribes, Inp, Messg, PixelPointer;
 
 {$R *.lfm}
 

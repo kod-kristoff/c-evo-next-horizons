@@ -462,7 +462,7 @@ implementation
 
 uses
   Directories, IsoEngine, CityScreen, Draft, MessgEx, Select, CityType, Help,
-  UnitStat, Log, Diagram, NatStat, Wonders, Enhance, Nego,
+  UnitStat, Log, Diagram, NatStat, Wonders, Enhance, Nego, PixelPointer,
   Battle, Rates, TechTree, Registry;
 
 {$R *.lfm}

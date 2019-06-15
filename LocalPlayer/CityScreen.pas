@@ -89,7 +89,7 @@ var
 implementation
 
 uses
-  Select, Messg, MessgEx, Help, Tribes, Directories, Math;
+  Select, Messg, MessgEx, Help, Tribes, Directories, Math, PixelPointer;
 
 {$R *.lfm}
 

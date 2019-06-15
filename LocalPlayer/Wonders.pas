@@ -37,7 +37,7 @@ var
 implementation
 
 uses
-  Term, ClientTools, Help, Tribes;
+  Term, ClientTools, Help, Tribes, PixelPointer;
 
 {$R *.lfm}
 

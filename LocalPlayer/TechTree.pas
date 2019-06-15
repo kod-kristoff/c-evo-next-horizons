@@ -29,10 +29,11 @@ type
 var
   TechTreeDlg: TTechTreeDlg;
 
+
 implementation
 
 uses
-  Directories;
+  Directories, PixelPointer;
 
 {$R *.lfm}
 

@@ -6,7 +6,7 @@ interface
 uses
   Protocol, ClientTools, ScreenTools, Tribes,
 {$IFNDEF SCR}Term, {$ENDIF}
-  LCLIntf, LCLType, SysUtils, Classes, Graphics;
+  LCLIntf, LCLType, SysUtils, Classes, Graphics, PixelPointer;
 
 type
   TInitEnemyModelEvent = function(emix: integer): boolean;

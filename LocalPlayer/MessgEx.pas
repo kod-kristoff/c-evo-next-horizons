@@ -72,7 +72,7 @@ procedure ContextMessage(SimpleText, SoundItem: string;
 implementation
 
 uses
-  ClientTools, BaseWin, Term, Help, UnitStat, Tribes,
+  ClientTools, BaseWin, Term, Help, UnitStat, Tribes, PixelPointer,
   IsoEngine, Diagram;
 
 {$R *.lfm}

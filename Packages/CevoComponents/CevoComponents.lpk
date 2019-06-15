@@ -36,7 +36,7 @@
     </CompilerOptions>
     <Description Value="C-evo components"/>
     <Version Major="1" Minor="2"/>
-    <Files Count="13">
+    <Files Count="14">
       <Item1>
         <Filename Value="Area.pas"/>
         <HasRegisterProc Value="True"/>
@@ -95,7 +95,12 @@
       <Item13>
         <Filename Value="BaseWin.pas"/>
         <HasRegisterProc Value="True"/>
+        <UnitName Value="BaseWin"/>
       </Item13>
+      <Item14>
+        <Filename Value="PixelPointer.pas"/>
+        <UnitName Value="PixelPointer"/>
+      </Item14>
     </Files>
     <RequiredPkgs Count="2">
       <Item1>

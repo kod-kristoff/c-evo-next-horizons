@@ -16,34 +16,6 @@ type
     clPage, clCover: TColor;
   end;
 
-  TColor32 = type cardinal;
-  TColor32Component = (ccBlue, ccGreen, ccRed, ccAlpha);
-  TPixel32 = packed record
-    case integer of
-      0: (B, G, R, A: byte);
-      1: (ARGB: TColor32);
-      2: (Planes: array[0..3] of byte);
-      3: (Components: array[TColor32Component] of byte);
-  end;
-  PPixel32 = ^TPixel32;
-
-  { TPixelPointer }
-
-  TPixelPointer = record
-    Base: PPixel32;
-    Pixel: PPixel32;
-    Line: PPixel32;
-    RelLine: PPixel32;
-    BytesPerPixel: integer;
-    BytesPerLine: integer;
-    procedure NextLine; inline; // Move pointer to start of new base line
-    procedure NextPixel; inline; // Move pointer to next pixel
-    procedure SetXY(X, Y: integer); inline; // Set pixel position relative to base
-    procedure SetX(X: integer); inline; // Set horizontal pixel position relative to base
-    procedure Init(Bitmap: TRasterImage; BaseX: integer = 0; BaseY: integer = 0); inline;
-  end;
-  PPixelPointer = ^TPixelPointer;
-
 {$IFDEF WINDOWS}
 function ChangeResolution(x, y, bpp, freq: integer): boolean;
 {$ENDIF}
@@ -217,7 +189,7 @@ procedure UnitDone;
 implementation
 
 uses
-  Directories, Sound, Registry;
+  Directories, Sound, Registry, PixelPointer;
 
 var
   {$IFDEF WINDOWS}
@@ -1426,39 +1398,6 @@ begin
     end
   else
     Result := False;
-end;
-
-{ TPixelPointer }
-
-procedure TPixelPointer.NextLine; inline;
-begin
-  Line := Pointer(Line) + BytesPerLine;
-  Pixel := Line;
-end;
-
-procedure TPixelPointer.NextPixel; inline;
-begin
-  Pixel := Pointer(Pixel) + BytesPerPixel;
-end;
-
-procedure TPixelPointer.SetXY(X, Y: Integer); inline;
-begin
-  Line := Pointer(Base) + Y * BytesPerLine;
-  SetX(X);
-end;
-
-procedure TPixelPointer.SetX(X: Integer); inline;
-begin
-  Pixel := Pointer(Line) + X * BytesPerPixel;
-end;
-
-procedure TPixelPointer.Init(Bitmap: TRasterImage; BaseX: Integer = 0;
-  BaseY: integer = 0); inline;
-begin
-  BytesPerLine := Bitmap.RawImage.Description.BytesPerLine;
-  BytesPerPixel := Bitmap.RawImage.Description.BitsPerPixel shr 3;
-  Base := PPixel32(Bitmap.RawImage.Data + BaseX * BytesPerPixel + BaseY * BytesPerLine);
-  SetXY(0, 0);
 end;
 
 procedure LoadPhrases;

@@ -154,7 +154,7 @@ var
 implementation
 
 uses
-  Directories, Direct, ScreenTools, Inp, Back, Locale;
+  Directories, Direct, ScreenTools, Inp, Back, Locale, PixelPointer;
 
 {$R *.lfm}
 
