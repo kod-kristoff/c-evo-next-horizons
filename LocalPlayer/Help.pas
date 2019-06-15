@@ -1405,6 +1405,7 @@ begin { Prepare }
         begin // complete advance list
           Caption := HelpText.Lookup('HELPTITLE_TECHLIST');
           List := THyperText.Create;
+          List.OwnsObjects := True;
           for j := 0 to 3 do
           begin
             if j > 0 then
@@ -1521,6 +1522,7 @@ begin { Prepare }
           Caption := HelpText.Lookup('HELPTITLE_IMPLIST');
           // AddLine(HelpText.Lookup('HELPTITLE_IMPLIST'),pkSection);
           List := THyperText.Create;
+          List.OwnsObjects := True;
           for i := 28 to nImp - 1 do
             if (i <> imTrGoods) and (Imp[i].Preq <> preNA) and
               (Imp[i].Kind = ikCommon) then
@@ -1787,6 +1789,7 @@ begin { Prepare }
         begin // complete feature list
           Caption := HelpText.Lookup('HELPTITLE_FEATURELIST');
           List := THyperText.Create;
+          List.OwnsObjects := True;
           for Special := 0 to 2 do
           begin
             if Special > 0 then
