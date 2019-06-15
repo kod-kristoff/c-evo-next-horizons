@@ -42,8 +42,14 @@ type
     procedure FormCreate(Sender: TObject);
     procedure SmartInvalidate; override;
   protected
-    CaptionLeft, CaptionRight, InnerWidth, InnerHeight: integer;
-    WideBottom, FullCaption, TexOverride, ModalIndication: boolean;
+    CaptionLeft: Integer;
+    CaptionRight: Integer;
+    InnerWidth: Integer;
+    InnerHeight: integer;
+    WideBottom: Boolean;
+    FullCaption: Boolean;
+    TexOverride: Boolean;
+    ModalIndication: Boolean;
     procedure InitWindowRegion;
     procedure VPaint; override;
     procedure FillOffscreen(Left, Top, Width, Height: integer);

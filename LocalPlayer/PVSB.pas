@@ -108,7 +108,7 @@ var
 begin
     if Max < ScrollBar.PageSize then Result := False
     else begin
-      NewPos := ScrollBar.Position - Delta div 300;
+      NewPos := ScrollBar.Position - Delta div 30;
       if NewPos < 0 then NewPos := 0;
       if NewPos > Max - ScrollBar.PageSize + 1 then
         NewPos := Max - ScrollBar.PageSize + 1;
