@@ -3,12 +3,15 @@ unit Directories;
 interface
 
 var
-  HomeDir, DataDir: string;
+  HomeDir: string;
+  DataDir: string;
   LocaleCode: string = '';
   LocaleCodeAuto: string = '';
 
 function LocalizedFilePath(const Path: string): string;
 procedure InitUnit;
+function GetSavedDir(Home: Boolean = False): string;
+function GetMapsDir(Home: Boolean = False): string;
 
 
 implementation
@@ -68,36 +71,45 @@ begin
     DataDir := HomeDir
   else
   begin
-    if not DirectoryExists(AppDataDir) then
-      CreateDir(AppDataDir);
+    if not DirectoryExists(AppDataDir) then CreateDir(AppDataDir);
     DataDir := AppDataDir;
   end;
-  if not DirectoryExists(DataDir + 'Saved') then
-    CreateDir(DataDir + 'Saved');
-  if not DirectoryExists(DataDir + 'Maps') then
-    CreateDir(DataDir + 'Maps');
+  if not DirectoryExists(GetSavedDir) then CreateDir(GetSavedDir);
+  if not DirectoryExists(GetMapsDir) then CreateDir(GetMapsDir);
 
   // Copy appdata if not done yet
-  if FindFirst(HomeDir + 'Saved' + DirectorySeparator + '*.cevo', $21, src) = 0 then
+  if FindFirst(GetSavedDir(True) + DirectorySeparator + '*.cevo', $21, src) = 0 then
     repeat
-      if (FindFirst(DataDir + 'Saved' + DirectorySeparator + src.Name, $21, dst) <> 0) or
+      if (FindFirst(GetSavedDir(True) + DirectorySeparator + src.Name, $21, dst) <> 0) or
         (dst.Time < src.Time) then
-        CopyFile(PChar(HomeDir + 'Saved' + DirectorySeparator + src.Name),
-          PChar(DataDir + 'Saved' + DirectorySeparator + src.Name), false);
+        CopyFile(PChar(GetSavedDir(True) + DirectorySeparator + src.Name),
+          PChar(GetSavedDir(True) + DirectorySeparator + src.Name), false);
       FindClose(dst);
     until FindNext(src) <> 0;
   FindClose(src);
 
   // Copy appdata if not done yet
-  if FindFirst(HomeDir + 'Maps' + DirectorySeparator + '*.*', $21, src) = 0 then
+  if FindFirst(GetMapsDir(True) + DirectorySeparator + '*.*', $21, src) = 0 then
     repeat
-      if (FindFirst(DataDir + 'Maps' + DirectorySeparator + src.Name, $21, dst) <> 0) or
+      if (FindFirst(GetMapsDir(True) + DirectorySeparator + src.Name, $21, dst) <> 0) or
         (dst.Time < src.Time) then
-        CopyFile(PChar(HomeDir + 'Maps' + DirectorySeparator + src.Name),
-          PChar(DataDir + 'Maps' + DirectorySeparator + src.Name), false);
+        CopyFile(PChar(GetMapsDir(True) + DirectorySeparator + src.Name),
+          PChar(GetMapsDir(True) + DirectorySeparator + src.Name), false);
       FindClose(dst);
     until FindNext(src) <> 0;
   FindClose(src);
+end;
+
+function GetSavedDir(Home: Boolean = False): string;
+begin
+  if Home then Result := HomeDir + 'Saved'
+    else Result := DataDir + 'Saved';
+end;
+
+function GetMapsDir(Home: Boolean = False): string;
+begin
+  if Home then Result := HomeDir + 'Maps'
+    else Result := DataDir + 'Maps';
 end;
 
 end.

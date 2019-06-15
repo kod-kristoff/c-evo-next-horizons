@@ -71,14 +71,18 @@ type
     procedure FormPaint(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormHide(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure BrainClick(Sender: TObject);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; x, y: integer);
+    procedure FormMouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; x, y: integer);
+    procedure FormMouseMove(Sender: TObject; Shift: TShiftState; x, y: integer);
     procedure Up1BtnClick(Sender: TObject);
     procedure Down1BtnClick(Sender: TObject);
-    procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure ListClick(Sender: TObject);
     procedure RenameBtnClick(Sender: TObject);
     procedure DeleteBtnClick(Sender: TObject);
@@ -87,13 +91,9 @@ type
     procedure Up2BtnClick(Sender: TObject);
     procedure Down2BtnClick(Sender: TObject);
     procedure QuitBtnClick(Sender: TObject);
-    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure CustomizeBtnClick(Sender: TObject);
     procedure AutoDiffUpBtnClick(Sender: TObject);
     procedure AutoDiffDownBtnClick(Sender: TObject);
-    procedure FormMouseUp(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; x, y: integer);
-    procedure FormMouseMove(Sender: TObject; Shift: TShiftState; x, y: integer);
     procedure AutoEnemyUpBtnClick(Sender: TObject);
     procedure AutoEnemyDownBtnClick(Sender: TObject);
     procedure ReplayBtnClick(Sender: TObject);
@@ -925,7 +925,7 @@ begin
     pgLoad:
       begin // load
         FileName := List.Items[List.ItemIndex];
-        if LoadGame(DataDir + 'Saved' + DirectorySeparator, FileName + CevoExt, LoadTurn, false)
+        if LoadGame(GetSavedDir + DirectorySeparator, FileName + CevoExt, LoadTurn, false)
         then
           UnlistBackupFile(FileName)
         else
@@ -1009,7 +1009,7 @@ begin
           Free;
         end;
 
-        StartNewGame(DataDir + 'Saved' + DirectorySeparator, FileName + CevoExt, MapFileName,
+        StartNewGame(GetSavedDir + DirectorySeparator, FileName + CevoExt, MapFileName,
           lxpre[WorldSize], lypre[WorldSize], StartLandMass, MaxTurn);
         UnlistBackupFile(FileName);
       end;
@@ -1144,7 +1144,7 @@ begin
       end;
     pgLoad:
       begin
-        AssignFile(LogFile, DataDir + 'Saved' + DirectorySeparator + List.Items[List.ItemIndex]
+        AssignFile(LogFile, GetSavedDir + DirectorySeparator + List.Items[List.ItemIndex]
           + CevoExt);
         try
           Reset(LogFile, 4);
@@ -1197,7 +1197,7 @@ begin
         MiniMode := mmPicture;
         if Page = pgEditMap then
           MapFileName := List.Items[List.ItemIndex] + CevoMapExt;
-        if LoadGraphicFile(Mini, DataDir + 'Maps' + DirectorySeparator + Copy(MapFileName, 1,
+        if LoadGraphicFile(Mini, GetMapsDir + DirectorySeparator + Copy(MapFileName, 1,
           Length(MapFileName) - 9) + '.png', gfNoError) then
         begin
           if Mini.width div 2 > MaxWidthMapLogo then
@@ -1214,7 +1214,7 @@ begin
           MiniHeight := MaxHeightMapLogo;
         end;
 
-        AssignFile(MapFile, DataDir + 'Maps' + DirectorySeparator + MapFileName);
+        AssignFile(MapFile, GetMapsDir + DirectorySeparator + MapFileName);
         try
           Reset(MapFile, 4);
           BlockRead(MapFile, s[1], 2); { file id }
@@ -1394,7 +1394,7 @@ var
   F: TSearchRec;
 begin
   FormerGames.Clear;
-  if FindFirst(DataDir + 'Saved' + DirectorySeparator + '*' + CevoExt, $21, F) = 0 then
+  if FindFirst(GetSavedDir + DirectorySeparator + '*' + CevoExt, $21, F) = 0 then
     repeat
       I := FormerGames.Count;
       while (I > 0) and (F.Time < integer(FormerGames.Objects[I - 1])) do
@@ -1414,7 +1414,7 @@ var
   f: TSearchRec;
 begin
   Maps.Clear;
-  if FindFirst(DataDir + 'Maps' + DirectorySeparator + '*' + CevoMapExt, $21, f) = 0 then
+  if FindFirst(GetMapsDir + DirectorySeparator + '*' + CevoMapExt, $21, f) = 0 then
     repeat
       Maps.Add(Copy(f.Name, 1, Length(f.Name) - 9));
     until FindNext(f) <> 0;
@@ -1789,25 +1789,25 @@ begin
           exit
         end;
       if Page = pgLoad then
-        AssignFile(f, DataDir + 'Saved' + DirectorySeparator + List.Items[List.ItemIndex] + CevoExt)
+        AssignFile(f, GetSavedDir + DirectorySeparator + List.Items[List.ItemIndex] + CevoExt)
       else
-        AssignFile(f, DataDir + 'Maps'+ DirectorySeparator + List.Items[List.ItemIndex] +
+        AssignFile(f, GetMapsDir + DirectorySeparator + List.Items[List.ItemIndex] +
           CevoMapExt);
       ok := true;
       try
         if Page = pgLoad then
-          Rename(f, DataDir + 'Saved'+ DirectorySeparator + NewName + CevoExt)
+          Rename(f, GetSavedDir + DirectorySeparator + NewName + CevoExt)
         else
-          Rename(f, DataDir + 'Maps'+ DirectorySeparator + NewName + CevoMapExt);
+          Rename(f, GetMapsDir + DirectorySeparator + NewName + CevoMapExt);
       except
         // Play('INVALID');
         ok := false
       end;
       if Page <> pgLoad then
         try // rename map picture
-          AssignFile(f, DataDir + 'Maps'+ DirectorySeparator + List.Items[List.ItemIndex]
+          AssignFile(f, GetMapsDir + DirectorySeparator + List.Items[List.ItemIndex]
             + '.png');
-          Rename(f, DataDir + 'Maps'+ DirectorySeparator + NewName + '.png');
+          Rename(f, GetMapsDir + DirectorySeparator + NewName + '.png');
         except
         end;
       if ok then
@@ -1841,9 +1841,9 @@ begin
     if MessgDlg.ModalResult = mrOK then
     begin
       if Page = pgLoad then
-        AssignFile(f, DataDir + 'Saved' + DirectorySeparator + List.Items[List.ItemIndex] + CevoExt)
+        AssignFile(f, GetSavedDir + DirectorySeparator + List.Items[List.ItemIndex] + CevoExt)
       else
-        AssignFile(f, DataDir + 'Maps' + DirectorySeparator + List.Items[List.ItemIndex] +
+        AssignFile(f, GetMapsDir + DirectorySeparator + List.Items[List.ItemIndex] +
           CevoMapExt);
       Erase(f);
       iDel := List.ItemIndex;
@@ -2035,7 +2035,7 @@ end;
 
 procedure TStartDlg.ReplayBtnClick(Sender: TObject);
 begin
-  LoadGame(DataDir + 'Saved' + DirectorySeparator, List.Items[List.ItemIndex] + CevoExt,
+  LoadGame(GetSavedDir + DirectorySeparator, List.Items[List.ItemIndex] + CevoExt,
     LastTurn, True);
   SlotAvailable := -1;
 end;
