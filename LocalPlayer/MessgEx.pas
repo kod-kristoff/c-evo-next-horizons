@@ -73,7 +73,7 @@ implementation
 
 uses
   ClientTools, BaseWin, Term, Help, UnitStat, Tribes, PixelPointer,
-  IsoEngine, Diagram;
+  IsoEngine, Diagram, Sound;
 
 {$R *.lfm}
 

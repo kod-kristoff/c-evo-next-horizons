@@ -7,6 +7,6 @@ Build-Depends: fpc, lazarus, lcl, lcl-utils, debhelper (>= 8)
 
 Package: c-evo
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends},
+Depends: ${shlibs:Depends}, ${misc:Depends}, sox, libsox-fmt-mp3
 Description: Empire building game
 HomePage: https://app.zdechov.net/c-evo

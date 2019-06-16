@@ -458,11 +458,12 @@ procedure ImpImage(ca: TCanvas; x, y, iix: integer; Government: integer = -1;
   IsControl: boolean = false);
 procedure HelpOnTerrain(Loc, NewMode: integer);
 
+
 implementation
 
 uses
   Directories, IsoEngine, CityScreen, Draft, MessgEx, Select, CityType, Help,
-  UnitStat, Log, Diagram, NatStat, Wonders, Enhance, Nego, PixelPointer,
+  UnitStat, Log, Diagram, NatStat, Wonders, Enhance, Nego, PixelPointer, Sound,
   Battle, Rates, TechTree, Registry;
 
 {$R *.lfm}

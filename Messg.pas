@@ -42,6 +42,9 @@ procedure SoundMessage(SimpleText, SoundItem: string);
 
 implementation
 
+uses
+  Sound;
+
 {$R *.lfm}
 
 procedure TMessgDlg.FormCreate(Sender: TObject);

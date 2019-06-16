@@ -20,8 +20,6 @@ type
 function ChangeResolution(x, y, bpp, freq: integer): boolean;
 {$ENDIF}
 procedure RestoreResolution;
-function Play(Item: string; Index: integer = -1): boolean;
-procedure PreparePlay(Item: string; Index: integer = -1);
 procedure EmptyMenu(MenuItems: TMenuItem; Keep: Integer = 0);
 function TurnToYear(Turn: integer): integer;
 function TurnToString(Turn: integer): string;
@@ -120,11 +118,6 @@ const
   wOrna = 27;
   hOrna = 26; // ornament
 
-  // sound modes
-  smOff = 0;
-  smOn = 1;
-  smOnAlt = 2;
-
   // color matrix
   clkAge0 = 1;
   cliTexture = 0;
@@ -172,10 +165,11 @@ type
   TFontType = (ftNormal, ftSmall, ftTiny, ftCaption, ftButton);
 
 var
-  Phrases, Phrases2, Sounds: TStringTable;
-  nGrExt: integer;
+  Phrases: TStringTable;
+  Phrases2: TStringTable;
+  nGrExt: Integer;
   GrExt: array [0 .. nGrExtmax - 1] of ^TGrExtDescr;
-  HGrSystem, HGrSystem2, ClickFrameColor, SoundMode, MainTextureAge: integer;
+  HGrSystem, HGrSystem2, ClickFrameColor, MainTextureAge: Integer;
   MainTexture: TTexture;
   Templates, Colors, Paper, BigImp, LogoBuffer: TBitmap;
   FullScreen, GenerateNames, InitOrnamentDone, Phrases2FallenBackToEnglish: Boolean;
@@ -226,44 +220,6 @@ begin
     ChangeDisplaySettings(StartResolution, 0);
   ResolutionChanged := False;
   {$ENDIF}
-end;
-
-function Play(Item: string; Index: integer = -1): boolean;
-{$IFNDEF DEBUG}
-var
-  WavFileName: string;
-{$ENDIF}
-begin
-  Result := False;
-{$IFNDEF DEBUG}
-  if (Sounds = nil) or (SoundMode = smOff) or (Item = '') then
-  begin
-    Result := True;
-    Exit;
-  end;
-  WavFileName := Sounds.Lookup(Item, Index);
-  Assert(WavFileName[1] <> '[');
-  Result := (WavFileName <> '') and (WavFileName[1] <> '[') and (WavFileName <> '*');
-  if Result then
-    // SndPlaySound(pchar(HomeDir+'Sounds' +DirectorySeparator+WavFileName+'.wav'),SND_ASYNC)
-    PlaySound(HomeDir + 'Sounds' + DirectorySeparator + WavFileName);
-{$ENDIF}
-end;
-
-procedure PreparePlay(Item: string; Index: Integer = -1);
-{$IFNDEF DEBUG}
-var
-  WavFileName: string;
-{$ENDIF}
-begin
-{$IFNDEF DEBUG}
-  if (Sounds = nil) or (SoundMode = smOff) or (Item = '') then
-    Exit;
-  WavFileName := Sounds.Lookup(Item, Index);
-  Assert(WavFileName[1] <> '[');
-  if (WavFileName <> '') and (WavFileName[1] <> '[') and (WavFileName <> '*') then
-    PrepareSound(HomeDir + 'Sounds' + DirectorySeparator + WavFileName);
-{$ENDIF}
 end;
 
 procedure EmptyMenu(MenuItems: TMenuItem; Keep: Integer = 0);
@@ -1402,31 +1358,28 @@ end;
 
 procedure LoadPhrases;
 begin
-  if Phrases = nil then
-    Phrases := TStringTable.Create;
-  if Phrases2 = nil then
-    Phrases2 := TStringTable.Create;
+  if Phrases = nil then Phrases := TStringTable.Create;
+  if Phrases2 = nil then Phrases2 := TStringTable.Create;
   Phrases2FallenBackToEnglish := False;
   if FileExists(LocalizedFilePath('Language.txt')) then
   begin
-    Phrases.loadfromfile(LocalizedFilePath('Language.txt'));
+    Phrases.LoadFromFile(LocalizedFilePath('Language.txt'));
     if FileExists(LocalizedFilePath('Language2.txt')) then
-      Phrases2.loadfromfile(LocalizedFilePath('Language2.txt'))
+      Phrases2.LoadFromFile(LocalizedFilePath('Language2.txt'))
     else
     begin
-      Phrases2.loadfromfile(HomeDir + 'Language2.txt');
+      Phrases2.LoadFromFile(HomeDir + 'Language2.txt');
       Phrases2FallenBackToEnglish := True;
     end;
   end
   else
   begin
-    Phrases.loadfromfile(HomeDir + 'Language.txt');
-    Phrases2.loadfromfile(HomeDir + 'Language2.txt');
+    Phrases.LoadFromFile(HomeDir + 'Language.txt');
+    Phrases2.LoadFromFile(HomeDir + 'Language2.txt');
   end;
 
-  if Sounds = nil then
-    Sounds := TStringTable.Create;
-  if not Sounds.loadfromfile(HomeDir + 'Sounds' + DirectorySeparator + 'sound.txt') then
+  if Sounds = nil then Sounds := TStringTable.Create;
+  if not Sounds.LoadFromFile(HomeDir + 'Sounds' + DirectorySeparator + 'sound.txt') then
   begin
     FreeAndNil(Sounds);
   end;
@@ -1453,16 +1406,11 @@ begin
       if s <> '' then
         if s[1] = '#' then begin
           s := TrimRight(s);
-          if s = '#SMALL' then
-            Section := ftSmall
-          else if s = '#TINY' then
-            Section := ftTiny
-          else if s = '#CAPTION' then
-            Section := ftCaption
-          else if s = '#BUTTON' then
-            Section := ftButton
-          else
-            Section := ftNormal;
+          if s = '#SMALL' then Section := ftSmall
+          else if s = '#TINY' then Section := ftTiny
+          else if s = '#CAPTION' then Section := ftCaption
+          else if s = '#BUTTON' then Section := ftButton
+          else Section := ftNormal;
         end else begin
           p := Pos(',', s);
           if p > 0 then begin
@@ -1598,8 +1546,6 @@ begin
 
   FreeAndNil(Phrases);
   FreeAndNil(Phrases2);
-  if Sounds <> nil then
-    FreeAndNil(Sounds);
   FreeAndNil(LogoBuffer);
   FreeAndNil(BigImp);
   FreeAndNil(Paper);

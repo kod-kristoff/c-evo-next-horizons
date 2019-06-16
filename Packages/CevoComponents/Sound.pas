@@ -3,10 +3,14 @@ unit Sound;
 interface
 
 uses
-  Messages, SysUtils, Classes, Graphics, Controls, Forms, fgl
-  {$IFDEF WINDOWS}, MMSystem, Windows{$ENDIF};
+  Messages, SysUtils, Classes, Graphics, Controls, Forms, fgl, FileUtil,
+  StringTables, Directories
+  {$IFDEF WINDOWS}, MMSystem, Windows{$ENDIF}
+  {$IFDEF LINUX}, Process, AsyncProcess{$ENDIF};
 
 type
+  TPlayStyle = (psAsync, psSync);
+
   TSoundPlayer = class(TForm)
   private
     {$IFDEF WINDOWS}
@@ -14,18 +18,20 @@ type
     {$ENDIF}
   end;
 
-function PrepareSound(FileName: string): integer;
-procedure PlaySound(FileName: string);
+  { TSound }
 
-implementation
-
-{$R *.lfm}
-
-type
   TSound = class
+  private
+    PlayCommand: string;
+    {$IFDEF LINUX}
+    SoundPlayerAsyncProcess: TAsyncProcess;
+    SoundPlayerSyncProcess: TProcess;
+    {$ENDIF}
+    function GetNonWindowsPlayCommand: string;
   public
-    FDeviceID: word;
+    FDeviceID: Word;
     FFileName: string;
+    PlayStyle: TPlayStyle;
     constructor Create(const FileName: string);
     destructor Destroy; override;
     procedure Play(HWND: DWORD);
@@ -33,6 +39,32 @@ type
     procedure Reset;
   end;
 
+function PrepareSound(FileName: string): Integer;
+procedure PlaySound(FileName: string);
+function Play(Item: string; Index: Integer = -1): Boolean;
+procedure PreparePlay(Item: string; Index: Integer = -1);
+
+const
+  // sound modes
+  smOff = 0;
+  smOn = 1;
+  smOnAlt = 2;
+
+var
+  Sounds: TStringTable;
+  SoundMode: Integer;
+  SoundPlayer: TSoundPlayer;
+  SoundList: TFPGObjectList<TSound>;
+  PlayingSound: TSound;
+
+
+implementation
+
+{$R *.lfm}
+
+resourcestring
+  SUnableToPlay = 'PlayStyle=%s: Unable to play %s Message:%s';
+  SPlayCommandNotWork = 'The play command %s does not work on your system';
 
 constructor TSound.Create(const FileName: string);
 {$IFDEF WINDOWS}
@@ -40,11 +72,11 @@ var
   OpenParm: TMCI_Open_Parms;
 {$ENDIF}
 begin
+  PlayStyle := psAsync;
+  FFileName := FileName;
   {$IFDEF WINDOWS}
   FDeviceID := 0;
-  FFileName := FileName;
-  if FileExists(FFileName) then
-  begin
+  if FileExists(FFileName) then begin
     OpenParm.dwCallback := 0;
     OpenParm.lpstrDeviceType := 'WaveAudio';
     OpenParm.lpstrElementName := PChar(FFileName);
@@ -52,6 +84,10 @@ begin
       MCI_OPEN_SHAREABLE, integer(@OpenParm));
     FDeviceID := OpenParm.wDeviceID;
   end
+  {$ENDIF}
+  {$IFDEF LINUX}
+  PlayCommand := GetNonWindowsPlayCommand;
+  FDeviceID := 1;
   {$ENDIF}
 end;
 
@@ -61,13 +97,69 @@ begin
   if FDeviceID <> 0 then
     mciSendCommand(FDeviceID, MCI_CLOSE, MCI_WAIT, 0);
   {$ENDIF}
+  {$IFDEF LINUX}
+  {$IFNDEF WINDOWS}
+  FreeAndNil(SoundPlayerSyncProcess);
+  FreeAndNil(SoundPlayerAsyncProcess);
+  {$ENDIF}
+  {$ENDIF}
   inherited Destroy;
 end;
+
+function TSound.GetNonWindowsPlayCommand: string;
+begin
+  Result := '';
+  // Try play
+  if (FindDefaultExecutablePath('play') <> '') then
+    Result := 'play';
+  // Try aplay
+  if (result = '') then
+    if (FindDefaultExecutablePath('aplay') <> '') then
+      Result := 'aplay -q';
+  // Try paplay
+  if (Result = '') then
+    if (FindDefaultExecutablePath('paplay') <> '') then
+      Result := 'paplay';
+  // Try mplayer
+  if (Result = '') then
+    if (FindDefaultExecutablePath('mplayer') <> '') then
+      Result := 'mplayer -really-quiet';
+  // Try CMus
+  if (Result = '') then
+    if (FindDefaultExecutablePath('CMus') <> '') then
+      Result := 'CMus';
+  // Try pacat
+  if (Result = '') then
+    if (FindDefaultExecutablePath('pacat') <> '') then
+      Result := 'pacat -p';
+  // Try ffplay
+  if (Result = '') then
+    if (FindDefaultExecutablePath('ffplay') <> '') then
+      result := 'ffplay -autoexit -nodisp';
+  // Try cvlc
+  if (Result = '') then
+    if (FindDefaultExecutablePath('cvlc') <> '') then
+      result := 'cvlc -q --play-and-exit';
+  // Try canberra-gtk-play
+  if (Result = '') then
+    if (FindDefaultExecutablePath('canberra-gtk-play') <> '') then
+      Result := 'canberra-gtk-play -c never -f';
+  // Try Macintosh command?
+  if (Result = '') then
+    if (FindDefaultExecutablePath('afplay') <> '') then
+      Result := 'afplay';
+end;
+
 
 procedure TSound.Play(HWND: DWORD);
 {$IFDEF WINDOWS}
 var
   PlayParm: TMCI_Play_Parms;
+{$ENDIF}
+{$IFDEF LINUX}
+var
+  L: TStringList;
+  I: Integer;
 {$ENDIF}
 begin
   {$IFDEF WINDOWS}
@@ -77,12 +169,66 @@ begin
     mciSendCommand(FDeviceID, MCI_PLAY, MCI_NOTIFY, DWORD_PTR(@PlayParm));
   end
   {$ENDIF}
+  {$IFDEF LINUX}
+  // How to play in Linux? Use generic Linux commands
+  // Use asyncprocess to play sound as SND_ASYNC
+  // proceed if we managed to find a valid command
+  if PlayCommand <> '' then begin
+    L := TStringList.Create;
+    try
+      L.Delimiter := ' ';
+      L.DelimitedText := PlayCommand;
+      if PlayStyle = psASync then begin
+        if SoundPlayerAsyncProcess = nil then
+          SoundPlayerAsyncProcess := TAsyncProcess.Create(nil);
+        SoundPlayerAsyncProcess.CurrentDirectory := ExtractFileDir(FFilename);
+        SoundPlayerAsyncProcess.Executable := FindDefaultExecutablePath(L[0]);
+        SoundPlayerAsyncProcess.Parameters.Clear;
+        for I := 1 to L.Count - 1 do
+          SoundPlayerAsyncProcess.Parameters.Add(L[I]);
+        SoundPlayerAsyncProcess.Parameters.Add(FFilename);
+        try
+          SoundPlayerAsyncProcess.Execute;
+        except
+          On E: Exception do
+            E.CreateFmt(SUnableToPlay, ['paASync', FFilename, E.Message]);
+        end;
+        PlayingSound := nil;
+      end else begin
+        if SoundPlayerSyncProcess = nil then
+          SoundPlayerSyncProcess := TProcess.Create(nil);
+        SoundPlayerSyncProcess.CurrentDirectory := ExtractFileDir(FFilename);
+        SoundPlayerSyncProcess.Executable := FindDefaultExecutablePath(L[0]);
+        SoundPlayersyncProcess.Parameters.Clear;
+        for I := 1 to L.Count - 1 do
+          SoundPlayerSyncProcess.Parameters.Add(L[I]);
+        SoundPlayerSyncProcess.Parameters.Add(FFilename);
+        try
+          SoundPlayerSyncProcess.Execute;
+          SoundPlayersyncProcess.WaitOnExit;
+        except
+          On E: Exception do
+            E.CreateFmt(SUnableToPlay, ['paSync', FFilename, E.Message]);
+        end;
+        PlayingSound := nil;
+      end;
+    finally
+      L.Free;
+    end;
+  end
+  else
+    raise Exception.CreateFmt(SPlayCommandNotWork, [PlayCommand]);
+  {$ENDIF}
 end;
 
 procedure TSound.Stop;
 begin
   {$IFDEF WINDOWS}
   mciSendCommand(FDeviceID, MCI_STOP, 0, 0);
+  {$ENDIF}
+  {$IFDEF LINUX}
+  if SoundPlayerSyncProcess <> nil then SoundPlayerSyncProcess.Terminate(1);
+  if SoundPlayerAsyncProcess <> nil then SoundPlayerAsyncProcess.Terminate(1);
   {$ENDIF}
 end;
 
@@ -92,12 +238,6 @@ begin
   mciSendCommand(FDeviceID, MCI_SEEK, MCI_SEEK_TO_START, 0);
   {$ENDIF}
 end;
-
-
-var
-  SoundPlayer: TSoundPlayer;
-  SoundList: TFPGObjectList<TSound>;
-  PlayingSound: TSound;
 
 {$IFDEF WINDOWS}
 procedure TSoundPlayer.OnMCI(var m: TMessage);
@@ -110,13 +250,13 @@ begin
 end;
 {$ENDIF}
 
-function PrepareSound(FileName: string): integer;
+function PrepareSound(FileName: string): Integer;
 begin
   Result := 0;
-  while (result < SoundList.Count) and (SoundList[result].FFileName <> FileName) do
-    inc(result);
-  if result = SoundList.Count then begin
-    // first time this sound is played
+  while (Result < SoundList.Count) and (SoundList[result].FFileName <> FileName) do
+    Inc(Result);
+  if Result = SoundList.Count then begin
+    // First time this sound is played
     SoundList.Add(TSound.Create(FileName));
     Result := SoundList.Count - 1;
   end;
@@ -124,8 +264,7 @@ end;
 
 procedure PlaySound(FileName: string);
 begin
-  if PlayingSound <> nil then
-    exit;
+  if PlayingSound <> nil then Exit;
   if SoundPlayer = nil then
     Application.CreateForm(TSoundPlayer, SoundPlayer);
   PlayingSound := SoundList[PrepareSound(FileName)];
@@ -133,6 +272,44 @@ begin
     PlayingSound := nil
   else
     PlayingSound.Play(SoundPlayer.Handle);
+end;
+
+function Play(Item: string; Index: Integer = -1): Boolean;
+{$IFNDEF DEBUG}
+var
+  WavFileName: string;
+{$ENDIF}
+begin
+  Result := False;
+{$IFNDEF DEBUG}
+  if (Sounds = nil) or (SoundMode = smOff) or (Item = '') then
+  begin
+    Result := True;
+    Exit;
+  end;
+  WavFileName := Sounds.Lookup(Item, Index);
+  Assert(WavFileName[1] <> '[');
+  Result := (WavFileName <> '') and (WavFileName[1] <> '[') and (WavFileName <> '*');
+  if Result then
+    // SndPlaySound(pchar(HomeDir+'Sounds' +DirectorySeparator+WavFileName+'.wav'),SND_ASYNC)
+    PlaySound(HomeDir + 'Sounds' + DirectorySeparator + WavFileName);
+{$ENDIF}
+end;
+
+procedure PreparePlay(Item: string; Index: Integer = -1);
+{$IFNDEF DEBUG}
+var
+  WavFileName: string;
+{$ENDIF}
+begin
+{$IFNDEF DEBUG}
+  if (Sounds = nil) or (SoundMode = smOff) or (Item = '') then
+    Exit;
+  WavFileName := Sounds.Lookup(Item, Index);
+  Assert(WavFileName[1] <> '[');
+  if (WavFileName <> '') and (WavFileName[1] <> '[') and (WavFileName <> '*') then
+    PrepareSound(HomeDir + 'Sounds' + DirectorySeparator + WavFileName);
+{$ENDIF}
 end;
 
 procedure UnitInit;
@@ -149,6 +326,8 @@ begin
     Sleep(222);
   end;
   FreeAndNil(SoundList);
+  if Sounds <> nil then
+    FreeAndNil(Sounds);
 end;
 
 initialization
