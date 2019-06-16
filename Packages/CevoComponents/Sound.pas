@@ -98,10 +98,8 @@ begin
     mciSendCommand(FDeviceID, MCI_CLOSE, MCI_WAIT, 0);
   {$ENDIF}
   {$IFDEF LINUX}
-  {$IFNDEF WINDOWS}
   FreeAndNil(SoundPlayerSyncProcess);
   FreeAndNil(SoundPlayerAsyncProcess);
-  {$ENDIF}
   {$ENDIF}
   inherited Destroy;
 end;

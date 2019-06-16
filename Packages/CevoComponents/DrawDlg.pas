@@ -14,11 +14,13 @@ type
   TDrawDlg = class(TForm)
   public
     constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
     procedure SmartInvalidate; virtual;
   private
     MoveFormPos: TPoint;
     MoveMousePos: TPoint;
     MoveActive: Boolean;
+    procedure VisibleChangedHandler(Sender: TObject);
   protected
     TitleHeight: Integer;
     // defines area to grip the window for moving (from top)
@@ -66,6 +68,14 @@ constructor TDrawDlg.Create(AOwner: TComponent);
 begin
   inherited;
   TitleHeight := 0;
+  MoveActive := False;
+  AddHandlerOnVisibleChanged(VisibleChangedHandler);
+end;
+
+destructor TDrawDlg.Destroy;
+begin
+  RemoveHandlerOnVisibleChanging(VisibleChangedHandler);
+  inherited Destroy;
 end;
 
 procedure TDrawDlg.OnEraseBkgnd(var m: TMessage);
@@ -110,17 +120,22 @@ procedure TDrawDlg.MouseDown(Button: TMouseButton; Shift: TShiftState; X,
   Y: Integer);
 var
   MousePosNew: TPoint;
+  NewFormPos: TPoint;
 begin
   inherited;
   {$IFDEF LINUX}
   // HitTest is not supported under Linux GTK2 so use form inside move mechanizm
-  MoveMousePos := ClientToScreen(Point(X, Y));
-  MoveFormPos := Point(Left, Top);
-  MousePosNew := Mouse.CursorPos;
-  // Activate move only if mouse position was not changed during inherited call
-  if (MousePosNew.X = MoveMousePos.X) and (MousePosNew.Y = MoveMousePos.Y) then begin
-    MoveActive := True;
-  end;
+  NewFormPos := ScreenToClient(Mouse.CursorPos);
+  if (NewFormPos.X >= 0) and (NewFormPos.X < Width) and
+    (NewFormPos.Y >= 0) and (NewFormPos.Y < Height) then begin
+    MoveMousePos := ClientToScreen(Point(X, Y));
+    MoveFormPos := Point(Left, Top);
+    MousePosNew := Mouse.CursorPos;
+    // Activate move only if mouse position was not changed during inherited call
+    if (MousePosNew.X = MoveMousePos.X) and (MousePosNew.Y = MoveMousePos.Y) then begin
+      MoveActive := True;
+    end;
+  end else MoveActive := False;
   {$ENDIF}
 end;
 
@@ -148,6 +163,11 @@ procedure TDrawDlg.MouseLeave;
 begin
   MoveActive := False;
   inherited;
+end;
+
+procedure TDrawDlg.VisibleChangedHandler(Sender: TObject);
+begin
+  MoveActive := False;
 end;
 
 procedure TDrawDlg.InitButtons;

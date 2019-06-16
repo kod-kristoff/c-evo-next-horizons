@@ -16,7 +16,7 @@ type
     constructor Create;
     destructor Destroy; override;
     function LoadFromFile(const FileName: String): boolean;
-    function GetHandle(const Item: AnsiString): integer;
+    function GetHandle(const Item: string): integer;
     function LookupByHandle(Handle: integer; Index: integer = -1): string;
     function Lookup(const Item: string; Index: integer = -1): string;
     function Search(const Content: string; var Handle, Index: integer): boolean;
@@ -54,7 +54,7 @@ begin
   end;
 end;
 
-function TStringTable.GetHandle(const Item: AnsiString): integer;
+function TStringTable.GetHandle(const Item: string): integer;
 var
   I: Integer;
 begin

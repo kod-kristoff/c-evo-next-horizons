@@ -14,11 +14,11 @@ const
 
 type
   THistory = record
-    n: integer;
-    Text: array [0 .. MaxHistory - 1] of ansistring;
+    n: Integer;
+    Text: array[0 .. MaxHistory - 1] of ansistring;
   end;
 
-  TCommandAllowedEnum = scDipNoticeStart .. scDipBreakStart;
+  TCommandAllowedEnum = scDipNoticeStart..scDipBreakStart;
 
   { TNegoDlg }
 
