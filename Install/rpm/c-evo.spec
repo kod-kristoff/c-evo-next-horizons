@@ -8,6 +8,7 @@ License:        Public Domain
 URL:            https://app.zdechov.net/c-evo
 Source0:        c-evo.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Requires:       sox
 
 #BuildRequires:  lazarus 
 
