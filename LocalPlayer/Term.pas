@@ -25,6 +25,7 @@ type
   { TMainScreen }
 
   TMainScreen = class(TDrawDlg)
+    mBigTiles: TMenuItem;
     Timer1: TTimer;
     GamePopup: TPopupMenu;
     UnitPopup: TPopupMenu;
@@ -217,6 +218,7 @@ type
     procedure DebugMapClick(Sender: TObject);
     procedure mSmallTilesClick(Sender: TObject);
     procedure mNormalTilesClick(Sender: TObject);
+    procedure mBigTilesClick(Sender: TObject);
     procedure GrWallBtnDownChanged(Sender: TObject);
     procedure BareBtnDownChanged(Sender: TObject);
     procedure MovieSpeedBtnClick(Sender: TObject);
@@ -1488,7 +1490,7 @@ procedure TMainScreen.Client(Command, NewPlayer: integer; var Data);
       for y := 0 to 1 do
         MiniColors[x, y] := GrExt[HGrSystem].Data.Canvas.Pixels[66 + x, 67 + y];
     IsoEngine.Init(InitEnemyModel);
-    if not IsoEngine.ApplyTileSize(xxt, yyt) and ((xxt <> 48) or (yyt <> 24))
+    if not IsoEngine.ApplyTileSize(xxt, yyt) and ((xxt <> 48) or (yyt <> 24) or (xxt <> 72))
     then
       ApplyTileSize(48, 24);
     // non-default tile size is missing a file, switch to default
@@ -7323,6 +7325,7 @@ begin
     end;
     mSmallTiles.Checked := xxt = 33;
     mNormalTiles.Checked := xxt = 48;
+    mBigTiles.Checked := xxt = 72;
   end
   else if Popup = StatPopup then
   begin
@@ -7990,6 +7993,11 @@ end;
 procedure TMainScreen.mNormalTilesClick(Sender: TObject);
 begin
   SetTileSize(48, 24);
+end;
+
+procedure TMainScreen.mBigTilesClick(Sender: TObject);
+begin
+  SetTileSize(72, 36);
 end;
 
 procedure TMainScreen.SetTileSize(x, y: integer);

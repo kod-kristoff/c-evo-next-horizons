@@ -88,7 +88,7 @@ const
   TerrainIconCols = 9;
 
   // sprites indexes
-  spDeadLands = 2 * TerrainIconCols + 6;
+  spRow2 = 2 * TerrainIconCols + 6;
   spBlink1 = 1 * TerrainIconCols + 8;
   spBlink2 = 2 * TerrainIconCols + 8;
   spPrefStartPos = 1 * TerrainIconCols;
@@ -106,8 +106,12 @@ const
   spSpacePort = 12 * TerrainIconCols + 5;
   spPollution = 12 * TerrainIconCols + 6;
   spFortBack = 12 * TerrainIconCols + 7;
+  spMinerals = 12 * TerrainIconCols + 8;
   spRiver = 13 * TerrainIconCols;
+  spRiverMouths = 15 * TerrainIconCols;
+  spGrid = 15 * TerrainIconCols + 6;
   spJungle = 18 * TerrainIconCols;
+  spCanalMouths = 20 * TerrainIconCols;
 
 var
   BordersOK: integer;
@@ -136,7 +140,7 @@ function ApplyTileSize(xxtNew, yytNew: integer): boolean;
 var
   i, x, y, xSrc, ySrc, HGrTerrainNew, HGrCitiesNew, age, size: integer;
   LandMore, OceanMore, DitherMask, Mask24: TBitmap;
-  MaskLine: array [0 .. 32 * 3 - 1] of TPixelPointer; // 32 = assumed maximum for yyt
+  MaskLine: array [0 .. 50 * 3 - 1] of TPixelPointer; // 32 = assumed maximum for yyt
   Border: boolean;
 begin
   result := false;
@@ -421,7 +425,7 @@ begin
     Borders.Free;
   Borders := TBitmap.Create;
   Borders.PixelFormat := pf24bit;
-  Borders.SetSize(xxt * 2,(yyt * 2) * nPl);
+  Borders.SetSize(xxt * 2, (yyt * 2) * nPl);
   Borders.Canvas.FillRect(0, 0, Borders.Width, Borders.Height);
   BordersOK := 0;
 end;
@@ -875,7 +879,7 @@ begin
     TSprite(x, y, Conn mod 8 + (yGr + Conn div 8) * TerrainIconCols);
   end
   else if Tile and fDeadLands <> 0 then
-    TSprite(x, y, spDeadLands);
+    TSprite(x, y, spRow2);
 
   if ShowObjects then
   begin
@@ -897,13 +901,13 @@ begin
     Conn := Connection4(Loc, fRiver, fRiver);
     for Dir := 0 to 3 do
       if Conn and (1 shl Dir) <> 0 then { river mouths }
-        TSprite(x, y, 15 * TerrainIconCols + Dir);
+        TSprite(x, y, spRiverMouths + Dir);
     if ShowObjects then
     begin
       Conn := Connection8(Loc, fCanal);
       for Dir := 0 to 7 do
         if Conn and (1 shl Dir) <> 0 then { canal mouths }
-          TSprite(x, y, 20 * TerrainIconCols + 1 + Dir);
+          TSprite(x, y, spCanalMouths + 1 + Dir);
     end
   end;
 
@@ -1111,8 +1115,8 @@ begin
         TSprite(x, y, spFortFront);
     end;
   end;
-  if Tile and fDeadLands <> 0 then
-    TSprite(x, y, (12 + Tile shr 25 and 3) * TerrainIconCols + 8);
+  if (Tile and fDeadLands) <> 0 then
+    TSprite(x, y, spMinerals + (Tile shr 25 and 3) * TerrainIconCols);
 
   if Options and (1 shl moEditMode) <> 0 then
     fog := (Loc < 0) or (Loc >= G.lx * G.ly)
@@ -1130,7 +1134,7 @@ begin
       Sprite(HGrTerrain, x, y, xxt * 2, yyt, 1 + 6 * (xxt * 2 + 1),
         1 + yyt + 15 * (yyt * 3 + 1))
     else
-      TSprite(x, y, 6 + TerrainIconCols * 15, xxt <> 33);
+      TSprite(x, y, spGrid, xxt <> 33);
 
   if FoW and (Tile and fObserved = 0) then
     PaintBorder;

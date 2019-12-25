@@ -465,8 +465,9 @@ begin
     GrExt[nGrExt].Name := Name;
 
     xmax := Source.Width - 1; // allows 4-byte access even for last pixel
-    if xmax > 970 then
-      xmax := 970;
+    // Why there was that limit?
+    //if xmax > 970 then
+    //  xmax := 970;
 
     GrExt[nGrExt].Data := Source;
     GrExt[nGrExt].Data.PixelFormat := pf24bit;
