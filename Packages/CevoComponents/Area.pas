@@ -25,8 +25,8 @@ end;
 constructor TArea.Create(AOwner: TComponent);
 begin
   inherited;
-  Enabled := false;
-  ShowHint := true;
+  Enabled := False;
+  ShowHint := True;
 end;
 
 procedure TArea.Paint;
@@ -35,7 +35,7 @@ begin
     with Canvas do
       begin
         Brush.Color := $FF0000;
-        FrameRect(Rect(0, 0, width, height));
+        FrameRect(Rect(0, 0, Width, Height));
       end;
 end;
 

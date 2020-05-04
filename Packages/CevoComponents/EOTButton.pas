@@ -13,6 +13,7 @@ const
   eotBackToNego = 3;
 
 type
+  // EndOfTurn button
   TEOTButton = class(TButtonBase)
   public
     constructor Create(aOwner: TComponent); override;
@@ -137,7 +138,7 @@ begin
     begin
       Brush.Color := $0000FF;
       FrameRect(Rect(0, 0, 48, 48))
-    end
+    end;
 end;
 
 procedure TEOTButton.SetIndex(x: integer);
@@ -145,8 +146,8 @@ begin
   if x <> FIndex then
   begin
     FIndex := x;
-    Invalidate
-  end
+    Invalidate;
+  end;
 end;
 
 procedure TEOTButton.SetButtonIndexFast(x: integer);
@@ -157,8 +158,8 @@ begin
     try
       Paint
     except
-    end
-  end
+    end;
+  end;
 end;
 
 procedure TEOTButton.SetBack(ca: TCanvas; x, y: integer);

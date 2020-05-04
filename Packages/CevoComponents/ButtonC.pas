@@ -3,15 +3,14 @@ unit ButtonC;
 interface
 
 uses
-  ButtonBase,
-  Classes, Graphics, LCLIntf, LCLType;
+  ButtonBase, Classes, Graphics, LCLIntf, LCLType;
 
 type
   TButtonC = class(TButtonBase)
     constructor Create(aOwner: TComponent); override;
   private
     FIndex: Integer;
-    procedure SetIndex(x: Integer);
+    procedure SetIndex(Text: Integer);
   published
     property Visible;
     property ButtonIndex: integer read FIndex write SetIndex;
@@ -46,14 +45,14 @@ begin
     begin
       Brush.Color := $0000FF;
       FrameRect(Rect(0, 0, 12, 12))
-    end
+    end;
 end;
 
-procedure TButtonC.SetIndex(x: integer);
+procedure TButtonC.SetIndex(Text: integer);
 begin
-  if x <> FIndex then
+  if Text <> FIndex then
   begin
-    FIndex := x;
+    FIndex := Text;
     Invalidate;
   end;
 end;

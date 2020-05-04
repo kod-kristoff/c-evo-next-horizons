@@ -3,16 +3,15 @@ unit ButtonA;
 interface
 
 uses
-  ButtonBase,
-  Classes, Graphics, LCLIntf, LCLType;
+  ButtonBase, Classes, Graphics, LCLIntf, LCLType;
 
 type
   TButtonA = class(TButtonBase)
     constructor Create(aOwner: TComponent); override;
   private
     FCaption: string;
-    procedure SetCaption(x: string);
-    procedure SetFont(const x: TFont);
+    procedure SetCaption(Text: string);
+    procedure SetFont(const Font: TFont);
   published
     property Visible;
     property Caption: string read FCaption write SetCaption;
@@ -24,6 +23,7 @@ type
   end;
 
 procedure Register;
+
 
 implementation
 
@@ -57,18 +57,17 @@ begin
     end
 end;
 
-procedure TButtonA.SetCaption(x: string);
+procedure TButtonA.SetCaption(Text: string);
 begin
-  if x <> FCaption then
-  begin
-    FCaption := x;
-    Invalidate
-  end
+  if Text <> FCaption then begin
+    FCaption := Text;
+    Invalidate;
+  end;
 end;
 
-procedure TButtonA.SetFont(const x: TFont);
+procedure TButtonA.SetFont(const Font: TFont);
 begin
-  Canvas.Font.Assign(x);
+  Canvas.Font.Assign(Font);
   Canvas.Font.Color := $000000;
 end;
 

@@ -69,7 +69,7 @@ begin
           195 + 37 * (FIndex mod 3), 21 + 37 * (FIndex div 3), SRCAND);
         BitBlt(Canvas.Handle, 3, 3, 36, 36, FGraphic.Canvas.Handle,
           195 + 37 * (FIndex mod 3), 21 + 37 * (FIndex div 3), SRCPAINT);
-      end
+      end;
     end;
     MoveTo(0, 41);
     Pen.Color := $B0B0B0;
@@ -78,14 +78,14 @@ begin
     Pen.Color := $FFFFFF;
     LineTo(41, 41);
     LineTo(0, 41);
-  end
+  end;
 end;
 
 procedure TButtonN.MouseDown(Button: TMouseButton; Shift: TShiftState;
   x, y: integer);
 begin
   if FPossible and (Button = mbLeft) and (@ChangeProc <> nil) then
-    ChangeProc(Self)
+    ChangeProc(Self);
 end;
 
 procedure TButtonN.SetPossible(x: boolean);
@@ -97,8 +97,8 @@ begin
       Hint := FSmartHint
     else
       Hint := '';
-    Invalidate
-  end
+    Invalidate;
+  end;
 end;
 
 procedure TButtonN.SetLit(x: boolean);
@@ -106,8 +106,8 @@ begin
   if x <> FLit then
   begin
     FLit := x;
-    Invalidate
-  end
+    Invalidate;
+  end;
 end;
 
 procedure TButtonN.SetIndex(x: integer);
@@ -119,8 +119,8 @@ begin
       BackIndex := 1
     else
       BackIndex := 0;
-    Invalidate
-  end
+    Invalidate;
+  end;
 end;
 
 procedure TButtonN.SetSmartHint(x: string);
@@ -130,7 +130,7 @@ begin
     FSmartHint := x;
     if FPossible then
       Hint := x;
-  end
+  end;
 end;
 
 end.
