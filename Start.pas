@@ -97,8 +97,7 @@ type
     AutoEnemies: Integer;
     AutoDiff: Integer;
     MultiControl: Integer;
-    MiniWidth: Integer;
-    MiniHeight: Integer;
+    MiniSize: TPoint;
     Page: TStartPage;
     ShowTab: TStartTab;
     Tab: TStartTab;
@@ -113,7 +112,8 @@ type
     PlayerPopupIndex: Integer; { brain concerned by brain context menu }
     ListIndex: array [TStartTab] of Integer;
     MapFileName: string;
-    FormerGames, Maps: TStringList;
+    FormerGames: TStringList;
+    Maps: TStringList;
     LogoBuffer, Mini: TBitmap; { game world sample preview }
     MiniColors: array [0 .. 11, 0 .. 1] of TColor;
     // BookDate: string;
@@ -141,6 +141,7 @@ type
 var
   StartDlg: TStartDlg;
 
+
 implementation
 
 uses
@@ -153,13 +154,13 @@ const
   CevoMapExt = '.cevo map';
   // predefined world size
   // attention: lx*ly+1 must be prime!
-  { nWorldSize=8;
+  { MaxWorldSize=8;
     lxpre: array[0..nWorldSize-1] of integer =(30,40,50,60,70,90,110,130);
     lypre: array[0..nWorldSize-1] of integer =(46,52,60,70,84,94,110,130);
     DefaultWorldTiles=4200; }
-  nWorldSize = 6;
-  lxpre: array [0 .. nWorldSize - 1] of integer = (30, 40, 50, 60, 75, 100);
-  lypre: array [0 .. nWorldSize - 1] of integer = (46, 52, 60, 70, 82, 96);
+  MaxWorldSize = 6;
+  WorldSizes: array [0 .. MaxWorldSize - 1] of TPoint = ((X: 30; Y:46),
+    (X: 40; Y:52), (X: 50; Y:60), (X: 60; Y:70), (X: 75; Y:82), (X: 100; Y:96));
   DefaultWorldTiles = 4150;
   DefaultWorldSize = 3;
   DefaultLandMass = 30;
@@ -774,7 +775,7 @@ begin
     DLine(Canvas, 344, 514, y0Mini - 77 + 19, MainTexture.clBevelLight,
       MainTexture.clBevelShade);
     RisedTextOut(Canvas, 344, y0Mini - 77, Phrases.Lookup('STARTCONTROLS', 5));
-    s := IntToStr((lxpre[WorldSize] * lypre[WorldSize] * 20 +
+    s := IntToStr((WorldSizes[WorldSize].X * WorldSizes[WorldSize].Y * 20 +
       DefaultWorldTiles div 2) div DefaultWorldTiles * 5) + '%';
     RisedTextOut(Canvas, 514 - BiColorTextWidth(Canvas, s), y0Mini - 77, s);
     DLine(Canvas, 344, 514, y0Mini + 61 + 19, MainTexture.clBevelLight,
@@ -825,19 +826,19 @@ begin
 
   if not(Page in [pgMain, pgNoLoad]) then
   begin
-    xMini := x0Mini - MiniWidth;
-    yMini := y0Mini - MiniHeight div 2;
-    Frame(Canvas, xMini, yMini, xMini + 3 + MiniWidth * 2,
-      yMini + 3 + MiniHeight, MainTexture.clBevelLight,
+    xMini := x0Mini - MiniSize.X;
+    yMini := y0Mini - MiniSize.Y div 2;
+    Frame(Canvas, xMini, yMini, xMini + 3 + MiniSize.X * 2,
+      yMini + 3 + MiniSize.Y, MainTexture.clBevelLight,
       MainTexture.clBevelShade);
-    Frame(Canvas, xMini + 1, yMini + 1, xMini + 2 + MiniWidth * 2,
-      yMini + 2 + MiniHeight, MainTexture.clBevelShade,
+    Frame(Canvas, xMini + 1, yMini + 1, xMini + 2 + MiniSize.X * 2,
+      yMini + 2 + MiniSize.Y, MainTexture.clBevelShade,
       MainTexture.clBevelLight);
   end;
   s := '';
   if MiniMode = mmPicture then
   begin
-    BitBlt(Canvas.Handle, xMini + 2, yMini + 2, MiniWidth * 2, MiniHeight,
+    BitBlt(Canvas.Handle, xMini + 2, yMini + 2, MiniSize.X * 2, MiniSize.Y,
       Mini.Canvas.Handle, 0, 0, SRCCOPY);
     if Page = pgStartRandom then
       s := Phrases.Lookup('RANMAP')
@@ -1000,7 +1001,7 @@ begin
         end;
 
         StartNewGame(GetSavedDir + DirectorySeparator, FileName + CevoExt, MapFileName,
-          lxpre[WorldSize], lypre[WorldSize], StartLandMass, MaxTurn);
+          WorldSizes[WorldSize].X, WorldSizes[WorldSize].Y, StartLandMass, MaxTurn);
         UnlistBackupFile(FileName);
       end;
     pgEditMap:
@@ -1019,7 +1020,7 @@ begin
           Free;
         end;
         MapFileName := Format(Phrases.Lookup('MAP'), [MapCount]) + CevoMapExt;
-        EditMap(MapFileName, lxpre[WorldSize], lypre[WorldSize], StartLandMass);
+        EditMap(MapFileName, WorldSizes[WorldSize].X, WorldSizes[WorldSize].Y, StartLandMass);
       end
   end
 end;
@@ -1031,21 +1032,20 @@ var
   Map: ^TTileList;
 begin
   Map := PreviewMap(StartLandMass);
-  MiniWidth := lxpre[WorldSize];
-  MiniHeight := lypre[WorldSize];
+  MiniSize := WorldSizes[WorldSize];
 
   Mini.PixelFormat := pf24bit;
-  Mini.SetSize(MiniWidth * 2, MiniHeight);
+  Mini.SetSize(MiniSize.X * 2, MiniSize.Y);
   Mini.BeginUpdate;
   MiniPixel.Init(Mini);
-  for y := 0 to MiniHeight - 1 do begin
-    for x := 0 to MiniWidth - 1 do begin
+  for y := 0 to MiniSize.Y - 1 do begin
+    for x := 0 to MiniSize.X - 1 do begin
       for i := 0 to 1 do begin
-        xm := (x * 2 + i + y and 1) mod (MiniWidth * 2);
+        xm := (x * 2 + i + y and 1) mod (MiniSize.X * 2);
         MiniPixel.SetX(xm);
         cm := MiniColors
-          [Map[x * lxmax div MiniWidth + lxmax *
-          ((y * (lymax - 1) + MiniHeight div 2) div (MiniHeight - 1))] and
+          [Map[x * lxmax div MiniSize.X + lxmax *
+          ((y * (lymax - 1) + MiniSize.Y div 2) div (MiniSize.Y - 1))] and
           fTerrain, i];
         MiniPixel.Pixel^.B := ((cm shr 16) and $FF) * Brightness div 3;
         MiniPixel.Pixel^.G := ((cm shr 8) and $FF) * Brightness div 3;
@@ -1065,18 +1065,18 @@ begin
   OwnColor := GrExt[HGrSystem].Data.Canvas.Pixels[95, 67];
   EnemyColor := GrExt[HGrSystem].Data.Canvas.Pixels[96, 67];
   Mini.PixelFormat := pf24bit;
-  Mini.SetSize(MiniWidth * 2, MiniHeight);
+  Mini.SetSize(MiniSize.X * 2, MiniSize.Y);
   if MiniMode = mmPicture then
   begin
     Mini.BeginUpdate;
     MiniPixel.Init(Mini);
     PrevMiniPixel.Init(Mini, 0, -1);
-    for y := 0 to MiniHeight - 1 do begin
-      for x := 0 to MiniWidth - 1 do begin
+    for y := 0 to MiniSize.Y - 1 do begin
+      for x := 0 to MiniSize.X - 1 do begin
         for i := 0 to 1 do begin
-          xm := (x * 2 + i + y and 1) mod (MiniWidth * 2);
+          xm := (x * 2 + i + y and 1) mod (MiniSize.X * 2);
           MiniPixel.SetX(xm);
-          Tile := SaveMap[x + MiniWidth * y];
+          Tile := SaveMap[x + MiniSize.X * y];
           if Tile and fTerrain = fUNKNOWN then
             cm := $000000
           else if Tile and smCity <> 0 then
@@ -1128,8 +1128,7 @@ begin
       end;
     pgNoLoad:
       begin
-        MiniWidth := lxpre[DefaultWorldSize];
-        MiniHeight := lypre[DefaultWorldSize];
+        MiniSize := WorldSizes[DefaultWorldSize];
         MiniMode := mmNone;
       end;
     pgLoad:
@@ -1142,12 +1141,12 @@ begin
           BlockRead(LogFile, Dummy, 1); { format id }
           if Dummy >= $000E01 then
             BlockRead(LogFile, Dummy, 1); { item stored since 0.14.1 }
-          BlockRead(LogFile, MiniWidth, 1);
-          BlockRead(LogFile, MiniHeight, 1);
+          BlockRead(LogFile, MiniSize.X, 1);
+          BlockRead(LogFile, MiniSize.Y, 1);
           BlockRead(LogFile, FileLandMass, 1);
           if FileLandMass = 0 then
-            for y := 0 to MiniHeight - 1 do
-              BlockRead(LogFile, MapRow, MiniWidth);
+            for y := 0 to MiniSize.Y - 1 do
+              BlockRead(LogFile, MapRow, MiniSize.X);
           BlockRead(LogFile, Dummy, 1);
           BlockRead(LogFile, Dummy, 1);
           BlockRead(LogFile, LastTurn, 1);
@@ -1157,13 +1156,12 @@ begin
           else
             MiniMode := mmPicture;
           if MiniMode = mmPicture then
-            BlockRead(LogFile, SaveMap[4], (MiniWidth * MiniHeight - 1) div 4);
+            BlockRead(LogFile, SaveMap[4], (MiniSize.X * MiniSize.Y - 1) div 4);
           CloseFile(LogFile);
         except
           CloseFile(LogFile);
           LastTurn := 0;
-          MiniWidth := lxpre[DefaultWorldSize];
-          MiniHeight := lypre[DefaultWorldSize];
+          MiniSize := WorldSizes[DefaultWorldSize];
           MiniMode := mmNone;
         end;
         // BookDate:=DateToStr(FileDateToDateTime(FileAge(FileName)));
@@ -1194,14 +1192,14 @@ begin
             Mini.width := MaxWidthMapLogo * 2;
           if Mini.height > MaxHeightMapLogo then
             Mini.height := MaxHeightMapLogo;
-          MiniWidth := Mini.width div 2;
-          MiniHeight := Mini.height;
+          MiniSize.X := Mini.width div 2;
+          MiniSize.Y := Mini.height;
         end
         else
         begin
           MiniMode := mmNone;
-          MiniWidth := MaxWidthMapLogo;
-          MiniHeight := MaxHeightMapLogo;
+          MiniSize.X := MaxWidthMapLogo;
+          MiniSize.Y := MaxHeightMapLogo;
         end;
 
         AssignFile(MapFile, GetMapsDir + DirectorySeparator + MapFileName);
@@ -1706,7 +1704,7 @@ end;
 
 procedure TStartDlg.Up1BtnClick(Sender: TObject);
 begin
-  if WorldSize < nWorldSize - 1 then
+  if WorldSize < MaxWorldSize - 1 then
   begin
     Inc(WorldSize);
     PaintInfo;

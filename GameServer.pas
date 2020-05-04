@@ -115,12 +115,12 @@ procedure ChangeClient;
 procedure NextPlayer;
 function PreviewMap(lm: integer): pointer;
 
+
 implementation
 
 uses
-  Directories, CityProcessing, UnitProcessing, CmdList,
-
-  LCLIntf, LCLType, LMessages, Classes, SysUtils;
+  Directories, CityProcessing, UnitProcessing, CmdList, LCLIntf, LCLType,
+  LMessages, Classes, SysUtils;
 
 var
   MaxTurn: Integer;
@@ -303,7 +303,7 @@ begin
     PreviewElevation := true;
   end;
   CreateMap(true);
-  result := @RealMap;
+  Result := @RealMap;
 end;
 
 procedure ChangeClientWhenDone(Command, Player: integer; var Data;
