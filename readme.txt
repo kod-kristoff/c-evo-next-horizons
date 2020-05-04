@@ -1,6 +1,6 @@
 C-evo 1.2.0 sources ported to Lazarus/FPC
 
-* Used development environment: Lazarus 1.8.2 (https://www.lazarus-ide.org/)
+* Used development environment: Lazarus 2.0.8 (https://www.lazarus-ide.org/)
 * Supported platforms: Windows and Linux
 * Supported architectures: 32-bit and 64-bit x86
 

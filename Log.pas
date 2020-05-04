@@ -41,6 +41,7 @@ type
 var
   LogDlg: TLogDlg;
 
+
 implementation
 
 uses

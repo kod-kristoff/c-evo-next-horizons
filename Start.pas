@@ -8,15 +8,6 @@ uses
   LCLIntf, LCLType, SysUtils, Classes, Graphics, Controls, Forms, StdCtrls,
   Menus, Registry, DrawDlg, fgl, Protocol;
 
-const
-  // main actions
-  nMainActions = 5;
-  maConfig = 0;
-  maManual = 1;
-  maCredits = 2;
-  maAIDev = 3;
-  maWeb = 4;
-
 type
   TPlayerSlot = class
     DiffUpBtn: TButtonC;
@@ -39,12 +30,10 @@ type
     pgMain
   );
 
-  TStartTab = (
-    tbMain,
-    tbMap,
-    tbNew,
-    tbPrevious
-  );
+  TStartTab = (tbMain, tbMap, tbNew, tbPrevious);
+  TMiniMode = (mmNone, mmPicture, mmMultiPlayer);
+  TMainAction = (maConfig, maManual, maCredits, maAIDev, maWeb, maNone);
+  TMainActionSet = set of TMainAction;
 
   TMapArray = array[0 .. lxmax * lymax - 1] of Byte;
 
@@ -110,7 +99,6 @@ type
     MultiControl: Integer;
     MiniWidth: Integer;
     MiniHeight: Integer;
-    SelectedAction: Integer;
     Page: TStartPage;
     ShowTab: TStartTab;
     Tab: TStartTab;
@@ -130,9 +118,11 @@ type
     MiniColors: array [0 .. 11, 0 .. 1] of TColor;
     // BookDate: string;
     PlayerSlots: TPlayerSlots;
-    MiniMode: (mmNone, mmPicture, mmMultiPlayer);
-    ActionsOffered: set of 0 .. nMainActions - 1;
-    TurnValid, Tracking: boolean;
+    MiniMode: TMiniMode;
+    ActionsOffered: TMainActionSet;
+    SelectedAction: TMainAction;
+    TurnValid: Boolean;
+    Tracking: Boolean;
     DefaultAI: string;
     procedure DrawAction(y, IconIndex: integer; HeaderItem, TextItem: string);
     procedure InitPopup(PlayerIndex: Integer);
@@ -236,8 +226,7 @@ begin
   end;
   LoadConfig;
 
-  ActionsOffered := [maManual, maCredits, maWeb];
-  Include(ActionsOffered, maConfig);
+  ActionsOffered := [maConfig, maManual, maCredits, maWeb];
   if FileExists(HomeDir + 'AI Template' + DirectorySeparator + 'AI development manual.html') then
     Include(ActionsOffered, maAIDev);
 
@@ -510,6 +499,7 @@ var
   i, w, h, xMini, yMini, y: integer;
   s: string;
   Tab2: TStartTab;
+  MainAction: TMainAction;
 begin
   PaintBackground(self, 3, 3, TabOffset + 4 * TabSize - 4, TabHeight - 3);
   PaintBackground(self, 3, TabHeight + 3, ClientWidth - 6,
@@ -599,30 +589,30 @@ begin
 
   if Page = pgMain then
   begin
-    if SelectedAction >= 0 then // mark selected action
+    if SelectedAction >= maNone then // mark selected action
       for i := 0 to (ClientWidth - 2 * ActionSideBorder) div wBuffer + 1 do
       begin
         w := ClientWidth - 2 * ActionSideBorder - i * wBuffer;
         if w > wBuffer then
           w := wBuffer;
         h := ActionPitch;
-        if yAction + SelectedAction * ActionPitch - 8 + h > ClientHeight - ActionBottomBorder
+        if yAction + Integer(SelectedAction) * ActionPitch - 8 + h > ClientHeight - ActionBottomBorder
         then
           h := ClientHeight - ActionBottomBorder -
-            (yAction + SelectedAction * ActionPitch - 8);
+            (yAction + Integer(SelectedAction) * ActionPitch - 8);
         BitBltCanvas(LogoBuffer.Canvas, 0, 0, w, h, Canvas,
-          ActionSideBorder + i * wBuffer, yAction + SelectedAction * ActionPitch
+          ActionSideBorder + i * wBuffer, yAction + Integer(SelectedAction) * ActionPitch
           - 8, SRCCOPY);
         MakeBlue(LogoBuffer, 0, 0, w, h);
         BitBlt(Canvas.Handle, ActionSideBorder + i * wBuffer,
-          yAction + SelectedAction * ActionPitch - 8, w, h,
+          yAction + Integer(SelectedAction) * ActionPitch - 8, w, h,
           LogoBuffer.Canvas.Handle, 0, 0, SRCCOPY);
       end;
     y := yAction;
-    for i := 0 to nMainActions - 1 do
+    for MainAction := Low(TMainActionSet) to High(TMainActionSet) do
     begin
-      if i in ActionsOffered then
-        case i of
+      if MainAction in ActionsOffered then
+        case MainAction of
           maConfig:
             DrawAction(y, 25, 'ACTIONHEADER_CONFIG', 'ACTION_CONFIG');
           maManual:
@@ -891,7 +881,7 @@ begin
 
   Difficulty[0] := Diff0;
 
-  SelectedAction := -1;
+  SelectedAction := maNone;
   if ShowTab = tbPrevious then
     PreviewMap(StartLandMass); // avoid delay on first TabX change
   ChangeTab(ShowTab);
@@ -1963,7 +1953,8 @@ end;
 procedure TStartDlg.FormMouseMove(Sender: TObject; Shift: TShiftState;
   x, y: integer);
 var
-  OldLoadTurn, NewSelectedAction: Integer;
+  OldLoadTurn: Integer;
+  NewSelectedAction: TMainAction;
 begin
   if Tracking then
   begin
@@ -1994,22 +1985,22 @@ begin
     if (x >= ActionSideBorder) and (x < ClientWidth - ActionSideBorder) and
       (y >= yAction - 8) and (y < ClientHeight - ActionBottomBorder) then
     begin
-      NewSelectedAction := (y - (yAction - 8)) div ActionPitch;
-      if not(NewSelectedAction in ActionsOffered) then
-        NewSelectedAction := -1;
+      NewSelectedAction := TMainAction((y - (yAction - 8)) div ActionPitch);
+      if not (NewSelectedAction in ActionsOffered) then
+        NewSelectedAction := maNone;
     end
     else
-      NewSelectedAction := -1;
+      NewSelectedAction := maNone;
     if NewSelectedAction <> SelectedAction then
     begin
-      if SelectedAction >= 0 then
-        SmartInvalidate(ActionSideBorder, yAction + SelectedAction * ActionPitch
-          - 8, ClientWidth - ActionSideBorder, yAction + (SelectedAction + 1) *
+      if SelectedAction <> maNone then
+        SmartInvalidate(ActionSideBorder, yAction + Integer(SelectedAction) * ActionPitch
+          - 8, ClientWidth - ActionSideBorder, yAction + (Integer(SelectedAction) + 1) *
           ActionPitch - 8);
       SelectedAction := NewSelectedAction;
-      if SelectedAction >= 0 then
-        SmartInvalidate(ActionSideBorder, yAction + SelectedAction * ActionPitch
-          - 8, ClientWidth - ActionSideBorder, yAction + (SelectedAction + 1) *
+      if SelectedAction <> maNone then
+        SmartInvalidate(ActionSideBorder, yAction + Integer(SelectedAction) * ActionPitch
+          - 8, ClientWidth - ActionSideBorder, yAction + (Integer(SelectedAction) + 1) *
           ActionPitch - 8);
     end;
   end;
