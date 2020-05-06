@@ -2747,9 +2747,9 @@ begin { >>>client }
           if G.RO[pLogo] = nil then
           begin
             if AILogo[pLogo] <> nil then
-              BitBlt(Canvas.Handle, (xRightPanel + 10) - (16 + 64),
-                ClientHeight - PanelHeight, 64, 64, AILogo[pLogo].Canvas.Handle,
-                0, 0, SRCCOPY);
+              BitBltCanvas(Canvas, (xRightPanel + 10) - (16 + 64),
+                ClientHeight - PanelHeight, 64, 64, AILogo[pLogo].Canvas,
+                0, 0);
           end
         end
       end;
@@ -4037,28 +4037,28 @@ begin
   then
     exit;
 
-  NoMap.BitBlt(Panel, -xMap - MapOffset, -yMap + MapHeight - overlap, xMidPanel,
+  NoMap.BitBltBitmap(Panel, -xMap - MapOffset, -yMap + MapHeight - overlap, xMidPanel,
     overlap, 0, 0, SRCCOPY);
-  NoMap.BitBlt(Panel, -xMap - MapOffset + xRightPanel,
+  NoMap.BitBltBitmap(Panel, -xMap - MapOffset + xRightPanel,
     -yMap + MapHeight - overlap, Panel.width - xRightPanel, overlap,
     xRightPanel, 0, SRCCOPY);
   if yMap < 0 then
   begin
     if xMap < 0 then
-      BitBlt(Canvas.Handle, MapOffset, TopBarHeight, width + xMap,
-        height + yMap, Buffer.Canvas.Handle, -xMap, -yMap, SRCCOPY)
+      BitBltCanvas(Canvas, MapOffset, TopBarHeight, width + xMap,
+        height + yMap, Buffer.Canvas, -xMap, -yMap)
     else
-      BitBlt(Canvas.Handle, xMap + MapOffset, TopBarHeight, width,
-        height + yMap, Buffer.Canvas.Handle, 0, -yMap, SRCCOPY)
+      BitBltCanvas(Canvas, xMap + MapOffset, TopBarHeight, width,
+        height + yMap, Buffer.Canvas, 0, -yMap)
   end
   else
   begin
     if xMap < 0 then
-      BitBlt(Canvas.Handle, MapOffset, TopBarHeight + yMap, width + xMap,
-        height, Buffer.Canvas.Handle, -xMap, 0, SRCCOPY)
+      BitBltCanvas(Canvas, MapOffset, TopBarHeight + yMap, width + xMap,
+        height, Buffer.Canvas, -xMap, 0)
     else
-      BitBlt(Canvas.Handle, xMap + MapOffset, TopBarHeight + yMap, width,
-        height, Buffer.Canvas.Handle, 0, 0, SRCCOPY);
+      BitBltCanvas(Canvas, xMap + MapOffset, TopBarHeight + yMap, width,
+        height, Buffer.Canvas, 0, 0);
   end
 end;
 
@@ -4183,7 +4183,7 @@ end;
 function ScrollDC(Canvas: TCanvas; dx: longint; dy: longint; const lprcScroll:TRect; const lprcClip:TRect; hrgnUpdate:HRGN; lprcUpdate: PRect):Boolean;
 begin
   BitBltCanvas(Canvas, lprcScroll.Left + dx, lprcScroll.Top + dy, lprcScroll.Right - lprcScroll.Left, lprcScroll.Bottom - lprcScroll.Top,
-    Canvas, lprcScroll.Left, lprcScroll.Top, SRCCOPY);
+    Canvas, lprcScroll.Left, lprcScroll.Top);
 end;
 {$ENDIF}
 
@@ -4328,8 +4328,8 @@ end;
 
 procedure TMainScreen.CopyMiniToPanel;
 begin
-  BitBlt(Panel.Canvas.Handle, xMini + 2, yMini + 2, G.lx * 2, G.ly,
-    Mini.Canvas.Handle, 0, 0, SRCCOPY);
+  BitBltCanvas(Panel.Canvas, xMini + 2, yMini + 2, G.lx * 2, G.ly,
+    Mini.Canvas, 0, 0);
   if MarkCityLoc >= 0 then
     Sprite(Panel, HGrSystem, xMini - 2 + (4 * G.lx + 2 * (MarkCityLoc mod G.lx)
       + (G.lx - MapWidth div (xxt * 2)) - 2 * xwd) mod (2 * G.lx) +
@@ -4417,8 +4417,8 @@ begin
         RFrame(Panel.Canvas, ClientWidth - xPalace - 2, yPalace - 2,
           ClientWidth - xPalace + xSizeBig + 1, yPalace + ySizeBig + 1,
           $FFFFFF, $B0B0B0);
-        BitBlt(Panel.Canvas.Handle, ClientWidth - xPalace, yPalace, xSizeBig,
-          ySizeBig, GrExt[HGrSystem2].Data.Canvas.Handle, 70, 123, SRCCOPY);
+        BitBltCanvas(Panel.Canvas, ClientWidth - xPalace, yPalace, xSizeBig,
+          ySizeBig, GrExt[HGrSystem2].Data.Canvas, 70, 123);
       end
       else if MyRO.NatBuilt[imPalace] > 0 then
         ImpImage(Panel.Canvas, ClientWidth - xPalace, yPalace, imPalace, -1,
@@ -5275,8 +5275,8 @@ begin
       BrushLoc := MouseLoc;
       PaintLoc(MouseLoc, 2);
       MiniPaint;
-      BitBlt(Panel.Canvas.Handle, xMini + 2, yMini + 2, G.lx * 2, G.ly,
-        Mini.Canvas.Handle, 0, 0, SRCCOPY);
+      BitBltCanvas(Panel.Canvas, xMini + 2, yMini + 2, G.lx * 2, G.ly,
+        Mini.Canvas, 0, 0);
       if ywmax <= 0 then
         Frame(Panel.Canvas, xMini + 2 + G.lx - MapWidth div (2 * xxt),
           yMini + 2, xMini + 1 + G.lx + MapWidth div (2 * xxt),
@@ -6099,8 +6099,8 @@ begin
     NoMap.SetPaintBounds(0, 0, xRange, yRange);
     for Step := 0 to abs(Step1 - Step0) do
     begin
-      BitBlt(Buffer.Canvas.Handle, 0, 0, xRange, yRange,
-        offscreen.Canvas.Handle, xMin, yMin, SRCCOPY);
+      BitBltCanvas(Buffer.Canvas, 0, 0, xRange, yRange,
+        offscreen.Canvas, xMin, yMin);
       if Step1 <> Step0 then
       begin
         xMoving := xFrom +
@@ -6141,8 +6141,7 @@ begin
   end;
   if Restore then
   begin
-    BitBlt(Buffer.Canvas.Handle, 0, 0, xRange, yRange, offscreen.Canvas.Handle,
-      xMin, yMin, SRCCOPY);
+    BitBltCanvas(Buffer.Canvas, 0, 0, xRange, yRange, offscreen.Canvas, xMin, yMin);
     PaintBufferToScreen(xMin, yMin, xRange, yRange);
   end;
   BlinkTime := -1;
@@ -7557,8 +7556,7 @@ begin
         else if yw > ywmax then
           yw := ywmax;
       end;
-      BitBlt(Buffer.Canvas.Handle, 0, 0, G.lx * 2, G.ly, Mini.Canvas.Handle, 0,
-        0, SRCCOPY);
+      BitBltCanvas(Buffer.Canvas, 0, 0, G.lx * 2, G.ly, Mini.Canvas, 0, 0);
       if ywmax <= 0 then
         Frame(Buffer.Canvas, x - xMini - 2 - MapWidth div (xxt * 2), 0,
           x - xMini - 2 + MapWidth div (xxt * 2) - 1, G.ly - 1,
@@ -7567,8 +7565,8 @@ begin
         Frame(Buffer.Canvas, x - xMini - 2 - MapWidth div (xxt * 2), yw,
           x - xMini - 2 + MapWidth div (xxt * 2) - 1, yw + MapHeight div yyt -
           2, MainTexture.clMark, MainTexture.clMark);
-      BitBlt(Panel.Canvas.Handle, xMini + 2, yMini + 2, G.lx * 2, G.ly,
-        Buffer.Canvas.Handle, 0, 0, SRCCOPY);
+      BitBltCanvas(Panel.Canvas, xMini + 2, yMini + 2, G.lx * 2, G.ly,
+        Buffer.Canvas, 0, 0);
       MainOffscreenPaint;
       RectInvalidate(xMini + 2, TopBarHeight + MapHeight - overlap + yMini + 2,
         xMini + 2 + G.lx * 2, TopBarHeight + MapHeight - overlap + yMini +
@@ -7577,7 +7575,7 @@ begin
     end
   end
   else
-    Tracking := false
+    Tracking := false;
 end;
 
 procedure TMainScreen.PanelBoxMouseUp(Sender: TObject; Button: TMouseButton;
@@ -7719,38 +7717,36 @@ begin
       end;
       Brush.Style := bsClear;
     end;
-  BitBlt(Canvas.Handle, MapOffset, TopBarHeight, MapWidth, MapHeight - overlap,
-    offscreen.Canvas.Handle, 0, 0, SRCCOPY);
-  BitBlt(Canvas.Handle, 0, 0, ClientWidth, TopBarHeight, TopBar.Canvas.Handle,
-    0, 0, SRCCOPY);
+  BitBltCanvas(Canvas, MapOffset, TopBarHeight, MapWidth, MapHeight - overlap,
+    offscreen.Canvas, 0, 0);
+  BitBltCanvas(Canvas, 0, 0, ClientWidth, TopBarHeight, TopBar.Canvas,
+    0, 0);
   if xMidPanel > MapOffset then
-    BitBlt(Canvas.Handle, xMidPanel, TopBarHeight + MapHeight - overlap,
-      ClientWidth div 2 - xMidPanel, overlap, offscreen.Canvas.Handle,
-      xMidPanel - MapOffset, MapHeight - overlap, SRCCOPY)
+    BitBltCanvas(Canvas, xMidPanel, TopBarHeight + MapHeight - overlap,
+      ClientWidth div 2 - xMidPanel, overlap, offscreen.Canvas,
+      xMidPanel - MapOffset, MapHeight - overlap)
   else
-    BitBlt(Canvas.Handle, MapOffset, TopBarHeight + MapHeight - overlap,
-      ClientWidth div 2 - MapOffset, overlap, offscreen.Canvas.Handle, 0,
-      MapHeight - overlap, SRCCOPY);
+    BitBltCanvas(Canvas, MapOffset, TopBarHeight + MapHeight - overlap,
+      ClientWidth div 2 - MapOffset, overlap, offscreen.Canvas, 0,
+      MapHeight - overlap);
   if xRightPanel < MapOffset + MapWidth then
-    BitBlt(Canvas.Handle, ClientWidth div 2, TopBarHeight + MapHeight - overlap,
-      xRightPanel - ClientWidth div 2, overlap, offscreen.Canvas.Handle,
-      ClientWidth div 2 - MapOffset, MapHeight - overlap, SRCCOPY)
+    BitBltCanvas(Canvas, ClientWidth div 2, TopBarHeight + MapHeight - overlap,
+      xRightPanel - ClientWidth div 2, overlap, offscreen.Canvas,
+      ClientWidth div 2 - MapOffset, MapHeight - overlap)
   else
-    BitBlt(Canvas.Handle, ClientWidth div 2, TopBarHeight + MapHeight - overlap,
+    BitBltCanvas(Canvas, ClientWidth div 2, TopBarHeight + MapHeight - overlap,
       MapOffset + MapWidth - ClientWidth div 2, overlap,
-      offscreen.Canvas.Handle, ClientWidth div 2 - MapOffset,
-      MapHeight - overlap, SRCCOPY);
-  BitBlt(Canvas.Handle, 0, TopBarHeight + MapHeight - overlap, xMidPanel,
-    overlap, Panel.Canvas.Handle, 0, 0, SRCCOPY);
-  BitBlt(Canvas.Handle, xRightPanel, TopBarHeight + MapHeight - overlap,
-    Panel.width - xRightPanel, overlap, Panel.Canvas.Handle, xRightPanel,
-    0, SRCCOPY);
-  BitBlt(Canvas.Handle, 0, TopBarHeight + MapHeight, Panel.width,
-    PanelHeight - overlap, Panel.Canvas.Handle, 0, overlap, SRCCOPY);
+      offscreen.Canvas, ClientWidth div 2 - MapOffset,
+      MapHeight - overlap);
+  BitBltCanvas(Canvas, 0, TopBarHeight + MapHeight - overlap, xMidPanel,
+    overlap, Panel.Canvas, 0, 0);
+  BitBltCanvas(Canvas, xRightPanel, TopBarHeight + MapHeight - overlap,
+    Panel.width - xRightPanel, overlap, Panel.Canvas, xRightPanel, 0);
+  BitBltCanvas(Canvas, 0, TopBarHeight + MapHeight, Panel.width,
+    PanelHeight - overlap, Panel.Canvas, 0, overlap);
   if (pLogo >= 0) and (G.RO[pLogo] = nil) and (AILogo[pLogo] <> nil) then
-    BitBlt(Canvas.Handle, xRightPanel + 10 - (16 + 64),
-      ClientHeight - PanelHeight, 64, 64, AILogo[pLogo].Canvas.Handle, 0,
-      0, SRCCOPY);
+    BitBltCanvas(Canvas, xRightPanel + 10 - (16 + 64),
+      ClientHeight - PanelHeight, 64, 64, AILogo[pLogo].Canvas, 0, 0);
 end;
 
 procedure TMainScreen.RectInvalidate(Left, Top, Rigth, Bottom: integer);

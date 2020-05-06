@@ -196,18 +196,18 @@ procedure TListDlg.line(ca: TCanvas; l: integer; NonText, lit: boolean);
         MainTexture.clBevelShade);
       if pix and cpType = 0 then
         if (pix and cpIndex = imPalace) and (MyRO.Government <> gAnarchy) then
-          BitBlt(offscreen.Canvas.Handle, x + 16, y + (16 - 1), xSizeSmall,
-            ySizeSmall, SmallImp.Canvas.Handle, (MyRO.Government - 1) *
-            xSizeSmall, ySizeSmall, SRCCOPY)
+          BitBltCanvas(offscreen.Canvas, x + 16, y + (16 - 1), xSizeSmall,
+            ySizeSmall, SmallImp.Canvas, (MyRO.Government - 1) *
+            xSizeSmall, ySizeSmall)
         else
-          BitBlt(offscreen.Canvas.Handle, x + 16, y + (16 - 1), xSizeSmall,
-            ySizeSmall, SmallImp.Canvas.Handle, pix and cpIndex mod 7 *
+          BitBltCanvas(offscreen.Canvas, x + 16, y + (16 - 1), xSizeSmall,
+            ySizeSmall, SmallImp.Canvas, pix and cpIndex mod 7 *
             xSizeSmall, (pix and cpIndex + SystemIconLines * 7) div 7 *
-            ySizeSmall, SRCCOPY)
+            ySizeSmall)
       else
-        BitBlt(offscreen.Canvas.Handle, x + 16, y + (16 - 1), xSizeSmall,
-          ySizeSmall, SmallImp.Canvas.Handle, (3 + pix and cpIndex) *
-          xSizeSmall, 0, SRCCOPY)
+        BitBltCanvas(offscreen.Canvas, x + 16, y + (16 - 1), xSizeSmall,
+          ySizeSmall, SmallImp.Canvas, (3 + pix and cpIndex) *
+          xSizeSmall, 0);
     end;
   end;
 
@@ -567,18 +567,18 @@ begin
                   (8 + 16 + xSizeSmall), y0 + ySizeSmall,
                   MainTexture.clBevelLight, MainTexture.clBevelShade);
                 if AdvIcon[lix] < 84 then
-                  BitBlt(offscreen.Canvas.Handle, (8 + 16), y0, xSizeSmall,
-                    ySizeSmall, SmallImp.Canvas.Handle,
+                  BitBltCanvas(offscreen.Canvas, (8 + 16), y0, xSizeSmall,
+                    ySizeSmall, SmallImp.Canvas,
                     (AdvIcon[lix] + SystemIconLines * 7) mod 7 * xSizeSmall,
                     (AdvIcon[lix] + SystemIconLines * 7) div 7 *
-                    ySizeSmall, SRCCOPY)
+                    ySizeSmall)
                 else
                   Dump(offscreen, HGrSystem, (8 + 16), y0, 36, 20,
                     1 + (AdvIcon[lix] - 84) mod 8 * 37,
                     295 + (AdvIcon[lix] - 84) div 8 * 21);
                 j := AdvValue[lix] div 1000;
-                BitBlt(Handle, (8 + 16 - 4), y0 + 2, 14, 14,
-                  GrExt[HGrSystem].Mask.Canvas.Handle, 127 + j * 15,
+                BitBltCanvas(Canvas, (8 + 16 - 4), y0 + 2, 14, 14,
+                  GrExt[HGrSystem].Mask.Canvas, 127 + j * 15,
                   85, SRCAND);
                 Sprite(offscreen, HGrSystem, (8 + 16 - 5), y0 + 1, 14, 14,
                   127 + j * 15, 85);
@@ -672,9 +672,9 @@ begin
             Frame(offscreen.Canvas, 8 + 16 - 1, y0 - 15 + (16 - 2),
               8 + 16 + xSizeSmall, y0 - 15 + (16 - 1 + ySizeSmall),
               MainTexture.clBevelLight, MainTexture.clBevelShade);
-            BitBlt(offscreen.Canvas.Handle, 8 + 16, y0 - 15 + (16 - 1),
-              xSizeSmall, ySizeSmall, SmallImp.Canvas.Handle,
-              (lix - 1) * xSizeSmall, ySizeSmall, SRCCOPY);
+            BitBltCanvas(offscreen.Canvas, 8 + 16, y0 - 15 + (16 - 1),
+              xSizeSmall, ySizeSmall, SmallImp.Canvas,
+              (lix - 1) * xSizeSmall, ySizeSmall);
           end
         end;
       kMission:
@@ -816,11 +816,11 @@ begin
         LoweredTextOut(Canvas, -1, MainTexture, xScreen + 10,
           ClientHeight - 29, s);
         BitBltCanvas(ScienceNationDot.Canvas, 0, 0, 17, 17, Canvas,
-          xScreen - 10, ClientHeight - 27, SRCCOPY);
+          xScreen - 10, ClientHeight - 27);
         ImageOp_BCC(ScienceNationDot, Templates, 0, 0, 114, 211, 17, 17,
           MainTexture.clBevelShade, Tribe[ScienceNation].Color);
-        BitBlt(Canvas.Handle, xScreen - 10, ClientHeight - 27, 17, 17,
-          ScienceNationDot.Canvas.Handle, 0, 0, SRCCOPY);
+        BitBltCanvas(Canvas, xScreen - 10, ClientHeight - 27, 17, 17,
+          ScienceNationDot.Canvas, 0, 0);
       end;
     end
   end;

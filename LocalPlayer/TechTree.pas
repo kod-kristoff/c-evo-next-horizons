@@ -107,14 +107,14 @@ begin
         ClientHeight - BlackBorder, -BlackBorder - xOffset,
         -BlackBorder - yOffset, Paper);
   end;
-  BitBlt(Canvas.Handle, max(BlackBorder, BlackBorder + xOffset),
+  BitBltCanvas(Canvas, max(BlackBorder, BlackBorder + xOffset),
     max(BlackBorder, BlackBorder + yOffset),
     min(Image.width, min(Image.width + xOffset,
     min(ClientWidth - 2 * BlackBorder, ClientWidth - 2 * BlackBorder - xOffset))
     ), min(Image.height, min(Image.height + yOffset,
     min(ClientHeight - 2 * BlackBorder, ClientHeight - 2 * BlackBorder -
-    yOffset))), Image.Canvas.Handle, max(0, -xOffset),
-    max(0, -yOffset), SRCCOPY);
+    yOffset))), Image.Canvas, max(0, -xOffset),
+    max(0, -yOffset));
 end;
 
 procedure TTechTreeDlg.FormShow(Sender: TObject);

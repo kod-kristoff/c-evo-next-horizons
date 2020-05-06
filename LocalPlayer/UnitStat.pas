@@ -96,21 +96,21 @@ begin
   if MainTextureAge <> AgePrepared then
   begin
     AgePrepared := MainTextureAge;
-    bitblt(Back.Canvas.Handle, 0, 0, wCommon, hOwnModel,
-      MainTexture.Image.Canvas.Handle, (wMainTexture - wCommon) div 2,
-      (hMainTexture - hOwnModel) div 2, SRCCOPY);
-    bitblt(Back.Canvas.Handle, wCommon, 0, wCommon, hEnemyModel,
-      MainTexture.Image.Canvas.Handle, (wMainTexture - wCommon) div 2,
-      (hMainTexture - hEnemyModel) div 2, SRCCOPY);
-    bitblt(Back.Canvas.Handle, 2 * wCommon, 0, wCommon, hEnemyUnit,
-      MainTexture.Image.Canvas.Handle, (wMainTexture - wCommon) div 2,
-      (hMainTexture - hEnemyUnit) div 2, SRCCOPY);
-    bitblt(Back.Canvas.Handle, 3 * wCommon, 0, wCommon, hEnemyCityDefense,
-      MainTexture.Image.Canvas.Handle, (wMainTexture - wCommon) div 2,
-      (hMainTexture - hEnemyCityDefense) div 2, SRCCOPY);
-    bitblt(Back.Canvas.Handle, 4 * wCommon, 0, wCommon, hEnemyCity,
-      MainTexture.Image.Canvas.Handle, (wMainTexture - wCommon) div 2,
-      (hMainTexture - hEnemyCity) div 2, SRCCOPY);
+    BitBltCanvas(Back.Canvas, 0, 0, wCommon, hOwnModel,
+      MainTexture.Image.Canvas, (wMainTexture - wCommon) div 2,
+      (hMainTexture - hOwnModel) div 2);
+    BitBltCanvas(Back.Canvas, wCommon, 0, wCommon, hEnemyModel,
+      MainTexture.Image.Canvas, (wMainTexture - wCommon) div 2,
+      (hMainTexture - hEnemyModel) div 2);
+    BitBltCanvas(Back.Canvas, 2 * wCommon, 0, wCommon, hEnemyUnit,
+      MainTexture.Image.Canvas, (wMainTexture - wCommon) div 2,
+      (hMainTexture - hEnemyUnit) div 2);
+    BitBltCanvas(Back.Canvas, 3 * wCommon, 0, wCommon, hEnemyCityDefense,
+      MainTexture.Image.Canvas, (wMainTexture - wCommon) div 2,
+      (hMainTexture - hEnemyCityDefense) div 2);
+    BitBltCanvas(Back.Canvas, 4 * wCommon, 0, wCommon, hEnemyCity,
+      MainTexture.Image.Canvas, (wMainTexture - wCommon) div 2,
+      (hMainTexture - hEnemyCity) div 2);
     ImageOp_B(Back, Template, 0, 0, 0, 0, 5 * wCommon, hMax);
   end
 end;
@@ -386,36 +386,36 @@ begin
   case Kind of
     dkOwnModel:
       begin
-        bitblt(offscreen.Canvas.Handle, 0, 0, wCommon, hOwnModel,
-          Back.Canvas.Handle, 0, 0, SRCCOPY);
+        BitBltCanvas(offscreen.Canvas, 0, 0, wCommon, hOwnModel,
+          Back.Canvas, 0, 0);
         yView := 13;
         yTotal := 92;
       end;
     dkEnemyModel:
       begin
-        bitblt(offscreen.Canvas.Handle, 0, 0, wCommon, hEnemyModel,
-          Back.Canvas.Handle, wCommon, 0, SRCCOPY);
+        BitBltCanvas(offscreen.Canvas, 0, 0, wCommon, hEnemyModel,
+          Back.Canvas, wCommon, 0);
         yView := 13;
         yTotal := 92;
       end;
     dkEnemyUnit, dkOwnUnit:
       begin
-        bitblt(offscreen.Canvas.Handle, 0, 0, wCommon, hEnemyUnit,
-          Back.Canvas.Handle, 2 * wCommon, 0, SRCCOPY);
+        BitBltCanvas(offscreen.Canvas, 0, 0, wCommon, hEnemyUnit,
+          Back.Canvas, 2 * wCommon, 0);
         yView := 13;
         yTotal := 123;
       end;
     dkEnemyCityDefense:
       begin
-        bitblt(offscreen.Canvas.Handle, 0, 0, wCommon, hEnemyCityDefense,
-          Back.Canvas.Handle, 3 * wCommon, 0, SRCCOPY);
+        BitBltCanvas(offscreen.Canvas, 0, 0, wCommon, hEnemyCityDefense,
+          Back.Canvas, 3 * wCommon, 0);
         yView := 171;
         yTotal := 231;
       end;
     dkEnemyCity:
       begin
-        bitblt(offscreen.Canvas.Handle, 0, 0, wCommon, hEnemyCity,
-          Back.Canvas.Handle, 4 * wCommon, 0, SRCCOPY);
+        BitBltCanvas(offscreen.Canvas, 0, 0, wCommon, hEnemyCity,
+          Back.Canvas, 4 * wCommon, 0);
       end;
   end;
   MarkUsedOffscreen(ClientWidth, ClientHeight);
@@ -444,9 +444,9 @@ begin
         Frame(offscreen.Canvas, x - 1, yImp - 1, x + xSizeSmall,
           yImp + ySizeSmall, MainTexture.clBevelLight,
           MainTexture.clBevelShade);
-        bitblt(offscreen.Canvas.Handle, x, yImp, xSizeSmall, ySizeSmall,
-          SmallImp.Canvas.Handle, j mod 7 * xSizeSmall,
-          (j + SystemIconLines * 7) div 7 * ySizeSmall, SRCCOPY);
+        bitbltCanvas(offscreen.Canvas, x, yImp, xSizeSmall, ySizeSmall,
+          SmallImp.Canvas, j mod 7 * xSizeSmall,
+          (j + SystemIconLines * 7) div 7 * ySizeSmall);
         inc(x, xSizeSmall + 4)
       end;
   end;
@@ -563,8 +563,8 @@ begin
                     1 + yyt + 2 * integer(2 + MyMap[Loc] and fTerrain - fForest)
                     * (yyt * 3 + 1));
               end;
-          bitblt(offscreen.Canvas.Handle, xView, yView + 16, 64, 32,
-            Buffer.Canvas.Handle, 1, 0, SRCCOPY);
+          bitbltCanvas(offscreen.Canvas, xView, yView + 16, 64, 32,
+            Buffer.Canvas, 1, 0);
 
           // show unit, experience and health
           Sprite(offscreen, HGr, xView, yView, 64, 48, pix mod 10 * 65 + 1,

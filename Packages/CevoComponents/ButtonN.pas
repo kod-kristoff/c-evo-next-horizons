@@ -3,7 +3,7 @@ unit ButtonN;
 interface
 
 uses
-  Classes, Graphics, Controls, LCLIntf, LCLType;
+  Classes, Graphics, Controls, LCLIntf, LCLType, ScreenTools;
 
 type
   TButtonN = class(TGraphicControl)
@@ -61,13 +61,13 @@ begin
   begin
     if FGraphic <> nil then
     begin
-      BitBlt(Canvas.Handle, 1, 1, 40, 40, FBackGraphic.Canvas.Handle,
-        1 + 80 * BackIndex + 40 * byte(FPossible and FLit), 176, SRCCOPY);
+      BitBltCanvas(Canvas, 1, 1, 40, 40, FBackGraphic.Canvas,
+        1 + 80 * BackIndex + 40 * byte(FPossible and FLit), 176);
       if FPossible then
       begin
-        BitBlt(Canvas.Handle, 3, 3, 36, 36, FMask.Canvas.Handle,
+        BitBltCanvas(Canvas, 3, 3, 36, 36, FMask.Canvas,
           195 + 37 * (FIndex mod 3), 21 + 37 * (FIndex div 3), SRCAND);
-        BitBlt(Canvas.Handle, 3, 3, 36, 36, FGraphic.Canvas.Handle,
+        BitBltCanvas(Canvas, 3, 3, 36, 36, FGraphic.Canvas,
           195 + 37 * (FIndex mod 3), 21 + 37 * (FIndex div 3), SRCPAINT);
       end;
     end;

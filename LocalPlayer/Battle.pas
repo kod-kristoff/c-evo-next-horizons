@@ -106,10 +106,10 @@ begin
   if LADamage > LABaseDamage then
     VLightGradient(ca, xm - 8, ym + 8 + LABaseDamage, LADamage - LABaseDamage,
       FanaticColor);
-  BitBlt(ca.Handle, xm - 12, ym - 12, 24, 24,
-    GrExt[HGrSystem].Mask.Canvas.Handle, 26, 146, SRCAND);
-  BitBlt(ca.Handle, xm - 12, ym - 12, 24, 24,
-    GrExt[HGrSystem].Data.Canvas.Handle, 26, 146, SRCPAINT);
+  BitBltCanvas(ca, xm - 12, ym - 12, 24, 24,
+    GrExt[HGrSystem].Mask.Canvas, 26, 146, SRCAND);
+  BitBltCanvas(ca, xm - 12, ym - 12, 24, 24,
+    GrExt[HGrSystem].Data.Canvas, 26, 146, SRCPAINT);
 
   LabelText := Format('%d', [Forecast.AStr]);
   TextSize := ca.TextExtent(LabelText);
@@ -131,12 +131,12 @@ begin
 
   if Forecast.EndHealthDef <= 0 then
   begin
-    BitBlt(ca.Handle, xm + 9 + LDDamage - 7, ym - 6, 14, 17,
-      GrExt[HGrSystem].Mask.Canvas.Handle, 51, 153, SRCAND);
-    BitBlt(ca.Handle, xm + 8 + LDDamage - 7, ym - 7, 14, 17,
-      GrExt[HGrSystem].Mask.Canvas.Handle, 51, 153, SRCAND);
-    BitBlt(ca.Handle, xm + 8 + LDDamage - 7, ym - 7, 14, 17,
-      GrExt[HGrSystem].Data.Canvas.Handle, 51, 153, SRCPAINT);
+    BitBltCanvas(ca, xm + 9 + LDDamage - 7, ym - 6, 14, 17,
+      GrExt[HGrSystem].Mask.Canvas, 51, 153, SRCAND);
+    BitBltCanvas(ca, xm + 8 + LDDamage - 7, ym - 7, 14, 17,
+      GrExt[HGrSystem].Mask.Canvas, 51, 153, SRCAND);
+    BitBltCanvas(ca, xm + 8 + LDDamage - 7, ym - 7, 14, 17,
+      GrExt[HGrSystem].Data.Canvas, 51, 153, SRCPAINT);
   end;
   LabelText := Format('%d', [DDamage]);
   TextSize := ca.TextExtent(LabelText);
@@ -151,12 +151,12 @@ begin
 
   if Forecast.EndHealthAtt <= 0 then
   begin
-    BitBlt(ca.Handle, xm - 6, ym + 9 + LADamage - 7, 14, 17,
-      GrExt[HGrSystem].Mask.Canvas.Handle, 51, 153, SRCAND);
-    BitBlt(ca.Handle, xm - 7, ym + 8 + LADamage - 7, 14, 17,
-      GrExt[HGrSystem].Mask.Canvas.Handle, 51, 153, SRCAND);
-    BitBlt(ca.Handle, xm - 7, ym + 8 + LADamage - 7, 14, 17,
-      GrExt[HGrSystem].Data.Canvas.Handle, 51, 153, SRCPAINT);
+    BitBltCanvas(ca, xm - 6, ym + 9 + LADamage - 7, 14, 17,
+      GrExt[HGrSystem].Mask.Canvas, 51, 153, SRCAND);
+    BitBltCanvas(ca, xm - 7, ym + 8 + LADamage - 7, 14, 17,
+      GrExt[HGrSystem].Mask.Canvas, 51, 153, SRCAND);
+    BitBltCanvas(ca, xm - 7, ym + 8 + LADamage - 7, 14, 17,
+      GrExt[HGrSystem].Data.Canvas, 51, 153, SRCPAINT);
   end;
   LabelText := Format('%d', [MyUn[uix].Health - Forecast.EndHealthAtt]);
   TextSize := ca.TextExtent(LabelText);
@@ -172,8 +172,8 @@ begin
       (LADamage - LAAvoidedDamage - TextSize.cy) div 2, LabelText);
 
   NoMap.SetOutput(Buffer);
-  BitBlt(Buffer.Canvas.Handle, 0, 0, 66, 48, ca.Handle, xm + 8 + 4,
-    ym - 8 - 12 - 48, SRCCOPY);
+  BitBltCanvas(Buffer.Canvas, 0, 0, 66, 48, ca, xm + 8 + 4,
+    ym - 8 - 12 - 48);
   { if TerrType<fForest then
     Sprite(Buffer,HGrTerrain,0,16,66,32,1+TerrType*(xxt*2+1),1+yyt)
     else
@@ -184,16 +184,15 @@ begin
     else Sprite(Buffer,HGrTerrain,0,16,66,32,1+7*(xxt*2+1),1+yyt+2*(2+TerrType-fForest)*(yyt*3+1));
     end; }
   NoMap.PaintUnit(1, 0, UnitInfo, 0);
-  BitBlt(ca.Handle, xm + 8 + 4, ym - 8 - 12 - 48, 66, 48, Buffer.Canvas.Handle,
-    0, 0, SRCCOPY);
+  BitBltCanvas(ca, xm + 8 + 4, ym - 8 - 12 - 48, 66, 48, Buffer.Canvas,
+    0, 0);
 
-  BitBlt(Buffer.Canvas.Handle, 0, 0, 66, 48, ca.Handle, xm - 8 - 4 - 66,
-    ym + 8 + 12, SRCCOPY);
+  BitBltCanvas(Buffer.Canvas, 0, 0, 66, 48, ca, xm - 8 - 4 - 66,
+    ym + 8 + 12);
   MakeUnitInfo(me, MyUn[uix], UnitInfo);
   UnitInfo.Flags := UnitInfo.Flags and not unFortified;
   NoMap.PaintUnit(1, 0, UnitInfo, 0);
-  BitBlt(ca.Handle, xm - 8 - 4 - 66, ym + 8 + 12, 66, 48, Buffer.Canvas.Handle,
-    0, 0, SRCCOPY);
+  BitBltCanvas(ca, xm - 8 - 4 - 66, ym + 8 + 12, 66, 48, Buffer.Canvas, 0, 0);
 end; { PaintBattleOutcome }
 
 procedure TBattleDlg.FormCreate(Sender: TObject);

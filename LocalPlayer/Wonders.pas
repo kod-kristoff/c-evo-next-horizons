@@ -237,7 +237,7 @@ begin
     if Imp[I].Preq <> preNA then
     begin
       case MyRO.Wonder[I].CityID of
-        - 1: // not built yet
+        -1: // not built yet
           begin
             Fill(Offscreen.Canvas, Center.X - xSizeBig div 2 + RingPosition[I].X - 3,
               Center.Y - ySizeBig div 2 + RingPosition[I].Y - 3, xSizeBig + 6,
@@ -248,20 +248,20 @@ begin
         -2: // destroyed
           begin
             HaveWonder := True;
-            BitBlt(Offscreen.Canvas.Handle,
+            BitBltCanvas(Offscreen.Canvas,
               Center.X - xSizeBig div 2 + RingPosition[I].X,
               Center.Y - ySizeBig div 2 + RingPosition[I].Y, xSizeBig,
-              ySizeBig, BigImp.Canvas.Handle, 0, (SystemIconLines + 3) *
-              ySizeBig, SRCCOPY);
+              ySizeBig, BigImp.Canvas, 0, (SystemIconLines + 3) *
+              ySizeBig);
           end;
       else
         begin
           HaveWonder := True;
-          BitBlt(Offscreen.Canvas.Handle,
+          BitBltCanvas(Offscreen.Canvas,
             Center.X - xSizeBig div 2 + RingPosition[I].X,
             Center.Y - ySizeBig div 2 + RingPosition[I].Y, xSizeBig, ySizeBig,
-            BigImp.Canvas.Handle, (I mod 7) * xSizeBig,
-            (I div 7 + SystemIconLines) * ySizeBig, SRCCOPY);
+            BigImp.Canvas, (I mod 7) * xSizeBig,
+            (I div 7 + SystemIconLines) * ySizeBig);
         end;
       end;
     end;

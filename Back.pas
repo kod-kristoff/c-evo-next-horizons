@@ -64,9 +64,9 @@ end;
 procedure TBackground.FormPaint(Sender: TObject);
 begin
   if Assigned(Img) then
-    BitBlt(Canvas.Handle, Screen.Width - Img.Width - (Screen.Width - 800) *
+    BitBltCanvas(Canvas, Screen.Width - Img.Width - (Screen.Width - 800) *
       3 div 8, (Screen.Height - 600) div 3, Img.Width, Img.Height,
-      Img.Canvas.Handle, 0, 0, SRCCOPY);
+      Img.Canvas, 0, 0);
 end;
 
 procedure TBackground.FormClose(Sender: TObject; var Action: TCloseAction);

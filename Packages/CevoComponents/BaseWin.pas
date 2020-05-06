@@ -164,8 +164,7 @@ end;
 
 procedure TBufferedDrawDlg.VPaint;
 begin
-  BitBlt(Canvas.Handle, 0, 0, ClientWidth, ClientHeight,
-    Offscreen.Canvas.Handle, 0, 0, SRCCOPY);
+  BitBltCanvas(Canvas, 0, 0, ClientWidth, ClientHeight, Offscreen.Canvas, 0, 0);
 end;
 
 procedure TBufferedDrawDlg.ShowNewContent(NewMode: integer;
@@ -453,8 +452,8 @@ begin
         BtnFrame(Canvas, R, MainTexture);
     end;
 
-  BitBlt(Canvas.Handle, SideFrame, TitleHeight, ClientWidth - 2 * SideFrame,
-    InnerBottom - TitleHeight, Offscreen.Canvas.Handle, 0, 0, SRCCOPY);
+  BitBltCanvas(Canvas, SideFrame, TitleHeight, ClientWidth - 2 * SideFrame,
+    InnerBottom - TitleHeight, Offscreen.Canvas, 0, 0);
 end;
 
 procedure TFramedDlg.InitWindowRegion;

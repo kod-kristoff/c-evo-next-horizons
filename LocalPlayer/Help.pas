@@ -394,8 +394,8 @@ begin
       ca.brush.color:=$FFFFFF;
       ca.FrameRect(rect(x+1,i*24+1,x+24-1,i*24+24-1));
       ca.Brush.Style:=bsClear; }
-    BitBlt(ca.Handle, x, y - 4, 24, 24, GrExt[HGrSystem].Data.Canvas.Handle, 1,
-      146, SRCCOPY);
+    BitBltCanvas(ca, x, y - 4, 24, 24, GrExt[HGrSystem].Data.Canvas, 1,
+      146);
     BiColorTextOut(ca, $FFFFFF, $7F007F, x + 10 - ca.Textwidth(s[1]) div 2,
       y - 3, s[1]);
     BiColorTextOut(ca, CaptionColor, $7F007F, x + 24, y - 3, copy(s, 2, 255));
@@ -532,8 +532,8 @@ begin
           yl := ExtPic.Height;
           if 4 + i * 24 + yl > InnerHeight then
             yl := InnerHeight - (4 + i * 24);
-          BitBlt(Handle, 8, 4 + i * 24, ExtPic.Width, yl, ExtPic.Canvas.Handle,
-            0, 0, SRCCOPY);
+          BitBltCanvas(OffScreen.Canvas, 8, 4 + i * 24, ExtPic.Width, yl, ExtPic.Canvas,
+            0, 0);
         end;
       end;
     for i := -2 to InnerHeight div 24 do
@@ -573,15 +573,15 @@ begin
               ScreenTools.Frame(OffScreen.Canvas, 8 - 1 + x0[i], 2 - 1 + i * 24,
                 8 + xSizeSmall + x0[i], 2 + 20 + i * 24, $000000, $000000);
               if HelpLineInfo.Picpix = imPalace then
-                BitBlt(OffScreen.Canvas.Handle, 8 + x0[i], 2 + i * 24,
-                  xSizeSmall, ySizeSmall, SmallImp.Canvas.Handle,
-                  0 * xSizeSmall, 1 * ySizeSmall, SRCCOPY)
+                BitBltCanvas(OffScreen.Canvas, 8 + x0[i], 2 + i * 24,
+                  xSizeSmall, ySizeSmall, SmallImp.Canvas,
+                  0 * xSizeSmall, 1 * ySizeSmall)
               else
-                BitBlt(OffScreen.Canvas.Handle, 8 + x0[i], 2 + i * 24,
-                  xSizeSmall, ySizeSmall, SmallImp.Canvas.Handle,
+                BitBltCanvas(OffScreen.Canvas, 8 + x0[i], 2 + i * 24,
+                  xSizeSmall, ySizeSmall, SmallImp.Canvas,
                   HelpLineInfo.Picpix mod 7 * xSizeSmall,
                   (HelpLineInfo.Picpix + SystemIconLines * 7) div 7 *
-                  ySizeSmall, SRCCOPY);
+                  ySizeSmall);
               x0[i] := x0[i] + (8 + 8 + 36);
             end;
           pkBigIcon:
@@ -640,18 +640,18 @@ begin
                 8 + xSizeSmall + x0[i], 2 + ySizeSmall + i * 24,
                 $000000, $000000);
               if AdvIcon[HelpLineInfo.Picpix] < 84 then
-                BitBlt(OffScreen.Canvas.Handle, 8 + x0[i], 2 + i * 24,
-                  xSizeSmall, ySizeSmall, SmallImp.Canvas.Handle,
+                BitBltCanvas(OffScreen.Canvas, 8 + x0[i], 2 + i * 24,
+                  xSizeSmall, ySizeSmall, SmallImp.Canvas,
                   (AdvIcon[HelpLineInfo.Picpix] + SystemIconLines * 7) mod 7 *
                   xSizeSmall, (AdvIcon[HelpLineInfo.Picpix] + SystemIconLines *
-                  7) div 7 * ySizeSmall, SRCCOPY)
+                  7) div 7 * ySizeSmall)
               else
                 Dump(OffScreen, HGrSystem, 8 + x0[i], 2 + i * 24, 36, 20,
                   1 + (AdvIcon[HelpLineInfo.Picpix] - 84) mod 8 * 37,
                   295 + (AdvIcon[HelpLineInfo.Picpix] - 84) div 8 * 21);
               j := AdvValue[HelpLineInfo.Picpix] div 1000;
-              BitBlt(Handle, x0[i] + 4, 4 + i * 24, 14, 14,
-                GrExt[HGrSystem].Mask.Canvas.Handle, 127 + j * 15, 85, SRCAND);
+              BitBltCanvas(OffScreen.Canvas, x0[i] + 4, 4 + i * 24, 14, 14,
+                GrExt[HGrSystem].Mask.Canvas, 127 + j * 15, 85, SRCAND);
               Sprite(OffScreen, HGrSystem, x0[i] + 3, 3 + i * 24, 14, 14,
                 127 + j * 15, 85);
               x0[i] := x0[i] + (8 + 8 + 36);
@@ -827,9 +827,9 @@ begin
             begin
               ScreenTools.Frame(OffScreen.Canvas, 8 - 1 + x0[i], 2 - 1 + i * 24,
                 8 + xSizeSmall + x0[i], 2 + 20 + i * 24, $000000, $000000);
-              BitBlt(OffScreen.Canvas.Handle, 8 + x0[i], 2 + i * 24, xSizeSmall,
-                ySizeSmall, SmallImp.Canvas.Handle, (HelpLineInfo.Picpix - 1) *
-                xSizeSmall, ySizeSmall, SRCCOPY);
+              BitBltCanvas(OffScreen.Canvas, 8 + x0[i], 2 + i * 24, xSizeSmall,
+                ySizeSmall, SmallImp.Canvas, (HelpLineInfo.Picpix - 1) *
+                xSizeSmall, ySizeSmall);
               x0[i] := x0[i] + (8 + 8 + 36);
             end;
           pkDot:

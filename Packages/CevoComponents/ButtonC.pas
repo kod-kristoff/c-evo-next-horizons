@@ -3,7 +3,7 @@ unit ButtonC;
 interface
 
 uses
-  ButtonBase, Classes, Graphics, LCLIntf, LCLType;
+  ButtonBase, Classes, Graphics, LCLIntf, LCLType, ScreenTools;
 
 type
   TButtonC = class(TButtonBase)
@@ -20,6 +20,7 @@ type
   end;
 
 procedure Register;
+
 
 implementation
 
@@ -39,8 +40,8 @@ procedure TButtonC.Paint;
 begin
   with Canvas do
     if FGraphic <> nil then
-      BitBlt(Canvas.Handle, 0, 0, 12, 12, FGraphic.Canvas.Handle,
-        169 + 13 * Byte(FDown), 159 + 13 * FIndex, SRCCOPY)
+      BitBltCanvas(Canvas, 0, 0, 12, 12, FGraphic.Canvas,
+        169 + 13 * Byte(FDown), 159 + 13 * FIndex)
     else
     begin
       Brush.Color := $0000FF;

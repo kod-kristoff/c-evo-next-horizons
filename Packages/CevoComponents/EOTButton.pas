@@ -37,7 +37,11 @@ type
 
 procedure Register;
 
+
 implementation
+
+uses
+  ScreenTools;
 
 procedure Register;
 begin
@@ -124,15 +128,14 @@ begin
     if FGraphic <> nil then
     begin
       // TODO: For some reason BitBlt is not working with gray background here
-      //BitBlt(Buffer.Canvas.Handle, 0, 0, 48, 48, Back.Canvas.Handle, 0,
-      //  0, SRCCOPY);
+      //BitBltCanvas(Buffer.Canvas, 0, 0, 48, 48, Back.Canvas, 0, 0);
       Buffer.Canvas.Draw(0, 0, Back);
       ImageOp_CBC(Buffer, Template, 0, 0, 133, 149 + 48 * Byte(FDown), 48, 48,
         $000000, $FFFFFF);
       if FIndex >= 0 then
         ImageOp_CBC(Buffer, Template, 8, 8, 1 + 32 * Byte(FIndex), 246, 32, 32,
           $000000, $FFFFFF);
-      BitBlt(Canvas.Handle, 0, 0, 48, 48, Buffer.Canvas.Handle, 0, 0, SRCCOPY);
+      BitBltCanvas(Canvas, 0, 0, 48, 48, Buffer.Canvas, 0, 0);
     end
     else
     begin
@@ -164,7 +167,7 @@ end;
 
 procedure TEOTButton.SetBack(ca: TCanvas; x, y: integer);
 begin
-  BitBlt(Back.Canvas.Handle, 0, 0, 48, 48, ca.Handle, x, y, SRCCOPY);
+  BitBltCanvas(Back.Canvas, 0, 0, 48, 48, ca, x, y);
 end;
 
 end.

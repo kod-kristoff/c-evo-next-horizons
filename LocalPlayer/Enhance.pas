@@ -95,9 +95,9 @@ begin
     job3.Top + job3.Height), MainTexture);
   for i := 0 to ControlCount - 1 do
     if Controls[i] is TButtonC then
-      BitBlt(Canvas.Handle, Controls[i].Left + 2, Controls[i].Top - 11, 8, 8,
-        GrExt[HGrSystem].Data.Canvas.Handle, 121 + Controls[i].Tag mod 7 * 9,
-        1 + Controls[i].Tag div 7 * 9, SRCCOPY);
+      BitBltCanvas(Canvas, Controls[i].Left + 2, Controls[i].Top - 11, 8, 8,
+        GrExt[HGrSystem].Data.Canvas, 121 + Controls[i].Tag mod 7 * 9,
+        1 + Controls[i].Tag div 7 * 9);
 end;
 
 procedure TEnhanceDlg.FormShow(Sender: TObject);

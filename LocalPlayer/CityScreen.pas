@@ -259,8 +259,8 @@ begin
     // TODO: FillRect should not be needed as BitBlt is with SRCCOPY
     Back.Canvas.FillRect(0, 0, ClientWidth, ClientHeight);
 
-    bitblt(Back.Canvas.Handle, 0, 0, ClientWidth, ClientHeight,
-      MainTexture.Image.Canvas.Handle, 0, 0, SRCCOPY);
+    bitbltCanvas(Back.Canvas, 0, 0, ClientWidth, ClientHeight,
+      MainTexture.Image.Canvas, 0, 0);
     ImageOp_B(Back, Template, 0, 0, 0, 0, ClientWidth, ClientHeight);
   end;
 end;
@@ -290,20 +290,20 @@ begin
   Color1 := Colors.Canvas.Pixels[clkCity, cli1];
   Color2 := Colors.Canvas.Pixels[clkAge0 + Age, cliHouse];
   SmallCityMap.Canvas.FillRect(0, 0, SmallCityMap.Width, SmallCityMap.Height);
-  bitblt(SmallCityMap.Canvas.Handle, 0, 0, 83, hSmallMap,
-    SmallCityMapTemplate.Canvas.Handle, 83 * SizeClass, 0, SRCCOPY);
+  bitbltCanvas(SmallCityMap.Canvas, 0, 0, 83, hSmallMap,
+    SmallCityMapTemplate.Canvas, 83 * SizeClass, 0);
   if IsPort then
   begin
-    bitblt(SmallCityMap.Canvas.Handle, 83, 0, 15, hSmallMap,
-      SmallCityMapTemplate.Canvas.Handle, 332 + 15, 0, SRCCOPY);
+    bitbltCanvas(SmallCityMap.Canvas, 83, 0, 15, hSmallMap,
+      SmallCityMapTemplate.Canvas, 332 + 15, 0);
     ImageOp_CCC(SmallCityMap, 0, 0, 83, hSmallMap, Color0, Color1, Color2);
     Color2 := Colors.Canvas.Pixels[clkCity, cliWater];
     ImageOp_CCC(SmallCityMap, 83, 0, 15, hSmallMap, Color0, Color1, Color2);
   end
   else
   begin
-    bitblt(SmallCityMap.Canvas.Handle, 83, 0, 15, hSmallMap,
-      SmallCityMapTemplate.Canvas.Handle, 332, 0, SRCCOPY);
+    bitbltCanvas(SmallCityMap.Canvas, 83, 0, 15, hSmallMap,
+      SmallCityMapTemplate.Canvas, 332, 0);
     ImageOp_CCC(SmallCityMap, 0, 0, wSmallMap, hSmallMap, Color0,
       Color1, Color2);
   end;
@@ -358,8 +358,8 @@ begin
   // TODO: FillRect should not be needed as BitBlt is with SRCCOPY
   ZoomCityMap.Canvas.FillRect(0, 0, ZoomCityMap.Width, ZoomCityMap.Height);
 
-  bitblt(ZoomCityMap.Canvas.Handle, 0, 0, wZoomMap, hZoomMap,
-    Back.Canvas.Handle, xZoomMap, yZoomMap, SRCCOPY);
+  bitbltCanvas(ZoomCityMap.Canvas, 0, 0, wZoomMap, hZoomMap,
+    Back.Canvas, xZoomMap, yZoomMap);
   if Mode = mImp then begin
     if ZoomArea < 3 then begin
       ImageOp_B(ZoomCityMap, CityMapTemplate, 0, 0, 376 * SizeClass,
@@ -541,8 +541,7 @@ begin
   RedTex.clTextLight := $000000;
   RedTex.clTextShade := $0000FF;
 
-  bitblt(offscreen.Canvas.Handle, 0, 0, 640, 480, Back.Canvas.Handle, 0,
-    0, SRCCOPY);
+  bitbltCanvas(offscreen.Canvas, 0, 0, 640, 480, Back.Canvas, 0, 0);
 
   offscreen.Canvas.Font.Assign(UniFont[ftCaption]);
   RisedTextOut(offscreen.Canvas, 42, 7, Caption);
@@ -613,8 +612,8 @@ begin
     dLoc(cLoc, -2 * rx + 1, -2 * ry - 1), 4 * rx - 1, 4 * ry + 1, cLoc, cOwner,
     false, AllowChange and IsCityAlive and
     (c.Status and csResourceWeightsMask = 0));
-  bitblt(offscreen.Canvas.Handle, xmArea + 102, 42, 90, 33, Back.Canvas.Handle,
-    xmArea + 102, 42, SRCCOPY);
+  bitbltCanvas(offscreen.Canvas, xmArea + 102, 42, 90, 33, Back.Canvas,
+    xmArea + 102, 42);
 
   if IsCityAlive then
     for dy := -3 to 3 do
@@ -644,8 +643,8 @@ begin
       xGr := 29
     else
       xGr := 141;
-    bitblt(offscreen.Canvas.Handle, xmArea - 192 + 5 + i * d, ymArea - 96 - 29,
-      27, 30, GrExt[HGrSystem].Mask.Canvas.Handle, xGr, 171, SRCAND); { shadow }
+    bitbltCanvas(offscreen.Canvas, xmArea - 192 + 5 + i * d, ymArea - 96 - 29,
+      27, 30, GrExt[HGrSystem].Mask.Canvas, xGr, 171, SRCAND); { shadow }
     Sprite(offscreen, HGrSystem, xmArea - 192 + 4 + i * d, ymArea - 96 - 30, 27,
       30, xGr, 171);
   end;
@@ -656,8 +655,8 @@ begin
   for i := 0 to c.Size - Report.Working - 1 do
   begin
     xGr := 1 + 112;
-    bitblt(offscreen.Canvas.Handle, xmArea + 192 - 27 + 1 - i * d, 29 + 1, 27,
-      30, GrExt[HGrSystem].Mask.Canvas.Handle, xGr, 171, SRCAND); { shadow }
+    bitbltCanvas(offscreen.Canvas, xmArea + 192 - 27 + 1 - i * d, 29 + 1, 27,
+      30, GrExt[HGrSystem].Mask.Canvas, xGr, 171, SRCAND); { shadow }
     Sprite(offscreen, HGrSystem, xmArea + 192 - 27 - i * d, 29, 27, 30,
       xGr, 171);
     Sprite(offscreen, HGrSystem, xmArea + 192 - 27 + 4 - i * d, 29 + 32, 10,
@@ -802,8 +801,8 @@ begin
   end;
 
   // small map
-  bitblt(offscreen.Canvas.Handle, xSmallMap, ySmallMap, wSmallMap, hSmallMap,
-    SmallCityMap.Canvas.Handle, 0, 0, SRCCOPY);
+  bitbltCanvas(offscreen.Canvas, xSmallMap, ySmallMap, wSmallMap, hSmallMap,
+    SmallCityMap.Canvas, 0, 0);
   if Mode = mImp then
     Frame(offscreen.Canvas, xSmallMap + 48 * (ZoomArea div 3),
       ySmallMap + 24 * (ZoomArea mod 3), xSmallMap + 48 * (ZoomArea div 3) + 49,
@@ -830,8 +829,8 @@ begin
   Sprite(offscreen, HGrSystem, x - 5, y - 5, 10, 10, 66, 115);
   Sprite(offscreen, HGrSystem, x + 6, y - 5, 10, 10, 154, 126);
 
-  bitblt(offscreen.Canvas.Handle, xZoomMap, yZoomMap, wZoomMap, hZoomMap,
-    ZoomCityMap.Canvas.Handle, 0, 0, SRCCOPY);
+  bitbltCanvas(offscreen.Canvas, xZoomMap, yZoomMap, wZoomMap, hZoomMap,
+    ZoomCityMap.Canvas, 0, 0);
 
   for i := 0 to 5 do
     imix[i] := -1;
@@ -1619,12 +1618,12 @@ begin
     if BlinkTime = 0 then
       with Canvas do
       begin
-        bitblt(Canvas.Handle, xView + 5, yView + 1, 64, 2, Back.Canvas.Handle,
-          xView + 5, yView + 1, SRCCOPY);
-        bitblt(Canvas.Handle, xView + 5, yView + 3, 2, 42, Back.Canvas.Handle,
-          xView + 5, yView + 3, SRCCOPY);
-        bitblt(Canvas.Handle, xView + 5 + 62, yView + 3, 2, 42,
-          Back.Canvas.Handle, xView + 5 + 62, yView + 3, SRCCOPY);
+        bitbltCanvas(Canvas, xView + 5, yView + 1, 64, 2, Back.Canvas,
+          xView + 5, yView + 1);
+        bitbltCanvas(Canvas, xView + 5, yView + 3, 2, 42, Back.Canvas,
+          xView + 5, yView + 3);
+        bitbltCanvas(Canvas, xView + 5 + 62, yView + 3, 2, 42,
+          Back.Canvas, xView + 5 + 62, yView + 3);
         ScreenTools.Frame(Canvas, xView + 9 - 1, yView + 5 - 1, xView + 9 + xSizeBig,
           yView + 5 + ySizeBig, $B0B0B0, $FFFFFF);
         RFrame(Canvas, xView + 9 - 2, yView + 5 - 2, xView + 9 + xSizeBig + 1,
@@ -1643,8 +1642,8 @@ begin
       end
       else if c.Project and cpImp = 0 then
       begin // project is unit
-        bitblt(Canvas.Handle, xView + 9, yView + 5, xSizeBig, ySizeBig,
-          bigimp.Canvas.Handle, 0, 0, SRCCOPY);
+        bitbltCanvas(Canvas, xView + 9, yView + 5, xSizeBig, ySizeBig,
+          bigimp.Canvas, 0, 0);
         with Tribe[cOwner].ModelPicture[c.Project and cpIndex] do
           Sprite(Canvas, HGr, xView + 5, yView + 1, 64, 44, pix mod 10 * 65 + 1,
             pix div 10 * 49 + 1);

@@ -94,9 +94,9 @@ begin
   begin
     GlowFrame(Offscreen, ClientWidth div 2 - xSizeBig div 2, 52, xSizeBig,
       ySizeBig, Tribe[me].Color);
-    BitBlt(Offscreen.Canvas.Handle, ClientWidth div 2 - xSizeBig div 2, 52,
-      xSizeBig, ySizeBig, BigImp.Canvas.Handle, (woLiberty mod 7) * xSizeBig,
-      (woLiberty div 7 + SystemIconLines) * ySizeBig, SRCCOPY);
+    BitBltCanvas(Offscreen.Canvas, ClientWidth div 2 - xSizeBig div 2, 52,
+      xSizeBig, ySizeBig, BigImp.Canvas, (woLiberty mod 7) * xSizeBig,
+      (woLiberty div 7 + SystemIconLines) * ySizeBig);
   end
   else
   begin
@@ -121,10 +121,10 @@ begin
     with Offscreen.Canvas do
     begin
       for i := 0 to current div 8 - 1 do
-        BitBlt(Handle, x + max - 8 - i * 8, y, 8, 7,
-          GrExt[HGrSystem].Data.Canvas.Handle, 104, 9 + 8 * 2, SRCCOPY);
-      BitBlt(Handle, x + max - current, y, current - 8 * (current div 8), 7,
-        GrExt[HGrSystem].Data.Canvas.Handle, 104, 9 + 8 * 2, SRCCOPY);
+        BitBltCanvas(Offscreen.Canvas, x + max - 8 - i * 8, y, 8, 7,
+          GrExt[HGrSystem].Data.Canvas, 104, 9 + 8 * 2);
+      BitBltCanvas(Offscreen.Canvas, x + max - current, y, current - 8 * (current div 8), 7,
+        GrExt[HGrSystem].Data.Canvas, 104, 9 + 8 * 2);
       Brush.Color := $000000;
       FillRect(Rect(x, y, x + max - current, y + 7));
       Brush.Style := bsClear;

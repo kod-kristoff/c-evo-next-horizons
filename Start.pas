@@ -533,20 +533,20 @@ begin
 
   Brains[0].Picture := TBitmap.Create;
   Brains[0].Picture.SetSize(64, 64);
-  BitBlt(Brains[0].Picture.Canvas.Handle, 0, 0, 64, 64,
-    GrExt[HGrSystem2].Data.Canvas.Handle, 1, 111, SRCCOPY);
+  BitBltCanvas(Brains[0].Picture.Canvas, 0, 0, 64, 64,
+    GrExt[HGrSystem2].Data.Canvas, 1, 111);
   Brains[1].Picture := TBitmap.Create;
   Brains[1].Picture.SetSize(64, 64);
-  BitBlt(Brains[1].Picture.Canvas.Handle, 0, 0, 64, 64,
-    GrExt[HGrSystem2].Data.Canvas.Handle, 66, 111, SRCCOPY);
+  BitBltCanvas(Brains[1].Picture.Canvas, 0, 0, 64, 64,
+    GrExt[HGrSystem2].Data.Canvas, 66, 111);
   Brains[2].Picture := TBitmap.Create;
   Brains[2].Picture.SetSize(64, 64);
-  BitBlt(Brains[2].Picture.Canvas.Handle, 0, 0, 64, 64,
-    GrExt[HGrSystem2].Data.Canvas.Handle, 131, 111, SRCCOPY);
+  BitBltCanvas(Brains[2].Picture.Canvas, 0, 0, 64, 64,
+    GrExt[HGrSystem2].Data.Canvas, 131, 111);
   Brains[3].Picture := TBitmap.Create;
   Brains[3].Picture.SetSize(64, 64);
-  BitBlt(Brains[3].Picture.Canvas.Handle, 0, 0, 64, 64,
-    GrExt[HGrSystem2].Data.Canvas.Handle, 131, 46, SRCCOPY);
+  BitBltCanvas(Brains[3].Picture.Canvas, 0, 0, 64, 64,
+    GrExt[HGrSystem2].Data.Canvas, 131, 46);
 
   AIBrains := TBrains.Create(False);
   Brains.GetByKind(btAI, AIBrains);
@@ -698,12 +698,12 @@ begin
   BiColorTextOut(Canvas, Colors.Canvas.Pixels[clkAge0 - 1, cliDimmedText],
     $000000, xAction, y + 21, Phrases2.Lookup(TextItem));
   BitBltCanvas(LogoBuffer.Canvas, 0, 0, 50, 50, Canvas,
-    xActionIcon - 2, y - 2, SRCCOPY);
+    xActionIcon - 2, y - 2);
   GlowFrame(LogoBuffer, 8, 8, 34, 34, $202020);
-  BitBlt(Canvas.Handle, xActionIcon - 2, y - 2, 50, 50,
-    LogoBuffer.Canvas.Handle, 0, 0, SRCCOPY);
-  BitBlt(Canvas.Handle, xActionIcon, y, 40, 40, BigImp.Canvas.Handle,
-    (IconIndex mod 7) * xSizeBig + 8, (IconIndex div 7) * ySizeBig, SRCCOPY);
+  BitBltCanvas(Canvas, xActionIcon - 2, y - 2, 50, 50,
+    LogoBuffer.Canvas, 0, 0);
+  BitBltCanvas(Canvas, xActionIcon, y, 40, 40, BigImp.Canvas,
+    (IconIndex mod 7) * xSizeBig + 8, (IconIndex div 7) * ySizeBig);
   RFrame(Canvas, xActionIcon - 1, y - 1, xActionIcon + 40, y + 40,
     $000000, $000000);
 end;
@@ -794,14 +794,14 @@ begin
       TabOffset + (Integer(Tab) + 1) * TabSize + 2, TabHeight, MainTexture.clBevelShade,
       MainTexture.clBevelShade); // Tab shadow
   BitBltCanvas(LogoBuffer.Canvas, 0, 0, 36, 36, Canvas, 6,
-    3 + 2 * integer(Tab <> tbMain), SRCCOPY);
+    3 + 2 * integer(Tab <> tbMain));
 
   ImageOp_BCC(LogoBuffer, Templates, 0, 0, 145, 38, 36, 27, $BFBF20, $4040DF);
   // logo part 1
   ImageOp_BCC(LogoBuffer, Templates, 10, 27, 155, 38 + 27, 26, 9, $BFBF20,
     $4040DF); // logo part 2
-  BitBlt(Canvas.Handle, 6, 3 + 2 * integer(Tab <> tbMain), 36, 36,
-    LogoBuffer.Canvas.Handle, 0, 0, SRCCOPY);
+  BitBltCanvas(Canvas, 6, 3 + 2 * integer(Tab <> tbMain), 36, 36,
+    LogoBuffer.Canvas, 0, 0);
 
   if Page = pgMain then
   begin
@@ -818,11 +818,11 @@ begin
             (yAction + Integer(SelectedAction) * ActionPitch - 8);
         BitBltCanvas(LogoBuffer.Canvas, 0, 0, w, h, Canvas,
           ActionSideBorder + i * wBuffer, yAction + Integer(SelectedAction) * ActionPitch
-          - 8, SRCCOPY);
+          - 8);
         MakeBlue(LogoBuffer, 0, 0, w, h);
-        BitBlt(Canvas.Handle, ActionSideBorder + i * wBuffer,
+        BitBltCanvas(Canvas, ActionSideBorder + i * wBuffer,
           yAction + Integer(SelectedAction) * ActionPitch - 8, w, h,
-          LogoBuffer.Canvas.Handle, 0, 0, SRCCOPY);
+          LogoBuffer.Canvas, 0, 0);
       end;
     y := yAction;
     for MainAction := Low(TMainActionSet) to High(TMainActionSet) do
@@ -845,11 +845,11 @@ begin
                 Phrases2.Lookup('ACTIONHEADER_WEB'));
               Canvas.Font.Assign(UniFont[ftNormal]);
               BitBltCanvas(LogoBuffer.Canvas, 0, 0, 91, 25, Canvas,
-                xActionIcon, y + 2, SRCCOPY);
+                xActionIcon, y + 2);
               ImageOp_BCC(LogoBuffer, Templates, 0, 0, 1, 400, 91, 25, 0,
                 Colors.Canvas.Pixels[clkAge0 - 1, cliDimmedText]);
-              BitBlt(Canvas.Handle, xActionIcon, y + 2, 91, 25,
-                LogoBuffer.Canvas.Handle, 0, 0, SRCCOPY);
+              BitBltCanvas(Canvas, xActionIcon, y + 2, 91, 25,
+                LogoBuffer.Canvas, 0, 0);
             end;
         end;
       inc(y, ActionPitch);
@@ -873,10 +873,10 @@ begin
       for i := 12 to 19 do
         if (i < 13) or (i > 17) then
         begin
-          BitBlt(Canvas.Handle, 9 + i * 27, yLogo - 2, wOrna, hOrna,
-            GrExt[HGrSystem2].Mask.Canvas.Handle, xOrna, yOrna, SRCAND);
-          BitBlt(Canvas.Handle, 9 + i * 27, yLogo - 2, wOrna, hOrna,
-            GrExt[HGrSystem2].Data.Canvas.Handle, xOrna, yOrna, SRCPAINT);
+          BitBltCanvas(Canvas, 9 + i * 27, yLogo - 2, wOrna, hOrna,
+            GrExt[HGrSystem2].Mask.Canvas, xOrna, yOrna, SRCAND);
+          BitBltCanvas(Canvas, 9 + i * 27, yLogo - 2, wOrna, hOrna,
+            GrExt[HGrSystem2].Data.Canvas, xOrna, yOrna, SRCPAINT);
         end;
       PaintLogo(Canvas, 69 + 11 * 27, yLogo, MainTexture.clBevelLight,
         MainTexture.clBevelShade);
@@ -892,9 +892,9 @@ begin
               0, 0, true);
           if Assigned(PlayersBrain[I]) and (PlayersBrain[i].Kind in [btTerm, btRandom, btAI]) then
           begin
-            BitBlt(Canvas.Handle, xBrain[i] - 18, yBrain[i] + 19, 12, 14,
-              GrExt[HGrSystem].Data.Canvas.Handle, 134 + (Difficulty[i] - 1) *
-              13, 28, SRCCOPY);
+            BitBltCanvas(Canvas, xBrain[i] - 18, yBrain[i] + 19, 12, 14,
+              GrExt[HGrSystem].Data.Canvas, 134 + (Difficulty[i] - 1) *
+              13, 28);
             Frame(Canvas, xBrain[i] - 19, yBrain[i] + 18, xBrain[i] - 18 + 12,
               yBrain[i] + (19 + 14), $000000, $000000);
             RFrame(Canvas, PlayerSlots[i].DiffUpBtn.left - 1, PlayerSlots[i].DiffUpBtn.top - 1,
@@ -912,8 +912,8 @@ begin
               RFrame(Canvas, PlayerSlots[I].MultiBtn.left - 1, PlayerSlots[I].MultiBtn.top - 1,
                 PlayerSlots[I].MultiBtn.left + 12, PlayerSlots[I].MultiBtn.top + 12,
                 MainTexture.clBevelShade, MainTexture.clBevelLight);
-              BitBlt(Canvas.Handle, xBrain[i] - 31, yBrain[i], 13, 12,
-                GrExt[HGrSystem].Data.Canvas.Handle, 88, 47, SRCCOPY);
+              BitBltCanvas(Canvas, xBrain[i] - 31, yBrain[i], 13, 12,
+                GrExt[HGrSystem].Data.Canvas, 88, 47);
             end;
           end;
           if Assigned(PlayersBrain[i]) then
@@ -957,10 +957,10 @@ begin
       for i := 0 to 19 do
         if (i < 2) or (i > 6) then
         begin
-          BitBlt(Canvas.Handle, 9 + i * 27, yLogo - 2, wOrna, hOrna,
-            GrExt[HGrSystem2].Mask.Canvas.Handle, xOrna, yOrna, SRCAND);
-          BitBlt(Canvas.Handle, 9 + i * 27, yLogo - 2, wOrna, hOrna,
-            GrExt[HGrSystem2].Data.Canvas.Handle, xOrna, yOrna, SRCPAINT);
+          BitBltCanvas(Canvas, 9 + i * 27, yLogo - 2, wOrna, hOrna,
+            GrExt[HGrSystem2].Mask.Canvas, xOrna, yOrna, SRCAND);
+          BitBltCanvas(Canvas, 9 + i * 27, yLogo - 2, wOrna, hOrna,
+            GrExt[HGrSystem2].Data.Canvas, xOrna, yOrna, SRCPAINT);
         end;
       PaintLogo(Canvas, 69, yLogo, MainTexture.clBevelLight,
         MainTexture.clBevelShade);
@@ -1053,8 +1053,8 @@ begin
   s := '';
   if MiniMap.Mode = mmPicture then
   begin
-    BitBlt(Canvas.Handle, xMini + 2, yMini + 2, MiniMap.Size.X * 2, MiniMap.Size.Y,
-      MiniMap.Bitmap.Canvas.Handle, 0, 0, SRCCOPY);
+    BitBltCanvas(Canvas, xMini + 2, yMini + 2, MiniMap.Size.X * 2, MiniMap.Size.Y,
+      MiniMap.Bitmap.Canvas, 0, 0);
     if Page = pgStartRandom then
       s := Phrases.Lookup('RANMAP')
   end

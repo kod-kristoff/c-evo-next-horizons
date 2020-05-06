@@ -27,6 +27,9 @@ procedure Register;
 
 implementation
 
+uses
+  ScreenTools;
+
 procedure Register;
 begin
   RegisterComponents('C-evo', [TButtonB]);
@@ -43,12 +46,12 @@ procedure TButtonB.Paint;
 begin
   with Canvas do
     if FGraphic <> nil then begin
-      BitBlt(Canvas.Handle, 0, 0, 25, 25, FGraphic.Canvas.Handle, 169,
-        243 + 26 * Byte(FDown), SRCCOPY);
+      BitBltCanvas(Canvas, 0, 0, 25, 25, FGraphic.Canvas, 169,
+        243 + 26 * Byte(FDown));
       if FIndex >= 0 then begin
-        BitBlt(Canvas.Handle, 0, 0, 25, 25, FMask.Canvas.Handle,
+        BitBltCanvas(Canvas, 0, 0, 25, 25, FMask.Canvas,
           1 + FIndex mod 12 * 26, 337 + FIndex div 12 * 26, SRCAND);
-        BitBlt(Canvas.Handle, 0, 0, 25, 25, FGraphic.Canvas.Handle,
+        BitBltCanvas(Canvas, 0, 0, 25, 25, FGraphic.Canvas,
           1 + FIndex mod 12 * 26, 337 + FIndex div 12 * 26, SRCPAINT);
       end
     end else begin
