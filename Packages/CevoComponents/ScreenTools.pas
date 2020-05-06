@@ -169,10 +169,20 @@ var
   Phrases2: TStringTable;
   nGrExt: Integer;
   GrExt: array [0 .. nGrExtmax - 1] of ^TGrExtDescr;
-  HGrSystem, HGrSystem2, ClickFrameColor, MainTextureAge: Integer;
+  HGrSystem: Integer;
+  HGrSystem2: Integer;
+  ClickFrameColor: Integer;
+  MainTextureAge: Integer;
   MainTexture: TTexture;
-  Templates, Colors, Paper, BigImp, LogoBuffer: TBitmap;
-  FullScreen, GenerateNames, InitOrnamentDone, Phrases2FallenBackToEnglish: Boolean;
+  Templates: TBitmap;
+  Colors: TBitmap;
+  Paper: TBitmap;
+  BigImp: TBitmap;
+  LogoBuffer: TBitmap;
+  FullScreen: Boolean;
+  GenerateNames: Boolean;
+  InitOrnamentDone: Boolean;
+  Phrases2FallenBackToEnglish: Boolean;
 
   UniFont: array [TFontType] of TFont;
   AppRegistryKey: string = '\SOFTWARE\C-evo';

@@ -31,11 +31,31 @@ type
   );
 
   TStartTab = (tbMain, tbMap, tbNew, tbPrevious);
-  TMiniMode = (mmNone, mmPicture, mmMultiPlayer);
   TMainAction = (maConfig, maManual, maCredits, maAIDev, maWeb, maNone);
   TMainActionSet = set of TMainAction;
 
   TMapArray = array[0 .. lxmax * lymax - 1] of Byte;
+
+  TMiniMode = (mmNone, mmPicture, mmMultiPlayer);
+
+  { TMiniMap }
+
+  TMiniMap = class
+  const
+    MaxWidthMapLogo = 96;
+    MaxHeightMapLogo = 96;
+  var
+    Bitmap: TBitmap; { game world sample preview }
+    Size: TPoint;
+    Colors: array [0 .. 11, 0 .. 1] of TColor;
+    Mode: TMiniMode;
+    procedure LoadFromLogFile(FileName: string; var LastTurn: Integer);
+    procedure LoadFromMapFile(FileName: string; var nMapLandTiles, nMapStartPositions: Integer);
+    procedure PaintRandom(Brightness, StartLandMass, WorldSize: Integer);
+    procedure PaintFile(SaveMap: TMapArray);
+    constructor Create;
+    destructor Destroy; override;
+  end;
 
   { TStartDlg }
 
@@ -97,7 +117,6 @@ type
     AutoEnemies: Integer;
     AutoDiff: Integer;
     MultiControl: Integer;
-    MiniSize: TPoint;
     Page: TStartPage;
     ShowTab: TStartTab;
     Tab: TStartTab;
@@ -114,24 +133,21 @@ type
     MapFileName: string;
     FormerGames: TStringList;
     Maps: TStringList;
-    LogoBuffer, Mini: TBitmap; { game world sample preview }
-    MiniColors: array [0 .. 11, 0 .. 1] of TColor;
+    LogoBuffer: TBitmap;
     // BookDate: string;
     PlayerSlots: TPlayerSlots;
-    MiniMode: TMiniMode;
     ActionsOffered: TMainActionSet;
     SelectedAction: TMainAction;
     TurnValid: Boolean;
     Tracking: Boolean;
     DefaultAI: string;
+    MiniMap: TMiniMap;
     procedure DrawAction(y, IconIndex: integer; HeaderItem, TextItem: string);
     procedure InitPopup(PlayerIndex: Integer);
     procedure OfferBrain(Brain: TBrain; FixedLines: Integer);
-    procedure PaintFileMini(SaveMap: TMapArray);
     procedure PaintInfo;
     procedure ChangePage(NewPage: TStartPage);
     procedure ChangeTab(NewTab: TStartTab);
-    procedure PaintRandomMini(Brightness: integer);
     procedure UnlistBackupFile(FileName: string);
     procedure SmartInvalidate(x0, y0, x1, y1: integer;
       invalidateTab0: boolean = false); overload;
@@ -159,8 +175,9 @@ const
     lypre: array[0..nWorldSize-1] of integer =(46,52,60,70,84,94,110,130);
     DefaultWorldTiles=4200; }
   MaxWorldSize = 6;
-  WorldSizes: array [0 .. MaxWorldSize - 1] of TPoint = ((X: 30; Y:46),
-    (X: 40; Y:52), (X: 50; Y:60), (X: 60; Y:70), (X: 75; Y:82), (X: 100; Y:96));
+  WorldSizes: array [0 .. MaxWorldSize - 1] of TPoint = ((X: 30; Y: 46),
+    (X: 40; Y: 52), (X: 50; Y: 60), (X: 60; Y: 70), (X: 75; Y: 82),
+    (X: 100; Y: 96));
   DefaultWorldTiles = 4150;
   DefaultWorldSize = 3;
   DefaultLandMass = 30;
@@ -196,9 +213,6 @@ const
   TabSize = 159;
   TabHeight = 40;
 
-  MaxWidthMapLogo = 96;
-  MaxHeightMapLogo = 96;
-
   InitAlive: array [1 .. nPl] of integer = (1, 1 + 2, 1 + 2 + 32,
     1 + 2 + 8 + 128, 1 + 2 + 8 + 32 + 128, 1 + 2 + 8 + 16 + 64 + 128,
     1 + 2 + 4 + 16 + 32 + 64 + 256, 511 - 32, 511, 511 - 32, 511, 511 - 32, 511,
@@ -209,10 +223,214 @@ const
   PlayerAutoDiff: array [1 .. 5] of integer = (1, 1, 2, 2, 3);
   EnemyAutoDiff: array [1 .. 5] of integer = (4, 3, 2, 1, 1);
 
+{ TMiniMap }
+
+constructor TMiniMap.Create;
+var
+  X, Y: Integer;
+begin
+  Bitmap := TBitmap.Create;
+
+  for X := 0 to 11 do
+    for Y := 0 to 1 do
+      Colors[x, y] := GrExt[HGrSystem].Data.Canvas.Pixels[66 + x, 67 + y];
+end;
+
+destructor TMiniMap.Destroy;
+begin
+  FreeAndNil(Bitmap);
+  inherited Destroy;
+end;
+
+procedure TMiniMap.LoadFromLogFile(FileName: string; var LastTurn: Integer);
+var
+  SaveMap: TMapArray;
+  y: Integer;
+  Dummy: Integer;
+  FileLandMass: integer;
+  LogFile: file;
+  s: string[255];
+  MapRow: array [0 .. lxmax - 1] of Cardinal;
+begin
+  AssignFile(LogFile, FileName);
+  try
+    Reset(LogFile, 4);
+    BlockRead(LogFile, s[1], 2); { file id }
+    BlockRead(LogFile, Dummy, 1); { format id }
+    if Dummy >= $000E01 then
+      BlockRead(LogFile, Dummy, 1); { item stored since 0.14.1 }
+    BlockRead(LogFile, Size.X, 1);
+    BlockRead(LogFile, Size.Y, 1);
+    BlockRead(LogFile, FileLandMass, 1);
+    if FileLandMass = 0 then
+      for y := 0 to Size.Y - 1 do
+        BlockRead(LogFile, MapRow, Size.X);
+    BlockRead(LogFile, Dummy, 1);
+    BlockRead(LogFile, Dummy, 1);
+    BlockRead(LogFile, LastTurn, 1);
+    BlockRead(LogFile, SaveMap, 1);
+    if SaveMap[0] = $80 then
+      Mode := mmMultiPlayer
+    else
+      Mode := mmPicture;
+    if Mode = mmPicture then
+      BlockRead(LogFile, SaveMap[4], (Size.X * Size.Y - 1) div 4);
+    CloseFile(LogFile);
+  except
+    CloseFile(LogFile);
+    LastTurn := 0;
+    Size := WorldSizes[DefaultWorldSize];
+    Mode := mmNone;
+  end;
+  PaintFile(SaveMap);
+end;
+
+procedure TMiniMap.LoadFromMapFile(FileName: string; var nMapLandTiles, nMapStartPositions: Integer);
+var
+  x, y, lxFile, lyFile: integer;
+  MapFile: file;
+  s: string[255];
+  MapRow: array [0 .. lxmax - 1] of Cardinal;
+  ImageFileName: string;
+begin
+  ImageFileName := Copy(FileName, 1, Length(FileName) - Length(CevoMapExt)) + '.png';
+  Mode := mmPicture;
+  if LoadGraphicFile(Bitmap, ImageFileName, gfNoError) then
+  begin
+    if Bitmap.width div 2 > MaxWidthMapLogo then
+      Bitmap.width := MaxWidthMapLogo * 2;
+    if Bitmap.height > MaxHeightMapLogo then
+      Bitmap.height := MaxHeightMapLogo;
+    Size.X := Bitmap.width div 2;
+    Size.Y := Bitmap.height;
+  end
+  else
+  begin
+    Mode := mmNone;
+    Size.X := MaxWidthMapLogo;
+    Size.Y := MaxHeightMapLogo;
+  end;
+
+  AssignFile(MapFile, FileName);
+  try
+    Reset(MapFile, 4);
+    BlockRead(MapFile, s[1], 2); { file id }
+    BlockRead(MapFile, x, 1); { format id }
+    BlockRead(MapFile, x, 1); // MaxTurn
+    BlockRead(MapFile, lxFile, 1);
+    BlockRead(MapFile, lyFile, 1);
+    nMapLandTiles := 0;
+    nMapStartPositions := 0;
+    for y := 0 to lyFile - 1 do begin
+      BlockRead(MapFile, MapRow, lxFile);
+      for x := 0 to lxFile - 1 do
+      begin
+        if (MapRow[x] and fTerrain) in [fGrass, fPrairie, fTundra, fSwamp,
+          fForest, fHills] then
+          inc(nMapLandTiles);
+        if MapRow[x] and (fPrefStartPos or fStartPos) <> 0 then
+          inc(nMapStartPositions);
+      end
+    end;
+    if nMapStartPositions > nPl then
+      nMapStartPositions := nPl;
+    CloseFile(MapFile);
+  except
+    CloseFile(MapFile);
+  end;
+end;
+
+procedure TMiniMap.PaintRandom(Brightness, StartLandMass, WorldSize: Integer);
+var
+  i, x, y, xm, cm: Integer;
+  MiniPixel: TPixelPointer;
+  Map: ^TTileList;
+begin
+  Map := PreviewMap(StartLandMass);
+  Size := WorldSizes[WorldSize];
+
+  Bitmap.PixelFormat := pf24bit;
+  Bitmap.SetSize(Size.X * 2, Size.Y);
+  Bitmap.BeginUpdate;
+  MiniPixel.Init(Bitmap);
+  for y := 0 to Size.Y - 1 do begin
+    for x := 0 to Size.X - 1 do begin
+      for i := 0 to 1 do begin
+        xm := (x * 2 + i + y and 1) mod (Size.X * 2);
+        MiniPixel.SetX(xm);
+        cm := Colors
+          [Map[x * lxmax div Size.X + lxmax *
+          ((y * (lymax - 1) + Size.Y div 2) div (Size.Y - 1))] and
+          fTerrain, i];
+        MiniPixel.Pixel^.B := ((cm shr 16) and $FF) * Brightness div 3;
+        MiniPixel.Pixel^.G := ((cm shr 8) and $FF) * Brightness div 3;
+        MiniPixel.Pixel^.R := ((cm shr 0) and $FF) * Brightness div 3;
+      end;
+    end;
+    MiniPixel.NextLine;
+  end;
+  Bitmap.EndUpdate;
+end;
+
+procedure TMiniMap.PaintFile(SaveMap: TMapArray);
+var
+  i, x, y, xm, cm, Tile, OwnColor, EnemyColor: integer;
+  MiniPixel: TPixelPointer;
+  PrevMiniPixel: TPixelPointer;
+begin
+  OwnColor := GrExt[HGrSystem].Data.Canvas.Pixels[95, 67];
+  EnemyColor := GrExt[HGrSystem].Data.Canvas.Pixels[96, 67];
+  Bitmap.PixelFormat := pf24bit;
+  Bitmap.SetSize(Size.X * 2, Size.Y);
+  if Mode = mmPicture then begin
+    Bitmap.BeginUpdate;
+    MiniPixel.Init(Bitmap);
+    PrevMiniPixel.Init(Bitmap, 0, -1);
+    for y := 0 to Size.Y - 1 do begin
+      for x := 0 to Size.X - 1 do begin
+        for i := 0 to 1 do begin
+          xm := (x * 2 + i + y and 1) mod (Size.X * 2);
+          MiniPixel.SetX(xm);
+          Tile := SaveMap[x + Size.X * y];
+          if Tile and fTerrain = fUNKNOWN then
+            cm := $000000
+          else if Tile and smCity <> 0 then
+          begin
+            if Tile and smOwned <> 0 then
+              cm := OwnColor
+            else
+              cm := EnemyColor;
+            if y > 0 then begin
+              // 2x2 city dot covers two lines
+              PrevMiniPixel.SetX(xm);
+              PrevMiniPixel.Pixel^.B := cm shr 16;
+              PrevMiniPixel.Pixel^.G:= cm shr 8 and $FF;
+              PrevMiniPixel.Pixel^.R := cm and $FF;
+            end;
+          end
+          else if (i = 0) and (Tile and smUnit <> 0) then
+            if Tile and smOwned <> 0 then
+              cm := OwnColor
+            else cm := EnemyColor
+          else
+            cm := Colors[Tile and fTerrain, i];
+          MiniPixel.Pixel^.B := (cm shr 16) and $ff;
+          MiniPixel.Pixel^.G := (cm shr 8) and $ff;
+          MiniPixel.Pixel^.R := (cm shr 0) and $ff;
+        end;
+      end;
+      MiniPixel.NextLine;
+      PrevMiniPixel.NextLine;
+    end;
+    Bitmap.EndUpdate;
+  end;
+end;
+
+{ TStartDlg }
 
 procedure TStartDlg.FormCreate(Sender: TObject);
 var
-  x, y, i: Integer;
+  x, i: Integer;
   r0, r1: HRgn;
   Location: TPoint;
   AIBrains: TBrains;
@@ -361,10 +579,7 @@ begin
   LogoBuffer.SetSize(wBuffer, 56);
   LogoBuffer.Canvas.FillRect(0, 0, LogoBuffer.Width, LogoBuffer.Height);
 
-  Mini := TBitmap.Create;
-  for x := 0 to 11 do
-    for y := 0 to 1 do
-      MiniColors[x, y] := GrExt[HGrSystem].Data.Canvas.Pixels[66 + x, 67 + y];
+  MiniMap := TMiniMap.Create;
   InitButtons;
 
   PlayersBrain[0] := BrainTerm;
@@ -385,10 +600,10 @@ procedure TStartDlg.FormDestroy(Sender: TObject);
 begin
   FreeAndNil(FormerGames);
   FreeAndNil(Maps);
-  FreeAndNil(Mini);
   FreeAndNil(EmptyPicture);
   FreeAndNil(LogoBuffer);
   FreeAndNil(PlayerSlots);
+  FreeAndNil(MiniMap);
 end;
 
 procedure TStartDlg.SmartInvalidate(x0, y0, x1, y1: integer;
@@ -824,26 +1039,26 @@ begin
   if Page = pgLoad then
     BtnFrame(Canvas, ReplayBtn.BoundsRect, MainTexture);
 
-  if not(Page in [pgMain, pgNoLoad]) then
+  if not (Page in [pgMain, pgNoLoad]) then
   begin
-    xMini := x0Mini - MiniSize.X;
-    yMini := y0Mini - MiniSize.Y div 2;
-    Frame(Canvas, xMini, yMini, xMini + 3 + MiniSize.X * 2,
-      yMini + 3 + MiniSize.Y, MainTexture.clBevelLight,
+    xMini := x0Mini - MiniMap.Size.X;
+    yMini := y0Mini - MiniMap.Size.Y div 2;
+    Frame(Canvas, xMini, yMini, xMini + 3 + MiniMap.Size.X * 2,
+      yMini + 3 + MiniMap.Size.Y, MainTexture.clBevelLight,
       MainTexture.clBevelShade);
-    Frame(Canvas, xMini + 1, yMini + 1, xMini + 2 + MiniSize.X * 2,
-      yMini + 2 + MiniSize.Y, MainTexture.clBevelShade,
+    Frame(Canvas, xMini + 1, yMini + 1, xMini + 2 + MiniMap.Size.X * 2,
+      yMini + 2 + MiniMap.Size.Y, MainTexture.clBevelShade,
       MainTexture.clBevelLight);
   end;
   s := '';
-  if MiniMode = mmPicture then
+  if MiniMap.Mode = mmPicture then
   begin
-    BitBlt(Canvas.Handle, xMini + 2, yMini + 2, MiniSize.X * 2, MiniSize.Y,
-      Mini.Canvas.Handle, 0, 0, SRCCOPY);
+    BitBlt(Canvas.Handle, xMini + 2, yMini + 2, MiniMap.Size.X * 2, MiniMap.Size.Y,
+      MiniMap.Bitmap.Canvas.Handle, 0, 0, SRCCOPY);
     if Page = pgStartRandom then
       s := Phrases.Lookup('RANMAP')
   end
-  else if MiniMode = mmMultiPlayer then
+  else if MiniMap.Mode = mmMultiPlayer then
     s := Phrases.Lookup('MPMAP')
   else if Page = pgStartMap then
     s := Copy(MapFileName, 1, Length(MapFileName) - 9)
@@ -1025,211 +1240,38 @@ begin
   end
 end;
 
-procedure TStartDlg.PaintRandomMini(Brightness: integer);
-var
-  i, x, y, xm, cm: integer;
-  MiniPixel: TPixelPointer;
-  Map: ^TTileList;
-begin
-  Map := PreviewMap(StartLandMass);
-  MiniSize := WorldSizes[WorldSize];
-
-  Mini.PixelFormat := pf24bit;
-  Mini.SetSize(MiniSize.X * 2, MiniSize.Y);
-  Mini.BeginUpdate;
-  MiniPixel.Init(Mini);
-  for y := 0 to MiniSize.Y - 1 do begin
-    for x := 0 to MiniSize.X - 1 do begin
-      for i := 0 to 1 do begin
-        xm := (x * 2 + i + y and 1) mod (MiniSize.X * 2);
-        MiniPixel.SetX(xm);
-        cm := MiniColors
-          [Map[x * lxmax div MiniSize.X + lxmax *
-          ((y * (lymax - 1) + MiniSize.Y div 2) div (MiniSize.Y - 1))] and
-          fTerrain, i];
-        MiniPixel.Pixel^.B := ((cm shr 16) and $FF) * Brightness div 3;
-        MiniPixel.Pixel^.G := ((cm shr 8) and $FF) * Brightness div 3;
-        MiniPixel.Pixel^.R := ((cm shr 0) and $FF) * Brightness div 3;
-      end;
-    end;
-    MiniPixel.NextLine;
-  end;
-  Mini.EndUpdate;
-end;
-
-procedure TStartDlg.PaintFileMini(SaveMap: TMapArray);
-var
-  i, x, y, xm, cm, Tile, OwnColor, EnemyColor: integer;
-  MiniPixel, PrevMiniPixel: TPixelPointer;
-begin
-  OwnColor := GrExt[HGrSystem].Data.Canvas.Pixels[95, 67];
-  EnemyColor := GrExt[HGrSystem].Data.Canvas.Pixels[96, 67];
-  Mini.PixelFormat := pf24bit;
-  Mini.SetSize(MiniSize.X * 2, MiniSize.Y);
-  if MiniMode = mmPicture then
-  begin
-    Mini.BeginUpdate;
-    MiniPixel.Init(Mini);
-    PrevMiniPixel.Init(Mini, 0, -1);
-    for y := 0 to MiniSize.Y - 1 do begin
-      for x := 0 to MiniSize.X - 1 do begin
-        for i := 0 to 1 do begin
-          xm := (x * 2 + i + y and 1) mod (MiniSize.X * 2);
-          MiniPixel.SetX(xm);
-          Tile := SaveMap[x + MiniSize.X * y];
-          if Tile and fTerrain = fUNKNOWN then
-            cm := $000000
-          else if Tile and smCity <> 0 then
-          begin
-            if Tile and smOwned <> 0 then
-              cm := OwnColor
-            else
-              cm := EnemyColor;
-            if y > 0 then begin
-              // 2x2 city dot covers two lines
-              PrevMiniPixel.SetX(xm);
-              PrevMiniPixel.Pixel^.B := cm shr 16;
-              PrevMiniPixel.Pixel^.G:= cm shr 8 and $FF;
-              PrevMiniPixel.Pixel^.R := cm and $FF;
-            end;
-          end
-          else if (i = 0) and (Tile and smUnit <> 0) then
-            if Tile and smOwned <> 0 then
-              cm := OwnColor
-            else
-              cm := EnemyColor
-          else
-            cm := MiniColors[Tile and fTerrain, i];
-          MiniPixel.Pixel^.B := cm shr 16;
-          MiniPixel.Pixel^.G:= cm shr 8 and $FF;
-          MiniPixel.Pixel^.R := cm and $FF;
-        end;
-      end;
-      MiniPixel.NextLine;
-      PrevMiniPixel.NextLine;
-    end;
-    Mini.EndUpdate;
-  end;
-end;
-
 procedure TStartDlg.PaintInfo;
-var
-  SaveMap: TMapArray;
-  x, y, Dummy, FileLandMass, lxFile, lyFile: integer;
-  LogFile, MapFile: file;
-  s: string[255];
-  MapRow: array [0 .. lxmax - 1] of Cardinal;
 begin
   case Page of
-    pgStartRandom:
-      begin
-        MiniMode := mmPicture;
-        PaintRandomMini(3);
-      end;
-    pgNoLoad:
-      begin
-        MiniSize := WorldSizes[DefaultWorldSize];
-        MiniMode := mmNone;
-      end;
-    pgLoad:
-      begin
-        AssignFile(LogFile, GetSavedDir + DirectorySeparator + List.Items[List.ItemIndex]
-          + CevoExt);
-        try
-          Reset(LogFile, 4);
-          BlockRead(LogFile, s[1], 2); { file id }
-          BlockRead(LogFile, Dummy, 1); { format id }
-          if Dummy >= $000E01 then
-            BlockRead(LogFile, Dummy, 1); { item stored since 0.14.1 }
-          BlockRead(LogFile, MiniSize.X, 1);
-          BlockRead(LogFile, MiniSize.Y, 1);
-          BlockRead(LogFile, FileLandMass, 1);
-          if FileLandMass = 0 then
-            for y := 0 to MiniSize.Y - 1 do
-              BlockRead(LogFile, MapRow, MiniSize.X);
-          BlockRead(LogFile, Dummy, 1);
-          BlockRead(LogFile, Dummy, 1);
-          BlockRead(LogFile, LastTurn, 1);
-          BlockRead(LogFile, SaveMap, 1);
-          if SaveMap[0] = $80 then
-            MiniMode := mmMultiPlayer
-          else
-            MiniMode := mmPicture;
-          if MiniMode = mmPicture then
-            BlockRead(LogFile, SaveMap[4], (MiniSize.X * MiniSize.Y - 1) div 4);
-          CloseFile(LogFile);
-        except
-          CloseFile(LogFile);
-          LastTurn := 0;
-          MiniSize := WorldSizes[DefaultWorldSize];
-          MiniMode := mmNone;
-        end;
+    pgStartRandom: begin
+      MiniMap.Mode := mmPicture;
+      MiniMap.PaintRandom(3, StartLandMass, WorldSize);
+    end;
+    pgNoLoad: begin
+      MiniMap.Mode := mmNone;
+      MiniMap.Size := WorldSizes[DefaultWorldSize];
+    end;
+    pgLoad: begin
+        MiniMap.LoadFromLogFile(GetSavedDir + DirectorySeparator +
+          List.Items[List.ItemIndex] + CevoExt, LastTurn);
         // BookDate:=DateToStr(FileDateToDateTime(FileAge(FileName)));
-        PaintFileMini(SaveMap);
-        if not TurnValid then
-        begin
+        if not TurnValid then  begin
           LoadTurn := LastTurn;
           SmartInvalidate(xTurnSlider - 2, y0Mini + 61,
             xTurnSlider + wTurnSlider + 2, yTurnSlider + 9);
         end;
         TurnValid := True;
       end;
-    pgEditRandom:
-      begin
-        MapFileName := '';
-        MiniMode := mmPicture;
-        PaintRandomMini(4);
-      end;
+    pgEditRandom: begin
+      MapFileName := '';
+      MiniMap.Mode := mmPicture;
+      MiniMap.PaintRandom(4, StartLandMass, WorldSize);
+    end;
     pgStartMap, pgEditMap:
       begin
-        MiniMode := mmPicture;
         if Page = pgEditMap then
           MapFileName := List.Items[List.ItemIndex] + CevoMapExt;
-        if LoadGraphicFile(Mini, GetMapsDir + DirectorySeparator + Copy(MapFileName, 1,
-          Length(MapFileName) - 9) + '.png', gfNoError) then
-        begin
-          if Mini.width div 2 > MaxWidthMapLogo then
-            Mini.width := MaxWidthMapLogo * 2;
-          if Mini.height > MaxHeightMapLogo then
-            Mini.height := MaxHeightMapLogo;
-          MiniSize.X := Mini.width div 2;
-          MiniSize.Y := Mini.height;
-        end
-        else
-        begin
-          MiniMode := mmNone;
-          MiniSize.X := MaxWidthMapLogo;
-          MiniSize.Y := MaxHeightMapLogo;
-        end;
-
-        AssignFile(MapFile, GetMapsDir + DirectorySeparator + MapFileName);
-        try
-          Reset(MapFile, 4);
-          BlockRead(MapFile, s[1], 2); { file id }
-          BlockRead(MapFile, x, 1); { format id }
-          BlockRead(MapFile, x, 1); // MaxTurn
-          BlockRead(MapFile, lxFile, 1);
-          BlockRead(MapFile, lyFile, 1);
-          nMapLandTiles := 0;
-          nMapStartPositions := 0;
-          for y := 0 to lyFile - 1 do
-          begin
-            BlockRead(MapFile, MapRow, lxFile);
-            for x := 0 to lxFile - 1 do
-            begin
-              if (MapRow[x] and fTerrain) in [fGrass, fPrairie, fTundra, fSwamp,
-                fForest, fHills] then
-                inc(nMapLandTiles);
-              if MapRow[x] and (fPrefStartPos or fStartPos) <> 0 then
-                inc(nMapStartPositions);
-            end
-          end;
-          if nMapStartPositions > nPl then
-            nMapStartPositions := nPl;
-          CloseFile(MapFile);
-        except
-          CloseFile(MapFile);
-        end;
+        MiniMap.LoadFromMapFile(GetMapsDir + DirectorySeparator + MapFileName, nMapLandTiles, nMapStartPositions);
         if Page = pgEditMap then
           SmartInvalidate(x0Mini - 112, y0Mini + 61, x0Mini + 112, y0Mini + 91);
       end;
@@ -1540,7 +1582,7 @@ begin
   for i := 0 to ControlCount - 1 do
     Controls[i].Visible := Controls[i].Tag and (256 shl Integer(Page)) <> 0;
   if Page = pgLoad then
-    ReplayBtn.Visible := MiniMode <> mmMultiPlayer;
+    ReplayBtn.Visible := MiniMap.Mode <> mmMultiPlayer;
   List.Invalidate;
   SmartInvalidate(0, 0, ClientWidth, ClientHeight, invalidateTab0);
 end;
@@ -1745,7 +1787,7 @@ begin
     TurnValid := False;
   PaintInfo;
   if Page = pgLoad then
-    ReplayBtn.Visible := MiniMode <> mmMultiPlayer;
+    ReplayBtn.Visible := MiniMap.Mode <> mmMultiPlayer;
 end;
 
 procedure TStartDlg.RenameBtnClick(Sender: TObject);
@@ -1857,7 +1899,7 @@ begin
             TurnValid := false;
           PaintInfo;
           if Page = pgLoad then
-            ReplayBtn.Visible := MiniMode <> mmMultiPlayer;
+            ReplayBtn.Visible := MiniMap.Mode <> mmMultiPlayer;
         end;
       end;
     end;
@@ -2028,5 +2070,6 @@ begin
     LastTurn, True);
   SlotAvailable := -1;
 end;
+
 
 end.

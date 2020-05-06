@@ -1114,8 +1114,7 @@ PollWork = 1800;
 // upgrade[domain,0].preq is domain precondition advance
 // cost values accumulate if prerequisite is future tech / are maximized if not
 nUpgrade = 15;
-upgrade:
-array [0 .. nDomains - 1, 0 .. nUpgrade - 1] of record
+upgrade: array [0 .. nDomains - 1, 0 .. nUpgrade - 1] of record
   Preq: Integer;
   Strength: Integer;
   Trans: Integer;
