@@ -152,6 +152,7 @@ type
     procedure SmartInvalidate(x0, y0, x1, y1: integer;
       invalidateTab0: boolean = false); overload;
     procedure LoadConfig;
+    procedure SaveConfig;
   end;
 
 var
@@ -161,13 +162,11 @@ var
 implementation
 
 uses
-  Directories, Direct, ScreenTools, Inp, Back, Locale, PixelPointer;
+  Global, Directories, Direct, ScreenTools, Inp, Back, Locale, PixelPointer;
 
 {$R *.lfm}
 
 const
-  CevoExt = '.cevo';
-  CevoMapExt = '.cevo map';
   // predefined world size
   // attention: lx*ly+1 must be prime!
   { MaxWorldSize=8;
@@ -466,8 +465,7 @@ begin
   DirectDlg.Left := (Screen.Width - DirectDlg.Width) div 2;
   DirectDlg.Top := (Screen.Height - DirectDlg.Height) div 2;
 
-  if FullScreen then
-  begin
+  if FullScreen then begin
     Location := Point((Screen.Width - 800) * 3 div 8,
       Screen.Height - Height - (Screen.Height - 600) div 3);
     Left := Location.X;
@@ -483,9 +481,7 @@ begin
     DeleteObject(r1);
     SetWindowRgn(Handle, r0, False);
     DeleteObject(r0); // causes crash with Windows 95
-  end
-  else
-  begin
+  end else begin
     Left := (Screen.Width - Width) div 2;
     Top := (Screen.Height - Height) div 2;
   end;
@@ -598,6 +594,7 @@ end;
 
 procedure TStartDlg.FormDestroy(Sender: TObject);
 begin
+  SaveConfig;
   FreeAndNil(FormerGames);
   FreeAndNil(Maps);
   FreeAndNil(EmptyPicture);
@@ -621,8 +618,7 @@ begin
       CombineRgn(r0, r0, r1, RGN_DIFF);
       DeleteObject(r1);
     end;
-  if not invalidateTab0 then
-  begin
+  if not invalidateTab0 then begin
     r1 := CreateRectRgn(0, 0, 6 + 36, 3 + 38); // tab 0 icon
     CombineRgn(r0, r0, r1, RGN_DIFF);
     DeleteObject(r1);
@@ -651,9 +647,13 @@ begin
       if not ValueExists('Diff' + IntToStr(I)) then
         WriteInteger('Diff' + IntToStr(I), 2);
     end;
-    WriteInteger('MultiControl', 0);
 
     OpenKey(AppRegistryKey, True);
+    if ValueExists('Gamma') then Gamma := ReadInteger('Gamma')
+      else Gamma := 100;
+    if Gamma <> 100 then InitGammaLookupTable;
+    if ValueExists('Locale') then LocaleCode := ReadString('Locale')
+      else LocaleCode := '';
     if ValueExists('WorldSize') then WorldSize := Reg.ReadInteger('WorldSize')
       else WorldSize := DefaultWorldSize;
     if ValueExists('LandMass') then StartLandMass := Reg.ReadInteger('LandMass')
@@ -679,11 +679,33 @@ begin
       ResolutionBPP := ReadInteger('ResolutionBPP');
     if ValueExists('ResolutionFreq') then
       ResolutionFreq := ReadInteger('ResolutionFreq');
+    if ValueExists('MultiControl') then
+      MultiControl := ReadInteger('MultiControl')
+      else MultiControl := 0;
     {$IFDEF WINDOWS}
     if ScreenMode = 2 then
       ChangeResolution(ResolutionX, ResolutionY, ResolutionBPP,
         ResolutionFreq);
     {$ENDIF}
+  finally
+    Free;
+  end;
+end;
+
+procedure TStartDlg.SaveConfig;
+var
+  Reg: TRegistry;
+begin
+  Reg := TRegistry.Create;
+  with Reg do try
+    OpenKey(AppRegistryKey, True);
+    WriteInteger('WorldSize', WorldSize);
+    WriteInteger('LandMass', StartLandMass);
+    WriteString('Locale', LocaleCode);
+    WriteInteger('Gamma', Gamma);
+    if FullScreen then WriteInteger('ScreenMode', 1)
+      else WriteInteger('ScreenMode', 0);
+    WriteInteger('MultiControl', MultiControl);
   finally
     Free;
   end;
@@ -1162,11 +1184,9 @@ begin
             FileName := Format(Phrases.Lookup('GAME'), [GameCount]);
           end;
 
-          // save settings and AI assignment
+          // Save settings and AI assignment
           if Page = pgStartRandom then begin
-            WriteInteger('WorldSize', WorldSize);
-            WriteInteger('LandMass', StartLandMass);
-
+            SaveConfig;
             OpenKey(AppRegistryKey + '\AI', True);
             if AutoDiff < 0 then
               for I := 0 to nPlOffered - 1 do begin
@@ -1176,7 +1196,6 @@ begin
                   PlayersBrain[I].FileName);
                 WriteInteger('Diff' + IntToStr(I), Difficulty[I]);
               end;
-            WriteInteger('MultiControl', MultiControl);
           end;
 
           OpenKey(AppRegistryKey, True);
@@ -1236,8 +1255,8 @@ begin
         end;
         MapFileName := Format(Phrases.Lookup('MAP'), [MapCount]) + CevoMapExt;
         EditMap(MapFileName, WorldSizes[WorldSize].X, WorldSizes[WorldSize].Y, StartLandMass);
-      end
-  end
+      end;
+  end;
 end;
 
 procedure TStartDlg.PaintInfo;
@@ -1504,7 +1523,6 @@ begin
                     if AnsiCompareFileName(s, Brains[j].FileName) = 0 then
                       PlayersBrain[p1] := Brains[j];
               end;
-              MultiControl := Reg.ReadInteger('MultiControl');
             finally
               Free;
             end;
@@ -1654,7 +1672,7 @@ begin
       maAIDev:
         OpenDocument(pchar(HomeDir + 'AI Template' + DirectorySeparator + 'AI development manual.html'));
       maWeb:
-        OpenURL('http://c-evo.org')
+        OpenURL(CevoHomepage);
     end;
   end
   else if (AutoDiff < 0) and ((Page = pgStartRandom) or (Page = pgStartMap) and

@@ -289,8 +289,8 @@ begin
   Assert(WavFileName[1] <> '[');
   Result := (WavFileName <> '') and (WavFileName[1] <> '[') and (WavFileName <> '*');
   if Result then
-    // SndPlaySound(pchar(HomeDir+'Sounds' +DirectorySeparator+WavFileName+'.wav'),SND_ASYNC)
-    PlaySound(HomeDir + 'Sounds' + DirectorySeparator + WavFileName);
+    // SndPlaySound(pchar(GetSoundsDir + DirectorySeparator + WavFileName + '.wav'), SND_ASYNC)
+    PlaySound(GetSoundsDir + DirectorySeparator + WavFileName);
 {$ENDIF}
 end;
 
@@ -306,7 +306,7 @@ begin
   WavFileName := Sounds.Lookup(Item, Index);
   Assert(WavFileName[1] <> '[');
   if (WavFileName <> '') and (WavFileName[1] <> '[') and (WavFileName <> '*') then
-    PrepareSound(HomeDir + 'Sounds' + DirectorySeparator + WavFileName);
+    PrepareSound(GetSoundsDir + DirectorySeparator + WavFileName);
 {$ENDIF}
 end;
 

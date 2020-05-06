@@ -187,10 +187,12 @@ var
   Phrases2FallenBackToEnglish: Boolean;
 
   UniFont: array [TFontType] of TFont;
-  AppRegistryKey: string = '\SOFTWARE\C-evo';
+  Gamma: Integer; // global gamma correction (cent)
 
 procedure UnitInit;
 procedure UnitDone;
+procedure InitGammaLookupTable;
+
 
 implementation
 
@@ -203,8 +205,7 @@ var
   ResolutionChanged: boolean;
   {$ENDIF}
 
-  Gamma: Integer; // global gamma correction (cent)
-  GammaLookupTable: array [0 .. 255] of Byte;
+  GammaLookupTable: array [0..255] of Byte;
 
 {$IFDEF WINDOWS}
 function ChangeResolution(x, y, bpp, freq: integer): boolean;
@@ -467,7 +468,7 @@ begin
   if I = nGrExt then begin
     Source := TBitmap.Create;
     Source.PixelFormat := pf24bit;
-    FileName := HomeDir + 'Graphics' + DirectorySeparator + Name;
+    FileName := GetGraphicsDir + DirectorySeparator + Name;
     if not LoadGraphicFile(Source, FileName) then begin
       Result := -1;
       Exit;
@@ -1351,7 +1352,7 @@ begin
   if Age <> MainTextureAge then
     with MainTexture do begin
       MainTextureAge := Age;
-      LoadGraphicFile(Image, HomeDir + 'Graphics' + DirectorySeparator +
+      LoadGraphicFile(Image, GetGraphicsDir + DirectorySeparator +
         'Texture' + IntToStr(Age + 1) + '.jpg');
       clBevelLight := Colors.Canvas.Pixels[clkAge0 + Age, cliBevelLight];
       clBevelShade := Colors.Canvas.Pixels[clkAge0 + Age, cliBevelShade];
@@ -1390,7 +1391,7 @@ begin
   end;
 
   if Sounds = nil then Sounds := TStringTable.Create;
-  if not Sounds.LoadFromFile(HomeDir + 'Sounds' + DirectorySeparator + 'sound.txt') then
+  if not Sounds.LoadFromFile(GetSoundsDir + DirectorySeparator + 'sound.txt') then
   begin
     FreeAndNil(Sounds);
   end;
@@ -1469,29 +1470,9 @@ begin
 end;
 
 procedure UnitInit;
-var
-  Reg: TRegistry;
 begin
-  Reg := TRegistry.Create;
-  with Reg do
-    try
-      OpenKey(AppRegistryKey, True);
-      if ValueExists('Gamma') then
-        Gamma := ReadInteger('Gamma')
-      else
-      begin
-        Gamma := 100;
-        WriteInteger('Gamma', Gamma);
-      end;
-      if ValueExists('Locale') then
-        LocaleCode := ReadString('Locale')
-      else
-        LocaleCode := '';
-    finally
-      Free;
-    end;
-
-  if Gamma <> 100 then InitGammaLookupTable;
+  Gamma := 100;
+  InitGammaLookupTable;
 
   {$IFDEF WINDOWS}
   EnumDisplaySettings(nil, $FFFFFFFF, StartResolution);
@@ -1511,17 +1492,17 @@ begin
   HGrSystem2 := LoadGraphicSet('System2.png');
   Templates := TBitmap.Create;
   Templates.PixelFormat := pf24bit;
-  LoadGraphicFile(Templates, HomeDir + 'Graphics' + DirectorySeparator +
+  LoadGraphicFile(Templates, GetGraphicsDir + DirectorySeparator +
     'Templates.png', gfNoGamma);
   Colors := TBitmap.Create;
   Colors.PixelFormat := pf24bit;
-  LoadGraphicFile(Colors, HomeDir + 'Graphics' + DirectorySeparator + 'Colors.png');
+  LoadGraphicFile(Colors, GetGraphicsDir + DirectorySeparator + 'Colors.png');
   Paper := TBitmap.Create;
   Paper.PixelFormat := pf24bit;
-  LoadGraphicFile(Paper, HomeDir + 'Graphics' + DirectorySeparator + 'Paper.jpg');
+  LoadGraphicFile(Paper, GetGraphicsDir + DirectorySeparator + 'Paper.jpg');
   BigImp := TBitmap.Create;
   BigImp.PixelFormat := pf24bit;
-  LoadGraphicFile(BigImp, HomeDir + 'Graphics' + DirectorySeparator + 'Icons.png');
+  LoadGraphicFile(BigImp, GetGraphicsDir + DirectorySeparator + 'Icons.png');
   MainTexture.Image := TBitmap.Create;
   MainTextureAge := -2;
   ClickFrameColor := GrExt[HGrSystem].Data.Canvas.Pixels[187, 175];
@@ -1531,21 +1512,8 @@ end;
 
 procedure UnitDone;
 var
-  Reg: TRegistry;
   I: integer;
 begin
-  Reg := TRegistry.Create;
-  with Reg do
-    try
-      OpenKey(AppRegistryKey, True);
-      WriteString('Locale', LocaleCode);
-      WriteInteger('Gamma', Gamma);
-      if FullScreen then WriteInteger('ScreenMode', 1)
-        else WriteInteger('ScreenMode', 0);
-    finally
-      Free;
-    end;
-
   RestoreResolution;
   for I := 0 to nGrExt - 1 do begin
     GrExt[I].Data.Free;

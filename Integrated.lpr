@@ -57,7 +57,7 @@ begin
   DotNetClient := nil;
   Application.Initialize;
   Application.Title := 'c-evo';
-  Directories.InitUnit;
+  Directories.UnitInit;
   ScreenTools.UnitInit;
   Application.CreateForm(TDirectDlg, DirectDlg);
   Application.CreateForm(TStartDlg, StartDlg);

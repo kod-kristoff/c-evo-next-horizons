@@ -175,16 +175,16 @@ var
   cix: integer;
   // ButtonDownSound, ButtonUpSound: string;
 begin
-  // ButtonDownSound:=Sounds.Lookup('BUTTON_DOWN');
-  // ButtonUpSound:=Sounds.Lookup('BUTTON_UP');
+  // ButtonDownSound := Sounds.Lookup('BUTTON_DOWN');
+  // ButtonUpSound := Sounds.Lookup('BUTTON_UP');
   for cix := 0 to ComponentCount - 1 do
     if Components[cix] is TButtonBase then
     begin
       TButtonBase(Components[cix]).Graphic := GrExt[HGrSystem].Data;
-      // if ButtonDownSound<>'*' then
-      // DownSound:=HomeDir+'Sounds' + DirectorySeparator + ButtonDownSound + '.wav';
-      // if ButtonUpSound<>'*' then
-      // UpSound:=HomeDir+'Sounds' + DirectorySeparator + ButtonUpSound + '.wav';
+      // if ButtonDownSound <> '*' then
+      // DownSound := GetSoundsDir + DirectorySeparator + ButtonDownSound + '.wav';
+      // if ButtonUpSound <> '*' then
+      // UpSound := GetSoundsDir + DirectorySeparator + ButtonUpSound + '.wav';
       if Components[cix] is TButtonA then
         TButtonA(Components[cix]).Font := UniFont[ftButton];
       if Components[cix] is TButtonB then

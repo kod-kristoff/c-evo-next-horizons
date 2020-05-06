@@ -272,6 +272,7 @@ type
     procedure SetTileSize(x, y: integer);
     procedure RectInvalidate(Left, Top, Rigth, Bottom: integer);
     procedure SmartRectInvalidate(Left, Top, Rigth, Bottom: integer);
+    procedure LoadSettings;
     procedure SaveSettings;
     procedure OnScroll(var m: TMessage); message WM_VSCROLL;
     procedure OnEOT(var Msg: TMessage); message WM_EOT;
@@ -466,7 +467,7 @@ implementation
 uses
   Directories, IsoEngine, CityScreen, Draft, MessgEx, Select, CityType, Help,
   UnitStat, Log, Diagram, NatStat, Wonders, Enhance, Nego, PixelPointer, Sound,
-  Battle, Rates, TechTree, Registry;
+  Battle, Rates, TechTree, Registry, Global;
 
 {$R *.lfm}
 
@@ -3406,8 +3407,6 @@ end;
 
 procedure TMainScreen.FormCreate(Sender: TObject);
 var
-  DefaultOptionChecked: integer;
-  Reg: TRegistry;
   i, j: integer;
 begin
   MainFormKeyDown := FormKeyDown;
@@ -3436,37 +3435,8 @@ begin
   SaveOption[19] := mAlSlowMoves.Tag;
   SaveOption[20] := mAlFastMoves.Tag;
   SaveOption[21] := mAlNoMoves.Tag;
-  DefaultOptionChecked := 1 shl 1 + 1 shl 7 + 1 shl 10 + 1 shl 12 + 1 shl 14 +
-    1 shl 18 + 1 shl 19;
 
-  Reg := TRegistry.Create;
-  with Reg do
-  try
-    OpenKey(AppRegistryKey, false);
-    if ValueExists('TileWidth') then xxt := ReadInteger('TileWidth') div 2
-      else xxt := 48;
-    if ValueExists('TileHeight') then yyt := ReadInteger('TileHeight') div 2
-      else yyt := 24;
-    if ValueExists('OptionChecked') then OptionChecked := ReadInteger('OptionChecked')
-      else OptionChecked := DefaultOptionChecked;
-    if ValueExists('MapOptionChecked') then MapOptionChecked := ReadInteger('MapOptionChecked')
-      else MapOptionChecked := 1 shl moCityNames;
-    if ValueExists('CityReport') then CityRepMask := Cardinal(ReadInteger('CityReport'))
-      else CityRepMask := Cardinal(not chPopIncrease and not chNoGrowthWarning and
-          not chCaptured);
-    if OptionChecked and (7 shl 16) = 0 then
-      OptionChecked := OptionChecked or (1 shl 16);
-      // old regver with no scrolling
-  finally
-    Free;
-  end;
-
-  if 1 shl 13 and OptionChecked <> 0 then
-    SoundMode := smOff
-  else if 1 shl 15 and OptionChecked <> 0 then
-    SoundMode := smOnAlt
-  else
-    SoundMode := smOn;
+  LoadSettings;
 
   Screen.Cursors[crImpDrag] := LoadCursor(HInstance, 'DRAG');
   Screen.Cursors[crFlatHand] := LoadCursor(HInstance, 'FLATHAND');
@@ -7774,6 +7744,42 @@ begin
     end;
   InvalidateRgn(Handle, r0, false);
   DeleteObject(r0);
+end;
+
+procedure TMainScreen.LoadSettings;
+var
+  Reg: TRegistry;
+  DefaultOptionChecked: Integer;
+begin
+  DefaultOptionChecked := 1 shl 1 + 1 shl 7 + 1 shl 10 + 1 shl 12 + 1 shl 14 +
+    1 shl 18 + 1 shl 19;
+  Reg := TRegistry.Create;
+  with Reg do try
+    OpenKey(AppRegistryKey, False);
+    if ValueExists('TileWidth') then xxt := ReadInteger('TileWidth') div 2
+      else xxt := 48;
+    if ValueExists('TileHeight') then yyt := ReadInteger('TileHeight') div 2
+      else yyt := 24;
+    if ValueExists('OptionChecked') then OptionChecked := ReadInteger('OptionChecked')
+      else OptionChecked := DefaultOptionChecked;
+    if ValueExists('MapOptionChecked') then MapOptionChecked := ReadInteger('MapOptionChecked')
+      else MapOptionChecked := 1 shl moCityNames;
+    if ValueExists('CityReport') then CityRepMask := Cardinal(ReadInteger('CityReport'))
+      else CityRepMask := Cardinal(not chPopIncrease and not chNoGrowthWarning and
+          not chCaptured);
+    if OptionChecked and (7 shl 16) = 0 then
+      OptionChecked := OptionChecked or (1 shl 16);
+      // old regver with no scrolling
+  finally
+    Free;
+  end;
+
+  if 1 shl 13 and OptionChecked <> 0 then
+    SoundMode := smOff
+  else if 1 shl 15 and OptionChecked <> 0 then
+    SoundMode := smOnAlt
+  else
+    SoundMode := smOn;
 end;
 
 procedure TMainScreen.mRepClicked(Sender: TObject);

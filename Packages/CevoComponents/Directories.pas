@@ -9,9 +9,11 @@ var
   LocaleCodeAuto: string = '';
 
 function LocalizedFilePath(const Path: string): string;
-procedure InitUnit;
+procedure UnitInit;
 function GetSavedDir(Home: Boolean = False): string;
 function GetMapsDir(Home: Boolean = False): string;
+function GetGraphicsDir: string;
+function GetSoundsDir: string;
 
 
 implementation
@@ -29,9 +31,9 @@ begin
   Lang := Copy(GetEnvironmentVariableUTF8('LANG'), 1, 2);
 
   if Lang = '' then begin
-      for i := 1 to Paramcount - 1 do
-        if (ParamStrUTF8(i) = '--LANG') or (ParamStrUTF8(i) = '-l') or
-          (ParamStrUTF8(i) = '--lang') then
+    for i := 1 to Paramcount - 1 do
+      if (ParamStrUTF8(i) = '--LANG') or (ParamStrUTF8(i) = '-l') or
+        (ParamStrUTF8(i) = '--lang') then
           Lang := ParamStrUTF8(i + 1);
   end;
   if Lang = '' then begin
@@ -58,7 +60,7 @@ begin
   end else Result := HomeDir + Path;
 end;
 
-procedure InitUnit;
+procedure UnitInit;
 var
   AppDataDir: string;
   src, dst: TSearchRec;
@@ -110,6 +112,16 @@ function GetMapsDir(Home: Boolean = False): string;
 begin
   if Home then Result := HomeDir + 'Maps'
     else Result := DataDir + 'Maps';
+end;
+
+function GetGraphicsDir: string;
+begin
+  Result := HomeDir + 'Graphics';
+end;
+
+function GetSoundsDir: string;
+begin
+  Result := HomeDir + 'Sounds';
 end;
 
 end.

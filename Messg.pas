@@ -81,7 +81,7 @@ begin
   inherited;
   if OpenSound <> '' then
     PostMessage(Handle, WM_PLAYSOUND, 0, 0);
-end; { FormPaint }
+end;
 
 procedure TMessgDlg.Button1Click(Sender: TObject);
 begin
@@ -96,7 +96,7 @@ end;
 procedure TMessgDlg.FormKeyPress(Sender: TObject; var Key: char);
 begin
   if Key = #13 then
-    ModalResult := mrOK
+    ModalResult := mrOK;
     // else if (Key=#27) and (Button2.Visible) then ModalResult:=mrCancel
 end;
 
@@ -107,7 +107,7 @@ begin
     MessgText := SimpleText;
     Kind := mkOK;
     ShowModal;
-  end
+  end;
 end;
 
 procedure SoundMessage(SimpleText, SoundItem: string);
@@ -118,7 +118,7 @@ begin
     OpenSound := SoundItem;
     Kind := mkOK;
     ShowModal;
-  end
+  end;
 end;
 
 procedure TMessgDlg.OnPlaySound(var Msg: TMessage);

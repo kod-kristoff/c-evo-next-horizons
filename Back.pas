@@ -41,7 +41,7 @@ var
 begin
   if FullScreen then begin
     if not Assigned(Img) then begin
-      FileName := HomeDir + 'Graphics' + DirectorySeparator + 'Background.png';
+      FileName := GetGraphicsDir + DirectorySeparator + 'Background.png';
       if FileExists(FileName) then begin
         Img := TBitmap.Create;
         LoadGraphicFile(img, FileName);

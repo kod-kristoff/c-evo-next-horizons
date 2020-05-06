@@ -4,9 +4,9 @@ unit Help;
 interface
 
 uses
-  Protocol, ScreenTools, BaseWin, StringTables, Math,
-  LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics, Controls, Forms,
-  ExtCtrls, ButtonB, PVSB, Types, fgl;
+  Protocol, ScreenTools, BaseWin, StringTables, Math, LCLIntf, LCLType,
+  LMessages, Messages, SysUtils, Classes, Graphics, Controls, Forms, ExtCtrls,
+  ButtonB, PVSB, Types, fgl;
 
 const
   MaxHist = 16;
@@ -122,10 +122,11 @@ type
 var
   HelpDlg: THelpDlg;
 
+
 implementation
 
 uses
-  Directories, ClientTools, Term, Tribes, Inp, Messg, PixelPointer;
+  Directories, ClientTools, Term, Tribes, Inp, Messg, PixelPointer, Global;
 
 {$R *.lfm}
 
@@ -1228,9 +1229,9 @@ var
   begin
     List := TStringList.Create;
     Plus := TStringList.Create;
-    if FindFirst(HomeDir + 'Graphics' + DirectorySeparator + '*.credits.txt', $27, sr) = 0 then
+    if FindFirst(GetGraphicsDir + DirectorySeparator + '*.credits.txt', $27, sr) = 0 then
       repeat
-        Plus.LoadFromFile(HomeDir + 'Graphics' + DirectorySeparator + sr.Name);
+        Plus.LoadFromFile(GetGraphicsDir + DirectorySeparator + sr.Name);
         List.AddStrings(Plus);
       until FindNext(sr) <> 0;
     FindClose(sr);
@@ -1261,7 +1262,7 @@ var
     List: TStringList;
   begin
     List := TStringList.Create;
-    List.LoadFromFile(HomeDir + 'Sounds' + DirectorySeparator + 'sound.credits.txt');
+    List.LoadFromFile(GetSoundsDir + DirectorySeparator + 'sound.credits.txt');
     for i := 0 to List.Count - 1 do begin
       s := List[i];
       while BiColorTextWidth(OffScreen.Canvas, s) > InnerWidth - 16 -
@@ -1947,8 +1948,8 @@ begin
       if Link shr 8 and $3F = hkInternet then
         case Link and $FF of
           1: OpenDocument(pchar(HomeDir + 'AI Template' + DirectorySeparator + 'AI development manual.html'));
-          2: OpenURL('http://c-evo.org');
-          3: OpenURL('http://c-evo.org/_sg/contact');
+          2: OpenURL(CevoHomepage);
+          3: OpenURL(CevoHomepageContact);
         end
       else
       begin
