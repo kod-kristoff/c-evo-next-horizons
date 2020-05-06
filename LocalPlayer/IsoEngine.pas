@@ -4,8 +4,7 @@ unit IsoEngine;
 interface
 
 uses
-  Protocol, ClientTools, ScreenTools, Tribes,
-{$IFNDEF SCR}Term, {$ENDIF}
+  Protocol, ClientTools, ScreenTools, Tribes, {$IFNDEF SCR}Term, {$ENDIF}
   LCLIntf, LCLType, SysUtils, Classes, Graphics, PixelPointer;
 
 type
@@ -477,12 +476,12 @@ begin
   if x < FLeft then
   begin
     Width := Width - (FLeft - x);
-    x := FLeft
+    x := FLeft;
   end;
   if y < FTop then
   begin
     Height := Height - (FTop - y);
-    y := FTop
+    y := FTop;
   end;
   if x + Width >= FRight then
     Width := FRight - x;
@@ -509,13 +508,13 @@ begin
   begin
     Width := Width - (FLeft - x);
     xSrc := xSrc + (FLeft - x);
-    x := FLeft
+    x := FLeft;
   end;
   if y < FTop then
   begin
     Height := Height - (FTop - y);
     ySrc := ySrc + (FTop - y);
-    y := FTop
+    y := FTop;
   end;
   if x + Width >= FRight then
     Width := FRight - x;
@@ -627,8 +626,8 @@ begin
           MaskDC:=GrExt[HGrTerrain].Mask.Canvas.Handle;
           TSprite(x,y+16,12*9+7); }
         Sprite(HGrStdUnits, x, y, xxu * 2, yyu * 2, 1 + 6 * (xxu * 2 + 1), 1);
-      end
-    end
+      end;
+    end;
 end; { PaintUnit }
 
 procedure TIsoMap.PaintCity(x, y: integer; const CityInfo: TCityInfo;

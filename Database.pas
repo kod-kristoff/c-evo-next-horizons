@@ -956,7 +956,7 @@ begin
         RealMap[Loc] := RealMap[Loc] and not fTerrain or fShore;
     end;
     if (RealMap[Loc] xor Cardinal(OldTile)) and fTerrain <> 0 then
-      result := true
+      result := true;
   end;
 end;
 
@@ -990,12 +990,12 @@ const
     if ly - 1 - y > y then
     begin
       z0 := 6 * y div ly;
-      ZPlus := 6 * y / ly - z0
+      ZPlus := 6 * y / ly - z0;
     end
     else
     begin
       z0 := 6 * (ly - 1 - y) div ly;
-      ZPlus := 6 * (ly - 1 - y) / ly - z0
+      ZPlus := 6 * (ly - 1 - y) / ly - z0;
     end;
     p0 := 1;
     for i := 2 to 9 do
@@ -1005,9 +1005,9 @@ const
       if DelphiRandom * p0 < p then
       begin
         RndLow := i;
-        Break
+        Break;
       end;
-      p0 := p0 - p
+      p0 := p0 - p;
     end;
   end;
 
@@ -1052,9 +1052,9 @@ const
           else
             Cost := 0;
           if Q.Put(Loc1, T + Cost shl 8 + 1) then
-            From[Loc1] := Loc
-        end
-      end
+            From[Loc1] := Loc;
+        end;
+      end;
     end;
     Loc1 := Loc;
     result := 0;
@@ -1074,11 +1074,11 @@ const
           RealMap[Loc] := fGrass or fRiver
         else if RealMap[Loc] and fTerrain >= fGrass then
           RealMap[Loc] := RealMap[Loc] or fRiver;
-      end
+      end;
     end
     else
       result := 0;
-    Q.Free
+    Q.Free;
   end;
 
 var
@@ -1403,8 +1403,8 @@ begin
           begin
             CityLoc[c, nCityLoc[c]] := Loc;
             inc(nCityLoc[c])
-          end
-        end
+          end;
+        end;
       end;
       Loc := (Loc + 1) * primitive mod (MapSize + 1) - 1;
     end;
@@ -1536,7 +1536,7 @@ begin
       RealMap[IrrLoc[j]] := RealMap[IrrLoc[j]] or tiIrrigation;
       IrrLoc[j] := IrrLoc[nIrrLoc - 1];
       dec(nIrrLoc);
-      dec(i)
+      dec(i);
     end;
   end;
 
@@ -1589,7 +1589,7 @@ begin
           if DelphiRandom(n) = 0 then
             StartLoc2[p1] := Loc1;
         end;
-      end
+      end;
     end;
 end; { StartPositions }
 
@@ -1794,7 +1794,7 @@ begin
   CreateMap(false);
   StartPositions;
   InitGame;
-end; { InitRandomGame }
+end;
 
 procedure InitMapGame(Human: integer);
 begin
@@ -1802,7 +1802,7 @@ begin
   FindContinents;
   PredefinedStartPositions(Human);
   InitGame;
-end; { InitMapGame }
+end;
 
 procedure ReleaseGame;
 var
@@ -1823,7 +1823,7 @@ begin
       FreeMem(RW[p1].Territory);
       FreeMem(RW[p1].MapObservedLast);
       FreeMem(RW[p1].Map);
-    end
+    end;
 end;
 
 procedure InitMapEditor;
@@ -1943,7 +1943,7 @@ begin
       if Tile and fTerrain = fUNKNOWN then
       begin
         result := eNoPreq;
-        exit
+        exit;
       end;
     end;
 
@@ -1957,7 +1957,7 @@ begin
     if cix = -1 then
     begin
       result := eInvalid;
-      exit
+      exit;
     end; // no city found here
 
     special := Tile and fSpecial and ResourceMask[p] shr 5;
@@ -2113,9 +2113,9 @@ begin
           Bonus := TestBonus;
           Det := TestDet;
           Cost := TestCost;
-        end
-      end
-    end
+        end;
+      end;
+    end;
   end;
 end;
 
@@ -2177,7 +2177,7 @@ begin
                 (RW[p].Treaty[TerrOwner] < trAlliance) then
                 UnitReport.ReportFlags := UnitReport.ReportFlags or urfDeployed;
           end;
-        end
+        end;
       end;
     end;
 end;
@@ -2372,8 +2372,8 @@ begin
               result := true;
           end
           else
-            AddFlags := AddFlags or Map[Loc] and (fStealthUnit or fHiddenUnit)
-        end
+            AddFlags := AddFlags or Map[Loc] and (fStealthUnit or fHiddenUnit);
+        end;
     end; // if Mode>moLoading_Fast
 
     if Tile and fCity <> 0 then
@@ -2430,7 +2430,7 @@ begin
     end;
     ObserveLevel[Loc] := ObserveLevel[Loc] and not(3 shl (2 * pTell)) or
       Cardinal(Level) shl (2 * pTell);
-  end
+  end;
 end; // DiscoverTile
 
 function Discover9(Loc, p, Level: integer;
@@ -2459,14 +2459,14 @@ begin
             if Level > OldLevel then
               result := DiscoverTile(Loc1, p, pTell, Level, EnableContact)
                 or result;
-          end
+          end;
       end
       else
       begin
         OldLevel := ObserveLevel[Loc1] shr (2 * p) and 3;
         if Level > OldLevel then
           result := DiscoverTile(Loc1, p, p, Level, EnableContact) or result;
-      end
+      end;
   end;
 end;
 
@@ -2499,14 +2499,14 @@ begin
             if Level > OldLevel then
               result := DiscoverTile(Loc1, p, pTell, Level, EnableContact)
                 or result;
-          end
+          end;
       end
       else
       begin
         OldLevel := ObserveLevel[Loc1] shr (2 * p) and 3;
         if Level > OldLevel then
           result := DiscoverTile(Loc1, p, p, Level, EnableContact) or result;
-      end
+      end;
     end;
     AdjacentFlags := AdjacentFlags shr 1;
   end;
@@ -2569,9 +2569,9 @@ begin // discover unit and city view areas
           begin
             RW[pTell].EnemyCity[ecix].Loc := -1;
             RW[pTell].Map[Loc] := RW[pTell].Map[Loc] and not fCity
-          end
-        end
-      end
+          end;
+        end;
+      end;
     end;
 end;
 
@@ -2593,8 +2593,8 @@ begin
       RW[p].EnemyUn[RW[p].nEnemyUn + result].emix :=
         RWemix[p, Occupant[Loc], unx.mix];
       inc(result);
-    end
-  end
+    end;
+  end;
 end;
 
 procedure UpdateUnitMap(Loc: integer; CityChange: boolean = false);
@@ -2654,9 +2654,9 @@ begin
           else
             ClearFlags := ClearFlags or fOwnZoCUnit;
           RW[p].Map[Loc] := RW[p].Map[Loc] and not ClearFlags or AddFlags;
-        end
-      end
-    end
+        end;
+      end;
+    end;
 end;
 
 procedure RecalcV8ZoC(p, Loc: integer);
@@ -2690,11 +2690,11 @@ begin
           begin
             Tile1^ := Tile1^ or fInEnemyZoC;
             Break
-          end
-        end
+          end;
+        end;
       end;
-    end
-  end
+    end;
+  end;
 end;
 
 procedure RecalcMapZoC(p: integer);
@@ -2720,9 +2720,9 @@ begin
           Loc1 := Adjacent[V8];
           if (Loc1 >= 0) and (Loc1 < MapSize) then
             RW[p].Map[Loc1] := RW[p].Map[Loc1] or fInEnemyZoC
-        end
-      end
-    end
+        end;
+      end;
+    end;
 end;
 
 procedure RecalcPeaceMap(p: integer);
@@ -2739,7 +2739,7 @@ begin
       and (RW[p].Treaty[p1] in [trPeace, TrFriendlyContact]);
   for Loc := 0 to MapSize - 1 do
     if PeacePlayer[RW[p].Territory[Loc]] then
-      RW[p].Map[Loc] := RW[p].Map[Loc] or fPeace
+      RW[p].Map[Loc] := RW[p].Map[Loc] or fPeace;
 end;
 
 {
@@ -2753,9 +2753,9 @@ procedure ChangeTerritory(Loc, p: integer);
 var
   p1: integer;
 begin
-  assert(p >= 0); // no player's territory indicated by p=nPl
-  dec(TerritoryCount[RealMap[Loc] shr 27]);
-  inc(TerritoryCount[p]);
+  Assert(p >= 0); // no player's territory indicated by p=nPl
+  Dec(TerritoryCount[RealMap[Loc] shr 27]);
+  Inc(TerritoryCount[p]);
   RealMap[Loc] := RealMap[Loc] and not($F shl 27) or Cardinal(p) shl 27;
   if p = $F then
     p := -1;
@@ -2769,7 +2769,7 @@ begin
           RW[p1].Map[Loc] := RW[p1].Map[Loc] or fPeace
         else
           RW[p1].Map[Loc] := RW[p1].Map[Loc] and not fPeace;
-      end
+      end;
 end;
 
 procedure ExpandTerritory(OriginLoc: integer);
@@ -2796,8 +2796,8 @@ begin
         if (Loc >= 0) and (Cardinal(NewOwner) <> RealMap[Loc] shr 27) then
           ChangeTerritory(Loc, NewOwner);
         inc(i);
-      end
-  end
+      end;
+  end;
 end;
 
 procedure CheckBorders(OriginLoc, PlayerLosingCity: integer);
@@ -2838,8 +2838,8 @@ begin
             if (Loc1 >= 0) and (Loc1 < MapSize) and (NewDist < StolenDist[Loc1])
             then
               StolenDist[Loc1] := NewDist;
-          end
-        end
+          end;
+        end;
     end;
   end;
 
@@ -2874,9 +2874,9 @@ begin
           begin
             Country[Loc1] := FormerCountry[Loc];
             Dist[Loc1] := NewDist;
-          end
-        end
-      end
+          end;
+        end;
+      end;
   end;
 
   FillChar(AtPeace, SizeOf(AtPeace), false);
@@ -3025,14 +3025,14 @@ begin
     Occupant[Loc] := p;
     if RW[p].Model[mix].Flags and mdZOC <> 0 then
       ZoCMap[Loc] := 1;
-  end
+  end;
 end;
 
 procedure CountLost(p, mix, Enemy: integer);
 begin
-  inc(RW[p].Model[mix].Lost);
+  Inc(RW[p].Model[mix].Lost);
   TellAboutModel(Enemy, p, mix);
-  inc(Destroyed[Enemy, p, mix]);
+  Inc(Destroyed[Enemy, p, mix]);
 end;
 
 procedure RemoveUnit(p, uix: integer; Enemy: integer = -1);
@@ -3063,12 +3063,12 @@ begin
     Loc := -1;
     if Enemy >= 0 then
       CountLost(p, mix, Enemy);
-  end
-end; { RemoveUnit }
+  end;
+end;
 
 procedure RemoveUnit_UpdateMap(p, uix: integer);
 var
-  Loc0: integer;
+  Loc0: Integer;
 begin
   Loc0 := RW[p].Un[uix].Loc;
   RemoveUnit(p, uix);
@@ -3137,7 +3137,7 @@ begin
 
     ChangeTerritory(Loc, p)
   end;
-end; { FoundCity }
+end;
 
 procedure StealCity(p, cix: integer; SaveUnits: boolean);
 var
@@ -3177,7 +3177,7 @@ begin
         end
         else
           RemoveUnit(p, uix1); // destroy supported units
-end; // StealCity
+end;
 
 procedure DestroyCity(p, cix: integer; SaveUnits: boolean);
 var
@@ -3196,8 +3196,8 @@ begin
         UsedByCity[Radius[V21]] := -1;
     RealMap[Loc] := RealMap[Loc] and not fCity;
     Loc := -1
-  end
-end; // DestroyCity
+  end;
+end;
 
 procedure ChangeCityOwner(pOld, cixOld, pNew: integer);
 var
@@ -3274,7 +3274,7 @@ begin
 
     ChangeTerritory(Loc, pNew);
   end;
-end; // ChangeCityOwner
+end;
 
 procedure CompleteJob(p, Loc, Job: integer);
 var
@@ -3410,7 +3410,7 @@ begin
     for uix := 0 to RW[pAbout].nUn - 1 do
       if RW[pAbout].Un[uix].Loc >= 0 then
         inc(UnCount[RW[pAbout].Un[uix].mix]);
-  end
+  end;
 end;
 
 procedure ShowPrice(pSender, pTarget, Price: integer);
@@ -3425,7 +3425,7 @@ begin
     { opCity: // + city ID
       begin
       end; }
-  end
+  end;
 end;
 
 function CopyCivilReport(pSender, pTarget, pAbout: integer): boolean;
@@ -3446,14 +3446,14 @@ begin // copy third nation civil report
     rTarget.Money := rSender.Money;
     rTarget.ResearchTech := rSender.ResearchTech;
     rTarget.ResearchDone := rSender.ResearchDone;
-    result := true
+    result := true;
   end;
   for i := 0 to nAdv - 1 do
     if rTarget.Tech[i] < rSender.Tech[i] then
     begin
       rTarget.Tech[i] := rSender.Tech[i];
-      result := true
-    end
+      result := true;
+    end;
 end;
 
 function CopyMilReport(pSender, pTarget, pAbout: integer): boolean;
@@ -3473,8 +3473,8 @@ begin // copy third nation military report
     move(rSender.UnCount, rTarget.UnCount, 2 * rSender.nModelCounted);
     for mix := 0 to rTarget.nModelCounted - 1 do
       TellAboutModel(pTarget, pAbout, mix);
-    result := true
-  end
+    result := true;
+  end;
 end;
 
 procedure CopyModel(pSender, pTarget, mix: integer);
@@ -3490,7 +3490,7 @@ begin
   begin
     MakeModelInfo(pTarget, i, RW[pTarget].Model[i], miTarget);
     if IsSameModel(miSender, miTarget) then
-      ok := false
+      ok := false;
   end;
   if ok then
   begin
@@ -3508,7 +3508,7 @@ begin
     inc(RW[pTarget].nModel);
     inc(Researched[pTarget]);
     TellAboutModel(pSender, pTarget, RW[pTarget].nModel - 1);
-  end
+  end;
 end;
 
 procedure CopyMap(pSender, pTarget: integer);
@@ -3661,8 +3661,8 @@ begin
             end;
             RecalcPeaceMap(pSender);
             RecalcPeaceMap(pTarget);
-          end
-        end
+          end;
+        end;
       end;
     opShipParts: // + number + part type shl 16
       begin
@@ -3680,8 +3680,8 @@ begin
               inc(GShip[pTarget].Parts[i], n);
               RW[pSender].Ship[pTarget].Parts[i] := GShip[pTarget].Parts[i];
               RW[pTarget].Ship[pTarget].Parts[i] := GShip[pTarget].Parts[i];
-            end
-          end
+            end;
+          end;
         end
         else
           result := false;
@@ -3694,7 +3694,7 @@ begin
         begin
           dec(RW[pSender].Money, Price - opMoney);
           inc(RW[pTarget].Money, Price - opMoney);
-        end
+        end;
       end
       else
         result := false;
@@ -3709,7 +3709,7 @@ begin
         begin
           SeeTech(pTarget, Price - opTech);
           RW[pSender].EnemyReport[pTarget].Tech[Price - opTech] := tsSeen;
-        end
+        end;
       end
       else
         result := false;
@@ -3806,13 +3806,13 @@ begin
     begin
       RecalcMapZoC(p);
       RecalcMapZoC(pWith);
-    end
+    end;
   end;
   if OldTreaty in [trPeace, trAlliance] then
   begin
     RecalcPeaceMap(p);
     RecalcPeaceMap(pWith);
-  end
+  end;
 end;
 
 function DoSpyMission(p, pCity, cix, Mission: integer): Cardinal;
@@ -3853,7 +3853,7 @@ begin
             if RW[pCity].EnemyReport[p1].TurnOfMilReport >= 0 then
               if CopyMilReport(pCity, p, p1) then
                 result := result or (2 shl (2 * p1));
-          end
+          end;
       end;
   end;
 end;
@@ -3910,7 +3910,7 @@ begin
             for i := 1 to 3 do
               if RW[p2].EnemyReport[p1].Tech[AgePreq[i]] < tsApplicable then
                 RW[p2].EnemyReport[p1].Tech[AgePreq[i]] := tsCheat;
-      end
+      end;
     end;
 
   if MoreFlags and tfUncover <> 0 then
@@ -3924,8 +3924,8 @@ begin
         begin
           GiveCivilReport(p, p1);
           GiveMilReport(p, p1);
-        end
-      end
+        end;
+      end;
   end;
 end;
 
