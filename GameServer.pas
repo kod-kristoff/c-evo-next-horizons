@@ -122,6 +122,9 @@ uses
   Directories, CityProcessing, UnitProcessing, CmdList, LCLIntf, LCLType,
   LMessages, Classes, SysUtils;
 
+resourcestring
+  SNoAiFound = 'No AI libraries found in directory %s';
+
 var
   MaxTurn: Integer;
   LoadTurn: Integer; { turn where to stop loading }
@@ -255,9 +258,9 @@ begin
 
   BrainBeginner := nil;
 
-  if FindFirst(HomeDir + 'AI' + DirectorySeparator + '*', faDirectory or faArchive or faReadOnly, f) = 0 then
+  if FindFirst(GetAiDir + DirectorySeparator + '*', faDirectory or faArchive or faReadOnly, f) = 0 then
   repeat
-    BasePath := HomeDir + 'AI' + DirectorySeparator + f.Name;
+    BasePath := GetAiDir + DirectorySeparator + f.Name;
     if (f.Name <> '.') and (f.Name <> '..') and DirectoryExists(BasePath) then begin
       NewBrain := Brains.AddNew;
       NewBrain.Kind := btAI;
@@ -271,7 +274,7 @@ begin
   FindClose(F);
 
   if Brains.GetKindCount(btAI) = 0 then
-    raise Exception.Create(Format('No AI libraries found in directory %s', [HomeDir + 'AI']));
+    raise Exception.Create(Format(SNoAiFound, [GetAiDir]));
 end;
 
 procedure Done;
@@ -4583,12 +4586,13 @@ end;
 
 constructor TBrain.Create;
 begin
-  Picture := nil;
+  Picture := TBitmap.Create;
+  Picture.SetSize(64, 64);
 end;
 
 destructor TBrain.Destroy;
 begin
-  if Assigned(Picture) then Picture.Free;
+  FreeAndNil(Picture);
   inherited Destroy;
 end;
 

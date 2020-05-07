@@ -153,6 +153,7 @@ type
       invalidateTab0: boolean = false); overload;
     procedure LoadConfig;
     procedure SaveConfig;
+    procedure LoadAiBrainsPictures;
   end;
 
 var
@@ -432,8 +433,8 @@ var
   x, i: Integer;
   r0, r1: HRgn;
   Location: TPoint;
-  AIBrains: TBrains;
   PlayerSlot: TPlayerSlot;
+  AIBrains: TBrains;
 begin
   PlayerSlots := TPlayerSlots.Create;
   PlayerSlots.Count := nPlOffered;
@@ -527,44 +528,11 @@ begin
   else
     CustomizeBtn.ButtonIndex := 2;
 
-  Brains[0].Picture := TBitmap.Create;
-  Brains[0].Picture.SetSize(64, 64);
-  BitBltCanvas(Brains[0].Picture.Canvas, 0, 0, 64, 64,
-    GrExt[HGrSystem2].Data.Canvas, 1, 111);
-  Brains[1].Picture := TBitmap.Create;
-  Brains[1].Picture.SetSize(64, 64);
-  BitBltCanvas(Brains[1].Picture.Canvas, 0, 0, 64, 64,
-    GrExt[HGrSystem2].Data.Canvas, 66, 111);
-  Brains[2].Picture := TBitmap.Create;
-  Brains[2].Picture.SetSize(64, 64);
-  BitBltCanvas(Brains[2].Picture.Canvas, 0, 0, 64, 64,
-    GrExt[HGrSystem2].Data.Canvas, 131, 111);
-  Brains[3].Picture := TBitmap.Create;
-  Brains[3].Picture.SetSize(64, 64);
-  BitBltCanvas(Brains[3].Picture.Canvas, 0, 0, 64, 64,
-    GrExt[HGrSystem2].Data.Canvas, 131, 46);
-
-  AIBrains := TBrains.Create(False);
-  Brains.GetByKind(btAI, AIBrains);
-  for i := 0 to AIBrains.Count - 1 do
-  with AIBrains[I] do
-  begin
-    AIBrains[i].Picture := TBitmap.Create;
-    if not LoadGraphicFile(AIBrains[i].Picture, HomeDir + 'AI' + DirectorySeparator +
-      FileName + DirectorySeparator + FileName + '.png', gfNoError) then begin
-      AIBrains[i].Picture.SetSize(64, 64);
-      with AIBrains[i].Picture.Canvas do begin
-        Brush.Color := $904830;
-        FillRect(Rect(0, 0, 64, 64));
-        Font.Assign(UniFont[ftTiny]);
-        Font.Style := [];
-        Font.Color := $5FDBFF;
-        Textout(32 - TextWidth(FileName) div 2,
-          32 - TextHeight(FileName) div 2, FileName);
-      end;
-    end;
-  end;
-  AIBrains.Free;
+  BitBltBitmap(BrainNoTerm.Picture, 0, 0, 64, 64, GrExt[HGrSystem2].Data, 1, 111);
+  BitBltBitmap(BrainSuperVirtual.Picture, 0, 0, 64, 64, GrExt[HGrSystem2].Data, 66, 111);
+  BitBltBitmap(BrainTerm.Picture, 0, 0, 64, 64, GrExt[HGrSystem2].Data, 131, 111);
+  BitBltBitmap(BrainRandom.Picture, 0, 0, 64, 64, GrExt[HGrSystem2].Data, 131, 46);
+  LoadAiBrainsPictures;
 
   EmptyPicture := TBitmap.Create;
   EmptyPicture.PixelFormat := pf24bit;
@@ -711,6 +679,31 @@ begin
   end;
 end;
 
+procedure TStartDlg.LoadAiBrainsPictures;
+var
+  AIBrains: TBrains;
+  I: Integer;
+begin
+  AIBrains := TBrains.Create(False);
+  Brains.GetByKind(btAI, AIBrains);
+  for i := 0 to AIBrains.Count - 1 do
+  with AIBrains[I] do begin
+    if not LoadGraphicFile(AIBrains[i].Picture, GetAiDir + DirectorySeparator +
+      FileName + DirectorySeparator + FileName + '.png', gfNoError) then begin
+      with AIBrains[i].Picture.Canvas do begin
+        Brush.Color := $904830;
+        FillRect(Rect(0, 0, 64, 64));
+        Font.Assign(UniFont[ftTiny]);
+        Font.Style := [];
+        Font.Color := $5FDBFF;
+        Textout(32 - TextWidth(FileName) div 2,
+          32 - TextHeight(FileName) div 2, FileName);
+      end;
+    end;
+  end;
+  AIBrains.Free;
+end;
+
 procedure TStartDlg.DrawAction(y, IconIndex: integer; HeaderItem, TextItem: string);
 begin
   Canvas.Font.Assign(UniFont[ftCaption]);
@@ -827,7 +820,7 @@ begin
 
   if Page = pgMain then
   begin
-    if SelectedAction >= maNone then // mark selected action
+    if SelectedAction <> maNone then // mark selected action
       for i := 0 to (ClientWidth - 2 * ActionSideBorder) div wBuffer + 1 do
       begin
         w := ClientWidth - 2 * ActionSideBorder - i * wBuffer;
@@ -851,14 +844,10 @@ begin
     begin
       if MainAction in ActionsOffered then
         case MainAction of
-          maConfig:
-            DrawAction(y, 25, 'ACTIONHEADER_CONFIG', 'ACTION_CONFIG');
-          maManual:
-            DrawAction(y, 19, 'ACTIONHEADER_MANUAL', 'ACTION_MANUAL');
-          maCredits:
-            DrawAction(y, 22, 'ACTIONHEADER_CREDITS', 'ACTION_CREDITS');
-          maAIDev:
-            DrawAction(y, 24, 'ACTIONHEADER_AIDEV', 'ACTION_AIDEV');
+          maConfig: DrawAction(y, 25, 'ACTIONHEADER_CONFIG', 'ACTION_CONFIG');
+          maManual: DrawAction(y, 19, 'ACTIONHEADER_MANUAL', 'ACTION_MANUAL');
+          maCredits: DrawAction(y, 22, 'ACTIONHEADER_CREDITS', 'ACTION_CREDITS');
+          maAIDev: DrawAction(y, 24, 'ACTIONHEADER_AIDEV', 'ACTION_AIDEV');
           maWeb:
             begin
               Canvas.Font.Assign(UniFont[ftCaption]);
@@ -1094,28 +1083,14 @@ begin
 end;
 
 procedure TStartDlg.FormShow(Sender: TObject);
-var
-  x, y: integer;
-  PicturePixel: TPixelPointer;
 begin
   SetMainTextureByAge(-1);
   List.Font.Color := MainTexture.clMark;
 
-  Fill(EmptyPicture.Canvas, 0, 0, 64, 64, (wMaintexture - 64) div 2,
-    (hMaintexture - 64) div 2);
-  // darken texture for empty slot
-  EmptyPicture.BeginUpdate;
-  PicturePixel.Init(EmptyPicture);
-  for y := 0 to 63 do begin
-    for x := 0 to 64 - 1 do begin
-      PicturePixel.Pixel^.B := Max(PicturePixel.Pixel^.B - 28, 0);
-      PicturePixel.Pixel^.G := Max(PicturePixel.Pixel^.G - 28, 0);
-      PicturePixel.Pixel^.R := Max(PicturePixel.Pixel^.R - 28, 0);
-      PicturePixel.NextPixel;
-    end;
-    PicturePixel.NextLine;
-  end;
-  EmptyPicture.EndUpdate;
+  Fill(EmptyPicture.Canvas, Bounds(0, 0, 64, 64),
+    Point((wMaintexture - 64) div 2, (hMaintexture - 64) div 2));
+
+  DarkenImage(EmptyPicture, 28);
 
   Difficulty[0] := Diff0;
 

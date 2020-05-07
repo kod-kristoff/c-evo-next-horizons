@@ -14,6 +14,7 @@ function GetSavedDir(Home: Boolean = False): string;
 function GetMapsDir(Home: Boolean = False): string;
 function GetGraphicsDir: string;
 function GetSoundsDir: string;
+function GetAiDir: string;
 
 
 implementation
@@ -123,6 +124,11 @@ end;
 function GetSoundsDir: string;
 begin
   Result := HomeDir + 'Sounds';
+end;
+
+function GetAiDir: string;
+begin
+  Result := HomeDir + 'AI';
 end;
 
 end.

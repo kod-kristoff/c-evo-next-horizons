@@ -6,7 +6,7 @@ uses
   {$IFDEF WINDOWS}
   Windows,
   {$ENDIF}
-  StringTables, LCLIntf, LCLType, SysUtils, Classes, Graphics, Controls,
+  StringTables, LCLIntf, LCLType, SysUtils, Classes, Graphics, Controls, Math,
   Forms, Menus, GraphType;
 
 type
@@ -34,13 +34,19 @@ procedure Sprite(Canvas: TCanvas; HGr, xDst, yDst, Width, Height, xGr, yGr: inte
   overload;
 procedure Sprite(dst: TBitmap; HGr, xDst, yDst, Width, Height, xGr, yGr: integer);
   overload;
-procedure MakeBlue(dst: TBitmap; x, y, w, h: integer);
+procedure MakeBlue(dst: TBitmap; x, y, Width, Height: Integer);
 procedure ImageOp_B(dst, Src: TBitmap; xDst, yDst, xSrc, ySrc, w, h: integer);
 procedure ImageOp_BCC(dst, Src: TBitmap;
   xDst, yDst, xSrc, ySrc, w, h, Color1, Color2: integer);
 procedure ImageOp_CCC(bmp: TBitmap; x, y, w, h, Color0, Color1, Color2: integer);
 function BitBltCanvas(DestCanvas: TCanvas; X, Y, Width, Height: Integer;
-  SrcCanvas: TCanvas; XSrc, YSrc: Integer; Rop: DWORD = SRCCOPY): Boolean;
+  SrcCanvas: TCanvas; XSrc, YSrc: Integer; Rop: DWORD = SRCCOPY): Boolean; overload;
+function BitBltCanvas(Dest: TCanvas; DestRect: TRect;
+  Src: TCanvas; SrcPos: TPoint; Rop: DWORD = SRCCOPY): Boolean; overload;
+function BitBltBitmap(Dest: TBitmap; X, Y, Width, Height: Integer;
+  Src: TBitmap; XSrc, YSrc: Integer; Rop: DWORD = SRCCOPY): Boolean; overload;
+function BitBltBitmap(Dest: TBitmap; DestRect: TRect;
+  Src: TBitmap; SrcPos: TPoint; Rop: DWORD = SRCCOPY): Boolean; overload;
 procedure SLine(ca: TCanvas; x0, x1, y: integer; cl: TColor);
 procedure DLine(ca: TCanvas; x0, x1, y: integer; cl0, cl1: TColor);
 procedure Frame(ca: TCanvas; x0, y0, x1, y1: integer; cl0, cl1: TColor);
@@ -51,7 +57,8 @@ procedure FrameImage(ca: TCanvas; Src: TBitmap;
 procedure GlowFrame(dst: TBitmap; x0, y0, Width, Height: integer; cl: TColor);
 procedure InitOrnament;
 procedure InitCityMark(const T: TTexture);
-procedure Fill(ca: TCanvas; Left, Top, Width, Height, xOffset, yOffset: integer);
+procedure Fill(ca: TCanvas; Left, Top, Width, Height, xOffset, yOffset: integer); overload;
+procedure Fill(Canvas: TCanvas; Rect: TRect; Offset: TPoint); overload;
 procedure FillLarge(ca: TCanvas; x0, y0, x1, y1, xm: integer);
 procedure FillSeamless(ca: TCanvas; Left, Top, Width, Height, xOffset, yOffset: integer;
   const Texture: TBitmap);
@@ -81,6 +88,7 @@ procedure PaintLogo(ca: TCanvas; x, y, clLight, clShade: integer);
 function SetMainTextureByAge(Age: integer): boolean;
 procedure LoadPhrases;
 procedure Texturize(Dest, Texture: TBitmap; TransparentColor: Integer);
+procedure DarkenImage(Bitmap: TBitmap; Change: Integer);
 
 const
   nGrExtmax = 64;
@@ -526,15 +534,15 @@ begin
     GrExt[HGr].Data.Canvas, xGr, yGr);
 end;
 
-procedure MakeBlue(dst: TBitmap; x, y, w, h: integer);
+procedure MakeBlue(dst: TBitmap; x, y, Width, Height: Integer);
 var
   XX, YY: integer;
   PixelPtr: TPixelPointer;
 begin
   Dst.BeginUpdate;
   PixelPtr.Init(Dst, X, Y);
-  for yy := 0 to h - 1 do begin
-    for xx := 0 to w - 1 do begin
+  for yy := 0 to Height - 1 do begin
+    for xx := 0 to Width - 1 do begin
       PixelPtr.Pixel^.B := PixelPtr.Pixel^.B div 2;
       PixelPtr.Pixel^.G := PixelPtr.Pixel^.G div 2;
       PixelPtr.Pixel^.R := PixelPtr.Pixel^.R div 2;
@@ -731,6 +739,25 @@ begin
   end else Result := BitBlt(DestCanvas.Handle, X, Y, Width, Height, SrcCanvas.Handle, XSrc, YSrc, Rop);
 end;
 
+function BitBltCanvas(Dest: TCanvas; DestRect: TRect; Src: TCanvas;
+  SrcPos: TPoint; Rop: DWORD): Boolean;
+begin
+  Result := BitBltCanvas(Dest, DestRect.Left, DestRect.Top, DestRect.Width, DestRect.Height,
+    Src, SrcPos.X, SrcPos.Y, Rop);
+end;
+
+function BitBltBitmap(Dest: TBitmap; X, Y, Width, Height: Integer;
+  Src: TBitmap; XSrc, YSrc: Integer; Rop: DWORD): Boolean;
+begin
+  Result := BitBltCanvas(Dest.Canvas, X, Y, Width, Height, Src.Canvas, XSrc, YSrc, Rop);
+end;
+
+function BitBltBitmap(Dest: TBitmap; DestRect: TRect; Src: TBitmap;
+  SrcPos: TPoint; Rop: DWORD): Boolean;
+begin
+  Result := BitBltCanvas(Dest.Canvas, DestRect, Src.Canvas, SrcPos, Rop);
+end;
+
 procedure SLine(ca: TCanvas; x0, x1, y: integer; cl: TColor);
 begin
   with ca do begin
@@ -900,6 +927,11 @@ begin
     (Top + yOffset >= 0) and (Top + yOffset + Height <= hMainTexture));
   BitBltCanvas(ca, Left, Top, Width, Height, MainTexture.Image.Canvas,
     Left + xOffset, Top + yOffset);
+end;
+
+procedure Fill(Canvas: TCanvas; Rect: TRect; Offset: TPoint);
+begin
+  Fill(Canvas, Rect.Left, Rect.Top, Rect.Width, Rect.Height, Offset.X, Offset.Y);
 end;
 
 procedure FillLarge(ca: TCanvas; x0, y0, x1, y1, xm: Integer);
@@ -1423,6 +1455,25 @@ begin
     DstPixel.NextLine;
   end;
   Dest.EndUpdate;
+end;
+
+procedure DarkenImage(Bitmap: TBitmap; Change: Integer);
+var
+  x, y: integer;
+  PicturePixel: TPixelPointer;
+begin
+  Bitmap.BeginUpdate;
+  PicturePixel.Init(Bitmap);
+  for y := 0 to Bitmap.Height - 1 do begin
+    for x := 0 to Bitmap.Width - 1 do begin
+      PicturePixel.Pixel^.B := Max(PicturePixel.Pixel^.B - Change, 0);
+      PicturePixel.Pixel^.G := Max(PicturePixel.Pixel^.G - Change, 0);
+      PicturePixel.Pixel^.R := Max(PicturePixel.Pixel^.R - Change, 0);
+      PicturePixel.NextPixel;
+    end;
+    PicturePixel.NextLine;
+  end;
+  Bitmap.EndUpdate;
 end;
 
 procedure LoadFonts;
