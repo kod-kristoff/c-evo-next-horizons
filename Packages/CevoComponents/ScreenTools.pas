@@ -80,6 +80,7 @@ procedure PaintRelativeProgressBar(ca: TCanvas;
 procedure PaintLogo(ca: TCanvas; x, y, clLight, clShade: integer);
 function SetMainTextureByAge(Age: integer): boolean;
 procedure LoadPhrases;
+procedure Texturize(Dest, Texture: TBitmap; TransparentColor: Integer);
 
 const
   nGrExtmax = 64;
@@ -1395,6 +1396,33 @@ begin
   begin
     FreeAndNil(Sounds);
   end;
+end;
+
+procedure Texturize(Dest, Texture: TBitmap; TransparentColor: Integer);
+var
+  SrcPixel, DstPixel: TPixelPointer;
+  X, Y: Integer;
+  TexWidth, TexHeight: Integer;
+begin
+  // texturize background
+  Dest.BeginUpdate;
+  TexWidth := Texture.Width;
+  TexHeight := Texture.Height;
+  DstPixel.Init(Dest);
+  SrcPixel.Init(Texture);
+  for Y := 0 to Dest.Height - 1 do begin
+    for X := 0 to Dest.Width - 1 do begin
+      if (DstPixel.Pixel^.ARGB and $FFFFFF) = TransparentColor then begin
+        SrcPixel.SetXY(X mod TexWidth, Y mod TexHeight);
+        DstPixel.Pixel^.B := SrcPixel.Pixel^.B;
+        DstPixel.Pixel^.G := SrcPixel.Pixel^.G;
+        DstPixel.Pixel^.R := SrcPixel.Pixel^.R;
+      end;
+      DstPixel.NextPixel;
+    end;
+    DstPixel.NextLine;
+  end;
+  Dest.EndUpdate;
 end;
 
 procedure LoadFonts;

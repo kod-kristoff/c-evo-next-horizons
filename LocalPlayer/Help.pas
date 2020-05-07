@@ -1947,9 +1947,9 @@ begin
     with THelpLineInfo(MainText.Objects[Sel + ScrollBar.Position]) do
       if Link shr 8 and $3F = hkInternet then
         case Link and $FF of
-          1: OpenDocument(pchar(HomeDir + 'AI Template' + DirectorySeparator + 'AI development manual.html'));
+          1: OpenDocument(HomeDir + AITemplateFileName);
           2: OpenURL(CevoHomepage);
-          3: OpenURL(CevoHomepageContact);
+          3: OpenURL(CevoContact);
         end
       else
       begin

@@ -77,8 +77,7 @@ procedure TTechTreeDlg.FormPaint(Sender: TObject);
 var
   X, w: Integer;
 begin
-  with Canvas do
-  begin
+  with Canvas do begin
     // black border
     brush.color := $000000;
     fillrect(rect(0, 0, BlackBorder, ClientHeight));
@@ -119,18 +118,17 @@ end;
 
 procedure TTechTreeDlg.FormShow(Sender: TObject);
 var
-  X, Y, ad, TexWidth, TexHeight: Integer;
+  X, Y, ad: Integer;
   s: string;
-  SrcPixel, DstPixel: TPixelPointer;
+const
+  TransparentColor = $7F007F;
 begin
-  if Image = nil then
-  begin
+  if Image = nil then begin
     Image := TBitmap.Create;
     Image.PixelFormat := pf24bit;
     LoadGraphicFile(Image, HomeDir + 'Help' + DirectorySeparator + 'AdvTree.png', gfNoGamma);
 
-    with Image.Canvas do
-    begin
+    with Image.Canvas do begin
       // write advance names
       Font.Assign(UniFont[ftSmall]);
       Font.color := clBlack;
@@ -146,7 +144,7 @@ begin
               Delete(s, Length(s), 1);
             TextOut(xStart + X * xPitch + 2, yStart + Y * yPitch, s);
             Pixels[xStart + X * xPitch + 10, yStart + Y * yPitch - 1]
-              := $7F007F;
+              := TransparentColor;
           end
         end;
 
@@ -161,25 +159,7 @@ begin
         Phrases2.Lookup('ADVTREE_OTHER'));
     end;
 
-    // texturize background
-    Image.BeginUpdate;
-    TexWidth := Paper.Width;
-    TexHeight := Paper.Height;
-    DstPixel.Init(Image);
-    SrcPixel.Init(Paper);
-    for Y := 0 to Image.Height - 1 do begin
-      for X := 0 to Image.Width - 1 do begin
-        if (DstPixel.Pixel^.ARGB and $FFFFFF) = $7F007F then begin // transparent
-          SrcPixel.SetXY(X mod TexWidth, Y mod TexHeight);
-          DstPixel.Pixel^.B := SrcPixel.Pixel^.B;
-          DstPixel.Pixel^.G := SrcPixel.Pixel^.G;
-          DstPixel.Pixel^.R := SrcPixel.Pixel^.R;
-        end;
-        DstPixel.NextPixel;
-      end;
-      DstPixel.NextLine;
-    end;
-    Image.EndUpdate;
+    Texturize(Image, Paper, TransparentColor);
   end;
 
   // fit window to image, center image in window, center window to screen
@@ -204,7 +184,7 @@ begin
     dragging := true;
     xDown := X;
     yDown := Y;
-  end
+  end;
 end;
 
 procedure TTechTreeDlg.FormMouseUp(Sender: TObject; Button: TMouseButton;
@@ -234,7 +214,7 @@ begin
       yOffset := ClientHeight - 2 * BlackBorder - Image.height - BottomBorder;
 
     SmartInvalidate;
-  end
+  end;
 end;
 
 procedure TTechTreeDlg.FormKeyDown(Sender: TObject; var Key: Word;
@@ -246,7 +226,7 @@ end;
 
 procedure TTechTreeDlg.CloseBtnClick(Sender: TObject);
 begin
-  Close();
+  Close;
 end;
 
 end.

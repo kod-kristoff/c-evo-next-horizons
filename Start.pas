@@ -445,7 +445,7 @@ begin
   LoadConfig;
 
   ActionsOffered := [maConfig, maManual, maCredits, maWeb];
-  if FileExists(HomeDir + 'AI Template' + DirectorySeparator + 'AI development manual.html') then
+  if FileExists(HomeDir + AITemplateFileName) then
     Include(ActionsOffered, maAIDev);
 
   BrainDefault := nil;
@@ -1670,7 +1670,7 @@ begin
       maCredits:
         DirectHelp(cStartCredits);
       maAIDev:
-        OpenDocument(pchar(HomeDir + 'AI Template' + DirectorySeparator + 'AI development manual.html'));
+        OpenDocument(HomeDir + AITemplateFileName);
       maWeb:
         OpenURL(CevoHomepage);
     end;

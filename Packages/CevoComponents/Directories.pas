@@ -37,6 +37,7 @@ begin
           Lang := ParamStrUTF8(i + 1);
   end;
   if Lang = '' then begin
+    T := '';
     LazGetLanguageIDs(Lang, T);
     Lang := Copy(Lang, 1, 2);
   end;

@@ -6856,7 +6856,7 @@ begin
     end
   end
   else if Sender = mWebsite then
-    OpenURL('http://c-evo.org')
+    OpenURL(CevoHomepage)
   else if Sender = mRandomMap then
   begin
     if not Edited or (SimpleQuery(mkYesNo, Phrases.Lookup('MAP_RANDOM'), '')

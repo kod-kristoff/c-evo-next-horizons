@@ -344,7 +344,7 @@ begin
         UnitsInLine := nLostArmy - LostUnitsPerLine * iy;
         if UnitsInLine > LostUnitsPerLine then
           UnitsInLine := LostUnitsPerLine;
-      end
+      end;
     end;
 end;
 
@@ -449,7 +449,7 @@ begin
 
   if OpenSound <> '' then
     PostMessage(Handle, WM_PLAYSOUND, 0, 0);
-end; { FormPaint }
+end;
 
 procedure TMessgExDlg.Button1Click(Sender: TObject);
 begin
@@ -468,12 +468,12 @@ end;
 
 procedure TMessgExDlg.Button3Click(Sender: TObject);
 begin
-  ModalResult := mrCancel
+  ModalResult := mrCancel;
 end;
 
 procedure TMessgExDlg.RemoveBtnClick(Sender: TObject);
 begin
-  ModalResult := mrNo
+  ModalResult := mrNo;
 end;
 
 procedure TMessgExDlg.FormKeyPress(Sender: TObject; var Key: char);
@@ -484,7 +484,7 @@ begin
     if Button3.Visible then
       ModalResult := mrCancel
     else if Button2.Visible then
-      ModalResult := mrIgnore
+      ModalResult := mrIgnore;
 end;
 
 procedure SoundMessageEx(SimpleText, SoundItem: string);
@@ -496,7 +496,7 @@ begin
     OpenSound := SoundItem;
     Kind := mkOk;
     ShowModal;
-  end
+  end;
 end;
 
 procedure TribeMessage(p: integer; SimpleText, SoundItem: string);
@@ -521,8 +521,8 @@ begin
     OpenSound := SoundItem;
     Kind := QueryKind;
     ShowModal;
-    result := ModalResult
-  end
+    result := ModalResult;
+  end;
 end;
 
 procedure ContextMessage(SimpleText, SoundItem: string;
@@ -536,7 +536,7 @@ begin
     HelpKind := ContextKind;
     HelpNo := ContextNo;
     ShowModal;
-  end
+  end;
 end;
 
 procedure TMessgExDlg.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -550,6 +550,7 @@ begin
   Play(OpenSound);
   OpenSound := '';
 end;
+
 
 initialization
 

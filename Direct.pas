@@ -128,7 +128,7 @@ begin
           Kind := mkYesNo;
           ShowModal;
           if ModalResult = mrOK then
-            OpenURL('http://c-evo.org/_sg/contact/cevobug.html');
+            OpenURL(CevoContactBug);
         end
     *)
       end;
@@ -217,7 +217,7 @@ begin
   begin
     Application.MessageBox(PChar(Phrases.Lookup('NOAI')), 'C-evo', 0);
     Close;
-    exit
+    exit;
   end;
   Quick := false;
   if ParamCount > 0 then
@@ -243,15 +243,14 @@ begin
         ), -1, false) then
       begin
         SimpleMessage(Phrases.Lookup('LOADERR'));
-        Close
-      end
-    end
+        Close;
+      end;
+    end;
   end;
-  if not Quick then
-  begin
+  if not Quick then begin
     background.Show;
-    StartDlg.Show
-  end
+    StartDlg.Show;
+  end;
 end;
 
 procedure TDirectDlg.OnChangeClient(var m: TMessage);
@@ -309,7 +308,7 @@ begin
     State := x;
     PaintProgressBar(Canvas, 6, ClientWidth div 2 - 64, 40, State, 128 - State,
       128, MainTexture);
-  end
+  end;
 end;
 
 end.
