@@ -57,7 +57,7 @@ begin
 
   if LocaleCode <> 'en' then begin
     Result := HomeDir + 'Localization' + DirectorySeparator + LocaleCodeDir + DirectorySeparator + Path;
-    if not FileExists(Result) then
+    if not DirectoryExists(Result) and not FileExists(Result) then
       Result := HomeDir + Path;
   end else Result := HomeDir + Path;
 end;
