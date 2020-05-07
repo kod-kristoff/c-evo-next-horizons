@@ -154,6 +154,7 @@ type
     procedure LoadConfig;
     procedure SaveConfig;
     procedure LoadAiBrainsPictures;
+    procedure UpdateInterface;
   end;
 
 var
@@ -431,8 +432,6 @@ end;
 procedure TStartDlg.FormCreate(Sender: TObject);
 var
   x, i: Integer;
-  r0, r1: HRgn;
-  Location: TPoint;
   PlayerSlot: TPlayerSlot;
   AIBrains: TBrains;
 begin
@@ -444,6 +443,7 @@ begin
     PlayerSlots[I] := PlayerSlot;
   end;
   LoadConfig;
+  LoadAssets;
 
   ActionsOffered := [maConfig, maManual, maCredits, maWeb];
   if FileExists(HomeDir + AITemplateFileName) then
@@ -466,26 +466,7 @@ begin
   DirectDlg.Left := (Screen.Width - DirectDlg.Width) div 2;
   DirectDlg.Top := (Screen.Height - DirectDlg.Height) div 2;
 
-  if FullScreen then begin
-    Location := Point((Screen.Width - 800) * 3 div 8,
-      Screen.Height - Height - (Screen.Height - 600) div 3);
-    Left := Location.X;
-    Top := Location.Y;
-
-    r0 := CreateRectRgn(0, 0, Width, Height);
-    r1 := CreateRectRgn(TabOffset + 4 * TabSize + 2, 0, Width, TabHeight);
-    CombineRgn(r0, r0, r1, RGN_DIFF);
-    DeleteObject(r1);
-    r1 := CreateRectRgn(QuitBtn.Left, QuitBtn.Top, QuitBtn.Left + QuitBtn.Width,
-      QuitBtn.top + QuitBtn.Height);
-    CombineRgn(r0, r0, r1, RGN_OR);
-    DeleteObject(r1);
-    SetWindowRgn(Handle, r0, False);
-    DeleteObject(r0); // causes crash with Windows 95
-  end else begin
-    Left := (Screen.Width - Width) div 2;
-    Top := (Screen.Height - Height) div 2;
-  end;
+  UpdateInterface;
 
   Canvas.Font.Assign(UniFont[ftNormal]);
   Canvas.Brush.Style := bsClear;
@@ -702,6 +683,33 @@ begin
     end;
   end;
   AIBrains.Free;
+end;
+
+procedure TStartDlg.UpdateInterface;
+var
+  r0, r1: HRgn;
+  Location: TPoint;
+begin
+  if FullScreen then begin
+    Location := Point((Screen.Width - 800) * 3 div 8,
+      Screen.Height - Height - (Screen.Height - 600) div 3);
+    Left := Location.X;
+    Top := Location.Y;
+
+    r0 := CreateRectRgn(0, 0, Width, Height);
+    r1 := CreateRectRgn(TabOffset + 4 * TabSize + 2, 0, Width, TabHeight);
+    CombineRgn(r0, r0, r1, RGN_DIFF);
+    DeleteObject(r1);
+    r1 := CreateRectRgn(QuitBtn.Left, QuitBtn.Top, QuitBtn.Left + QuitBtn.Width,
+      QuitBtn.top + QuitBtn.Height);
+    CombineRgn(r0, r0, r1, RGN_OR);
+    DeleteObject(r1);
+    SetWindowRgn(Handle, r0, False);
+    DeleteObject(r0); // causes crash with Windows 95
+  end else begin
+    Left := (Screen.Width - Width) div 2;
+    Top := (Screen.Height - Height) div 2;
+  end;
 end;
 
 procedure TStartDlg.DrawAction(y, IconIndex: integer; HeaderItem, TextItem: string);
@@ -1635,8 +1643,10 @@ begin
         begin
           LocaleDlg := TLocaleDlg.Create(nil);
           if LocaleDlg.ShowModal = mrOk then begin
-            LoadPhrases;
+            LoadAssets;
             Invalidate;
+            UpdateInterface;
+            Background.UpdateInterface;
           end;
           FreeAndNil(LocaleDlg);
         end;

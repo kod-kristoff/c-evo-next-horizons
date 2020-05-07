@@ -110,7 +110,7 @@ end;
 
 procedure TLocaleDlg.CancelBtnClick(Sender: TObject);
 begin
-  ModalResult := mrOk;
+  ModalResult := mrCancel;
 end;
 
 procedure TLocaleDlg.ButtonFullscreenClick(Sender: TObject);
@@ -160,7 +160,7 @@ end;
 procedure TLocaleDlg.OKBtnClick(Sender: TObject);
 begin
   LocaleCode := Languages[List.ItemIndex].ShortName;
-  ModalResult := mrCancel;
+  ModalResult := mrOk;
 end;
 
 end.

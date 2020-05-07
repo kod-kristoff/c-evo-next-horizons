@@ -198,6 +198,7 @@ var
   UniFont: array [TFontType] of TFont;
   Gamma: Integer; // global gamma correction (cent)
 
+procedure LoadAssets;
 procedure UnitInit;
 procedure UnitDone;
 procedure InitGammaLookupTable;
@@ -1485,14 +1486,11 @@ var
   I: integer;
   P: integer;
 begin
-  for Section := Low(TFontType) to High(TFontType) do
-    UniFont[Section] := TFont.Create;
-
   Section := ftNormal;
   AssignFile(FontScript, LocalizedFilePath('Fonts.txt'));
   try
-    Reset(fontscript);
-    while not EOF(FontScript) do begin
+    Reset(FontScript);
+    while not Eof(FontScript) do begin
       ReadLn(FontScript, s);
       if s <> '' then
         if s[1] = '#' then begin
@@ -1548,7 +1546,20 @@ begin
   end;
 end;
 
+procedure LoadAssets;
+begin
+  LoadPhrases;
+  LoadFonts;
+  LoadGraphicFile(Templates, GetGraphicsDir + DirectorySeparator +
+    'Templates.png', gfNoGamma);
+  LoadGraphicFile(Colors, GetGraphicsDir + DirectorySeparator + 'Colors.png');
+  LoadGraphicFile(Paper, GetGraphicsDir + DirectorySeparator + 'Paper.jpg');
+  LoadGraphicFile(BigImp, GetGraphicsDir + DirectorySeparator + 'Icons.png');
+end;
+
 procedure UnitInit;
+var
+  Section: TFontType;
 begin
   Gamma := 100;
   InitGammaLookupTable;
@@ -1558,35 +1569,31 @@ begin
   ResolutionChanged := False;
   {$ENDIF}
 
-  LoadPhrases;
-
   LogoBuffer := TBitmap.Create;
   LogoBuffer.PixelFormat := pf24bit;
   LogoBuffer.SetSize(wBBook, hBBook);
 
-  LoadFonts;
+  for Section := Low(TFontType) to High(TFontType) do
+    UniFont[Section] := TFont.Create;
 
   nGrExt := 0;
   HGrSystem := LoadGraphicSet('System.png');
   HGrSystem2 := LoadGraphicSet('System2.png');
   Templates := TBitmap.Create;
   Templates.PixelFormat := pf24bit;
-  LoadGraphicFile(Templates, GetGraphicsDir + DirectorySeparator +
-    'Templates.png', gfNoGamma);
   Colors := TBitmap.Create;
   Colors.PixelFormat := pf24bit;
-  LoadGraphicFile(Colors, GetGraphicsDir + DirectorySeparator + 'Colors.png');
   Paper := TBitmap.Create;
   Paper.PixelFormat := pf24bit;
-  LoadGraphicFile(Paper, GetGraphicsDir + DirectorySeparator + 'Paper.jpg');
   BigImp := TBitmap.Create;
   BigImp.PixelFormat := pf24bit;
-  LoadGraphicFile(BigImp, GetGraphicsDir + DirectorySeparator + 'Icons.png');
   MainTexture.Image := TBitmap.Create;
   MainTextureAge := -2;
   ClickFrameColor := GrExt[HGrSystem].Data.Canvas.Pixels[187, 175];
   InitOrnamentDone := False;
   GenerateNames := True;
+
+  LoadAssets;
 end;
 
 procedure UnitDone;
