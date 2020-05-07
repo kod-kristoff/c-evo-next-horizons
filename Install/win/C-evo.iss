@@ -100,6 +100,7 @@ Source: "{#MyAppSubDir}\Help\*.*"; DestDir: "{app}\Help"; Flags: ignoreversion; 
 Source: "{#MyAppSubDir}\Fonts.txt"; DestDir: "{app}"; Flags: ignoreversion; Components: main
 Source: "{#MyAppSubDir}\Language.txt"; DestDir: "{app}"; Flags: ignoreversion; Components: main
 Source: "{#MyAppSubDir}\Language2.txt"; DestDir: "{app}"; Flags: ignoreversion; Components: main
+Source: "{#MyAppSubDir}\AI Template\*.*"; DestDir: "{app}\AI Template"; Flags: ignoreversion; Components: main
 Source: "{#MyAppSubDir}\AI\StdAI\lib\x86_64-win64-Release\StdAI.dll"; DestDir: "{app}\AI\StdAI"; DestName: "StdAI-win64.dll"; Flags: ignoreversion; Components: ai\stdai
 Source: "{#MyAppSubDir}\AI\StdAI\lib\i386-win32-Release\StdAI.dll"; DestDir: "{app}\AI\StdAI"; DestName: "StdAI-win32.dll"; Flags: ignoreversion; Components: ai\stdai
 Source: "{#MyAppSubDir}\AI\StdAI\StdAI.png"; DestDir: "{app}\AI\StdAI"; Flags: ignoreversion; Components: ai\stdai
