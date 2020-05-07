@@ -720,6 +720,9 @@ begin
   Canvas.Font.Assign(UniFont[ftNormal]);
   BiColorTextOut(Canvas, Colors.Canvas.Pixels[clkAge0 - 1, cliDimmedText],
     $000000, xAction, y + 21, Phrases2.Lookup(TextItem));
+
+  // TODO: Explicitly clear background to black but in fact BitBlt SRCCOPY should do it
+  LogoBuffer.Canvas.FillRect(0, 0, LogoBuffer.Width, LogoBuffer.Height);
   BitBltCanvas(LogoBuffer.Canvas, 0, 0, 50, 50, Canvas,
     xActionIcon - 2, y - 2);
   GlowFrame(LogoBuffer, 8, 8, 34, 34, $202020);
@@ -816,6 +819,8 @@ begin
     Frame(Canvas, TabOffset + (Integer(Tab) + 1) * TabSize + 1, 3,
       TabOffset + (Integer(Tab) + 1) * TabSize + 2, TabHeight, MainTexture.clBevelShade,
       MainTexture.clBevelShade); // Tab shadow
+  // TODO: Explicitly clear background to black but in fact BitBlt SRCCOPY should do it
+  LogoBuffer.Canvas.FillRect(0, 0, LogoBuffer.Width, LogoBuffer.Height);
   BitBltCanvas(LogoBuffer.Canvas, 0, 0, 36, 36, Canvas, 6,
     3 + 2 * integer(Tab <> tbMain));
 
@@ -826,8 +831,7 @@ begin
   BitBltCanvas(Canvas, 6, 3 + 2 * integer(Tab <> tbMain), 36, 36,
     LogoBuffer.Canvas, 0, 0);
 
-  if Page = pgMain then
-  begin
+  if Page = pgMain then begin
     if SelectedAction <> maNone then // mark selected action
       for i := 0 to (ClientWidth - 2 * ActionSideBorder) div wBuffer + 1 do
       begin
@@ -839,6 +843,8 @@ begin
         then
           h := ClientHeight - ActionBottomBorder -
             (yAction + Integer(SelectedAction) * ActionPitch - 8);
+        // TODO: Explicitly clear background to black but in fact BitBlt SRCCOPY should do it
+        LogoBuffer.Canvas.FillRect(0, 0, LogoBuffer.Width, LogoBuffer.Height);
         BitBltCanvas(LogoBuffer.Canvas, 0, 0, w, h, Canvas,
           ActionSideBorder + i * wBuffer, yAction + Integer(SelectedAction) * ActionPitch
           - 8);
@@ -863,6 +869,8 @@ begin
               RisedTextOut(Canvas, xActionIcon + 99, y,
                 Phrases2.Lookup('ACTIONHEADER_WEB'));
               Canvas.Font.Assign(UniFont[ftNormal]);
+              // TODO: Explicitly clear background to black but in fact BitBlt SRCCOPY should do it
+              LogoBuffer.Canvas.FillRect(0, 0, LogoBuffer.Width, LogoBuffer.Height);
               BitBltCanvas(LogoBuffer.Canvas, 0, 0, 91, 25, Canvas,
                 xActionIcon, y + 2);
               ImageOp_BCC(LogoBuffer, Templates, 0, 0, 1, 400, 91, 25, 0,

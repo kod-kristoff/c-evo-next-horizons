@@ -37,7 +37,7 @@ procedure Sprite(dst: TBitmap; HGr, xDst, yDst, Width, Height, xGr, yGr: integer
 procedure MakeBlue(dst: TBitmap; x, y, Width, Height: Integer);
 procedure ImageOp_B(dst, Src: TBitmap; xDst, yDst, xSrc, ySrc, w, h: integer);
 procedure ImageOp_BCC(dst, Src: TBitmap;
-  xDst, yDst, xSrc, ySrc, w, h, Color1, Color2: integer);
+  xDst, yDst, xSrc, ySrc, Width, Height, Color1, Color2: integer);
 procedure ImageOp_CCC(bmp: TBitmap; x, y, w, h, Color0, Color1, Color2: integer);
 function BitBltCanvas(DestCanvas: TCanvas; X, Y, Width, Height: Integer;
   SrcCanvas: TCanvas; XSrc, YSrc: Integer; Rop: DWORD = SRCCOPY): Boolean; overload;
@@ -614,8 +614,8 @@ begin
   dst.EndUpdate;
 end;
 
-procedure ImageOp_BCC(dst, Src: TBitmap;
-  xDst, yDst, xSrc, ySrc, w, h, Color1, Color2: integer);
+procedure ImageOp_BCC(dst, Src: TBitmap; xDst, yDst, xSrc, ySrc, Width, Height,
+  Color1, Color2: integer);
 // Src is template
 // B channel = background amp (old Dst content), 128=original brightness
 // G channel = Color1 amp, 128=original brightness
@@ -625,51 +625,45 @@ var
   SrcPixel, DstPixel: TPixelPointer;
 begin
   if xDst < 0 then begin
-    w := w + xDst;
+    Width := Width + xDst;
     xSrc := xSrc - xDst;
     xDst := 0;
   end;
   if yDst < 0 then begin
-    h := h + yDst;
+    Height := Height + yDst;
     ySrc := ySrc - yDst;
     yDst := 0;
   end;
-  if xDst + w > dst.Width then
-    w := dst.Width - xDst;
-  if yDst + h > dst.Height then
-    h := dst.Height - yDst;
-  if (w < 0) or (h < 0) then
+  if xDst + Width > dst.Width then
+    Width := dst.Width - xDst;
+  if yDst + Height > dst.Height then
+    Height := dst.Height - yDst;
+  if (Width < 0) or (Height < 0) then
     exit;
 
   Src.BeginUpdate;
   dst.BeginUpdate;
   SrcPixel.Init(Src, xSrc, ySrc);
   DstPixel.Init(Dst, xDst, yDst);
-  for iy := 0 to h - 1 do begin
-    for ix := 0 to w - 1 do begin
+  for iy := 0 to Height - 1 do begin
+    for ix := 0 to Width - 1 do begin
       trans := SrcPixel.Pixel^.B * 2; // green channel = transparency
       amp1 := SrcPixel.Pixel^.G * 2;
       amp2 := SrcPixel.Pixel^.R * 2;
       if trans <> $FF then begin
         Value := (DstPixel.Pixel^.B * trans + ((Color2 shr 16) and $FF) *
           amp2 + ((Color1 shr 16) and $FF) * amp1) div $FF;
-        if Value < 256 then
-          DstPixel.Pixel^.B := Value
-        else
-          DstPixel.Pixel^.B := 255;
+        DstPixel.Pixel^.B := Min(Value, 255);
+
         Value := (DstPixel.Pixel^.G * trans + ((Color2 shr 8) and $FF) *
           amp2 + ((Color1 shr 8) and $FF) * amp1) div $FF;
-        if Value < 256 then
-          DstPixel.Pixel^.G := Value
-        else
-          DstPixel.Pixel^.G := 255;
+        DstPixel.Pixel^.G := Min(Value, 255);
+
         Value := (DstPixel.Pixel^.R * trans + (Color2 and $FF) *
           amp2 + (Color1 and $FF) * amp1) div $FF;
-        if Value < 256 then
-          DstPixel.Pixel^.R := Value
-        else
-          DstPixel.Pixel^.R := 255;
+        DstPixel.Pixel^.R := Min(Value, 255);
       end;
+
       SrcPixel.NextPixel;
       DstPixel.NextPixel;
     end;
@@ -732,12 +726,7 @@ end;
 function BitBltCanvas(DestCanvas: TCanvas; X, Y, Width, Height: Integer;
   SrcCanvas: TCanvas; XSrc, YSrc: Integer; Rop: DWORD = SRCCOPY): Boolean;
 begin
-  {Assert(Rop = SRCCOPY);}
-  if Rop = SRCCOPY then begin
-    DestCanvas.CopyRect(Rect(X, Y, X + Width, Y + Height), SrcCanvas,
-      Rect(XSrc, YSrc, XSrc + Width, YSrc + Height));
-    Result := True;
-  end else Result := BitBlt(DestCanvas.Handle, X, Y, Width, Height, SrcCanvas.Handle, XSrc, YSrc, Rop);
+  Result := BitBlt(DestCanvas.Handle, X, Y, Width, Height, SrcCanvas.Handle, XSrc, YSrc, Rop);
 end;
 
 function BitBltCanvas(Dest: TCanvas; DestRect: TRect; Src: TCanvas;
@@ -1375,6 +1364,8 @@ end;
 
 procedure PaintLogo(ca: TCanvas; x, y, clLight, clShade: Integer);
 begin
+  // TODO: Explicitly clear background to black but in fact BitBlt SRCCOPY should do it
+  LogoBuffer.Canvas.FillRect(0, 0, LogoBuffer.Width, LogoBuffer.Height);
   BitBltCanvas(LogoBuffer.Canvas, 0, 0, wLogo, hLogo, ca, x, y);
   ImageOp_BCC(LogoBuffer, Templates, 0, 0, 1, 1, wLogo, hLogo,
     clLight, clShade);
