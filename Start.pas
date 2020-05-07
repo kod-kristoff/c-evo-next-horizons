@@ -4,7 +4,7 @@ unit Start;
 interface
 
 uses
-  GameServer, Messg, ButtonBase, ButtonA, ButtonC, ButtonB, Area, Math,
+  GameServer, Messg, ButtonBase, ButtonA, ButtonC, ButtonB, Area,
   LCLIntf, LCLType, SysUtils, Classes, Graphics, Controls, Forms, StdCtrls,
   Menus, Registry, DrawDlg, fgl, Protocol;
 
@@ -1076,26 +1076,27 @@ begin
     Frame(Canvas, xMini + 1, yMini + 1, xMini + 2 + MiniMap.Size.X * 2,
       yMini + 2 + MiniMap.Size.Y, MainTexture.clBevelShade,
       MainTexture.clBevelLight);
+
+    s := '';
+    if MiniMap.Mode = mmPicture then
+    begin
+      BitBltCanvas(Canvas, xMini + 2, yMini + 2, MiniMap.Size.X * 2, MiniMap.Size.Y,
+        MiniMap.Bitmap.Canvas, 0, 0);
+      if Page = pgStartRandom then
+        s := Phrases.Lookup('RANMAP')
+    end
+    else if MiniMap.Mode = mmMultiPlayer then
+      s := Phrases.Lookup('MPMAP')
+    else if Page = pgStartMap then
+      s := Copy(MapFileName, 1, Length(MapFileName) - 9)
+    else if Page = pgEditMap then
+      s := List.Items[List.ItemIndex]
+    else if Page = pgNoLoad then
+      s := Phrases.Lookup('NOGAMES');
+    if s <> '' then
+      RisedTextOut(Canvas, x0Mini + 2 - BiColorTextWidth(Canvas, s) div 2,
+        y0Mini - 8, s);
   end;
-  s := '';
-  if MiniMap.Mode = mmPicture then
-  begin
-    BitBltCanvas(Canvas, xMini + 2, yMini + 2, MiniMap.Size.X * 2, MiniMap.Size.Y,
-      MiniMap.Bitmap.Canvas, 0, 0);
-    if Page = pgStartRandom then
-      s := Phrases.Lookup('RANMAP')
-  end
-  else if MiniMap.Mode = mmMultiPlayer then
-    s := Phrases.Lookup('MPMAP')
-  else if Page = pgStartMap then
-    s := Copy(MapFileName, 1, Length(MapFileName) - 9)
-  else if Page = pgEditMap then
-    s := List.Items[List.ItemIndex]
-  else if Page = pgNoLoad then
-    s := Phrases.Lookup('NOGAMES');
-  if s <> '' then
-    RisedTextOut(Canvas, x0Mini + 2 - BiColorTextWidth(Canvas, s) div 2,
-      y0Mini - 8, s);
 end;
 
 procedure TStartDlg.FormShow(Sender: TObject);
