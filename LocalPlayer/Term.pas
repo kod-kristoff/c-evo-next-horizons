@@ -1628,8 +1628,8 @@ const
     Icon: imRecycling), (Adv: adComputers; Icon: imResLab),
     (Adv: adSpaceFlight; Icon: woMIR));
 var
-  Domain, p1, i, ad, uix, cix, MoveOptions, MoveResult, Loc1, Dist,
-    NewAgeCenterTo, Bankrupt, ShipMore, Winners, NewGovAvailable, dx,
+  p1, i, ad, uix, cix, MoveOptions, MoveResult, Loc1,
+    NewAgeCenterTo, Winners, NewGovAvailable, dx,
     dy: integer;
   MoveAdviceData: TMoveAdviceData;
   Picture: TModelPictureInfo;
@@ -6007,7 +6007,7 @@ procedure TMainScreen.MoveOnScreen(ShowMove: TShowMove;
   Step0, Step1, nStep: integer; Restore: boolean = true);
 var
   ToLoc, xFromLoc, yFromLoc, xToLoc, yToLoc, xFrom, yFrom, xTo, yTo, xMin, yMin,
-    xRange, yRange, xw1, Step, xMoving, yMoving, yl, SliceCount: integer;
+    xRange, yRange, xw1, Step, xMoving, yMoving, SliceCount: integer;
   UnitInfo: TUnitInfo;
   Ticks0, Ticks: TDateTime;
 begin

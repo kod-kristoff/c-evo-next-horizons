@@ -5,8 +5,8 @@ unit DrawDlg;
 interface
 
 uses
-  Classes, SysUtils, Forms, LCLIntf, LCLType, LMessages, Messages, Graphics,
-  Controls, ButtonBase, ButtonA, ButtonB, Area, ScreenTools;
+  Classes, SysUtils, Forms, LCLIntf, LCLType, {$IFDEF LINUX}LMessages,{$ENDIF}
+  Messages, Graphics, Controls, ButtonBase, ButtonA, ButtonB, Area, ScreenTools;
 
 type
   { TDrawDlg }
@@ -118,9 +118,11 @@ end;
 
 procedure TDrawDlg.MouseDown(Button: TMouseButton; Shift: TShiftState; X,
   Y: Integer);
+{$IFDEF LINUX}
 var
   MousePosNew: TPoint;
   NewFormPos: TPoint;
+{$ENDIF}
 begin
   inherited;
   {$IFDEF LINUX}

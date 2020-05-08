@@ -694,7 +694,7 @@ begin
 
 initialization
 
-assert(nImp < 128);
+Assert(nImp < 128);
 CalculateAdvValues;
 
 end.

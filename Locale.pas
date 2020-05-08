@@ -127,7 +127,6 @@ end;
 procedure TLocaleDlg.FormPaint(Sender: TObject);
 var
   S: string;
-  W: Integer;
 begin
   PaintBackground(self, 3, 3, ClientWidth - 6, ClientHeight - 6);
   Frame(Canvas, 0, 0, ClientWidth - 1, ClientHeight - 1, 0, 0);

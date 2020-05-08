@@ -207,7 +207,7 @@ procedure InitGammaLookupTable;
 implementation
 
 uses
-  Directories, Sound, Registry, PixelPointer;
+  Directories, Sound, PixelPointer;
 
 var
   {$IFDEF WINDOWS}

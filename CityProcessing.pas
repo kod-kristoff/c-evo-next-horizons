@@ -629,6 +629,7 @@ var
   Radius: TVicinity21Loc;
   TileInfo: TTileInfo;
 begin
+  BestDist := MaxInt;
 {$IFOPT O-}assert(1 shl p and InvalidTreatyMap = 0); {$ENDIF}
   Best := 0;
   result := -1;
@@ -659,12 +660,12 @@ begin
             begin
               result := Loc1;
               Best := Resources;
-              BestDist := Dist
-            end
-          end
-        end
+              BestDist := Dist;
+            end;
+          end;
+        end;
       end;
-  end
+  end;
 end;
 
 function AddBestCityTile(p, cix: integer): boolean;

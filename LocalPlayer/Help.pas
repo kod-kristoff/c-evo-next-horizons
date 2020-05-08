@@ -5,7 +5,7 @@ interface
 
 uses
   Protocol, ScreenTools, BaseWin, StringTables, Math, LCLIntf, LCLType,
-  LMessages, Messages, SysUtils, Classes, Graphics, Controls, Forms, ExtCtrls,
+  Messages, SysUtils, Classes, Graphics, Controls, Forms, ExtCtrls,
   ButtonB, PVSB, Types, fgl;
 
 const

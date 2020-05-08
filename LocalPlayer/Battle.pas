@@ -4,7 +4,7 @@ unit Battle;
 interface
 
 uses
-  ScreenTools, Protocol, Messg, ButtonBase, ButtonA, Types, LCLIntf, LCLType,
+  ScreenTools, Protocol, ButtonBase, ButtonA, Types, LCLIntf, LCLType,
   SysUtils, Classes, Graphics, Controls, Forms, DrawDlg;
 
 type

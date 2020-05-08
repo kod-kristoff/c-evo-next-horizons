@@ -3,10 +3,10 @@ unit Sound;
 interface
 
 uses
-  Messages, SysUtils, Classes, Graphics, Controls, Forms, fgl, FileUtil,
+  SysUtils, Classes, Graphics, Controls, Forms, fgl, FileUtil,
   StringTables, Directories
   {$IFDEF WINDOWS}, MMSystem, Windows{$ENDIF}
-  {$IFDEF LINUX}, Process, AsyncProcess{$ENDIF};
+  {$IFDEF LINUX}, Messages, Process, AsyncProcess{$ENDIF};
 
 type
   TPlayStyle = (psAsync, psSync);
