@@ -234,6 +234,10 @@ type
     sb: TPVScrollbar;
     Closable, RepaintOnResize, Tracking, TurnComplete, Edited, GoOnPhase,
       HaveStrategyAdvice, FirstMovieTurn: boolean;
+    function ChooseUnusedTribe: integer;
+    procedure GetTribeList;
+    procedure InitModule;
+    procedure InitTurn(NewPlayer: integer);
     procedure ScrollBarUpdate(Sender: TObject);
     procedure ArrangeMidPanel;
     procedure MainOffscreenPaint;
@@ -271,11 +275,13 @@ type
     function LocationOfScreenPixel(x, y: integer): integer;
     procedure SetTileSize(x, y: integer);
     procedure RectInvalidate(Left, Top, Rigth, Bottom: integer);
+    procedure ShowEnemyShipChange(ShowShipChange: TShowShipChange);
     procedure SmartRectInvalidate(Left, Top, Rigth, Bottom: integer);
     procedure LoadSettings;
     procedure SaveSettings;
     procedure OnScroll(var m: TMessage); message WM_VSCROLL;
     procedure OnEOT(var Msg: TMessage); message WM_EOT;
+    procedure SoundPreload(Check: integer);
   public
     UsedOffscreenWidth, UsedOffscreenHeight: integer;
     Offscreen: TBitmap;
@@ -392,6 +398,14 @@ const
     'CITY_SABOTAGE', 'CITY_GROWTHNEEDSIMP', 'CITY_POLLUTION', 'CITY_SIEGE',
     'CITY_WONDEREX', 'CITY_EMDELAY', 'CITY_FOUNDED', 'CITY_FOUNDED', '',
     'CITY_INVALIDTYPE');
+
+  // sound blocks for preload
+  sbStart = $01;
+  sbWonder = $02;
+  sbScience = $04;
+  sbContact = $08;
+  sbTurn = $10;
+  sbAll = $FF;
 
 type
   TPersistentData = record
@@ -1294,797 +1308,750 @@ begin
       end;
 end;
 
-procedure TMainScreen.Client(Command, NewPlayer: integer; var Data);
+procedure TMainScreen.SoundPreload(Check: integer);
+const
+  nStartBlock = 27;
+  StartBlock: array [0 .. nStartBlock - 1] of string = ('INVALID', 'TURNEND',
+    'DISBAND', 'CHEAT', 'MSG_DEFAULT', 'WARNING_DISORDER', 'WARNING_FAMINE',
+    'WARNING_LOWSUPPORT', 'WARNING_LOWFUNDS', 'MOVE_MOUNTAIN', 'MOVE_LOAD',
+    'MOVE_UNLOAD', 'MOVE_DIE', 'NOMOVE_TIME', 'NOMOVE_DOMAIN',
+    'NOMOVE_DEFAULT', 'CITY_SELLIMP', 'CITY_REBUILDIMP', 'CITY_BUYPROJECT',
+    'CITY_UTILIZE', 'NEWMODEL_0', 'NEWADVANCE_0', 'AGE_0', 'REVOLUTION',
+    'NEWGOV', 'CITY_INVALIDTYPE', 'MSG_GAMEOVER');
 
-  procedure GetTribeList;
-  var
-    SearchRec: TSearchRec;
-    Color: TColor;
-    Name: string;
-    ok: boolean;
+  nWonderBlock = 6;
+  WonderBlock: array [0 .. nWonderBlock - 1] of string = ('WONDER_BUILT',
+    'WONDER_CAPTURED', 'WONDER_EXPIRED', 'WONDER_DESTROYED', 'MSG_COLDWAR',
+    'NEWADVANCE_GRLIB');
+
+  nScienceBlock = 17;
+  ScienceBlock: array [0 .. nScienceBlock - 1] of string = ('MOVE_PARACHUTE',
+    'MOVE_PLANESTART', 'MOVE_PLANELANDING', 'MOVE_COVERT', 'NEWMODEL_1',
+    'NEWMODEL_2', 'NEWMODEL_3', 'NEWADVANCE_1', 'NEWADVANCE_2',
+    'NEWADVANCE_3', 'AGE_1', 'AGE_2', 'AGE_3', 'SHIP_BUILT', 'SHIP_TRADED',
+    'SHIP_CAPTURED', 'SHIP_DESTROYED');
+
+  nContactBlock = 20;
+  ContactBlock: array [0 .. nContactBlock - 1] of string = ('NEWTREATY',
+    'CANCELTREATY', 'ACCEPTOFFER', 'MSG_WITHDRAW', 'MSG_BANKRUPT',
+    'CONTACT_0', 'CONTACT_1', 'CONTACT_2', 'CONTACT_3', 'CONTACT_4',
+    'CONTACT_5', 'CONTACT_5', 'CONTACT_6', 'NEGO_REJECTED', 'MOVE_CAPTURE',
+    'MOVE_EXPEL', 'NOMOVE_TREATY', 'NOMOVE_ZOC', 'NOMOVE_SUBMARINE',
+    'NOMOVE_STEALTH');
+
+var
+  i, cix, mix: integer;
+  need: boolean;
+  mi: TModelInfo;
+begin
+  if Check and sbStart and not SoundPreloadDone <> 0 then
   begin
-    UnusedTribeFiles.Clear;
-    ok := FindFirst(LocalizedFilePath('Tribes') + DirectorySeparator + '*.tribe.txt',
-      faArchive + faReadOnly, SearchRec) = 0;
-    if not ok then
+    for i := 0 to nStartBlock - 1 do
+      PreparePlay(StartBlock[i]);
+    SoundPreloadDone := SoundPreloadDone or sbStart;
+  end;
+  if Check and sbWonder and not SoundPreloadDone <> 0 then
+  begin
+    need := false;
+    for i := 0 to 27 do
+      if MyRO.Wonder[i].CityID <> -1 then
+        need := true;
+    if need then
     begin
-      FindClose(SearchRec);
-      ok := FindFirst(LocalizedFilePath('Tribes' + DirectorySeparator + '*.tribe.txt'),
-        faArchive + faReadOnly, SearchRec) = 0;
+      for i := 0 to nWonderBlock - 1 do
+        PreparePlay(WonderBlock[i]);
+      SoundPreloadDone := SoundPreloadDone or sbWonder;
     end;
-    if ok then
-      repeat
-        SearchRec.Name := Copy(SearchRec.Name, 1, Length(SearchRec.Name) - 10);
-        if GetTribeInfo(SearchRec.Name, Name, Color) then
-          UnusedTribeFiles.AddObject(SearchRec.Name, TObject(Color));
-      until FindNext(SearchRec) <> 0;
+  end;
+  if (Check and sbScience and not SoundPreloadDone <> 0) and
+    (MyRO.Tech[adScience] >= tsApplicable) then
+  begin
+    for i := 0 to nScienceBlock - 1 do
+      PreparePlay(ScienceBlock[i]);
+    SoundPreloadDone := SoundPreloadDone or sbScience;
+  end;
+  if (Check and sbContact and not SoundPreloadDone <> 0) and
+    (MyRO.nEnemyModel + MyRO.nEnemyCity > 0) then
+  begin
+    for i := 0 to nContactBlock - 1 do
+      PreparePlay(ContactBlock[i]);
+    SoundPreloadDone := SoundPreloadDone or sbContact;
+  end;
+  if Check and sbTurn <> 0 then
+  begin
+    if MyRO.Happened and phShipComplete <> 0 then
+      PreparePlay('MSG_YOUWIN');
+    if MyData.ToldAlive <> MyRO.Alive then
+      PreparePlay('MSG_EXTINCT');
+    for cix := 0 to MyRO.nCity - 1 do
+      with MyCity[cix] do
+        if (Loc >= 0) and (Flags and CityRepMask <> 0) then
+          for i := 0 to 12 do
+            if 1 shl i and Flags and CityRepMask <> 0 then
+              PreparePlay(CityEventSoundItem[i]);
+    for mix := 0 to MyRO.nModel - 1 do
+      with MyModel[mix] do
+        if Attack > 0 then
+        begin
+          MakeModelInfo(me, mix, MyModel[mix], mi);
+          PreparePlay(AttackSound(ModelCode(mi)));
+        end;
+  end;
+end;
+
+procedure TMainScreen.GetTribeList;
+var
+  SearchRec: TSearchRec;
+  Color: TColor;
+  Name: string;
+  ok: boolean;
+begin
+  UnusedTribeFiles.Clear;
+  ok := FindFirst(LocalizedFilePath('Tribes') + DirectorySeparator + '*.tribe.txt',
+    faArchive + faReadOnly, SearchRec) = 0;
+  if not ok then
+  begin
     FindClose(SearchRec);
+    ok := FindFirst(LocalizedFilePath('Tribes' + DirectorySeparator + '*.tribe.txt'),
+      faArchive + faReadOnly, SearchRec) = 0;
   end;
+  if ok then
+    repeat
+      SearchRec.Name := Copy(SearchRec.Name, 1, Length(SearchRec.Name) - 10);
+      if GetTribeInfo(SearchRec.Name, Name, Color) then
+        UnusedTribeFiles.AddObject(SearchRec.Name, TObject(Color));
+    until FindNext(SearchRec) <> 0;
+  FindClose(SearchRec);
+end;
 
-  function ChooseUnusedTribe: integer;
-  var
-    i, j, ColorDistance, BestColorDistance, TestColorDistance,
-      CountBest: integer;
+function TMainScreen.ChooseUnusedTribe: integer;
+var
+  i, j, ColorDistance, BestColorDistance, TestColorDistance,
+    CountBest: integer;
+begin
+  assert(UnusedTribeFiles.Count > 0);
+  result := -1;
+  BestColorDistance := -1;
+  for j := 0 to UnusedTribeFiles.Count - 1 do
   begin
-    assert(UnusedTribeFiles.Count > 0);
-    result := -1;
-    BestColorDistance := -1;
-    for j := 0 to UnusedTribeFiles.Count - 1 do
+    ColorDistance := 250; // consider differences more than this infinite
+    for i := 0 to nPl - 1 do
+      if Tribe[i] <> nil then
+      begin
+        TestColorDistance := abs(integer(UnusedTribeFiles.Objects[j])
+          shr 16 and $FF - Tribe[i].Color shr 16 and $FF) +
+          abs(integer(UnusedTribeFiles.Objects[j]) shr 8 and
+          $FF - Tribe[i].Color shr 8 and $FF) * 3 +
+          abs(integer(UnusedTribeFiles.Objects[j]) and
+          $FF - Tribe[i].Color and $FF) * 2;
+        if TestColorDistance < ColorDistance then
+          ColorDistance := TestColorDistance
+      end;
+    if ColorDistance > BestColorDistance then
     begin
-      ColorDistance := 250; // consider differences more than this infinite
-      for i := 0 to nPl - 1 do
-        if Tribe[i] <> nil then
-        begin
-          TestColorDistance := abs(integer(UnusedTribeFiles.Objects[j])
-            shr 16 and $FF - Tribe[i].Color shr 16 and $FF) +
-            abs(integer(UnusedTribeFiles.Objects[j]) shr 8 and
-            $FF - Tribe[i].Color shr 8 and $FF) * 3 +
-            abs(integer(UnusedTribeFiles.Objects[j]) and
-            $FF - Tribe[i].Color and $FF) * 2;
-          if TestColorDistance < ColorDistance then
-            ColorDistance := TestColorDistance
-        end;
-      if ColorDistance > BestColorDistance then
-      begin
-        CountBest := 0;
-        BestColorDistance := ColorDistance
-      end;
-      if ColorDistance = BestColorDistance then
-      begin
-        inc(CountBest);
-        if DelphiRandom(CountBest) = 0 then
-          result := j
-      end
+      CountBest := 0;
+      BestColorDistance := ColorDistance
     end;
-  end;
-
-  procedure ShowEnemyShipChange(ShowShipChange: TShowShipChange);
-  var
-    i, TestCost, MostCost: integer;
-    Ship1Plus, Ship2Plus: boolean;
-  begin
-    with ShowShipChange, MessgExDlg do
+    if ColorDistance = BestColorDistance then
     begin
-      case Reason of
-        scrProduction:
-          begin
-            OpenSound := 'SHIP_BUILT';
-            MessgText := Tribe[Ship1Owner].TPhrase('SHIPBUILT');
-            IconKind := mikShip;
-            IconIndex := Ship1Owner;
-          end;
-
-        scrDestruction:
-          begin
-            OpenSound := 'SHIP_DESTROYED';
-            MessgText := Tribe[Ship1Owner].TPhrase('SHIPDESTROYED');
-            IconKind := mikImp;
-          end;
-
-        scrTrade:
-          begin
-            OpenSound := 'SHIP_TRADED';
-            Ship1Plus := false;
-            Ship2Plus := false;
-            for i := 0 to nShipPart - 1 do
-            begin
-              if Ship1Change[i] > 0 then
-                Ship1Plus := true;
-              if Ship2Change[i] > 0 then
-                Ship2Plus := true;
-            end;
-            if Ship1Plus and Ship2Plus then
-              MessgText := Tribe[Ship1Owner].TPhrase('SHIPBITRADE1') + ' ' +
-                Tribe[Ship2Owner].TPhrase('SHIPBITRADE2')
-            else if Ship1Plus then
-              MessgText := Tribe[Ship1Owner].TPhrase('SHIPUNITRADE1') + ' ' +
-                Tribe[Ship2Owner].TPhrase('SHIPUNITRADE2')
-            else // if Ship2Plus then
-              MessgText := Tribe[Ship2Owner].TPhrase('SHIPUNITRADE1') + ' ' +
-                Tribe[Ship1Owner].TPhrase('SHIPUNITRADE2');
-            IconKind := mikImp;
-          end;
-
-        scrCapture:
-          begin
-            OpenSound := 'SHIP_CAPTURED';
-            MessgText := Tribe[Ship2Owner].TPhrase('SHIPCAPTURE1') + ' ' +
-              Tribe[Ship1Owner].TPhrase('SHIPCAPTURE2');
-            IconKind := mikShip;
-            IconIndex := Ship2Owner;
-          end
-      end;
-
-      if IconKind = mikImp then
-      begin
-        MostCost := 0;
-        for i := 0 to nShipPart - 1 do
-        begin
-          TestCost := abs(Ship1Change[i]) * Imp[imShipComp + i].Cost;
-          if TestCost > MostCost then
-          begin
-            MostCost := TestCost;
-            IconIndex := imShipComp + i
-          end
-        end;
-      end;
-
-      Kind := mkOk;
-      ShowModal;
-    end;
+      inc(CountBest);
+      if DelphiRandom(CountBest) = 0 then
+        result := j
+    end
   end;
+end;
 
-  procedure InitModule;
-  var
-    x, y, i, j, Domain: integer;
+procedure TMainScreen.ShowEnemyShipChange(ShowShipChange: TShowShipChange);
+var
+  i, TestCost, MostCost: integer;
+  Ship1Plus, Ship2Plus: boolean;
+begin
+  with ShowShipChange, MessgExDlg do
   begin
-    { search icons for advances: }
-    for i := 0 to nAdv - 1 do
-      if i in FutureTech then
-        AdvIcon[i] := 96 + i - futResearchTechnology
-      else
+    case Reason of
+      scrProduction:
+        begin
+          OpenSound := 'SHIP_BUILT';
+          MessgText := Tribe[Ship1Owner].TPhrase('SHIPBUILT');
+          IconKind := mikShip;
+          IconIndex := Ship1Owner;
+        end;
+
+      scrDestruction:
+        begin
+          OpenSound := 'SHIP_DESTROYED';
+          MessgText := Tribe[Ship1Owner].TPhrase('SHIPDESTROYED');
+          IconKind := mikImp;
+        end;
+
+      scrTrade:
+        begin
+          OpenSound := 'SHIP_TRADED';
+          Ship1Plus := false;
+          Ship2Plus := false;
+          for i := 0 to nShipPart - 1 do
+          begin
+            if Ship1Change[i] > 0 then
+              Ship1Plus := true;
+            if Ship2Change[i] > 0 then
+              Ship2Plus := true;
+          end;
+          if Ship1Plus and Ship2Plus then
+            MessgText := Tribe[Ship1Owner].TPhrase('SHIPBITRADE1') + ' ' +
+              Tribe[Ship2Owner].TPhrase('SHIPBITRADE2')
+          else if Ship1Plus then
+            MessgText := Tribe[Ship1Owner].TPhrase('SHIPUNITRADE1') + ' ' +
+              Tribe[Ship2Owner].TPhrase('SHIPUNITRADE2')
+          else // if Ship2Plus then
+            MessgText := Tribe[Ship2Owner].TPhrase('SHIPUNITRADE1') + ' ' +
+              Tribe[Ship1Owner].TPhrase('SHIPUNITRADE2');
+          IconKind := mikImp;
+        end;
+
+      scrCapture:
+        begin
+          OpenSound := 'SHIP_CAPTURED';
+          MessgText := Tribe[Ship2Owner].TPhrase('SHIPCAPTURE1') + ' ' +
+            Tribe[Ship1Owner].TPhrase('SHIPCAPTURE2');
+          IconKind := mikShip;
+          IconIndex := Ship2Owner;
+        end
+    end;
+
+    if IconKind = mikImp then
+    begin
+      MostCost := 0;
+      for i := 0 to nShipPart - 1 do
       begin
-        AdvIcon[i] := -1;
-        for Domain := 0 to nDomains - 1 do
-          for j := 0 to nUpgrade - 1 do
-            if upgrade[Domain, j].Preq = i then
-              if AdvIcon[i] >= 0 then
+        TestCost := abs(Ship1Change[i]) * Imp[imShipComp + i].Cost;
+        if TestCost > MostCost then
+        begin
+          MostCost := TestCost;
+          IconIndex := imShipComp + i
+        end
+      end;
+    end;
+
+    Kind := mkOk;
+    ShowModal;
+  end;
+end;
+
+procedure TMainScreen.InitModule;
+var
+  x, y, i, j, Domain: integer;
+begin
+  { search icons for advances: }
+  for i := 0 to nAdv - 1 do
+    if i in FutureTech then
+      AdvIcon[i] := 96 + i - futResearchTechnology
+    else
+    begin
+      AdvIcon[i] := -1;
+      for Domain := 0 to nDomains - 1 do
+        for j := 0 to nUpgrade - 1 do
+          if upgrade[Domain, j].Preq = i then
+            if AdvIcon[i] >= 0 then
+              AdvIcon[i] := 85
+            else
+              AdvIcon[i] := 86 + Domain;
+      for j := 0 to nFeature - 1 do
+        if Feature[j].Preq = i then
+          for Domain := 0 to nDomains - 1 do
+            if 1 shl Domain and Feature[j].Domains <> 0 then
+              if (AdvIcon[i] >= 0) and (AdvIcon[i] <> 86 + Domain) then
                 AdvIcon[i] := 85
               else
                 AdvIcon[i] := 86 + Domain;
-        for j := 0 to nFeature - 1 do
-          if Feature[j].Preq = i then
-            for Domain := 0 to nDomains - 1 do
-              if 1 shl Domain and Feature[j].Domains <> 0 then
-                if (AdvIcon[i] >= 0) and (AdvIcon[i] <> 86 + Domain) then
-                  AdvIcon[i] := 85
-                else
-                  AdvIcon[i] := 86 + Domain;
-        for j := 28 to nImp - 1 do
-          if Imp[j].Preq = i then
-            AdvIcon[i] := j;
-        for j := 28 to nImp - 1 do
-          if (Imp[j].Preq = i) and (Imp[j].Kind <> ikCommon) then
-            AdvIcon[i] := j;
-        for j := 0 to nJob - 1 do
-          if i = JobPreq[j] then
-            AdvIcon[i] := 84;
-        for j := 0 to 27 do
-          if Imp[j].Preq = i then
-            AdvIcon[i] := j;
-        if AdvIcon[i] < 0 then
-          if AdvValue[i] < 1000 then
-            AdvIcon[i] := -7
-          else
-            AdvIcon[i] := 24 + AdvValue[i] div 1000;
-        for j := 2 to nGov - 1 do
-          if GovPreq[j] = i then
-            AdvIcon[i] := j - 8;
-      end;
-    AdvIcon[adConscription] := 86 + dGround;
+      for j := 28 to nImp - 1 do
+        if Imp[j].Preq = i then
+          AdvIcon[i] := j;
+      for j := 28 to nImp - 1 do
+        if (Imp[j].Preq = i) and (Imp[j].Kind <> ikCommon) then
+          AdvIcon[i] := j;
+      for j := 0 to nJob - 1 do
+        if i = JobPreq[j] then
+          AdvIcon[i] := 84;
+      for j := 0 to 27 do
+        if Imp[j].Preq = i then
+          AdvIcon[i] := j;
+      if AdvIcon[i] < 0 then
+        if AdvValue[i] < 1000 then
+          AdvIcon[i] := -7
+        else
+          AdvIcon[i] := 24 + AdvValue[i] div 1000;
+      for j := 2 to nGov - 1 do
+        if GovPreq[j] = i then
+          AdvIcon[i] := j - 8;
+    end;
+  AdvIcon[adConscription] := 86 + dGround;
 
-    UnusedTribeFiles := tstringlist.Create;
-    UnusedTribeFiles.Sorted := true;
-    TribeNames := tstringlist.Create;
+  UnusedTribeFiles := tstringlist.Create;
+  UnusedTribeFiles.Sorted := true;
+  TribeNames := tstringlist.Create;
 
-    for x := 0 to 11 do
-      for y := 0 to 1 do
-        MiniColors[x, y] := GrExt[HGrSystem].Data.Canvas.Pixels[66 + x, 67 + y];
-    IsoEngine.Init(InitEnemyModel);
-    if not IsoEngine.ApplyTileSize(xxt, yyt) and ((xxt <> 48) or (yyt <> 24) or (xxt <> 72))
-    then
-      ApplyTileSize(48, 24);
-    // non-default tile size is missing a file, switch to default
-    MainMap := TIsoMap.Create;
-    MainMap.SetOutput(offscreen);
+  for x := 0 to 11 do
+    for y := 0 to 1 do
+      MiniColors[x, y] := GrExt[HGrSystem].Data.Canvas.Pixels[66 + x, 67 + y];
+  IsoEngine.Init(InitEnemyModel);
+  if not IsoEngine.ApplyTileSize(xxt, yyt) and ((xxt <> 48) or (yyt <> 24) or (xxt <> 72))
+  then
+    ApplyTileSize(48, 24);
+  // non-default tile size is missing a file, switch to default
+  MainMap := TIsoMap.Create;
+  MainMap.SetOutput(offscreen);
 
-    HGrStdUnits := LoadGraphicSet('StdUnits.png');
-    SmallImp := TBitmap.Create;
-    SmallImp.PixelFormat := pf24bit;
-    InitSmallImp;
-    SoundPreloadDone := 0;
-    StartRunning := false;
-    StayOnTop_Ensured := false;
+  HGrStdUnits := LoadGraphicSet('StdUnits.png');
+  SmallImp := TBitmap.Create;
+  SmallImp.PixelFormat := pf24bit;
+  InitSmallImp;
+  SoundPreloadDone := 0;
+  StartRunning := false;
+  StayOnTop_Ensured := false;
 
-    sb := TPVScrollbar.Create(Self);
-    sb.OnUpdate := ScrollBarUpdate;
-  end; { InitModule }
+  sb := TPVScrollbar.Create(Self);
+  sb.OnUpdate := ScrollBarUpdate;
+end; { InitModule }
 
-// sound blocks for preload
+procedure TMainScreen.InitTurn(NewPlayer: integer);
 const
-  sbStart = $01;
-  sbWonder = $02;
-  sbScience = $04;
-  sbContact = $08;
-  sbTurn = $10;
-  sbAll = $FF;
-
-  procedure SoundPreload(Check: integer);
-  const
-    nStartBlock = 27;
-    StartBlock: array [0 .. nStartBlock - 1] of string = ('INVALID', 'TURNEND',
-      'DISBAND', 'CHEAT', 'MSG_DEFAULT', 'WARNING_DISORDER', 'WARNING_FAMINE',
-      'WARNING_LOWSUPPORT', 'WARNING_LOWFUNDS', 'MOVE_MOUNTAIN', 'MOVE_LOAD',
-      'MOVE_UNLOAD', 'MOVE_DIE', 'NOMOVE_TIME', 'NOMOVE_DOMAIN',
-      'NOMOVE_DEFAULT', 'CITY_SELLIMP', 'CITY_REBUILDIMP', 'CITY_BUYPROJECT',
-      'CITY_UTILIZE', 'NEWMODEL_0', 'NEWADVANCE_0', 'AGE_0', 'REVOLUTION',
-      'NEWGOV', 'CITY_INVALIDTYPE', 'MSG_GAMEOVER');
-
-    nWonderBlock = 6;
-    WonderBlock: array [0 .. nWonderBlock - 1] of string = ('WONDER_BUILT',
-      'WONDER_CAPTURED', 'WONDER_EXPIRED', 'WONDER_DESTROYED', 'MSG_COLDWAR',
-      'NEWADVANCE_GRLIB');
-
-    nScienceBlock = 17;
-    ScienceBlock: array [0 .. nScienceBlock - 1] of string = ('MOVE_PARACHUTE',
-      'MOVE_PLANESTART', 'MOVE_PLANELANDING', 'MOVE_COVERT', 'NEWMODEL_1',
-      'NEWMODEL_2', 'NEWMODEL_3', 'NEWADVANCE_1', 'NEWADVANCE_2',
-      'NEWADVANCE_3', 'AGE_1', 'AGE_2', 'AGE_3', 'SHIP_BUILT', 'SHIP_TRADED',
-      'SHIP_CAPTURED', 'SHIP_DESTROYED');
-
-    nContactBlock = 20;
-    ContactBlock: array [0 .. nContactBlock - 1] of string = ('NEWTREATY',
-      'CANCELTREATY', 'ACCEPTOFFER', 'MSG_WITHDRAW', 'MSG_BANKRUPT',
-      'CONTACT_0', 'CONTACT_1', 'CONTACT_2', 'CONTACT_3', 'CONTACT_4',
-      'CONTACT_5', 'CONTACT_5', 'CONTACT_6', 'NEGO_REJECTED', 'MOVE_CAPTURE',
-      'MOVE_EXPEL', 'NOMOVE_TREATY', 'NOMOVE_ZOC', 'NOMOVE_SUBMARINE',
-      'NOMOVE_STEALTH');
-
-  var
-    i, cix, mix: integer;
-    need: boolean;
-    mi: TModelInfo;
+  nAdvBookIcon = 16;
+  AdvBookIcon: array [0 .. nAdvBookIcon - 1] of record Adv,
+    Icon: integer end = ((Adv: adPolyTheism; Icon: woZeus),
+    (Adv: adBronzeWorking; Icon: woColossus), (Adv: adMapMaking;
+    Icon: woLighthouse), (Adv: adPoetry; Icon: imTheater), (Adv: adMonotheism;
+    Icon: woMich), (Adv: adPhilosophy; Icon: woLeo), (Adv: adTheoryOfGravity;
+    Icon: woNewton), (Adv: adSteel; Icon: woEiffel), (Adv: adDemocracy;
+    Icon: woLiberty), (Adv: adAutomobile; Icon: imHighways),
+    (Adv: adSanitation; Icon: imSewer), (Adv: adElectronics; Icon: woHoover),
+    (Adv: adNuclearFission; Icon: woManhattan), (Adv: adRecycling;
+    Icon: imRecycling), (Adv: adComputers; Icon: imResLab),
+    (Adv: adSpaceFlight; Icon: woMIR));
+var
+  Domain, p1, i, ad, uix, cix, MoveOptions, MoveResult, Loc1, Dist,
+    NewAgeCenterTo, Bankrupt, ShipMore, Winners, NewGovAvailable, dx,
+    dy: integer;
+  MoveAdviceData: TMoveAdviceData;
+  Picture: TModelPictureInfo;
+  s, Item, Item2: string;
+  UpdatePanel, OwnWonder, ok, Stop, ShowCityList, WondersOnly,
+    AllowCityScreen: boolean;
+begin
+  if IsMultiPlayerGame and (NewPlayer <> me) then
   begin
-    if Check and sbStart and not SoundPreloadDone <> 0 then
-    begin
-      for i := 0 to nStartBlock - 1 do
-        PreparePlay(StartBlock[i]);
-      SoundPreloadDone := SoundPreloadDone or sbStart;
-    end;
-    if Check and sbWonder and not SoundPreloadDone <> 0 then
-    begin
-      need := false;
-      for i := 0 to 27 do
-        if MyRO.Wonder[i].CityID <> -1 then
-          need := true;
-      if need then
-      begin
-        for i := 0 to nWonderBlock - 1 do
-          PreparePlay(WonderBlock[i]);
-        SoundPreloadDone := SoundPreloadDone or sbWonder;
-      end;
-    end;
-    if (Check and sbScience and not SoundPreloadDone <> 0) and
-      (MyRO.Tech[adScience] >= tsApplicable) then
-    begin
-      for i := 0 to nScienceBlock - 1 do
-        PreparePlay(ScienceBlock[i]);
-      SoundPreloadDone := SoundPreloadDone or sbScience;
-    end;
-    if (Check and sbContact and not SoundPreloadDone <> 0) and
-      (MyRO.nEnemyModel + MyRO.nEnemyCity > 0) then
-    begin
-      for i := 0 to nContactBlock - 1 do
-        PreparePlay(ContactBlock[i]);
-      SoundPreloadDone := SoundPreloadDone or sbContact;
-    end;
-    if Check and sbTurn <> 0 then
-    begin
-      if MyRO.Happened and phShipComplete <> 0 then
-        PreparePlay('MSG_YOUWIN');
-      if MyData.ToldAlive <> MyRO.Alive then
-        PreparePlay('MSG_EXTINCT');
-      for cix := 0 to MyRO.nCity - 1 do
-        with MyCity[cix] do
-          if (Loc >= 0) and (Flags and CityRepMask <> 0) then
-            for i := 0 to 12 do
-              if 1 shl i and Flags and CityRepMask <> 0 then
-                PreparePlay(CityEventSoundItem[i]);
-      for mix := 0 to MyRO.nModel - 1 do
-        with MyModel[mix] do
-          if Attack > 0 then
-          begin
-            MakeModelInfo(me, mix, MyModel[mix], mi);
-            PreparePlay(AttackSound(ModelCode(mi)));
-          end
-    end
+    UnitInfoBtn.Visible := false;
+    UnitBtn.Visible := false;
+    TerrainBtn.Visible := false;
+    EOT.Visible := false;
   end;
-
-  procedure InitTurn(p: integer);
-  const
-    nAdvBookIcon = 16;
-    AdvBookIcon: array [0 .. nAdvBookIcon - 1] of record Adv,
-      Icon: integer end = ((Adv: adPolyTheism; Icon: woZeus),
-      (Adv: adBronzeWorking; Icon: woColossus), (Adv: adMapMaking;
-      Icon: woLighthouse), (Adv: adPoetry; Icon: imTheater), (Adv: adMonotheism;
-      Icon: woMich), (Adv: adPhilosophy; Icon: woLeo), (Adv: adTheoryOfGravity;
-      Icon: woNewton), (Adv: adSteel; Icon: woEiffel), (Adv: adDemocracy;
-      Icon: woLiberty), (Adv: adAutomobile; Icon: imHighways),
-      (Adv: adSanitation; Icon: imSewer), (Adv: adElectronics; Icon: woHoover),
-      (Adv: adNuclearFission; Icon: woManhattan), (Adv: adRecycling;
-      Icon: imRecycling), (Adv: adComputers; Icon: imResLab),
-      (Adv: adSpaceFlight; Icon: woMIR));
-  var
-    Domain, p1, i, ad, uix, cix, MoveOptions, MoveResult, Loc1, Dist,
-      NewAgeCenterTo, Bankrupt, ShipMore, Winners, NewGovAvailable, dx,
-      dy: integer;
-    MoveAdviceData: TMoveAdviceData;
-    Picture: TModelPictureInfo;
-    s, Item, Item2: string;
-    UpdatePanel, OwnWonder, ok, Stop, ShowCityList, WondersOnly,
-      AllowCityScreen: boolean;
-  begin
-    if IsMultiPlayerGame and (p <> me) then
-    begin
-      UnitInfoBtn.Visible := false;
-      UnitBtn.Visible := false;
-      TerrainBtn.Visible := false;
-      EOT.Visible := false;
-    end;
-    if IsMultiPlayerGame and (p <> me) and
-      (G.RO[0].Happened and phShipComplete = 0) then
-    begin // inter player screen
-      for i := 0 to ControlCount - 1 do
-        if Controls[i] is TButtonC then
-          Controls[i].Visible := false;
-      me := -1;
-      SetMainTextureByAge(-1);
-      with Panel.Canvas do
-      begin
-        Brush.Color := $000000;
-        FillRect(Rect(0, 0, Panel.width, Panel.height));
-        Brush.Style := bsClear;
-      end;
-      with TopBar.Canvas do
-      begin
-        Brush.Color := $000000;
-        FillRect(Rect(0, 0, TopBar.width, TopBar.height));
-        Brush.Style := bsClear;
-      end;
-      Invalidate;
-
-      s := TurnToString(G.RO[0].Turn);
-      if supervising then
-        SimpleMessage(Format(Phrases.Lookup('SUPERTURN'), [s]))
-      else
-        SimpleMessage(Format(Tribe[NewPlayer].TPhrase('TURN'), [s]));
-    end;
+  if IsMultiPlayerGame and (NewPlayer <> me) and
+    (G.RO[0].Happened and phShipComplete = 0) then
+  begin // inter player screen
     for i := 0 to ControlCount - 1 do
       if Controls[i] is TButtonC then
-        Controls[i].Visible := true;
-
-    ItsMeAgain(p);
-    MyData := G.RO[p].Data;
-    if not supervising then
-      SoundPreload(sbAll);
-    if (me = 0) and ((MyRO.Turn = 0) or (ClientMode = cResume)) then
-      Invalidate; // colorize empty space
-
-    if not supervising then
+        Controls[i].Visible := false;
+    me := -1;
+    SetMainTextureByAge(-1);
+    with Panel.Canvas do
     begin
+      Brush.Color := $000000;
+      FillRect(Rect(0, 0, Panel.width, Panel.height));
+      Brush.Style := bsClear;
+    end;
+    with TopBar.Canvas do
+    begin
+      Brush.Color := $000000;
+      FillRect(Rect(0, 0, TopBar.width, TopBar.height));
+      Brush.Style := bsClear;
+    end;
+    Invalidate;
 
-      { if MyRO.Happened and phGameEnd<>0 then
-        begin
-        Age:=3;
-        SetMainTextureByAge(-1);
-        end
-        else }
+    s := TurnToString(G.RO[0].Turn);
+    if supervising then
+      SimpleMessage(Format(Phrases.Lookup('SUPERTURN'), [s]))
+    else
+      SimpleMessage(Format(Tribe[NewPlayer].TPhrase('TURN'), [s]));
+  end;
+  for i := 0 to ControlCount - 1 do
+    if Controls[i] is TButtonC then
+      Controls[i].Visible := true;
+
+  ItsMeAgain(NewPlayer);
+  MyData := G.RO[NewPlayer].Data;
+  if not supervising then
+    SoundPreload(sbAll);
+  if (me = 0) and ((MyRO.Turn = 0) or (ClientMode = cResume)) then
+    Invalidate; // colorize empty space
+
+  if not supervising then
+  begin
+
+    { if MyRO.Happened and phGameEnd<>0 then
       begin
-        Age := GetAge(me);
-        if SetMainTextureByAge(Age) then
-          EOT.Invalidate; // has visible background parts in its bounds
-      end;
-      // age:=MyRO.Turn mod 4; //!!!
-      if ClientMode = cMovieTurn then
-        EOT.ButtonIndex := eotCancel
-      else if ClientMode < scContact then
-        EOT.ButtonIndex := eotGray
-      else
-        EOT.ButtonIndex := eotBackToNego;
-    end
-    else
-    begin
-      Age := 0;
+      Age:=3;
       SetMainTextureByAge(-1);
-      if ClientMode = cMovieTurn then
-        EOT.ButtonIndex := eotCancel
-      else
-        EOT.ButtonIndex := eotBlinkOn;
-    end;
-    InitCityMark(MainTexture);
-    CityDlg.CheckAge;
-    NatStatDlg.CheckAge;
-    UnitStatDlg.CheckAge;
-    HelpDlg.Difficulty := G.Difficulty[me];
-
-    UnFocus := -1;
-    MarkCityLoc := -1;
-    BlinkON := false;
-    BlinkTime := -1;
-    Tracking := false;
-    TurnComplete := false;
-
-    if (ToldSlavery < 0) or
-      ((ToldSlavery = 1) <> (MyRO.Wonder[woPyramids].EffectiveOwner >= 0)) then
+      end
+      else }
     begin
-      if MyRO.Wonder[woPyramids].EffectiveOwner >= 0 then
-        ToldSlavery := 1
-      else
-        ToldSlavery := 0;
-      for p1 := 0 to nPl - 1 do
-        if (Tribe[p1] <> nil) and (Tribe[p1].mixSlaves >= 0) then
-          with Picture do
-          begin // replace unit picture
-            mix := Tribe[p1].mixSlaves;
-            if ToldSlavery = 1 then
-              pix := pixSlaves
-            else
-              pix := pixNoSlaves;
-            Hash := 0;
-            GrName := 'StdUnits.png';
-            Tribe[p1].SetModelPicture(Picture, true);
-          end
+      Age := GetAge(me);
+      if SetMainTextureByAge(Age) then
+        EOT.Invalidate; // has visible background parts in its bounds
     end;
-
-    if not supervising and (ClientMode = cTurn) then
-    begin
-      for cix := 0 to MyRO.nCity - 1 do
-        if (MyCity[cix].Loc >= 0) and
-          ((MyRO.Turn = 0) or (MyCity[cix].Flags and chFounded <> 0)) then
-          MyCity[cix].Status := MyCity[cix].Status and
-            not csResourceWeightsMask or (3 shl 4);
-      // new city, set to maximum growth
-    end;
-    if (ClientMode = cTurn) or (ClientMode = cContinue) then
-      CityOptimizer_BeginOfTurn; // maybe peace was made or has ended
-    SumCities(TaxSum, ScienceSum);
-
+    // age:=MyRO.Turn mod 4; //!!!
     if ClientMode = cMovieTurn then
-    begin
-      UnitInfoBtn.Visible := false;
-      UnitBtn.Visible := false;
-      TerrainBtn.Visible := false;
-      EOT.Hint := Phrases.Lookup('BTN_STOP');
-      EOT.Visible := true;
-    end
+      EOT.ButtonIndex := eotCancel
     else if ClientMode < scContact then
-    begin
-      UnitInfoBtn.Visible := UnFocus >= 0;
-      UnitBtn.Visible := UnFocus >= 0;
-      CheckTerrainBtnVisible;
-      TurnComplete := supervising;
-      EOT.Hint := Phrases.Lookup('BTN_ENDTURN');
-      EOT.Visible := Server(sTurn - sExecute, me, 0, nil^) >= rExecuted;
-    end
+      EOT.ButtonIndex := eotGray
     else
-    begin
-      UnitInfoBtn.Visible := false;
-      UnitBtn.Visible := false;
-      TerrainBtn.Visible := false;
-      EOT.Hint := Phrases.Lookup('BTN_NEGO');
-      EOT.Visible := true;
-    end;
-    SetTroopLoc(-1);
-    MapValid := false;
-    NewAgeCenterTo := 0;
-    if ((MyRO.Turn = 0) and not supervising or IsMultiPlayerGame or
-      (ClientMode = cResume)) and (MyRO.nCity > 0) then
-    begin
-      Loc1 := MyCity[0].Loc;
-      if (ClientMode = cTurn) and (MyRO.Turn = 0) then
-      begin // move city out of center to not be covered by welcome screen
-        dx := MapWidth div (xxt * 5);
-        if dx > 5 then
-          dx := 5;
-        dy := MapHeight div (yyt * 5);
-        if dy > 5 then
-          dy := 5;
-        if Loc1 >= G.lx * G.ly div 2 then
-        begin
-          NewAgeCenterTo := -1;
-          Loc1 := dLoc(Loc1, -dx, -dy)
-        end
-        else
-        begin
-          NewAgeCenterTo := 1;
-          Loc1 := dLoc(Loc1, -dx, dy);
-        end
-      end;
-      Centre(Loc1)
-    end;
+      EOT.ButtonIndex := eotBackToNego;
+  end
+  else
+  begin
+    Age := 0;
+    SetMainTextureByAge(-1);
+    if ClientMode = cMovieTurn then
+      EOT.ButtonIndex := eotCancel
+    else
+      EOT.ButtonIndex := eotBlinkOn;
+  end;
+  InitCityMark(MainTexture);
+  CityDlg.CheckAge;
+  NatStatDlg.CheckAge;
+  UnitStatDlg.CheckAge;
+  HelpDlg.Difficulty := G.Difficulty[me];
 
+  UnFocus := -1;
+  MarkCityLoc := -1;
+  BlinkON := false;
+  BlinkTime := -1;
+  Tracking := false;
+  TurnComplete := false;
+
+  if (ToldSlavery < 0) or
+    ((ToldSlavery = 1) <> (MyRO.Wonder[woPyramids].EffectiveOwner >= 0)) then
+  begin
+    if MyRO.Wonder[woPyramids].EffectiveOwner >= 0 then
+      ToldSlavery := 1
+    else
+      ToldSlavery := 0;
+    for p1 := 0 to nPl - 1 do
+      if (Tribe[p1] <> nil) and (Tribe[p1].mixSlaves >= 0) then
+        with Picture do
+        begin // replace unit picture
+          mix := Tribe[p1].mixSlaves;
+          if ToldSlavery = 1 then
+            pix := pixSlaves
+          else
+            pix := pixNoSlaves;
+          Hash := 0;
+          GrName := 'StdUnits.png';
+          Tribe[p1].SetModelPicture(Picture, true);
+        end
+  end;
+
+  if not supervising and (ClientMode = cTurn) then
+  begin
+    for cix := 0 to MyRO.nCity - 1 do
+      if (MyCity[cix].Loc >= 0) and
+        ((MyRO.Turn = 0) or (MyCity[cix].Flags and chFounded <> 0)) then
+        MyCity[cix].Status := MyCity[cix].Status and
+          not csResourceWeightsMask or (3 shl 4);
+    // new city, set to maximum growth
+  end;
+  if (ClientMode = cTurn) or (ClientMode = cContinue) then
+    CityOptimizer_BeginOfTurn; // maybe peace was made or has ended
+  SumCities(TaxSum, ScienceSum);
+
+  if ClientMode = cMovieTurn then
+  begin
+    UnitInfoBtn.Visible := false;
+    UnitBtn.Visible := false;
+    TerrainBtn.Visible := false;
+    EOT.Hint := Phrases.Lookup('BTN_STOP');
+    EOT.Visible := true;
+  end
+  else if ClientMode < scContact then
+  begin
+    UnitInfoBtn.Visible := UnFocus >= 0;
+    UnitBtn.Visible := UnFocus >= 0;
+    CheckTerrainBtnVisible;
+    TurnComplete := supervising;
+    EOT.Hint := Phrases.Lookup('BTN_ENDTURN');
+    EOT.Visible := Server(sTurn - sExecute, me, 0, nil^) >= rExecuted;
+  end
+  else
+  begin
+    UnitInfoBtn.Visible := false;
+    UnitBtn.Visible := false;
+    TerrainBtn.Visible := false;
+    EOT.Hint := Phrases.Lookup('BTN_NEGO');
+    EOT.Visible := true;
+  end;
+  SetTroopLoc(-1);
+  MapValid := false;
+  NewAgeCenterTo := 0;
+  if ((MyRO.Turn = 0) and not supervising or IsMultiPlayerGame or
+    (ClientMode = cResume)) and (MyRO.nCity > 0) then
+  begin
+    Loc1 := MyCity[0].Loc;
+    if (ClientMode = cTurn) and (MyRO.Turn = 0) then
+    begin // move city out of center to not be covered by welcome screen
+      dx := MapWidth div (xxt * 5);
+      if dx > 5 then
+        dx := 5;
+      dy := MapHeight div (yyt * 5);
+      if dy > 5 then
+        dy := 5;
+      if Loc1 >= G.lx * G.ly div 2 then
+      begin
+        NewAgeCenterTo := -1;
+        Loc1 := dLoc(Loc1, -dx, -dy)
+      end
+      else
+      begin
+        NewAgeCenterTo := 1;
+        Loc1 := dLoc(Loc1, -dx, dy);
+      end
+    end;
+    Centre(Loc1)
+  end;
+
+  for i := 0 to Screen.FormCount - 1 do
+    if Screen.Forms[i] is TBufferedDrawDlg then
+      Screen.Forms[i].Enabled := true;
+
+  if ClientMode <> cResume then
+  begin
+    PaintAll;
+    if (MyRO.Happened and phChangeGov <> 0) and (MyRO.NatBuilt[imPalace] > 0)
+    then
+      ImpImage(Panel.Canvas, ClientWidth - xPalace, yPalace, imPalace,
+        gAnarchy { , GameMode<>cMovie } );
+    // first turn after anarchy -- don't show despotism palace!
+    Update;
     for i := 0 to Screen.FormCount - 1 do
-      if Screen.Forms[i] is TBufferedDrawDlg then
-        Screen.Forms[i].Enabled := true;
-
-    if ClientMode <> cResume then
-    begin
-      PaintAll;
-      if (MyRO.Happened and phChangeGov <> 0) and (MyRO.NatBuilt[imPalace] > 0)
+      if (Screen.Forms[i].Visible) and (Screen.Forms[i] is TBufferedDrawDlg)
       then
-        ImpImage(Panel.Canvas, ClientWidth - xPalace, yPalace, imPalace,
-          gAnarchy { , GameMode<>cMovie } );
-      // first turn after anarchy -- don't show despotism palace!
-      Update;
-      for i := 0 to Screen.FormCount - 1 do
-        if (Screen.Forms[i].Visible) and (Screen.Forms[i] is TBufferedDrawDlg)
-        then
+      begin
+        if @Screen.Forms[i].OnShow <> nil then
+          Screen.Forms[i].OnShow(nil);
+        Screen.Forms[i].Invalidate;
+        Screen.Forms[i].Update;
+      end;
+
+    if MyRO.Happened and phGameEnd <> 0 then
+      with MessgExDlg do
+      begin // game ended
+        if MyRO.Happened and phExtinct <> 0 then
         begin
-          if @Screen.Forms[i].OnShow <> nil then
-            Screen.Forms[i].OnShow(nil);
-          Screen.Forms[i].Invalidate;
-          Screen.Forms[i].Update;
-        end;
-
-      if MyRO.Happened and phGameEnd <> 0 then
-        with MessgExDlg do
-        begin // game ended
-          if MyRO.Happened and phExtinct <> 0 then
+          OpenSound := 'MSG_GAMEOVER';
+          MessgText := Tribe[me].TPhrase('GAMEOVER');
+          IconKind := mikBigIcon;
+          IconIndex := 8;
+        end
+        else if MyRO.Happened and phShipComplete <> 0 then
+        begin
+          Winners := 0;
+          for p1 := 0 to nPl - 1 do
+            if 1 shl p1 and MyRO.Alive <> 0 then
+            begin
+              Winners := Winners or 1 shl p1;
+              for i := 0 to nShipPart - 1 do
+                if MyRO.Ship[p1].Parts[i] < ShipNeed[i] then
+                  Winners := Winners and not(1 shl p1);
+            end;
+          assert(Winners <> 0);
+          if Winners and (1 shl me) <> 0 then
           begin
-            OpenSound := 'MSG_GAMEOVER';
-            MessgText := Tribe[me].TPhrase('GAMEOVER');
-            IconKind := mikBigIcon;
-            IconIndex := 8;
-          end
-          else if MyRO.Happened and phShipComplete <> 0 then
-          begin
-            Winners := 0;
+            s := '';
             for p1 := 0 to nPl - 1 do
-              if 1 shl p1 and MyRO.Alive <> 0 then
-              begin
-                Winners := Winners or 1 shl p1;
-                for i := 0 to nShipPart - 1 do
-                  if MyRO.Ship[p1].Parts[i] < ShipNeed[i] then
-                    Winners := Winners and not(1 shl p1);
-              end;
-            assert(Winners <> 0);
-            if Winners and (1 shl me) <> 0 then
-            begin
-              s := '';
-              for p1 := 0 to nPl - 1 do
-                if (p1 <> me) and (1 shl p1 and Winners <> 0) then
-                  if s = '' then
-                    s := Tribe[p1].TPhrase('SHORTNAME')
-                  else
-                    s := Format(Phrases.Lookup('SHAREDWIN_CONCAT'),
-                      [s, Tribe[p1].TPhrase('SHORTNAME')]);
+              if (p1 <> me) and (1 shl p1 and Winners <> 0) then
+                if s = '' then
+                  s := Tribe[p1].TPhrase('SHORTNAME')
+                else
+                  s := Format(Phrases.Lookup('SHAREDWIN_CONCAT'),
+                    [s, Tribe[p1].TPhrase('SHORTNAME')]);
 
-              OpenSound := 'MSG_YOUWIN';
-              MessgText := Tribe[me].TPhrase('MYSPACESHIP');
-              if s <> '' then
-                MessgText := MessgText + '\' +
-                  Format(Phrases.Lookup('SHAREDWIN'), [s]);
-              IconKind := mikBigIcon;
-              IconIndex := 9;
-            end
-            else
-            begin
-              assert(me = 0);
-              OpenSound := 'MSG_GAMEOVER';
-              MessgText := '';
-              for p1 := 0 to nPl - 1 do
-                if Winners and (1 shl p1) <> 0 then
-                  MessgText := MessgText + Tribe[p1].TPhrase('SPACESHIP1');
-              MessgText := MessgText + '\' + Phrases.Lookup('SPACESHIP2');
-              IconKind := mikEnemyShipComplete;
-            end
+            OpenSound := 'MSG_YOUWIN';
+            MessgText := Tribe[me].TPhrase('MYSPACESHIP');
+            if s <> '' then
+              MessgText := MessgText + '\' +
+                Format(Phrases.Lookup('SHAREDWIN'), [s]);
+            IconKind := mikBigIcon;
+            IconIndex := 9;
           end
-          else { if MyRO.Happened and fTimeUp<>0 then }
+          else
           begin
             assert(me = 0);
             OpenSound := 'MSG_GAMEOVER';
-            if not supervising then
-              MessgText := Tribe[me].TPhrase('TIMEUP')
-            else
-              MessgText := Phrases.Lookup('TIMEUPSUPER');
-            IconKind := mikImp;
-            IconIndex := 22;
-          end;
-          Kind := mkOk;
-          ShowModal;
-          if MyRO.Happened and phExtinct = 0 then
-          begin
-            p1 := 0;
-            while (p1 < nPl - 1) and (Winners and (1 shl p1) = 0) do
-              inc(p1);
-            if MyRO.Happened and phShipComplete = 0 then
-              DiaDlg.ShowNewContent_Charts(wmModal);
-          end;
-          TurnComplete := true;
-          exit;
+            MessgText := '';
+            for p1 := 0 to nPl - 1 do
+              if Winners and (1 shl p1) <> 0 then
+                MessgText := MessgText + Tribe[p1].TPhrase('SPACESHIP1');
+            MessgText := MessgText + '\' + Phrases.Lookup('SPACESHIP2');
+            IconKind := mikEnemyShipComplete;
+          end
+        end
+        else { if MyRO.Happened and fTimeUp<>0 then }
+        begin
+          assert(me = 0);
+          OpenSound := 'MSG_GAMEOVER';
+          if not supervising then
+            MessgText := Tribe[me].TPhrase('TIMEUP')
+          else
+            MessgText := Phrases.Lookup('TIMEUPSUPER');
+          IconKind := mikImp;
+          IconIndex := 22;
         end;
-      if not supervising and (1 shl me and MyRO.Alive = 0) then
-      begin
+        Kind := mkOk;
+        ShowModal;
+        if MyRO.Happened and phExtinct = 0 then
+        begin
+          p1 := 0;
+          while (p1 < nPl - 1) and (Winners and (1 shl p1) = 0) do
+            inc(p1);
+          if MyRO.Happened and phShipComplete = 0 then
+            DiaDlg.ShowNewContent_Charts(wmModal);
+        end;
         TurnComplete := true;
         exit;
       end;
+    if not supervising and (1 shl me and MyRO.Alive = 0) then
+    begin
+      TurnComplete := true;
+      exit;
+    end;
 
-      if (ClientMode = cContinue) and
-        (DipMem[me].SentCommand and $FF0F = scContact) then
-        // contact was refused
-        if MyRO.Treaty[DipMem[me].pContact] >= trPeace then
-          ContactRefused(DipMem[me].pContact, 'FRREJECTED')
-        else
-          SoundMessage(Tribe[DipMem[me].pContact].TPhrase('FRREJECTED'),
-            'NEGO_REJECTED');
+    if (ClientMode = cContinue) and
+      (DipMem[me].SentCommand and $FF0F = scContact) then
+      // contact was refused
+      if MyRO.Treaty[DipMem[me].pContact] >= trPeace then
+        ContactRefused(DipMem[me].pContact, 'FRREJECTED')
+      else
+        SoundMessage(Tribe[DipMem[me].pContact].TPhrase('FRREJECTED'),
+          'NEGO_REJECTED');
 
-      if not supervising and (Age > MyData.ToldAge) and
-        ((Age > 0) or (ClientMode <> cMovieTurn)) then
-        with MessgExDlg do
+    if not supervising and (Age > MyData.ToldAge) and
+      ((Age > 0) or (ClientMode <> cMovieTurn)) then
+      with MessgExDlg do
+      begin
+        if Age = 0 then
         begin
-          if Age = 0 then
+          if Phrases2FallenBackToEnglish then
           begin
-            if Phrases2FallenBackToEnglish then
-            begin
-              s := Tribe[me].TPhrase('AGE0');
-              MessgText :=
-                Format(s, [TurnToString(MyRO.Turn), CityName(MyCity[0].ID)])
-            end
-            else
-            begin
-              s := Tribe[me].TString(Phrases2.Lookup('AGE0'));
-              MessgText := Format(s, [TurnToString(MyRO.Turn)]);
-            end
+            s := Tribe[me].TPhrase('AGE0');
+            MessgText :=
+              Format(s, [TurnToString(MyRO.Turn), CityName(MyCity[0].ID)])
           end
           else
           begin
-            s := Tribe[me].TPhrase('AGE' + char(48 + Age));
+            s := Tribe[me].TString(Phrases2.Lookup('AGE0'));
             MessgText := Format(s, [TurnToString(MyRO.Turn)]);
-          end;
-          IconKind := mikAge;
-          IconIndex := Age;
-          { if age=0 then } Kind := mkOk
-          { else begin Kind:=mkOkHelp; HelpKind:=hkAdv; HelpNo:=AgePreq[age]; end };
-          CenterTo := NewAgeCenterTo;
-          OpenSound := 'AGE_' + char(48 + Age);
-          ShowModal;
-          MyData.ToldAge := Age;
-          if Age > 0 then
-            MyData.ToldTech[AgePreq[Age]] := MyRO.Tech[AgePreq[Age]];
-        end;
-
-      if MyData.ToldAlive <> MyRO.Alive then
-      begin
-        for p1 := 0 to nPl - 1 do
-          if (MyData.ToldAlive - MyRO.Alive) and (1 shl p1) <> 0 then
-            with MessgExDlg do
-            begin
-              OpenSound := 'MSG_EXTINCT';
-              s := Tribe[p1].TPhrase('EXTINCT');
-              MessgText := Format(s, [TurnToString(MyRO.Turn)]);
-              if MyRO.Alive = 1 shl me then
-                MessgText := MessgText + Phrases.Lookup('EXTINCTALL');
-              Kind := mkOk;
-              IconKind := mikImp;
-              IconIndex := 21;
-              ShowModal;
-            end;
-        if (ClientMode <> cMovieTurn) and not supervising then
-          DiaDlg.ShowNewContent_Charts(wmModal);
-      end;
-
-      // tell changes of own credibility
-      if not supervising then
-      begin
-        if RoughCredibility(MyRO.Credibility) <>
-          RoughCredibility(MyData.ToldOwnCredibility) then
-        begin
-          if RoughCredibility(MyRO.Credibility) >
-            RoughCredibility(MyData.ToldOwnCredibility) then
-            s := Phrases.Lookup('CREDUP')
-          else
-            s := Phrases.Lookup('CREDDOWN');
-          TribeMessage(me, Format(s, [Phrases.Lookup('CREDIBILITY',
-            RoughCredibility(MyRO.Credibility))]), '');
-        end;
-        MyData.ToldOwnCredibility := MyRO.Credibility;
-      end;
-
-      for i := 0 to 27 do
-      begin
-        OwnWonder := false;
-        for cix := 0 to MyRO.nCity - 1 do
-          if (MyCity[cix].Loc >= 0) and (MyCity[cix].ID = MyRO.Wonder[i].CityID)
-          then
-            OwnWonder := true;
-        if MyRO.Wonder[i].CityID <> MyData.ToldWonders[i].CityID then
-        begin
-          if MyRO.Wonder[i].CityID = -2 then
-            with MessgExDlg do
-            begin { tell about destroyed wonders }
-              OpenSound := 'WONDER_DESTROYED';
-              MessgText := Format(Phrases.Lookup('WONDERDEST'),
-                [Phrases.Lookup('IMPROVEMENTS', i)]);
-              Kind := mkOkHelp;
-              HelpKind := hkImp;
-              HelpNo := i;
-              IconKind := mikImp;
-              IconIndex := i;
-              ShowModal;
-            end
-          else
-          begin
-            if i = woManhattan then
-              if MyRO.Wonder[i].EffectiveOwner > me then
-                MyData.ColdWarStart := MyRO.Turn - 1
-              else
-                MyData.ColdWarStart := MyRO.Turn;
-            if not OwnWonder then
-              with MessgExDlg do
-              begin { tell about newly built wonders }
-                if i = woManhattan then
-                begin
-                  OpenSound := 'MSG_COLDWAR';
-                  s := Tribe[MyRO.Wonder[i].EffectiveOwner].TPhrase('COLDWAR')
-                end
-                else if MyRO.Wonder[i].EffectiveOwner >= 0 then
-                begin
-                  OpenSound := 'WONDER_BUILT';
-                  s := Tribe[MyRO.Wonder[i].EffectiveOwner]
-                    .TPhrase('WONDERBUILT')
-                end
-                else
-                begin
-                  OpenSound := 'MSG_DEFAULT';
-                  s := Phrases.Lookup('WONDERBUILTEXP');
-                  // already expired when built
-                end;
-                MessgText := Format(s, [Phrases.Lookup('IMPROVEMENTS', i),
-                  CityName(MyRO.Wonder[i].CityID)]);
-                Kind := mkOkHelp;
-                HelpKind := hkImp;
-                HelpNo := i;
-                IconKind := mikImp;
-                IconIndex := i;
-                ShowModal;
-              end
           end
         end
-        else if (MyRO.Wonder[i].EffectiveOwner <> MyData.ToldWonders[i]
-          .EffectiveOwner) and (MyRO.Wonder[i].CityID > -2) then
-          if MyRO.Wonder[i].EffectiveOwner < 0 then
+        else
+        begin
+          s := Tribe[me].TPhrase('AGE' + char(48 + Age));
+          MessgText := Format(s, [TurnToString(MyRO.Turn)]);
+        end;
+        IconKind := mikAge;
+        IconIndex := Age;
+        { if age=0 then } Kind := mkOk
+        { else begin Kind:=mkOkHelp; HelpKind:=hkAdv; HelpNo:=AgePreq[age]; end };
+        CenterTo := NewAgeCenterTo;
+        OpenSound := 'AGE_' + char(48 + Age);
+        ShowModal;
+        MyData.ToldAge := Age;
+        if Age > 0 then
+          MyData.ToldTech[AgePreq[Age]] := MyRO.Tech[AgePreq[Age]];
+      end;
+
+    if MyData.ToldAlive <> MyRO.Alive then
+    begin
+      for p1 := 0 to nPl - 1 do
+        if (MyData.ToldAlive - MyRO.Alive) and (1 shl p1) <> 0 then
+          with MessgExDlg do
           begin
-            if i <> woMIR then
-              with MessgExDlg do
-              begin { tell about expired wonders }
-                OpenSound := 'WONDER_EXPIRED';
-                MessgText := Format(Phrases.Lookup('WONDEREXP'),
-                  [Phrases.Lookup('IMPROVEMENTS', i),
-                  CityName(MyRO.Wonder[i].CityID)]);
-                Kind := mkOkHelp;
-                HelpKind := hkImp;
-                HelpNo := i;
-                IconKind := mikImp;
-                IconIndex := i;
-                ShowModal;
-              end
+            OpenSound := 'MSG_EXTINCT';
+            s := Tribe[p1].TPhrase('EXTINCT');
+            MessgText := Format(s, [TurnToString(MyRO.Turn)]);
+            if MyRO.Alive = 1 shl me then
+              MessgText := MessgText + Phrases.Lookup('EXTINCTALL');
+            Kind := mkOk;
+            IconKind := mikImp;
+            IconIndex := 21;
+            ShowModal;
+          end;
+      if (ClientMode <> cMovieTurn) and not supervising then
+        DiaDlg.ShowNewContent_Charts(wmModal);
+    end;
+
+    // tell changes of own credibility
+    if not supervising then
+    begin
+      if RoughCredibility(MyRO.Credibility) <>
+        RoughCredibility(MyData.ToldOwnCredibility) then
+      begin
+        if RoughCredibility(MyRO.Credibility) >
+          RoughCredibility(MyData.ToldOwnCredibility) then
+          s := Phrases.Lookup('CREDUP')
+        else
+          s := Phrases.Lookup('CREDDOWN');
+        TribeMessage(me, Format(s, [Phrases.Lookup('CREDIBILITY',
+          RoughCredibility(MyRO.Credibility))]), '');
+      end;
+      MyData.ToldOwnCredibility := MyRO.Credibility;
+    end;
+
+    for i := 0 to 27 do
+    begin
+      OwnWonder := false;
+      for cix := 0 to MyRO.nCity - 1 do
+        if (MyCity[cix].Loc >= 0) and (MyCity[cix].ID = MyRO.Wonder[i].CityID)
+        then
+          OwnWonder := true;
+      if MyRO.Wonder[i].CityID <> MyData.ToldWonders[i].CityID then
+      begin
+        if MyRO.Wonder[i].CityID = -2 then
+          with MessgExDlg do
+          begin { tell about destroyed wonders }
+            OpenSound := 'WONDER_DESTROYED';
+            MessgText := Format(Phrases.Lookup('WONDERDEST'),
+              [Phrases.Lookup('IMPROVEMENTS', i)]);
+            Kind := mkOkHelp;
+            HelpKind := hkImp;
+            HelpNo := i;
+            IconKind := mikImp;
+            IconIndex := i;
+            ShowModal;
           end
-          else if (MyData.ToldWonders[i].EffectiveOwner >= 0) and not OwnWonder
-          then
+        else
+        begin
+          if i = woManhattan then
+            if MyRO.Wonder[i].EffectiveOwner > me then
+              MyData.ColdWarStart := MyRO.Turn - 1
+            else
+              MyData.ColdWarStart := MyRO.Turn;
+          if not OwnWonder then
             with MessgExDlg do
-            begin { tell about capture of wonders }
-              OpenSound := 'WONDER_CAPTURED';
-              s := Tribe[MyRO.Wonder[i].EffectiveOwner].TPhrase('WONDERCAPT');
+            begin { tell about newly built wonders }
+              if i = woManhattan then
+              begin
+                OpenSound := 'MSG_COLDWAR';
+                s := Tribe[MyRO.Wonder[i].EffectiveOwner].TPhrase('COLDWAR')
+              end
+              else if MyRO.Wonder[i].EffectiveOwner >= 0 then
+              begin
+                OpenSound := 'WONDER_BUILT';
+                s := Tribe[MyRO.Wonder[i].EffectiveOwner]
+                  .TPhrase('WONDERBUILT')
+              end
+              else
+              begin
+                OpenSound := 'MSG_DEFAULT';
+                s := Phrases.Lookup('WONDERBUILTEXP');
+                // already expired when built
+              end;
               MessgText := Format(s, [Phrases.Lookup('IMPROVEMENTS', i),
                 CityName(MyRO.Wonder[i].CityID)]);
               Kind := mkOkHelp;
@@ -2093,324 +2060,361 @@ const
               IconKind := mikImp;
               IconIndex := i;
               ShowModal;
-            end;
-      end;
-
-      if MyRO.Turn = MyData.ColdWarStart + ColdWarTurns then
-      begin
-        SoundMessageEx(Phrases.Lookup('COLDWAREND'), 'MSG_DEFAULT');
-        MyData.ColdWarStart := -ColdWarTurns - 1
-      end;
-
-      TellNewModels;
-    end; // ClientMode<>cResume
-    MyData.ToldAlive := MyRO.Alive;
-    move(MyRO.Wonder, MyData.ToldWonders, SizeOf(MyData.ToldWonders));
-
-    NewGovAvailable := -1;
-    if ClientMode <> cResume then
-    begin // tell about new techs
-      for ad := 0 to nAdv - 1 do
-        if (MyRO.TestFlags and tfAllTechs = 0) and
-          ((MyRO.Tech[ad] >= tsApplicable) <> (MyData.ToldTech[ad] >=
-          tsApplicable)) or (ad in FutureTech) and
-          (MyRO.Tech[ad] <> MyData.ToldTech[ad]) then
+            end
+        end
+      end
+      else if (MyRO.Wonder[i].EffectiveOwner <> MyData.ToldWonders[i]
+        .EffectiveOwner) and (MyRO.Wonder[i].CityID > -2) then
+        if MyRO.Wonder[i].EffectiveOwner < 0 then
+        begin
+          if i <> woMIR then
+            with MessgExDlg do
+            begin { tell about expired wonders }
+              OpenSound := 'WONDER_EXPIRED';
+              MessgText := Format(Phrases.Lookup('WONDEREXP'),
+                [Phrases.Lookup('IMPROVEMENTS', i),
+                CityName(MyRO.Wonder[i].CityID)]);
+              Kind := mkOkHelp;
+              HelpKind := hkImp;
+              HelpNo := i;
+              IconKind := mikImp;
+              IconIndex := i;
+              ShowModal;
+            end
+        end
+        else if (MyData.ToldWonders[i].EffectiveOwner >= 0) and not OwnWonder
+        then
           with MessgExDlg do
-          begin
-            Item := 'RESEARCH_GENERAL';
-            if GameMode <> cMovie then
-              OpenSound := 'NEWADVANCE_' + char(48 + Age);
-            Item2 := Phrases.Lookup('ADVANCES', ad);
-            if ad in FutureTech then
-              Item2 := Item2 + ' ' + IntToStr(MyRO.Tech[ad]);
-            MessgText := Format(Phrases.Lookup(Item), [Item2]);
+          begin { tell about capture of wonders }
+            OpenSound := 'WONDER_CAPTURED';
+            s := Tribe[MyRO.Wonder[i].EffectiveOwner].TPhrase('WONDERCAPT');
+            MessgText := Format(s, [Phrases.Lookup('IMPROVEMENTS', i),
+              CityName(MyRO.Wonder[i].CityID)]);
             Kind := mkOkHelp;
-            HelpKind := hkAdv;
-            HelpNo := ad;
-            IconKind := mikBook;
-            IconIndex := -1;
-            for i := 0 to nAdvBookIcon - 1 do
-              if AdvBookIcon[i].Adv = ad then
-                IconIndex := AdvBookIcon[i].Icon;
+            HelpKind := hkImp;
+            HelpNo := i;
+            IconKind := mikImp;
+            IconIndex := i;
             ShowModal;
-            MyData.ToldTech[ad] := MyRO.Tech[ad];
-            for i := gMonarchy to nGov - 1 do
-              if GovPreq[i] = ad then
-                NewGovAvailable := i;
           end;
     end;
 
-    ShowCityList := false;
-    if ClientMode = cTurn then
+    if MyRO.Turn = MyData.ColdWarStart + ColdWarTurns then
     begin
-      if (MyRO.Happened and phTech <> 0) and (MyData.FarTech <> adNexus) then
-        ChooseResearch;
-
-      UpdatePanel := false;
-      if MyRO.Happened and phChangeGov <> 0 then
-      begin
-        ModalSelectDlg.ShowNewContent(wmModal, kGov);
-        Play('NEWGOV');
-        Server(sSetGovernment, me, ModalSelectDlg.result, nil^);
-        CityOptimizer_BeginOfTurn;
-        UpdatePanel := true;
-      end;
-    end; // ClientMode=cTurn
-
-    if not supervising and ((ClientMode = cTurn) or (ClientMode = cMovieTurn))
-    then
-      for cix := 0 to MyRO.nCity - 1 do
-        with MyCity[cix] do
-          Status := Status and not csToldBombard;
-
-    if ((ClientMode = cTurn) or (ClientMode = cMovieTurn)) and
-      (MyRO.Government <> gAnarchy) then
-    begin
-      // tell what happened in cities
-      for WondersOnly := true downto false do
-        for cix := 0 to MyRO.nCity - 1 do
-          with MyCity[cix] do
-            if (MyRO.Turn > 0) and (Loc >= 0) and (Flags and chCaptured = 0) and
-              (WondersOnly = (Flags and chProduction <> 0) and
-              (Project0 and cpImp <> 0) and (Project0 and cpIndex < 28)) then
-            begin
-              if WondersOnly then
-                with MessgExDlg do
-                begin { tell about newly built wonder }
-                  OpenSound := 'WONDER_BUILT';
-                  s := Tribe[me].TPhrase('WONDERBUILTOWN');
-                  MessgText :=
-                    Format(s, [Phrases.Lookup('IMPROVEMENTS',
-                    Project0 and cpIndex), CityName(ID)]);
-                  Kind := mkOkHelp;
-                  HelpKind := hkImp;
-                  HelpNo := Project0 and cpIndex;
-                  IconKind := mikImp;
-                  IconIndex := Project0 and cpIndex;
-                  ShowModal;
-                end;
-              if not supervising and (ClientMode = cTurn) then
-              begin
-                AllowCityScreen := true;
-                if (Status and 7 <> 0) and
-                  (Project and (cpImp + cpIndex) = cpImp + imTrGoods) then
-                  if (MyData.ImpOrder[Status and 7 - 1, 0] >= 0) then
-                  begin
-                    if AutoBuild(cix, MyData.ImpOrder[Status and 7 - 1]) then
-                      AllowCityScreen := false
-                    else if Flags and chProduction <> 0 then
-                      Flags := (Flags and not chProduction) or chAllImpsMade
-                  end
-                  else
-                    Flags := Flags or chTypeDel;
-                if (Size >= NeedAqueductSize) and
-                  (MyRO.Tech[Imp[imAqueduct].Preq] < tsApplicable) or
-                  (Size >= NeedSewerSize) and
-                  (MyRO.Tech[Imp[imSewer].Preq] < tsApplicable) then
-                  Flags := Flags and not chNoGrowthWarning;
-                // don't remind of unknown building
-                if Flags and chNoSettlerProd = 0 then
-                  Status := Status and not csToldDelay
-                else if Status and csToldDelay = 0 then
-                  Status := Status or csToldDelay
-                else
-                  Flags := Flags and not chNoSettlerProd;
-                if mRepScreens.Checked then
-                begin
-                  if (Flags and CityRepMask <> 0) and AllowCityScreen then
-                  begin { show what happened in cities }
-                    SetTroopLoc(MyCity[cix].Loc);
-                    MarkCityLoc := MyCity[cix].Loc;
-                    PanelPaint;
-                    CityDlg.CloseAction := None;
-                    CityDlg.ShowNewContent(wmModal, MyCity[cix].Loc,
-                      Flags and CityRepMask);
-                    UpdatePanel := true;
-                  end
-                end
-                else { if mRepList.Checked then }
-                begin
-                  if Flags and CityRepMask <> 0 then
-                    ShowCityList := true
-                end
-              end
-            end; { city loop }
-    end; // ClientMode=cTurn
-
-    if ClientMode = cTurn then
-    begin
-      if NewGovAvailable >= 0 then
-        with MessgExDlg do
-        begin
-          MessgText := Format(Phrases.Lookup('AUTOREVOLUTION'),
-            [Phrases.Lookup('GOVERNMENT', NewGovAvailable)]);
-          Kind := mkYesNo;
-          IconKind := mikPureIcon;
-          IconIndex := 6 + NewGovAvailable;
-          ShowModal;
-          if ModalResult = mrOK then
-          begin
-            Play('REVOLUTION');
-            Server(sRevolution, me, 0, nil^);
-          end
-        end;
-    end; // ClientMode=cTurn
-
-    if (ClientMode = cTurn) or (ClientMode = cMovieTurn) then
-    begin
-      if MyRO.Happened and phGliderLost <> 0 then
-        ContextMessage(Phrases.Lookup('GLIDERLOST'), 'MSG_DEFAULT',
-          hkModel, 200);
-      if MyRO.Happened and phPlaneLost <> 0 then
-        ContextMessage(Phrases.Lookup('PLANELOST'), 'MSG_DEFAULT',
-          hkFeature, mcFuel);
-      if MyRO.Happened and phPeaceEvacuation <> 0 then
-        for p1 := 0 to nPl - 1 do
-          if 1 shl p1 and MyData.PeaceEvaHappened <> 0 then
-            SoundMessageEx(Tribe[p1].TPhrase('WITHDRAW'), 'MSG_DEFAULT');
-      if MyRO.Happened and phPeaceViolation <> 0 then
-        for p1 := 0 to nPl - 1 do
-          if (1 shl p1 and MyRO.Alive <> 0) and (MyRO.EvaStart[p1] = MyRO.Turn)
-          then
-            SoundMessageEx(Format(Tribe[p1].TPhrase('VIOLATION'),
-              [TurnToString(MyRO.Turn + PeaceEvaTurns - 1)]), 'MSG_WITHDRAW');
-      TellNewContacts;
+      SoundMessageEx(Phrases.Lookup('COLDWAREND'), 'MSG_DEFAULT');
+      MyData.ColdWarStart := -ColdWarTurns - 1
     end;
 
-    if ClientMode = cMovieTurn then
-      Update
-    else if ClientMode = cTurn then
-    begin
-      if UpdatePanel then
-        UpdateViews;
-      Application.ProcessMessages;
+    TellNewModels;
+  end; // ClientMode<>cResume
+  MyData.ToldAlive := MyRO.Alive;
+  move(MyRO.Wonder, MyData.ToldWonders, SizeOf(MyData.ToldWonders));
 
-      if not supervising then
-        for uix := 0 to MyRO.nUn - 1 do
-          with MyUn[uix] do
-            if Loc >= 0 then
+  NewGovAvailable := -1;
+  if ClientMode <> cResume then
+  begin // tell about new techs
+    for ad := 0 to nAdv - 1 do
+      if (MyRO.TestFlags and tfAllTechs = 0) and
+        ((MyRO.Tech[ad] >= tsApplicable) <> (MyData.ToldTech[ad] >=
+        tsApplicable)) or (ad in FutureTech) and
+        (MyRO.Tech[ad] <> MyData.ToldTech[ad]) then
+        with MessgExDlg do
+        begin
+          Item := 'RESEARCH_GENERAL';
+          if GameMode <> cMovie then
+            OpenSound := 'NEWADVANCE_' + char(48 + Age);
+          Item2 := Phrases.Lookup('ADVANCES', ad);
+          if ad in FutureTech then
+            Item2 := Item2 + ' ' + IntToStr(MyRO.Tech[ad]);
+          MessgText := Format(Phrases.Lookup(Item), [Item2]);
+          Kind := mkOkHelp;
+          HelpKind := hkAdv;
+          HelpNo := ad;
+          IconKind := mikBook;
+          IconIndex := -1;
+          for i := 0 to nAdvBookIcon - 1 do
+            if AdvBookIcon[i].Adv = ad then
+              IconIndex := AdvBookIcon[i].Icon;
+          ShowModal;
+          MyData.ToldTech[ad] := MyRO.Tech[ad];
+          for i := gMonarchy to nGov - 1 do
+            if GovPreq[i] = ad then
+              NewGovAvailable := i;
+        end;
+  end;
+
+  ShowCityList := false;
+  if ClientMode = cTurn then
+  begin
+    if (MyRO.Happened and phTech <> 0) and (MyData.FarTech <> adNexus) then
+      ChooseResearch;
+
+    UpdatePanel := false;
+    if MyRO.Happened and phChangeGov <> 0 then
+    begin
+      ModalSelectDlg.ShowNewContent(wmModal, kGov);
+      Play('NEWGOV');
+      Server(sSetGovernment, me, ModalSelectDlg.result, nil^);
+      CityOptimizer_BeginOfTurn;
+      UpdatePanel := true;
+    end;
+  end; // ClientMode=cTurn
+
+  if not supervising and ((ClientMode = cTurn) or (ClientMode = cMovieTurn))
+  then
+    for cix := 0 to MyRO.nCity - 1 do
+      with MyCity[cix] do
+        Status := Status and not csToldBombard;
+
+  if ((ClientMode = cTurn) or (ClientMode = cMovieTurn)) and
+    (MyRO.Government <> gAnarchy) then
+  begin
+    // tell what happened in cities
+    for WondersOnly := true downto false do
+      for cix := 0 to MyRO.nCity - 1 do
+        with MyCity[cix] do
+          if (MyRO.Turn > 0) and (Loc >= 0) and (Flags and chCaptured = 0) and
+            (WondersOnly = (Flags and chProduction <> 0) and
+            (Project0 and cpImp <> 0) and (Project0 and cpIndex < 28)) then
+          begin
+            if WondersOnly then
+              with MessgExDlg do
+              begin { tell about newly built wonder }
+                OpenSound := 'WONDER_BUILT';
+                s := Tribe[me].TPhrase('WONDERBUILTOWN');
+                MessgText :=
+                  Format(s, [Phrases.Lookup('IMPROVEMENTS',
+                  Project0 and cpIndex), CityName(ID)]);
+                Kind := mkOkHelp;
+                HelpKind := hkImp;
+                HelpNo := Project0 and cpIndex;
+                IconKind := mikImp;
+                IconIndex := Project0 and cpIndex;
+                ShowModal;
+              end;
+            if not supervising and (ClientMode = cTurn) then
             begin
-              if Flags and unWithdrawn <> 0 then
-                Status := 0;
-              if Health = 100 then
-                Status := Status and not usRecover;
-              if (Master >= 0) or UnitExhausted(uix) then
-                Status := Status and not usWaiting
-              else
-                Status := Status or usWaiting;
-              CheckToldNoReturn(uix);
-              if Status and usGoto <> 0 then
-              begin { continue multi-turn goto }
-                SetUnFocus(uix);
-                SetTroopLoc(Loc);
-                FocusOnLoc(TroopLoc, flRepaintPanel or flImmUpdate);
-                if Status shr 16 = $7FFF then
-                  MoveResult := GetMoveAdvice(UnFocus, maNextCity,
-                    MoveAdviceData)
+              AllowCityScreen := true;
+              if (Status and 7 <> 0) and
+                (Project and (cpImp + cpIndex) = cpImp + imTrGoods) then
+                if (MyData.ImpOrder[Status and 7 - 1, 0] >= 0) then
+                begin
+                  if AutoBuild(cix, MyData.ImpOrder[Status and 7 - 1]) then
+                    AllowCityScreen := false
+                  else if Flags and chProduction <> 0 then
+                    Flags := (Flags and not chProduction) or chAllImpsMade
+                end
                 else
-                  MoveResult := GetMoveAdvice(UnFocus, Status shr 16,
-                    MoveAdviceData);
-                if MoveResult >= rExecuted then
-                begin // !!! Shinkansen
-                  MoveResult := eOK;
-                  ok := true;
-                  for i := 0 to MoveAdviceData.nStep - 1 do
+                  Flags := Flags or chTypeDel;
+              if (Size >= NeedAqueductSize) and
+                (MyRO.Tech[Imp[imAqueduct].Preq] < tsApplicable) or
+                (Size >= NeedSewerSize) and
+                (MyRO.Tech[Imp[imSewer].Preq] < tsApplicable) then
+                Flags := Flags and not chNoGrowthWarning;
+              // don't remind of unknown building
+              if Flags and chNoSettlerProd = 0 then
+                Status := Status and not csToldDelay
+              else if Status and csToldDelay = 0 then
+                Status := Status or csToldDelay
+              else
+                Flags := Flags and not chNoSettlerProd;
+              if mRepScreens.Checked then
+              begin
+                if (Flags and CityRepMask <> 0) and AllowCityScreen then
+                begin { show what happened in cities }
+                  SetTroopLoc(MyCity[cix].Loc);
+                  MarkCityLoc := MyCity[cix].Loc;
+                  PanelPaint;
+                  CityDlg.CloseAction := None;
+                  CityDlg.ShowNewContent(wmModal, MyCity[cix].Loc,
+                    Flags and CityRepMask);
+                  UpdatePanel := true;
+                end
+              end
+              else { if mRepList.Checked then }
+              begin
+                if Flags and CityRepMask <> 0 then
+                  ShowCityList := true
+              end
+            end
+          end; { city loop }
+  end; // ClientMode=cTurn
+
+  if ClientMode = cTurn then
+  begin
+    if NewGovAvailable >= 0 then
+      with MessgExDlg do
+      begin
+        MessgText := Format(Phrases.Lookup('AUTOREVOLUTION'),
+          [Phrases.Lookup('GOVERNMENT', NewGovAvailable)]);
+        Kind := mkYesNo;
+        IconKind := mikPureIcon;
+        IconIndex := 6 + NewGovAvailable;
+        ShowModal;
+        if ModalResult = mrOK then
+        begin
+          Play('REVOLUTION');
+          Server(sRevolution, me, 0, nil^);
+        end
+      end;
+  end; // ClientMode=cTurn
+
+  if (ClientMode = cTurn) or (ClientMode = cMovieTurn) then
+  begin
+    if MyRO.Happened and phGliderLost <> 0 then
+      ContextMessage(Phrases.Lookup('GLIDERLOST'), 'MSG_DEFAULT',
+        hkModel, 200);
+    if MyRO.Happened and phPlaneLost <> 0 then
+      ContextMessage(Phrases.Lookup('PLANELOST'), 'MSG_DEFAULT',
+        hkFeature, mcFuel);
+    if MyRO.Happened and phPeaceEvacuation <> 0 then
+      for p1 := 0 to nPl - 1 do
+        if 1 shl p1 and MyData.PeaceEvaHappened <> 0 then
+          SoundMessageEx(Tribe[p1].TPhrase('WITHDRAW'), 'MSG_DEFAULT');
+    if MyRO.Happened and phPeaceViolation <> 0 then
+      for p1 := 0 to nPl - 1 do
+        if (1 shl p1 and MyRO.Alive <> 0) and (MyRO.EvaStart[p1] = MyRO.Turn)
+        then
+          SoundMessageEx(Format(Tribe[p1].TPhrase('VIOLATION'),
+            [TurnToString(MyRO.Turn + PeaceEvaTurns - 1)]), 'MSG_WITHDRAW');
+    TellNewContacts;
+  end;
+
+  if ClientMode = cMovieTurn then
+    Update
+  else if ClientMode = cTurn then
+  begin
+    if UpdatePanel then
+      UpdateViews;
+    Application.ProcessMessages;
+
+    if not supervising then
+      for uix := 0 to MyRO.nUn - 1 do
+        with MyUn[uix] do
+          if Loc >= 0 then
+          begin
+            if Flags and unWithdrawn <> 0 then
+              Status := 0;
+            if Health = 100 then
+              Status := Status and not usRecover;
+            if (Master >= 0) or UnitExhausted(uix) then
+              Status := Status and not usWaiting
+            else
+              Status := Status or usWaiting;
+            CheckToldNoReturn(uix);
+            if Status and usGoto <> 0 then
+            begin { continue multi-turn goto }
+              SetUnFocus(uix);
+              SetTroopLoc(Loc);
+              FocusOnLoc(TroopLoc, flRepaintPanel or flImmUpdate);
+              if Status shr 16 = $7FFF then
+                MoveResult := GetMoveAdvice(UnFocus, maNextCity,
+                  MoveAdviceData)
+              else
+                MoveResult := GetMoveAdvice(UnFocus, Status shr 16,
+                  MoveAdviceData);
+              if MoveResult >= rExecuted then
+              begin // !!! Shinkansen
+                MoveResult := eOK;
+                ok := true;
+                for i := 0 to MoveAdviceData.nStep - 1 do
+                begin
+                  Loc1 := dLoc(Loc, MoveAdviceData.dx[i],
+                    MoveAdviceData.dy[i]);
+                  if (MyMap[Loc1] and (fCity or fOwned) = fCity)
+                  // don't capture cities during auto move
+                    or (MyMap[Loc1] and (fUnit or fOwned) = fUnit) then
+                  // don't attack during auto move
                   begin
-                    Loc1 := dLoc(Loc, MoveAdviceData.dx[i],
-                      MoveAdviceData.dy[i]);
-                    if (MyMap[Loc1] and (fCity or fOwned) = fCity)
-                    // don't capture cities during auto move
-                      or (MyMap[Loc1] and (fUnit or fOwned) = fUnit) then
-                    // don't attack during auto move
+                    ok := false;
+                    Break
+                  end
+                  else
+                  begin
+                    if (Loc1 = MoveAdviceData.ToLoc) or
+                      (MoveAdviceData.ToLoc = maNextCity) and
+                      (MyMap[dLoc(Loc, MoveAdviceData.dx[i],
+                      MoveAdviceData.dy[i])] and fCity <> 0) then
+                      MoveOptions := muAutoNoWait
+                    else
+                      MoveOptions := 0;
+                    MoveResult := MoveUnit(MoveAdviceData.dx[i],
+                      MoveAdviceData.dy[i], MoveOptions);
+                    if (MoveResult < rExecuted) or (MoveResult = eEnemySpotted)
+                    then
                     begin
                       ok := false;
                       Break
-                    end
-                    else
-                    begin
-                      if (Loc1 = MoveAdviceData.ToLoc) or
-                        (MoveAdviceData.ToLoc = maNextCity) and
-                        (MyMap[dLoc(Loc, MoveAdviceData.dx[i],
-                        MoveAdviceData.dy[i])] and fCity <> 0) then
-                        MoveOptions := muAutoNoWait
-                      else
-                        MoveOptions := 0;
-                      MoveResult := MoveUnit(MoveAdviceData.dx[i],
-                        MoveAdviceData.dy[i], MoveOptions);
-                      if (MoveResult < rExecuted) or (MoveResult = eEnemySpotted)
-                      then
-                      begin
-                        ok := false;
-                        Break
-                      end;
-                    end
-                  end;
-                  Stop := not ok or (Loc = MoveAdviceData.ToLoc) or
-                    (MoveAdviceData.ToLoc = maNextCity) and
-                    (MyMap[Loc] and fCity <> 0)
-                end
-                else
-                begin
-                  MoveResult := eOK;
-                  Stop := true;
+                    end;
+                  end
                 end;
-
-                if MoveResult <> eDied then
-                  if Stop then
-                    Status := Status and ($FFFF - usGoto)
-                  else
-                    Status := Status and not usWaiting;
+                Stop := not ok or (Loc = MoveAdviceData.ToLoc) or
+                  (MoveAdviceData.ToLoc = maNextCity) and
+                  (MyMap[Loc] and fCity <> 0)
+              end
+              else
+              begin
+                MoveResult := eOK;
+                Stop := true;
               end;
 
-              if Status and (usEnhance or usGoto) = usEnhance then
-              // continue terrain enhancement
-              begin
-                MoveResult := ProcessEnhancement(uix, MyData.EnhancementJobs);
-                if MoveResult <> eDied then
-                  if MoveResult = eJobDone then
-                    Status := Status and not usEnhance
-                  else
-                    Status := Status and not usWaiting;
-              end
+              if MoveResult <> eDied then
+                if Stop then
+                  Status := Status and ($FFFF - usGoto)
+                else
+                  Status := Status and not usWaiting;
             end;
-    end; // ClientMode=cTurn
 
-    HaveStrategyAdvice := false;
-    // (GameMode<>cMovie) and not supervising
-    // and AdvisorDlg.HaveStrategyAdvice;
-    GoOnPhase := true;
-    if supervising or (GameMode = cMovie) then
+            if Status and (usEnhance or usGoto) = usEnhance then
+            // continue terrain enhancement
+            begin
+              MoveResult := ProcessEnhancement(uix, MyData.EnhancementJobs);
+              if MoveResult <> eDied then
+                if MoveResult = eJobDone then
+                  Status := Status and not usEnhance
+                else
+                  Status := Status and not usWaiting;
+            end
+          end;
+  end; // ClientMode=cTurn
+
+  HaveStrategyAdvice := false;
+  // (GameMode<>cMovie) and not supervising
+  // and AdvisorDlg.HaveStrategyAdvice;
+  GoOnPhase := true;
+  if supervising or (GameMode = cMovie) then
+  begin
+    SetTroopLoc(-1);
+    PaintAll
+  end { supervisor }
+  { else if (ClientMode=cTurn) and (MyRO.Turn=0) then
     begin
-      SetTroopLoc(-1);
-      PaintAll
-    end { supervisor }
-    { else if (ClientMode=cTurn) and (MyRO.Turn=0) then
-      begin
-      SetUnFocus(0);
-      ZoomToCity(MyCity[0].Loc)
-      end }
+    SetUnFocus(0);
+    ZoomToCity(MyCity[0].Loc)
+    end }
+  else
+  begin
+    if ClientMode >= scContact then
+      SetUnFocus(-1)
     else
+      NextUnit(-1, false);
+    if UnFocus < 0 then
     begin
-      if ClientMode >= scContact then
-        SetUnFocus(-1)
-      else
-        NextUnit(-1, false);
-      if UnFocus < 0 then
-      begin
-        UnStartLoc := -1;
-        if IsMultiPlayerGame or (ClientMode = cResume) then
-          if MyRO.nCity > 0 then
-            FocusOnLoc(MyCity[0].Loc)
-          else
-            FocusOnLoc(G.lx * G.ly div 2);
-        SetTroopLoc(-1);
-        PanelPaint
-      end;
-      if ShowCityList then
-        ListDlg.ShowNewContent(wmPersistent, kCityEvents);
+      UnStartLoc := -1;
+      if IsMultiPlayerGame or (ClientMode = cResume) then
+        if MyRO.nCity > 0 then
+          FocusOnLoc(MyCity[0].Loc)
+        else
+          FocusOnLoc(G.lx * G.ly div 2);
+      SetTroopLoc(-1);
+      PanelPaint
     end;
-  end; { InitTurn }
+    if ShowCityList then
+      ListDlg.ShowNewContent(wmPersistent, kCityEvents);
+  end;
+end;
 
+procedure TMainScreen.Client(Command, NewPlayer: integer; var Data);
 var
   i, j, p1, mix, ToLoc, AnimationSpeed, ShowMoveDomain, cix, ecix: integer;
   Color: TColor;
@@ -2418,8 +2422,7 @@ var
   TribeInfo: TTribeInfo;
   mi: TModelInfo;
   SkipTurn, IsAlpine, IsTreatyDeal: boolean;
-
-begin { >>>client }
+begin
   case Command of
     cTurn, cResume, cContinue, cMovieTurn, scContact, scDipStart .. scDipBreak:
       begin
@@ -3391,7 +3394,7 @@ begin { >>>client }
               Tribe[NewPlayer].ModelName[mix] := NewName;
       end
   end
-end; { <<<client }
+end;
 
 { *** main part *** }
 
