@@ -35,10 +35,12 @@ procedure Sprite(Canvas: TCanvas; HGr, xDst, yDst, Width, Height, xGr, yGr: inte
 procedure Sprite(dst: TBitmap; HGr, xDst, yDst, Width, Height, xGr, yGr: integer);
   overload;
 procedure MakeBlue(dst: TBitmap; x, y, Width, Height: Integer);
-procedure ImageOp_B(dst, Src: TBitmap; xDst, yDst, xSrc, ySrc, w, h: integer);
+procedure ImageOp_B(dst, Src: TBitmap; xDst, yDst, xSrc, ySrc, Width, Height: Integer);
 procedure ImageOp_BCC(dst, Src: TBitmap;
-  xDst, yDst, xSrc, ySrc, Width, Height, Color1, Color2: integer);
-procedure ImageOp_CCC(bmp: TBitmap; x, y, w, h, Color0, Color1, Color2: integer);
+  xDst, yDst, xSrc, ySrc, Width, Height, Color1, Color2: Integer);
+procedure ImageOp_CBC(Dst, Src: TBitmap; xDst, yDst, xSrc, ySrc, Width, Height,
+  Color0, Color2: Integer);
+procedure ImageOp_CCC(bmp: TBitmap; x, y, w, h, Color0, Color1, Color2: Integer);
 function BitBltCanvas(DestCanvas: TCanvas; X, Y, Width, Height: Integer;
   SrcCanvas: TCanvas; XSrc, YSrc: Integer; Rop: DWORD = SRCCOPY): Boolean; overload;
 function BitBltCanvas(Dest: TCanvas; DestRect: TRect;
@@ -554,7 +556,7 @@ begin
   Dst.EndUpdate;
 end;
 
-procedure ImageOp_B(dst, Src: TBitmap; xDst, yDst, xSrc, ySrc, w, h: Integer);
+procedure ImageOp_B(dst, Src: TBitmap; xDst, yDst, xSrc, ySrc, Width, Height: Integer);
 // Src is template
 // X channel = background amp (old Dst content), 128=original brightness
 var
@@ -566,28 +568,28 @@ begin
   //Assert(Src.PixelFormat = pf8bit);
   Assert(dst.PixelFormat = pf24bit);
   if xDst < 0 then begin
-    w := w + xDst;
+    Width := Width + xDst;
     xSrc := xSrc - xDst;
     xDst := 0;
   end;
   if yDst < 0 then begin
-    h := h + yDst;
+    Height := Height + yDst;
     ySrc := ySrc - yDst;
     yDst := 0;
   end;
-  if xDst + w > dst.Width then
-    w := dst.Width - xDst;
-  if yDst + h > dst.Height then
-    h := dst.Height - yDst;
-  if (w < 0) or (h < 0) then
+  if xDst + Width > dst.Width then
+    Width := dst.Width - xDst;
+  if yDst + Height > dst.Height then
+    Height := dst.Height - yDst;
+  if (Width < 0) or (Height < 0) then
     exit;
 
   dst.BeginUpdate;
   Src.BeginUpdate;
   PixelDst := PixelPointer(Dst, xDst, yDst);
   PixelSrc := PixelPointer(Src, xSrc, ySrc);
-  for Y := 0 to h - 1 do begin
-    for X := 0 to w - 1 do  begin
+  for Y := 0 to Height - 1 do begin
+    for X := 0 to Width - 1 do  begin
       Brightness := PixelSrc.Pixel^.B; // One byte for 8-bit color
       test := (PixelDst.Pixel^.R * Brightness) shr 7;
       if test >= 256 then
@@ -615,14 +617,15 @@ begin
 end;
 
 procedure ImageOp_BCC(dst, Src: TBitmap; xDst, yDst, xSrc, ySrc, Width, Height,
-  Color1, Color2: integer);
+  Color1, Color2: Integer);
 // Src is template
 // B channel = background amp (old Dst content), 128=original brightness
 // G channel = Color1 amp, 128=original brightness
 // R channel = Color2 amp, 128=original brightness
 var
-  ix, iy, amp1, amp2, trans, Value: integer;
-  SrcPixel, DstPixel: TPixelPointer;
+  ix, iy, amp1, amp2, trans, Value: Integer;
+  SrcPixel: TPixelPointer;
+  DstPixel: TPixelPointer;
 begin
   if xDst < 0 then begin
     Width := Width + xDst;
@@ -672,6 +675,49 @@ begin
   end;
   Src.EndUpdate;
   dst.EndUpdate;
+end;
+
+procedure ImageOp_CBC(Dst, Src: TBitmap; xDst, yDst, xSrc, ySrc, Width, Height,
+  Color0, Color2: Integer);
+// Src is template
+// B channel = Color0 amp
+// G channel = background amp (old Dst content), 128=original brightness
+// R channel = Color2 amp
+var
+  ix, iy, amp0, amp1, trans, Value: integer;
+  SrcPixel: TPixelPointer;
+  DstPixel: TPixelPointer;
+begin
+  Src.BeginUpdate;
+  Dst.BeginUpdate;
+  SrcPixel := PixelPointer(Src, xSrc, ySrc);
+  DstPixel := PixelPointer(Dst, xDst, yDst);
+  for iy := 0 to Height - 1 do begin
+    for ix := 0 to Width - 1 do begin
+      trans := SrcPixel.Pixel^.B * 2; // green channel = transparency
+      amp0 := SrcPixel.Pixel^.G * 2;
+      amp1 := SrcPixel.Pixel^.R * 2;
+      if trans <> $FF then begin
+        Value := (DstPixel.Pixel^.B * trans + (Color2 shr 16 and $FF) * amp1 +
+          (Color0 shr 16 and $FF) * amp0) div $FF;
+        DstPixel.Pixel^.B := Min(Value, 255);
+
+        Value := (DstPixel.Pixel^.G * trans + (Color2 shr 8 and $FF) * amp1 +
+          (Color0 shr 8 and $FF) * amp0) div $FF;
+        DstPixel.Pixel^.G := Min(Value, 255);
+
+        Value := (DstPixel.Pixel^.R * trans + (Color2 and $FF) * amp1 +
+          (Color0 and $FF) * amp0) div $FF;
+        DstPixel.Pixel^.R := Min(Value, 255);
+      end;
+      SrcPixel.NextPixel;
+      DstPixel.NextPixel;
+    end;
+    SrcPixel.NextLine;
+    DstPixel.NextLine;
+  end;
+  Src.EndUpdate;
+  Dst.EndUpdate;
 end;
 
 procedure ImageOp_CCC(bmp: TBitmap; x, y, w, h, Color0, Color1, Color2: Integer);

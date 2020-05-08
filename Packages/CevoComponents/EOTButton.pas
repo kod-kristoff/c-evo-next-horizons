@@ -48,58 +48,6 @@ begin
   RegisterComponents('C-evo', [TEOTButton]);
 end;
 
-procedure ImageOp_CBC(Dst, Src: TBitmap; xDst, yDst, xSrc, ySrc, w, h, Color0,
-  Color2: integer);
-// Src is template
-// B channel = Color0 amp
-// G channel = background amp (old Dst content), 128=original brightness
-// R channel = Color2 amp
-type
-  TPixel = array [0 .. 2] of Byte;
-var
-  ix, iy, amp0, amp1, trans, Value: integer;
-  SrcLine, DstLine: ^TPixel;
-begin
-  Src.BeginUpdate;
-  Dst.BeginUpdate;
-  for iy := 0 to h - 1 do
-  begin
-    SrcLine := Src.ScanLine[ySrc + iy] + xSrc * (Src.RawImage.Description.BitsPerPixel shr 3);
-    DstLine := Dst.ScanLine[yDst + iy] + xDst * (Dst.RawImage.Description.BitsPerPixel shr 3);
-    for ix := 0 to w - 1 do
-    begin
-      trans := SrcLine[0] * 2; // green channel = transparency
-      amp0 := SrcLine[1] * 2;
-      amp1 := SrcLine[2] * 2;
-      if trans <> $FF then
-      begin
-        Value := (DstLine[0] * trans + (Color2 shr 16 and $FF) * amp1
-          + (Color0 shr 16 and $FF) * amp0) div $FF;
-        if Value < 256 then
-          DstLine[0] := Value
-        else
-          DstLine[0] := 255;
-        Value := (DstLine[1] * trans + (Color2 shr 8 and $FF) * amp1
-          + (Color0 shr 8 and $FF) * amp0) div $FF;
-        if Value < 256 then
-          DstLine[1] := Value
-        else
-          DstLine[1] := 255;
-        Value := (DstLine[2] * trans + (Color2 and $FF) * amp1 +
-          (Color0 and $FF) * amp0) div $FF;
-        if Value < 256 then
-          DstLine[2] := Value
-        else
-          DstLine[2] := 255;
-      end;
-      SrcLine := Pointer(SrcLine) + (Src.RawImage.Description.BitsPerPixel shr 3);
-      DstLine := Pointer(DstLine) + (Dst.RawImage.Description.BitsPerPixel shr 3);
-    end;
-  end;
-  Src.EndUpdate;
-  Dst.EndUpdate;
-end;
-
 constructor TEOTButton.Create;
 begin
   inherited;
