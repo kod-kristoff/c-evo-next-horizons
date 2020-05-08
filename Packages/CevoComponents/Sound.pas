@@ -11,10 +11,15 @@ uses
 type
   TPlayStyle = (psAsync, psSync);
 
+  { TSoundPlayer }
+
   TSoundPlayer = class(TForm)
   private
     {$IFDEF WINDOWS}
+    PrevWndProc: WNDPROC;
     procedure OnMCI(var m: TMessage); message MM_MCINOTIFY;
+  public
+    constructor Create(AOwner: TComponent); override;
     {$ENDIF}
   end;
 
@@ -22,8 +27,8 @@ type
 
   TSound = class
   private
-    PlayCommand: string;
     {$IFDEF LINUX}
+    PlayCommand: string;
     SoundPlayerAsyncProcess: TAsyncProcess;
     SoundPlayerSyncProcess: TProcess;
     {$ENDIF}
@@ -81,7 +86,7 @@ begin
     OpenParm.lpstrDeviceType := 'WaveAudio';
     OpenParm.lpstrElementName := PChar(FFileName);
     mciSendCommand(0, MCI_Open, MCI_WAIT or MCI_OPEN_ELEMENT or
-      MCI_OPEN_SHAREABLE, integer(@OpenParm));
+      MCI_OPEN_SHAREABLE, DWORD_PTR(@OpenParm));
     FDeviceID := OpenParm.wDeviceID;
   end
   {$ENDIF}
@@ -238,13 +243,34 @@ begin
 end;
 
 {$IFDEF WINDOWS}
+function WndCallback(Ahwnd: HWND; uMsg: UINT; wParam: WParam; lParam: LParam):LRESULT; stdcall;
+var
+  Message: TMessage;
+begin
+  if (uMsg = MM_MCINOTIFY) then begin
+    Message.msg := uMsg;
+    Message.wParam := wParam;
+    Message.lParam := lParam;
+    SoundPlayer.OnMCI(Message);
+  end;
+  Result := CallWindowProc(SoundPlayer.PrevWndProc, Ahwnd, uMsg, WParam, LParam);
+end;
+
 procedure TSoundPlayer.OnMCI(var m: TMessage);
 begin
-  if (m.wParam = MCI_Notify_Successful) and (PlayingSound <> nil) then
+  if (m.wParam = MCI_NOTIFY_SUCCESSFUL) and (PlayingSound <> nil) then
   begin
     PlayingSound.Reset;
     PlayingSound := nil;
   end;
+end;
+
+constructor TSoundPlayer.Create(AOwner: TComponent);
+begin
+  inherited;
+  // MM_MCINOTIFY is not handled by LCL, fallback to low lever handling
+  // https://wiki.lazarus.freepascal.org/Win32/64_Interface#Processing_non-user_messages_in_your_window
+  PrevWndProc := Windows.WNDPROC(SetWindowLongPtr(Self.Handle, GWL_WNDPROC, PtrInt(@WndCallback)));
 end;
 {$ENDIF}
 
@@ -273,13 +299,10 @@ begin
 end;
 
 function Play(Item: string; Index: Integer = -1): Boolean;
-{$IFNDEF DEBUG}
 var
   WavFileName: string;
-{$ENDIF}
 begin
   Result := False;
-{$IFNDEF DEBUG}
   if (Sounds = nil) or (SoundMode = smOff) or (Item = '') then
   begin
     Result := True;
@@ -291,23 +314,18 @@ begin
   if Result then
     // SndPlaySound(pchar(GetSoundsDir + DirectorySeparator + WavFileName + '.wav'), SND_ASYNC)
     PlaySound(GetSoundsDir + DirectorySeparator + WavFileName);
-{$ENDIF}
 end;
 
 procedure PreparePlay(Item: string; Index: Integer = -1);
-{$IFNDEF DEBUG}
 var
   WavFileName: string;
-{$ENDIF}
 begin
-{$IFNDEF DEBUG}
   if (Sounds = nil) or (SoundMode = smOff) or (Item = '') then
     Exit;
   WavFileName := Sounds.Lookup(Item, Index);
   Assert(WavFileName[1] <> '[');
   if (WavFileName <> '') and (WavFileName[1] <> '[') and (WavFileName <> '*') then
     PrepareSound(GetSoundsDir + DirectorySeparator + WavFileName);
-{$ENDIF}
 end;
 
 procedure UnitInit;
