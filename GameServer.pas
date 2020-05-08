@@ -1368,16 +1368,13 @@ begin
   SavePath := Path;
   LogFileName := FileName;
   MapFileName := Map;
-  if FastContact then
-  begin
+  {$IFDEF FastContact}
     lx := 24;
     ly := 42;
-  end
-  else
-  begin
+  {$ELSE}
     lx := Newlx;
-    ly := Newly
-  end;
+    ly := Newly;
+  {$ENDIF}
   MapSize := lx * ly;
   if MapFileName <> '' then
     LandMass := 0

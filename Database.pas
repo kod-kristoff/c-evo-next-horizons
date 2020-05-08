@@ -10,7 +10,7 @@ uses
 
 const
   // additional test flags
-  FastContact = false; { extra small world with railroad everywhere }
+  //{$DEFINE FastContact} { extra small world with railroad everywhere }
 
   neumax = 4096;
   necmax = 1024;
@@ -1656,10 +1656,12 @@ procedure InitGame;
 var
   i, p, p1, uix, Loc1: integer;
 begin
-  if FastContact then { Railroad everywhere }
+  {$IFDEF FastContact}
+    { Railroad everywhere }
     for Loc1 := 0 to MapSize - 1 do
       if RealMap[Loc1] and fTerrain >= fGrass then
         RealMap[Loc1] := RealMap[Loc1] or fRR;
+  {$ENDIF}
 
   { !!!for Loc1:=0 to MapSize-1 do
     if RealMap[Loc1] and fterrain>=fGrass then

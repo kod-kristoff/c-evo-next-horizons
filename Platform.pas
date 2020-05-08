@@ -6,11 +6,10 @@ interface
 
 uses
   {$IFDEF Windows}Windows,{$ENDIF}
-  {$IFDEF Linux}BaseUnix, UnixUtil, Unix,{$ENDIF}
+  {$IFDEF Linux}Unix,{$ENDIF}
   Classes, SysUtils, DateUtils, SyncObjs;
 
 function NowPrecise: TDateTime;
-function GetLogicalProcessorCount: Integer;
 
 implementation
 
@@ -47,18 +46,6 @@ begin
   //finally
     //NowPreciseLock.Release;
   //end;
-end;
-
-function GetLogicalProcessorCount: Integer;
-{$IFDEF Windows}
-var
-  SystemInfo: _SYSTEM_INFO;
-  {$ENDIF}
-begin
-  {$IFDEF Windows}
-  GetSystemInfo(SystemInfo);
-  Result := SystemInfo.dwNumberOfProcessors;
-  {$ENDIF}
 end;
 
 initialization

@@ -6,7 +6,7 @@ uses
   SysUtils, Classes, Graphics, Controls, Forms, fgl, FileUtil,
   StringTables, Directories
   {$IFDEF WINDOWS}, MMSystem, Windows{$ENDIF}
-  {$IFDEF LINUX}, Messages, Process, AsyncProcess{$ENDIF};
+  {$IFDEF LINUX}, Process, AsyncProcess{$ENDIF};
 
 type
   TPlayStyle = (psAsync, psSync);
@@ -106,7 +106,7 @@ begin
   FreeAndNil(SoundPlayerSyncProcess);
   FreeAndNil(SoundPlayerAsyncProcess);
   {$ENDIF}
-  inherited Destroy;
+  inherited;
 end;
 
 function TSound.GetNonWindowsPlayCommand: string;
