@@ -89,7 +89,7 @@ var
 implementation
 
 uses
-  Select, Messg, MessgEx, Help, Tribes, Directories, Math, PixelPointer, Sound;
+  Select, Messg, MessgEx, Help, Tribes, Directories, Math, UPixelPointer, Sound;
 
 {$R *.lfm}
 
@@ -442,7 +442,7 @@ procedure TCityDlg.OffscreenPaint;
     PixelPtr: TPixelPointer;
   begin
     Offscreen.BeginUpdate;
-    PixelPtr.Init(Offscreen, X, Y);
+    PixelPtr := PixelPointer(Offscreen, X, Y);
     for YY := 0 to H - 1 do begin
       for XX := 0 to W - 1 do begin
         Gray := (Integer(PixelPtr.Pixel^.B) + Integer(PixelPtr.Pixel^.G) +

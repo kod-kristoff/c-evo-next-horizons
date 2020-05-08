@@ -126,7 +126,7 @@ var
 implementation
 
 uses
-  Directories, ClientTools, Term, Tribes, Inp, Messg, PixelPointer, Global;
+  Directories, ClientTools, Term, Tribes, Inp, Messg, UPixelPointer, Global;
 
 {$R *.lfm}
 
@@ -458,11 +458,11 @@ begin
   ySrc := (iix div 7 + 1) * ySizeBig;
   for y := 0 to ySizeBig * 2 - 1 do
     if ((y0 + y) >= 0) and ((y0 + y) < InnerHeight) then begin
-      PaintPtr.Init(OffScreen, 0, y0 + y);
-      CoalPtr.Init(Templates, 0, yCoal + y);
+      PaintPtr := PixelPointer(OffScreen, 0, y0 + y);
+      CoalPtr := PixelPointer(Templates, 0, yCoal + y);
       for dy := -1 to 1 do
         if ((Max(y + dy, 0) shr 1) >= 0) and ((Max(y + dy, 0) shr 1) < ySizeBig) then
-          ImpPtr[dy].Init(BigImp, 0, ySrc + (Max(y + dy, 0) shr 1));
+          ImpPtr[dy] := PixelPointer(BigImp, 0, ySrc + (Max(y + dy, 0) shr 1));
       for x := 0 to xSizeBig * 2 - 1 do begin
         sum := 0;
         for dx := -1 to 1 do begin

@@ -5,7 +5,7 @@ interface
 
 uses
   Protocol, ClientTools, ScreenTools, Tribes, {$IFNDEF SCR}Term, {$ENDIF}
-  LCLIntf, LCLType, SysUtils, Classes, Graphics, PixelPointer;
+  LCLIntf, LCLType, SysUtils, Classes, Graphics, UPixelPointer;
 
 type
   TInitEnemyModelEvent = function(emix: integer): boolean;
@@ -374,7 +374,7 @@ begin
   for ySrc := 0 to TerrainIconLines - 1 do
   begin
     for i := 0 to yyt * 3 - 1 do
-      MaskLine[i].Init(Mask24, 0, 1 + ySrc * (yyt * 3 + 1) + i);
+      MaskLine[i] := PixelPointer(Mask24, 0, 1 + ySrc * (yyt * 3 + 1) + i);
     for xSrc := 0 to 9 - 1 do
     begin
       i := ySrc * 9 + xSrc;
@@ -1016,7 +1016,7 @@ var
           Borders.BeginUpdate;
           for dy := 0 to yyt * 2 - 1 do
           begin
-            PixelPtr.Init(Borders, 0, p1 * (yyt * 2) + dy);
+            PixelPtr := PixelPointer(Borders, 0, p1 * (yyt * 2) + dy);
             for dx := 0 to xxt * 2 - 1 do begin
               if PixelPtr.Pixel^.B = 99 then begin
                 PixelPtr.Pixel^.B := Tribe[p1].Color shr 16 and $FF;
@@ -1339,7 +1339,7 @@ var
 begin
   FOutput.BeginUpdate;
   for y := y0 to y1 - 1 do begin
-    Line.Init(FOutput, 0, y);
+    Line := PixelPointer(FOutput, 0, y);
     y_n := (y - ym) / yyt;
     if abs(y_n) < rShade then begin
       // Darken left and right parts of elipsis

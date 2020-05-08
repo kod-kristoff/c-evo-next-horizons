@@ -72,7 +72,7 @@ procedure ContextMessage(SimpleText, SoundItem: string;
 implementation
 
 uses
-  ClientTools, BaseWin, Term, Help, UnitStat, Tribes, PixelPointer,
+  ClientTools, BaseWin, Term, Help, UnitStat, Tribes, UPixelPointer,
   IsoEngine, Diagram, Sound;
 
 {$R *.lfm}
@@ -245,7 +245,7 @@ begin
     BigImp.BeginUpdate;
     for iy := 0 to 39 do begin
       for ix := 0 to 55 do begin
-        SrcPtr.Init(BigImp, ix + xIcon, iy + yIcon);
+        SrcPtr := PixelPointer(BigImp, ix + xIcon, iy + yIcon);
         xR := ix * (37 + iy * 5 / 40) / 56;
         xDst := Trunc(xR);
         xR := Frac(xR);

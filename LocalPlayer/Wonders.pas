@@ -37,7 +37,7 @@ var
 implementation
 
 uses
-  Term, ClientTools, Help, Tribes, PixelPointer;
+  Term, ClientTools, Help, Tribes, UPixelPointer;
 
 {$R *.lfm}
 
@@ -105,8 +105,8 @@ var
   Line: array [0..1] of TPixelPointer;
 begin
   Offscreen.BeginUpdate;
-  Line[0].Init(Offscreen);
-  Line[1].Init(Offscreen);
+  Line[0] := PixelPointer(Offscreen);
+  Line[1] := PixelPointer(Offscreen);
   for Y := 0 to 127 do begin
     for X := 0 to 179 do begin
       r := X * X * (32 * 32) + Y * Y * (45 * 45);
@@ -143,8 +143,8 @@ begin
   y0Dst := ClientHeight div 2 - ySizeBig div 2 + RingPosition[i].Y;
   x0Src := (i mod 7) * xSizeBig;
   y0Src := (i div 7 + SystemIconLines) * ySizeBig;
-  Src.Init(BigImp, x0Src, y0Src);
-  Dst.Init(Offscreen, x0Dst, y0Dst);
+  Src := PixelPointer(BigImp, x0Src, y0Src);
+  Dst := PixelPointer(Offscreen, x0Dst, y0Dst);
   for Y := 0 to ySizeBig - 1 do begin
     for X := 0 to xSizeBig - 1 do begin
       Darken := ((255 - Src.Pixel^.B) * 3 + (255 - Src.Pixel^.G) *

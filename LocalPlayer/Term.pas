@@ -480,7 +480,7 @@ implementation
 
 uses
   Directories, IsoEngine, CityScreen, Draft, MessgEx, Select, CityType, Help,
-  UnitStat, Log, Diagram, NatStat, Wonders, Enhance, Nego, PixelPointer, Sound,
+  UnitStat, Log, Diagram, NatStat, Wonders, Enhance, Nego, UPixelPointer, Sound,
   Battle, Rates, TechTree, Registry, Global;
 
 {$R *.lfm}
@@ -576,7 +576,7 @@ begin
           (ySizeBig - 2 * cut) - y * ySizeSmall;
         if ydivider > ySizeSmall then
           ydivider := ySizeSmall;
-        PixelPtr.Init(BigImp, 0, cut + iy * ySizeBig + y);
+        PixelPtr := PixelPointer(BigImp, 0, cut + iy * ySizeBig + y);
         for x := 0 to xSizeBig - 1 do
         begin
           ir := ix * xSizeSmall + iy * nx * ySizeSmall + x *
@@ -609,7 +609,7 @@ begin
   SmallImp.SetSize(nx, ny);
   SmallImp.BeginUpdate;
   for y := 0 to ny - 1 do begin
-    PixelPtr.Init(SmallImp, 0, y);
+    PixelPtr := PixelPointer(SmallImp, 0, y);
     for x := 0 to nx - 1 do
       for ch := 0 to 2 do begin
         sum := 0;
@@ -4074,8 +4074,8 @@ begin
     FillRect(Rect(0, 0, Mini.width, Mini.height));
   end;
   Mini.BeginUpdate;
-  MiniPixel.Init(Mini);
-  PrevMiniPixel.Init(Mini);
+  MiniPixel := PixelPointer(Mini);
+  PrevMiniPixel := PixelPointer(Mini);
   for y := 0 to G.ly - 1 do
   begin
     for x := 0 to G.lx - 1 do

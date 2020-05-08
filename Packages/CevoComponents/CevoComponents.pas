@@ -9,7 +9,7 @@ interface
 
 uses
   Area, ButtonA, ButtonB, ButtonC, ButtonN, EOTButton, ButtonBase, DrawDlg, 
-  Sound, BaseWin, PixelPointer, LazarusPackageIntf;
+  Sound, BaseWin, UPixelPointer, LazarusPackageIntf;
 
 implementation
 

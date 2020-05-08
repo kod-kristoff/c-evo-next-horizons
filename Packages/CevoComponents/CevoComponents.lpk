@@ -98,8 +98,8 @@
         <UnitName Value="BaseWin"/>
       </Item13>
       <Item14>
-        <Filename Value="PixelPointer.pas"/>
-        <UnitName Value="PixelPointer"/>
+        <Filename Value="UPixelPointer.pas"/>
+        <UnitName Value="UPixelPointer"/>
       </Item14>
     </Files>
     <RequiredPkgs Count="2">

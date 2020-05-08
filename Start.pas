@@ -164,7 +164,7 @@ var
 implementation
 
 uses
-  Global, Directories, Direct, ScreenTools, Inp, Back, Locale, PixelPointer;
+  Global, Directories, Direct, ScreenTools, Inp, Back, Locale, UPixelPointer;
 
 {$R *.lfm}
 
@@ -353,7 +353,7 @@ begin
   Bitmap.PixelFormat := pf24bit;
   Bitmap.SetSize(Size.X * 2, Size.Y);
   Bitmap.BeginUpdate;
-  MiniPixel.Init(Bitmap);
+  MiniPixel := PixelPointer(Bitmap);
   for y := 0 to Size.Y - 1 do begin
     for x := 0 to Size.X - 1 do begin
       for i := 0 to 1 do begin
@@ -385,8 +385,8 @@ begin
   Bitmap.SetSize(Size.X * 2, Size.Y);
   if Mode = mmPicture then begin
     Bitmap.BeginUpdate;
-    MiniPixel.Init(Bitmap);
-    PrevMiniPixel.Init(Bitmap, 0, -1);
+    MiniPixel := PixelPointer(Bitmap);
+    PrevMiniPixel := PixelPointer(Bitmap, 0, -1);
     for y := 0 to Size.Y - 1 do begin
       for x := 0 to Size.X - 1 do begin
         for i := 0 to 1 do begin

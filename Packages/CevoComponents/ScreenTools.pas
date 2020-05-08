@@ -207,7 +207,7 @@ procedure InitGammaLookupTable;
 implementation
 
 uses
-  Directories, Sound, PixelPointer;
+  Directories, Sound, UPixelPointer;
 
 var
   {$IFDEF WINDOWS}
@@ -359,7 +359,7 @@ var
   X, Y: Integer;
 begin
   Bitmap.BeginUpdate;
-  PixelPtr.Init(Bitmap);
+  PixelPtr := PixelPointer(Bitmap);
   for Y := 0 to Bitmap.Height - 1 do begin
     for X := 0 to Bitmap.Width - 1 do begin
       PixelPtr.Pixel^ := ApplyGammaToPixel(PixelPtr.Pixel^);
@@ -376,8 +376,8 @@ var
   X, Y: Integer;
 begin
   //Dst.SetSize(Src.Width, Src.Height);
-  SrcPtr.Init(Src);
-  DstPtr.Init(Dst);
+  SrcPtr := PixelPointer(Src);
+  DstPtr := PixelPointer(Dst);
   for Y := 0 to Src.Height - 1 do begin
     for X := 0 to Src.Width - 1 do begin
       DstPtr.Pixel^.B := SrcPtr.Pixel^.B;
@@ -500,8 +500,8 @@ begin
 
     GrExt[nGrExt].Data.BeginUpdate;
     GrExt[nGrExt].Mask.BeginUpdate;
-    DataPixel.Init(GrExt[nGrExt].Data);
-    MaskPixel.Init(GrExt[nGrExt].Mask);
+    DataPixel := PixelPointer(GrExt[nGrExt].Data);
+    MaskPixel := PixelPointer(GrExt[nGrExt].Mask);
     for y := 0 to Source.Height - 1 do begin
       for x := 0 to xmax - 1 do begin
         OriginalColor := DataPixel.Pixel^.ARGB and $FFFFFF;
@@ -541,7 +541,7 @@ var
   PixelPtr: TPixelPointer;
 begin
   Dst.BeginUpdate;
-  PixelPtr.Init(Dst, X, Y);
+  PixelPtr := PixelPointer(Dst, X, Y);
   for yy := 0 to Height - 1 do begin
     for xx := 0 to Width - 1 do begin
       PixelPtr.Pixel^.B := PixelPtr.Pixel^.B div 2;
@@ -584,8 +584,8 @@ begin
 
   dst.BeginUpdate;
   Src.BeginUpdate;
-  PixelDst.Init(Dst, xDst, yDst);
-  PixelSrc.Init(Src, xSrc, ySrc);
+  PixelDst := PixelPointer(Dst, xDst, yDst);
+  PixelSrc := PixelPointer(Src, xSrc, ySrc);
   for Y := 0 to h - 1 do begin
     for X := 0 to w - 1 do  begin
       Brightness := PixelSrc.Pixel^.B; // One byte for 8-bit color
@@ -643,8 +643,8 @@ begin
 
   Src.BeginUpdate;
   dst.BeginUpdate;
-  SrcPixel.Init(Src, xSrc, ySrc);
-  DstPixel.Init(Dst, xDst, yDst);
+  SrcPixel := PixelPointer(Src, xSrc, ySrc);
+  DstPixel := PixelPointer(Dst, xDst, yDst);
   for iy := 0 to Height - 1 do begin
     for ix := 0 to Width - 1 do begin
       trans := SrcPixel.Pixel^.B * 2; // green channel = transparency
@@ -686,7 +686,7 @@ begin
   bmp.BeginUpdate;
   assert(bmp.PixelFormat = pf24bit);
   h := y + h;
-  PixelPtr.Init(Bmp, x, y);
+  PixelPtr := PixelPointer(Bmp, x, y);
   while y < h do begin
     for i := 0 to w - 1 do begin
       Red := ((PixelPtr.Pixel^.B * (Color0 and $0000FF) + PixelPtr.Pixel^.G *
@@ -836,7 +836,7 @@ var
   DstPtr: TPixelPointer;
 begin
   dst.BeginUpdate;
-  DstPtr.Init(dst, x0, y0);
+  DstPtr := PixelPointer(dst, x0, y0);
   for y := -GlowRange + 1 to Height - 1 + GlowRange - 1 do begin
     for x := -GlowRange + 1 to Width - 1 + GlowRange - 1 do begin
       DstPtr.SetXY(x, y);
@@ -1432,8 +1432,8 @@ begin
   Dest.BeginUpdate;
   TexWidth := Texture.Width;
   TexHeight := Texture.Height;
-  DstPixel.Init(Dest);
-  SrcPixel.Init(Texture);
+  DstPixel := PixelPointer(Dest);
+  SrcPixel := PixelPointer(Texture);
   for Y := 0 to Dest.Height - 1 do begin
     for X := 0 to Dest.Width - 1 do begin
       if (DstPixel.Pixel^.ARGB and $FFFFFF) = TransparentColor then begin
@@ -1455,7 +1455,7 @@ var
   PicturePixel: TPixelPointer;
 begin
   Bitmap.BeginUpdate;
-  PicturePixel.Init(Bitmap);
+  PicturePixel := PixelPointer(Bitmap);
   for y := 0 to Bitmap.Height - 1 do begin
     for x := 0 to Bitmap.Width - 1 do begin
       PicturePixel.Pixel^.B := Max(PicturePixel.Pixel^.B - Change, 0);
