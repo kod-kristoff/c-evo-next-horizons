@@ -879,7 +879,7 @@ begin
                 LogoBuffer.Canvas, 0, 0);
             end;
         end;
-      inc(y, ActionPitch);
+      Inc(y, ActionPitch);
     end;
   end
   else if Page in [pgStartRandom, pgStartMap] then
@@ -1137,7 +1137,7 @@ end;
 
 procedure TStartDlg.StartBtnClick(Sender: TObject);
 var
-  I, GameCount, MapCount: integer;
+  I, GameCount, MapCount: Integer;
   FileName: string;
   Reg: TRegistry;
 begin
@@ -1472,9 +1472,9 @@ var
   i, j, p1: integer;
   s: string;
   Reg: TRegistry;
-  invalidateTab0: boolean;
+  InvalidateTab0: boolean;
 begin
-  invalidateTab0 := (Page = pgMain) or (NewPage = pgMain);
+  InvalidateTab0 := (Page = pgMain) or (NewPage = pgMain);
   Page := NewPage;
   case Page of
     pgStartRandom, pgStartMap:

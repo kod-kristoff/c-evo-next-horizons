@@ -444,7 +444,7 @@ begin
         Frame(offscreen.Canvas, x - 1, yImp - 1, x + xSizeSmall,
           yImp + ySizeSmall, MainTexture.clBevelLight,
           MainTexture.clBevelShade);
-        bitbltCanvas(offscreen.Canvas, x, yImp, xSizeSmall, ySizeSmall,
+        BitBltCanvas(offscreen.Canvas, x, yImp, xSizeSmall, ySizeSmall,
           SmallImp.Canvas, j mod 7 * xSizeSmall,
           (j + SystemIconLines * 7) div 7 * ySizeSmall);
         inc(x, xSizeSmall + 4)
@@ -563,7 +563,7 @@ begin
                     1 + yyt + 2 * integer(2 + MyMap[Loc] and fTerrain - fForest)
                     * (yyt * 3 + 1));
               end;
-          bitbltCanvas(offscreen.Canvas, xView, yView + 16, 64, 32,
+          BitBltCanvas(offscreen.Canvas, xView, yView + 16, 64, 32,
             Buffer.Canvas, 1, 0);
 
           // show unit, experience and health

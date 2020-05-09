@@ -54,7 +54,7 @@ begin
     begin
       Brush.Color := $0000FF;
       FrameRect(Rect(0, 0, 100, 25))
-    end
+    end;
 end;
 
 procedure TButtonA.SetCaption(Text: string);

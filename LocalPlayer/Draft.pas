@@ -238,22 +238,22 @@ begin
   if ClientHeight > hMainTexture then
   // assemble background from 2 texture tiles
   begin
-    bitbltCanvas(Back.Canvas, 0, 0, ClientWidth, 64,
+    BitBltCanvas(Back.Canvas, 0, 0, ClientWidth, 64,
       MainTexture.Image.Canvas, (wMainTexture - ClientWidth) div 2,
       hMainTexture - 64);
-    bitbltCanvas(Back.Canvas, 0, 64, ClientWidth, ClientHeight - 64,
+    BitBltCanvas(Back.Canvas, 0, 64, ClientWidth, ClientHeight - 64,
       MainTexture.Image.Canvas, (wMainTexture - ClientWidth) div 2,
       0);
   end
   else
-    bitbltCanvas(Back.Canvas, 0, 0, ClientWidth, ClientHeight,
+    BitBltCanvas(Back.Canvas, 0, 0, ClientWidth, ClientHeight,
       MainTexture.Image.Canvas, (wMainTexture - ClientWidth) div 2,
       (hMainTexture - ClientHeight) div 2);
   ImageOp_B(Back, Template, 0, 0, 0, 0, Template.Width, 64);
   ImageOp_B(Back, Template, 0, 64, 0, 64 + Cut, Template.Width,
     Template.Height - 64 - Cut);
 
-  bitbltCanvas(offscreen.Canvas, 0, 0, ClientWidth, ClientHeight,
+  BitBltCanvas(offscreen.Canvas, 0, 0, ClientWidth, ClientHeight,
     Back.Canvas, 0, 0);
 
   offscreen.Canvas.Font.Assign(UniFont[ftCaption]);
