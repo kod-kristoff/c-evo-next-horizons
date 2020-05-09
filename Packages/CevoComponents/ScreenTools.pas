@@ -34,7 +34,8 @@ procedure Sprite(Canvas: TCanvas; HGr, xDst, yDst, Width, Height, xGr, yGr: inte
   overload;
 procedure Sprite(dst: TBitmap; HGr, xDst, yDst, Width, Height, xGr, yGr: integer);
   overload;
-procedure MakeBlue(dst: TBitmap; x, y, Width, Height: Integer);
+procedure MakeBlue(Dst: TBitmap; X, Y, Width, Height: Integer);
+procedure MakeRed(Dst: TBitmap; X, Y, Width, Height: Integer);
 procedure ImageOp_B(dst, Src: TBitmap; xDst, yDst, xSrc, ySrc, Width, Height: Integer);
 procedure ImageOp_BCC(dst, Src: TBitmap;
   xDst, yDst, xSrc, ySrc, Width, Height, Color1, Color2: Integer);
@@ -537,9 +538,9 @@ begin
     GrExt[HGr].Data.Canvas, xGr, yGr);
 end;
 
-procedure MakeBlue(dst: TBitmap; x, y, Width, Height: Integer);
+procedure MakeBlue(Dst: TBitmap; X, Y, Width, Height: Integer);
 var
-  XX, YY: integer;
+  XX, YY: Integer;
   PixelPtr: TPixelPointer;
 begin
   Dst.BeginUpdate;
@@ -549,6 +550,28 @@ begin
       PixelPtr.Pixel^.B := PixelPtr.Pixel^.B div 2;
       PixelPtr.Pixel^.G := PixelPtr.Pixel^.G div 2;
       PixelPtr.Pixel^.R := PixelPtr.Pixel^.R div 2;
+      PixelPtr.NextPixel;
+    end;
+    PixelPtr.NextLine;
+  end;
+  Dst.EndUpdate;
+end;
+
+procedure MakeRed(Dst: TBitmap; X, Y, Width, Height: Integer);
+var
+  XX, YY: Integer;
+  Gray: Integer;
+  PixelPtr: TPixelPointer;
+begin
+  Dst.BeginUpdate;
+  PixelPtr := PixelPointer(Dst, X, Y);
+  for YY := 0 to Height - 1 do begin
+    for XX := 0 to Width - 1 do begin
+      Gray := (Integer(PixelPtr.Pixel^.B) + Integer(PixelPtr.Pixel^.G) +
+        Integer(PixelPtr.Pixel^.R)) * 85 shr 8;
+      PixelPtr.Pixel^.B := 0;
+      PixelPtr.Pixel^.G := 0;
+      PixelPtr.Pixel^.R := Gray; // 255-(255-gray) div 2;
       PixelPtr.NextPixel;
     end;
     PixelPtr.NextLine;

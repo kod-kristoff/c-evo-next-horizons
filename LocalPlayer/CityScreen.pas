@@ -434,29 +434,6 @@ procedure TCityDlg.OffscreenPaint;
         y + yyt - 5, 10, 10, xGr, yGr);
     end;
   end;
-
-  procedure MakeRed(X, Y, W, H: Integer);
-  var
-    XX, YY: Integer;
-    Gray: Integer;
-    PixelPtr: TPixelPointer;
-  begin
-    Offscreen.BeginUpdate;
-    PixelPtr := PixelPointer(Offscreen, X, Y);
-    for YY := 0 to H - 1 do begin
-      for XX := 0 to W - 1 do begin
-        Gray := (Integer(PixelPtr.Pixel^.B) + Integer(PixelPtr.Pixel^.G) +
-        Integer(PixelPtr.Pixel^.R)) * 85 shr 8;
-        PixelPtr.Pixel^.B := 0;
-        PixelPtr.Pixel^.G := 0;
-        PixelPtr.Pixel^.R := Gray; // 255-(255-gray) div 2;
-        PixelPtr.NextPixel;
-      end;
-      PixelPtr.NextLine;
-    end;
-    Offscreen.EndUpdate;
-  end;
-
 var
   line, MessageCount: integer;
 
@@ -560,7 +537,7 @@ begin
 
   if not IsCityAlive then
   begin
-    MakeRed(18, 280, 298, 40);
+    MakeRed(Offscreen, 18, 280, 298, 40);
     if cGov = gAnarchy then
       s := Phrases.Lookup('GOVERNMENT', gAnarchy)
     else { if c.Flags and chCaptured<>0 then }
@@ -696,7 +673,7 @@ begin
         Phrases.Lookup('HAPPINESSPLUS'), Report.HappinessBalance, MainTexture)
     else
     begin
-      MakeRed(xHapp + dxBar - 6, yHapp + 2 * dyBar, wBar + 10, 38);
+      MakeRed(Offscreen, xHapp + dxBar - 6, yHapp + 2 * dyBar, wBar + 10, 38);
       CountBar(offscreen, xHapp + dxBar, yHapp + 2 * dyBar, wBar, 18,
         Phrases.Lookup('LACK'), -Report.HappinessBalance, RedTex);
     end;
@@ -721,7 +698,7 @@ begin
           Phrases.Lookup('SURPLUS'), Report.FoodSurplus, MainTexture)
     else
     begin
-      MakeRed(xFood + dxBar - 6, yFood + 2 * dyBar, wBar + 10, 38);
+      MakeRed(Offscreen, xFood + dxBar - 6, yFood + 2 * dyBar, wBar + 10, 38);
       CountBar(offscreen, xFood + dxBar, yFood + 2 * dyBar, wBar, 1,
         Phrases.Lookup('LACK'), -Report.FoodSurplus, RedTex);
     end;
@@ -754,7 +731,7 @@ begin
           Phrases.Lookup('PROD'), Report.Production, MainTexture)
     else
     begin
-      MakeRed(xProd + dxBar - 6, yProd + dyBar + 17, wBar + 10, 38);
+      MakeRed(Offscreen, xProd + dxBar - 6, yProd + dyBar + 17, wBar + 10, 38);
       CountBar(offscreen, xProd + dxBar, yProd + dyBar + 16, wBar, 3,
         Phrases.Lookup('LACK'), -Report.Production, RedTex);
     end;
