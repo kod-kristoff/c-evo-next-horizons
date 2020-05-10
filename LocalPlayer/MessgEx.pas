@@ -290,6 +290,8 @@ begin
   x := x - wb div 2;
 
   // paint
+  // TODO: Explicitly clear background to black but in fact BitBlt SRCCOPY should do it
+  LogoBuffer.Canvas.FillRect(0, 0, LogoBuffer.Width, LogoBuffer.Height);
   BitBltCanvas(LogoBuffer.Canvas, 0, 0, wb, hb, ca, x, y);
 
   if IconIndex >= 0 then
