@@ -4,6 +4,8 @@ if not defined LAZDIR (
   set LAZDIR=C:\lazarus
 )
 
+set INNO_SETUP="c:\Program Files (x86)\Inno Setup 6\ISCC.exe"
+
 rem Build AI
 SET PROJECTNAME=StdAI
 SET MAIN_DLL=..\..\AI\StdAI\StdAI.dll
@@ -32,4 +34,6 @@ copy %MAIN_EXE% %WIN32_EXE%
 %LAZDIR%\lazbuild.exe --lazarusdir=%LAZDIR% --build-mode="Release" --cpu=x86_64 --operating-system=Win64 ..\..\%PROJECTNAME%.lpi
 copy %MAIN_EXE% %WIN64_EXE%
 
-"c:\Program Files (x86)\Inno Setup 5\ISCC.exe" "C-evo.iss"
+%INNO_SETUP% "C-evo.iss"
+%INNO_SETUP% "C-evo 32-bit.iss"
+%INNO_SETUP% "C-evo 64-bit.iss"
