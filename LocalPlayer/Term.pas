@@ -7794,7 +7794,7 @@ end;
 procedure TMainScreen.FormShow(Sender: TObject);
 begin
   if FullScreen then begin
-    WindowState := wsMaximized;
+    WindowState := wsFullScreen;
     BorderStyle := bsNone;
     BorderIcons := [];
   end else begin

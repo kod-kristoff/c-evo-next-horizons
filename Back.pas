@@ -64,7 +64,7 @@ var
   FileName: string;
 begin
   if FullScreen then begin
-    WindowState := wsMaximized;
+    WindowState := wsFullScreen;
     if not Assigned(Img) then begin
       FileName := GetGraphicsDir + DirectorySeparator + 'Background.png';
       if FileExists(FileName) then begin

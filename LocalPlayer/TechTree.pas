@@ -8,9 +8,13 @@ uses
   Controls, Forms, ButtonB, DrawDlg;
 
 type
+
+  { TTechTreeDlg }
+
   TTechTreeDlg = class(TDrawDlg)
     CloseBtn: TButtonB;
     procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
     procedure FormPaint(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormMouseDown(Sender: TObject; Button: TMouseButton;
@@ -23,7 +27,7 @@ type
   private
     xOffset, yOffset, xDown, yDown: Integer;
     Image: TBitmap;
-    dragging: boolean;
+    Dragging: Boolean;
   end;
 
 var
@@ -73,6 +77,11 @@ begin
   Image := nil;
 end;
 
+procedure TTechTreeDlg.FormDestroy(Sender: TObject);
+begin
+  FreeAndNil(Image);
+end;
+
 procedure TTechTreeDlg.FormPaint(Sender: TObject);
 var
   X, w: Integer;
@@ -120,6 +129,8 @@ procedure TTechTreeDlg.FormShow(Sender: TObject);
 var
   X, Y, ad: Integer;
   s: string;
+  NewWidth: Integer;
+  NewHeight: Integer;
 const
   TransparentColor = $7F007F;
 begin
@@ -163,17 +174,16 @@ begin
   end;
 
   // fit window to image, center image in window, center window to screen
-  width := min(Screen.width - 40, Image.width + LeftBorder + RightBorder + 2 *
-    BlackBorder);
-  height := min(Screen.height - 40, Image.height + TopBorder + BottomBorder + 2
-    * BlackBorder);
-  Left := (Screen.width - width) div 2;
-  Top := (Screen.height - height) div 2;
+  NewWidth := Min(Screen.Width - 40, Image.Width + LeftBorder + RightBorder + 2 * BlackBorder);
+  NewHeight := Min(Screen.Height - 40, Image.Height + TopBorder + BottomBorder + 2 * BlackBorder);
+  BoundsRect := Bounds((Screen.Width - NewWidth) div 2,
+    (Screen.Height - NewHeight) div 2,
+    NewWidth, NewHeight);
   CloseBtn.Left := width - CloseBtn.width - BlackBorder - 8;
   CloseBtn.Top := BlackBorder + 8;
-  xOffset := (ClientWidth - Image.width + LeftBorder - RightBorder) div 2 -
+  xOffset := (ClientWidth - Image.Width + LeftBorder - RightBorder) div 2 -
     BlackBorder;
-  yOffset := ClientHeight - 2 * BlackBorder - Image.height - BottomBorder;
+  yOffset := ClientHeight - 2 * BlackBorder - Image.Height - BottomBorder;
 end;
 
 procedure TTechTreeDlg.FormMouseDown(Sender: TObject; Button: TMouseButton;
