@@ -17,6 +17,7 @@ object TechTreeDlg: TTechTreeDlg
   Position = poDefault
   Scaled = False
   OnCreate = FormCreate
+  OnDestroy = FormDestroy
   OnKeyDown = FormKeyDown
   OnMouseDown = FormMouseDown
   OnMouseMove = FormMouseMove
