@@ -286,7 +286,6 @@ type
     UsedOffscreenWidth, UsedOffscreenHeight: integer;
     Offscreen: TBitmap;
     OffscreenUser: TForm;
-    procedure CreateParams(var p: TCreateParams); override;
     procedure Client(Command, NewPlayer: integer; var Data);
     procedure SetAIName(p: integer; Name: string);
     function ZoomToCity(Loc: integer; NextUnitOnClose: boolean = false;
@@ -3397,16 +3396,6 @@ begin
 end;
 
 { *** main part *** }
-
-procedure TMainScreen.CreateParams(var p: TCreateParams);
-begin
-  inherited;
-  if FullScreen then begin
-    p.Style := $87000000;
-    BorderStyle := bsNone;
-    BorderIcons := [];
-  end;
-end;
 
 procedure TMainScreen.FormCreate(Sender: TObject);
 var
@@ -7804,9 +7793,16 @@ end;
 
 procedure TMainScreen.FormShow(Sender: TObject);
 begin
-  Timer1.Enabled := true;
-  Left := 0;
-  Top := 0;
+  if FullScreen then begin
+    WindowState := wsMaximized;
+    BorderStyle := bsNone;
+    BorderIcons := [];
+  end else begin
+    WindowState := wsMaximized;
+    BorderStyle := bsSizeable;
+    BorderIcons := [biSystemMenu, biMinimize, biMaximize];
+  end;
+  Timer1.Enabled := True;
 end;
 
 procedure TMainScreen.FormClose(Sender: TObject; var Action: TCloseAction);

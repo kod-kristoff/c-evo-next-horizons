@@ -693,8 +693,7 @@ begin
   if FullScreen then begin
     Location := Point((Screen.Width - 800) * 3 div 8,
       Screen.Height - Height - (Screen.Height - 600) div 3);
-    Left := Location.X;
-    Top := Location.Y;
+    BoundsRect := Bounds(Location.X, Location.Y, Width, Height);
 
     r0 := CreateRectRgn(0, 0, Width, Height);
     r1 := CreateRectRgn(TabOffset + 4 * TabSize + 2, 0, Width, TabHeight);
@@ -707,8 +706,8 @@ begin
     SetWindowRgn(Handle, r0, False);
     DeleteObject(r0); // causes crash with Windows 95
   end else begin
-    Left := (Screen.Width - Width) div 2;
-    Top := (Screen.Height - Height) div 2;
+    BoundsRect := Bounds((Screen.Width - Width) div 2,
+      (Screen.Height - Height) div 2, Width, Height)
   end;
 end;
 

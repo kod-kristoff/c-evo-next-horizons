@@ -74,10 +74,8 @@ begin
     end;
   end else begin
     WindowState := wsNormal;
-    Width := StartDlg.Width + 16;
-    Height := StartDlg.Height + 16;
-    Left := StartDlg.Left - 8;
-    Top := StartDlg.Top - 8;
+    BoundsRect := Bounds(StartDlg.Left - 8, StartDlg.Top - 8,
+      StartDlg.Width + 16, StartDlg.Height + 16);
   end;
 end;
 
