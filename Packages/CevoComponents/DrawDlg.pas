@@ -74,7 +74,7 @@ end;
 
 destructor TDrawDlg.Destroy;
 begin
-  RemoveHandlerOnVisibleChanging(VisibleChangedHandler);
+  RemoveHandlerOnVisibleChanged(VisibleChangedHandler);
   inherited Destroy;
 end;
 
