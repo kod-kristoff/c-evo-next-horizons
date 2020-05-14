@@ -26,8 +26,10 @@ type
     RelLine: PPixel32;
     BytesPerPixel: Integer;
     BytesPerLine: Integer;
-    procedure NextLine; inline; // Move pointer to start of new base line
+    procedure NextLine; inline; // Move pointer to start of next line
+    procedure PreviousLine; inline; // Move pointer to start of previous line
     procedure NextPixel; inline; // Move pointer to next pixel
+    procedure PreviousPixel; inline; // Move pointer to previous pixel
     procedure SetXY(X, Y: Integer); inline; // Set pixel position relative to base
     procedure SetX(X: Integer); inline; // Set horizontal pixel position relative to base
   end;
@@ -46,9 +48,20 @@ begin
   Pixel := Line;
 end;
 
+procedure TPixelPointer.PreviousLine;
+begin
+  Line := Pointer(Line) - BytesPerLine;
+  Pixel := Line;
+end;
+
 procedure TPixelPointer.NextPixel; inline;
 begin
   Pixel := Pointer(Pixel) + BytesPerPixel;
+end;
+
+procedure TPixelPointer.PreviousPixel;
+begin
+  Pixel := Pointer(Pixel) - BytesPerPixel;
 end;
 
 procedure TPixelPointer.SetXY(X, Y: Integer); inline;

@@ -86,7 +86,7 @@ end;
 
 procedure TWondersDlg.PaintBackgroundShape;
 const
-  darken = 24;
+  Darken = 24;
   // space=pi/120;
   amax0 = 15734; // 1 shl 16*tan(pi/12-space);
   amin1 = 19413; // 1 shl 16*tan(pi/12+space);
@@ -102,11 +102,13 @@ var
   I: Integer;
   C: Integer;
   Ch: Integer;
-  Line: array [0..1] of TPixelPointer;
+  Line: array [0..3] of TPixelPointer;
 begin
   Offscreen.BeginUpdate;
-  Line[0] := PixelPointer(Offscreen);
-  Line[1] := PixelPointer(Offscreen);
+  Line[0] := PixelPointer(Offscreen, Center.X, Center.Y);
+  Line[1] := PixelPointer(Offscreen, Center.X, Center.Y - 1);
+  Line[2] := PixelPointer(Offscreen, Center.X - 1, Center.Y);
+  Line[3] := PixelPointer(Offscreen, Center.X - 1, Center.Y - 1);
   for Y := 0 to 127 do begin
     for X := 0 to 179 do begin
       r := X * X * (32 * 32) + Y * Y * (45 * 45);
@@ -114,21 +116,31 @@ begin
       if (r < 8 * 128 * 180 * 180) and
         ((r >= 32 * 64 * 90 * 90) and (ax < amax2 * X) and
         ((ax < amax0 * X) or (ax > amin2 * X)) or (ax > amin1 * X) and
-        ((ax < amax1 * X) or (ax > amin3 * X))) then
-        for i := 0 to 1 do
-          for ch := 0 to 2 do begin
-            Line[0].SetXY(Center.X + X, Center.Y + Y);
-            Line[1].SetXY(Center.X + X, Center.Y - 1 - Y);
-            c := Line[i].Pixel^.Planes[ch] - darken;
-            if c < 0 then Line[i].Pixel^.Planes[ch] := 0
-              else Line[i].Pixel^.Planes[ch] := c;
-            Line[0].SetXY(Center.X - 1 - X, Center.Y + Y);
-            Line[1].SetXY(Center.X - 1 - X, Center.Y - 1 - Y);
-            c := Line[i].Pixel^.Planes[ch] - darken;
-            if c < 0 then Line[i].Pixel^.Planes[ch] := 0
-              else Line[i].Pixel^.Planes[ch] := c;
-          end;
+        ((ax < amax1 * X) or (ax > amin3 * X))) then begin
+        for ch := 0 to 2 do begin
+          c := Line[0].Pixel^.Planes[ch] - Darken;
+          if c < 0 then Line[0].Pixel^.Planes[ch] := 0
+            else Line[0].Pixel^.Planes[ch] := c;
+          c := Line[1].Pixel^.Planes[ch] - Darken;
+          if c < 0 then Line[1].Pixel^.Planes[ch] := 0
+            else Line[1].Pixel^.Planes[ch] := c;
+          c := Line[2].Pixel^.Planes[ch] - Darken;
+          if c < 0 then Line[2].Pixel^.Planes[ch] := 0
+            else Line[2].Pixel^.Planes[ch] := c;
+          c := Line[3].Pixel^.Planes[ch] - Darken;
+          if c < 0 then Line[3].Pixel^.Planes[ch] := 0
+            else Line[3].Pixel^.Planes[ch] := c;
+        end;
+      end;
+      Line[0].NextPixel;
+      Line[1].NextPixel;
+      Line[2].PreviousPixel;
+      Line[3].PreviousPixel;
     end;
+    Line[0].NextLine;
+    Line[1].PreviousLine;
+    Line[2].NextLine;
+    Line[3].PreviousLine;
   end;
   Offscreen.EndUpdate;
 end;
@@ -216,7 +228,7 @@ begin
               Center.Y - ySizeBig div 2 + RingPosition[I].Y - 3, xSizeBig + 6,
               ySizeBig + 6, (wMaintexture - ClientWidth) div 2,
               (hMaintexture - ClientHeight) div 2);
-            DarkIcon(I);
+            //DarkIcon(I);
           end;
         -2: // destroyed
           begin

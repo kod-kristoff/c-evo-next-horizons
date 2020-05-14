@@ -910,10 +910,9 @@ var
   DstPtr: TPixelPointer;
 begin
   dst.BeginUpdate;
-  DstPtr := PixelPointer(dst, x0, y0);
+  DstPtr := PixelPointer(dst, x0 - GlowRange + 1, y0 - GlowRange + 1);
   for y := -GlowRange + 1 to Height - 1 + GlowRange - 1 do begin
     for x := -GlowRange + 1 to Width - 1 + GlowRange - 1 do begin
-      DstPtr.SetXY(x, y);
       if x < 0 then
         if y < 0 then
           r := round(sqrt(sqr(x) + sqr(y)))
@@ -932,8 +931,10 @@ begin
         r := -y
       else if y >= Height then
         r := y - (Height - 1)
-      else
+      else begin
+        DstPtr.NextPixel;
         continue;
+      end;
       if r = 0 then
         r := 1;
       if r < GlowRange then
@@ -941,7 +942,9 @@ begin
           DstPtr.Pixel^.Planes[2 - ch] :=
             (DstPtr.Pixel^.Planes[2 - ch] * (r - 1) + (cl shr (8 * ch) and $FF) *
             (GlowRange - r)) div (GlowRange - 1);
+      DstPtr.NextPixel;
     end;
+    DstPtr.NextLine;
   end;
   dst.EndUpdate;
 end;
