@@ -64,9 +64,9 @@ Name: "lang\it"; Description: "Italian"; Types: full
 Name: "lang\ru"; Description: "Russian"; Types: full
 Name: "lang\zhHans"; Description: "Chinese Simplified"; Types: full
 Name: "lang\zhHant"; Description: "Chinese Traditional"; Types: full
+Name: "ai_template"; Description: "AI template"; Types: full
 Name: "ai"; Description: "AI files"; Types: full
 Name: "ai\stdai"; Description: "StdAI"; Types: full
-Name: "ai_template"; Description: "AI template"; Types: full
 
 [Files]
 Source: "{#MyAppSubDir}\Graphics\*"; DestDir: "{app}\Graphics"; Flags: ignoreversion; Components: main
