@@ -795,7 +795,12 @@ end;
 function BitBltCanvas(DestCanvas: TCanvas; X, Y, Width, Height: Integer;
   SrcCanvas: TCanvas; XSrc, YSrc: Integer; Rop: DWORD = SRCCOPY): Boolean;
 begin
+  {$IFDEF WINDOWS}
+  // LCLIntf.BitBlt is slower than direct Windows BitBlt
+  Result := Windows.BitBlt(DestCanvas.Handle, X, Y, Width, Height, SrcCanvas.Handle, XSrc, YSrc, Rop);
+  {$ELSE}
   Result := BitBlt(DestCanvas.Handle, X, Y, Width, Height, SrcCanvas.Handle, XSrc, YSrc, Rop);
+  {$ENDIF}
 end;
 
 function BitBltCanvas(Dest: TCanvas; DestRect: TRect; Src: TCanvas;
