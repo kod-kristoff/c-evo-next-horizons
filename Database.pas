@@ -29,6 +29,9 @@ const
 
   CityOwnTile = 13;
 
+type
+  TGameMode = (moLoading_Fast, moLoading, moMovie, moPlaying);
+
 var
   GAlive: Integer; { players alive; bitset of 1 shl p }
   GWatching: Integer;
@@ -44,7 +47,7 @@ var
   PeaceEnded: Integer;
   GTurn: Integer; { current turn }
   GTestFlags: Integer;
-  Mode: (moLoading_Fast, moLoading, moMovie, moPlaying);
+  Mode: TGameMode;
   GWonder: array [0 .. 27] of TWonderInfo;
   ServerVersion: array [0 .. nPl - 1] of integer;
   ProcessClientData: array [0 .. nPl - 1] of boolean;

@@ -211,7 +211,7 @@ begin
         Application.ProcessMessages;
         Sleep(1);
         Ticks := NowPrecise;
-      until MovieCancelled or (MillisecondOf(Ticks - Ticks0) >= 1500);
+      until MovieCancelled or (Round((Ticks - Ticks0) / OneMillisecond) >= 1500);
       Hide;
     end;
     result := mrOk;
@@ -372,6 +372,8 @@ begin
       if Imp[IconIndex].Kind = ikWonder then
       begin
         p1 := MyRO.Wonder[IconIndex].EffectiveOwner;
+        // TODO: Explicitly clear background to black but in fact BitBlt SRCCOPY should do it
+        Buffer.Canvas.FillRect(0, 0, 1, 1);
         BitBltCanvas(Buffer.Canvas, 0, 0, xSizeBig + 2 * GlowRange,
           ySizeBig + 2 * GlowRange, Canvas,
           ClientWidth div 2 - (28 + GlowRange), 24 - GlowRange);

@@ -1656,6 +1656,7 @@ begin
       Play('CITY_UNITCOMPLETE');
   end
   else
+  if OpenSoundEvent >= 0 then
     Play(CityEventSoundItem[OpenSoundEvent]);
   OpenSoundEvent := -2;
 end;

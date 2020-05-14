@@ -6079,25 +6079,25 @@ begin
       end;
       NoMap.PaintUnit(xMoving - xMin, yMoving - yMin, UnitInfo, 0);
       PaintBufferToScreen(xMin, yMin, xRange, yRange);
+      {$IFDEF LINUX}
+      // TODO: Force animation under linux
+      Application.ProcessMessages;
+      {$ENDIF}
 
       SliceCount := 0;
       Ticks := Ticks0;
       repeat
         if (SliceCount = 0) or
-          (MillisecondOf(Ticks - Ticks0) * 12 * (SliceCount + 1) div SliceCount
+          (Round(((Ticks - Ticks0) * 12) / OneMillisecond) * (SliceCount + 1) div SliceCount
           < MoveTime) then
         begin
           if not idle or (GameMode = cMovie) then
             Application.ProcessMessages;
-          {$IFDEF LINUX}
-          // TODO: Force animation under linux
-          Application.ProcessMessages;
-          {$ENDIF}
           Sleep(1);
           inc(SliceCount)
         end;
         Ticks := NowPrecise;
-      until (Ticks - Ticks0) / OneMillisecond * 12 >= MoveTime;
+      until (((Ticks - Ticks0) * 12) / OneMillisecond) >= MoveTime;
       Ticks0 := Ticks
     end;
   end;
@@ -6538,7 +6538,7 @@ begin
           MainOffscreenPaint;
           time1 := NowPrecise;
           SimpleMessage(Format('Map repaint time: %.3f ms',
-            [MillisecondOf(time1 - time0)]));
+            [(time1 - time0) / OneMillisecond]));
         end
     end
   else if Shift = [] then
