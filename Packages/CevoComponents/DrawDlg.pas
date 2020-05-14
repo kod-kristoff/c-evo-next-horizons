@@ -12,10 +12,6 @@ type
   { TDrawDlg }
 
   TDrawDlg = class(TForm)
-  public
-    constructor Create(AOwner: TComponent); override;
-    destructor Destroy; override;
-    procedure SmartInvalidate; virtual;
   private
     MoveFormPos: TPoint;
     MoveMousePos: TPoint;
@@ -32,6 +28,10 @@ type
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure MouseLeave; override;
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+    procedure SmartInvalidate; virtual;
   end;
 
   { TBaseMessgDlg }
@@ -126,7 +126,8 @@ var
 begin
   inherited;
   {$IFDEF LINUX}
-  if not Assigned(OnMouseDown) then begin
+  // Only if client is not doing own mouse move handling
+  if not Assigned(OnMouseDown) or not Assigned(OnMouseMove) or not Assigned(OnMouseUp) then begin
     // HitTest is not supported under Linux GTK2 so use form inside move mechanizm
     NewFormPos := ScreenToClient(Mouse.CursorPos);
     if (NewFormPos.X >= 0) and (NewFormPos.X < Width) and
