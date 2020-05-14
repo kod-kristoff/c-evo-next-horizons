@@ -4502,6 +4502,24 @@ begin { >>>server }
 {$IFOPT O-}dec(nHandoverStack, 2); {$ENDIF}
 end; { <<<server }
 
+function ExtractFileNameWithoutExt(const Filename: string): string;
+var
+  P: Integer;
+begin
+  Result := Filename;
+  P := Length(Result);
+  while P > 0 do begin
+    case Result[P] of
+      PathDelim: Exit;
+      {$ifdef windows}
+      '/': if ('/' in AllowDirectorySeparators) then Exit;
+      {$endif}
+      '.': Exit(Copy(Result, 1, P - 1));
+    end;
+    Dec(P);
+  end;
+end;
+
 { TBrain }
 
 procedure TBrain.LoadFromFile(AIFileName: string);
