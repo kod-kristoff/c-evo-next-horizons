@@ -577,7 +577,7 @@ begin
                     1 + (AdvIcon[lix] - 84) mod 8 * 37,
                     295 + (AdvIcon[lix] - 84) div 8 * 21);
                 j := AdvValue[lix] div 1000;
-                BitBltCanvas(Canvas, (8 + 16 - 4), y0 + 2, 14, 14,
+                BitBltCanvas(offscreen.Canvas, (8 + 16 - 4), y0 + 2, 14, 14,
                   GrExt[HGrSystem].Mask.Canvas, 127 + j * 15,
                   85, SRCAND);
                 Sprite(offscreen, HGrSystem, (8 + 16 - 5), y0 + 1, 14, 14,
@@ -753,6 +753,7 @@ begin
           end
         end;
       end;
+
     for i := -1 to DispLines do
       if (i + sb.Position >= 0) and (i + sb.Position < Lines[Layer]) then
         Self.line(offscreen.Canvas, i, true, false)
