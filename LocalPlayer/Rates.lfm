@@ -17,6 +17,7 @@ object RatesDlg: TRatesDlg
   OnCreate = FormCreate
   OnShow = FormShow
   PixelsPerInch = 96
+  Scaled = False
   TextHeight = 13
   object CloseBtn: TButtonB
     Left = 274

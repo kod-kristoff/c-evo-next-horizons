@@ -17,4 +17,6 @@ object Background: TBackground
   OnShow = FormShow
   LCLVersion = '1.6.2.0'
   WindowState = wsMaximized
+  PixelsPerInch = 96
+  Scaled = False
 end

@@ -19,6 +19,8 @@ object MessgDlg: TMessgDlg
   OnPaint = FormPaint
   OnShow = FormShow
   LCLVersion = '1.8.0.6'
+  PixelsPerInch = 96
+  Scaled = False
   object Button1: TButtonA
     Left = 101
     Height = 25

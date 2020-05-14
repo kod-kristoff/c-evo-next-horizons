@@ -21,6 +21,7 @@ object HelpDlg: THelpDlg
   OnMouseMove = PaintBox1MouseMove
   OnPaint = FormPaint
   PixelsPerInch = 96
+  Scaled = False
   object CloseBtn: TButtonB
     Left = 522
     Top = 6

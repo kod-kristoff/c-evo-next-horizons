@@ -17,4 +17,6 @@ object DirectDlg: TDirectDlg
   OnPaint = FormPaint
   OnShow = FormShow
   LCLVersion = '1.8.0.6'
+  PixelsPerInch = 96
+  Scaled = False
 end

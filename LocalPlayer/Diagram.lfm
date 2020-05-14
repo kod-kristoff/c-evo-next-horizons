@@ -17,6 +17,7 @@ object DiaDlg: TDiaDlg
   OnPaint = FormPaint
   OnShow = FormShow
   PixelsPerInch = 96
+  Scaled = False
   object CloseBtn: TButtonB
     Left = 380
     Top = 6

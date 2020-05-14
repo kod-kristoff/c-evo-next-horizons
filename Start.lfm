@@ -25,6 +25,8 @@ object StartDlg: TStartDlg
   OnPaint = FormPaint
   OnShow = FormShow
   LCLVersion = '2.0.2.0'
+  PixelsPerInch = 96
+  Scaled = False
   object StartBtn: TButtonA
     Tag = 15104
     Left = 389

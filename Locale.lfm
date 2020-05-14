@@ -14,6 +14,8 @@ object LocaleDlg: TLocaleDlg
   OnPaint = FormPaint
   OnShow = FormShow
   LCLVersion = '2.0.2.0'
+  PixelsPerInch = 96
+  Scaled = False
   object List: TListBox
     Tag = 15360
     Left = 24

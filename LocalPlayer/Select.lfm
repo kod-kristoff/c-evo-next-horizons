@@ -22,6 +22,7 @@ object ListDlg: TListDlg
   OnPaint = FormPaint
   OnShow = FormShow
   PixelsPerInch = 96
+  Scaled = False
   object CloseBtn: TButtonB
     Left = 343
     Top = 6

@@ -16,6 +16,7 @@ object WondersDlg: TWondersDlg
   OnMouseMove = FormMouseMove
   OnShow = FormShow
   PixelsPerInch = 96
+  Scaled = False
   object CloseBtn: TButtonB
     Left = 442
     Top = 6

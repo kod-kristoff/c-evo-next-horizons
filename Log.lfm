@@ -17,6 +17,7 @@ object LogDlg: TLogDlg
   OnKeyDown = FormKeyDown
   OnKeyUp = FormKeyUp
   PixelsPerInch = 96
+  Scaled = False
   object List: TMemo
     Left = 0
     Top = 0

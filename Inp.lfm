@@ -16,6 +16,7 @@ object InputDlg: TInputDlg
   OnPaint = FormPaint
   OnShow = FormShow
   PixelsPerInch = 96
+  Scaled = False
   object OKBtn: TButtonA
     Left = 66
     Top = 67

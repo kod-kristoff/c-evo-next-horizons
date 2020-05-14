@@ -16,6 +16,8 @@ object EnhanceDlg: TEnhanceDlg
   OnPaint = FormPaint
   OnShow = FormShow
   LCLVersion = '1.6.0.4'
+  PixelsPerInch = 96
+  Scaled = False
   object ToggleBtn: TButtonB
     Left = 13
     Height = 25

@@ -17,6 +17,8 @@ object NegoDlg: TNegoDlg
   OnMouseDown = FormMouseDown
   OnShow = FormShow
   LCLVersion = '1.6.2.0'
+  PixelsPerInch = 96
+  Scaled = False
   object OkBtn: TButtonA
     Left = 426
     Height = 25

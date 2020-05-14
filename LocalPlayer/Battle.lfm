@@ -21,6 +21,7 @@ object BattleDlg: TBattleDlg
   OnPaint = FormPaint
   OnShow = FormShow
   PixelsPerInch = 96
+  Scaled = False
   TextHeight = 13
   object OKBtn: TButtonA
     Left = 46

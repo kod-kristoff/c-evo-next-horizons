@@ -19,6 +19,7 @@ object MessgExDlg: TMessgExDlg
   OnPaint = FormPaint
   OnShow = FormShow
   PixelsPerInch = 96
+  Scaled = False
   object Button1: TButtonA
     Left = 43
     Top = 104
