@@ -1607,7 +1607,7 @@ begin
   end;
   if Tab <> tbNew then
     if List.Count > 0 then begin
-      if (List.Count > ListIndex[Tab]) then
+      if (ListIndex[Tab] < List.Count) and (ListIndex[Tab] >= 0) then
         List.ItemIndex := ListIndex[Tab]
         else List.ItemIndex := 0;
     end else List.ItemIndex := -1;
