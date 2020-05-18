@@ -62,10 +62,25 @@ begin
   end else Result := HomeDir + Path;
 end;
 
+procedure CopyDir(SourceDir, DestinationDir, Filter: string);
+var
+  Src, Dst: TSearchRec;
+begin
+  if not DirectoryExists(DestinationDir) then CreateDir(DestinationDir);
+  if FindFirst(SourceDir + DirectorySeparator + Filter, $21, Src) = 0 then
+    repeat
+      if (FindFirst(DestinationDir + DirectorySeparator + Src.Name, $21, Dst) <> 0) or
+        (Dst.Time < Src.Time) then
+        CopyFile(SourceDir + DirectorySeparator + Src.Name,
+          DestinationDir + DirectorySeparator + Src.Name, false);
+      FindClose(Dst);
+    until FindNext(Src) <> 0;
+  FindClose(Src);
+end;
+
 procedure UnitInit;
 var
   AppDataDir: string;
-  src, dst: TSearchRec;
 begin
   LocaleCode := '';
   HomeDir := ExtractFilePath(ParamStr(0));
@@ -78,30 +93,9 @@ begin
     if not DirectoryExists(AppDataDir) then CreateDir(AppDataDir);
     DataDir := AppDataDir;
   end;
-  if not DirectoryExists(GetSavedDir) then CreateDir(GetSavedDir);
-  if not DirectoryExists(GetMapsDir) then CreateDir(GetMapsDir);
 
-  // Copy appdata if not done yet
-  if FindFirst(GetSavedDir(True) + DirectorySeparator + '*.cevo', $21, src) = 0 then
-    repeat
-      if (FindFirst(GetSavedDir(True) + DirectorySeparator + src.Name, $21, dst) <> 0) or
-        (dst.Time < src.Time) then
-        CopyFile(PChar(GetSavedDir(True) + DirectorySeparator + src.Name),
-          PChar(GetSavedDir(True) + DirectorySeparator + src.Name), false);
-      FindClose(dst);
-    until FindNext(src) <> 0;
-  FindClose(src);
-
-  // Copy appdata if not done yet
-  if FindFirst(GetMapsDir(True) + DirectorySeparator + '*.*', $21, src) = 0 then
-    repeat
-      if (FindFirst(GetMapsDir(True) + DirectorySeparator + src.Name, $21, dst) <> 0) or
-        (dst.Time < src.Time) then
-        CopyFile(PChar(GetMapsDir(True) + DirectorySeparator + src.Name),
-          PChar(GetMapsDir(True) + DirectorySeparator + src.Name), false);
-      FindClose(dst);
-    until FindNext(src) <> 0;
-  FindClose(src);
+  CopyDir(GetSavedDir(True), GetSavedDir(False), '*.*');
+  CopyDir(GetMapsDir(True), GetMapsDir(False), '*.*');
 end;
 
 function GetSavedDir(Home: Boolean = False): string;

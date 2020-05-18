@@ -72,6 +72,8 @@ Name: "ai\stdai"; Description: "StdAI"; Types: full
 Source: "{#MyAppSubDir}\Graphics\*"; DestDir: "{app}\Graphics"; Flags: ignoreversion; Components: main
 Source: "{#MyAppSubDir}\Sounds\*.*"; DestDir: "{app}\Sounds"; Flags: ignoreversion; Components: main
 Source: "{#MyAppSubDir}\Tribes\*.*"; DestDir: "{app}\Tribes"; Flags: ignoreversion; Components: main
+Source: "{#MyAppSubDir}\Saved\*.*"; DestDir: "{app}\Saved"; Flags: ignoreversion; Components: main
+Source: "{#MyAppSubDir}\Maps\*.*"; DestDir: "{app}\Maps"; Flags: ignoreversion; Components: maps
 Source: "{#MyAppSubDir}\Localization\cs\*.*"; DestDir: "{app}\Localization\cs"; Flags: ignoreversion recursesubdirs; Components: lang\cs
 Source: "{#MyAppSubDir}\Localization\de\*.*"; DestDir: "{app}\Localization\de"; Flags: ignoreversion recursesubdirs; Components: lang\de
 Source: "{#MyAppSubDir}\Localization\it\*.*"; DestDir: "{app}\Localization\it"; Flags: ignoreversion recursesubdirs; Components: lang\it
@@ -85,8 +87,6 @@ Source: "{#MyAppSubDir}\Language2.txt"; DestDir: "{app}"; Flags: ignoreversion; 
 Source: "{#MyAppSubDir}\AI Template\*.*"; DestDir: "{app}\AI Template"; Flags: ignoreversion recursesubdirs; Components: ai_template
 Source: "{#MyAppSubDir}\AI\StdAI\StdAI.png"; DestDir: "{app}\AI\StdAI"; Flags: ignoreversion; Components: ai\stdai
 Source: "{#MyAppSubDir}\AI\StdAI\StdAI.ai.txt"; DestDir: "{app}\AI\StdAI"; Flags: ignoreversion; Components: ai\stdai
-Source: "{#MyAppSubDir}\Maps\*.*"; DestDir: "{localappdata}\c-evo\Maps"; Flags: ignoreversion; Components: maps
-Source: "{#MyAppSubDir}\Saved\*.*"; DestDir: "{localappdata}\c-evo\Saved"; Flags: ignoreversion; Components: main
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
