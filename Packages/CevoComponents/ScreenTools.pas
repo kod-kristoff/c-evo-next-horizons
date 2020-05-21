@@ -41,7 +41,7 @@ procedure ImageOp_BCC(dst, Src: TBitmap;
   xDst, yDst, xSrc, ySrc, Width, Height, Color1, Color2: Integer);
 procedure ImageOp_CBC(Dst, Src: TBitmap; xDst, yDst, xSrc, ySrc, Width, Height,
   Color0, Color2: Integer);
-procedure ImageOp_CCC(bmp: TBitmap; x, y, w, h, Color0, Color1, Color2: Integer);
+procedure ImageOp_CCC(bmp: TBitmap; x, y, Width, Height, Color0, Color1, Color2: Integer);
 function BitBltCanvas(DestCanvas: TCanvas; X, Y, Width, Height: Integer;
   SrcCanvas: TCanvas; XSrc, YSrc: Integer; Rop: DWORD = SRCCOPY): Boolean; overload;
 function BitBltCanvas(Dest: TCanvas; DestRect: TRect;
@@ -57,7 +57,7 @@ procedure RFrame(ca: TCanvas; x0, y0, x1, y1: integer; cl0, cl1: TColor);
 procedure CFrame(ca: TCanvas; x0, y0, x1, y1, Corner: integer; cl: TColor);
 procedure FrameImage(ca: TCanvas; Src: TBitmap;
   x, y, Width, Height, xSrc, ySrc: integer; IsControl: boolean = False);
-procedure GlowFrame(dst: TBitmap; x0, y0, Width, Height: integer; cl: TColor);
+procedure GlowFrame(Dst: TBitmap; x0, y0, Width, Height: integer; cl: TColor);
 procedure InitOrnament;
 procedure InitCityMark(const T: TTexture);
 procedure Fill(ca: TCanvas; Left, Top, Width, Height, xOffset, yOffset: integer); overload;
@@ -92,6 +92,8 @@ function SetMainTextureByAge(Age: integer): boolean;
 procedure LoadPhrases;
 procedure Texturize(Dest, Texture: TBitmap; TransparentColor: Integer);
 procedure DarkenImage(Bitmap: TBitmap; Change: Integer);
+function ScaleToNative(Value: Integer): Integer;
+function ScaleFromNative(Value: Integer): Integer;
 
 const
   nGrExtmax = 64;
@@ -363,8 +365,8 @@ var
 begin
   Bitmap.BeginUpdate;
   PixelPtr := PixelPointer(Bitmap);
-  for Y := 0 to Bitmap.Height - 1 do begin
-    for X := 0 to Bitmap.Width - 1 do begin
+  for Y := 0 to ScaleToNative(Bitmap.Height) - 1 do begin
+    for X := 0 to ScaleToNative(Bitmap.Width) - 1 do begin
       PixelPtr.Pixel^ := ApplyGammaToPixel(PixelPtr.Pixel^);
       PixelPtr.NextPixel;
     end;
@@ -381,8 +383,8 @@ begin
   //Dst.SetSize(Src.Width, Src.Height);
   SrcPtr := PixelPointer(Src);
   DstPtr := PixelPointer(Dst);
-  for Y := 0 to Src.Height - 1 do begin
-    for X := 0 to Src.Width - 1 do begin
+  for Y := 0 to ScaleToNative(Src.Height - 1) do begin
+    for X := 0 to ScaleToNative(Src.Width - 1) do begin
       DstPtr.Pixel^.B := SrcPtr.Pixel^.B;
       DstPtr.Pixel^.G := SrcPtr.Pixel^.B;
       DstPtr.Pixel^.R := SrcPtr.Pixel^.B;
@@ -403,7 +405,7 @@ begin
   if ExtractFileExt(Path) = '' then
     Path := Path + '.png';
   if ExtractFileExt(Path) = '.jpg' then begin
-    jtex := tjpegimage.Create;
+    jtex := TJpegImage.Create;
     try
       jtex.LoadFromFile(Path);
     except
@@ -505,8 +507,8 @@ begin
     GrExt[nGrExt].Mask.BeginUpdate;
     DataPixel := PixelPointer(GrExt[nGrExt].Data);
     MaskPixel := PixelPointer(GrExt[nGrExt].Mask);
-    for y := 0 to Source.Height - 1 do begin
-      for x := 0 to xmax - 1 do begin
+    for y := 0 to ScaleToNative(Source.Height) - 1 do begin
+      for x := 0 to ScaleToNative(xmax) - 1 do begin
         OriginalColor := DataPixel.Pixel^.ARGB and $FFFFFF;
         if (OriginalColor = $FF00FF) or (OriginalColor = $7F007F) then
         begin // transparent
@@ -544,9 +546,9 @@ var
   PixelPtr: TPixelPointer;
 begin
   Dst.BeginUpdate;
-  PixelPtr := PixelPointer(Dst, X, Y);
-  for yy := 0 to Height - 1 do begin
-    for xx := 0 to Width - 1 do begin
+  PixelPtr := PixelPointer(Dst, ScaleToNative(X), ScaleToNative(Y));
+  for yy := 0 to ScaleToNative(Height) - 1 do begin
+    for xx := 0 to ScaleToNative(Width) - 1 do begin
       PixelPtr.Pixel^.B := PixelPtr.Pixel^.B div 2;
       PixelPtr.Pixel^.G := PixelPtr.Pixel^.G div 2;
       PixelPtr.Pixel^.R := PixelPtr.Pixel^.R div 2;
@@ -564,9 +566,9 @@ var
   PixelPtr: TPixelPointer;
 begin
   Dst.BeginUpdate;
-  PixelPtr := PixelPointer(Dst, X, Y);
-  for YY := 0 to Height - 1 do begin
-    for XX := 0 to Width - 1 do begin
+  PixelPtr := PixelPointer(Dst, ScaleToNative(X), ScaleToNative(Y));
+  for YY := 0 to ScaleToNative(Height) - 1 do begin
+    for XX := 0 to ScaleToNative(Width) - 1 do begin
       Gray := (Integer(PixelPtr.Pixel^.B) + Integer(PixelPtr.Pixel^.G) +
         Integer(PixelPtr.Pixel^.R)) * 85 shr 8;
       PixelPtr.Pixel^.B := 0;
@@ -588,6 +590,12 @@ var
   PixelSrc: TPixelPointer;
   PixelDst: TPixelPointer;
 begin
+  xDst := ScaleToNative(xDst);
+  yDst := ScaleToNative(yDst);
+  xSrc := ScaleToNative(xSrc);
+  ySrc := ScaleToNative(ySrc);
+  Width := ScaleToNative(Width);
+  Height := ScaleToNative(Height);
   //Assert(Src.PixelFormat = pf8bit);
   Assert(dst.PixelFormat = pf24bit);
   if xDst < 0 then begin
@@ -600,10 +608,10 @@ begin
     ySrc := ySrc - yDst;
     yDst := 0;
   end;
-  if xDst + Width > dst.Width then
-    Width := dst.Width - xDst;
-  if yDst + Height > dst.Height then
-    Height := dst.Height - yDst;
+  if xDst + Width > ScaleToNative(dst.Width) then
+    Width := ScaleToNative(dst.Width) - xDst;
+  if yDst + Height > ScaleToNative(dst.Height) then
+    Height := ScaleToNative(dst.Height) - yDst;
   if (Width < 0) or (Height < 0) then
     exit;
 
@@ -650,6 +658,12 @@ var
   SrcPixel: TPixelPointer;
   DstPixel: TPixelPointer;
 begin
+  xDst := ScaleToNative(xDst);
+  yDst := ScaleToNative(yDst);
+  xSrc := ScaleToNative(xSrc);
+  ySrc := ScaleToNative(ySrc);
+  Width := ScaleToNative(Width);
+  Height := ScaleToNative(Height);
   if xDst < 0 then begin
     Width := Width + xDst;
     xSrc := xSrc - xDst;
@@ -660,10 +674,10 @@ begin
     ySrc := ySrc - yDst;
     yDst := 0;
   end;
-  if xDst + Width > dst.Width then
-    Width := dst.Width - xDst;
-  if yDst + Height > dst.Height then
-    Height := dst.Height - yDst;
+  if xDst + Width > ScaleToNative(dst.Width) then
+    Width := ScaleToNative(dst.Width) - xDst;
+  if yDst + Height > ScaleToNative(dst.Height) then
+    Height := ScaleToNative(dst.Height) - yDst;
   if (Width < 0) or (Height < 0) then
     exit;
 
@@ -711,6 +725,12 @@ var
   SrcPixel: TPixelPointer;
   DstPixel: TPixelPointer;
 begin
+  xDst := ScaleToNative(xDst);
+  yDst := ScaleToNative(yDst);
+  xSrc := ScaleToNative(xSrc);
+  ySrc := ScaleToNative(ySrc);
+  Width := ScaleToNative(Width);
+  Height := ScaleToNative(Height);
   Src.BeginUpdate;
   Dst.BeginUpdate;
   SrcPixel := PixelPointer(Src, xSrc, ySrc);
@@ -743,7 +763,7 @@ begin
   Dst.EndUpdate;
 end;
 
-procedure ImageOp_CCC(bmp: TBitmap; x, y, w, h, Color0, Color1, Color2: Integer);
+procedure ImageOp_CCC(bmp: TBitmap; x, y, Width, Height, Color0, Color1, Color2: Integer);
 // Bmp is template
 // B channel = Color0 amp, 128=original brightness
 // G channel = Color1 amp, 128=original brightness
@@ -752,12 +772,16 @@ var
   i, Red, Green: Integer;
   PixelPtr: TPixelPointer;
 begin
+  X := ScaleToNative(X);
+  Y := ScaleToNative(Y);
+  Width := ScaleToNative(Width);
+  Height := ScaleToNative(Height);
   bmp.BeginUpdate;
   assert(bmp.PixelFormat = pf24bit);
-  h := y + h;
+  Height := y + Height;
   PixelPtr := PixelPointer(Bmp, x, y);
-  while y < h do begin
-    for i := 0 to w - 1 do begin
+  while y < Height do begin
+    for i := 0 to Width - 1 do begin
       Red := ((PixelPtr.Pixel^.B * (Color0 and $0000FF) + PixelPtr.Pixel^.G *
         (Color1 and $0000FF) + PixelPtr.Pixel^.R * (Color2 and $0000FF)) shr 8) and $ff;
       Green := ((PixelPtr.Pixel^.B * ((Color0 shr 8) and $0000FF) +
@@ -904,15 +928,21 @@ begin
   BitBltCanvas(ca, x, y, Width, Height, Src.Canvas, xSrc, ySrc);
 end;
 
-procedure GlowFrame(dst: TBitmap; x0, y0, Width, Height: Integer; cl: TColor);
+procedure GlowFrame(Dst: TBitmap; x0, y0, Width, Height: Integer; cl: TColor);
 var
   x, y, ch, r: Integer;
   DstPtr: TPixelPointer;
+  DpiGlowRange: Integer;
 begin
-  dst.BeginUpdate;
-  DstPtr := PixelPointer(dst, x0 - GlowRange + 1, y0 - GlowRange + 1);
-  for y := -GlowRange + 1 to Height - 1 + GlowRange - 1 do begin
-    for x := -GlowRange + 1 to Width - 1 + GlowRange - 1 do begin
+  DpiGlowRange := ScaleToNative(GlowRange);
+  X0 := ScaleToNative(X0);
+  Y0 := ScaleToNative(Y0);
+  Width := ScaleToNative(Width);
+  Height := ScaleToNative(Height);
+  Dst.BeginUpdate;
+  DstPtr := PixelPointer(Dst, x0 - DpiGlowRange + 1, y0 - DpiGlowRange + 1);
+  for y := -DpiGlowRange + 1 to Height - 1 + DpiGlowRange - 1 do begin
+    for x := -DpiGlowRange + 1 to Width - 1 + DpiGlowRange - 1 do begin
       if x < 0 then
         if y < 0 then
           r := round(sqrt(sqr(x) + sqr(y)))
@@ -937,16 +967,16 @@ begin
       end;
       if r = 0 then
         r := 1;
-      if r < GlowRange then
+      if r < DpiGlowRange then
         for ch := 0 to 2 do
           DstPtr.Pixel^.Planes[2 - ch] :=
             (DstPtr.Pixel^.Planes[2 - ch] * (r - 1) + (cl shr (8 * ch) and $FF) *
-            (GlowRange - r)) div (GlowRange - 1);
+            (DpiGlowRange - r)) div (DpiGlowRange - 1);
       DstPtr.NextPixel;
     end;
     DstPtr.NextLine;
   end;
-  dst.EndUpdate;
+  Dst.EndUpdate;
 end;
 
 procedure InitOrnament;
@@ -1511,8 +1541,8 @@ begin
   TexHeight := Texture.Height;
   DstPixel := PixelPointer(Dest);
   SrcPixel := PixelPointer(Texture);
-  for Y := 0 to Dest.Height - 1 do begin
-    for X := 0 to Dest.Width - 1 do begin
+  for Y := 0 to ScaleToNative(Dest.Height) - 1 do begin
+    for X := 0 to ScaleToNative(Dest.Width) - 1 do begin
       if (DstPixel.Pixel^.ARGB and $FFFFFF) = TransparentColor then begin
         SrcPixel.SetXY(X mod TexWidth, Y mod TexHeight);
         DstPixel.Pixel^.B := SrcPixel.Pixel^.B;
@@ -1533,8 +1563,8 @@ var
 begin
   Bitmap.BeginUpdate;
   PicturePixel := PixelPointer(Bitmap);
-  for y := 0 to Bitmap.Height - 1 do begin
-    for x := 0 to Bitmap.Width - 1 do begin
+  for y := 0 to ScaleToNative(Bitmap.Height) - 1 do begin
+    for x := 0 to ScaleToNative(Bitmap.Width) - 1 do begin
       PicturePixel.Pixel^.B := Max(PicturePixel.Pixel^.B - Change, 0);
       PicturePixel.Pixel^.G := Max(PicturePixel.Pixel^.G - Change, 0);
       PicturePixel.Pixel^.R := Max(PicturePixel.Pixel^.R - Change, 0);
@@ -1543,6 +1573,16 @@ begin
     PicturePixel.NextLine;
   end;
   Bitmap.EndUpdate;
+end;
+
+function ScaleToNative(Value: Integer): Integer;
+begin
+  Result := Value;
+end;
+
+function ScaleFromNative(Value: Integer): Integer;
+begin
+  Result := Value;
 end;
 
 procedure LoadFonts;

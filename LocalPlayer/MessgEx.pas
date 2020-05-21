@@ -236,21 +236,25 @@ var
   x1, xR, yR, share: single;
   Screwed: array [0 .. wScrewed - 1, 0 .. hScrewed - 1, 0 .. 3] of single;
   SrcPtr: TPixelPointer;
+  Width: Integer;
+  Height: Integer;
 begin
+  Width := 56;
+  Height := 40;
   if IconIndex >= 0 then begin
     xIcon := IconIndex mod 7 * xSizeBig;
     yIcon := (IconIndex + SystemIconLines * 7) div 7 * ySizeBig;
     // prepare screwed icon
-    fillchar(Screwed, sizeof(Screwed), 0);
+    FillChar(Screwed, sizeof(Screwed), 0);
     BigImp.BeginUpdate;
-    for iy := 0 to 39 do begin
-      for ix := 0 to 55 do begin
-        SrcPtr := PixelPointer(BigImp, ix + xIcon, iy + yIcon);
-        xR := ix * (37 + iy * 5 / 40) / 56;
+    SrcPtr := PixelPointer(BigImp, ScaleToNative(xIcon), ScaleToNative(yIcon));
+    for iy := 0 to ScaleToNative(Height) - 1 do begin
+      for ix := 0 to ScaleToNative(Width) - 1 do begin
+        xR := ScaleFromNative(ix) * (37 + ScaleFromNative(iy) * 5 / Height) / Width;
         xDst := Trunc(xR);
         xR := Frac(xR);
-        x1 := (120 - ix) * (120 - ix) - 10000;
-        yR := iy * 18 / 40 + x1 * x1 / 4000000;
+        x1 := (120 - ScaleFromNative(ix)) * (120 - ScaleFromNative(ix)) - 10000;
+        yR := ScaleFromNative(iy) * 18 / Height + x1 * x1 / 4000000;
         yDst := Trunc(yR);
         yR := Frac(yR);
         for dx := 0 to 1 do
@@ -271,8 +275,10 @@ begin
               + share * SrcPtr.Pixel^.R;
             Screwed[xDst + dx, yDst + dy, 3] := Screwed[xDst + dx, yDst + dy,
               3] + share;
-          end;
+        end;
+        SrcPtr.NextPixel;
       end;
+      SrcPtr.NextLine;
     end;
     BigImp.EndUpdate;
     xb := xBBook;

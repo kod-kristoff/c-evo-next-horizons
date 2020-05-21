@@ -103,18 +103,22 @@ var
   C: Integer;
   Ch: Integer;
   Line: array [0..3] of TPixelPointer;
+  Width: Integer;
+  Height: Integer;
 begin
+  Width := ScaleToNative(180);
+  Height := ScaleToNative(128);
   Offscreen.BeginUpdate;
-  Line[0] := PixelPointer(Offscreen, Center.X, Center.Y);
-  Line[1] := PixelPointer(Offscreen, Center.X, Center.Y - 1);
-  Line[2] := PixelPointer(Offscreen, Center.X - 1, Center.Y);
-  Line[3] := PixelPointer(Offscreen, Center.X - 1, Center.Y - 1);
-  for Y := 0 to 127 do begin
-    for X := 0 to 179 do begin
-      r := X * X * (32 * 32) + Y * Y * (45 * 45);
-      ax := ((1 shl 16 div 32) * 45) * Y;
-      if (r < 8 * 128 * 180 * 180) and
-        ((r >= 32 * 64 * 90 * 90) and (ax < amax2 * X) and
+  Line[0] := PixelPointer(Offscreen, ScaleToNative(Center.X), ScaleToNative(Center.Y));
+  Line[1] := PixelPointer(Offscreen, ScaleToNative(Center.X), ScaleToNative(Center.Y) - 1);
+  Line[2] := PixelPointer(Offscreen, ScaleToNative(Center.X) - 1, ScaleToNative(Center.Y));
+  Line[3] := PixelPointer(Offscreen, ScaleToNative(Center.X) - 1, ScaleToNative(Center.Y) - 1);
+  for Y := 0 to Height - 1 do begin
+    for X := 0 to Width - 1 do begin
+      r := X * X * ((Height div 4) * (Height div 4)) + Y * Y * ((Width div 4) * (Width div 4));
+      ax := ((1 shl 16 div (Height div 4)) * (Width div 4)) * Y;
+      if (r < ScaleToNative(8) * Height * Width * Width) and
+        ((r >= (Height div 4) * (Height div 2) * (Width div 2) * (Width div 2)) and (ax < amax2 * X) and
         ((ax < amax0 * X) or (ax > amin2 * X)) or (ax > amin1 * X) and
         ((ax < amax1 * X) or (ax > amin3 * X))) then begin
         for ch := 0 to 2 do begin
@@ -155,10 +159,10 @@ begin
   y0Dst := ClientHeight div 2 - ySizeBig div 2 + RingPosition[i].Y;
   x0Src := (i mod 7) * xSizeBig;
   y0Src := (i div 7 + SystemIconLines) * ySizeBig;
-  Src := PixelPointer(BigImp, x0Src, y0Src);
-  Dst := PixelPointer(Offscreen, x0Dst, y0Dst);
-  for Y := 0 to ySizeBig - 1 do begin
-    for X := 0 to xSizeBig - 1 do begin
+  Src := PixelPointer(BigImp, ScaleToNative(x0Src), ScaleToNative(y0Src));
+  Dst := PixelPointer(Offscreen, ScaleToNative(x0Dst), ScaleToNative(y0Dst));
+  for Y := 0 to ScaleToNative(ySizeBig) - 1 do begin
+    for X := 0 to ScaleToNative(xSizeBig) - 1 do begin
       Darken := ((255 - Src.Pixel^.B) * 3 + (255 - Src.Pixel^.G) *
         15 + (255 - Src.Pixel^.R) * 9) div 128;
       for ch := 0 to 2 do begin
@@ -228,7 +232,7 @@ begin
               Center.Y - ySizeBig div 2 + RingPosition[I].Y - 3, xSizeBig + 6,
               ySizeBig + 6, (wMaintexture - ClientWidth) div 2,
               (hMaintexture - ClientHeight) div 2);
-            //DarkIcon(I);
+            DarkIcon(I);
           end;
         -2: // destroyed
           begin

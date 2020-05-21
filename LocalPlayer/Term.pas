@@ -553,86 +553,88 @@ const
   cut = 4;
   Sharpen = 80;
 type
-  TBuffer = array [0 .. 99999, 0 .. 2] of integer;
+  TBuffer = array [0 .. 99999, 0 .. 2] of Integer;
 var
-  sum, Cnt, dx, dy, nx, ny, ix, iy, ir, x, y, c, ch, xdivider,
-    ydivider: integer;
-  resampled: ^TBuffer;
+  Sum, Cnt, dx, dy, nx, ny, ix, iy, ir, x, y, c, ch: Integer;
+  xdivider, ydivider: Integer;
+  Resampled: ^TBuffer;
   PixelPtr: TPixelPointer;
 begin
-  nx := BigImp.width div xSizeBig * xSizeSmall;
-  ny := BigImp.height div ySizeBig * ySizeSmall;
+  nx := BigImp.Width div xSizeBig * xSizeSmall;
+  ny := BigImp.Height div ySizeBig * ySizeSmall;
 
   // resample icons
-  GetMem(resampled, nx * ny * 12);
-  FillChar(resampled^, nx * ny * 12, 0);
+  GetMem(Resampled, nx * ny * 12);
+  FillChar(Resampled^, nx * ny * 12, 0);
   BigImp.BeginUpdate;
-  for ix := 0 to BigImp.width div xSizeBig - 1 do
-    for iy := 0 to BigImp.height div ySizeBig - 1 do
-      for y := 0 to ySizeBig - 2 * cut - 1 do
-      begin
-        ydivider := (y * ySizeSmall div (ySizeBig - 2 * cut) + 1) *
-          (ySizeBig - 2 * cut) - y * ySizeSmall;
+  for ix := 0 to BigImp.Width div xSizeBig - 1 do
+    for iy := 0 to BigImp.Height div ySizeBig - 1 do begin
+      PixelPtr := PixelPointer(BigImp, ScaleToNative(ix * xSizeBig),
+        ScaleToNative(cut + iy * ySizeBig));
+      for y := 0 to ScaleToNative(ySizeBig - 2 * cut) - 1 do begin
+        ydivider := (ScaleFromNative(y) * ySizeSmall div (ySizeBig - 2 * cut) + 1) *
+          (ySizeBig - 2 * cut) - ScaleFromNative(y) * ySizeSmall;
         if ydivider > ySizeSmall then
           ydivider := ySizeSmall;
-        PixelPtr := PixelPointer(BigImp, 0, cut + iy * ySizeBig + y);
-        for x := 0 to xSizeBig - 1 do
-        begin
-          ir := ix * xSizeSmall + iy * nx * ySizeSmall + x *
-            xSizeSmall div xSizeBig + y *
+        for x := 0 to ScaleToNative(xSizeBig) - 1 do begin
+          ir := ix * xSizeSmall + iy * nx * ySizeSmall + ScaleFromNative(x) *
+            xSizeSmall div xSizeBig + ScaleFromNative(y) *
             ySizeSmall div (ySizeBig - 2 * cut) * nx;
-          xdivider := (x * xSizeSmall div xSizeBig + 1) * xSizeBig - x *
-            xSizeSmall;
+          xdivider := (ScaleFromNative(x) * xSizeSmall div xSizeBig + 1) *
+            xSizeBig - ScaleFromNative(x) * xSizeSmall;
           if xdivider > xSizeSmall then
             xdivider := xSizeSmall;
-          for ch := 0 to 2 do
-          begin
-            PixelPtr.SetX(ix * xSizeBig + x);
+          for ch := 0 to 2 do begin
             c := PixelPtr.Pixel^.Planes[ch];
-            inc(resampled[ir, ch], c * xdivider * ydivider);
+            Inc(Resampled[ir, ch], c * xdivider * ydivider);
             if xdivider < xSizeSmall then
-              inc(resampled[ir + 1, ch], c * (xSizeSmall - xdivider) *
+              Inc(Resampled[ir + 1, ch], c * (xSizeSmall - xdivider) *
                 ydivider);
             if ydivider < ySizeSmall then
-              inc(resampled[ir + nx, ch],
+              Inc(Resampled[ir + nx, ch],
                 c * xdivider * (ySizeSmall - ydivider));
             if (xdivider < xSizeSmall) and (ydivider < ySizeSmall) then
-              inc(resampled[ir + nx + 1, ch], c * (xSizeSmall - xdivider) *
+              Inc(Resampled[ir + nx + 1, ch], c * (xSizeSmall - xdivider) *
                 (ySizeSmall - ydivider));
           end;
+          PixelPtr.NextPixel;
         end;
+        PixelPtr.NextLine;
       end;
+    end;
   BigImp.EndUpdate;
 
-  // sharpen resampled icons
+  // Sharpen Resampled icons
   SmallImp.SetSize(nx, ny);
   SmallImp.BeginUpdate;
-  for y := 0 to ny - 1 do begin
-    PixelPtr := PixelPointer(SmallImp, 0, y);
-    for x := 0 to nx - 1 do
+  PixelPtr := PixelPointer(SmallImp);
+  for y := 0 to ScaleToNative(ny) - 1 do begin
+    for x := 0 to ScaleToNative(nx) - 1 do begin
       for ch := 0 to 2 do begin
-        sum := 0;
+        Sum := 0;
         Cnt := 0;
         for dy := -1 to 1 do
-          if ((dy >= 0) or (y mod ySizeSmall > 0)) and
-            ((dy <= 0) or (y mod ySizeSmall < ySizeSmall - 1)) then
+          if ((dy >= 0) or (ScaleFromNative(y) mod ySizeSmall > 0)) and
+            ((dy <= 0) or (ScaleFromNative(y) mod ySizeSmall < ySizeSmall - 1)) then
             for dx := -1 to 1 do
-              if ((dx >= 0) or (x mod xSizeSmall > 0)) and
-                ((dx <= 0) or (x mod xSizeSmall < xSizeSmall - 1)) then
+              if ((dx >= 0) or (ScaleFromNative(x) mod xSizeSmall > 0)) and
+                ((dx <= 0) or (ScaleFromNative(x) mod xSizeSmall < xSizeSmall - 1)) then
               begin
-                inc(sum, resampled[x + dx + nx * (y + dy), ch]);
-                inc(Cnt);
+                Inc(Sum, Resampled[ScaleFromNative(x) + dx + nx * (ScaleFromNative(y) + dy), ch]);
+                Inc(Cnt);
               end;
-        sum := ((Cnt * Sharpen + 800) * resampled[x + nx * y, ch] - sum *
+        Sum := ((Cnt * Sharpen + 800) * Resampled[ScaleFromNative(x) + nx * ScaleFromNative(y), ch] - Sum *
           Sharpen) div (800 * xSizeBig * (ySizeBig - 2 * cut));
-        if sum < 0 then sum := 0;
-        if sum > 255 then sum := 255;
-        PixelPtr.SetX(x);
-        PixelPtr.Pixel^.Planes[ch] := sum;
+        if Sum < 0 then Sum := 0;
+        if Sum > 255 then Sum := 255;
+        PixelPtr.Pixel^.Planes[ch] := Sum;
       end;
+      PixelPtr.NextPixel;
+    end;
+    PixelPtr.NextLine;
   end;
   SmallImp.EndUpdate;
-  FreeMem(resampled);
+  FreeMem(Resampled);
 end;
 
 procedure ImpImage(ca: TCanvas; x, y, iix: integer; Government: integer;
@@ -4065,15 +4067,16 @@ begin
   Mini.BeginUpdate;
   MiniPixel := PixelPointer(Mini);
   PrevMiniPixel := PixelPointer(Mini);
-  for y := 0 to G.ly - 1 do
+  for y := 0 to ScaleToNative(G.ly) - 1 do
   begin
-    for x := 0 to G.lx - 1 do
-      if MyMap[x + G.lx * y] and fTerrain <> fUNKNOWN then
+    for x := 0 to ScaleToNative(G.lx) - 1 do
+      if MyMap[ScaleFromNative(x) + G.lx * ScaleFromNative(y)] and fTerrain <> fUNKNOWN then
       begin
-        Loc := x + G.lx * y;
+        Loc := ScaleFromNative(x) + G.lx * ScaleFromNative(y);
         for i := 0 to 1 do
         begin
-          xm := ((x - xwMini) * 2 + i + y and 1 - hw + G.lx * 5) mod (G.lx * 2);
+          xm := ((x - ScaleToNative(xwMini)) * 2 + i + y and 1 - ScaleToNative(hw) +
+            ScaleToNative(G.lx) * 5) mod (ScaleToNative(G.lx) * 2);
           MiniPixel.SetXY(xm, y);
           cm := MiniColors[MyMap[Loc] and fTerrain, i];
           if ClientMode = cEditMap then

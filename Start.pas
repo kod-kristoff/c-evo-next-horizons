@@ -354,14 +354,14 @@ begin
   Bitmap.SetSize(Size.X * 2, Size.Y);
   Bitmap.BeginUpdate;
   MiniPixel := PixelPointer(Bitmap);
-  for y := 0 to Size.Y - 1 do begin
-    for x := 0 to Size.X - 1 do begin
+  for y := 0 to ScaleToNative(Size.Y) - 1 do begin
+    for x := 0 to ScaleToNative(Size.X) - 1 do begin
       for i := 0 to 1 do begin
-        xm := (x * 2 + i + y and 1) mod (Size.X * 2);
+        xm := (x * 2 + i + y and 1) mod (ScaleToNative(Size.X) * 2);
         MiniPixel.SetX(xm);
         cm := Colors
-          [Map[x * lxmax div Size.X + lxmax *
-          ((y * (lymax - 1) + Size.Y div 2) div (Size.Y - 1))] and
+          [Map[ScaleFromNative(x) * lxmax div Size.X + lxmax *
+          ((ScaleFromNative(y) * (lymax - 1) + Size.Y div 2) div (Size.Y - 1))] and
           fTerrain, i];
         MiniPixel.Pixel^.B := ((cm shr 16) and $FF) * Brightness div 3;
         MiniPixel.Pixel^.G := ((cm shr 8) and $FF) * Brightness div 3;
@@ -387,12 +387,12 @@ begin
     Bitmap.BeginUpdate;
     MiniPixel := PixelPointer(Bitmap);
     PrevMiniPixel := PixelPointer(Bitmap, 0, -1);
-    for y := 0 to Size.Y - 1 do begin
-      for x := 0 to Size.X - 1 do begin
+    for y := 0 to ScaleToNative(Size.Y) - 1 do begin
+      for x := 0 to ScaleToNative(Size.X) - 1 do begin
         for i := 0 to 1 do begin
-          xm := (x * 2 + i + y and 1) mod (Size.X * 2);
+          xm := (x * 2 + i + y and 1) mod (ScaleToNative(Size.X) * 2);
           MiniPixel.SetX(xm);
-          Tile := SaveMap[x + Size.X * y];
+          Tile := SaveMap[ScaleFromNative(x) + Size.X * ScaleFromNative(y)];
           if Tile and fTerrain = fUNKNOWN then
             cm := $000000
           else if Tile and smCity <> 0 then

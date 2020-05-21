@@ -440,7 +440,7 @@ end;
 procedure THelpDlg.WaterSign(x0, y0, iix: integer);
 const
   nHeaven = 28;
-  maxsum = 9 * 9 * 255 * 75 div 100;
+  MaxSum = 9 * 9 * 255 * 75 div 100;
 var
   x, y, dx, dy, xSrc, ySrc, sum, xx: integer;
   Heaven: array [0..nHeaven] of integer;
@@ -456,33 +456,33 @@ begin
   Offscreen.BeginUpdate;
   xSrc := iix mod 7 * xSizeBig;
   ySrc := (iix div 7 + 1) * ySizeBig;
-  for y := 0 to ySizeBig * 2 - 1 do
-    if ((y0 + y) >= 0) and ((y0 + y) < InnerHeight) then begin
-      PaintPtr := PixelPointer(OffScreen, 0, y0 + y);
-      CoalPtr := PixelPointer(Templates, 0, yCoal + y);
+  for y := 0 to ScaleToNative(ySizeBig) * 2 - 1 do
+    if ((ScaleToNative(y0) + y) >= 0) and ((ScaleToNative(y0) + y) < ScaleToNative(InnerHeight)) then begin
+      PaintPtr := PixelPointer(OffScreen, 0, ScaleToNative(y0) + y);
+      CoalPtr := PixelPointer(Templates, 0, ScaleToNative(yCoal) + y);
       for dy := -1 to 1 do
-        if ((Max(y + dy, 0) shr 1) >= 0) and ((Max(y + dy, 0) shr 1) < ySizeBig) then
-          ImpPtr[dy] := PixelPointer(BigImp, 0, ySrc + (Max(y + dy, 0) shr 1));
-      for x := 0 to xSizeBig * 2 - 1 do begin
+        if ((Max(y + ScaleToNative(dy), 0) shr 1) >= 0) and ((Max(y + ScaleToNative(dy), 0) shr 1) < ScaleToNative(ySizeBig)) then
+          ImpPtr[dy] := PixelPointer(BigImp, 0, ScaleToNative(ySrc) + (Max(y + ScaleToNative(dy), 0) shr 1));
+      for x := 0 to ScaleToNative(xSizeBig) * 2 - 1 do begin
         sum := 0;
         for dx := -1 to 1 do begin
-          xx := xSrc + Max((x + dx), 0) shr 1;
+          xx := ScaleToNative(xSrc) + Max((x + ScaleToNative(dx)), 0) shr 1;
           for dy := -1 to 1 do begin
             ImpPtr[dy].SetX(xx);
-            if ((y + dy) shr 1 < 0) or ((y + dy) shr 1 >= ySizeBig) or
-              ((x + dx) shr 1 < 0) or ((x + dx) shr 1 >= xSizeBig) or
-              ((y + dy) shr 1 < nHeaven) and
+            if ((y + ScaleToNative(dy)) shr 1 < 0) or ((y + ScaleToNative(dy)) shr 1 >= ScaleToNative(ySizeBig)) or
+              ((x + ScaleToNative(dx)) shr 1 < 0) or ((x + ScaleToNative(dx)) shr 1 >= ScaleToNative(xSizeBig)) or
+              ((y + ScaleToNative(dy)) shr 1 < ScaleToNative(nHeaven)) and
               (ImpPtr[dy].Pixel^.B shl 16 + ImpPtr[dy].Pixel^.G shl 8 +
-              ImpPtr[dy].Pixel^.R = Heaven[(y + dy) shr 1]) then
+              ImpPtr[dy].Pixel^.R = Heaven[(ScaleFromNative(y) + dy) shr 1]) then
               sum := sum + 9 * 255
             else
               sum := sum + ImpPtr[dy].Pixel^.B + 5 * ImpPtr[dy].Pixel^.G + 3 *
                 ImpPtr[dy].Pixel^.R;
           end;
         end;
-        if sum < maxsum then begin // no saturation
-          CoalPtr.SetX(xCoal + x);
-          sum := 1 shl 22 - (maxsum - sum) * (256 - CoalPtr.Pixel^.B * 2);
+        if sum < MaxSum then begin // no saturation
+          CoalPtr.SetX(ScaleToNative(xCoal) + x);
+          sum := 1 shl 22 - (MaxSum - sum) * (256 - CoalPtr.Pixel^.B * 2);
           PaintPtr.SetX(x0 + x);
           PaintPtr.Pixel^.B := PaintPtr.Pixel^.B * sum shr 22;
           PaintPtr.Pixel^.G := PaintPtr.Pixel^.G * sum shr 22;

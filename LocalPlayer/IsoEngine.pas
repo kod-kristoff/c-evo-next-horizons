@@ -33,7 +33,7 @@ type
     procedure CityGrid(xm, ym: integer; CityAllowClick: Boolean);
     function IsShoreTile(Loc: integer): boolean;
     procedure MakeDark(Line: PPixelPointer; Length: Integer);
-    procedure ShadeOutside(x0, y0, x1, y1, xm, ym: integer);
+    procedure ShadeOutside(x0, y0, Width, Height, xm, ym: integer);
   protected
     FOutput: TBitmap;
     FLeft, FTop, FRight, FBottom, RealTop, RealBottom, AttLoc, DefLoc,
@@ -1014,10 +1014,9 @@ var
             yyt * 2, GrExt[HGrTerrain].Data.Canvas,
             1 + 8 * (xxt * 2 + 1), 1 + yyt + 16 * (yyt * 3 + 1));
           Borders.BeginUpdate;
-          for dy := 0 to yyt * 2 - 1 do
-          begin
-            PixelPtr := PixelPointer(Borders, 0, p1 * (yyt * 2) + dy);
-            for dx := 0 to xxt * 2 - 1 do begin
+          PixelPtr := PixelPointer(Borders, ScaleToNative(0), ScaleToNative(p1 * (yyt * 2)));
+          for dy := 0 to ScaleToNative(yyt * 2) - 1 do begin
+            for dx := 0 to ScaleToNative(xxt * 2) - 1 do begin
               if PixelPtr.Pixel^.B = 99 then begin
                 PixelPtr.Pixel^.B := Tribe[p1].Color shr 16 and $FF;
                 PixelPtr.Pixel^.G := Tribe[p1].Color shr 8 and $FF;
@@ -1025,6 +1024,7 @@ var
               end;
               PixelPtr.NextPixel;
             end;
+            PixelPtr.NextLine;
           end;
           Borders.EndUpdate;
           BordersOK := BordersOK or 1 shl p1;
@@ -1329,7 +1329,7 @@ begin
   end;
 end;
 
-procedure TIsoMap.ShadeOutside(x0, y0, x1, y1, xm, ym: integer);
+procedure TIsoMap.ShadeOutside(x0, y0, Width, Height, xm, ym: integer);
 const
   rShade = 3.75;
 var
@@ -1338,22 +1338,23 @@ var
   Line: TPixelPointer;
 begin
   FOutput.BeginUpdate;
-  for y := y0 to y1 - 1 do begin
-    Line := PixelPointer(FOutput, 0, y);
-    y_n := (y - ym) / yyt;
+  Line := PixelPointer(FOutput, ScaleToNative(x0), ScaleToNative(y0));
+  for y := 0 to ScaleToNative(Height) - 1 do begin
+    y_n := (ScaleFromNative(y) + y0 - ym) / yyt;
     if abs(y_n) < rShade then begin
       // Darken left and right parts of elipsis
       w_n := sqrt(sqr(rShade) - sqr(y_n));
       wBright := trunc(w_n * xxt + 0.5);
-      Line.SetX(x0);
-      MakeDark(@Line, xm - x0 - wBright);
-      Line.SetX(xm + wBright);
-      MakeDark(@Line, x1 - xm - wBright);
+      Line.SetX(0);
+      MakeDark(@Line, ScaleToNative(xm - wBright));
+      Line.SetX(ScaleToNative(xm + wBright));
+      MakeDark(@Line, ScaleToNative(Width - xm - wBright));
     end else begin
       // Darken entire line
-      Line.SetX(x0);
-      MakeDark(@Line, x1 - x0);
+      Line.SetX(0);
+      MakeDark(@Line, ScaleToNative(Width));
     end;
+    Line.NextLine;
   end;
   FOutput.EndUpdate;
 end;
@@ -1575,7 +1576,7 @@ begin
     dy := CityLoc div G.lx - (Loc + 666 * G.lx) div G.lx + 666;
     xm := x + (dx + 1) * xxt;
     ym := y + (dy + 1) * yyt + yyt;
-    ShadeOutside(FLeft, FTop, FRight, FBottom, xm, ym);
+    ShadeOutside(FLeft, FTop, FRight - FLeft, FBottom - FTop, xm, ym);
     CityGrid(xm, ym, CityAllowClick);
     for dy := -2 to ny + 1 do
       for dx := -2 to nx + 1 do
