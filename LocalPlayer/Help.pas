@@ -126,7 +126,8 @@ var
 implementation
 
 uses
-  Directories, ClientTools, Term, Tribes, Inp, Messg, UPixelPointer, Global;
+  Directories, ClientTools, Term, Tribes, Inp, Messg, UPixelPointer, Global,
+  UKeyBindings;
 
 {$R *.lfm}
 
@@ -2009,9 +2010,9 @@ end;
 procedure THelpDlg.FormKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
-  if Key = VK_F1 then // my key
+  if KeyToShortCut(Key, Shift) = BHelp.ShortCut then // my key
   else
-    inherited
+    inherited;
 end;
 
 procedure THelpDlg.SearchBtnClick(Sender: TObject);

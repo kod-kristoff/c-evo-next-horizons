@@ -480,7 +480,7 @@ implementation
 uses
   Directories, IsoEngine, CityScreen, Draft, MessgEx, Select, CityType, Help,
   UnitStat, Log, Diagram, NatStat, Wonders, Enhance, Nego, UPixelPointer, Sound,
-  Battle, Rates, TechTree, Registry, Global;
+  Battle, Rates, TechTree, Registry, Global, UKeyBindings;
 
 {$R *.lfm}
 
@@ -6452,7 +6452,10 @@ procedure TMainScreen.FormKeyDown(Sender: TObject; var Key: word;
 var
   dx, dy: integer;
   time0, time1: TDateTime;
+  ShortCut: TShortCut;
 begin
+  ShortCut := KeyToShortCut(Key, Shift);
+
   if GameMode = cMovie then
   begin
     case Key of
@@ -6492,14 +6495,22 @@ begin
           MenuClick(mResign);
         'R':
           MenuClick(mRandomMap);
-      end
-    else if Shift = [] then
-      case char(Key) of
-        char(VK_F1):
-          MenuClick(mHelp);
       end;
-    exit;
+    if ShortCut = BHelp.ShortCut then MenuClick(mHelp);
+    Exit;
   end;
+
+  if ShortCut = BEndTurn.ShortCut then EndTurn
+  else if ShortCut = BHelp.ShortCut then MenuClick(mHelp)
+  else if ShortCut = BUnitStat.ShortCut then MenuClick_Check(StatPopup, mUnitStat)
+  else if ShortCut = BCityStat.ShortCut then MenuClick_Check(StatPopup, mCityStat)
+  else if ShortCut = BScienceStat.ShortCut then MenuClick_Check(StatPopup, mScienceStat)
+  else if ShortCut = BEUnitStat.ShortCut then MenuClick_Check(StatPopup, mEUnitStat)
+  else if ShortCut = BDiagram.ShortCut then MenuClick_Check(StatPopup, mDiagram)
+  else if ShortCut = BWonders.ShortCut then MenuClick_Check(StatPopup, mWonders)
+  else if ShortCut = BShips.ShortCut then MenuClick_Check(StatPopup, mShips)
+  else if ShortCut = BNations.ShortCut then MenuClick_Check(StatPopup, mNations)
+  else if ShortCut = BEmpire.ShortCut then MenuClick_Check(StatPopup, mEmpire);
 
   if Shift = [ssAlt] then
     case char(Key) of
@@ -6546,28 +6557,6 @@ begin
     end
   else if Shift = [] then
     case char(Key) of
-      char(VK_F1):
-        MenuClick(mHelp);
-      char(VK_F2):
-        MenuClick_Check(StatPopup, mUnitStat);
-      char(VK_F3):
-        MenuClick_Check(StatPopup, mCityStat);
-      char(VK_F4):
-        MenuClick_Check(StatPopup, mScienceStat);
-      char(VK_F5):
-        MenuClick_Check(StatPopup, mEUnitStat);
-      char(VK_F6):
-        MenuClick_Check(StatPopup, mDiagram);
-      char(VK_F7):
-        MenuClick_Check(StatPopup, mWonders);
-      char(VK_F8):
-        MenuClick_Check(StatPopup, mShips);
-      char(VK_F9):
-        MenuClick_Check(StatPopup, mNations);
-      char(VK_F10):
-        MenuClick_Check(StatPopup, mEmpire);
-      char(VK_ADD):
-        EndTurn;
       '1':
         MapBtnClick(MapBtn0);
       '2':
