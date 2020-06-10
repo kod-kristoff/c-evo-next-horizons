@@ -28,6 +28,7 @@ type
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure MouseLeave; override;
+    procedure KeyDown(var Key: Word; Shift: TShiftState); override;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -168,6 +169,12 @@ procedure TDrawDlg.MouseLeave;
 begin
   MoveActive := False;
   inherited;
+end;
+
+procedure TDrawDlg.KeyDown(var Key: Word; Shift: TShiftState);
+begin
+  if Key = VK_ESCAPE then Close;
+  inherited KeyDown(Key, Shift);
 end;
 
 procedure TDrawDlg.VisibleChangedHandler(Sender: TObject);

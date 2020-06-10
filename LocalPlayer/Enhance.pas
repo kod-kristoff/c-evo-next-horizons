@@ -365,9 +365,7 @@ end;
 procedure TEnhanceDlg.FormKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
-  if Key = VK_ESCAPE then
-    Close
-  else if Key = VK_F1 then
+  if Key = VK_F1 then
     HelpDlg.ShowNewContent(FWindowMode or wmPersistent, hkText,
       HelpDlg.TextIndex('MACRO'))
 end;

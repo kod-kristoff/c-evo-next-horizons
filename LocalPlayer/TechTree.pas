@@ -22,7 +22,6 @@ type
     procedure FormMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure FormMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
-    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure CloseBtnClick(Sender: TObject);
   private
     xOffset, yOffset, xDown, yDown: Integer;
@@ -225,13 +224,6 @@ begin
 
     SmartInvalidate;
   end;
-end;
-
-procedure TTechTreeDlg.FormKeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
-begin
-  if Key = VK_ESCAPE then
-    Close;
 end;
 
 procedure TTechTreeDlg.CloseBtnClick(Sender: TObject);
