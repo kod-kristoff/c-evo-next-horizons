@@ -1,4 +1,4 @@
-object LocaleDlg: TLocaleDlg
+object SettingsDlg: TSettingsDlg
   Left = 766
   Height = 448
   Top = 240

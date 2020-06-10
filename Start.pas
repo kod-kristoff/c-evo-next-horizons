@@ -164,7 +164,7 @@ var
 implementation
 
 uses
-  Global, Directories, Direct, ScreenTools, Inp, Back, Locale, UPixelPointer;
+  Global, Directories, Direct, ScreenTools, Inp, Back, Settings, UPixelPointer;
 
 {$R *.lfm}
 
@@ -1649,14 +1649,14 @@ begin
     case SelectedAction of
       maConfig:
         begin
-          LocaleDlg := TLocaleDlg.Create(nil);
-          if LocaleDlg.ShowModal = mrOk then begin
+          SettingsDlg := TSettingsDlg.Create(nil);
+          if SettingsDlg.ShowModal = mrOk then begin
             LoadAssets;
             Invalidate;
             UpdateInterface;
             Background.UpdateInterface;
           end;
-          FreeAndNil(LocaleDlg);
+          FreeAndNil(SettingsDlg);
         end;
       maManual:
         DirectHelp(cStartHelp);

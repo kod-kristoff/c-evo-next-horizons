@@ -1,4 +1,4 @@
-unit Locale;
+unit Settings;
 
 {$mode delphi}
 
@@ -23,9 +23,9 @@ type
     function Search(ShortName: string): Integer;
   end;
 
-  { TLocaleDlg }
+  { TSettingsDlg }
 
-  TLocaleDlg = class(TDrawDlg)
+  TSettingsDlg = class(TDrawDlg)
     ButtonFullscreen: TButtonC;
     List: TListBox;
     OKBtn: TButtonA;
@@ -44,7 +44,7 @@ type
   end;
 
 var
-  LocaleDlg: TLocaleDlg;
+  SettingsDlg: TSettingsDlg;
 
 implementation
 
@@ -81,9 +81,9 @@ begin
     else Result := -1;
 end;
 
-{ TLocaleDlg }
+{ TSettingsDlg }
 
-procedure TLocaleDlg.FormCreate(Sender: TObject);
+procedure TSettingsDlg.FormCreate(Sender: TObject);
 begin
   Canvas.Font.Assign(UniFont[ftNormal]);
   Canvas.Brush.Style := bsClear;
@@ -108,23 +108,23 @@ begin
     else ButtonFullscreen.ButtonIndex := 2;
 end;
 
-procedure TLocaleDlg.CancelBtnClick(Sender: TObject);
+procedure TSettingsDlg.CancelBtnClick(Sender: TObject);
 begin
   ModalResult := mrCancel;
 end;
 
-procedure TLocaleDlg.ButtonFullscreenClick(Sender: TObject);
+procedure TSettingsDlg.ButtonFullscreenClick(Sender: TObject);
 begin
   FullScreen := not FullScreen;
   ButtonFullscreen.ButtonIndex := ButtonFullscreen.ButtonIndex xor 1;
 end;
 
-procedure TLocaleDlg.FormDestroy(Sender: TObject);
+procedure TSettingsDlg.FormDestroy(Sender: TObject);
 begin
   FreeAndNil(Languages);
 end;
 
-procedure TLocaleDlg.FormPaint(Sender: TObject);
+procedure TSettingsDlg.FormPaint(Sender: TObject);
 var
   S: string;
 begin
@@ -147,7 +147,7 @@ begin
     ButtonFullscreen.Top - 4, s);
 end;
 
-procedure TLocaleDlg.FormShow(Sender: TObject);
+procedure TSettingsDlg.FormShow(Sender: TObject);
 begin
   Languages.LoadToStrings(List.Items);
   List.ItemIndex := Languages.Search(LocaleCode);
@@ -156,7 +156,7 @@ begin
   List.Font.Color := MainTexture.clMark;
 end;
 
-procedure TLocaleDlg.OKBtnClick(Sender: TObject);
+procedure TSettingsDlg.OKBtnClick(Sender: TObject);
 begin
   LocaleCode := Languages[List.ItemIndex].ShortName;
   ModalResult := mrOk;
