@@ -550,7 +550,7 @@ end;
 
 procedure InitSmallImp;
 const
-  cut = 4;
+  Cut = 4;
   Sharpen = 80;
 type
   TBuffer = array [0 .. 99999, 0 .. 2] of Integer;
@@ -570,16 +570,16 @@ begin
   for ix := 0 to BigImp.Width div xSizeBig - 1 do
     for iy := 0 to BigImp.Height div ySizeBig - 1 do begin
       PixelPtr := PixelPointer(BigImp, ScaleToNative(ix * xSizeBig),
-        ScaleToNative(cut + iy * ySizeBig));
-      for y := 0 to ScaleToNative(ySizeBig - 2 * cut) - 1 do begin
-        ydivider := (ScaleFromNative(y) * ySizeSmall div (ySizeBig - 2 * cut) + 1) *
-          (ySizeBig - 2 * cut) - ScaleFromNative(y) * ySizeSmall;
+        ScaleToNative(Cut + iy * ySizeBig));
+      for y := 0 to ScaleToNative(ySizeBig - 2 * Cut) - 1 do begin
+        ydivider := (ScaleFromNative(y) * ySizeSmall div (ySizeBig - 2 * Cut) + 1) *
+          (ySizeBig - 2 * Cut) - ScaleFromNative(y) * ySizeSmall;
         if ydivider > ySizeSmall then
           ydivider := ySizeSmall;
         for x := 0 to ScaleToNative(xSizeBig) - 1 do begin
           ir := ix * xSizeSmall + iy * nx * ySizeSmall + ScaleFromNative(x) *
             xSizeSmall div xSizeBig + ScaleFromNative(y) *
-            ySizeSmall div (ySizeBig - 2 * cut) * nx;
+            ySizeSmall div (ySizeBig - 2 * Cut) * nx;
           xdivider := (ScaleFromNative(x) * xSizeSmall div xSizeBig + 1) *
             xSizeBig - ScaleFromNative(x) * xSizeSmall;
           if xdivider > xSizeSmall then
@@ -624,7 +624,7 @@ begin
                 Inc(Cnt);
               end;
         Sum := ((Cnt * Sharpen + 800) * Resampled[ScaleFromNative(x) + nx * ScaleFromNative(y), ch] - Sum *
-          Sharpen) div (800 * xSizeBig * (ySizeBig - 2 * cut));
+          Sharpen) div (800 * xSizeBig * (ySizeBig - 2 * Cut));
         if Sum < 0 then Sum := 0;
         if Sum > 255 then Sum := 255;
         PixelPtr.Pixel^.Planes[ch] := Sum;
