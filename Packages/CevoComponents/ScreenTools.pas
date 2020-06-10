@@ -1622,9 +1622,7 @@ begin
                 'I', 'i':
                   UniFont[section].Style := UniFont[section].Style + [fsItalic];
               end;
-            // 0.8 constant is compensation for Lazarus as size of fonts against Delphi differs
-            UniFont[section].Size :=
-              Round(size * Screen.PixelsPerInch / UniFont[section].PixelsPerInch * 0.8);
+            UniFont[section].Size := Round(Size * 72 / UniFont[section].PixelsPerInch);
           end;
         end;
     end;
