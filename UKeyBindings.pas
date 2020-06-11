@@ -37,6 +37,13 @@ var
   BShips: TKeyBinding;
   BNations: TKeyBinding;
   BEmpire: TKeyBinding;
+  BResign: TKeyBinding;
+  BRandomMap: TKeyBinding;
+  BDisbandUnit: TKeyBinding;
+  BFortify: TKeyBinding;
+  BCenterUnit: TKeyBinding;
+  BStay: TKeyBinding;
+  BNoOrders: TKeyBinding;
 
 
 implementation
@@ -112,17 +119,26 @@ end;
 initialization
 
 KeyBindings := TKeyBindings.Create;
-BEndTurn := KeyBindings.AddItem('EndTurn', 'End turn', 'NumPlus');
-BHelp := KeyBindings.AddItem('Help', 'Help', 'F1');
-BUnitStat := KeyBindings.AddItem('UnitStat', 'Unit stat', 'F2');
-BCityStat := KeyBindings.AddItem('CityStat', 'City stat', 'F3');
-BScienceStat := KeyBindings.AddItem('ScienceStat', 'Science research', 'F4');
-BEUnitStat := KeyBindings.AddItem('EnemyUnitStat', 'Enemy unit stat', 'F5');
-BDiagram := KeyBindings.AddItem('Diagram', 'Charts', 'F6');
-BWonders := KeyBindings.AddItem('Wonders', 'World wonders', 'F7');
-BShips := KeyBindings.AddItem('Ships', 'Colonization ships', 'F8');
-BNations := KeyBindings.AddItem('Nations', 'Nations', 'F9');
-BEmpire := KeyBindings.AddItem('Empire', 'Empire', 'F10');
+with KeyBindings do begin
+  BEndTurn := AddItem('EndTurn', 'End turn', 'NumPlus');
+  BHelp := AddItem('Help', 'Help', 'F1');
+  BUnitStat := AddItem('UnitStat', 'Unit stat', 'F2');
+  BCityStat := AddItem('CityStat', 'City stat', 'F3');
+  BScienceStat := AddItem('ScienceStat', 'Science research', 'F4');
+  BEUnitStat := AddItem('EnemyUnitStat', 'Enemy unit stat', 'F5');
+  BDiagram := AddItem('Diagram', 'Charts', 'F6');
+  BWonders := AddItem('Wonders', 'World wonders', 'F7');
+  BShips := AddItem('Ships', 'Colonization ships', 'F8');
+  BNations := AddItem('Nations', 'Nations', 'F9');
+  BEmpire := AddItem('Empire', 'Empire', 'F10');
+  BResign := AddItem('Resign', 'Resign', 'Ctrl+Q');
+  BRandomMap := AddItem('RandomMap', 'Random map', 'Ctrl+R');
+  BDisbandUnit := AddItem('DisbandUnit', 'Disband unit', 'Ctrl+D');
+  BFortify := AddItem('Fortify', 'Fortify', 'F');
+  BCenterUnit := AddItem('CenterUnit', 'Center', 'C');
+  BStay := AddItem('Stay', 'Stay', 'S');
+  BNoOrders := AddItem('NoOrders', 'No orders', ' ');
+end;
 
 
 finalization

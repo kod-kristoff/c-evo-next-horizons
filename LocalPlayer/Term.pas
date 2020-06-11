@@ -6459,26 +6459,23 @@ begin
   if GameMode = cMovie then
   begin
     case Key of
-      VK_F4:
-        MenuClick_Check(StatPopup, mScienceStat);
-      VK_F6:
-        MenuClick_Check(StatPopup, mDiagram);
-      VK_F7:
-        MenuClick_Check(StatPopup, mWonders);
-      VK_F8:
-        MenuClick_Check(StatPopup, mShips);
+      VK_F4: MenuClick_Check(StatPopup, mScienceStat);
+      VK_F6: MenuClick_Check(StatPopup, mDiagram);
+      VK_F7: MenuClick_Check(StatPopup, mWonders);
+      VK_F8: MenuClick_Check(StatPopup, mShips);
     end;
     exit;
   end;
 
-  if not idle then
-    exit;
+  if not idle then exit;
 
-  if ClientMode = cEditMap then
-  begin
-    if Shift = [ssCtrl] then
+  if ClientMode = cEditMap then begin
+    if ShortCut = BResign.ShortCut then MenuClick(mResign)
+    else if ShortCut = BRandomMap.ShortCut then MenuClick(mRandomMap)
+    else if ShortCut = BHelp.ShortCut then MenuClick(mHelp);
+    (*if Shift = [ssCtrl] then
       case char(Key) of
-        (* 'A':
+         'A':
           begin // auto symmetry
           Server($7F0,me,0,nil^);
           MapValid:=false;
@@ -6490,13 +6487,10 @@ begin
           for dx:=G.lx to G.lx*(G.ly-1)-1 do
           if MyMap[dx] and fTerrain>=fGrass then inc(dy);
           dy:=dy
-          end; *)
-        'Q':
-          MenuClick(mResign);
-        'R':
-          MenuClick(mRandomMap);
+          end;
       end;
-    if ShortCut = BHelp.ShortCut then MenuClick(mHelp);
+    *)
+
     Exit;
   end;
 
@@ -6512,136 +6506,89 @@ begin
   else if ShortCut = BNations.ShortCut then MenuClick_Check(StatPopup, mNations)
   else if ShortCut = BEmpire.ShortCut then MenuClick_Check(StatPopup, mEmpire);
 
-  if Shift = [ssAlt] then
+  if Shift = [ssAlt] then begin
     case char(Key) of
-      '0':
-        SetDebugMap(-1);
-      '1' .. '9':
-        SetDebugMap(ord(Key) - 48);
+      '0': SetDebugMap(-1);
+      '1'..'9': SetDebugMap(ord(Key) - 48);
     end
-  else if Shift = [ssCtrl] then
+  end else if Shift = [ssCtrl] then begin
     case char(Key) of
-      'J':
-        MenuClick(mJump);
-      'K':
-        mShowClick(mDebugMap);
-      'L':
-        mShowClick(mLocCodes);
-      'M':
-        if LogDlg.Visible then
-          LogDlg.Close
-        else
-          LogDlg.Show;
-      'N':
-        mNamesClick(mNames);
-      'Q':
-        MenuClick_Check(GamePopup, mResign);
-      'R':
-        MenuClick(mRun);
-      '0' .. '9':
-        begin
-          if ord(Key) - 48 = me then
-            SetViewpoint(0)
-          else
-            SetViewpoint(ord(Key) - 48);
+      'J': MenuClick(mJump);
+      'K': mShowClick(mDebugMap);
+      'L': mShowClick(mLocCodes);
+      'M': if LogDlg.Visible then LogDlg.Close
+        else LogDlg.Show;
+      'N': mNamesClick(mNames);
+      'Q': MenuClick_Check(GamePopup, mResign);
+      'R': MenuClick(mRun);
+      '0'..'9': begin
+          if ord(Key) - 48 = me then SetViewpoint(0)
+            else SetViewpoint(ord(Key) - 48);
         end;
-      ' ':
-        begin // test map repaint time
+      ' ': begin // test map repaint time
           time0 := NowPrecise;
           MapValid := false;
           MainOffscreenPaint;
           time1 := NowPrecise;
           SimpleMessage(Format('Map repaint time: %.3f ms',
             [(time1 - time0) / OneMillisecond]));
-        end
+        end;
     end
-  else if Shift = [] then
+  end else if Shift = [] then begin
     case char(Key) of
-      '1':
-        MapBtnClick(MapBtn0);
-      '2':
-        MapBtnClick(MapBtn1);
-      '3':
-        MapBtnClick(MapBtn4);
-      '4':
-        MapBtnClick(MapBtn5);
-      '5':
-        MapBtnClick(MapBtn6);
-      'T':
-        MenuClick(mTechTree);
-      'W':
-        MenuClick(mWait);
+      '1': MapBtnClick(MapBtn0);
+      '2': MapBtnClick(MapBtn1);
+      '3': MapBtnClick(MapBtn4);
+      '4': MapBtnClick(MapBtn5);
+      '5': MapBtnClick(MapBtn6);
+      'T': MenuClick(mTechTree);
+      'W': MenuClick(mWait);
     end;
+  end;
 
-  if UnFocus >= 0 then
-    if Shift = [ssCtrl] then
+  if UnFocus >= 0 then begin
+    if ShortCut = BDisbandUnit.ShortCut then MenuClick(mDisband)
+    else if ShortCut = BFortify.ShortCut then MenuClick_Check(TerrainPopup, mFort)
+    else if ShortCut = BCenterUnit.ShortCut then MenuClick(mCentre)
+    else if ShortCut = BStay.ShortCut then MenuClick(mStay)
+    else if ShortCut = BNoOrders.ShortCut then MenuClick(mNoOrders);
+
+    if Shift = [ssCtrl] then begin
       case char(Key) of
-        'C':
-          MenuClick_Check(UnitPopup, mCancel);
-        'D':
-          MenuClick(mDisband);
-        'P':
-          MenuClick_Check(UnitPopup, mPillage);
-        'T':
-          MenuClick_Check(UnitPopup, mSelectTransport);
-      end
-    else if Shift = [] then
+        'C': MenuClick_Check(UnitPopup, mCancel);
+        'P': MenuClick_Check(UnitPopup, mPillage);
+        'T': MenuClick_Check(UnitPopup, mSelectTransport);
+      end;
+    end else if Shift = [] then begin
       case char(Key) of
-        ' ':
-          MenuClick(mNoOrders);
-        'A':
-          MenuClick_Check(TerrainPopup, mAirBase);
-        'B':
-          MenuClick_Check(UnitPopup, mCity);
-        'C':
-          MenuClick(mCentre);
-        'E':
-          begin
+        'A': MenuClick_Check(TerrainPopup, mAirBase);
+        'B': MenuClick_Check(UnitPopup, mCity);
+        'E': begin
             InitPopup(TerrainPopup);
             if mEnhance.Visible and mEnhance.Enabled then
               MenuClick(mEnhance)
-            else
-              MenuClick(mEnhanceDef)
+            else MenuClick(mEnhanceDef)
           end;
-        'F':
-          MenuClick_Check(TerrainPopup, mFort);
-        'G':
-          MenuClick_Check(UnitPopup, mGoOn);
-        'H':
-          MenuClick_Check(UnitPopup, mHome);
-        'I':
-          if JobTest(UnFocus, jFarm, [eTreaty]) then
+        'G': MenuClick_Check(UnitPopup, mGoOn);
+        'H': MenuClick_Check(UnitPopup, mHome);
+        'I': if JobTest(UnFocus, jFarm, [eTreaty]) then
             MenuClick(mFarm)
           else if JobTest(UnFocus, jClear, [eTreaty]) then
             MenuClick(mClear)
-          else
-            MenuClick_Check(TerrainPopup, mIrrigation);
-        'L':
-          MenuClick_Check(UnitPopup, mLoad);
-        'M':
-          if JobTest(UnFocus, jAfforest, [eTreaty]) then
+          else MenuClick_Check(TerrainPopup, mIrrigation);
+        'L': MenuClick_Check(UnitPopup, mLoad);
+        'M': if JobTest(UnFocus, jAfforest, [eTreaty]) then
             MenuClick(mAfforest)
-          else
-            MenuClick_Check(TerrainPopup, mMine);
-        'N':
-          MenuClick_Check(TerrainPopup, mCanal);
-        'O':
-          MenuClick_Check(TerrainPopup, MTrans);
-        'P':
-          MenuClick_Check(TerrainPopup, mPollution);
-        'R':
-          if JobTest(UnFocus, jRR, [eTreaty]) then
+          else MenuClick_Check(TerrainPopup, mMine);
+        'N': MenuClick_Check(TerrainPopup, mCanal);
+        'O': MenuClick_Check(TerrainPopup, MTrans);
+        'P': MenuClick_Check(TerrainPopup, mPollution);
+        'R': if JobTest(UnFocus, jRR, [eTreaty]) then
             MenuClick(mRR)
-          else
-            MenuClick_Check(TerrainPopup, mRoad);
-        'S':
-          MenuClick(mStay);
-        'U':
-          MenuClick_Check(UnitPopup, mUnload);
-        'V':
-          MenuClick_Check(UnitPopup, mRecover);
-        'Z':
-          MenuClick_Check(UnitPopup, mUtilize);
+          else MenuClick_Check(TerrainPopup, mRoad);
+        'U': MenuClick_Check(UnitPopup, mUnload);
+        'V': MenuClick_Check(UnitPopup, mRecover);
+        'Z': MenuClick_Check(UnitPopup, mUtilize);
         #33 .. #40, #97 .. #100, #102 .. #105:
           begin { arrow keys }
             DestinationMarkON := false;
@@ -6692,7 +6639,9 @@ begin
             end;
             MoveUnit(dx, dy, muAutoNext)
           end;
-      end
+      end;
+    end;
+  end;
 end;
 
 procedure TMainScreen.MenuClick(Sender: TObject);
