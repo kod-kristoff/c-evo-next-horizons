@@ -5,7 +5,7 @@ unit UKeyBindings;
 interface
 
 uses
-  Classes, SysUtils, fgl, LCLProc;
+  Classes, SysUtils, fgl, LCLProc, LCLType, Menus;
 
 type
   TKeyBinding = class
@@ -137,7 +137,7 @@ with KeyBindings do begin
   BFortify := AddItem('Fortify', 'Fortify', 'F');
   BCenterUnit := AddItem('CenterUnit', 'Center', 'C');
   BStay := AddItem('Stay', 'Stay', 'S');
-  BNoOrders := AddItem('NoOrders', 'No orders', ' ');
+  BNoOrders := AddItem('NoOrders', 'No orders', ShortCut(VK_SPACE, []));
 end;
 
 
