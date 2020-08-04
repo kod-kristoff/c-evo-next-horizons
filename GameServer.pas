@@ -862,7 +862,7 @@ begin
     move(RealMap, MapField^, MapSize * 4);
     Human := 0;
     for p1 := 0 to nPl - 1 do
-      if bix[p1].Kind = btTerm then
+      if Assigned(bix[p1]) and (bix[p1].Kind = btTerm) then
         inc(Human, 1 shl p1);
     InitMapGame(Human);
   end;

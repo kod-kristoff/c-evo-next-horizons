@@ -981,7 +981,7 @@ repeat
     BackToStart:=false;
     if RO.nEnemyUn>0 then
       begin
-      fillchar(euixMap, MapSize*2, $FFFF);
+      fillchar(euixMap, MapSize*2, $FF);
       fillchar(AttackScore,RO.nEnemyUn*4,0);
       for euix:=0 to RO.nEnemyUn-1 do with RO.EnemyUn[euix] do
         if (Loc>=0) and (RO.Treaty[Owner]<trPeace) then
