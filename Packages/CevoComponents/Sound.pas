@@ -4,7 +4,7 @@ interface
 
 uses
   SysUtils, Classes, Graphics, Controls, Forms, fgl, FileUtil,
-  StringTables, Directories
+  StringTables, Directories, LCLType
   {$IFDEF WINDOWS}, MMSystem, Windows{$ENDIF}
   {$IFDEF LINUX}, Process, AsyncProcess{$ENDIF};
 
@@ -39,7 +39,7 @@ type
     PlayStyle: TPlayStyle;
     constructor Create(const FileName: string);
     destructor Destroy; override;
-    procedure Play(HWND: DWORD);
+    procedure Play(Handle: HWND);
     procedure Stop;
     procedure Reset;
   end;
@@ -154,7 +154,7 @@ begin
 end;
 
 
-procedure TSound.Play(HWND: DWORD);
+procedure TSound.Play(Handle: HWND);
 {$IFDEF WINDOWS}
 var
   PlayParm: TMCI_Play_Parms;
@@ -168,7 +168,7 @@ begin
   {$IFDEF WINDOWS}
   if FDeviceID <> 0 then
   begin
-    PlayParm.dwCallback := HWND;
+    PlayParm.dwCallback := Handle;
     mciSendCommand(FDeviceID, MCI_PLAY, MCI_NOTIFY, DWORD_PTR(@PlayParm));
   end
   {$ENDIF}
