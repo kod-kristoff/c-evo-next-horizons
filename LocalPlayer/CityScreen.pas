@@ -1396,42 +1396,45 @@ begin
 end; { FormMouseDown }
 
 procedure TCityDlg.ChooseProject;
-const
-  ptSelect = 0;
-  ptTrGoods = 1;
-  ptUn = 2;
-  ptCaravan = 3;
-  ptImp = 4;
-  ptWonder = 6;
-  ptShip = 7;
-  ptInvalid = 8;
+type
+  TProjectType = (
+    ptSelect = 0,
+    ptTrGoods = 1,
+    ptUn = 2,
+    ptCaravan = 3,
+    ptImp = 4,
+    ptWonder = 6,
+    ptShip = 7,
+    ptInvalid = 8
+  );
 
-  function ProjectType(Project: integer): integer;
+  function ProjectType(Project: integer): TProjectType;
   begin
     if Project and cpCompleted <> 0 then
-      result := ptSelect
+      Result := ptSelect
     else if Project and (cpImp + cpIndex) = cpImp + imTrGoods then
-      result := ptTrGoods
-    else if Project and cpImp = 0 then
+      Result := ptTrGoods
+    else if Project and cpImp = 0 then begin
       if MyModel[Project and cpIndex].Kind = mkCaravan then
-        result := ptCaravan
-      else
-        result := ptUn
+        Result := ptCaravan
+      else Result := ptUn;
+    end
     else if Project and cpIndex >= nImp then
-      result := ptInvalid
+      Result := ptInvalid
     else if Imp[Project and cpIndex].Kind = ikWonder then
-      result := ptWonder
+      Result := ptWonder
     else if Imp[Project and cpIndex].Kind = ikShipPart then
-      result := ptShip
+      Result := ptShip
     else
-      result := ptImp
+      Result := ptImp;
   end;
 
 var
-  NewProject, OldMoney, pt0, pt1, cix1: integer;
+  NewProject, OldMoney, cix1: integer;
+  pt0, pt1: TProjectType;
   QueryOk: boolean;
 begin
-  assert(not supervising);
+  Assert(not supervising);
   ModalSelectDlg.ShowNewContent_CityProject(wmModal, cix);
   if ModalSelectDlg.result <> -1 then
   begin
@@ -1443,8 +1446,8 @@ begin
     end
     else
     begin
-      NewProject := ModalSelectDlg.result;
-      QueryOk := true;
+      NewProject := ModalSelectDlg.Result;
+      QueryOk := True;
       if (NewProject and cpImp <> 0) and (NewProject and cpIndex >= 28) and
         (MyRO.NatBuilt[NewProject and cpIndex] > 0) then
         with MessgExDlg do
@@ -1452,7 +1455,7 @@ begin
           cix1 := MyRO.nCity - 1;
           while (cix1 >= 0) and
             (MyCity[cix1].Built[NewProject and cpIndex] = 0) do
-            dec(cix1);
+            Dec(cix1);
           MessgText := Format(Phrases.Lookup('DOUBLESTATEIMP'),
             [Phrases.Lookup('IMPROVEMENTS', NewProject and cpIndex),
             CityName(MyCity[cix1].ID)]);
@@ -1464,7 +1467,7 @@ begin
           QueryOk := ModalResult = mrOK;
         end;
       if not QueryOk then
-        exit;
+        Exit;
 
       if (MyCity[cix].Prod > 0) then
       begin
@@ -1481,14 +1484,16 @@ begin
                 Format(Phrases.Lookup('LOSEMAT'), [MyCity[cix].Prod0,
                 MyCity[cix].Prod0]), 'MSG_DEFAULT') = mrOK
             else if MyCity[cix].Project and (cpImp or cpIndex) = MyCity[cix]
-              .Project0 and (cpImp or cpIndex) then
-              QueryOk := SimpleQuery(mkOkCancel, Phrases.Lookup('LOSEMAT3'),
-                'MSG_DEFAULT') = mrOK
+              .Project0 and (cpImp or cpIndex) then begin
+                Application.ProcessMessages; // TODO: Needed for Gtk2, Lazarus gtk2 bug?
+                QueryOk := SimpleQuery(mkOkCancel, Phrases.Lookup('LOSEMAT3'),
+                  'MSG_DEFAULT') = mrOK;
+              end;
           end;
         end;
       end;
       if not QueryOk then
-        exit;
+        Exit;
 
       OldMoney := MyRO.Money;
       MyCity[cix].Status := MyCity[cix].Status and not 7;
