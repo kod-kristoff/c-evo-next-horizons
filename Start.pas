@@ -544,7 +544,6 @@ begin
   Tracking := False;
   FormerGames := TStringList.Create;
   UpdateFormerGames;
-  ShowTab := tbNew; // always start with new book page
   MapFileName := '';
   Maps := TStringList.Create;
   UpdateMaps;
@@ -624,6 +623,8 @@ begin
       else AutoEnemies := 8;
     if ValueExists('AutoDiff') then AutoDiff := Reg.ReadInteger('AutoDiff')
       else AutoDiff := 1;
+    if ValueExists('StartTab') then ShowTab := TStartTab(Reg.ReadInteger('StartTab'))
+       else ShowTab := tbNew;
 
     if ValueExists('ScreenMode') then
       ScreenMode := ReadInteger('ScreenMode')
@@ -664,6 +665,7 @@ begin
     if FullScreen then WriteInteger('ScreenMode', 1)
       else WriteInteger('ScreenMode', 0);
     WriteInteger('MultiControl', MultiControl);
+    WriteInteger('StartTab', Integer(ShowTab));
   finally
     Free;
   end;
@@ -1453,8 +1455,6 @@ begin
     until FindNext(F) <> 0;
   FindClose(F);
   ListIndex[tbNew] := FormerGames.Count - 1;
-  if (ShowTab = tbNew) and (FormerGames.Count > 0) then
-    ShowTab := tbPrevious;
   TurnValid := False;
 end;
 
