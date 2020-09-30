@@ -142,6 +142,7 @@ type
     Tracking: Boolean;
     DefaultAI: string;
     MiniMap: TMiniMap;
+    LastGame: string;
     procedure DrawAction(y, IconIndex: integer; HeaderItem, TextItem: string);
     procedure InitPopup(PlayerIndex: Integer);
     procedure OfferBrain(Brain: TBrain; FixedLines: Integer);
@@ -625,6 +626,8 @@ begin
       else AutoDiff := 1;
     if ValueExists('StartTab') then ShowTab := TStartTab(Reg.ReadInteger('StartTab'))
        else ShowTab := tbNew;
+    if ValueExists('LastGame') then LastGame := Reg.ReadString('LastGame')
+       else LastGame := '';
 
     if ValueExists('ScreenMode') then
       ScreenMode := ReadInteger('ScreenMode')
@@ -666,6 +669,7 @@ begin
       else WriteInteger('ScreenMode', 0);
     WriteInteger('MultiControl', MultiControl);
     WriteInteger('StartTab', Integer(ShowTab));
+    WriteString('LastGame', LastGame);
   finally
     Free;
   end;
@@ -1454,7 +1458,9 @@ begin
         TObject(F.Time));
     until FindNext(F) <> 0;
   FindClose(F);
-  ListIndex[tbNew] := FormerGames.Count - 1;
+  I := FormerGames.IndexOf(LastGame);
+  if I >= 0 then ListIndex[tbPrevious] := I
+    else ListIndex[tbPrevious] := FormerGames.Count - 1;
   TurnValid := False;
 end;
 
@@ -1616,9 +1622,9 @@ begin
   end;
   if Tab <> tbNew then
     if List.Count > 0 then begin
-      if (ListIndex[Tab] < List.Count) and (ListIndex[Tab] >= 0) then
-        List.ItemIndex := ListIndex[Tab]
-        else List.ItemIndex := 0;
+      if (ListIndex[Tab] < List.Count) and (ListIndex[Tab] >= 0) then begin
+        List.ItemIndex := ListIndex[Tab];
+      end else List.ItemIndex := 0;
     end else List.ItemIndex := -1;
   case Tab of
     tbMain:
@@ -1961,6 +1967,7 @@ begin
   ListIndex[Tab] := List.ItemIndex;
   ShowTab := Tab;
   Background.Enabled := True;
+  LastGame := FormerGames[ListIndex[tbPrevious]];
 end;
 
 procedure TStartDlg.QuitBtnClick(Sender: TObject);
