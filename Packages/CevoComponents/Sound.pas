@@ -112,11 +112,16 @@ end;
 function TSound.GetNonWindowsPlayCommand: string;
 begin
   Result := '';
+  // Try ffplay
+  if (Result = '') then
+    if (FindDefaultExecutablePath('ffplay') <> '') then
+      Result := 'ffplay -autoexit -nodisp -loglevel quiet';
   // Try play
-  if (FindDefaultExecutablePath('play') <> '') then
-    Result := 'play';
+  if (Result = '') then
+    if (FindDefaultExecutablePath('play') <> '') then
+      Result := 'play -q';
   // Try aplay
-  if (result = '') then
+  if (Result = '') then
     if (FindDefaultExecutablePath('aplay') <> '') then
       Result := 'aplay -q';
   // Try paplay
@@ -135,14 +140,10 @@ begin
   if (Result = '') then
     if (FindDefaultExecutablePath('pacat') <> '') then
       Result := 'pacat -p';
-  // Try ffplay
-  if (Result = '') then
-    if (FindDefaultExecutablePath('ffplay') <> '') then
-      result := 'ffplay -autoexit -nodisp';
   // Try cvlc
   if (Result = '') then
     if (FindDefaultExecutablePath('cvlc') <> '') then
-      result := 'cvlc -q --play-and-exit';
+      Result := 'cvlc -q --play-and-exit';
   // Try canberra-gtk-play
   if (Result = '') then
     if (FindDefaultExecutablePath('canberra-gtk-play') <> '') then
