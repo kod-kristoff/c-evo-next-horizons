@@ -1478,17 +1478,18 @@ begin
           if NewProject and (cpImp or cpIndex) <> MyCity[cix].Project0 and
             (cpImp or cpIndex) then
           begin // loss of material -- do query
+            Application.ProcessMessages; // TODO: Needed for Gtk2, Lazarus gtk2 bug?
             if (pt1 = ptTrGoods) or (pt1 = ptShip) or (pt1 <> pt0) and
-              (pt0 <> ptCaravan) then
+              (pt0 <> ptCaravan) then begin
               QueryOk := SimpleQuery(mkOkCancel,
                 Format(Phrases.Lookup('LOSEMAT'), [MyCity[cix].Prod0,
                 MyCity[cix].Prod0]), 'MSG_DEFAULT') = mrOK
-            else if MyCity[cix].Project and (cpImp or cpIndex) = MyCity[cix]
+            end else
+            if MyCity[cix].Project and (cpImp or cpIndex) = MyCity[cix]
               .Project0 and (cpImp or cpIndex) then begin
-                Application.ProcessMessages; // TODO: Needed for Gtk2, Lazarus gtk2 bug?
                 QueryOk := SimpleQuery(mkOkCancel, Phrases.Lookup('LOSEMAT3'),
                   'MSG_DEFAULT') = mrOK;
-              end;
+            end;
           end;
         end;
       end;
