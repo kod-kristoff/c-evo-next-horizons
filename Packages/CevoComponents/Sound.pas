@@ -6,7 +6,7 @@ uses
   SysUtils, Classes, Graphics, Controls, Forms, fgl, FileUtil,
   StringTables, Directories, LCLType
   {$IFDEF WINDOWS}, MMSystem, Windows{$ENDIF}
-  {$IFDEF LINUX}, Process, AsyncProcess{$ENDIF};
+  {$IFDEF LINUX}, Process, AsyncProcess2{$ENDIF};
 
 type
   TPlayStyle = (psAsync, psSync);
