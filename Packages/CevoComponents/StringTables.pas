@@ -18,7 +18,7 @@ type
     function LoadFromFile(const FileName: String): boolean;
     function GetHandle(const Item: string): integer;
     function LookupByHandle(Handle: integer; Index: integer = -1): string;
-    function Lookup(const Item: string; Index: integer = -1): string;
+    function Lookup(const Item: string; Index: Integer = -1): string;
     function Search(const Content: string; var Handle, Index: integer): boolean;
   end;
 
@@ -98,20 +98,20 @@ begin
   if Result = '' then Result := '*';
 end;
 
-function TStringTable.Lookup(const Item: string; Index: integer): string;
+function TStringTable.Lookup(const Item: string; Index: Integer): string;
 var
-  Handle: integer;
+  Handle: Integer;
 begin
   Handle := GetHandle(Item);
   if Handle >= 0 then
-    result := LookupByHandle(Handle, Index)
+    Result := LookupByHandle(Handle, Index)
   else
-    result := '';
-  if result = '' then
+    Result := '';
+  if Result = '' then
     if Index < 0 then
-      result := Format('[%s]', [Item])
+      Result := Format('[%s]', [Item])
     else
-      result := Format('[%s %d]', [Item, Index])
+      Result := Format('[%s %d]', [Item, Index])
 end;
 
 { might become necessary for 1.3

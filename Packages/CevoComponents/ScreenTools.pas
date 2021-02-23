@@ -262,17 +262,37 @@ begin
 end;
 
 function TurnToYear(Turn: Integer): Integer;
-var
-  I: Integer;
 begin
   Result := -4000;
-  for I := 1 to Turn do
-    if Result < -1000 then Inc(Result, 50) // 0..60
-    else if Result < 0 then Inc(Result, 25) // 60..100
-    else if Result < 1500 then Inc(Result, 20) // 100..175
-    else if Result < 1750 then Inc(Result, 10) // 175..200
-    else if Result < 1850 then Inc(Result, 2) // 200..250
-    else Inc(Result);
+  if Turn <= 0 then Exit;
+
+  // Year -4000..-1000, Turn 0..60
+  Inc(Result, Min(60, Turn) * 50);
+  Dec(Turn, Min(60, Turn));
+  if Turn = 0 then Exit;
+
+  // Year -1000..0, Turn 60..100
+  Inc(Result, Min(40, Turn) * 25);
+  Dec(Turn, Min(40, Turn));
+  if Turn = 0 then Exit;
+
+  // Year 0..1500, Turn 100..175
+  Inc(Result, Min(75, Turn) * 20);
+  Dec(Turn, Min(75, Turn));
+  if Turn = 0 then Exit;
+
+  // Year 1500..1750, Turn 175..200
+  Inc(Result, Min(25, Turn) * 10);
+  Dec(Turn, Min(25, Turn));
+  if Turn = 0 then Exit;
+
+  // Year 1750..1850, Turn 200..250
+  Inc(Result, Min(50, Turn) * 2);
+  Dec(Turn, Min(50, Turn));
+  if Turn = 0 then Exit;
+
+  // Year 1850.., Turn 250..
+  Inc(Result, Turn);
 end;
 
 function TurnToString(Turn: Integer): string;
