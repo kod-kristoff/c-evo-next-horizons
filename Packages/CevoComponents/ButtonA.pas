@@ -34,7 +34,7 @@ end;
 
 constructor TButtonA.Create(aOwner: TComponent);
 begin
-  inherited Create(aOwner);
+  inherited;
   FCaption := '';
   SetBounds(0, 0, 100, 25);
 end;

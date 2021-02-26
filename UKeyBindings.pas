@@ -96,7 +96,7 @@ begin
       end;
     end;
   finally
-    Lines.Free;
+    FreeAndNil(Lines);
   end;
 end;
 
@@ -113,7 +113,7 @@ begin
     end;
     Lines.SaveToFile(FileName);
   finally
-    Lines.Free;
+    FreeAndNil(Lines);
   end;
 end;
 

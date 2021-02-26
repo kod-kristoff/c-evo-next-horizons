@@ -76,7 +76,7 @@ end;
 destructor TDrawDlg.Destroy;
 begin
   RemoveHandlerOnVisibleChanged(VisibleChangedHandler);
-  inherited Destroy;
+  inherited;
 end;
 
 procedure TDrawDlg.OnEraseBkgnd(var m: TMessage);
@@ -174,7 +174,7 @@ end;
 procedure TDrawDlg.KeyDown(var Key: Word; Shift: TShiftState);
 begin
   if Key = VK_ESCAPE then Close;
-  inherited KeyDown(Key, Shift);
+  inherited;
 end;
 
 procedure TDrawDlg.VisibleChangedHandler(Sender: TObject);

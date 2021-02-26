@@ -89,7 +89,7 @@ type
     procedure Done;
     begin
       ReallocMem(PictureList, 0);
-      StdUnitScript.Free;
+      FreeAndNil(StdUnitScript);
     end;
 
     function CityName(Founder: integer): string;
@@ -312,8 +312,8 @@ type
 
   destructor TTribe.Destroy;
   begin
-    Script.Free;
-    inherited Destroy;
+    FreeAndNil(Script);
+    inherited;
   end;
 
   procedure FindPosition(HGr, x, y, xmax, ymax: integer; Mark: TColor;

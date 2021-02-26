@@ -24,7 +24,8 @@ type
     TurnTime, TotalStatTime: extended;
     G: TNewGameData;
     Server: TServerCall;
-    Shade, State: TBitmap;
+    Shade: TBitmap;
+    State: TBitmap;
     WinStat, ExtStat, AloneStat: array [0 .. nPl - 1] of integer;
     DisallowShowActive: array [0 .. nPl - 1] of boolean;
     TimeStat: array [0 .. nPl - 1] of extended;
@@ -162,8 +163,8 @@ begin
 
     cReleaseModule:
       begin
-        Shade.Free;
-        State.Free;
+        FreeAndNil(Shade);
+        FreeAndNil(State);
       end;
 
     cNewGame, cLoadGame:
@@ -244,7 +245,7 @@ begin
                   if G.RO[me].Ship[p].Parts[i] < ShipNeed[i] then
                     ShipComplete := false;
                 if ShipComplete then
-                  inc(WinStat[p])
+                  inc(WinStat[p]);
               end;
           if Mode = Running then
             Server(sNextRound, me, 0, nil^)
@@ -254,8 +255,8 @@ begin
         if Mode = Stop then
         begin
           GoBtn.ButtonIndex := 22;
-          Mode := Stopped
-        end
+          Mode := Stopped;
+        end;
       end;
 
     cShowTurnChange:
@@ -276,9 +277,8 @@ begin
         Active := integer(Data);
         if (Active >= 0) and not DisallowShowActive[Active] then
           ShowActive(Active, true);
-      end
-
-  end
+      end;
+  end;
 end;
 
 procedure TNoTermDlg.GoBtnClick(Sender: TObject);
@@ -291,7 +291,7 @@ begin
     GoBtn.ButtonIndex := 23;
     GoBtn.Update;
     Server(sTurn, me, 0, nil^);
-  end
+  end;
 end;
 
 procedure TNoTermDlg.QuitBtnClick(Sender: TObject);
@@ -299,7 +299,7 @@ begin
   if Mode = Stopped then
     EndPlaying
   else
-    Mode := Quit
+    Mode := Quit;
 end;
 
 procedure TNoTermDlg.FormPaint(Sender: TObject);

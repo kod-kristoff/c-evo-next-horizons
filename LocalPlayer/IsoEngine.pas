@@ -132,7 +132,7 @@ procedure Init(InitEnemyModelHandler: TInitEnemyModelEvent);
 begin
   OnInitEnemyModel := InitEnemyModelHandler;
   if NoMap <> nil then
-    NoMap.Free;
+    FreeAndNil(NoMap);
   NoMap := TIsoMap.Create;
 end;
 
@@ -167,14 +167,14 @@ begin
 
   { prepare dithered ground tiles }
   if LandPatch <> nil then
-    LandPatch.Free;
+    FreeAndNil(LandPatch);
   LandPatch := TBitmap.Create;
   LandPatch.PixelFormat := pf24bit;
   LandPatch.Canvas.Brush.Color := 0;
   LandPatch.SetSize(xxt * 18, yyt * 9);
   LandPatch.Canvas.FillRect(0, 0, LandPatch.Width, LandPatch.Height);
   if OceanPatch <> nil then
-    OceanPatch.Free;
+    FreeAndNil(OceanPatch);
   OceanPatch := TBitmap.Create;
   OceanPatch.PixelFormat := pf24bit;
   OceanPatch.Canvas.Brush.Color := 0;
@@ -362,9 +362,9 @@ begin
     BitBltCanvas(LandPatch.Canvas, xxt * 2, (y + 2) * yyt, xxt * 2, yyt,
       DitherMask.Canvas, 0, 0, SRCAND);
 
-  LandMore.Free;
-  OceanMore.Free;
-  DitherMask.Free;
+  FreeAndNil(LandMore);
+  FreeAndNil(OceanMore);
+  FreeAndNil(DitherMask);
 
   // reduce size of terrain icons
   Mask24 := TBitmap.Create;
@@ -417,10 +417,10 @@ begin
     end
   end;
   Mask24.EndUpdate;
-  Mask24.Free;
+  FreeAndNil(Mask24);
 
   if Borders <> nil then
-    Borders.Free;
+    FreeAndNil(Borders);
   Borders := TBitmap.Create;
   Borders.PixelFormat := pf24bit;
   Borders.SetSize(xxt * 2, (yyt * 2) * nPl);

@@ -37,7 +37,7 @@ end;
 
 constructor TButtonB.Create(aOwner: TComponent);
 begin
-  inherited Create(aOwner);
+  inherited;
   ShowHint := True;
   SetBounds(0, 0, 25, 25);
 end;

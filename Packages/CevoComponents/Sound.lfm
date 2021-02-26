@@ -7,10 +7,10 @@ object SoundPlayer: TSoundPlayer
   BorderStyle = bsDialog
   Caption = 'SoundPlayer'
   Color = clBtnFace
-  DesignTimePPI = 125
+  DesignTimePPI = 144
   Font.Color = clWindowText
   Font.Height = -11
   Font.Name = 'MS Sans Serif'
-  LCLVersion = '1.8.0.6'
+  LCLVersion = '2.0.12.0'
   Scaled = False
 end

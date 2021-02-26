@@ -207,7 +207,7 @@ end;
 
 destructor THyperText.Destroy;
 begin
-  inherited Destroy;
+  inherited;
 end;
 
 const
@@ -1236,7 +1236,7 @@ var
         List.AddStrings(Plus);
       until FindNext(sr) <> 0;
     FindClose(sr);
-    Plus.Free;
+    FreeAndNil(Plus);
 
     List.Sort;
     i := 1;
@@ -1253,7 +1253,7 @@ var
         Delete(s, length(s), 1);
       MainText.AddLine(s);
     end;
-    List.Free;
+    FreeAndNil(List);
   end;
 
   procedure AddSoundCredits;
@@ -1271,7 +1271,7 @@ var
         Delete(s, length(s), 1);
       MainText.AddLine(s);
     end;
-    List.Free;
+    FreeAndNil(List);
   end;
 
   procedure NextSection(Item: string);
@@ -1433,7 +1433,7 @@ begin { Prepare }
             List.Sort;
             AppendList(List);
           end;
-          List.Free;
+          FreeAndNil(List);
         end
         else // single advance
         begin
@@ -1532,7 +1532,7 @@ begin { Prepare }
                 i, hkImp, i);
           List.Sort;
           AppendList(List);
-          List.Free;
+          FreeAndNil(List);
         end
         else if no = 201 then
         begin // complete nat. project list
@@ -1821,7 +1821,7 @@ begin { Prepare }
             List.Sort;
             AppendList(List);
           end;
-          List.Free;
+          FreeAndNil(List);
         end
         else
         begin // single feature
@@ -1982,7 +1982,7 @@ begin
     Prepare(HistItem.Pos);
     OffscreenPaint;
     Invalidate;
-    HistItem.Free;
+    FreeAndNil(HistItem);
   end;
 end;
 

@@ -56,7 +56,7 @@ type
 
 constructor TCmdList.Create;
 begin
-  inherited Create;
+  inherited;
   FState.nLog := 0;
   LogAlloc := 0;
   LogData := nil;
@@ -68,7 +68,7 @@ end;
 destructor TCmdList.Destroy;
 begin
   ReallocMem(LogData, 0);
-  inherited Destroy;
+  inherited;
 end;
 
 procedure TCmdList.Get(var Command, Player, Subject: integer;

@@ -6,7 +6,8 @@ unit GameServer;
 interface
 
 uses
-  Protocol, Database, dynlibs, Platform, dateutils, fgl, LazFileUtils, Graphics;
+  Protocol, Database, dynlibs, Platform, dateutils, fgl, LazFileUtils,
+  Graphics;
 
 const
   Version = $010300;
@@ -288,9 +289,9 @@ begin
       if (Kind = btAI) and ((Flags and fDotNet) = 0) then
         FreeLibrary(hm);
     end;
-  PlayersBrain.Free;
-  bix.Free;
-  Brains.Free;
+  FreeAndNil(PlayersBrain);
+  FreeAndNil(bix);
+  FreeAndNil(Brains);
 end;
 
 function PreviewMap(lm: integer): pointer;
@@ -560,16 +561,19 @@ var
 begin
   MapFile := TFileStream.Create(GetMapsDir + DirectorySeparator + FileName,
     fmCreate or fmShareExclusive);
-  MapFile.Position := 0;
-  s := 'cEvoMap'#0;
-  MapFile.write(s[1], 8); { file id }
-  i := 0;
-  MapFile.write(i, 4); { format id }
-  MapFile.write(MaxTurn, 4);
-  MapFile.write(lx, 4);
-  MapFile.write(ly, 4);
-  MapFile.write(RealMap, MapSize * 4);
-  MapFile.Free;
+  try
+    MapFile.Position := 0;
+    s := 'cEvoMap'#0;
+    MapFile.write(s[1], 8); { file id }
+    i := 0;
+    MapFile.write(i, 4); { format id }
+    MapFile.write(MaxTurn, 4);
+    MapFile.write(lx, 4);
+    MapFile.write(ly, 4);
+    MapFile.write(RealMap, MapSize * 4);
+  finally
+    FreeAndNil(MapFile);
+  end;
 end;
 
 function LoadMap(FileName: string): boolean;
@@ -612,10 +616,10 @@ begin
       end;
       result := true;
     end;
-    MapFile.Free;
+    FreeAndNil(MapFile);
   except
     if MapFile <> nil then
-      MapFile.Free;
+      FreeAndNil(MapFile);
   end;
 end;
 
@@ -693,7 +697,7 @@ begin
     CL.AppendToFile(LogFile, AutoSaveState)
   else
     CL.SaveToFile(LogFile);
-  LogFile.Free;
+  FreeAndNil(LogFile);
   if auto then
   begin
     AutoSaveState := CL.State;
@@ -720,7 +724,7 @@ begin
         AIBrains := TBrains.Create(False);
         Brains.GetByKind(btAI, AIBrains);
         bix[p1] := AIBrains[DelphiRandom(AIBrains.Count)];
-        AIBrains.Free;
+        FreeAndNil(AIBrains);
       end
     else
       bix[p1] := PlayersBrain[p1];
@@ -991,7 +995,7 @@ begin
   UnitProcessing.ReleaseGame;
   CityProcessing.ReleaseGame;
   Database.ReleaseGame;
-  CL.Free;
+  FreeAndNil(CL);
 end;
 
 procedure GenerateStat(p: integer);
@@ -1189,7 +1193,7 @@ begin
     CL := TCmdList.Create;
     CL.LoadFromFile(LogFile);
   end;
-  LogFile.Free;
+  FreeAndNil(LogFile);
   if not result then
     Exit;
 
@@ -4603,7 +4607,7 @@ end;
 destructor TBrain.Destroy;
 begin
   FreeAndNil(Picture);
-  inherited Destroy;
+  inherited;
 end;
 
 { TBrains }

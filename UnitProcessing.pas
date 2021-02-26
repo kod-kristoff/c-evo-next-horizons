@@ -4,7 +4,7 @@ unit UnitProcessing;
 interface
 
 uses
-  Protocol, Database;
+  SysUtils, Protocol, Database;
 
 type
   TMoveType = (mtInvalid, mtMove, mtCapture, mtSpyMission, mtAttack,
@@ -1034,7 +1034,7 @@ begin
       end
     end
   end;
-  Q.Free;
+  FreeAndNil(Q);
   if (Loc = a.ToLoc) or (a.ToLoc = maNextCity) and (Loc >= 0) and
     (Map[Loc] and fCity <> 0) then
   begin
@@ -1164,7 +1164,7 @@ begin
       end
     end
   end;
-  Q.Free;
+  FreeAndNil(Q);
 end; // CanPlaneReturn
 
 {

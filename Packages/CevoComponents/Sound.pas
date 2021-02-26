@@ -219,7 +219,7 @@ begin
         PlayingSound := nil;
       end;
     finally
-      L.Free;
+      FreeAndNil(L);
     end;
   end
   else

@@ -46,14 +46,14 @@ begin
   GetMem(bh, fmax * sizeof(TheapItem));
   GetMem(Ix, fmax * sizeof(integer));
   n := -1;
-  Empty
+  Empty;
 end;
 
 destructor TIPQ.Destroy;
 begin
   FreeMem(bh);
   FreeMem(Ix);
-  inherited Destroy;
+  inherited;
 end;
 
 procedure TIPQ.Empty;

@@ -97,10 +97,10 @@ end;
 
 procedure TNatStatDlg.FormDestroy(Sender: TObject);
 begin
-  ReportText.Free;
+  FreeAndNil(ReportText);
   FreeMem(SelfReport);
-  Template.Free;
-  Back.Free;
+  FreeAndNil(Template);
+  FreeAndNil(Back);
 end;
 
 procedure TNatStatDlg.CheckAge;

@@ -57,7 +57,7 @@ NowPreciseLock := TCriticalSection.Create;
 
 finalization
 
-NowPreciseLock.Free;
+FreeAndNil(NowPreciseLock);
 
 end.
 

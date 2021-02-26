@@ -243,7 +243,7 @@ end;
 destructor TMiniMap.Destroy;
 begin
   FreeAndNil(Bitmap);
-  inherited Destroy;
+  inherited;
 end;
 
 procedure TMiniMap.LoadFromLogFile(FileName: string; var LastTurn: Integer);
@@ -470,7 +470,7 @@ begin
       AIBrains := TBrains.Create(False);
       Brains.GetByKind(btAI, AIBrains);
       BrainDefault := Brains[0];
-      AIBrains.Free;
+      FreeAndNil(AIBrains);
     end; // default AI not found, use any
 
   DirectDlg.Left := (Screen.Width - DirectDlg.Width) div 2;
@@ -697,7 +697,7 @@ begin
       end;
     end;
   end;
-  AIBrains.Free;
+  FreeAndNil(AIBrains);
 end;
 
 procedure TStartDlg.UpdateInterface;
@@ -1410,7 +1410,7 @@ begin
     for I := 0 to AIBrains.Count - 1 do // offer available AIs
       if AIBrains[I].Flags and fMultiple <> 0 then
         OfferBrain(AIBrains[I], FixedLines);
-    AIBrains.Free;
+    FreeAndNil(AIBrains);
   end else begin
     FixedLines := 0;
     if PlayerPopupIndex > 0 then begin
@@ -1438,7 +1438,7 @@ begin
         if (AIBrains[I].Flags and fMultiple <> 0) or (AIBrains[I].Flags and fUsed = 0)
           or (Brains[I] = PlayersBrain[PlayerPopupIndex]) then
           OfferBrain(AIBrains[i], FixedLines);
-      AIBrains.Free;
+      FreeAndNil(AIBrains);
     end;
   end;
 end;

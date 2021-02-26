@@ -44,7 +44,7 @@ end;
 
 constructor TButtonN.Create(aOwner: TComponent);
 begin
-  inherited Create(aOwner);
+  inherited;
   ShowHint := true;
   FGraphic := nil;
   FBackGraphic := nil;

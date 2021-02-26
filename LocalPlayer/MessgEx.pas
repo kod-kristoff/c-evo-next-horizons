@@ -217,7 +217,7 @@ begin
     result := mrOk;
   end
   else
-    result := inherited ShowModal;
+    result := inherited;
 end;
 
 procedure TMessgExDlg.CancelMovie;

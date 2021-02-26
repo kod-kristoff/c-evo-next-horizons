@@ -103,7 +103,7 @@ end;
 
 procedure TAsyncProcess.Execute;
 begin
-  inherited Execute;
+  inherited;
 
   if poUsePipes in Options then
     FPipeHandler := AddPipeEventHandler(Output.Handle, @HandlePipeInput, 0);

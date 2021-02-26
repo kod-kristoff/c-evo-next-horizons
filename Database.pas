@@ -1081,7 +1081,7 @@ const
     end
     else
       result := 0;
-    Q.Free;
+    FreeAndNil(Q);
   end;
 
 var

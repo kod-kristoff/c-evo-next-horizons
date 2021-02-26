@@ -257,7 +257,7 @@ begin
   while MenuItems.Count > Keep do begin
     MenuItem := MenuItems[MenuItems.Count - 1];
     MenuItems.Delete(MenuItems.Count - 1);
-    MenuItem.Free;
+    FreeAndNil(MenuItem);
   end;
 end;
 
@@ -438,7 +438,7 @@ begin
       Bmp.SetSize(jtex.Width, jtex.Height);
       Bmp.Canvas.Draw(0, 0, jtex);
     end;
-    jtex.Free;
+    FreeAndNil(jtex);
   end
   else
   if ExtractFileExt(Path) = '.png' then begin
@@ -463,7 +463,7 @@ begin
       else
         Bmp.Canvas.draw(0, 0, Png);
     end;
-    Png.Free;
+    FreeAndNil(Png);
   end
   else
   if ExtractFileExt(Path) = '.bmp' then begin
@@ -1725,8 +1725,8 @@ var
 begin
   RestoreResolution;
   for I := 0 to nGrExt - 1 do begin
-    GrExt[I].Data.Free;
-    GrExt[I].Mask.Free;
+    FreeAndNil(GrExt[I].Data);
+    FreeAndNil(GrExt[I].Mask);
     FreeMem(GrExt[I]);
   end;
 

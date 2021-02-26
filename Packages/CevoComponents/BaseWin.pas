@@ -105,8 +105,8 @@ end;
 
 destructor TBufferedDrawDlg.Destroy;
 begin
-  Offscreen.Free;
-  inherited Destroy;
+  FreeAndNil(Offscreen);
+  inherited;
 end;
 
 procedure TBufferedDrawDlg.FormClose(Sender: TObject; var Action: TCloseAction);

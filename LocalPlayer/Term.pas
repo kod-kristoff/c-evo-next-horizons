@@ -1242,8 +1242,7 @@ begin
   begin
     if AILogo[p] <> nil then
     begin
-      AILogo[p].free;
-      AILogo[p] := nil
+      FreeAndNil(AILogo[p]);
     end
   end
   else
@@ -1252,8 +1251,7 @@ begin
       AILogo[p] := TBitmap.Create;
     if not LoadGraphicFile(AILogo[p], HomeDir + Name + '.png', gfNoError) then
     begin
-      AILogo[p].free;
-      AILogo[p] := nil
+      FreeAndNil(AILogo[p]);
     end
   end
 end;
@@ -2496,10 +2494,10 @@ begin
 
     cReleaseModule:
       begin
-        SmallImp.free;
-        UnusedTribeFiles.free;
-        TribeNames.free;
-        MainMap.free;
+        FreeAndNil(SmallImp);
+        FreeAndNil(UnusedTribeFiles);
+        FreeAndNil(TribeNames);
+        FreeAndNil(MainMap);
         IsoEngine.Done;
         // AdvisorDlg.DeInit;
       end;
@@ -2697,7 +2695,7 @@ begin
         sb.Init(0, 1);
         for p1 := 0 to nPl - 1 do
           if Tribe[p1] <> nil then
-            Tribe[p1].free;
+            FreeAndNil(Tribe[p1]);
         Tribes.Done;
         RepaintOnResize := false;
         Closable := true;

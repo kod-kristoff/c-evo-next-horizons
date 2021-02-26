@@ -87,8 +87,8 @@ end;
 
 procedure TUnitStatDlg.FormDestroy(Sender: TObject);
 begin
-  Template.Free;
-  Back.Free;
+  FreeAndNil(Template);
+  FreeAndNil(Back);
 end;
 
 procedure TUnitStatDlg.CheckAge;
