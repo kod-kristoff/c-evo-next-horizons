@@ -282,6 +282,7 @@ type
     procedure OnScroll(var m: TMessage); message WM_VSCROLL;
     procedure OnEOT(var Msg: TMessage); message WM_EOT;
     procedure SoundPreload(Check: integer);
+    procedure UpdateKeyShortcuts;
   public
     UsedOffscreenWidth, UsedOffscreenHeight: integer;
     Offscreen: TBitmap;
@@ -3403,6 +3404,8 @@ procedure TMainScreen.FormCreate(Sender: TObject);
 var
   i, j: integer;
 begin
+  UpdateKeyShortcuts;
+
   MainFormKeyDown := FormKeyDown;
   BaseWin.CreateOffscreen(Offscreen);
 
@@ -3616,7 +3619,7 @@ procedure TMainScreen.FormCloseQuery(Sender: TObject; var CanClose: boolean);
 begin
   CanClose := Closable;
   if not Closable and idle and (me = 0) and (ClientMode < scContact) then
-    MenuClick(mResign)
+    MenuClick(mResign);
 end;
 
 procedure TMainScreen.OnScroll(var m: TMessage);
@@ -3629,7 +3632,7 @@ end;
 
 procedure TMainScreen.OnEOT(var Msg: TMessage);
 begin
-  EndTurn
+  EndTurn;
 end;
 
 procedure TMainScreen.EOTClick(Sender: TObject);
@@ -3637,7 +3640,7 @@ begin
   if GameMode = cMovie then
   begin
     MessgExDlg.CancelMovie;
-    Server(sBreak, me, 0, nil^)
+    Server(sBreak, me, 0, nil^);
   end
   else if ClientMode < 0 then
     skipped := true
@@ -3646,10 +3649,10 @@ begin
   else if Jump[pTurn] > 0 then
   begin
     Jump[pTurn] := 0;
-    StartRunning := false
+    StartRunning := false;
   end
   else
-    EndTurn
+    EndTurn;
 end;
 
 // set xTerrain, xTroop, and TrRow
@@ -6439,6 +6442,30 @@ begin
   end
 end;
 
+procedure TMainScreen.UpdateKeyShortcuts;
+begin
+  mHelp.ShortCut := BHelp.ShortCut;
+  mUnitStat.ShortCut := BUnitStat.ShortCut;
+  mCityStat.ShortCut := BCityStat.ShortCut;
+  mScienceStat.ShortCut := BScienceStat.ShortCut;
+  mEUnitStat.ShortCut := BEUnitStat.ShortCut;;
+  mDiagram.ShortCut := BDiagram.ShortCut;
+  mWonders.ShortCut := BWonders.ShortCut;
+  mShips.ShortCut := BShips.ShortCut;
+  mNations.ShortCut := BNations.ShortCut;
+  mEmpire.ShortCut := BEmpire.ShortCut;
+  mResign.ShortCut := BResign.ShortCut;
+  mRandomMap.ShortCut := BRandomMap.ShortCut;
+  mDisband.ShortCut := BDisbandUnit.ShortCut;
+  mFort.ShortCut := BFortify.ShortCut;
+  mCentre.ShortCut := BCenterUnit.ShortCut;
+  mStay.ShortCut := BStay.ShortCut;
+  mNoOrders.ShortCut := BNoOrders.ShortCut;
+  mTechTree.ShortCut := BTechTree.ShortCut;
+  mWait.ShortCut := BWait.ShortCut;
+  mJump.ShortCut := BJump.ShortCut;;
+end;
+
 procedure TMainScreen.FormKeyDown(Sender: TObject; var Key: word;
   Shift: TShiftState);
 
@@ -6512,8 +6539,8 @@ begin
       '1'..'9': SetDebugMap(ord(Key) - 48);
     end
   end else if Shift = [ssCtrl] then begin
+    if ShortCut = BJump.ShortCut then MenuClick(mJump);
     case char(Key) of
-      'J': MenuClick(mJump);
       'K': mShowClick(mDebugMap);
       'L': mShowClick(mLocCodes);
       'M': if LogDlg.Visible then LogDlg.Close
@@ -6541,9 +6568,9 @@ begin
       '3': MapBtnClick(MapBtn4);
       '4': MapBtnClick(MapBtn5);
       '5': MapBtnClick(MapBtn6);
-      'T': MenuClick(mTechTree);
-      'W': MenuClick(mWait);
     end;
+    if ShortCut = BTechTree.ShortCut then MenuClick(mTechTree)
+    else if ShortCut = BWait.ShortCut then MenuClick(mWait);
   end;
 
   if UnFocus >= 0 then begin

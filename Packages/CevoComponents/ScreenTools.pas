@@ -90,7 +90,7 @@ procedure PaintRelativeProgressBar(ca: TCanvas;
 procedure PaintLogo(ca: TCanvas; x, y, clLight, clShade: integer);
 function SetMainTextureByAge(Age: integer): boolean;
 procedure LoadPhrases;
-procedure Texturize(Dest, Texture: TBitmap; TransparentColor: Integer);
+procedure Texturize(Dest, Texture: TBitmap; TransparentColor: Cardinal);
 procedure DarkenImage(Bitmap: TBitmap; Change: Integer);
 function ScaleToNative(Value: Integer): Integer;
 function ScaleFromNative(Value: Integer): Integer;
@@ -1247,33 +1247,30 @@ procedure Gradient(ca: TCanvas; x, y, dx, dy, Width, Height, Color: Integer;
 var
   i, r, g, b: Integer;
 begin
-  begin
-    for i := 0 to 15 do
-    begin // gradient
-      r := Color and $FF + Brightness[i];
-      if r < 0 then
-        r := 0
-      else if r >= 256 then
-        r := 255;
-      g := Color shr 8 and $FF + Brightness[i];
-      if g < 0 then
-        g := 0
-      else if g >= 256 then
-        g := 255;
-      b := Color shr 16 and $FF + Brightness[i];
-      if b < 0 then
-        b := 0
-      else if b >= 256 then
-        b := 255;
-      ca.Pen.Color := r + g shl 8 + b shl 16;
-      ca.MoveTo(x + dx * i, y + dy * i);
-      ca.LineTo(x + dx * i + Width, y + dy * i + Height);
-    end;
-    ca.Pen.Color := $000000;
-    ca.MoveTo(x + 1, y + 16 * dy + Height);
-    ca.LineTo(x + 16 * dx + Width, y + 16 * dy + Height);
-    ca.LineTo(x + 16 * dx + Width, y);
+  for i := 0 to Length(Brightness) - 1 do begin // gradient
+    r := Color and $FF + Brightness[i];
+    if r < 0 then
+      r := 0
+    else if r >= 256 then
+      r := 255;
+    g := Color shr 8 and $FF + Brightness[i];
+    if g < 0 then
+      g := 0
+    else if g >= 256 then
+      g := 255;
+    b := Color shr 16 and $FF + Brightness[i];
+    if b < 0 then
+      b := 0
+    else if b >= 256 then
+      b := 255;
+    ca.Pen.Color := r + g shl 8 + b shl 16;
+    ca.MoveTo(x + dx * i, y + dy * i);
+    ca.LineTo(x + dx * i + Width, y + dy * i + Height);
   end;
+  ca.Pen.Color := $000000;
+  ca.MoveTo(x + 1, y + 16 * dy + Height);
+  ca.LineTo(x + 16 * dx + Width, y + 16 * dy + Height);
+  ca.LineTo(x + 16 * dx + Width, y);
 end;
 
 procedure LightGradient(ca: TCanvas; x, y, Width, Color: Integer);
@@ -1549,7 +1546,7 @@ begin
   end;
 end;
 
-procedure Texturize(Dest, Texture: TBitmap; TransparentColor: Integer);
+procedure Texturize(Dest, Texture: TBitmap; TransparentColor: Cardinal);
 var
   SrcPixel, DstPixel: TPixelPointer;
   X, Y: Integer;

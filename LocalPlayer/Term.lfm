@@ -1,7 +1,7 @@
 object MainScreen: TMainScreen
-  Left = 231
+  Left = 169
   Height = 480
-  Top = 190
+  Top = 596
   Width = 800
   HorzScrollBar.Visible = False
   VertScrollBar.Visible = False
@@ -11,6 +11,7 @@ object MainScreen: TMainScreen
   Color = clBtnFace
   Constraints.MinHeight = 480
   Constraints.MinWidth = 800
+  DesignTimePPI = 144
   Font.Color = clWindowText
   Font.Height = -13
   Font.Name = 'MS Sans Serif'
@@ -29,9 +30,8 @@ object MainScreen: TMainScreen
   OnResize = FormResize
   OnShow = FormShow
   Position = poDefault
-  PixelsPerInch = 96
+  LCLVersion = '2.0.12.0'
   Scaled = False
-  LCLVersion = '1.6.0.4'
   WindowState = wsMaximized
   object UnitBtn: TButtonB
     Tag = 14
@@ -216,13 +216,13 @@ object MainScreen: TMainScreen
     Enabled = False
     Interval = 50
     OnTimer = Timer1Timer
-    left = 8
-    top = 48
+    Left = 8
+    Top = 48
   end
   object GamePopup: TPopupMenu
     AutoPopup = False
-    left = 40
-    top = 48
+    Left = 40
+    Top = 48
     object mHelp: TMenuItem
       Tag = 7
       ShortCut = 112
@@ -458,7 +458,7 @@ object MainScreen: TMainScreen
           Caption = '90px'
           RadioItem = True
           OnClick = mBigTilesClick
-        end   		
+        end
       end
       object mSound: TMenuItem
         Tag = 80
@@ -586,8 +586,8 @@ object MainScreen: TMainScreen
   end
   object UnitPopup: TPopupMenu
     AutoPopup = False
-    left = 104
-    top = 48
+    Left = 104
+    Top = 48
     object mdisband: TMenuItem
       Tag = 72
       ShortCut = 16452
@@ -669,8 +669,8 @@ object MainScreen: TMainScreen
   end
   object StatPopup: TPopupMenu
     AutoPopup = False
-    left = 72
-    top = 48
+    Left = 72
+    Top = 48
     object mUnitStat: TMenuItem
       Tag = 9
       ShortCut = 113
@@ -725,15 +725,15 @@ object MainScreen: TMainScreen
     end
   end
   object EditPopup: TPopupMenu
-    left = 168
-    top = 48
+    Left = 168
+    Top = 48
     object mCreateUnit: TMenuItem
       Tag = 47
     end
   end
   object TerrainPopup: TPopupMenu
-    left = 136
-    top = 48
+    Left = 136
+    Top = 48
     object mtrans: TMenuItem
       Tag = 273
       ShortCut = 79

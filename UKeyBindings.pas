@@ -44,6 +44,9 @@ var
   BCenterUnit: TKeyBinding;
   BStay: TKeyBinding;
   BNoOrders: TKeyBinding;
+  BTechTree: TKeyBinding;
+  BWait: TKeyBinding;
+  BJump: TKeyBinding;
 
 
 implementation
@@ -81,7 +84,6 @@ var
   Lines: TStringList;
   I: Integer;
   KeyBinding: TKeyBinding;
-  N: Integer;
 begin
   Lines := TStringList.Create;
   Lines.NameValueSeparator := '=';
@@ -137,7 +139,10 @@ with KeyBindings do begin
   BFortify := AddItem('Fortify', 'Fortify', 'F');
   BCenterUnit := AddItem('CenterUnit', 'Center', 'C');
   BStay := AddItem('Stay', 'Stay', 'S');
-  BNoOrders := AddItem('NoOrders', 'No orders', ShortCut(VK_SPACE, []));
+  BNoOrders := AddItem('NoOrders', 'No orders', 'Space');
+  BTechTree := AddItem('TechTree', 'Tech tree', 'T');
+  BWait := AddItem('Wait', 'Wait', 'W');
+  BJump := AddItem('Jump', 'Jump 20 turns', 'Ctrl+J');
 end;
 
 

@@ -131,7 +131,7 @@ var
   NewWidth: Integer;
   NewHeight: Integer;
 const
-  TransparentColor = $7F007F;
+  TransparentColor: Cardinal = $7F007F;
 begin
   if Image = nil then begin
     Image := TBitmap.Create;

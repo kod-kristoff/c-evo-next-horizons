@@ -1,10 +1,11 @@
-C-evo 1.2.0 sources ported to Lazarus/FPC
+C-evo 1.3.0 Horizons
+========================
 
-* Used development environment: Lazarus 2.0.8 (https://www.lazarus-ide.org/)
+* Developed with: Lazarus 2.0.12 (https://www.lazarus-ide.org/)
 * Supported platforms: Windows and Linux
 * Supported architectures: 32-bit and 64-bit x86
 
-=Code changes to original source=
+= Code changes to original source =
 
 * Converted from Delphi to Lazarus
 * Merged source code and binaries from installed game
@@ -17,7 +18,22 @@ C-evo 1.2.0 sources ported to Lazarus/FPC
 * Added installer scripts for Windows and Ubuntu/Debian Linux.
 * Design time components converted to Lazarus package (cevocomponenets.lpk)
 
-=Original readme content=
+= Development =
+
+* Home page: https://app.zdechov.net/c-evo/
+* Source code: https://svn.zdechov.net/c-evo/
+* Developed in [http://www.lazarus-ide.org/ Lazarus/FPC] 2.0.12
+* To build new Windows installer run Install/build.bat. InnoSetup (http://www.jrsoftware.org/isdl.php) needs to be installed).
+
+== Release new version ==
+
+* Update version in GameServer.pas Version constant.
+* Update version in Install\win\Common.iss MyAppVersion define.
+* Update version in Install\rpm\c-evo.spec Version field.
+* Update version in Install\deb\control Standards-Version field.
+* Build all binary installer packages and put them into bin directory.
+
+= Original readme content =
 
 The C-evo sources
 

@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "C-evo"
-#define MyAppVersion "1.2.0"
+#define MyAppVersion "1.3.0"
 #define MyAppPublisher "Chronosoft"
 #define MyAppPublisherShort "Chronosoft"
 #define MyAppURL "https://app.zdechov.net/c-evo"

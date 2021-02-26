@@ -9,7 +9,7 @@ uses
   Protocol, Database, dynlibs, Platform, dateutils, fgl, LazFileUtils, Graphics;
 
 const
-  Version = $010200;
+  Version = $010300;
   FirstAICompatibleVersion = $000D00;
   FirstBookCompatibleVersion = $010103;
 

@@ -319,7 +319,7 @@
       <Unit38>
         <Filename Value="Settings.pas"/>
         <IsPartOfProject Value="True"/>
-        <ComponentName Value="LocaleDlg"/>
+        <ComponentName Value="SettingsDlg"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit38>

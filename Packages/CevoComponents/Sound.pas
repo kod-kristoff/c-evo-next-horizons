@@ -67,9 +67,11 @@ implementation
 
 {$R *.lfm}
 
+{$IFDEF LINUX}
 resourcestring
   SUnableToPlay = 'PlayStyle=%s: Unable to play %s Message:%s';
   SPlayCommandNotWork = 'The play command %s does not work on your system';
+{$ENDIF}
 
 constructor TSound.Create(const FileName: string);
 {$IFDEF WINDOWS}
