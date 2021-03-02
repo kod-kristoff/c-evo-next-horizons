@@ -165,8 +165,7 @@ var
 implementation
 
 uses
-  Global, Directories, Direct, ScreenTools, Inp, Back, Settings, UPixelPointer,
-  UKeyBindings;
+  Global, Directories, Direct, ScreenTools, Inp, Back, Settings, UPixelPointer;
 
 {$R *.lfm}
 
@@ -225,7 +224,6 @@ const
 
   PlayerAutoDiff: array [1 .. 5] of integer = (1, 1, 2, 2, 3);
   EnemyAutoDiff: array [1 .. 5] of integer = (4, 3, 2, 1, 1);
-  KeyBindingsFileName = 'KeyBindings.txt';
 
 { TMiniMap }
 
@@ -437,7 +435,6 @@ var
   x, i: Integer;
   PlayerSlot: TPlayerSlot;
   AIBrains: TBrains;
-  KeyBindingsAbsoluteFileName: string;
 begin
   PlayerSlots := TPlayerSlots.Create;
   PlayerSlots.Count := nPlOffered;
@@ -448,12 +445,6 @@ begin
   end;
   LoadConfig;
   LoadAssets;
-  KeyBindingsAbsoluteFileName := DataDir + DirectorySeparator + KeyBindingsFileName;
-  if FileExists(KeyBindingsAbsoluteFileName) then KeyBindings.LoadFromFile(KeyBindingsAbsoluteFileName)
-    else begin
-      ForceDirectories(ExtractFileDir(KeyBindingsAbsoluteFileName));
-      KeyBindings.SaveToFile(KeyBindingsAbsoluteFileName);
-    end;
 
   ActionsOffered := [maConfig, maManual, maCredits, maWeb];
   if FileExists(HomeDir + AITemplateFileName) then
@@ -1978,7 +1969,7 @@ end;
 procedure TStartDlg.FormKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
-  if KeyToShortCut(Key, Shift) = BHelp.ShortCut then
+  if KeyToShortCut(Key, Shift) = VK_F1 then
     DirectHelp(cStartHelp);
 end;
 

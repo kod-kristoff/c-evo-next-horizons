@@ -5,7 +5,7 @@ unit UKeyBindings;
 interface
 
 uses
-  Classes, SysUtils, fgl, LCLProc, LCLType, Menus;
+  Classes, SysUtils, fgl, LCLProc, LCLType, Menus, Registry;
 
 type
 
@@ -22,11 +22,12 @@ type
   { TKeyBindings }
 
   TKeyBindings = class(TFPGObjectList<TKeyBinding>)
+  public
     function AddItem(const ShortName, FullName: string; ShortCut: TShortCut; ShortCut2: TShortCut = 0): TKeyBinding; overload;
     function AddItem(const ShortName, FullName: string; ShortCutText: string; ShortCutText2: string = ''): TKeyBinding; overload;
     function Search(ShortName: string): TKeyBinding;
-    procedure LoadFromFile(FileName: string);
-    procedure SaveToFile(FileName: string);
+    procedure LoadFromRegistry(RootKey: HKEY; Key: string);
+    procedure SaveToRegistry(RootKey: HKEY; Key: string);
   end;
 
 var
@@ -150,41 +151,57 @@ begin
     else Result := nil;
 end;
 
-procedure TKeyBindings.LoadFromFile(FileName: string);
+procedure TKeyBindings.LoadFromRegistry(RootKey: HKEY; Key: string);
 var
-  Lines: TStringList;
   I: Integer;
-  KeyBinding: TKeyBinding;
+  Registry: TRegistry;
+  Text: string;
 begin
-  Lines := TStringList.Create;
-  Lines.NameValueSeparator := '=';
+  Registry := TRegistry.Create;
+  Registry.RootKey := RootKey;
+  with Registry do
   try
-    Lines.LoadFromFile(FileName);
-    for I := 0 to Lines.Count - 1 do begin
-      KeyBinding := Search(Lines.Names[I]);
-      if Assigned(KeyBinding) then begin
-        KeyBinding.ShortCut := TextToShortCut(Lines.ValueFromIndex[I]);
+    OpenKey(Key, True);
+    for I := 0 to Count - 1 do begin
+      Text := '';
+      if ValueExists(Items[I].ShortName) then begin
+        Text := ReadString(Items[I].ShortName);
+        if Pos(',', Text) > 0 then begin
+          Items[I].ShortCut2 := TextToShortCut(Copy(Text, Pos(',', Text) + 1, MaxInt));
+          Items[I].ShortCut := TextToShortCut(Copy(Text, 1, Pos(',', Text) - 1));
+        end else begin
+          Items[I].ShortCut := TextToShortCut(Text);
+          Items[I].ShortCut2 := 0;
+        end;
+      end else begin
+        Text := ShortCutToText(Items[I].ShortCut);
+        if Items[I].ShortCut2 <> 0 then Text := Text + ',' + ShortCutToText(Items[I].ShortCut2);
+        WriteString(Items[I].ShortName, Text);
       end;
     end;
   finally
-    FreeAndNil(Lines);
+    Free;
   end;
 end;
 
-procedure TKeyBindings.SaveToFile(FileName: string);
+procedure TKeyBindings.SaveToRegistry(RootKey: HKEY; Key: string);
 var
-  Lines: TStringList;
   I: Integer;
+  Registry: TRegistry;
+  Text: string;
 begin
-  Lines := TStringList.Create;
-  Lines.NameValueSeparator := '=';
+  Registry := TRegistry.Create;
+  Registry.RootKey := RootKey;
+  with Registry do
   try
+    OpenKey(Key, True);
     for I := 0 to Count - 1 do begin
-      Lines.Add(TKeyBinding(Items[I]).ShortName + '=' + ShortCutToText(TKeyBinding(Items[I]).ShortCut));
+      Text := ShortCutToText(Items[I].ShortCut);
+      if Items[I].ShortCut2 <> 0 then Text := Text + ',' + ShortCutToText(Items[I].ShortCut2);
+      WriteString(Items[I].ShortName, Text);
     end;
-    Lines.SaveToFile(FileName);
   finally
-    FreeAndNil(Lines);
+    Free;
   end;
 end;
 

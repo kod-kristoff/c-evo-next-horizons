@@ -3402,6 +3402,7 @@ procedure TMainScreen.FormCreate(Sender: TObject);
 var
   i, j: integer;
 begin
+  KeyBindings.LoadFromRegistry(HKEY_CURRENT_USER, AppRegistryKey + '\KeyBindings');
   UpdateKeyShortcuts;
 
   MainFormKeyDown := FormKeyDown;
@@ -3506,6 +3507,7 @@ procedure TMainScreen.FormDestroy(Sender: TObject);
 var
   I: Integer;
 begin
+  KeyBindings.SaveToRegistry(HKEY_CURRENT_USER, AppRegistryKey + '\KeyBindings');
   MainFormKeyDown := nil;
   FreeAndNil(sb);
   FreeAndNil(TopBar);

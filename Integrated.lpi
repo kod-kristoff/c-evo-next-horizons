@@ -332,7 +332,7 @@
         <IsPartOfProject Value="True"/>
       </Unit40>
       <Unit41>
-        <Filename Value="UKeyBindings.pas"/>
+        <Filename Value="LocalPlayer\UKeyBindings.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit41>
     </Units>
