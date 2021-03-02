@@ -6437,7 +6437,7 @@ begin
     PanelPaint;
     MapValid := false;
     PaintAllMaps;
-  end
+  end;
 end;
 
 procedure TMainScreen.UpdateKeyShortcuts;
@@ -6459,9 +6459,34 @@ begin
   mCentre.ShortCut := BCenterUnit.ShortCut;
   mStay.ShortCut := BStay.ShortCut;
   mNoOrders.ShortCut := BNoOrders.ShortCut;
+  mCancel.ShortCut := BCancel.ShortCut;
+  mPillage.ShortCut := BPillage.ShortCut;
   mTechTree.ShortCut := BTechTree.ShortCut;
   mWait.ShortCut := BWait.ShortCut;
   mJump.ShortCut := BJump.ShortCut;;
+  mDebugMap.ShortCut := BDebugMap.ShortCut;
+  mLocCodes.ShortCut := BLocCodes.ShortCut;
+  mNames.ShortCut := BNames.ShortCut;
+  mRun.ShortCut := BRun.ShortCut;
+  mAirBase.ShortCut := BAirBase.ShortCut;
+  mCity.ShortCut := BBuildCity.ShortCut;
+  mEnhance.ShortCut := BEnhance.ShortCut;
+  mGoOn.ShortCut := BGoOn.ShortCut;
+  mHome.ShortCut := BHome.ShortCut;
+  mFarm.ShortCut := BFarmClearIrrigation.ShortCut;
+  mClear.ShortCut := BFarmClearIrrigation.ShortCut;
+  mIrrigation.ShortCut := BFarmClearIrrigation.ShortCut;
+  mLoad.ShortCut := BLoad.ShortCut;
+  mAfforest.ShortCut := BAfforestMine.ShortCut;
+  mMine.ShortCut := BAfforestMine.ShortCut;
+  mCanal.ShortCut := BCanal.ShortCut;
+  MTrans.ShortCut := BTrans.ShortCut;
+  mPollution.ShortCut := BPollution.ShortCut;
+  mRR.ShortCut := BRailRoad.ShortCut;
+  mRoad.ShortCut := BRailRoad.ShortCut;
+  mUnload.ShortCut := BUnload.ShortCut;
+  mRecover.ShortCut := BRecover.ShortCut;
+  mUtilize.ShortCut := BUtilize.ShortCut;
 end;
 
 procedure TMainScreen.FormKeyDown(Sender: TObject; var Key: word;
@@ -6474,30 +6499,41 @@ procedure TMainScreen.FormKeyDown(Sender: TObject; var Key: word;
       MenuClick(Item);
   end;
 
+  procedure SetViewpointMe(p: Integer);
+  begin
+    if p = me then SetViewpoint(p)
+      else SetViewpoint(p);
+  end;
+
+  procedure DoMoveUnit(X, Y: Integer);
+  begin
+    DestinationMarkON := False;
+    PaintDestination;
+    MyUn[UnFocus].Status := MyUn[UnFocus].Status and
+      ($FFFF - usStay - usRecover - usGoto - usEnhance) or usWaiting;
+    MoveUnit(X, Y, muAutoNext);
+  end;
+
 var
-  dx, dy: integer;
-  time0, time1: TDateTime;
+  Time0, Time1: TDateTime;
   ShortCut: TShortCut;
 begin
   ShortCut := KeyToShortCut(Key, Shift);
 
-  if GameMode = cMovie then
-  begin
-    case Key of
-      VK_F4: MenuClick_Check(StatPopup, mScienceStat);
-      VK_F6: MenuClick_Check(StatPopup, mDiagram);
-      VK_F7: MenuClick_Check(StatPopup, mWonders);
-      VK_F8: MenuClick_Check(StatPopup, mShips);
-    end;
-    exit;
+  if GameMode = cMovie then begin
+    if BScienceStat.Test(ShortCut) then MenuClick_Check(StatPopup, mScienceStat)
+    else if BDiagram.Test(ShortCut) then MenuClick_Check(StatPopup, mDiagram)
+    else if BWonders.Test(ShortCut) then MenuClick_Check(StatPopup, mWonders)
+    else if BShips.Test(ShortCut) then MenuClick_Check(StatPopup, mShips);
+    Exit;
   end;
 
-  if not idle then exit;
+  if not Idle then Exit;
 
   if ClientMode = cEditMap then begin
-    if ShortCut = BResign.ShortCut then MenuClick(mResign)
-    else if ShortCut = BRandomMap.ShortCut then MenuClick(mRandomMap)
-    else if ShortCut = BHelp.ShortCut then MenuClick(mHelp);
+    if BResign.Test(ShortCut) then MenuClick(mResign)
+    else if BRandomMap.Test(ShortCut) then MenuClick(mRandomMap)
+    else if BHelp.Test(ShortCut) then MenuClick(mHelp);
     (*if Shift = [ssCtrl] then
       case char(Key) of
          'A':
@@ -6515,157 +6551,117 @@ begin
           end;
       end;
     *)
-
     Exit;
   end;
 
-  if ShortCut = BEndTurn.ShortCut then EndTurn
-  else if ShortCut = BHelp.ShortCut then MenuClick(mHelp)
-  else if ShortCut = BUnitStat.ShortCut then MenuClick_Check(StatPopup, mUnitStat)
-  else if ShortCut = BCityStat.ShortCut then MenuClick_Check(StatPopup, mCityStat)
-  else if ShortCut = BScienceStat.ShortCut then MenuClick_Check(StatPopup, mScienceStat)
-  else if ShortCut = BEUnitStat.ShortCut then MenuClick_Check(StatPopup, mEUnitStat)
-  else if ShortCut = BDiagram.ShortCut then MenuClick_Check(StatPopup, mDiagram)
-  else if ShortCut = BWonders.ShortCut then MenuClick_Check(StatPopup, mWonders)
-  else if ShortCut = BShips.ShortCut then MenuClick_Check(StatPopup, mShips)
-  else if ShortCut = BNations.ShortCut then MenuClick_Check(StatPopup, mNations)
-  else if ShortCut = BEmpire.ShortCut then MenuClick_Check(StatPopup, mEmpire);
+  if BEndTurn.Test(ShortCut) then EndTurn
+  else if BHelp.Test(ShortCut) then MenuClick(mHelp)
+  else if BUnitStat.Test(ShortCut) then MenuClick_Check(StatPopup, mUnitStat)
+  else if BCityStat.Test(ShortCut) then MenuClick_Check(StatPopup, mCityStat)
+  else if BScienceStat.Test(ShortCut) then MenuClick_Check(StatPopup, mScienceStat)
+  else if BEUnitStat.Test(ShortCut) then MenuClick_Check(StatPopup, mEUnitStat)
+  else if BDiagram.Test(ShortCut) then MenuClick_Check(StatPopup, mDiagram)
+  else if BWonders.Test(ShortCut) then MenuClick_Check(StatPopup, mWonders)
+  else if BShips.Test(ShortCut) then MenuClick_Check(StatPopup, mShips)
+  else if BNations.Test(ShortCut) then MenuClick_Check(StatPopup, mNations)
+  else if BEmpire.Test(ShortCut) then MenuClick_Check(StatPopup, mEmpire)
 
-  if Shift = [ssAlt] then begin
-    case char(Key) of
-      '0': SetDebugMap(-1);
-      '1'..'9': SetDebugMap(ord(Key) - 48);
-    end
-  end else if Shift = [ssCtrl] then begin
-    if ShortCut = BJump.ShortCut then MenuClick(mJump);
-    case char(Key) of
-      'K': mShowClick(mDebugMap);
-      'L': mShowClick(mLocCodes);
-      'M': if LogDlg.Visible then LogDlg.Close
-        else LogDlg.Show;
-      'N': mNamesClick(mNames);
-      'Q': MenuClick_Check(GamePopup, mResign);
-      'R': MenuClick(mRun);
-      '0'..'9': begin
-          if ord(Key) - 48 = me then SetViewpoint(0)
-            else SetViewpoint(ord(Key) - 48);
-        end;
-      ' ': begin // test map repaint time
-          time0 := NowPrecise;
-          MapValid := false;
-          MainOffscreenPaint;
-          time1 := NowPrecise;
-          SimpleMessage(Format('Map repaint time: %.3f ms',
-            [(time1 - time0) / OneMillisecond]));
-        end;
-    end
-  end else if Shift = [] then begin
-    case char(Key) of
-      '1': MapBtnClick(MapBtn0);
-      '2': MapBtnClick(MapBtn1);
-      '3': MapBtnClick(MapBtn4);
-      '4': MapBtnClick(MapBtn5);
-      '5': MapBtnClick(MapBtn6);
-    end;
-    if ShortCut = BTechTree.ShortCut then MenuClick(mTechTree)
-    else if ShortCut = BWait.ShortCut then MenuClick(mWait);
-  end;
+  else if BSetDebugMap0.Test(ShortCut) then SetDebugMap(-1)
+  else if BSetDebugMap1.Test(ShortCut) then SetDebugMap(1)
+  else if BSetDebugMap2.Test(ShortCut) then SetDebugMap(2)
+  else if BSetDebugMap3.Test(ShortCut) then SetDebugMap(3)
+  else if BSetDebugMap4.Test(ShortCut) then SetDebugMap(4)
+  else if BSetDebugMap5.Test(ShortCut) then SetDebugMap(5)
+  else if BSetDebugMap6.Test(ShortCut) then SetDebugMap(6)
+  else if BSetDebugMap7.Test(ShortCut) then SetDebugMap(7)
+  else if BSetDebugMap8.Test(ShortCut) then SetDebugMap(8)
+  else if BSetDebugMap9.Test(ShortCut) then SetDebugMap(9)
+
+  else if BJump.Test(ShortCut) then MenuClick(mJump)
+  else if BDebugMap.Test(ShortCut) then mShowClick(mDebugMap)
+  else if BLocCodes.Test(ShortCut) then mShowClick(mLocCodes)
+  else if BLogDlg.Test(ShortCut) then begin
+    if LogDlg.Visible then LogDlg.Close
+      else LogDlg.Show;
+  end
+  else if BNames.Test(ShortCut) then mNamesClick(mNames)
+  else if BResign.Test(ShortCut) then MenuClick_Check(GamePopup, mResign)
+  else if BRun.Test(ShortCut) then MenuClick(mRun)
+  else if BTestMapRepaint.Test(ShortCut) then begin // test map repaint time
+    Time0 := NowPrecise;
+    MapValid := False;
+    MainOffscreenPaint;
+    Time1 := NowPrecise;
+    SimpleMessage(Format('Map repaint time: %.3f ms',
+      [(Time1 - Time0) / OneMillisecond]));
+  end
+  else if BSetViewpoint0.Test(ShortCut) then SetViewpointMe(0)
+  else if BSetViewpoint1.Test(ShortCut) then SetViewpointMe(1)
+  else if BSetViewpoint2.Test(ShortCut) then SetViewpointMe(2)
+  else if BSetViewpoint3.Test(ShortCut) then SetViewpointMe(3)
+  else if BSetViewpoint4.Test(ShortCut) then SetViewpointMe(4)
+  else if BSetViewpoint5.Test(ShortCut) then SetViewpointMe(5)
+  else if BSetViewpoint6.Test(ShortCut) then SetViewpointMe(6)
+  else if BSetViewpoint7.Test(ShortCut) then SetViewpointMe(7)
+  else if BSetViewpoint8.Test(ShortCut) then SetViewpointMe(8)
+  else if BSetViewpoint9.Test(ShortCut) then SetViewpointMe(9)
+
+  else if BMapBtn0.Test(ShortCut) then MapBtnClick(MapBtn0)
+  else if BMapBtn1.Test(ShortCut) then MapBtnClick(MapBtn1)
+  else if BMapBtn4.Test(ShortCut) then MapBtnClick(MapBtn4)
+  else if BMapBtn5.Test(ShortCut) then MapBtnClick(MapBtn5)
+  else if BMapBtn6.Test(ShortCut) then MapBtnClick(MapBtn6)
+  else if BTechTree.Test(ShortCut) then MenuClick(mTechTree)
+  else if BWait.Test(ShortCut) then MenuClick(mWait);
 
   if UnFocus >= 0 then begin
-    if ShortCut = BDisbandUnit.ShortCut then MenuClick(mDisband)
-    else if ShortCut = BFortify.ShortCut then MenuClick_Check(TerrainPopup, mFort)
-    else if ShortCut = BCenterUnit.ShortCut then MenuClick(mCentre)
-    else if ShortCut = BStay.ShortCut then MenuClick(mStay)
-    else if ShortCut = BNoOrders.ShortCut then MenuClick(mNoOrders);
-
-    if Shift = [ssCtrl] then begin
-      case char(Key) of
-        'C': MenuClick_Check(UnitPopup, mCancel);
-        'P': MenuClick_Check(UnitPopup, mPillage);
-        'T': MenuClick_Check(UnitPopup, mSelectTransport);
-      end;
-    end else if Shift = [] then begin
-      case char(Key) of
-        'A': MenuClick_Check(TerrainPopup, mAirBase);
-        'B': MenuClick_Check(UnitPopup, mCity);
-        'E': begin
-            InitPopup(TerrainPopup);
-            if mEnhance.Visible and mEnhance.Enabled then
-              MenuClick(mEnhance)
-            else MenuClick(mEnhanceDef)
-          end;
-        'G': MenuClick_Check(UnitPopup, mGoOn);
-        'H': MenuClick_Check(UnitPopup, mHome);
-        'I': if JobTest(UnFocus, jFarm, [eTreaty]) then
-            MenuClick(mFarm)
-          else if JobTest(UnFocus, jClear, [eTreaty]) then
-            MenuClick(mClear)
-          else MenuClick_Check(TerrainPopup, mIrrigation);
-        'L': MenuClick_Check(UnitPopup, mLoad);
-        'M': if JobTest(UnFocus, jAfforest, [eTreaty]) then
-            MenuClick(mAfforest)
-          else MenuClick_Check(TerrainPopup, mMine);
-        'N': MenuClick_Check(TerrainPopup, mCanal);
-        'O': MenuClick_Check(TerrainPopup, MTrans);
-        'P': MenuClick_Check(TerrainPopup, mPollution);
-        'R': if JobTest(UnFocus, jRR, [eTreaty]) then
-            MenuClick(mRR)
-          else MenuClick_Check(TerrainPopup, mRoad);
-        'U': MenuClick_Check(UnitPopup, mUnload);
-        'V': MenuClick_Check(UnitPopup, mRecover);
-        'Z': MenuClick_Check(UnitPopup, mUtilize);
-        #33 .. #40, #97 .. #100, #102 .. #105:
-          begin { arrow keys }
-            DestinationMarkON := false;
-            PaintDestination;
-            MyUn[UnFocus].Status := MyUn[UnFocus].Status and
-              ($FFFF - usStay - usRecover - usGoto - usEnhance) or usWaiting;
-            case Key of
-              VK_NUMPAD1, VK_END:
-                begin
-                  dx := -1;
-                  dy := 1
-                end;
-              VK_NUMPAD2, VK_DOWN:
-                begin
-                  dx := 0;
-                  dy := 2
-                end;
-              VK_NUMPAD3, VK_NEXT:
-                begin
-                  dx := 1;
-                  dy := 1
-                end;
-              VK_NUMPAD4, VK_LEFT:
-                begin
-                  dx := -2;
-                  dy := 0
-                end;
-              VK_NUMPAD6, VK_RIGHT:
-                begin
-                  dx := 2;
-                  dy := 0
-                end;
-              VK_NUMPAD7, VK_HOME:
-                begin
-                  dx := -1;
-                  dy := -1
-                end;
-              VK_NUMPAD8, VK_UP:
-                begin
-                  dx := 0;
-                  dy := -2
-                end;
-              VK_NUMPAD9, VK_PRIOR:
-                begin
-                  dx := 1;
-                  dy := -1
-                end;
-            end;
-            MoveUnit(dx, dy, muAutoNext)
-          end;
-      end;
-    end;
+    if BDisbandUnit.Test(ShortCut) then MenuClick(mDisband)
+    else if BFortify.Test(ShortCut) then MenuClick_Check(TerrainPopup, mFort)
+    else if BCenterUnit.Test(ShortCut) then MenuClick(mCentre)
+    else if BStay.Test(ShortCut) then MenuClick(mStay)
+    else if BNoOrders.Test(ShortCut) then MenuClick(mNoOrders)
+    else if BCancel.Test(ShortCut) then MenuClick_Check(UnitPopup, mCancel)
+    else if BPillage.Test(ShortCut) then MenuClick_Check(UnitPopup, mPillage)
+    else if BSelectTransport.Test(ShortCut) then MenuClick_Check(UnitPopup, mSelectTransport)
+    else if BAirBase.Test(ShortCut) then MenuClick_Check(TerrainPopup, mAirBase)
+    else if BBuildCity.Test(ShortCut) then MenuClick_Check(UnitPopup, mCity)
+    else if BEnhance.Test(ShortCut) then begin
+      InitPopup(TerrainPopup);
+      if mEnhance.Visible and mEnhance.Enabled then MenuClick(mEnhance)
+        else MenuClick(mEnhanceDef)
+    end
+    else if BGoOn.Test(ShortCut) then MenuClick_Check(UnitPopup, mGoOn)
+    else if BHome.Test(ShortCut) then MenuClick_Check(UnitPopup, mHome)
+    else if BFarmClearIrrigation.Test(ShortCut) then begin
+      if JobTest(UnFocus, jFarm, [eTreaty]) then
+        MenuClick(mFarm)
+      else if JobTest(UnFocus, jClear, [eTreaty]) then
+        MenuClick(mClear)
+      else MenuClick_Check(TerrainPopup, mIrrigation);
+    end
+    else if BLoad.Test(ShortCut) then MenuClick_Check(UnitPopup, mLoad)
+    else if BAfforestMine.Test(ShortCut) then begin
+      if JobTest(UnFocus, jAfforest, [eTreaty]) then MenuClick(mAfforest)
+        else MenuClick_Check(TerrainPopup, mMine);
+    end
+    else if BCanal.Test(ShortCut) then MenuClick_Check(TerrainPopup, mCanal)
+    else if BTrans.Test(ShortCut) then MenuClick_Check(TerrainPopup, MTrans)
+    else if BPollution.Test(ShortCut) then MenuClick_Check(TerrainPopup, mPollution)
+    else if BRailRoad.Test(ShortCut) then begin
+      if JobTest(UnFocus, jRR, [eTreaty]) then MenuClick(mRR)
+        else MenuClick_Check(TerrainPopup, mRoad);
+    end
+    else if BUnload.Test(ShortCut) then MenuClick_Check(UnitPopup, mUnload)
+    else if BRecover.Test(ShortCut) then MenuClick_Check(UnitPopup, mRecover)
+    else if BUtilize.Test(ShortCut) then MenuClick_Check(UnitPopup, mUtilize)
+    else if BMoveLeftDown.Test(ShortCut) then DoMoveUnit(-1, 1)
+    else if BMoveDown.Test(ShortCut) then DoMoveUnit(0, 2)
+    else if BMoveRightDown.Test(ShortCut) then DoMoveUnit(1, 1)
+    else if BMoveLeft.Test(ShortCut) then DoMoveUnit(-2, 0)
+    else if BMoveRight.Test(ShortCut) then DoMoveUnit(2, 0)
+    else if BMoveLeftUp.Test(ShortCut) then DoMoveUnit(-1, -1)
+    else if BMoveUp.Test(ShortCut) then  DoMoveUnit(0, -2)
+    else if BMoveRightUp.Test(ShortCut) then DoMoveUnit(1, -1);
   end;
 end;
 
