@@ -6503,21 +6503,6 @@ end;
 
 procedure TMainScreen.SetFullScreen(Active: Boolean);
 begin
-  (*  if FullScreen then begin
-      ShowWindow(Handle, SW_SHOWFULLSCREEN);
-      {$IFDEF WINDOWS}
-      Form.BorderStyle := bsNone;
-      {$ENDIF}
-    end else begin
-      {$IFDEF WINDOWS}
-      Form.BorderStyle := bsSizeable;
-      {$ENDIF}
-      ShowWindow(Handle, SW_SHOWNORMAL);
-      WindowState := wsMaximized;
-      BorderStyle := bsSizeable;
-      BorderIcons := [biSystemMenu, biMinimize, biMaximize];
-    end;
-   *)
     if Active and (CurrentWindowState <> wsFullScreen) then begin
       PrevWindowState := WindowState;
       CurrentWindowState := wsFullScreen;
