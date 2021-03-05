@@ -234,6 +234,8 @@ type
     sb: TPVScrollbar;
     Closable, RepaintOnResize, Tracking, TurnComplete, Edited, GoOnPhase,
       HaveStrategyAdvice, FirstMovieTurn: boolean;
+    PrevWindowState: TWindowState;
+    CurrentWindowState: TWindowState;
     function ChooseUnusedTribe: integer;
     procedure GetTribeList;
     procedure InitModule;
@@ -283,6 +285,7 @@ type
     procedure OnEOT(var Msg: TMessage); message WM_EOT;
     procedure SoundPreload(Check: integer);
     procedure UpdateKeyShortcuts;
+    procedure SetFullScreen(Active: Boolean);
   public
     UsedOffscreenWidth, UsedOffscreenHeight: integer;
     Offscreen: TBitmap;
@@ -307,13 +310,15 @@ type
     trix: integer;
     FileName: ShortString;
   end;
-
   TCityNameInfo = record
     ID: integer;
-    NewName: ShortString end;
-    TModelNameInfo = record mix: integer;
-    NewName: ShortString end;
-    TPriceSet = Set of $00 .. $FF;
+    NewName: ShortString;
+  end;
+  TModelNameInfo = record
+    mix: integer;
+    NewName: ShortString;
+  end;
+  TPriceSet = Set of $00 .. $FF;
 
 const
   crImpDrag = 2;
@@ -531,8 +536,8 @@ var
   pTurn, pLogo, UnStartLoc, ToldSlavery: integer;
   SmallScreen, GameOK, MapValid, skipped, idle: boolean;
 
-  SaveOption: array [0 .. nSaveOption - 1] of integer;
-  MiniColors: array [0 .. 11, 0 .. 1] of TColor;
+  SaveOption: array [0..nSaveOption - 1] of integer;
+  MiniColors: array [0..11, 0..1] of TColor;
   MainMap: TIsoMap;
   CurrentMoveInfo: record AfterMovePaintRadius, AfterAttackExpeller: integer;
   DoShow, IsAlly: boolean;
@@ -736,7 +741,7 @@ begin
   with MyRO.EnemyModel[emix] do
     ChooseModelPicture(Owner, mix, ModelCode(MyRO.EnemyModel[emix]),
       ModelHash(MyRO.EnemyModel[emix]), MyRO.Turn, false, true);
-  result := true
+  result := true;
 end;
 
 procedure InitAllEnemyModels;
@@ -873,7 +878,7 @@ begin
           if MyModel[mix].Kind = mkSettler then
             MyModel[mix].Status := MyModel[mix].Status or msObsolete;
       end;
-      inc(MyData.ToldModels)
+      inc(MyData.ToldModels);
     end;
 end;
 
@@ -3611,8 +3616,8 @@ begin
   begin
     RectInvalidate(0, TopBarHeight, ClientWidth, TopBarHeight + MapHeight);
     MapValid := false;
-    PaintAll
-  end
+    PaintAll;
+  end;
 end;
 
 procedure TMainScreen.FormCloseQuery(Sender: TObject; var CanClose: boolean);
@@ -4057,7 +4062,9 @@ end;
 procedure TMainScreen.MiniPaint;
 var
   uix, cix, x, y, Loc, i, hw, xm, cm, cmPolOcean, cmPolNone: integer;
-  PrevMiniPixel, MiniPixel: TPixelPointer;
+  PrevMiniPixel: TPixelPointer;
+  MiniPixel: TPixelPointer;
+  TerrainTile: Cardinal;
 begin
   cmPolOcean := GrExt[HGrSystem].Data.Canvas.Pixels[101, 67];
   cmPolNone := GrExt[HGrSystem].Data.Canvas.Pixels[102, 67];
@@ -4081,7 +4088,9 @@ begin
           xm := ((x - ScaleToNative(xwMini)) * 2 + i + y and 1 - ScaleToNative(hw) +
             ScaleToNative(G.lx) * 5) mod (ScaleToNative(G.lx) * 2);
           MiniPixel.SetXY(xm, y);
-          cm := MiniColors[MyMap[Loc] and fTerrain, i];
+          TerrainTile := MyMap[Loc] and fTerrain;
+          if TerrainTile > 11 then TerrainTile := 0;
+          cm := MiniColors[TerrainTile, i];
           if ClientMode = cEditMap then
           begin
             if MyMap[Loc] and (fPrefStartPos or fStartPos) <> 0 then
@@ -4571,7 +4580,8 @@ begin
     begin
       Brush.Style := bsClear;
       if UnFocus >= 0 then
-        with MyUn[UnFocus], MyModel[mix] do
+        with MyUn[UnFocus] do
+        with MyModel[mix] do
         begin { display info about selected unit }
           if Job = jCity then
             mixShow := -1 // building site
@@ -6491,6 +6501,49 @@ begin
   mUtilize.ShortCut := BUtilize.ShortCut;
 end;
 
+procedure TMainScreen.SetFullScreen(Active: Boolean);
+begin
+  (*  if FullScreen then begin
+      ShowWindow(Handle, SW_SHOWFULLSCREEN);
+      {$IFDEF WINDOWS}
+      Form.BorderStyle := bsNone;
+      {$ENDIF}
+    end else begin
+      {$IFDEF WINDOWS}
+      Form.BorderStyle := bsSizeable;
+      {$ENDIF}
+      ShowWindow(Handle, SW_SHOWNORMAL);
+      WindowState := wsMaximized;
+      BorderStyle := bsSizeable;
+      BorderIcons := [biSystemMenu, biMinimize, biMaximize];
+    end;
+   *)
+    if Active and (CurrentWindowState <> wsFullScreen) then begin
+      PrevWindowState := WindowState;
+      CurrentWindowState := wsFullScreen;
+      WindowState := CurrentWindowState;
+      {$IFDEF WINDOWS}
+      BorderStyle := bsNone;
+      {$ENDIF}
+      BorderIcons := [];
+    end else
+    if not Active and (CurrentWindowState = wsFullScreen) then begin
+      if PrevWindowState = wsMaximized then begin
+        CurrentWindowState := wsMaximized;
+        WindowState := CurrentWindowState;
+      end else begin
+        CurrentWindowState := wsNormal;
+        WindowState := CurrentWindowState;
+        WindowState := wsFullScreen;
+        WindowState := CurrentWindowState;
+      end;
+      {$IFDEF WINDOWS}
+      BorderStyle := bsSizeable;
+      {$ENDIF}
+      BorderIcons := [biSystemMenu, biMinimize, biMaximize];
+    end;
+end;
+
 procedure TMainScreen.FormKeyDown(Sender: TObject; var Key: word;
   Shift: TShiftState);
 
@@ -6557,6 +6610,10 @@ begin
   end;
 
   if BEndTurn.Test(ShortCut) then EndTurn
+  else if BFullScreen.Test(ShortCut) then begin
+    FullScreen := not FullScreen;
+    SetFullScreen(FullScreen);
+  end
   else if BHelp.Test(ShortCut) then MenuClick(mHelp)
   else if BUnitStat.Test(ShortCut) then MenuClick_Check(StatPopup, mUnitStat)
   else if BCityStat.Test(ShortCut) then MenuClick_Check(StatPopup, mCityStat)
@@ -7757,15 +7814,7 @@ end;
 
 procedure TMainScreen.FormShow(Sender: TObject);
 begin
-  if FullScreen then begin
-    WindowState := wsFullScreen;
-    BorderStyle := bsNone;
-    BorderIcons := [];
-  end else begin
-    WindowState := wsMaximized;
-    BorderStyle := bsSizeable;
-    BorderIcons := [biSystemMenu, biMinimize, biMaximize];
-  end;
+  SetFullScreen(FullScreen);
   Timer1.Enabled := True;
 end;
 

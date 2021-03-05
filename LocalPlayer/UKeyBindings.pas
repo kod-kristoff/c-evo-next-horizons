@@ -43,6 +43,7 @@ var
   BShips: TKeyBinding;
   BNations: TKeyBinding;
   BEmpire: TKeyBinding;
+  BFullScreen: TKeyBinding;
   BResign: TKeyBinding;
   BRandomMap: TKeyBinding;
   BDisbandUnit: TKeyBinding;
@@ -221,6 +222,7 @@ with KeyBindings do begin
   BShips := AddItem('Ships', 'Colonization ships', 'F8');
   BNations := AddItem('Nations', 'Nations', 'F9');
   BEmpire := AddItem('Empire', 'Empire', 'F10');
+  BFullScreen := AddItem('FullScreen', 'Full screen', 'F11');
   BResign := AddItem('Resign', 'Resign', 'Ctrl+Q');
   BRandomMap := AddItem('RandomMap', 'Random map', 'Ctrl+R');
   BDisbandUnit := AddItem('DisbandUnit', 'Disband unit', 'Ctrl+D');

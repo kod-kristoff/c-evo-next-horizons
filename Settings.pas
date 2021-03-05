@@ -41,6 +41,8 @@ type
     { private declarations }
   public
     Languages: TLanguages;
+    procedure LoadData;
+    procedure SaveData;
   end;
 
 var
@@ -104,8 +106,6 @@ begin
   CancelBtn.Graphic := GrExt[HGrSystem].Data;
 
   ButtonFullscreen.Graphic := GrExt[HGrSystem].Data;
-  if FullScreen then ButtonFullscreen.ButtonIndex := 3
-    else ButtonFullscreen.ButtonIndex := 2;
 end;
 
 procedure TSettingsDlg.CancelBtnClick(Sender: TObject);
@@ -115,7 +115,6 @@ end;
 
 procedure TSettingsDlg.ButtonFullscreenClick(Sender: TObject);
 begin
-  FullScreen := not FullScreen;
   ButtonFullscreen.ButtonIndex := ButtonFullscreen.ButtonIndex xor 1;
 end;
 
@@ -150,16 +149,29 @@ end;
 procedure TSettingsDlg.FormShow(Sender: TObject);
 begin
   Languages.LoadToStrings(List.Items);
-  List.ItemIndex := Languages.Search(LocaleCode);
-  if (List.ItemIndex = -1) and (Languages.Count > 0) then
-    List.ItemIndex := 0;
   List.Font.Color := MainTexture.clMark;
+  LoadData;
 end;
 
 procedure TSettingsDlg.OKBtnClick(Sender: TObject);
 begin
-  LocaleCode := Languages[List.ItemIndex].ShortName;
+  SaveData;
   ModalResult := mrOk;
+end;
+
+procedure TSettingsDlg.LoadData;
+begin
+  List.ItemIndex := Languages.Search(LocaleCode);
+  if (List.ItemIndex = -1) and (Languages.Count > 0) then
+    List.ItemIndex := 0;
+  if FullScreen then ButtonFullscreen.ButtonIndex := 3
+    else ButtonFullscreen.ButtonIndex := 2;
+end;
+
+procedure TSettingsDlg.SaveData;
+begin
+  LocaleCode := Languages[List.ItemIndex].ShortName;
+  FullScreen := (ButtonFullscreen.ButtonIndex and 1) = 1;
 end;
 
 end.
