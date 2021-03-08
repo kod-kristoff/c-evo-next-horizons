@@ -702,7 +702,7 @@ begin
       LabelTextColor := $000000;
     end;
     Textout(xShield + 2, yShield - 1, LabelTextColor, s);
-  end
+  end;
 end; { PaintCity }
 
 function PoleTile(Loc: integer): integer;

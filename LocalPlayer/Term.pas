@@ -785,11 +785,12 @@ end;
 
 function CreateTribe(p: integer; FileName: string; Original: boolean): boolean;
 begin
-  if not FileExists(LocalizedFilePath('Tribes' + DirectorySeparator + FileName +
-    '.tribe.txt')) then
+  FileName := LocalizedFilePath('Tribes' + DirectorySeparator + FileName +
+    CevoTribeExt);
+  if not FileExists(FileName) then
   begin
-    result := false;
-    exit
+    Result := False;
+    Exit;
   end;
 
   TribeOriginal[p] := Original;
@@ -1412,17 +1413,17 @@ var
   ok: boolean;
 begin
   UnusedTribeFiles.Clear;
-  ok := FindFirst(LocalizedFilePath('Tribes') + DirectorySeparator + '*.tribe.txt',
+  ok := FindFirst(LocalizedFilePath('Tribes') + DirectorySeparator + '*' + CevoTribeExt,
     faArchive + faReadOnly, SearchRec) = 0;
   if not ok then
   begin
     FindClose(SearchRec);
-    ok := FindFirst(LocalizedFilePath('Tribes' + DirectorySeparator + '*.tribe.txt'),
+    ok := FindFirst(LocalizedFilePath('Tribes' + DirectorySeparator + '*' + CevoTribeExt),
       faArchive + faReadOnly, SearchRec) = 0;
   end;
   if ok then
     repeat
-      SearchRec.Name := Copy(SearchRec.Name, 1, Length(SearchRec.Name) - 10);
+      SearchRec.Name := Copy(SearchRec.Name, 1, Length(SearchRec.Name) - Length(CevoTribeExt));
       if GetTribeInfo(SearchRec.Name, Name, Color) then
         UnusedTribeFiles.AddObject(SearchRec.Name, TObject(Color));
     until FindNext(SearchRec) <> 0;
@@ -1431,8 +1432,12 @@ end;
 
 function TMainScreen.ChooseUnusedTribe: integer;
 var
-  i, j, ColorDistance, BestColorDistance, TestColorDistance,
-    CountBest: integer;
+  i: Integer;
+  j: Integer;
+  ColorDistance: Integer;
+  BestColorDistance: Integer;
+  TestColorDistance: Integer;
+  CountBest: Integer;
 begin
   assert(UnusedTribeFiles.Count > 0);
   result := -1;

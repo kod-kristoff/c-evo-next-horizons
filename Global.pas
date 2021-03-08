@@ -5,11 +5,13 @@ interface
 const
   CevoExt = '.cevo';
   CevoMapExt = '.cevo map';
-  CevoHomepage = 'http://c-evo.org';
-  CevoContact = 'http://c-evo.org/_sg/contact';
-  CevoContactBug = 'http://c-evo.org/_sg/contact/cevobug.html';
+  CevoTribeExt = '.tribe.txt';
+  CevoHomepage = 'https://app.zdechov.net/c-evo';
+  CevoContact = 'https://app.zdechov.net/c-evo#Contact';
+  CevoContactBug = 'https://app.zdechov.net/c-evo/report/1';
   AppRegistryKey = '\SOFTWARE\C-evo';
   AITemplateFileName = 'AI Template' + DirectorySeparator + 'AI development manual.html';
+
 
 implementation
 

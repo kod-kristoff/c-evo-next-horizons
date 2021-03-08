@@ -4,7 +4,7 @@ unit Tribes;
 interface
 
 uses
-  Protocol, ScreenTools, LazFileUtils, Classes, Graphics, SysUtils;
+  Protocol, ScreenTools, LazFileUtils, Classes, Graphics, SysUtils, Global;
 
 type
   TCityPicture = record
@@ -48,9 +48,9 @@ type
 {$IFNDEF SCR} procedure SetCityName(i: Integer; NewName: string); {$ENDIF}
 {$IFNDEF SCR} function TString(Template: string): string;
     function TPhrase(Item: string): string; {$ENDIF}
-    procedure SetModelPicture(const Info: TModelPictureInfo; IsNew: boolean);
+    procedure SetModelPicture(const Info: TModelPictureInfo; IsNew: Boolean);
     function ChooseModelPicture(var Picture: TModelPictureInfo;
-      Code, Turn: Integer; ForceNew: boolean): boolean;
+      Code, Turn: Integer; ForceNew: Boolean): Boolean;
     procedure InitAge(Age: Integer);
   protected
     CityLine0: Integer;
@@ -67,8 +67,8 @@ procedure Init;
 procedure Done;
 function CityName(Founder: Integer): string;
 function ModelCode(const ModelInfo: TModelInfo): Integer;
-procedure FindStdModelPicture(code: Integer; var pix: Integer; var Name: string);
-function GetTribeInfo(FileName: string; var Name: string; var Color: TColor): boolean;
+procedure FindStdModelPicture(Code: Integer; var pix: Integer; var Name: string);
+function GetTribeInfo(FileName: string; var Name: string; var Color: TColor): Boolean;
 procedure FindPosition(HGr, x, y, xmax, ymax: Integer; Mark: TColor;
   var xp, yp: Integer);
 
@@ -230,7 +230,7 @@ begin
     Result := 0;
 end;
 
-procedure FindStdModelPicture(code: Integer; var pix: Integer; var Name: string);
+procedure FindStdModelPicture(Code: Integer; var pix: Integer; var Name: string);
 var
   i: Integer;
 begin
@@ -238,7 +238,7 @@ begin
   begin // look through StdUnits
     Input := StdUnitScript[i];
     pix := GetNum;
-    if code = GetNum then
+    if Code = GetNum then
     begin
       Name := Get;
       Exit;
@@ -248,7 +248,7 @@ begin
 end;
 
 function GetTribeInfo(FileName: string; var Name: string;
-  var Color: TColor): boolean;
+  var Color: TColor): Boolean;
 var
   Found: Integer;
   TribeScript: TextFile;
@@ -257,7 +257,7 @@ begin
   Color := $FFFFFF;
   Found := 0;
   AssignFile(TribeScript, LocalizedFilePath('Tribes' + DirectorySeparator +
-    FileName + '.tribe.txt'));
+    FileName + CevoTribeExt));
   Reset(TribeScript);
   while not EOF(TribeScript) do
   begin
@@ -284,15 +284,14 @@ end;
 constructor TTribe.Create(FileName: string);
 var
   Line: Integer;
-  Variant: char;
+  Variant: Char;
   Item: string;
 begin
   inherited Create;
   for Variant := 'a' to 'z' do
     Name[Variant] := '';
   Script := TStringList.Create;
-  Script.LoadFromFile(LocalizedFilePath('Tribes' + DirectorySeparator +
-    FileName + '.tribe.txt'));
+  Script.LoadFromFile(FileName);
   CityLine0 := 0;
   nCityLines := 0;
   for Line := 0 to Script.Count - 1 do
@@ -475,7 +474,7 @@ begin
   end;
 end;
 
-procedure TTribe.SetModelPicture(const Info: TModelPictureInfo; IsNew: boolean);
+procedure TTribe.SetModelPicture(const Info: TModelPictureInfo; IsNew: Boolean);
 var
   i: Integer;
   ok: Boolean;
