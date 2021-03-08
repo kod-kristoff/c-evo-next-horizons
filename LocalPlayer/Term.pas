@@ -1122,8 +1122,8 @@ begin
         CityDlg.Close;
       if UnitStatDlg.Visible then
         UnitStatDlg.Close;
-    end
-  end
+    end;
+  end;
 end;
 
 function TMainScreen.OfferCall(var Offer: TOffer): integer;
@@ -1150,8 +1150,8 @@ begin
         CityDlg.Close;
       if UnitStatDlg.Visible then
         UnitStatDlg.Close;
-    end
-  end
+    end;
+  end;
 end;
 
 procedure TMainScreen.SetUnFocus(uix: integer);
@@ -1174,7 +1174,7 @@ begin
       begin
         UnFocus := -1;
         PaintLoc(Loc0);
-      end
+      end;
     end;
     UnFocus := uix;
   end;
@@ -1219,7 +1219,7 @@ begin
     MovieSpeed2Btn.Visible := false;
     MovieSpeed3Btn.Visible := false;
     MovieSpeed4Btn.Visible := false;
-  end
+  end;
 end;
 
 procedure TMainScreen.SetMapOptions;
@@ -1248,17 +1248,17 @@ begin
     if AILogo[p] <> nil then
     begin
       FreeAndNil(AILogo[p]);
-    end
+    end;
   end
   else
   begin
     if AILogo[p] = nil then
       AILogo[p] := TBitmap.Create;
-    if not LoadGraphicFile(AILogo[p], HomeDir + Name + '.png', gfNoError) then
+    if not LoadGraphicFile(AILogo[p], HomeDir + Name + '.png', [gfNoError]) then
     begin
       FreeAndNil(AILogo[p]);
-    end
-  end
+    end;
+  end;
 end;
 
 function TMainScreen.ContactRefused(p: integer; Item: String): boolean;
@@ -1293,8 +1293,8 @@ begin
       // peace treaty was cancelled -- use formerly forbidden tiles
       MapValid := false;
       PaintAllMaps;
-    end
-  end
+    end;
+  end;
 end;
 
 procedure TMainScreen.RememberPeaceViolation;
@@ -1462,7 +1462,7 @@ begin
       inc(CountBest);
       if DelphiRandom(CountBest) = 0 then
         result := j
-    end
+    end;
   end;
 end;
 
@@ -1520,7 +1520,7 @@ begin
             Tribe[Ship1Owner].TPhrase('SHIPCAPTURE2');
           IconKind := mikShip;
           IconIndex := Ship2Owner;
-        end
+        end;
     end;
 
     if IconKind = mikImp then
@@ -1533,7 +1533,7 @@ begin
         begin
           MostCost := TestCost;
           IconIndex := imShipComp + i
-        end
+        end;
       end;
     end;
 
@@ -1616,7 +1616,7 @@ begin
 
   sb := TPVScrollbar.Create(Self);
   sb.OnUpdate := ScrollBarUpdate;
-end; { InitModule }
+end;
 
 procedure TMainScreen.InitTurn(NewPlayer: integer);
 const
@@ -2234,14 +2234,14 @@ begin
                   CityDlg.ShowNewContent(wmModal, MyCity[cix].Loc,
                     Flags and CityRepMask);
                   UpdatePanel := true;
-                end
+                end;
               end
               else { if mRepList.Checked then }
               begin
                 if Flags and CityRepMask <> 0 then
                   ShowCityList := true
-              end
-            end
+              end;
+            end;
           end; { city loop }
   end; // ClientMode=cTurn
 
@@ -2260,7 +2260,7 @@ begin
         begin
           Play('REVOLUTION');
           Server(sRevolution, me, 0, nil^);
-        end
+        end;
       end;
   end; // ClientMode=cTurn
 
@@ -2379,7 +2379,7 @@ begin
                   Status := Status and not usEnhance
                 else
                   Status := Status and not usWaiting;
-            end
+            end;
           end;
   end; // ClientMode=cTurn
 
@@ -2477,7 +2477,7 @@ begin
                 s := s + Tribe[pSender].ModelName[Offer.Price[i] and $FFFFFF];
               opAllModel:
                 s := s + 'All models';
-            end
+            end;
           end;
           LogDlg.Add(NewPlayer, G.RO[0].Turn, pchar(s));
         end
@@ -2485,7 +2485,7 @@ begin
         begin
           s := s + '--- ACCEPTED! ---';
           LogDlg.Add(NewPlayer, G.RO[0].Turn, pchar(s));
-        end
+        end;
       end;
 
     cInitModule:
@@ -2841,7 +2841,7 @@ begin
           Sleep(75);
           // this break will ensure speed of fast forward does not depend on cpu speed
           Application.ProcessMessages;
-        end
+        end;
       end;
 
     cMovieEndTurn:
@@ -2920,8 +2920,8 @@ begin
             begin
               DipCall(scReject);
               EndNego
-            end
-          end
+            end;
+          end;
         end;
       end;
 
@@ -7169,7 +7169,7 @@ begin
             SetUnFocus(NewFocus);
             SetTroopLoc(Loc);
             PanelPaint
-          end
+          end;
         end
       else if Sender = mSelectTransport then
         Server(sSelectTransport, me, UnFocus, nil^)
@@ -7188,7 +7188,7 @@ begin
     if MyCity[i].Loc >= 0 then
     begin
       HaveCities := true;
-      Break
+      Break;
     end;
   if Popup = GamePopup then
   begin
@@ -7288,7 +7288,7 @@ begin
           if m.Tag = IsoEngine.pDebugMap then
             m.Checked := true;
           mDebugMap.Add(m);
-        end
+        end;
     end;
     mSmallTiles.Checked := xxt = 33;
     mNormalTiles.Checked := xxt = 48;
@@ -7472,7 +7472,7 @@ begin
   if supervising then
   begin
     SetTroopLoc(-1);
-    PanelPaint
+    PanelPaint;
   end
   else
   begin
@@ -7491,8 +7491,8 @@ begin
     begin
       SetTroopLoc(-1);
       PanelPaint
-    end
-  end
+    end;
+  end;
 end;
 
 procedure TMainScreen.Toggle(Sender: TObject);
@@ -7540,7 +7540,7 @@ begin
         xMini + 2 + G.lx * 2, TopBarHeight + MapHeight - overlap + yMini +
         2 + G.ly);
       Update;
-    end
+    end;
   end
   else
     Tracking := false;
@@ -7556,7 +7556,7 @@ begin
     ywMini := yw;
     MiniPaint;
     PanelPaint;
-  end
+  end;
 end;
 
 procedure TMainScreen.MapBoxMouseMove(Sender: TObject; Shift: TShiftState;
@@ -7608,7 +7608,7 @@ end;
 function TMainScreen.IsPanelPixel(x, y: integer): boolean;
 begin
   result := (y >= TopBarHeight + MapHeight) or (y >= ClientHeight - PanelHeight)
-    and ((x < xMidPanel) or (x >= xRightPanel))
+    and ((x < xMidPanel) or (x >= xRightPanel));
 end;
 
 procedure TMainScreen.FormMouseDown(Sender: TObject; Button: TMouseButton;
@@ -7625,7 +7625,7 @@ begin
         else
           GamePopup.Popup(Left + 4, Top + GetSystemMetrics(SM_CYCAPTION) + 4 +
             TopBarHeight - 1);
-      end
+      end;
     end
     else if IsPanelPixel(x, y) then
       PanelBoxMouseDown(Sender, Button, Shift, x,
@@ -7788,8 +7788,8 @@ begin
     if Checked then
       CityRepMask := CityRepMask or (1 shl (Tag shr 8))
     else
-      CityRepMask := CityRepMask and not(1 shl (Tag shr 8))
-  end
+      CityRepMask := CityRepMask and not(1 shl (Tag shr 8));
+  end;
 end;
 
 procedure TMainScreen.mLogClick(Sender: TObject);
@@ -7836,8 +7836,8 @@ begin
       end
       else if Flag = tfAllTechs then
         TellNewModels
-    end
-  end
+    end;
+  end;
 end;
 
 procedure TMainScreen.MapBtnClick(Sender: TObject);
@@ -7907,8 +7907,8 @@ begin
     else
       GamePopup.Popup(Left + 4, Top + GetSystemMetrics(SM_CYCAPTION) + 4 +
         TopBarHeight - 1);
-    exit
-  end // windows menu button calls game menu
+    exit;
+  end; // windows menu button calls game menu
 end;
 
 procedure TMainScreen.CreateUnitClick(Sender: TObject);

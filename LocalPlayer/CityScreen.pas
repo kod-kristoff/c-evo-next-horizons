@@ -215,14 +215,16 @@ begin
   Back.Canvas.FillRect(0, 0, Back.Width, Back.Height);
   Template := TBitmap.Create;
   Template.PixelFormat := pf24bit;
-  LoadGraphicFile(Template, GetGraphicsDir + DirectorySeparator + 'City.png', gfNoGamma);
+  LoadGraphicFile(Template, GetGraphicsDir + DirectorySeparator + 'City.png',
+    [gfNoGamma]);
   CityMapTemplate := TBitmap.Create;
   CityMapTemplate.PixelFormat := pf24bit;
-  LoadGraphicFile(CityMapTemplate, GetGraphicsDir + DirectorySeparator + 'BigCityMap.png', gfNoGamma);
+  LoadGraphicFile(CityMapTemplate, GetGraphicsDir + DirectorySeparator + 'BigCityMap.png',
+    [gfNoGamma]);
   SmallCityMapTemplate := TBitmap.Create;
   SmallCityMapTemplate.PixelFormat := pf24bit;
   LoadGraphicFile(SmallCityMapTemplate, GetGraphicsDir + DirectorySeparator + 'SmallCityMap.png',
-    gfNoGamma);
+    [gfNoGamma]);
   SmallCityMap := TBitmap.Create;
   SmallCityMap.PixelFormat := pf24bit;
   SmallCityMap.SetSize(98, 74);

@@ -92,7 +92,8 @@ begin
   Back.Canvas.FillRect(0, 0, Back.Width, Back.Height);
   Template := TBitmap.Create;
   Template.PixelFormat := pf24bit;
-  LoadGraphicFile(Template, GetGraphicsDir + DirectorySeparator + 'Nation.png', gfNoGamma);
+  LoadGraphicFile(Template, GetGraphicsDir + DirectorySeparator + 'Nation.png',
+    [gfNoGamma]);
 end;
 
 procedure TNatStatDlg.FormDestroy(Sender: TObject);

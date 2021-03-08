@@ -15,6 +15,9 @@ type
     clBevelLight, clBevelShade, clTextLight, clTextShade, clLitText, clMark,
     clPage, clCover: TColor;
   end;
+  TLoadGraphicFileOption = (gfNoError, gfNoGamma);
+  TLoadGraphicFileOptions = set of TLoadGraphicFileOption;
+
 
 {$IFDEF WINDOWS}
 function ChangeResolution(x, y, bpp, freq: integer): boolean;
@@ -27,7 +30,7 @@ function MovementToString(Movement: integer): string;
 procedure BtnFrame(ca: TCanvas; p: TRect; const T: TTexture);
 procedure EditFrame(ca: TCanvas; p: TRect; const T: TTexture);
 function HexStringToColor(S: string): integer;
-function LoadGraphicFile(bmp: TBitmap; Path: string; Options: integer = 0): boolean;
+function LoadGraphicFile(bmp: TBitmap; Path: string; Options: TLoadGraphicFileOptions = []): boolean;
 function LoadGraphicSet(const Name: string): integer;
 procedure Dump(dst: TBitmap; HGr, xDst, yDst, Width, Height, xGr, yGr: integer);
 procedure Sprite(Canvas: TCanvas; HGr, xDst, yDst, Width, Height, xGr, yGr: integer);
@@ -158,10 +161,6 @@ const
   cliHills = 2;
   cliTundra = 3;
   cliWater = 4;
-
-  // LoadGraphicFile options
-  gfNoError = $01;
-  gfNoGamma = $02;
 
 type
   TGrExtDescr = record { don't use dynamic strings here! }
@@ -416,7 +415,7 @@ begin
   end;
 end;
 
-function LoadGraphicFile(bmp: TBitmap; Path: string; Options: Integer): Boolean;
+function LoadGraphicFile(bmp: TBitmap; Path: string; Options: TLoadGraphicFileOptions = []): Boolean;
 var
   jtex: TJpegImage;
   Png: TPortableNetworkGraphic;
@@ -433,7 +432,7 @@ begin
     end;
     if Result then
     begin
-      if Options and gfNoGamma = 0 then
+      if not (gfNoGamma in Options) then
         bmp.PixelFormat := pf24bit;
       Bmp.SetSize(jtex.Width, jtex.Height);
       Bmp.Canvas.Draw(0, 0, jtex);
@@ -451,7 +450,7 @@ begin
     end;
     if Result then
     begin
-      if Options and gfNoGamma = 0 then
+      if not (gfNoGamma in Options) then
         bmp.PixelFormat := pf24bit;
       bmp.SetSize(Png.Width, Png.Height);
       if (Png.RawImage.Description.Format = ricfGray) then
@@ -473,7 +472,7 @@ begin
       Result := False;
     end;
     if Result then begin
-      if Options and gfNoGamma = 0 then
+      if not (gfNoGamma in Options) then
         bmp.PixelFormat := pf24bit;
     end;
   end
@@ -481,11 +480,11 @@ begin
     raise Exception.Create('Unsupported image file type ' + ExtractFileExt(Path));
 
   if not Result then begin
-    if Options and gfNoError = 0 then
+    if not (gfNoError in Options) then
       raise Exception.Create(Format(Phrases.Lookup('FILENOTFOUND'), [Path]));
   end;
 
-  if (Options and gfNoGamma = 0) and (Gamma <> 100) then
+  if (not (gfNoGamma in Options)) and (Gamma <> 100) then
     ApplyGammaToBitmap(Bmp);
 end;
 
@@ -1674,7 +1673,7 @@ begin
   LoadPhrases;
   LoadFonts;
   LoadGraphicFile(Templates, GetGraphicsDir + DirectorySeparator +
-    'Templates.png', gfNoGamma);
+    'Templates.png', [gfNoGamma]);
   LoadGraphicFile(Colors, GetGraphicsDir + DirectorySeparator + 'Colors.png');
   LoadGraphicFile(Paper, GetGraphicsDir + DirectorySeparator + 'Paper.jpg');
   LoadGraphicFile(BigImp, GetGraphicsDir + DirectorySeparator + 'Icons.png');

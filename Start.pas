@@ -297,7 +297,7 @@ var
 begin
   ImageFileName := Copy(FileName, 1, Length(FileName) - Length(CevoMapExt)) + '.png';
   Mode := mmPicture;
-  if LoadGraphicFile(Bitmap, ImageFileName, gfNoError) then
+  if LoadGraphicFile(Bitmap, ImageFileName, [gfNoError]) then
   begin
     if Bitmap.width div 2 > MaxWidthMapLogo then
       Bitmap.width := MaxWidthMapLogo * 2;
@@ -676,7 +676,7 @@ begin
   for i := 0 to AIBrains.Count - 1 do
   with AIBrains[I] do begin
     if not LoadGraphicFile(AIBrains[i].Picture, GetAiDir + DirectorySeparator +
-      FileName + DirectorySeparator + FileName + '.png', gfNoError) then begin
+      FileName + DirectorySeparator + FileName + '.png', [gfNoError]) then begin
       with AIBrains[i].Picture.Canvas do begin
         Brush.Color := $904830;
         FillRect(Rect(0, 0, 64, 64));

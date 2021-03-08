@@ -91,7 +91,8 @@ begin
   Back.Canvas.FillRect(0, 0, Back.Width, Back.Height);
   Template := TBitmap.Create;
   Template.PixelFormat := pf24bit;
-  LoadGraphicFile(Template, GetGraphicsDir + DirectorySeparator + 'MiliRes.png', gfNoGamma);
+  LoadGraphicFile(Template, GetGraphicsDir + DirectorySeparator + 'MiliRes.png',
+    [gfNoGamma]);
 end;
 
 procedure TDraftDlg.FormDestroy(Sender: TObject);
