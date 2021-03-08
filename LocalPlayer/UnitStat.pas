@@ -276,7 +276,7 @@ end;
 
 procedure TUnitStatDlg.CloseBtnClick(Sender: TObject);
 begin
-  Close
+  Close;
 end;
 
 procedure TUnitStatDlg.OffscreenPaint;
@@ -363,8 +363,8 @@ var
               66 + i mod 11 * 11, 137 + i div 11 * 11);
             inc(dx, 15)
           end;
-        end
-      end
+        end;
+      end;
   end; { featurebar }
 
   procedure NumberBarS(dst: TBitmap; x, y: integer; Cap, s: string;

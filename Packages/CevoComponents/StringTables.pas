@@ -22,6 +22,7 @@ type
     function Search(const Content: string; var Handle, Index: integer): boolean;
   end;
 
+
 implementation
 
 uses
@@ -69,7 +70,7 @@ function TStringTable.LookupByHandle(Handle: integer; Index: integer): string;
 var
   s: string;
 begin
-  if Index < 0 then
+  if Index < 0 then begin
     if Handle < 0 then begin
       Result := '';
       Exit;
@@ -85,11 +86,12 @@ begin
         end;
       end;
       Result := S;
-    end else
-    if (Handle + Index + 1) >= Lines.Count then begin
-      Result := '';
-      Exit;
-    end else Result := Lines[Handle + Index + 1];
+    end;
+  end else
+  if (Handle + Index + 1) >= Lines.Count then begin
+    Result := '';
+    Exit;
+  end else Result := Lines[Handle + Index + 1];
   while (Result <> '') and ((Result[1] = ' ') or (Result[1] = #9)) do
     Delete(Result, 1, 1);
   while (Result <> '') and ((Result[Length(Result)] = ' ') or
@@ -103,15 +105,12 @@ var
   Handle: Integer;
 begin
   Handle := GetHandle(Item);
-  if Handle >= 0 then
-    Result := LookupByHandle(Handle, Index)
-  else
-    Result := '';
-  if Result = '' then
-    if Index < 0 then
-      Result := Format('[%s]', [Item])
-    else
-      Result := Format('[%s %d]', [Item, Index])
+  if Handle >= 0 then Result := LookupByHandle(Handle, Index)
+    else Result := '';
+  if Result = '' then begin
+    if Index < 0 then Result := Format('[%s]', [Item])
+      else Result := Format('[%s %d]', [Item, Index]);
+  end;
 end;
 
 { might become necessary for 1.3
@@ -152,12 +151,12 @@ begin
     if h + i + 1 >= Lines.Count then
     begin
       result := false;
-      exit
+      exit;
     end;
     if Copy(Lines[h + i + 1], 1, 1) = '#' then
     begin
       h := h + i + 1;
-      i := -1
+      i := -1;
     end;
     if (h >= 0) and not ((Length(Lines[h + i + 1]) > 0) and (Lines[h + i + 1][1] in ['#', ':', ';'])) and
       (Pos(UContent, UpperCase(Lines[h + i + 1])) > 0) then

@@ -12,8 +12,14 @@ uses
 type
   TTexture = record
     Image: TBitmap;
-    clBevelLight, clBevelShade, clTextLight, clTextShade, clLitText, clMark,
-    clPage, clCover: TColor;
+    clBevelLight: TColor;
+    clBevelShade: TColor;
+    clTextLight: TColor;
+    clTextShade: TColor;
+    clLitText: TColor;
+    clMark: TColor;
+    clPage: TColor;
+    clCover: TColor;
   end;
   TLoadGraphicFileOption = (gfNoError, gfNoGamma);
   TLoadGraphicFileOptions = set of TLoadGraphicFileOption;
