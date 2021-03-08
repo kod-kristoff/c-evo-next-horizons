@@ -30,7 +30,7 @@ function MovementToString(Movement: integer): string;
 procedure BtnFrame(ca: TCanvas; p: TRect; const T: TTexture);
 procedure EditFrame(ca: TCanvas; p: TRect; const T: TTexture);
 function HexStringToColor(S: string): integer;
-function LoadGraphicFile(bmp: TBitmap; Path: string; Options: TLoadGraphicFileOptions = []): boolean;
+function LoadGraphicFile(Bmp: TBitmap; FileName: string; Options: TLoadGraphicFileOptions = []): boolean;
 function LoadGraphicSet(const Name: string): integer;
 procedure Dump(dst: TBitmap; HGr, xDst, yDst, Width, Height, xGr, yGr: integer);
 procedure Sprite(Canvas: TCanvas; HGr, xDst, yDst, Width, Height, xGr, yGr: integer);
@@ -415,73 +415,69 @@ begin
   end;
 end;
 
-function LoadGraphicFile(bmp: TBitmap; Path: string; Options: TLoadGraphicFileOptions = []): Boolean;
+function LoadGraphicFile(Bmp: TBitmap; FileName: string; Options:
+  TLoadGraphicFileOptions = []): Boolean;
 var
-  jtex: TJpegImage;
+  Jpeg: TJpegImage;
   Png: TPortableNetworkGraphic;
 begin
-  Result := True;
-  if ExtractFileExt(Path) = '' then
-    Path := Path + '.png';
-  if ExtractFileExt(Path) = '.jpg' then begin
-    jtex := TJpegImage.Create;
-    try
-      jtex.LoadFromFile(Path);
-    except
-      Result := False;
-    end;
-    if Result then
-    begin
-      if not (gfNoGamma in Options) then
-        bmp.PixelFormat := pf24bit;
-      Bmp.SetSize(jtex.Width, jtex.Height);
-      Bmp.Canvas.Draw(0, 0, jtex);
-    end;
-    FreeAndNil(jtex);
-  end
-  else
-  if ExtractFileExt(Path) = '.png' then begin
-    Png := TPortableNetworkGraphic.Create;
-    Png.PixelFormat := Bmp.PixelFormat;
-    try
-      Png.LoadFromFile(Path);
-    except
-      Result := False;
-    end;
-    if Result then
-    begin
-      if not (gfNoGamma in Options) then
-        bmp.PixelFormat := pf24bit;
-      bmp.SetSize(Png.Width, Png.Height);
-      if (Png.RawImage.Description.Format = ricfGray) then
-      begin
-        // LCL doesn't support 8-bit colors properly. Use 24-bit instead.
-        Bmp.PixelFormat := pf24bit;
-        CopyGray8BitTo24bitBitmap(Bmp, Png);
-      end
-      else
-        Bmp.Canvas.draw(0, 0, Png);
-    end;
-    FreeAndNil(Png);
-  end
-  else
-  if ExtractFileExt(Path) = '.bmp' then begin
-    try
-      bmp.LoadFromFile(Path);
-    except
-      Result := False;
-    end;
-    if Result then begin
-      if not (gfNoGamma in Options) then
-        bmp.PixelFormat := pf24bit;
-    end;
-  end
-  else
-    raise Exception.Create('Unsupported image file type ' + ExtractFileExt(Path));
+  Result := False;
+  if ExtractFileExt(FileName) = '' then
+    FileName := FileName + '.png';
+
+  if FileExists(FileName) then begin
+    if ExtractFileExt(FileName) = '.jpg' then begin
+      Jpeg := TJpegImage.Create;
+      try
+        Jpeg.LoadFromFile(FileName);
+        if not (gfNoGamma in Options) then
+          Bmp.PixelFormat := pf24bit;
+        Bmp.SetSize(Jpeg.Width, Jpeg.Height);
+        Bmp.Canvas.Draw(0, 0, Jpeg);
+        Result := True;
+      except
+        Result := False;
+      end;
+      FreeAndNil(Jpeg);
+    end else
+    if ExtractFileExt(FileName) = '.png' then begin
+      Png := TPortableNetworkGraphic.Create;
+      try
+        Png.PixelFormat := Bmp.PixelFormat;
+        Png.LoadFromFile(FileName);
+        if not (gfNoGamma in Options) then
+          Bmp.PixelFormat := pf24bit;
+        Bmp.SetSize(Png.Width, Png.Height);
+        if (Png.RawImage.Description.Format = ricfGray) then
+        begin
+          // LCL doesn't support 8-bit colors properly. Use 24-bit instead.
+          Bmp.PixelFormat := pf24bit;
+          CopyGray8BitTo24bitBitmap(Bmp, Png);
+        end
+        else
+          Bmp.Canvas.Draw(0, 0, Png);
+        Result := True;
+      except
+        Result := False;
+      end;
+      FreeAndNil(Png);
+    end else
+    if ExtractFileExt(FileName) = '.bmp' then begin
+      try
+        Bmp.LoadFromFile(FileName);
+        if not (gfNoGamma in Options) then
+          Bmp.PixelFormat := pf24bit;
+        Result := True;
+      except
+        Result := False;
+      end;
+    end else
+      raise Exception.Create('Unsupported image file type ' + ExtractFileExt(FileName));
+  end;
 
   if not Result then begin
     if not (gfNoError in Options) then
-      raise Exception.Create(Format(Phrases.Lookup('FILENOTFOUND'), [Path]));
+      raise Exception.Create(Format(Phrases.Lookup('FILENOTFOUND'), [FileName]));
   end;
 
   if (not (gfNoGamma in Options)) and (Gamma <> 100) then
