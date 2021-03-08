@@ -17,6 +17,7 @@ type
     MoveMousePos: TPoint;
     MoveActive: Boolean;
     procedure VisibleChangedHandler(Sender: TObject);
+    procedure DoDeactivate(Sender: TObject);
   protected
     TitleHeight: Integer;
     // defines area to grip the window for moving (from top)
@@ -71,6 +72,9 @@ begin
   TitleHeight := 0;
   MoveActive := False;
   AddHandlerOnVisibleChanged(VisibleChangedHandler);
+  {$IFDEF LINUX}
+  OnDeactivate := DoDeactivate;
+  {$ENDIF}
 end;
 
 destructor TDrawDlg.Destroy;
@@ -178,6 +182,11 @@ begin
 end;
 
 procedure TDrawDlg.VisibleChangedHandler(Sender: TObject);
+begin
+  MoveActive := False;
+end;
+
+procedure TDrawDlg.DoDeactivate(Sender: TObject);
 begin
   MoveActive := False;
 end;
