@@ -872,7 +872,7 @@ begin
               Canvas.Font.Assign(UniFont[ftCaption]);
               // Canvas.Font.Style:=Canvas.Font.Style+[fsUnderline];
               RisedTextOut(Canvas, xActionIcon + 99, y,
-                Phrases2.Lookup('ACTIONHEADER_WEB'));
+                Format(Phrases2.Lookup('ACTIONHEADER_WEB'), [CevoHomepageShort]));
               Canvas.Font.Assign(UniFont[ftNormal]);
               // TODO: Explicitly clear background to black but in fact BitBlt SRCCOPY should do it
               LogoBuffer.Canvas.FillRect(0, 0, LogoBuffer.Width, LogoBuffer.Height);

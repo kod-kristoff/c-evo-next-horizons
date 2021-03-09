@@ -240,8 +240,12 @@ const
   pkGov = 25;
 
   nSeeAlso = 14;
-  SeeAlso: array [0 .. nSeeAlso - 1] of record Kind, no, SeeKind,
-    SeeNo: integer end = ((Kind: hkImp; no: imWalls; SeeKind: hkFeature;
+  SeeAlso: array [0 .. nSeeAlso - 1] of record
+    Kind: Integer;
+    no: Integer;
+    SeeKind: Integer;
+    SeeNo: Integer;
+  end = ((Kind: hkImp; no: imWalls; SeeKind: hkFeature;
     SeeNo: mcArtillery), (Kind: hkImp; no: imHydro; SeeKind: hkImp;
     SeeNo: woHoover), (Kind: hkImp; no: imWalls; SeeKind: hkImp;
     SeeNo: imGrWall), (Kind: hkImp; no: imHighways; SeeKind: hkAdv;
@@ -357,7 +361,7 @@ begin
   if Sel <> -1 then begin
     Line(Canvas, Sel, false);
     Sel := -1
-  end
+  end;
 end;
 
 procedure THelpDlg.ClearHistory;
@@ -435,7 +439,7 @@ begin
       end;
     if (Kind = hkMisc) and (no = miscMain) then
       ca.Font.Assign(UniFont[ftNormal]);
-  end
+  end;
 end;
 
 procedure THelpDlg.WaterSign(x0, y0, iix: integer);
@@ -983,9 +987,18 @@ var
 
   procedure AddTextual(s: string);
   var
-    i, p, l, ofs, CurrentFormat, FollowFormat, Picpix, LinkCategory, LinkIndex,
-      RightMargin: integer;
+    i: Integer;
+    p: Integer;
+    l: Integer;
+    ofs: Integer;
+    CurrentFormat: Integer;
+    FollowFormat: Integer;
+    Picpix: Integer;
+    LinkCategory: Integer;
+    LinkIndex: Integer;
+    RightMargin: Integer;
     Name: string;
+    Text: string;
   begin
     RightMargin := InnerWidth - 16 - GetSystemMetrics(SM_CXVSCROLL);
     FollowFormat := pkNormal;
@@ -1132,7 +1145,13 @@ var
           else
             Break;
         until (p >= Length(s)) or (s[l + 1] = '\');
-        MainText.AddLine(Copy(s, 1, l), CurrentFormat, Picpix, LinkCategory,
+        Text := Copy(s, 1, l);
+        if LinkCategory and $3f = hkInternet then begin
+          if LinkIndex = 1 then Text := AITemplateManual
+          else if LinkIndex = 2 then Text := CevoHomepageShort
+          else if LinkIndex = 3 then Text := CevoContactShort;
+        end;
+        MainText.AddLine(Text, CurrentFormat, Picpix, LinkCategory,
           LinkIndex);
         if (l < Length(s)) and (s[l + 1] = '\') then
           FollowFormat := pkNormal;

@@ -34,7 +34,7 @@
 #ACTION_CREDITS Chi ha contribuito a questo gioco
 #ACTIONHEADER_AIDEV Sviluppo I.A.
 #ACTION_AIDEV Impara a programmare la tua I.A. per questo gioco
-#ACTIONHEADER_WEB Sul web: c-evo.org
+#ACTIONHEADER_WEB Sul web: %s
 
 'Message Text
 #BUSY_DEINIT Deinizializzo %s...

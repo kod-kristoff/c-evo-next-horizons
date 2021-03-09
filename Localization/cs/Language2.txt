@@ -34,7 +34,7 @@
 #ACTION_CREDITS Kdo se podílel na této hře
 #ACTIONHEADER_AIDEV Vývoj AI
 #ACTION_AIDEV Jak naprogramovat vlastní AI pro tuto hru
-#ACTIONHEADER_WEB Na webu: c-evo.org
+#ACTIONHEADER_WEB Na webu: %s
 
 'Message Text
 #BUSY_DEINIT Deinicializuji %s...
