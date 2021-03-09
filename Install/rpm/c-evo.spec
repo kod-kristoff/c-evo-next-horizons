@@ -50,6 +50,12 @@ install -d -m 755 $RPM_BUILD_ROOT/usr/share/c-evo/Sounds
 install -D -m 644 Sounds/* $RPM_BUILD_ROOT/usr/share/c-evo/Sounds
 install -d -m 755 $RPM_BUILD_ROOT/usr/share/c-evo/Tribes
 install -D -m 644 Tribes/* $RPM_BUILD_ROOT/usr/share/c-evo/Tribes
+install -d -m 755 $RPM_BUILD_ROOT/usr/share/c-evo/Maps
+install -D -m 644 Maps/* $RPM_BUILD_ROOT/usr/share/c-evo/Maps
+install -d -m 755 $RPM_BUILD_ROOT/usr/share/c-evo/Saved
+install -D -m 644 Saved/* $RPM_BUILD_ROOT/usr/share/c-evo/Saved
+#install -d -m 755 $RPM_BUILD_ROOT/usr/share/c-evo/AI\ Template
+#install -D -m 644 AI\ Template/* $RPM_BUILD_ROOT/usr/share/c-evo/AI\ Template
 install -d -m 755 $RPM_BUILD_ROOT/usr/share/c-evo/Localization
 cp -R Localization $RPM_BUILD_ROOT/usr/share/c-evo
 
