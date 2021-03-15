@@ -102,10 +102,7 @@ begin
 
   OKBtn.Caption := Phrases.Lookup('BTN_OK');
   CancelBtn.Caption := Phrases.Lookup('BTN_CANCEL');
-  OkBtn.Graphic := GrExt[HGrSystem].Data;
-  CancelBtn.Graphic := GrExt[HGrSystem].Data;
-
-  ButtonFullscreen.Graphic := GrExt[HGrSystem].Data;
+  InitButtons;
 end;
 
 procedure TSettingsDlg.CancelBtnClick(Sender: TObject);
