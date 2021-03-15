@@ -4071,25 +4071,22 @@ var
   MiniPixel: TPixelPointer;
   TerrainTile: Cardinal;
 begin
+  if not Assigned(MyMap) then Exit;
   cmPolOcean := GrExt[HGrSystem].Data.Canvas.Pixels[101, 67];
   cmPolNone := GrExt[HGrSystem].Data.Canvas.Pixels[102, 67];
   hw := MapWidth div (xxt * 2);
-  with Mini.Canvas do
-  begin
+  with Mini.Canvas do begin
     Brush.Color := $000000;
     FillRect(Rect(0, 0, Mini.width, Mini.height));
   end;
   Mini.BeginUpdate;
   MiniPixel := PixelPointer(Mini);
   PrevMiniPixel := PixelPointer(Mini);
-  for y := 0 to ScaleToNative(G.ly) - 1 do
-  begin
-    for x := 0 to ScaleToNative(G.lx) - 1 do
-      if MyMap[ScaleFromNative(x) + G.lx * ScaleFromNative(y)] and fTerrain <> fUNKNOWN then
-      begin
-        Loc := ScaleFromNative(x) + G.lx * ScaleFromNative(y);
-        for i := 0 to 1 do
-        begin
+  for y := 0 to ScaleToNative(G.ly) - 1 do begin
+    for x := 0 to ScaleToNative(G.lx) - 1 do begin
+      Loc := ScaleFromNative(x) + G.lx * ScaleFromNative(y);
+      if (MyMap[Loc] and fTerrain) <> fUNKNOWN then begin
+        for i := 0 to 1 do begin
           xm := ((x - ScaleToNative(xwMini)) * 2 + i + y and 1 - ScaleToNative(hw) +
             ScaleToNative(G.lx) * 5) mod (ScaleToNative(G.lx) * 2);
           MiniPixel.SetXY(xm, y);
@@ -4123,7 +4120,7 @@ begin
               PrevMiniPixel.Pixel^.B := cm shr 16;
               PrevMiniPixel.Pixel^.G := cm shr 8 and $FF;
               PrevMiniPixel.Pixel^.R := cm and $FF;
-            end
+            end;
           end
           else if (i = 0) and (MyMap[Loc] and fUnit <> 0) then
           begin
@@ -4156,6 +4153,7 @@ begin
           MiniPixel.Pixel^.R := cm and $FF;
         end;
       end;
+    end;
   end;
   Mini.EndUpdate;
 end;
@@ -4350,6 +4348,7 @@ var
   JobProgressData: TJobProgressData;
   Prio: boolean;
 begin
+  if not Assigned(MyRO) then Exit;
   with Panel.Canvas do
   begin
     Fill(Panel.Canvas, 0, 3, xMidPanel + 7 - 10, PanelHeight - 3,
