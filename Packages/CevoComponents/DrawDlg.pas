@@ -201,7 +201,7 @@ begin
   for cix := 0 to ComponentCount - 1 do
     if Components[cix] is TButtonBase then
     begin
-      TButtonBase(Components[cix]).Graphic := GrExt[HGrSystem].Data;
+      TButtonBase(Components[cix]).Graphic := HGrSystem.Data;
       // if ButtonDownSound <> '*' then
       // DownSound := GetSoundsDir + DirectorySeparator + ButtonDownSound + '.wav';
       // if ButtonUpSound <> '*' then
@@ -209,7 +209,7 @@ begin
       if Components[cix] is TButtonA then
         TButtonA(Components[cix]).Font := UniFont[ftButton];
       if Components[cix] is TButtonB then
-        TButtonB(Components[cix]).Mask := GrExt[HGrSystem].Mask;
+        TButtonB(Components[cix]).Mask := HGrSystem.Mask;
     end;
 end;
 

@@ -50,7 +50,7 @@ type
     procedure PaintGrid(x, y, nx, ny: integer);
     procedure FillRect(x, y, Width, Height, Color: integer);
     procedure Textout(x, y, Color: integer; const s: string);
-    procedure Sprite(HGr, xDst, yDst, Width, Height, xGr, yGr: integer);
+    procedure Sprite(HGr: TGrExtDescr; xDst, yDst, Width, Height, xGr, yGr: integer);
     procedure TSprite(xDst, yDst, grix: integer; PureBlack: boolean = false);
 
   public
@@ -138,7 +138,15 @@ end;
 
 function ApplyTileSize(xxtNew, yytNew: integer): boolean;
 var
-  i, x, y, xSrc, ySrc, HGrTerrainNew, HGrCitiesNew, age, size: integer;
+  i: Integer;
+  x: Integer;
+  y: Integer;
+  xSrc: Integer;
+  ySrc: Integer;
+  HGrTerrainNew: TGrExtDescr;
+  HGrCitiesNew: TGrExtDescr;
+  Age: Integer;
+  Size: Integer;
   LandMore, OceanMore, DitherMask, Mask24: TBitmap;
   MaskLine: array [0 .. 50 * 3 - 1] of TPixelPointer; // 32 = assumed maximum for yyt
   Border: boolean;
@@ -146,11 +154,11 @@ begin
   result := false;
   HGrTerrainNew := LoadGraphicSet(Format('Terrain%dx%d.png',
     [xxtNew * 2, yytNew * 2]));
-  if HGrTerrainNew < 0 then
+  if not Assigned(HGrTerrainNew) then
     exit;
   HGrCitiesNew := LoadGraphicSet(Format('Cities%dx%d.png',
     [xxtNew * 2, yytNew * 2]));
-  if HGrCitiesNew < 0 then
+  if not Assigned(HGrCitiesNew) then
     exit;
   xxt := xxtNew;
   yyt := yytNew;
@@ -195,7 +203,7 @@ begin
   DitherMask.SetSize(xxt * 2, yyt * 2);
   DitherMask.Canvas.FillRect(0, 0, DitherMask.Width, DitherMask.Height);
   BitBltCanvas(DitherMask.Canvas, 0, 0, xxt * 2, yyt * 2,
-    GrExt[HGrTerrain].Mask.Canvas, 1 + 7 * (xxt * 2 + 1),
+    HGrTerrain.Mask.Canvas, 1 + 7 * (xxt * 2 + 1),
     1 + yyt + 15 * (yyt * 3 + 1), SRCAND);
 
   for x := -1 to 6 do
@@ -217,14 +225,14 @@ begin
     end;
     for y := -1 to 6 do
       BitBltCanvas(LandPatch.Canvas, (x + 2) * (xxt * 2), (y + 2) * yyt,
-        xxt * 2, yyt, GrExt[HGrTerrain].Data.Canvas, xSrc, ySrc);
+        xxt * 2, yyt, HGrTerrain.Data.Canvas, xSrc, ySrc);
     for y := -2 to 6 do
       BitBltCanvas(LandPatch.Canvas, (x + 2) * (xxt * 2), (y + 2) * yyt, xxt,
-        yyt, GrExt[HGrTerrain].Data.Canvas, xSrc + xxt, ySrc + yyt,
+        yyt, HGrTerrain.Data.Canvas, xSrc + xxt, ySrc + yyt,
         SRCPAINT);
     for y := -2 to 6 do
       BitBltCanvas(LandPatch.Canvas, (x + 2) * (xxt * 2) + xxt, (y + 2) * yyt,
-        xxt, yyt, GrExt[HGrTerrain].Data.Canvas, xSrc, ySrc + yyt,
+        xxt, yyt, HGrTerrain.Data.Canvas, xSrc, ySrc + yyt,
         SRCPAINT);
     for y := -2 to 6 do
       BitBltCanvas(LandPatch.Canvas, (x + 2) * (xxt * 2), (y + 2) * yyt, xxt,
@@ -253,12 +261,12 @@ begin
     end;
     for x := -2 to 6 do
       BitBltCanvas(LandMore.Canvas, (x + 2) * (xxt * 2), (y + 2) * yyt,
-        xxt * 2, yyt, GrExt[HGrTerrain].Data.Canvas, xSrc, ySrc);
+        xxt * 2, yyt, HGrTerrain.Data.Canvas, xSrc, ySrc);
     BitBltCanvas(LandMore.Canvas, xxt * 2, (y + 2) * yyt, xxt, yyt,
-      GrExt[HGrTerrain].Data.Canvas, xSrc + xxt, ySrc + yyt, SRCPAINT);
+      HGrTerrain.Data.Canvas, xSrc + xxt, ySrc + yyt, SRCPAINT);
     for x := 0 to 7 do
       BitBltCanvas(LandMore.Canvas, (x + 2) * (xxt * 2) - xxt, (y + 2) * yyt,
-        xxt * 2, yyt, GrExt[HGrTerrain].Data.Canvas, xSrc, ySrc + yyt,
+        xxt * 2, yyt, HGrTerrain.Data.Canvas, xSrc, ySrc + yyt,
         SRCPAINT);
     for x := -2 to 6 do
       BitBltCanvas(LandMore.Canvas, (x + 2) * (xxt * 2), (y + 2) * yyt,
@@ -275,14 +283,14 @@ begin
       ySrc := 1 + yyt;
       if (x >= 1) = (y >= 2) then
         BitBltCanvas(OceanPatch.Canvas, x * (xxt * 2), y * yyt, xxt * 2, yyt,
-          GrExt[HGrTerrain].Data.Canvas, xSrc, ySrc);
+          HGrTerrain.Data.Canvas, xSrc, ySrc);
       if (x >= 1) and ((y < 2) or (x >= 2)) then
       begin
         BitBltCanvas(OceanPatch.Canvas, x * (xxt * 2), y * yyt, xxt, yyt,
-          GrExt[HGrTerrain].Data.Canvas, xSrc + xxt, ySrc + yyt,
+          HGrTerrain.Data.Canvas, xSrc + xxt, ySrc + yyt,
           SRCPAINT);
         BitBltCanvas(OceanPatch.Canvas, x * (xxt * 2) + xxt, y * yyt, xxt, yyt,
-          GrExt[HGrTerrain].Data.Canvas, xSrc, ySrc + yyt, SRCPAINT);
+          HGrTerrain.Data.Canvas, xSrc, ySrc + yyt, SRCPAINT);
       end;
       BitBltCanvas(OceanPatch.Canvas, x * (xxt * 2), y * yyt, xxt, yyt,
         DitherMask.Canvas, xxt, yyt, SRCAND);
@@ -300,14 +308,14 @@ begin
       ySrc := 1 + yyt;
       if (x < 1) or (y >= 2) then
         BitBltCanvas(OceanMore.Canvas, x * (xxt * 2), y * yyt, xxt * 2, yyt,
-          GrExt[HGrTerrain].Data.Canvas, xSrc, ySrc);
+          HGrTerrain.Data.Canvas, xSrc, ySrc);
       if (x = 1) and (y < 2) or (x >= 2) and (y >= 1) then
       begin
         BitBltCanvas(OceanMore.Canvas, x * (xxt * 2), y * yyt, xxt, yyt,
-          GrExt[HGrTerrain].Data.Canvas, xSrc + xxt, ySrc + yyt,
+          HGrTerrain.Data.Canvas, xSrc + xxt, ySrc + yyt,
           SRCPAINT);
         BitBltCanvas(OceanMore.Canvas, x * (xxt * 2) + xxt, y * yyt, xxt, yyt,
-          GrExt[HGrTerrain].Data.Canvas, xSrc, ySrc + yyt, SRCPAINT);
+          HGrTerrain.Data.Canvas, xSrc, ySrc + yyt, SRCPAINT);
       end;
       BitBltCanvas(OceanMore.Canvas, x * (xxt * 2), y * yyt, xxt * 2, yyt,
         DitherMask.Canvas, 0, 0, SRCAND);
@@ -316,7 +324,7 @@ begin
   BitBltCanvas(DitherMask.Canvas, 0, 0, xxt * 2, yyt * 2,
     DitherMask.Canvas, 0, 0, DSTINVERT); { invert dither mask }
   BitBltCanvas(DitherMask.Canvas, 0, 0, xxt * 2, yyt * 2,
-    GrExt[HGrTerrain].Mask.Canvas, 1, 1 + yyt, SRCPAINT);
+    HGrTerrain.Mask.Canvas, 1, 1 + yyt, SRCPAINT);
 
   for x := -1 to 6 do
     for y := -2 to 6 do
@@ -350,7 +358,7 @@ begin
     FillRect(Rect(0, 0, xxt * 2, yyt));
   end;
   BitBltCanvas(DitherMask.Canvas, 0, 0, xxt * 2, yyt,
-    GrExt[HGrTerrain].Mask.Canvas, 1, 1 + yyt);
+    HGrTerrain.Mask.Canvas, 1, 1 + yyt);
 
   for x := 0 to 6 do
     BitBltCanvas(LandPatch.Canvas, (x + 2) * (xxt * 2), yyt, xxt * 2, yyt,
@@ -368,7 +376,7 @@ begin
 
   // reduce size of terrain icons
   Mask24 := TBitmap.Create;
-  Mask24.Assign(GrExt[HGrTerrain].Mask);
+  Mask24.Assign(HGrTerrain.Mask);
   Mask24.PixelFormat := pf24bit;
   Mask24.BeginUpdate;
   for ySrc := 0 to TerrainIconLines - 1 do
@@ -525,10 +533,10 @@ begin
   BitBltCanvas(FOutput.Canvas, x, y, Width, Height, Src.Canvas, xSrc, ySrc, Rop);
 end;
 
-procedure TIsoMap.Sprite(HGr, xDst, yDst, Width, Height, xGr, yGr: integer);
+procedure TIsoMap.Sprite(HGr: TGrExtDescr; xDst, yDst, Width, Height, xGr, yGr: integer);
 begin
-  BitBltBitmap(GrExt[HGr].Mask, xDst, yDst, Width, Height, xGr, yGr, SRCAND);
-  BitBltBitmap(GrExt[HGr].Data, xDst, yDst, Width, Height, xGr, yGr, SRCPAINT);
+  BitBltBitmap(HGr.Mask, xDst, yDst, Width, Height, xGr, yGr, SRCAND);
+  BitBltBitmap(HGr.Data, xDst, yDst, Width, Height, xGr, yGr, SRCPAINT);
 end;
 
 procedure TIsoMap.TSprite(xDst, yDst, grix: integer;
@@ -578,7 +586,7 @@ begin
         mixShow := -1 // building site
       else
         mixShow := mix;
-      if (Tribe[Owner].ModelPicture[mixShow].HGr = 0) and
+      if (Tribe[Owner].ModelPicture[mixShow].HGr = HGrSystem) and
         (@OnInitEnemyModel <> nil) then
         if not OnInitEnemyModel(emix) then
           exit;
@@ -611,7 +619,7 @@ begin
       begin
         xGr := 121 + j mod 7 * 9;
         yGr := 1 + j div 7 * 9;
-        BitBltBitmap(GrExt[HGrSystem].Mask, x + xsh + 3, y + ysh + 9, 8, 8, xGr,
+        BitBltBitmap(HGrSystem.Mask, x + xsh + 3, y + ysh + 9, 8, 8, xGr,
           yGr, SRCAND);
         Sprite(HGrSystem, x + xsh + 2, y + ysh + 8, 8, 8, xGr, yGr);
       end;
@@ -630,7 +638,14 @@ end; { PaintUnit }
 procedure TIsoMap.PaintCity(x, y: integer; const CityInfo: TCityInfo;
   accessory: boolean);
 var
-  age, cHGr, cpix, xGr, xShield, yShield, LabelTextColor, LabelLength: integer;
+  age: Integer;
+  cHGr: TGrExtDescr;
+  cpix: Integer;
+  xGr: Integer;
+  xShield: Integer;
+  yShield: Integer;
+  LabelTextColor: Integer;
+  LabelLength: Integer;
   cpic: TCityPicture;
   s: string;
 begin
@@ -649,7 +664,7 @@ begin
     cHGr := Tribe[CityInfo.Owner].cHGr;
     cpix := Tribe[CityInfo.Owner].cpix;
     if (ciWalled and CityInfo.Flags = 0) or
-      (GrExt[cHGr].Data.Canvas.Pixels[(xGr + 4) * 65, cpix * 49 + 48] = $00FFFF)
+      (cHGr.Data.Canvas.Pixels[(xGr + 4) * 65, cpix * 49 + 48] = $00FFFF)
     then
       Sprite(cHGr, x - xxc, y - 2 * yyc, xxc * 2, yyc * 3,
         xGr * (xxc * 2 + 1) + 1, 1 + cpix * (yyc * 3 + 1));
@@ -818,30 +833,30 @@ begin
   if Conn = 0 then
     exit;
 
-  BitBltBitmap(GrExt[HGrTerrain].Data, x + xxt div 2, y, xxt, yyt,
+  BitBltBitmap(HGrTerrain.Data, x + xxt div 2, y, xxt, yyt,
     1 + (Conn shr 6 + Conn and 1 shl 2) * (xxt * 2 + 1),
     1 + yyt + (16 + Tile and fTerrain) * (yyt * 3 + 1), SRCPAINT);
-  BitBltBitmap(GrExt[HGrTerrain].Data, x + xxt, y + yyt div 2, xxt, yyt,
+  BitBltBitmap(HGrTerrain.Data, x + xxt, y + yyt div 2, xxt, yyt,
     1 + (Conn and 7) * (xxt * 2 + 1) + xxt,
     1 + yyt * 2 + (16 + Tile and fTerrain) * (yyt * 3 + 1), SRCPAINT);
-  BitBltBitmap(GrExt[HGrTerrain].Data, x + xxt div 2, y + yyt, xxt, yyt,
+  BitBltBitmap(HGrTerrain.Data, x + xxt div 2, y + yyt, xxt, yyt,
     1 + (Conn shr 2 and 7) * (xxt * 2 + 1) + xxt,
     1 + yyt + (16 + Tile and fTerrain) * (yyt * 3 + 1), SRCPAINT);
-  BitBltBitmap(GrExt[HGrTerrain].Data, x, y + yyt div 2, xxt, yyt,
+  BitBltBitmap(HGrTerrain.Data, x, y + yyt div 2, xxt, yyt,
     1 + (Conn shr 4 and 7) * (xxt * 2 + 1),
     1 + yyt * 2 + (16 + Tile and fTerrain) * (yyt * 3 + 1), SRCPAINT);
   Conn := Connection4(Loc, fTerrain, fUNKNOWN); { dither to black }
   if Conn and 1 <> 0 then
-    BitBltBitmap(GrExt[HGrTerrain].Mask, x + xxt, y, xxt, yyt, 1 + 7 * (xxt * 2 + 1) +
+    BitBltBitmap(HGrTerrain.Mask, x + xxt, y, xxt, yyt, 1 + 7 * (xxt * 2 + 1) +
       xxt, 1 + yyt + 15 * (yyt * 3 + 1), SRCAND);
   if Conn and 2 <> 0 then
-    BitBltBitmap(GrExt[HGrTerrain].Mask, x + xxt, y + yyt, xxt, yyt,
+    BitBltBitmap(HGrTerrain.Mask, x + xxt, y + yyt, xxt, yyt,
       1 + 7 * (xxt * 2 + 1) + xxt, 1 + yyt * 2 + 15 * (yyt * 3 + 1), SRCAND);
   if Conn and 4 <> 0 then
-    BitBltBitmap(GrExt[HGrTerrain].Mask, x, y + yyt, xxt, yyt, 1 + 7 * (xxt * 2 + 1),
+    BitBltBitmap(HGrTerrain.Mask, x, y + yyt, xxt, yyt, 1 + 7 * (xxt * 2 + 1),
       1 + yyt * 2 + 15 * (yyt * 3 + 1), SRCAND);
   if Conn and 8 <> 0 then
-    BitBltBitmap(GrExt[HGrTerrain].Mask, x, y, xxt, yyt, 1 + 7 * (xxt * 2 + 1),
+    BitBltBitmap(HGrTerrain.Mask, x, y, xxt, yyt, 1 + 7 * (xxt * 2 + 1),
       1 + yyt + 15 * (yyt * 3 + 1), SRCAND);
 end;
 
@@ -1011,7 +1026,7 @@ var
           Borders.Canvas.FillRect(Bounds(0, p1 * (yyt * 2), xxt * 2, yyt * 2));
 
           BitBltCanvas(Borders.Canvas, 0, p1 * (yyt * 2), xxt * 2,
-            yyt * 2, GrExt[HGrTerrain].Data.Canvas,
+            yyt * 2, HGrTerrain.Data.Canvas,
             1 + 8 * (xxt * 2 + 1), 1 + yyt + 16 * (yyt * 3 + 1));
           Borders.BeginUpdate;
           PixelPtr := PixelPointer(Borders, ScaleToNative(0), ScaleToNative(p1 * (yyt * 2)));
@@ -1042,7 +1057,7 @@ var
                 p2 := MyRO.Territory[Loc1];
               if p2 <> p1 then
               begin
-                BitBltBitmap(GrExt[HGrTerrain].Mask, x + dx * xxt, y + dy * yyt, xxt,
+                BitBltBitmap(HGrTerrain.Mask, x + dx * xxt, y + dy * yyt, xxt,
                   yyt, 1 + 8 * (xxt * 2 + 1) + dx * xxt,
                   1 + yyt + 16 * (yyt * 3 + 1) + dy * yyt, SRCAND);
                 BitBltBitmap(Borders, x + dx * xxt, y + dy * yyt, xxt, yyt, dx * xxt,
@@ -1535,11 +1550,11 @@ begin
               else
                 bix := Aix;
             if Aix = -1 then
-              BitBltBitmap(GrExt[HGrTerrain].Data, x + dx * xxt, y + dy * yyt, xxt,
+              BitBltBitmap(HGrTerrain.Data, x + dx * xxt, y + dy * yyt, xxt,
                 yyt, 1 + 6 * (xxt * 2 + 1) + (dx + dy + 1) and 1 * xxt, 1 + yyt,
                 SRCCOPY) // arctic <-> ocean
             else if bix = -1 then
-              BitBltBitmap(GrExt[HGrTerrain].Data, x + dx * xxt, y + dy * yyt, xxt,
+              BitBltBitmap(HGrTerrain.Data, x + dx * xxt, y + dy * yyt, xxt,
                 yyt, 1 + 6 * (xxt * 2 + 1) + xxt - (dx + dy + 1) and 1 * xxt,
                 1 + yyt * 2, SRCCOPY) // arctic <-> ocean
             else
@@ -1548,8 +1563,8 @@ begin
           end
       end;
 
-  DataCanvas := GrExt[HGrTerrain].Data.Canvas;
-  MaskCanvas := GrExt[HGrTerrain].Mask.Canvas;
+  DataCanvas := HGrTerrain.Data.Canvas;
+  MaskCanvas := HGrTerrain.Mask.Canvas;
   for dy := -2 to ny + 1 do
     for dx := -1 to nx do
       if (dx + dy) and 1 = 0 then

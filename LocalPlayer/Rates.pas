@@ -122,9 +122,9 @@ begin
     begin
       for i := 0 to current div 8 - 1 do
         BitBltCanvas(Offscreen.Canvas, x + max - 8 - i * 8, y, 8, 7,
-          GrExt[HGrSystem].Data.Canvas, 104, 9 + 8 * 2);
+          HGrSystem.Data.Canvas, 104, 9 + 8 * 2);
       BitBltCanvas(Offscreen.Canvas, x + max - current, y, current - 8 * (current div 8), 7,
-        GrExt[HGrSystem].Data.Canvas, 104, 9 + 8 * 2);
+        HGrSystem.Data.Canvas, 104, 9 + 8 * 2);
       Brush.Color := $000000;
       FillRect(Rect(x, y, x + max - current, y + 7));
       Brush.Style := bsClear;

@@ -148,9 +148,9 @@ begin
     if Components[cix] is TButtonN then
       with TButtonN(Components[cix]) do
       begin
-        Graphic := GrExt[HGrSystem].Data;
-        Mask := GrExt[HGrSystem].Mask;
-        BackGraphic := GrExt[HGrSystem2].Data;
+        Graphic := HGrSystem.Data;
+        Mask := HGrSystem.Mask;
+        BackGraphic := HGrSystem2.Data;
         case Tag shr 8 of
           1:
             SmartHint := Phrases.Lookup('WANT', ButtonIndex - 6);
@@ -431,7 +431,7 @@ begin
     Rectangle(X - 6, Y - 1, X + 70, Y + 49);
     Brush.Color := $000000;
     Tribe[p].InitAge(GetAge(p));
-    if Tribe[p].faceHGr >= 0 then
+    if Assigned(Tribe[p].faceHGr) then
       Dump(Offscreen, Tribe[p].faceHGr, X, Y, 64, 48,
         1 + Tribe[p].facepix mod 10 * 65, 1 + Tribe[p].facepix div 10 * 49)
     else

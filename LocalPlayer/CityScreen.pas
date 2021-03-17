@@ -386,7 +386,7 @@ procedure TCityDlg.OffscreenPaint;
     Tex := MainTexture;
     if Kind = 3 then
     begin
-      Tex.clBevelLight := GrExt[HGrSystem].Data.Canvas.Pixels[104, 36];
+      Tex.clBevelLight := HGrSystem.Data.Canvas.Pixels[104, 36];
       Tex.clBevelShade := Tex.clBevelLight;
     end;
     PaintRelativeProgressBar(offscreen.Canvas, Kind, x - 3, y, wBar - 4, pos,
@@ -623,7 +623,7 @@ begin
     else
       xGr := 141;
     BitBltCanvas(offscreen.Canvas, xmArea - 192 + 5 + i * d, ymArea - 96 - 29,
-      27, 30, GrExt[HGrSystem].Mask.Canvas, xGr, 171, SRCAND); { shadow }
+      27, 30, HGrSystem.Mask.Canvas, xGr, 171, SRCAND); { shadow }
     Sprite(offscreen, HGrSystem, xmArea - 192 + 4 + i * d, ymArea - 96 - 30, 27,
       30, xGr, 171);
   end;
@@ -635,7 +635,7 @@ begin
   begin
     xGr := 1 + 112;
     BitBltCanvas(offscreen.Canvas, xmArea + 192 - 27 + 1 - i * d, 29 + 1, 27,
-      30, GrExt[HGrSystem].Mask.Canvas, xGr, 171, SRCAND); { shadow }
+      30, HGrSystem.Mask.Canvas, xGr, 171, SRCAND); { shadow }
     Sprite(offscreen, HGrSystem, xmArea + 192 - 27 - i * d, 29, 27, 30,
       xGr, 171);
     Sprite(offscreen, HGrSystem, xmArea + 192 - 27 + 4 - i * d, 29 + 32, 10,
@@ -1051,7 +1051,7 @@ begin
       while (emix > 0) and ((MyRO.EnemyModel[emix].Owner <> cOwner) or
         (integer(MyRO.EnemyModel[emix].mix) <> c.Project and cpIndex)) do
         dec(emix);
-      if Tribe[cOwner].ModelPicture[c.Project and cpIndex].HGr = 0 then
+      if Tribe[cOwner].ModelPicture[c.Project and cpIndex].HGr = HGrSystem then
         InitEnemyModel(emix);
     end;
 

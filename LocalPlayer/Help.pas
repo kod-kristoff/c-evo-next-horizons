@@ -400,7 +400,7 @@ begin
       ca.brush.color:=$FFFFFF;
       ca.FrameRect(rect(x+1,i*24+1,x+24-1,i*24+24-1));
       ca.Brush.Style:=bsClear; }
-    BitBltCanvas(ca, x, y - 4, 24, 24, GrExt[HGrSystem].Data.Canvas, 1,
+    BitBltCanvas(ca, x, y - 4, 24, 24, HGrSystem.Data.Canvas, 1,
       146);
     BiColorTextOut(ca, $FFFFFF, $7F007F, x + 10 - ca.Textwidth(s[1]) div 2,
       y - 3, s[1]);
@@ -568,7 +568,7 @@ begin
               s := Format('%d.%d.%d', [j shr 16 and $FF, j shr 8 and $FF,
                 j and $FF]);
               PaintLogo(OffScreen.Canvas, (InnerWidth - 122) div 2, i * 24 + 1,
-                GrExt[HGrSystem].Data.Canvas.Pixels[95, 1], $000000);
+                HGrSystem.Data.Canvas.Pixels[95, 1], $000000);
               Font.Assign(UniFont[ftSmall]);
               BiColorTextOut(OffScreen.Canvas, $000000, $7F007F,
                 (InnerWidth - Textwidth(s)) div 2, i * 24 + 26, s);
@@ -601,7 +601,7 @@ begin
             begin
               case HelpLineInfo.Picpix of
                 0:
-                  FrameImage(OffScreen.Canvas, GrExt[HGrSystem2].Data,
+                  FrameImage(OffScreen.Canvas, HGrSystem2.Data,
                     12 + x0[i], -7 + i * 24, 56, 40, 137, 127);
                 1:
                   begin
@@ -636,7 +636,7 @@ begin
             begin
               ScreenTools.Frame(OffScreen.Canvas, 8 - 1 + x0[i], 2 - 1 + i * 24,
                 8 + 36 + x0[i], 2 + 20 + i * 24, $000000, $000000);
-              Dump(OffScreen, HGrSystem, 8 + x0[i], 2 + i * 24, 36, 20,
+              Dump(OffScreen, HGrSystem,  8 + x0[i], 2 + i * 24, 36, 20,
                 75 + HelpLineInfo.Picpix * 37, 295);
               x0[i] := x0[i] + (8 + 8 + 36);
             end;
@@ -657,7 +657,7 @@ begin
                   295 + (AdvIcon[HelpLineInfo.Picpix] - 84) div 8 * 21);
               j := AdvValue[HelpLineInfo.Picpix] div 1000;
               BitBltCanvas(OffScreen.Canvas, x0[i] + 4, 4 + i * 24, 14, 14,
-                GrExt[HGrSystem].Mask.Canvas, 127 + j * 15, 85, SRCAND);
+                HGrSystem.Mask.Canvas, 127 + j * 15, 85, SRCAND);
               Sprite(OffScreen, HGrSystem, x0[i] + 3, 3 + i * 24, 14, 14,
                 127 + j * 15, 85);
               x0[i] := x0[i] + (8 + 8 + 36);

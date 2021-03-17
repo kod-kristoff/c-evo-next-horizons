@@ -135,7 +135,7 @@ begin
       with MyRO.EnemyUn[euixShow] do
       begin
         mox := @MyRO.EnemyModel[emix];
-        if Tribe[owner].ModelPicture[mix].HGr = 0 then
+        if Tribe[owner].ModelPicture[mix].HGr = HGrSystem then
           InitEnemyModel(emix);
       end
     end
@@ -528,7 +528,7 @@ begin
             MainTexture.clBevelShade,MainTexture.clBevelLight); }
           with offscreen.Canvas do
           begin
-            Brush.Color := GrExt[HGrSystem].Data.Canvas.Pixels[98, 67];
+            Brush.Color := HGrSystem.Data.Canvas.Pixels[98, 67];
             offscreen.Canvas.FillRect(Rect(xView, yView, xView + 64,
               yView + 16));
             Brush.Style := bsClear;
@@ -573,7 +573,7 @@ begin
           if Flags and unFortified <> 0 then
             Sprite(offscreen, HGrStdUnits, xView, yView, xxu * 2, yyu * 2,
               1 + 6 * (xxu * 2 + 1), 1);
-          FrameImage(offscreen.Canvas, GrExt[HGrSystem].Data, xView - 20,
+          FrameImage(offscreen.Canvas, HGrSystem.Data, xView - 20,
             yView + 5, 12, 14, 121 + Exp div ExpCost * 13, 28);
           if Health < 100 then
           begin

@@ -148,8 +148,8 @@ begin
     mikTribe:
       begin
         Tribe[IconIndex].InitAge(GetAge(IconIndex));
-        if Tribe[IconIndex].faceHGr >= 0 then
-          TopSpace := 64
+        if Assigned(Tribe[IconIndex].faceHGr) then
+          TopSpace := 64;
       end;
     mikFullControl:
       TopSpace := 80;
@@ -335,9 +335,9 @@ begin
       y := 26 + Border + TopSpace + Lines * MessageLineSpacing + iy * 48;
       with MyRO.EnemyModel[emix], Tribe[Owner].ModelPicture[mix] do
       begin
-        BitBltCanvas(Canvas, x, y, 64, 48, GrExt[HGr].Mask.Canvas,
+        BitBltCanvas(Canvas, x, y, 64, 48, HGr.Mask.Canvas,
           pix mod 10 * 65 + 1, pix div 10 * 49 + 1, SRCAND);
-        BitBltCanvas(Canvas, x, y, 64, 48, GrExt[HGr].Data.Canvas,
+        BitBltCanvas(Canvas, x, y, 64, 48, HGr.Data.Canvas,
           pix mod 10 * 65 + 1, pix div 10 * 49 + 1, SRCPAINT);
       end;
 
@@ -410,22 +410,22 @@ begin
         FrameImage(Canvas, BigImp, ClientWidth div 2 - 28, 24, xSizeBig,
           ySizeBig, 0, 0);
         BitBltCanvas(Canvas, ClientWidth div 2 - 32, 20, 64, 44,
-          GrExt[HGr].Mask.Canvas, pix mod 10 * 65 + 1,
+          HGr.Mask.Canvas, pix mod 10 * 65 + 1,
           pix div 10 * 49 + 1, SRCAND);
         BitBltCanvas(Canvas, ClientWidth div 2 - 32, 20, 64, 44,
-          GrExt[HGr].Data.Canvas, pix mod 10 * 65 + 1,
+          HGr.Data.Canvas, pix mod 10 * 65 + 1,
           pix div 10 * 49 + 1, SRCPAINT);
       end;
     mikBook:
       PaintBook(Canvas, ClientWidth div 2, 24, MainTexture.clPage,
         MainTexture.clCover);
     mikTribe:
-      if Tribe[IconIndex].faceHGr >= 0 then
+      if Assigned(Tribe[IconIndex].faceHGr) then
       begin
         Frame(Canvas, ClientWidth div 2 - 32 - 1, 24 - 1,
           ClientWidth div 2 + 32, 24 + 48, $000000, $000000);
         BitBltCanvas(Canvas, ClientWidth div 2 - 32, 24, 64, 48,
-          GrExt[Tribe[IconIndex].faceHGr].Data.Canvas,
+          Tribe[IconIndex].faceHGr.Data.Canvas,
           1 + Tribe[IconIndex].facepix mod 10 * 65,
           1 + Tribe[IconIndex].facepix div 10 * 49)
       end;

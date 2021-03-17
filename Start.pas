@@ -235,7 +235,7 @@ begin
 
   for X := 0 to 11 do
     for Y := 0 to 1 do
-      Colors[x, y] := GrExt[HGrSystem].Data.Canvas.Pixels[66 + x, 67 + y];
+      Colors[x, y] := HGrSystem.Data.Canvas.Pixels[66 + x, 67 + y];
 end;
 
 destructor TMiniMap.Destroy;
@@ -380,8 +380,8 @@ var
   MiniPixel: TPixelPointer;
   PrevMiniPixel: TPixelPointer;
 begin
-  OwnColor := GrExt[HGrSystem].Data.Canvas.Pixels[95, 67];
-  EnemyColor := GrExt[HGrSystem].Data.Canvas.Pixels[96, 67];
+  OwnColor := HGrSystem.Data.Canvas.Pixels[95, 67];
+  EnemyColor := HGrSystem.Data.Canvas.Pixels[96, 67];
   Bitmap.PixelFormat := pf24bit;
   Bitmap.SetSize(Size.X * 2, Size.Y);
   if Mode = mmPicture then begin
@@ -478,14 +478,14 @@ begin
   for i := 0 to PlayerSlots.Count - 1 do
   with PlayerSlots[i] do begin
     DiffUpBtn := TButtonC.Create(self);
-    DiffUpBtn.Graphic := GrExt[HGrSystem].Data;
+    DiffUpBtn.Graphic := HGrSystem.Data;
     DiffUpBtn.left := xBrain[i] - 18;
     DiffUpBtn.top := yBrain[i] + 39;
     DiffUpBtn.ButtonIndex := 1;
     DiffUpBtn.Parent := self;
     DiffUpBtn.OnClick := DiffBtnClick;
     DiffDownBtn := TButtonC.Create(self);
-    DiffDownBtn.Graphic := GrExt[HGrSystem].Data;
+    DiffDownBtn.Graphic := HGrSystem.Data;
     DiffDownBtn.left := xBrain[i] - 18;
     DiffDownBtn.top := yBrain[i] + 51;
     DiffDownBtn.ButtonIndex := 0;
@@ -495,7 +495,7 @@ begin
   for i := 6 to 8 do
   with PlayerSlots[i] do begin
     MultiBtn := TButtonC.Create(self);
-    MultiBtn.Graphic := GrExt[HGrSystem].Data;
+    MultiBtn.Graphic := HGrSystem.Data;
     MultiBtn.left := xBrain[i] - 18;
     MultiBtn.top := yBrain[i];
     MultiBtn.Parent := self;
@@ -510,10 +510,10 @@ begin
   else
     CustomizeBtn.ButtonIndex := 2;
 
-  BitBltBitmap(BrainNoTerm.Picture, 0, 0, 64, 64, GrExt[HGrSystem2].Data, 1, 111);
-  BitBltBitmap(BrainSuperVirtual.Picture, 0, 0, 64, 64, GrExt[HGrSystem2].Data, 66, 111);
-  BitBltBitmap(BrainTerm.Picture, 0, 0, 64, 64, GrExt[HGrSystem2].Data, 131, 111);
-  BitBltBitmap(BrainRandom.Picture, 0, 0, 64, 64, GrExt[HGrSystem2].Data, 131, 46);
+  BitBltBitmap(BrainNoTerm.Picture, 0, 0, 64, 64, HGrSystem2.Data, 1, 111);
+  BitBltBitmap(BrainSuperVirtual.Picture, 0, 0, 64, 64, HGrSystem2.Data, 66, 111);
+  BitBltBitmap(BrainTerm.Picture, 0, 0, 64, 64, HGrSystem2.Data, 131, 111);
+  BitBltBitmap(BrainRandom.Picture, 0, 0, 64, 64, HGrSystem2.Data, 131, 46);
   LoadAiBrainsPictures;
 
   EmptyPicture := TBitmap.Create;
@@ -906,9 +906,9 @@ begin
         if (i < 13) or (i > 17) then
         begin
           BitBltCanvas(Canvas, 9 + i * 27, yLogo - 2, wOrna, hOrna,
-            GrExt[HGrSystem2].Mask.Canvas, xOrna, yOrna, SRCAND);
+            HGrSystem2.Mask.Canvas, xOrna, yOrna, SRCAND);
           BitBltCanvas(Canvas, 9 + i * 27, yLogo - 2, wOrna, hOrna,
-            GrExt[HGrSystem2].Data.Canvas, xOrna, yOrna, SRCPAINT);
+            HGrSystem2.Data.Canvas, xOrna, yOrna, SRCPAINT);
         end;
       PaintLogo(Canvas, 69 + 11 * 27, yLogo, MainTexture.clBevelLight,
         MainTexture.clBevelShade);
@@ -925,7 +925,7 @@ begin
           if Assigned(PlayersBrain[I]) and (PlayersBrain[i].Kind in [btTerm, btRandom, btAI]) then
           begin
             BitBltCanvas(Canvas, xBrain[i] - 18, yBrain[i] + 19, 12, 14,
-              GrExt[HGrSystem].Data.Canvas, 134 + (Difficulty[i] - 1) *
+              HGrSystem.Data.Canvas, 134 + (Difficulty[i] - 1) *
               13, 28);
             Frame(Canvas, xBrain[i] - 19, yBrain[i] + 18, xBrain[i] - 18 + 12,
               yBrain[i] + (19 + 14), $000000, $000000);
@@ -945,7 +945,7 @@ begin
                 PlayerSlots[I].MultiBtn.left + 12, PlayerSlots[I].MultiBtn.top + 12,
                 MainTexture.clBevelShade, MainTexture.clBevelLight);
               BitBltCanvas(Canvas, xBrain[i] - 31, yBrain[i], 13, 12,
-                GrExt[HGrSystem].Data.Canvas, 88, 47);
+                HGrSystem.Data.Canvas, 88, 47);
             end;
           end;
           if Assigned(PlayersBrain[i]) then
@@ -990,9 +990,9 @@ begin
         if (i < 2) or (i > 6) then
         begin
           BitBltCanvas(Canvas, 9 + i * 27, yLogo - 2, wOrna, hOrna,
-            GrExt[HGrSystem2].Mask.Canvas, xOrna, yOrna, SRCAND);
+            HGrSystem2.Mask.Canvas, xOrna, yOrna, SRCAND);
           BitBltCanvas(Canvas, 9 + i * 27, yLogo - 2, wOrna, hOrna,
-            GrExt[HGrSystem2].Data.Canvas, xOrna, yOrna, SRCPAINT);
+            HGrSystem2.Data.Canvas, xOrna, yOrna, SRCPAINT);
         end;
       PaintLogo(Canvas, 69, yLogo, MainTexture.clBevelLight,
         MainTexture.clBevelShade);

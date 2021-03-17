@@ -444,8 +444,8 @@ var
   TaxSum: Integer;
   SoundPreloadDone: Integer;
   MarkCityLoc: Integer;
-  HGrTerrain: Integer;
-  HGrCities: Integer;
+  HGrTerrain: TGrExtDescr;
+  HGrCities: TGrExtDescr;
   MovieSpeed: Integer;
   CityRepMask: Cardinal;
   ReceivedOffer: TOffer;
@@ -750,7 +750,7 @@ var
 begin
   for emix := 0 to MyRO.nEnemyModel - 1 do
     with MyRO.EnemyModel[emix] do
-      if Tribe[Owner].ModelPicture[mix].HGr = 0 then
+      if Tribe[Owner].ModelPicture[mix].HGr = HGrSystem then
         InitEnemyModel(emix);
 end;
 
@@ -833,14 +833,14 @@ begin
   with Tribe[me] do
     while MyData.ToldModels < MyRO.nModel do
     begin { new Unit class available }
-      if (ModelPicture[MyData.ToldModels].HGr > 0) and
+      if (ModelPicture[MyData.ToldModels].HGr <> HGrSystem) and
         (MyModel[MyData.ToldModels].Kind <> mkSelfDeveloped) then
       begin // save picture of DevModel
         ModelPicture[MyData.ToldModels + 1] := ModelPicture[MyData.ToldModels];
         ModelName[MyData.ToldModels + 1] := ModelName[MyData.ToldModels];
-        ModelPicture[MyData.ToldModels].HGr := 0
+        ModelPicture[MyData.ToldModels].HGr := HGrSystem
       end;
-      if ModelPicture[MyData.ToldModels].HGr = 0 then
+      if ModelPicture[MyData.ToldModels].HGr = HGrSystem then
         InitMyModel(MyData.ToldModels, true);
       { only run if no researched model }
       with MessgExDlg do
@@ -1041,7 +1041,7 @@ begin
       begin
         DraftDlg.ShowNewContent(wmModal);
         if DraftDlg.ModalResult <> mrOK then
-          Tribe[me].ModelPicture[MyRO.nModel].HGr := 0
+          Tribe[me].ModelPicture[MyRO.nModel].HGr := HGrSystem
       end;
     until (ChosenResearch <> adMilitary) or (DraftDlg.ModalResult = mrOK);
 
@@ -1602,7 +1602,7 @@ begin
 
   for x := 0 to 11 do
     for y := 0 to 1 do
-      MiniColors[x, y] := GrExt[HGrSystem].Data.Canvas.Pixels[66 + x, 67 + y];
+      MiniColors[x, y] := HGrSystem.Data.Canvas.Pixels[66 + x, 67 + y];
   IsoEngine.Init(InitEnemyModel);
   if not IsoEngine.ApplyTileSize(xxt, yyt) and ((xxt <> 48) or (yyt <> 24) or (xxt <> 72))
   then
@@ -2784,7 +2784,7 @@ begin
             begin
               ItsMeAgain(p1);
               for mix := 0 to MyRO.nModel - 1 do
-                if Tribe[me].ModelPicture[mix].HGr = 0 then
+                if Tribe[me].ModelPicture[mix].HGr = HGrSystem then
                   InitMyModel(mix, true);
             end;
           me := -1;
@@ -3074,7 +3074,7 @@ begin
         with TShowMove(Data) do
         begin
           CurrentMoveInfo.DoShow := false;
-          if not idle and (Tribe[Owner].ModelPicture[mix].HGr = 0) then
+          if not idle and (Tribe[Owner].ModelPicture[mix].HGr = HGrSystem) then
             InitEnemyModel(emix);
 
           ToLoc := dLoc(FromLoc, dx, dy);
@@ -3269,7 +3269,7 @@ begin
           if CurrentMoveInfo.DoShow then
           begin
             ToLoc := dLoc(FromLoc, dx, dy);
-            if Tribe[Owner].ModelPicture[mix].HGr = 0 then
+            if Tribe[Owner].ModelPicture[mix].HGr = HGrSystem then
               InitEnemyModel(emix);
 
             if (MyMap[ToLoc] and (fCity or fUnit or fOwned) = fCity or fOwned)
@@ -4072,8 +4072,8 @@ var
   TerrainTile: Cardinal;
 begin
   if not Assigned(MyMap) then Exit;
-  cmPolOcean := GrExt[HGrSystem].Data.Canvas.Pixels[101, 67];
-  cmPolNone := GrExt[HGrSystem].Data.Canvas.Pixels[102, 67];
+  cmPolOcean := HGrSystem.Data.Canvas.Pixels[101, 67];
+  cmPolNone := HGrSystem.Data.Canvas.Pixels[102, 67];
   hw := MapWidth div (xxt * 2);
   with Mini.Canvas do begin
     Brush.Color := $000000;
@@ -4399,7 +4399,7 @@ begin
           ClientWidth - xPalace + xSizeBig + 1, yPalace + ySizeBig + 1,
           $FFFFFF, $B0B0B0);
         BitBltCanvas(Panel.Canvas, ClientWidth - xPalace, yPalace, xSizeBig,
-          ySizeBig, GrExt[HGrSystem2].Data.Canvas, 70, 123);
+          ySizeBig, HGrSystem2.Data.Canvas, 70, 123);
       end
       else if MyRO.NatBuilt[imPalace] > 0 then
         ImpImage(Panel.Canvas, ClientWidth - xPalace, yPalace, imPalace, -1,
@@ -4614,7 +4614,7 @@ begin
           RisedTextOut(Panel.Canvas, xMidPanel + 7 + 12 + 32 -
             BiColorTextWidth(Panel.Canvas, s) div 2, PanelHeight - 23, s);
 
-          FrameImage(Panel.Canvas, GrExt[HGrSystem].Data,
+          FrameImage(Panel.Canvas, HGrSystem.Data,
             xMidPanel + 7 + xUnitText, yTroop + 15, 12, 14,
             121 + Exp div ExpCost * 13, 28);
           if Job = jCity then
@@ -5352,7 +5352,7 @@ begin
               (Server(sCreateUnit - sExecute + p1 shl 4, me,
               MyRO.EnemyModel[emix].mix, MouseLoc) >= rExecuted) then
             begin
-              if Tribe[p1].ModelPicture[MyRO.EnemyModel[emix].mix].HGr = 0 then
+              if Tribe[p1].ModelPicture[MyRO.EnemyModel[emix].mix].HGr = HGrSystem then
                 InitEnemyModel(emix);
               m2 := TMenuItem.Create(m);
               m2.Caption := Tribe[p1].ModelName[MyRO.EnemyModel[emix].mix];
@@ -6435,7 +6435,7 @@ end;
 
 procedure TMainScreen.SetViewpoint(p: integer);
 var
-  i: integer;
+  i: Integer;
 begin
   if supervising and (G.RO[0].Turn > 0) and
     ((p = 0) or (1 shl p and G.RO[0].Alive <> 0)) then
@@ -6446,12 +6446,12 @@ begin
     ItsMeAgain(p);
     SumCities(TaxSum, ScienceSum);
     for i := 0 to MyRO.nModel - 1 do
-      if Tribe[me].ModelPicture[i].HGr = 0 then
-        InitMyModel(i, true);
+      if Tribe[me].ModelPicture[i].HGr = HGrSystem then
+        InitMyModel(i, True);
 
     SetTroopLoc(-1);
     PanelPaint;
-    MapValid := false;
+    MapValid := False;
     PaintAllMaps;
   end;
 end;

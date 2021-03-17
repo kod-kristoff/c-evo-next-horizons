@@ -578,7 +578,7 @@ begin
                     295 + (AdvIcon[lix] - 84) div 8 * 21);
                 j := AdvValue[lix] div 1000;
                 BitBltCanvas(offscreen.Canvas, (8 + 16 - 4), y0 + 2, 14, 14,
-                  GrExt[HGrSystem].Mask.Canvas, 127 + j * 15,
+                  HGrSystem.Mask.Canvas, 127 + j * 15,
                   85, SRCAND);
                 Sprite(offscreen, HGrSystem, (8 + 16 - 5), y0 + 1, 14, 14,
                   127 + j * 15, 85);
@@ -1349,7 +1349,7 @@ begin
           if ModelOk[emix] then
           begin
             if Tribe[DipMem[me].pContact].ModelPicture
-              [MyRO.EnemyModel[emix].mix].HGr = 0 then
+              [MyRO.EnemyModel[emix].mix].HGr = HGrSystem then
               InitEnemyModel(emix);
             code[0, Lines[0]] := emix;
             code[2, Lines[0]] := ModelSortValue(MyRO.EnemyModel[emix]);
@@ -1372,7 +1372,7 @@ begin
             not((MyRO.EnemyModel[code[1, Lines[0]]].Owner = pView) and
             (MyRO.EnemyModel[code[1, Lines[0]]].mix = i)) do
             dec(code[1, Lines[0]]);
-          if Tribe[pView].ModelPicture[i].HGr = 0 then
+          if Tribe[pView].ModelPicture[i].HGr = HGrSystem then
             InitEnemyModel(code[1, Lines[0]]);
           code[0, Lines[0]] := i;
           code[2, Lines[0]] :=
@@ -1393,7 +1393,7 @@ begin
           begin
             PPicture := @Tribe[MyRO.EnemyModel[emix].Owner].ModelPicture
               [MyRO.EnemyModel[emix].mix];
-            if PPicture.HGr = 0 then
+            if PPicture.HGr = HGrSystem then
               InitEnemyModel(emix);
             ok := true;
             if MainScreen.mNames.Checked then

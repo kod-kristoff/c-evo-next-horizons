@@ -13,7 +13,7 @@ type
   end;
 
   TModelPicture = record
-    HGr: Integer;
+    HGr: TGrExtDescr;
     pix: Integer;
     xShield: Integer;
     yShield: Integer;
@@ -28,11 +28,11 @@ type
   end;
 
   TTribe = class
-    symHGr: Integer;
+    symHGr: TGrExtDescr;
     sympix: Integer;
-    faceHGr: Integer;
+    faceHGr: TGrExtDescr;
     facepix: Integer;
-    cHGr: Integer;
+    cHGr: TGrExtDescr;
     cpix: Integer;
     // symbol and city graphics
     cAge: Integer;
@@ -61,7 +61,7 @@ type
 
 var
   Tribe: array [0 .. nPl - 1] of TTribe;
-  HGrStdUnits: Integer;
+  HGrStdUnits: TGrExtDescr;
 
 procedure Init;
 procedure Done;
@@ -69,7 +69,7 @@ function CityName(Founder: Integer): string;
 function ModelCode(const ModelInfo: TModelInfo): Integer;
 procedure FindStdModelPicture(Code: Integer; var pix: Integer; var Name: string);
 function GetTribeInfo(FileName: string; var Name: string; var Color: TColor): Boolean;
-procedure FindPosition(HGr, x, y, xmax, ymax: Integer; Mark: TColor;
+procedure FindPosition(HGr: TGrExtDescr; x, y, xmax, ymax: Integer; Mark: TColor;
   var xp, yp: Integer);
 
 
@@ -81,7 +81,7 @@ uses
 type
   TChosenModelPictureInfo = record
     Hash: Integer;
-    HGr: Integer;
+    HGr: TGrExtDescr;
     pix: Integer;
     ModelName: ShortString;
   end;
@@ -327,14 +327,14 @@ begin
   inherited;
 end;
 
-procedure FindPosition(HGr, x, y, xmax, ymax: Integer; Mark: TColor;
+procedure FindPosition(HGr: TGrExtDescr; x, y, xmax, ymax: Integer; Mark: TColor;
   var xp, yp: Integer);
 begin
   xp := 0;
-  while (xp < xmax) and (GrExt[HGr].Data.Canvas.Pixels[x + 1 + xp, y] <> Mark) do
+  while (xp < xmax) and (HGr.Data.Canvas.Pixels[x + 1 + xp, y] <> Mark) do
     Inc(xp);
   yp := 0;
-  while (yp < ymax) and (GrExt[HGr].Data.Canvas.Pixels[x, y + 1 + yp] <> Mark) do
+  while (yp < ymax) and (HGr.Data.Canvas.Pixels[x, y + 1 + yp] <> Mark) do
     Inc(yp);
 end;
 
@@ -446,25 +446,25 @@ begin
           end;
       end
       else
-        cHGr := -1;
+        cHGr := nil;
 
 {$IFNDEF SCR}
       Get;
       GetNum;
       Item := Get;
       if Item = '' then
-        faceHGr := -1
+        faceHGr := nil
       else
       begin
         faceHGr := LoadGraphicSet(Item + '.png');
         facepix := GetNum;
-        if GrExt[faceHGr].Data.Canvas.Pixels[facepix mod 10 * 65,
+        if faceHGr.Data.Canvas.Pixels[facepix mod 10 * 65,
           facepix div 10 * 49 + 48] = $00FFFF then
         begin // generate shield picture
-          GrExt[faceHGr].Data.Canvas.Pixels[facepix mod 10 * 65,
+          faceHGr.Data.Canvas.Pixels[facepix mod 10 * 65,
             facepix div 10 * 49 + 48] := $000000;
           Gray := $B8B8B8;
-          ImageOp_BCC(GrExt[faceHGr].Data, Templates,
+          ImageOp_BCC(faceHGr.Data, Templates,
             facepix mod 10 * 65 + 1, facepix div 10 * 49 + 1, 1, 25, 64, 48,
             Gray, Color);
         end;
@@ -499,7 +499,7 @@ begin
       begin
         HGr := LoadGraphicSet(GrName);
         pix := Info.pix;
-        Inc(GrExt[HGr].pixUsed[pix]);
+        Inc(HGr.pixUsed[pix]);
       end;
       ModelName[mix] := '';
 
@@ -557,7 +557,11 @@ end;
 function TTribe.ChooseModelPicture(var Picture: TModelPictureInfo;
   Code, Turn: Integer; ForceNew: Boolean): Boolean;
 var
-  i, Cnt, HGr, Used, LeastUsed: Integer;
+  i: Integer;
+  Cnt: Integer;
+  HGr: TGrExtDescr;
+  Used: Integer;
+  LeastUsed: Integer;
   TestPic: TModelPictureInfo;
   ok: Boolean;
 
@@ -566,11 +570,11 @@ var
     TestPic.pix := GetNum;
     if Code = GetNum then
     begin
-      if ForceNew or (HGr < 0) then
+      if ForceNew or (not Assigned(HGr)) then
         Used := 0
       else
       begin
-        Used := 4 * GrExt[HGr].pixUsed[TestPic.pix];
+        Used := 4 * HGr.pixUsed[TestPic.pix];
         if HGr = HGrStdUnits then
           Inc(Used, 2); // prefer units not from StdUnits
       end;
@@ -595,7 +599,7 @@ begin
     for i := 0 to nPictureList - 1 do
       if PictureList[i].Hash = Picture.Hash then
       begin
-        Picture.GrName := GrExt[PictureList[i].HGr].Name;
+        Picture.GrName := PictureList[i].HGr.Name;
         Picture.pix := PictureList[i].pix;
         Result := False;
         Exit;
@@ -622,9 +626,7 @@ begin
     begin
       ok := True;
       TestPic.GrName := Copy(Input, 8, 255) + '.png';
-      HGr := GrExt.Count - 1;
-      while (HGr >= 0) and (GrExt[HGr].Name <> TestPic.GrName) do
-        Dec(HGr);
+      HGr := GrExt.SearchByName(TestPic.GrName);
     end
     else if (Input <> '') and (Input[1] = '#') then
       ok := False

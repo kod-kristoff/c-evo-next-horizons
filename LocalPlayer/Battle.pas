@@ -107,9 +107,9 @@ begin
     VLightGradient(ca, xm - 8, ym + 8 + LABaseDamage, LADamage - LABaseDamage,
       FanaticColor);
   BitBltCanvas(ca, xm - 12, ym - 12, 24, 24,
-    GrExt[HGrSystem].Mask.Canvas, 26, 146, SRCAND);
+    HGrSystem.Mask.Canvas, 26, 146, SRCAND);
   BitBltCanvas(ca, xm - 12, ym - 12, 24, 24,
-    GrExt[HGrSystem].Data.Canvas, 26, 146, SRCPAINT);
+    HGrSystem.Data.Canvas, 26, 146, SRCPAINT);
 
   LabelText := Format('%d', [Forecast.AStr]);
   TextSize := ca.TextExtent(LabelText);
@@ -132,11 +132,11 @@ begin
   if Forecast.EndHealthDef <= 0 then
   begin
     BitBltCanvas(ca, xm + 9 + LDDamage - 7, ym - 6, 14, 17,
-      GrExt[HGrSystem].Mask.Canvas, 51, 153, SRCAND);
+      HGrSystem.Mask.Canvas, 51, 153, SRCAND);
     BitBltCanvas(ca, xm + 8 + LDDamage - 7, ym - 7, 14, 17,
-      GrExt[HGrSystem].Mask.Canvas, 51, 153, SRCAND);
+      HGrSystem.Mask.Canvas, 51, 153, SRCAND);
     BitBltCanvas(ca, xm + 8 + LDDamage - 7, ym - 7, 14, 17,
-      GrExt[HGrSystem].Data.Canvas, 51, 153, SRCPAINT);
+      HGrSystem.Data.Canvas, 51, 153, SRCPAINT);
   end;
   LabelText := Format('%d', [DDamage]);
   TextSize := ca.TextExtent(LabelText);
@@ -152,11 +152,11 @@ begin
   if Forecast.EndHealthAtt <= 0 then
   begin
     BitBltCanvas(ca, xm - 6, ym + 9 + LADamage - 7, 14, 17,
-      GrExt[HGrSystem].Mask.Canvas, 51, 153, SRCAND);
+      HGrSystem.Mask.Canvas, 51, 153, SRCAND);
     BitBltCanvas(ca, xm - 7, ym + 8 + LADamage - 7, 14, 17,
-      GrExt[HGrSystem].Mask.Canvas, 51, 153, SRCAND);
+      HGrSystem.Mask.Canvas, 51, 153, SRCAND);
     BitBltCanvas(ca, xm - 7, ym + 8 + LADamage - 7, 14, 17,
-      GrExt[HGrSystem].Data.Canvas, 51, 153, SRCPAINT);
+      HGrSystem.Data.Canvas, 51, 153, SRCPAINT);
   end;
   LabelText := Format('%d', [MyUn[uix].Health - Forecast.EndHealthAtt]);
   TextSize := ca.TextExtent(LabelText);

@@ -24,6 +24,26 @@ type
   TLoadGraphicFileOption = (gfNoError, gfNoGamma);
   TLoadGraphicFileOptions = set of TLoadGraphicFileOption;
 
+  { TGrExtDescr }
+
+  TGrExtDescr = class
+    Name: string;
+    Data: TBitmap;
+    Mask: TBitmap;
+    pixUsed: array of Byte;
+    procedure ResetPixUsed;
+    constructor Create;
+    destructor Destroy; override;
+  end;
+
+  { TGrExtDescrs }
+
+  TGrExtDescrs = class(TFPGObjectList<TGrExtDescr>)
+    function SearchByName(Name: string): TGrExtDescr;
+    function AddNew(Name: string): TGrExtDescr;
+  end;
+
+  TFontType = (ftNormal, ftSmall, ftTiny, ftCaption, ftButton);
 
 {$IFDEF WINDOWS}
 function ChangeResolution(x, y, bpp, freq: integer): boolean;
@@ -37,11 +57,11 @@ procedure BtnFrame(ca: TCanvas; p: TRect; const T: TTexture);
 procedure EditFrame(ca: TCanvas; p: TRect; const T: TTexture);
 function HexStringToColor(S: string): integer;
 function LoadGraphicFile(Bmp: TBitmap; FileName: string; Options: TLoadGraphicFileOptions = []): boolean;
-function LoadGraphicSet(const Name: string): integer;
-procedure Dump(dst: TBitmap; HGr, xDst, yDst, Width, Height, xGr, yGr: integer);
-procedure Sprite(Canvas: TCanvas; HGr, xDst, yDst, Width, Height, xGr, yGr: integer);
+function LoadGraphicSet(const Name: string): TGrExtDescr;
+procedure Dump(dst: TBitmap; HGr: TGrExtDescr; xDst, yDst, Width, Height, xGr, yGr: integer);
+procedure Sprite(Canvas: TCanvas; HGr: TGrExtDescr; xDst, yDst, Width, Height, xGr, yGr: integer);
   overload;
-procedure Sprite(dst: TBitmap; HGr, xDst, yDst, Width, Height, xGr, yGr: integer);
+procedure Sprite(dst: TBitmap; HGr: TGrExtDescr; xDst, yDst, Width, Height, xGr, yGr: integer);
   overload;
 procedure MakeBlue(Dst: TBitmap; X, Y, Width, Height: Integer);
 procedure MakeRed(Dst: TBitmap; X, Y, Width, Height: Integer);
@@ -167,35 +187,12 @@ const
   cliTundra = 3;
   cliWater = 4;
 
-type
-
-  { TGrExtDescr }
-
-  TGrExtDescr = class
-    Name: string;
-    Data: TBitmap;
-    Mask: TBitmap;
-    pixUsed: array of Byte;
-    procedure ResetPixUsed;
-    constructor Create;
-    destructor Destroy; override;
-  end;
-
-  { TGrExtDescrs }
-
-  TGrExtDescrs = class(TFPGObjectList<TGrExtDescr>)
-    function SearchByName(Name: string): TGrExtDescr;
-    function AddNew(Name: string): TGrExtDescr;
-  end;
-
-  TFontType = (ftNormal, ftSmall, ftTiny, ftCaption, ftButton);
-
 var
   Phrases: TStringTable;
   Phrases2: TStringTable;
   GrExt: TGrExtDescrs;
-  HGrSystem: Integer;
-  HGrSystem2: Integer;
+  HGrSystem: TGrExtDescr;
+  HGrSystem2: TGrExtDescr;
   ClickFrameColor: Integer;
   MainTextureAge: Integer;
   MainTexture: TTexture;
@@ -494,9 +491,8 @@ begin
     ApplyGammaToBitmap(Bmp);
 end;
 
-function LoadGraphicSet(const Name: string): Integer;
+function LoadGraphicSet(const Name: string): TGrExtDescr;
 var
-  I: Integer;
   x: Integer;
   y: Integer;
   xmax: Integer;
@@ -504,31 +500,30 @@ var
   FileName: string;
   DataPixel: TPixelPointer;
   MaskPixel: TPixelPointer;
-  NewGrExt: TGrExtDescr;
 begin
-  NewGrExt := GrExt.SearchByName(Name);
-  if not Assigned(NewGrExt) then begin
-    NewGrExt := GrExt.AddNew(Name);
+  Result := GrExt.SearchByName(Name);
+  if not Assigned(Result) then begin
+    Result := GrExt.AddNew(Name);
     FileName := GetGraphicsDir + DirectorySeparator + Name;
-    if not LoadGraphicFile(NewGrExt.Data, FileName) then begin
-      Result := -1;
+    if not LoadGraphicFile(Result.Data, FileName) then begin
+      Result := nil;
       Exit;
     end;
 
-    NewGrExt.ResetPixUsed;
+    Result.ResetPixUsed;
 
-    xmax := NewGrExt.Data.Width - 1; // allows 4-byte access even for last pixel
+    xmax := Result.Data.Width - 1; // allows 4-byte access even for last pixel
     // Why there was that limit?
     //if xmax > 970 then
     //  xmax := 970;
 
-    NewGrExt.Mask.SetSize(NewGrExt.Data.Width, NewGrExt.Data.Height);
+    Result.Mask.SetSize(Result.Data.Width, Result.Data.Height);
 
-    NewGrExt.Data.BeginUpdate;
-    NewGrExt.Mask.BeginUpdate;
-    DataPixel := PixelPointer(NewGrExt.Data);
-    MaskPixel := PixelPointer(NewGrExt.Mask);
-    for y := 0 to ScaleToNative(NewGrExt.Data.Height) - 1 do begin
+    Result.Data.BeginUpdate;
+    Result.Mask.BeginUpdate;
+    DataPixel := PixelPointer(Result.Data);
+    MaskPixel := PixelPointer(Result.Mask);
+    for y := 0 to ScaleToNative(Result.Data.Height) - 1 do begin
       for x := 0 to ScaleToNative(xmax) - 1 do begin
         OriginalColor := DataPixel.Pixel^.ARGB and $FFFFFF;
         if (OriginalColor = $FF00FF) or (OriginalColor = $7F007F) then
@@ -547,16 +542,15 @@ begin
       DataPixel.NextLine;
       MaskPixel.NextLine;
     end;
-    NewGrExt.Data.EndUpdate;
-    NewGrExt.Mask.EndUpdate;
+    Result.Data.EndUpdate;
+    Result.Mask.EndUpdate;
   end;
-  Result := GrExt.IndexOf(NewGrExt);
 end;
 
-procedure Dump(dst: TBitmap; HGr, xDst, yDst, Width, Height, xGr, yGr: integer);
+procedure Dump(dst: TBitmap; HGr: TGrExtDescr; xDst, yDst, Width, Height, xGr, yGr: integer);
 begin
   BitBltCanvas(dst.Canvas, xDst, yDst, Width, Height,
-    GrExt[HGr].Data.Canvas, xGr, yGr);
+    HGr.Data.Canvas, xGr, yGr);
 end;
 
 procedure MakeBlue(Dst: TBitmap; X, Y, Width, Height: Integer);
@@ -819,20 +813,20 @@ begin
   bmp.EndUpdate;
 end;
 
-procedure Sprite(Canvas: TCanvas; HGr, xDst, yDst, Width, Height, xGr, yGr: integer);
+procedure Sprite(Canvas: TCanvas; HGr: TGrExtDescr; xDst, yDst, Width, Height, xGr, yGr: integer);
 begin
   BitBltCanvas(Canvas, xDst, yDst, Width, Height,
-    GrExt[HGr].Mask.Canvas, xGr, yGr, SRCAND);
+    HGr.Mask.Canvas, xGr, yGr, SRCAND);
   BitBltCanvas(Canvas, xDst, yDst, Width, Height,
-    GrExt[HGr].Data.Canvas, xGr, yGr, SRCPAINT);
+    HGr.Data.Canvas, xGr, yGr, SRCPAINT);
 end;
 
-procedure Sprite(dst: TBitmap; HGr, xDst, yDst, Width, Height, xGr, yGr: integer);
+procedure Sprite(dst: TBitmap; HGr: TGrExtDescr; xDst, yDst, Width, Height, xGr, yGr: integer);
 begin
   BitBltCanvas(dst.Canvas, xDst, yDst, Width, Height,
-    GrExt[HGr].Mask.Canvas, xGr, yGr, SRCAND);
+    HGr.Mask.Canvas, xGr, yGr, SRCAND);
   BitBltCanvas(dst.Canvas, xDst, yDst, Width, Height,
-    GrExt[HGr].Data.Canvas, xGr, yGr, SRCPAINT);
+    HGr.Data.Canvas, xGr, yGr, SRCPAINT);
 end;
 
 function BitBltCanvas(DestCanvas: TCanvas; X, Y, Width, Height: Integer;
@@ -1009,11 +1003,11 @@ begin
     MainTexture.clBevelLight and $FCFCFC shr 2;
   for x := 0 to wOrna - 1 do
     for y := 0 to hOrna - 1 do begin
-      p := GrExt[HGrSystem2].Data.Canvas.Pixels[xOrna + x, yOrna + y];
+      p := HGrSystem2.Data.Canvas.Pixels[xOrna + x, yOrna + y];
       if p = $0000FF then
-        GrExt[HGrSystem2].Data.Canvas.Pixels[xOrna + x, yOrna + y] := Light
+        HGrSystem2.Data.Canvas.Pixels[xOrna + x, yOrna + y] := Light
       else if p = $FF0000 then
-        GrExt[HGrSystem2].Data.Canvas.Pixels[xOrna + x, yOrna + y] := Shade;
+        HGrSystem2.Data.Canvas.Pixels[xOrna + x, yOrna + y] := Shade;
     end;
   InitOrnamentDone := True;
 end;
@@ -1024,17 +1018,17 @@ var
 begin
   for x := 0 to 9 do
     for y := 0 to 9 do
-      if GrExt[HGrSystem].Mask.Canvas.Pixels[66 + x, 47 + y] = 0 then
+      if HGrSystem.Mask.Canvas.Pixels[66 + x, 47 + y] = 0 then
       begin
-        intensity := GrExt[HGrSystem].Data.Canvas.Pixels[66 +
+        intensity := HGrSystem.Data.Canvas.Pixels[66 +
           x, 47 + y] and $FF;
-        GrExt[HGrSystem].Data.Canvas.Pixels[77 + x, 47 + y] :=
+        HGrSystem.Data.Canvas.Pixels[77 + x, 47 + y] :=
           T.clMark and $FF * intensity div $FF + T.clMark shr 8 and
           $FF * intensity div $FF shl 8 + T.clMark shr 16 and
           $FF * intensity div $FF shl 16;
       end;
-  BitBltCanvas(GrExt[HGrSystem].Mask.Canvas, 77, 47, 10, 10,
-    GrExt[HGrSystem].Mask.Canvas, 66, 47);
+  BitBltCanvas(HGrSystem.Mask.Canvas, 77, 47, 10, 10,
+    HGrSystem.Mask.Canvas, 66, 47);
 end;
 
 procedure Fill(ca: TCanvas; Left, Top, Width, Height, xOffset, yOffset: Integer);
@@ -1143,9 +1137,9 @@ procedure BiColorTextOut(ca: TCanvas; clMain, clBack: TColor; x, y: Integer; s: 
 
   procedure PaintIcon(x, y, Kind: Integer);
   begin
-    BitBltCanvas(ca, x, y + 6, 10, 10, GrExt[HGrSystem].Mask.Canvas,
+    BitBltCanvas(ca, x, y + 6, 10, 10, HGrSystem.Mask.Canvas,
       66 + Kind mod 11 * 11, 115 + Kind div 11 * 11, SRCAND);
-    BitBltCanvas(ca, x, y + 6, 10, 10, GrExt[HGrSystem].Data.Canvas,
+    BitBltCanvas(ca, x, y + 6, 10, 10, HGrSystem.Data.Canvas,
       66 + Kind mod 11 * 11, 115 + Kind div 11 * 11, SRCPAINT);
   end;
 
@@ -1285,7 +1279,7 @@ const
   Brightness: array [0 .. 15] of integer =
     (16, 12, 8, 4, 0, -4, -8, -12 - 24, -16 + 16, -20, -24, -28, -32, -36, -40, -44);
 begin
-  Gradient(ca, x, y, 0, 1, Width, 0, GrExt[HGrSystem].Data.Canvas.Pixels
+  Gradient(ca, x, y, 0, 1, Width, 0, HGrSystem.Data.Canvas.Pixels
     [187, 137 + Kind], Brightness);
 end;
 
@@ -1303,7 +1297,7 @@ const
     (16, 12, 8, 4, 0, -4, -8, -12 - 24, -16 + 16, -20, -24, -28, -32, -36, -40, -44);
 begin
   Gradient(ca, x, y, 1, 0, 0, Height,
-    GrExt[HGrSystem].Data.Canvas.Pixels[187, 137 + Kind], Brightness);
+    HGrSystem.Data.Canvas.Pixels[187, 137 + Kind], Brightness);
 end;
 
 procedure NumberBar(dst: TBitmap; x, y: integer; Cap: string;
@@ -1365,7 +1359,7 @@ begin
       for i := 0 to val mod 10 - 1 do
       begin
         BitBltCanvas(dst.Canvas, xIcon + 4 + i * (14 * ld div sd), yIcon + 2 + 1, 14,
-          14, GrExt[HGrSystem].Mask.Canvas, 67 + Kind mod 8 * 15,
+          14, HGrSystem.Mask.Canvas, 67 + Kind mod 8 * 15,
           70 + Kind div 8 * 15, SRCAND);
         Sprite(dst, HGrSystem, xIcon + 3 + i * (14 * ld div sd), yIcon + 2,
           14, 14, 67 + Kind mod 8 * 15, 70 + Kind div 8 * 15);
@@ -1374,7 +1368,7 @@ begin
       begin
         BitBltCanvas(dst.Canvas, xIcon + 4 + (val mod 10) *
           (14 * ld div sd) + i * (14 * ld div sd), yIcon + 3, 14, 14,
-          GrExt[HGrSystem].Mask.Canvas, 67 + 7 mod 8 * 15,
+          HGrSystem.Mask.Canvas, 67 + 7 mod 8 * 15,
           70 + 7 div 8 * 15, SRCAND);
         Sprite(dst, HGrSystem, xIcon + 3 + (val mod 10) *
           (14 * ld div sd) + i * (14 * ld div sd), yIcon + 2, 14,
@@ -1398,7 +1392,7 @@ begin
       for i := 0 to val div 10 - 1 do
       begin
         BitBltCanvas(dst.Canvas, xIcon + 4 + i * (14 * ld div sd), yIcon + 3, 14, 14,
-          GrExt[HGrSystem].Mask.Canvas, 67 + Kind mod 8 * 15,
+          HGrSystem.Mask.Canvas, 67 + Kind mod 8 * 15,
           70 + Kind div 8 * 15, SRCAND);
         Sprite(dst, HGrSystem, xIcon + 3 + i * (14 * ld div sd), yIcon + 2,
           14, 14, 67 + Kind mod 8 * 15, 70 + Kind div 8 * 15);
@@ -1407,7 +1401,7 @@ begin
       begin
         BitBltCanvas(dst.Canvas, xIcon + 4 + (val div 10) *
           (14 * ld div sd) + i * (10 * ld div sd), yIcon + 7, 10, 10,
-          GrExt[HGrSystem].Mask.Canvas, 66 + Kind mod 11 * 11,
+          HGrSystem.Mask.Canvas, 66 + Kind mod 11 * 11,
           115 + Kind div 11 * 11, SRCAND);
         Sprite(dst, HGrSystem, xIcon + 3 + (val div 10) *
           (14 * ld div sd) + i * (10 * ld div sd), yIcon + 6, 10,
@@ -1443,26 +1437,26 @@ begin
   begin
     for i := 0 to pos div 8 - 1 do
       BitBltCanvas(ca, x + i * 8, y, 8, 7,
-        GrExt[HGrSystem].Data.Canvas, 104, 9 + 8 * Kind);
+        HGrSystem.Data.Canvas, 104, 9 + 8 * Kind);
     BitBltCanvas(ca, x + 8 * (pos div 8), y, pos - 8 * (pos div 8), 7,
-      GrExt[HGrSystem].Data.Canvas, 104, 9 + 8 * Kind);
+      HGrSystem.Data.Canvas, 104, 9 + 8 * Kind);
     if Growth > 0 then
     begin
       for i := 0 to Growth div 8 - 1 do
         BitBltCanvas(ca, x + pos + i * 8, y, 8, 7,
-          GrExt[HGrSystem].Data.Canvas, 112, 9 + 8 * Kind);
+          HGrSystem.Data.Canvas, 112, 9 + 8 * Kind);
       BitBltCanvas(ca, x + pos + 8 * (Growth div 8), y,
-        Growth - 8 * (Growth div 8), 7, GrExt[HGrSystem].Data.Canvas,
+        Growth - 8 * (Growth div 8), 7, HGrSystem.Data.Canvas,
         112, 9 + 8 * Kind);
     end
     else if Growth < 0 then
     begin
       for i := 0 to -Growth div 8 - 1 do
         BitBltCanvas(ca, x + pos + i * 8, y, 8, 7,
-          GrExt[HGrSystem].Data.Canvas, 104, 1);
+          HGrSystem.Data.Canvas, 104, 1);
       BitBltCanvas(ca, x + pos + 8 * (-Growth div 8), y, -Growth -
         8 * (-Growth div 8), 7,
-        GrExt[HGrSystem].Data.Canvas, 104, 1);
+        HGrSystem.Data.Canvas, 104, 1);
     end;
     Brush.Color := $000000;
     FillRect(Rect(x + pos + abs(Growth), y, x + max, y + 7));
@@ -1711,7 +1705,7 @@ begin
   BigImp.PixelFormat := pf24bit;
   MainTexture.Image := TBitmap.Create;
   MainTextureAge := -2;
-  ClickFrameColor := GrExt[HGrSystem].Data.Canvas.Pixels[187, 175];
+  ClickFrameColor := HGrSystem.Data.Canvas.Pixels[187, 175];
   InitOrnamentDone := False;
   GenerateNames := True;
 
