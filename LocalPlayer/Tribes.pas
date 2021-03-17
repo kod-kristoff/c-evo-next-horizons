@@ -622,7 +622,7 @@ begin
     begin
       ok := True;
       TestPic.GrName := Copy(Input, 8, 255) + '.png';
-      HGr := nGrExt - 1;
+      HGr := GrExt.Count - 1;
       while (HGr >= 0) and (GrExt[HGr].Name <> TestPic.GrName) do
         Dec(HGr);
     end

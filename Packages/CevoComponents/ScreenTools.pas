@@ -7,7 +7,7 @@ uses
   Windows,
   {$ENDIF}
   StringTables, LCLIntf, LCLType, SysUtils, Classes, Graphics, Controls, Math,
-  Forms, Menus, GraphType;
+  Forms, Menus, GraphType, fgl;
 
 type
   TTexture = record
@@ -105,7 +105,6 @@ function ScaleToNative(Value: Integer): Integer;
 function ScaleFromNative(Value: Integer): Integer;
 
 const
-  nGrExtmax = 64;
   wMainTexture = 640;
   hMainTexture = 480;
 
@@ -169,18 +168,24 @@ const
   cliWater = 4;
 
 type
-  TGrExtDescr = record { don't use dynamic strings here! }
-    Name: string[31];
+
+  { TGrExtDescr }
+
+  TGrExtDescr = class
+    Name: string;
     Data: TBitmap;
     Mask: TBitmap;
-    pixUsed: array [Byte] of Byte;
+    pixUsed: array of Byte;
+    procedure ResetPixUsed;
+    constructor Create;
+    destructor Destroy; override;
   end;
 
-  TGrExtDescrSize = record { for size calculation only - must be the same as
-      TGrExtDescr, but without pixUsed }
-    Name: string[31];
-    Data: TBitmap;
-    Mask: TBitmap;
+  { TGrExtDescrs }
+
+  TGrExtDescrs = class(TFPGObjectList<TGrExtDescr>)
+    function SearchByName(Name: string): TGrExtDescr;
+    function AddNew(Name: string): TGrExtDescr;
   end;
 
   TFontType = (ftNormal, ftSmall, ftTiny, ftCaption, ftButton);
@@ -188,8 +193,7 @@ type
 var
   Phrases: TStringTable;
   Phrases2: TStringTable;
-  nGrExt: Integer;
-  GrExt: array [0 .. nGrExtmax - 1] of ^TGrExtDescr;
+  GrExt: TGrExtDescrs;
   HGrSystem: Integer;
   HGrSystem2: Integer;
   ClickFrameColor: Integer;
@@ -492,43 +496,39 @@ end;
 
 function LoadGraphicSet(const Name: string): Integer;
 var
-  I, x, y, xmax, OriginalColor: Integer;
+  I: Integer;
+  x: Integer;
+  y: Integer;
+  xmax: Integer;
+  OriginalColor: Integer;
   FileName: string;
-  Source: TBitmap;
-  DataPixel, MaskPixel: TPixelPointer;
+  DataPixel: TPixelPointer;
+  MaskPixel: TPixelPointer;
+  NewGrExt: TGrExtDescr;
 begin
-  I := 0;
-  while (I < nGrExt) and (GrExt[i].Name <> Name) do
-    Inc(I);
-  Result := I;
-  if I = nGrExt then begin
-    Source := TBitmap.Create;
-    Source.PixelFormat := pf24bit;
+  NewGrExt := GrExt.SearchByName(Name);
+  if not Assigned(NewGrExt) then begin
+    NewGrExt := GrExt.AddNew(Name);
     FileName := GetGraphicsDir + DirectorySeparator + Name;
-    if not LoadGraphicFile(Source, FileName) then begin
+    if not LoadGraphicFile(NewGrExt.Data, FileName) then begin
       Result := -1;
       Exit;
     end;
 
-    GetMem(GrExt[nGrExt], SizeOf(TGrExtDescrSize) + Source.Height div 49 * 10);
-    GrExt[nGrExt].Name := Name;
+    NewGrExt.ResetPixUsed;
 
-    xmax := Source.Width - 1; // allows 4-byte access even for last pixel
+    xmax := NewGrExt.Data.Width - 1; // allows 4-byte access even for last pixel
     // Why there was that limit?
     //if xmax > 970 then
     //  xmax := 970;
 
-    GrExt[nGrExt].Data := Source;
-    GrExt[nGrExt].Data.PixelFormat := pf24bit;
-    GrExt[nGrExt].Mask := TBitmap.Create;
-    GrExt[nGrExt].Mask.PixelFormat := pf24bit;
-    GrExt[nGrExt].Mask.SetSize(Source.Width, Source.Height);
+    NewGrExt.Mask.SetSize(NewGrExt.Data.Width, NewGrExt.Data.Height);
 
-    GrExt[nGrExt].Data.BeginUpdate;
-    GrExt[nGrExt].Mask.BeginUpdate;
-    DataPixel := PixelPointer(GrExt[nGrExt].Data);
-    MaskPixel := PixelPointer(GrExt[nGrExt].Mask);
-    for y := 0 to ScaleToNative(Source.Height) - 1 do begin
+    NewGrExt.Data.BeginUpdate;
+    NewGrExt.Mask.BeginUpdate;
+    DataPixel := PixelPointer(NewGrExt.Data);
+    MaskPixel := PixelPointer(NewGrExt.Mask);
+    for y := 0 to ScaleToNative(NewGrExt.Data.Height) - 1 do begin
       for x := 0 to ScaleToNative(xmax) - 1 do begin
         OriginalColor := DataPixel.Pixel^.ARGB and $FFFFFF;
         if (OriginalColor = $FF00FF) or (OriginalColor = $7F007F) then
@@ -547,12 +547,10 @@ begin
       DataPixel.NextLine;
       MaskPixel.NextLine;
     end;
-    GrExt[nGrExt].Data.EndUpdate;
-    GrExt[nGrExt].Mask.EndUpdate;
-
-    FillChar(GrExt[nGrExt].pixUsed, GrExt[nGrExt].Data.Height div 49 * 10, 0);
-    Inc(nGrExt);
+    NewGrExt.Data.EndUpdate;
+    NewGrExt.Mask.EndUpdate;
   end;
+  Result := GrExt.IndexOf(NewGrExt);
 end;
 
 procedure Dump(dst: TBitmap; HGr, xDst, yDst, Width, Height, xGr, yGr: integer);
@@ -1700,7 +1698,7 @@ begin
   for Section := Low(TFontType) to High(TFontType) do
     UniFont[Section] := TFont.Create;
 
-  nGrExt := 0;
+  GrExt := TGrExtDescrs.Create;
   HGrSystem := LoadGraphicSet('System.png');
   HGrSystem2 := LoadGraphicSet('System2.png');
   Templates := TBitmap.Create;
@@ -1722,17 +1720,11 @@ end;
 
 procedure UnitDone;
 var
-  I: integer;
+  I: Integer;
 begin
   RestoreResolution;
-  for I := 0 to nGrExt - 1 do begin
-    FreeAndNil(GrExt[I].Data);
-    FreeAndNil(GrExt[I].Mask);
-    FreeMem(GrExt[I]);
-  end;
-
+  FreeAndNil(GrExt);
   ReleaseFonts;
-
   FreeAndNil(Phrases);
   FreeAndNil(Phrases2);
   FreeAndNil(LogoBuffer);
@@ -1741,6 +1733,49 @@ begin
   FreeAndNil(Templates);
   FreeAndNil(Colors);
   FreeAndNil(MainTexture.Image);
+end;
+
+{ TGrExtDescr }
+
+procedure TGrExtDescr.ResetPixUsed;
+begin
+  SetLength(pixUsed, Data.Height div 49 * 10);
+  if Length(pixUsed) > 0 then
+    FillChar(pixUsed[0], Length(pixUsed), 0);
+end;
+
+constructor TGrExtDescr.Create;
+begin
+  Data := TBitmap.Create;
+  Data.PixelFormat := pf24bit;
+  Mask := TBitmap.Create;
+  Mask.PixelFormat := pf24bit;
+end;
+
+destructor TGrExtDescr.Destroy;
+begin
+  FreeAndNil(Data);
+  FreeAndNil(Mask);
+  inherited;
+end;
+
+{ TGrExtDescrs }
+
+function TGrExtDescrs.SearchByName(Name: string): TGrExtDescr;
+var
+  I: Integer;
+begin
+  I := 0;
+  while (I < Count) and (Items[I].Name <> Name) do Inc(I);
+  if I < Count then Result := Items[I]
+    else Result := nil;
+end;
+
+function TGrExtDescrs.AddNew(Name: string): TGrExtDescr;
+begin
+  Result := TGrExtDescr.Create;
+  Result.Name := Name;
+  Add(Result);
 end;
 
 end.

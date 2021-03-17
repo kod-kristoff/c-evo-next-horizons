@@ -2545,8 +2545,8 @@ begin
         if StartRunning then
           Jump[0] := 999999;
         GameMode := Command;
-        for i := 0 to nGrExt - 1 do
-          FillChar(GrExt[i].pixUsed, GrExt[i].Data.height div 49 * 10, 0);
+        for i := 0 to GrExt.Count - 1 do
+          GrExt[i].ResetPixUsed;
         IsoEngine.Reset;
         Tribes.Init;
         GetTribeList;
