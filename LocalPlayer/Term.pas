@@ -12,7 +12,8 @@ uses
 {$ENDIF}
   Protocol, Tribes, PVSB, ClientTools, ScreenTools, BaseWin, Messg, ButtonBase,
   LCLIntf, LCLType, SysUtils, Classes, Graphics, Controls, DrawDlg, Types,
-  Forms, Menus, ExtCtrls, dateutils, Platform, ButtonB, ButtonC, EOTButton, Area;
+  Forms, Menus, ExtCtrls, dateutils, Platform, ButtonB, ButtonC, EOTButton, Area,
+  UGraphicSet;
 
 const
   WM_EOT = WM_USER;
@@ -444,8 +445,8 @@ var
   TaxSum: Integer;
   SoundPreloadDone: Integer;
   MarkCityLoc: Integer;
-  HGrTerrain: TGrExtDescr;
-  HGrCities: TGrExtDescr;
+  HGrTerrain: TGraphicSet;
+  HGrCities: TGraphicSet;
   MovieSpeed: Integer;
   CityRepMask: Cardinal;
   ReceivedOffer: TOffer;
@@ -4313,8 +4314,8 @@ begin
   if MarkCityLoc >= 0 then
     Sprite(Panel, HGrSystem, xMini - 2 + (4 * G.lx + 2 * (MarkCityLoc mod G.lx)
       + (G.lx - MapWidth div (xxt * 2)) - 2 * xwd) mod (2 * G.lx) +
-      MarkCityLoc div G.lx and 1, yMini - 3 + MarkCityLoc div G.lx, 10,
-      10, 77, 47)
+      MarkCityLoc div G.lx and 1, yMini - 3 + MarkCityLoc div G.lx, CityMark2.Width,
+      CityMark2.Height, CityMark2.Left, CityMark2.Top)
   else if ywmax <= 0 then
     Frame(Panel.Canvas, xMini + 2 + G.lx - MapWidth div (xxt * 2), yMini + 2,
       xMini + 1 + G.lx + MapWidth div (xxt * 2), yMini + 2 + G.ly - 1,

@@ -36,7 +36,7 @@
     </CompilerOptions>
     <Description Value="C-evo components"/>
     <Version Major="1" Minor="2"/>
-    <Files Count="15">
+    <Files Count="17">
       <Item1>
         <Filename Value="Area.pas"/>
         <HasRegisterProc Value="True"/>
@@ -105,6 +105,14 @@
         <Filename Value="AsyncProcess2.pas"/>
         <UnitName Value="AsyncProcess2"/>
       </Item15>
+      <Item16>
+        <Filename Value="UGraphicSet.pas"/>
+        <UnitName Value="UGraphicSet"/>
+      </Item16>
+      <Item17>
+        <Filename Value="UXMLUtils.pas"/>
+        <UnitName Value="UXMLUtils"/>
+      </Item17>
     </Files>
     <RequiredPkgs Count="2">
       <Item1>

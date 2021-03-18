@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GraphicSet>
+  <Items>
+    <Item>
+      <Name>CityMark1</Name>
+      <Left>66</Left>
+      <Top>47</Top>
+      <Width>10</Width>
+      <Height>10</Height>
+    </Item>
+    <Item>
+      <Name>CityMark2</Name>
+      <Left>77</Left>
+      <Top>47</Top>
+      <Width>10</Width>
+      <Height>10</Height>
+    </Item>
+  </Items>
+</GraphicSet>

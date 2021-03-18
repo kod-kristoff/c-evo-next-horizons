@@ -7,7 +7,7 @@ uses
   Windows,
   {$ENDIF}
   StringTables, LCLIntf, LCLType, SysUtils, Classes, Graphics, Controls, Math,
-  Forms, Menus, GraphType, fgl;
+  Forms, Menus, GraphType, fgl, UGraphicSet, LazFileUtils;
 
 type
   TTexture = record
@@ -24,25 +24,6 @@ type
   TLoadGraphicFileOption = (gfNoError, gfNoGamma);
   TLoadGraphicFileOptions = set of TLoadGraphicFileOption;
 
-  { TGrExtDescr }
-
-  TGrExtDescr = class
-    Name: string;
-    Data: TBitmap;
-    Mask: TBitmap;
-    pixUsed: array of Byte;
-    procedure ResetPixUsed;
-    constructor Create;
-    destructor Destroy; override;
-  end;
-
-  { TGrExtDescrs }
-
-  TGrExtDescrs = class(TFPGObjectList<TGrExtDescr>)
-    function SearchByName(Name: string): TGrExtDescr;
-    function AddNew(Name: string): TGrExtDescr;
-  end;
-
   TFontType = (ftNormal, ftSmall, ftTiny, ftCaption, ftButton);
 
 {$IFDEF WINDOWS}
@@ -57,11 +38,11 @@ procedure BtnFrame(ca: TCanvas; p: TRect; const T: TTexture);
 procedure EditFrame(ca: TCanvas; p: TRect; const T: TTexture);
 function HexStringToColor(S: string): integer;
 function LoadGraphicFile(Bmp: TBitmap; FileName: string; Options: TLoadGraphicFileOptions = []): boolean;
-function LoadGraphicSet(const Name: string): TGrExtDescr;
-procedure Dump(dst: TBitmap; HGr: TGrExtDescr; xDst, yDst, Width, Height, xGr, yGr: integer);
-procedure Sprite(Canvas: TCanvas; HGr: TGrExtDescr; xDst, yDst, Width, Height, xGr, yGr: integer);
+function LoadGraphicSet(const Name: string): TGraphicSet;
+procedure Dump(dst: TBitmap; HGr: TGraphicSet; xDst, yDst, Width, Height, xGr, yGr: integer);
+procedure Sprite(Canvas: TCanvas; HGr: TGraphicSet; xDst, yDst, Width, Height, xGr, yGr: integer);
   overload;
-procedure Sprite(dst: TBitmap; HGr: TGrExtDescr; xDst, yDst, Width, Height, xGr, yGr: integer);
+procedure Sprite(dst: TBitmap; HGr: TGraphicSet; xDst, yDst, Width, Height, xGr, yGr: integer);
   overload;
 procedure MakeBlue(Dst: TBitmap; X, Y, Width, Height: Integer);
 procedure MakeRed(Dst: TBitmap; X, Y, Width, Height: Integer);
@@ -154,12 +135,6 @@ const
 
   EmptySpaceColor = $101010;
 
-  // template positions in System2.bmp
-  xOrna = 156;
-  yOrna = 1;
-  wOrna = 27;
-  hOrna = 26; // ornament
-
   // color matrix
   clkAge0 = 1;
   cliTexture = 0;
@@ -190,9 +165,12 @@ const
 var
   Phrases: TStringTable;
   Phrases2: TStringTable;
-  GrExt: TGrExtDescrs;
-  HGrSystem: TGrExtDescr;
-  HGrSystem2: TGrExtDescr;
+  GrExt: TGraphicSets;
+  HGrSystem: TGraphicSet;
+  HGrSystem2: TGraphicSet;
+  CityMark1: TGraphicSetItem;
+  CityMark2: TGraphicSetItem;
+  Ornament: TGraphicSetItem;
   ClickFrameColor: Integer;
   MainTextureAge: Integer;
   MainTexture: TTexture;
@@ -491,7 +469,7 @@ begin
     ApplyGammaToBitmap(Bmp);
 end;
 
-function LoadGraphicSet(const Name: string): TGrExtDescr;
+function LoadGraphicSet(const Name: string): TGraphicSet;
 var
   x: Integer;
   y: Integer;
@@ -509,6 +487,10 @@ begin
       Result := nil;
       Exit;
     end;
+
+    FileName := ExtractFileNameWithoutExt(FileName) + GraphicSetFileExt;
+    if FileExists(FileName) then
+      Result.LoadFromFile(FileName);
 
     Result.ResetPixUsed;
 
@@ -547,7 +529,7 @@ begin
   end;
 end;
 
-procedure Dump(dst: TBitmap; HGr: TGrExtDescr; xDst, yDst, Width, Height, xGr, yGr: integer);
+procedure Dump(dst: TBitmap; HGr: TGraphicSet; xDst, yDst, Width, Height, xGr, yGr: integer);
 begin
   BitBltCanvas(dst.Canvas, xDst, yDst, Width, Height,
     HGr.Data.Canvas, xGr, yGr);
@@ -813,7 +795,7 @@ begin
   bmp.EndUpdate;
 end;
 
-procedure Sprite(Canvas: TCanvas; HGr: TGrExtDescr; xDst, yDst, Width, Height, xGr, yGr: integer);
+procedure Sprite(Canvas: TCanvas; HGr: TGraphicSet; xDst, yDst, Width, Height, xGr, yGr: integer);
 begin
   BitBltCanvas(Canvas, xDst, yDst, Width, Height,
     HGr.Mask.Canvas, xGr, yGr, SRCAND);
@@ -821,7 +803,7 @@ begin
     HGr.Data.Canvas, xGr, yGr, SRCPAINT);
 end;
 
-procedure Sprite(dst: TBitmap; HGr: TGrExtDescr; xDst, yDst, Width, Height, xGr, yGr: integer);
+procedure Sprite(dst: TBitmap; HGr: TGraphicSet; xDst, yDst, Width, Height, xGr, yGr: integer);
 begin
   BitBltCanvas(dst.Canvas, xDst, yDst, Width, Height,
     HGr.Mask.Canvas, xGr, yGr, SRCAND);
@@ -1001,34 +983,38 @@ begin
   // and $FCFCFC shr 2*3+MainTexture.clBevelShade and $FCFCFC shr 2;
   Shade := MainTexture.clBevelShade and $FCFCFC shr 2 * 3 +
     MainTexture.clBevelLight and $FCFCFC shr 2;
-  for x := 0 to wOrna - 1 do
-    for y := 0 to hOrna - 1 do begin
-      p := HGrSystem2.Data.Canvas.Pixels[xOrna + x, yOrna + y];
+  for x := 0 to Ornament.Width - 1 do
+    for y := 0 to Ornament.Height - 1 do begin
+      p := HGrSystem2.Data.Canvas.Pixels[Ornament.Left + x, Ornament.Top + y];
       if p = $0000FF then
-        HGrSystem2.Data.Canvas.Pixels[xOrna + x, yOrna + y] := Light
+        HGrSystem2.Data.Canvas.Pixels[Ornament.Left + x, Ornament.Top + y] := Light
       else if p = $FF0000 then
-        HGrSystem2.Data.Canvas.Pixels[xOrna + x, yOrna + y] := Shade;
+        HGrSystem2.Data.Canvas.Pixels[Ornament.Left + x, Ornament.Top + y] := Shade;
     end;
   InitOrnamentDone := True;
 end;
 
 procedure InitCityMark(const T: TTexture);
 var
-  x, y, intensity: Integer;
+  x: Integer;
+  y: Integer;
+  Intensity: Integer;
 begin
-  for x := 0 to 9 do
-    for y := 0 to 9 do
-      if HGrSystem.Mask.Canvas.Pixels[66 + x, 47 + y] = 0 then
+  for x := 0 to CityMark1.Width - 1 do begin
+    for y := 0 to CityMark1.Height - 1 do begin
+      if HGrSystem.Mask.Canvas.Pixels[CityMark1.Left + x, CityMark1.Top + y] = 0 then
       begin
-        intensity := HGrSystem.Data.Canvas.Pixels[66 +
-          x, 47 + y] and $FF;
-        HGrSystem.Data.Canvas.Pixels[77 + x, 47 + y] :=
-          T.clMark and $FF * intensity div $FF + T.clMark shr 8 and
-          $FF * intensity div $FF shl 8 + T.clMark shr 16 and
-          $FF * intensity div $FF shl 16;
+        Intensity := HGrSystem.Data.Canvas.Pixels[CityMark1.Left +
+          x, CityMark1.Top + y] and $FF;
+        HGrSystem.Data.Canvas.Pixels[CityMark2.Left + x, CityMark2.Top + y] :=
+          T.clMark and $FF * Intensity div $FF + T.clMark shr 8 and
+          $FF * Intensity div $FF shl 8 + T.clMark shr 16 and
+          $FF * Intensity div $FF shl 16;
       end;
-  BitBltCanvas(HGrSystem.Mask.Canvas, 77, 47, 10, 10,
-    HGrSystem.Mask.Canvas, 66, 47);
+    end;
+  end;
+  BitBltCanvas(HGrSystem.Mask.Canvas, CityMark2.Left, CityMark2.Top, CityMark1.Width, CityMark1.Width,
+    HGrSystem.Mask.Canvas, CityMark1.Left, CityMark1.Top);
 end;
 
 procedure Fill(ca: TCanvas; Left, Top, Width, Height, xOffset, yOffset: Integer);
@@ -1692,9 +1678,15 @@ begin
   for Section := Low(TFontType) to High(TFontType) do
     UniFont[Section] := TFont.Create;
 
-  GrExt := TGrExtDescrs.Create;
+  GrExt := TGraphicSets.Create;
+
   HGrSystem := LoadGraphicSet('System.png');
+  CityMark1 := HGrSystem.GetItem('CityMark1');
+  CityMark2 := HGrSystem.GetItem('CityMark2');
+
   HGrSystem2 := LoadGraphicSet('System2.png');
+  Ornament := HGrSystem2.GetItem('Ornament');
+
   Templates := TBitmap.Create;
   Templates.PixelFormat := pf24bit;
   Colors := TBitmap.Create;
@@ -1727,49 +1719,6 @@ begin
   FreeAndNil(Templates);
   FreeAndNil(Colors);
   FreeAndNil(MainTexture.Image);
-end;
-
-{ TGrExtDescr }
-
-procedure TGrExtDescr.ResetPixUsed;
-begin
-  SetLength(pixUsed, Data.Height div 49 * 10);
-  if Length(pixUsed) > 0 then
-    FillChar(pixUsed[0], Length(pixUsed), 0);
-end;
-
-constructor TGrExtDescr.Create;
-begin
-  Data := TBitmap.Create;
-  Data.PixelFormat := pf24bit;
-  Mask := TBitmap.Create;
-  Mask.PixelFormat := pf24bit;
-end;
-
-destructor TGrExtDescr.Destroy;
-begin
-  FreeAndNil(Data);
-  FreeAndNil(Mask);
-  inherited;
-end;
-
-{ TGrExtDescrs }
-
-function TGrExtDescrs.SearchByName(Name: string): TGrExtDescr;
-var
-  I: Integer;
-begin
-  I := 0;
-  while (I < Count) and (Items[I].Name <> Name) do Inc(I);
-  if I < Count then Result := Items[I]
-    else Result := nil;
-end;
-
-function TGrExtDescrs.AddNew(Name: string): TGrExtDescr;
-begin
-  Result := TGrExtDescr.Create;
-  Result.Name := Name;
-  Add(Result);
 end;
 
 end.

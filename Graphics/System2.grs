@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GraphicSet>
+  <Items>
+    <Item>
+      <Name>Ornament</Name>
+      <Left>156</Left>
+      <Top>1</Top>
+      <Width>27</Width>
+      <Height>26</Height>
+    </Item>
+  </Items>
+</GraphicSet>

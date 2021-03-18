@@ -905,10 +905,10 @@ begin
       for i := 12 to 19 do
         if (i < 13) or (i > 17) then
         begin
-          BitBltCanvas(Canvas, 9 + i * 27, yLogo - 2, wOrna, hOrna,
-            HGrSystem2.Mask.Canvas, xOrna, yOrna, SRCAND);
-          BitBltCanvas(Canvas, 9 + i * 27, yLogo - 2, wOrna, hOrna,
-            HGrSystem2.Data.Canvas, xOrna, yOrna, SRCPAINT);
+          BitBltCanvas(Canvas, 9 + i * 27, yLogo - 2, Ornament.Width, Ornament.Height,
+            HGrSystem2.Mask.Canvas, Ornament.Left, Ornament.Top, SRCAND);
+          BitBltCanvas(Canvas, 9 + i * 27, yLogo - 2, Ornament.Width, Ornament.Height,
+            HGrSystem2.Data.Canvas, Ornament.Left, Ornament.Top, SRCPAINT);
         end;
       PaintLogo(Canvas, 69 + 11 * 27, yLogo, MainTexture.clBevelLight,
         MainTexture.clBevelShade);
@@ -989,10 +989,10 @@ begin
       for i := 0 to 19 do
         if (i < 2) or (i > 6) then
         begin
-          BitBltCanvas(Canvas, 9 + i * 27, yLogo - 2, wOrna, hOrna,
-            HGrSystem2.Mask.Canvas, xOrna, yOrna, SRCAND);
-          BitBltCanvas(Canvas, 9 + i * 27, yLogo - 2, wOrna, hOrna,
-            HGrSystem2.Data.Canvas, xOrna, yOrna, SRCPAINT);
+          BitBltCanvas(Canvas, 9 + i * 27, yLogo - 2, Ornament.Width, Ornament.Height,
+            HGrSystem2.Mask.Canvas, Ornament.Left, Ornament.Top, SRCAND);
+          BitBltCanvas(Canvas, 9 + i * 27, yLogo - 2, Ornament.Width, Ornament.Height,
+            HGrSystem2.Data.Canvas, Ornament.Left, Ornament.Top, SRCPAINT);
         end;
       PaintLogo(Canvas, 69, yLogo, MainTexture.clBevelLight,
         MainTexture.clBevelShade);

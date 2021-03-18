@@ -4,7 +4,8 @@ unit Tribes;
 interface
 
 uses
-  Protocol, ScreenTools, LazFileUtils, Classes, Graphics, SysUtils, Global;
+  Protocol, ScreenTools, LazFileUtils, Classes, Graphics, SysUtils, Global,
+  UGraphicSet;
 
 type
   TCityPicture = record
@@ -13,7 +14,7 @@ type
   end;
 
   TModelPicture = record
-    HGr: TGrExtDescr;
+    HGr: TGraphicSet;
     pix: Integer;
     xShield: Integer;
     yShield: Integer;
@@ -28,11 +29,11 @@ type
   end;
 
   TTribe = class
-    symHGr: TGrExtDescr;
+    symHGr: TGraphicSet;
     sympix: Integer;
-    faceHGr: TGrExtDescr;
+    faceHGr: TGraphicSet;
     facepix: Integer;
-    cHGr: TGrExtDescr;
+    cHGr: TGraphicSet;
     cpix: Integer;
     // symbol and city graphics
     cAge: Integer;
@@ -61,7 +62,7 @@ type
 
 var
   Tribe: array [0 .. nPl - 1] of TTribe;
-  HGrStdUnits: TGrExtDescr;
+  HGrStdUnits: TGraphicSet;
 
 procedure Init;
 procedure Done;
@@ -69,7 +70,7 @@ function CityName(Founder: Integer): string;
 function ModelCode(const ModelInfo: TModelInfo): Integer;
 procedure FindStdModelPicture(Code: Integer; var pix: Integer; var Name: string);
 function GetTribeInfo(FileName: string; var Name: string; var Color: TColor): Boolean;
-procedure FindPosition(HGr: TGrExtDescr; x, y, xmax, ymax: Integer; Mark: TColor;
+procedure FindPosition(HGr: TGraphicSet; x, y, xmax, ymax: Integer; Mark: TColor;
   var xp, yp: Integer);
 
 
@@ -81,7 +82,7 @@ uses
 type
   TChosenModelPictureInfo = record
     Hash: Integer;
-    HGr: TGrExtDescr;
+    HGr: TGraphicSet;
     pix: Integer;
     ModelName: ShortString;
   end;
@@ -327,7 +328,7 @@ begin
   inherited;
 end;
 
-procedure FindPosition(HGr: TGrExtDescr; x, y, xmax, ymax: Integer; Mark: TColor;
+procedure FindPosition(HGr: TGraphicSet; x, y, xmax, ymax: Integer; Mark: TColor;
   var xp, yp: Integer);
 begin
   xp := 0;
@@ -559,7 +560,7 @@ function TTribe.ChooseModelPicture(var Picture: TModelPictureInfo;
 var
   i: Integer;
   Cnt: Integer;
-  HGr: TGrExtDescr;
+  HGr: TGraphicSet;
   Used: Integer;
   LeastUsed: Integer;
   TestPic: TModelPictureInfo;

@@ -5,7 +5,7 @@ interface
 
 uses
   Protocol, ClientTools, ScreenTools, Tribes, {$IFNDEF SCR}Term, {$ENDIF}
-  LCLIntf, LCLType, SysUtils, Classes, Graphics, UPixelPointer;
+  LCLIntf, LCLType, SysUtils, Classes, Graphics, UPixelPointer, UGraphicSet;
 
 type
   TInitEnemyModelEvent = function(emix: integer): boolean;
@@ -50,7 +50,7 @@ type
     procedure PaintGrid(x, y, nx, ny: integer);
     procedure FillRect(x, y, Width, Height, Color: integer);
     procedure Textout(x, y, Color: integer; const s: string);
-    procedure Sprite(HGr: TGrExtDescr; xDst, yDst, Width, Height, xGr, yGr: integer);
+    procedure Sprite(HGr: TGraphicSet; xDst, yDst, Width, Height, xGr, yGr: integer);
     procedure TSprite(xDst, yDst, grix: integer; PureBlack: boolean = false);
 
   public
@@ -143,8 +143,8 @@ var
   y: Integer;
   xSrc: Integer;
   ySrc: Integer;
-  HGrTerrainNew: TGrExtDescr;
-  HGrCitiesNew: TGrExtDescr;
+  HGrTerrainNew: TGraphicSet;
+  HGrCitiesNew: TGraphicSet;
   Age: Integer;
   Size: Integer;
   LandMore, OceanMore, DitherMask, Mask24: TBitmap;
@@ -533,7 +533,7 @@ begin
   BitBltCanvas(FOutput.Canvas, x, y, Width, Height, Src.Canvas, xSrc, ySrc, Rop);
 end;
 
-procedure TIsoMap.Sprite(HGr: TGrExtDescr; xDst, yDst, Width, Height, xGr, yGr: integer);
+procedure TIsoMap.Sprite(HGr: TGraphicSet; xDst, yDst, Width, Height, xGr, yGr: integer);
 begin
   BitBltBitmap(HGr.Mask, xDst, yDst, Width, Height, xGr, yGr, SRCAND);
   BitBltBitmap(HGr.Data, xDst, yDst, Width, Height, xGr, yGr, SRCPAINT);
@@ -639,7 +639,7 @@ procedure TIsoMap.PaintCity(x, y: integer; const CityInfo: TCityInfo;
   accessory: boolean);
 var
   age: Integer;
-  cHGr: TGrExtDescr;
+  cHGr: TGraphicSet;
   cpix: Integer;
   xGr: Integer;
   xShield: Integer;
