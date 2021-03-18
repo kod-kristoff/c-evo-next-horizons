@@ -4,7 +4,7 @@ unit Start;
 interface
 
 uses
-  GameServer, Messg, ButtonBase, ButtonA, ButtonC, ButtonB, Area,
+  GameServer, Messg, ButtonBase, ButtonA, ButtonC, ButtonB, Area, Types,
   LCLIntf, LCLType, SysUtils, Classes, Graphics, Controls, Forms, StdCtrls,
   Menus, Registry, DrawDlg, fgl, Protocol;
 
@@ -670,6 +670,7 @@ procedure TStartDlg.LoadAiBrainsPictures;
 var
   AIBrains: TBrains;
   I: Integer;
+  TextSize: TSize;
 begin
   AIBrains := TBrains.Create(False);
   Brains.GetByKind(btAI, AIBrains);
@@ -683,8 +684,9 @@ begin
         Font.Assign(UniFont[ftTiny]);
         Font.Style := [];
         Font.Color := $5FDBFF;
-        Textout(32 - TextWidth(FileName) div 2,
-          32 - TextHeight(FileName) div 2, FileName);
+        TextSize := TextExtent(FileName);
+        Textout(32 - TextSize.Width div 2,
+          32 - TextSize.Height div 2, FileName);
       end;
     end;
   end;
@@ -829,9 +831,9 @@ begin
   BitBltCanvas(LogoBuffer.Canvas, 0, 0, 36, 36, Canvas, 6,
     3 + 2 * integer(Tab <> tbMain));
 
-  ImageOp_BCC(LogoBuffer, Templates, 0, 0, 145, 38, 36, 27, $BFBF20, $4040DF);
+  ImageOp_BCC(LogoBuffer, Templates.Data, 0, 0, 145, 38, 36, 27, $BFBF20, $4040DF);
   // logo part 1
-  ImageOp_BCC(LogoBuffer, Templates, 10, 27, 155, 38 + 27, 26, 9, $BFBF20,
+  ImageOp_BCC(LogoBuffer, Templates.Data, 10, 27, 155, 38 + 27, 26, 9, $BFBF20,
     $4040DF); // logo part 2
   BitBltCanvas(Canvas, 6, 3 + 2 * integer(Tab <> tbMain), 36, 36,
     LogoBuffer.Canvas, 0, 0);
@@ -878,7 +880,7 @@ begin
               LogoBuffer.Canvas.FillRect(0, 0, LogoBuffer.Width, LogoBuffer.Height);
               BitBltCanvas(LogoBuffer.Canvas, 0, 0, 91, 25, Canvas,
                 xActionIcon, y + 2);
-              ImageOp_BCC(LogoBuffer, Templates, 0, 0, 1, 400, 91, 25, 0,
+              ImageOp_BCC(LogoBuffer, Templates.Data, 0, 0, 1, 400, 91, 25, 0,
                 Colors.Canvas.Pixels[clkAge0 - 1, cliDimmedText]);
               BitBltCanvas(Canvas, xActionIcon, y + 2, 91, 25,
                 LogoBuffer.Canvas, 0, 0);

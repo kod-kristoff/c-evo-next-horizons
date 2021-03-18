@@ -2546,8 +2546,7 @@ begin
         if StartRunning then
           Jump[0] := 999999;
         GameMode := Command;
-        for i := 0 to GrExt.Count - 1 do
-          GrExt[i].ResetPixUsed;
+        GrExt.ResetPixUsed;
         IsoEngine.Reset;
         Tribes.Init;
         GetTribeList;
@@ -3511,7 +3510,7 @@ begin
     AILogo[i] := nil;
   Canvas.Font.Assign(UniFont[ftSmall]);
   InitButtons;
-  EOT.Template := Templates;
+  EOT.Template := Templates.Data;
 end;
 
 procedure TMainScreen.FormDestroy(Sender: TObject);
@@ -4843,7 +4842,7 @@ begin
       TopBarHeight - 7, MainTexture.clBevelShade, MainTexture.clBevelLight);
   end;
   if GameMode <> cMovie then
-    ImageOp_BCC(TopBar, Templates, 2, 1, 145, 38, 36, 36, $BFBF20, $4040DF);
+    ImageOp_BCC(TopBar, Templates.Data, 2, 1, 145, 38, 36, 36, $BFBF20, $4040DF);
   if MyRO.nCity > 0 then
   begin
     TrueMoney := MyRO.Money;
@@ -4859,14 +4858,14 @@ begin
     end;
 
     // treasury section
-    ImageOp_BCC(TopBar, Templates, xTreasurySection + 8, 1, 145, 1, 36, 36,
+    ImageOp_BCC(TopBar, Templates.Data, xTreasurySection + 8, 1, 145, 1, 36, 36,
       $40A040, $4030C0);
     s := IntToStr(TrueMoney);
     LoweredTextOut(TopBar.Canvas, -1, MainTexture, xTreasurySection + 48, 0,
       s + '%c');
     if MyRO.Government <> gAnarchy then
     begin
-      ImageOp_BCC(TopBar, Templates, xTreasurySection + 48, 22, 124, 1, 14, 14,
+      ImageOp_BCC(TopBar, Templates.Data, xTreasurySection + 48, 22, 124, 1, 14, 14,
         $0000C0, $0080C0);
       if TaxSum >= 0 then
         s := Format(Phrases.Lookup('MONEYGAINPOS'), [TaxSum])
@@ -4877,7 +4876,7 @@ begin
     end;
 
     // research section
-    ImageOp_BCC(TopBar, Templates, xResearchSection + 8, 1, 145, 75, 36, 36,
+    ImageOp_BCC(TopBar, Templates.Data, xResearchSection + 8, 1, 145, 75, 36, 36,
       $FF0000, $00FFE0);
     if MyData.FarTech <> adNexus then
     begin
@@ -4928,7 +4927,7 @@ begin
       CostFactor := 0;
     if (MyData.FarTech <> adNexus) and (ScienceSum > 0) then
     begin
-      ImageOp_BCC(TopBar, Templates, xResearchSection + 48 + CostFactor + 11,
+      ImageOp_BCC(TopBar, Templates.Data, xResearchSection + 48 + CostFactor + 11,
         22, 124, 1, 14, 14, $0000C0, $0080C0);
       s := Format(Phrases.Lookup('TECHGAIN'), [ScienceSum]);
       LoweredTextOut(TopBar.Canvas, -1, MainTexture, xResearchSection + 48 +

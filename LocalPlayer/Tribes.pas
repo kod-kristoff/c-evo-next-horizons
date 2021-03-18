@@ -465,7 +465,7 @@ begin
           faceHGr.Data.Canvas.Pixels[facepix mod 10 * 65,
             facepix div 10 * 49 + 48] := $000000;
           Gray := $B8B8B8;
-          ImageOp_BCC(faceHGr.Data, Templates,
+          ImageOp_BCC(faceHGr.Data, Templates.Data,
             facepix mod 10 * 65 + 1, facepix div 10 * 49 + 1, 1, 25, 64, 48,
             Gray, Color);
         end;

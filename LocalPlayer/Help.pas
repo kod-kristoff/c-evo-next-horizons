@@ -464,7 +464,7 @@ begin
   for y := 0 to ScaleToNative(ySizeBig) * 2 - 1 do
     if ((ScaleToNative(y0) + y) >= 0) and ((ScaleToNative(y0) + y) < ScaleToNative(InnerHeight)) then begin
       PaintPtr := PixelPointer(OffScreen, 0, ScaleToNative(y0) + y);
-      CoalPtr := PixelPointer(Templates, 0, ScaleToNative(yCoal) + y);
+      CoalPtr := PixelPointer(Templates.Data, 0, ScaleToNative(yCoal) + y);
       for dy := -1 to 1 do
         if ((Max(y + ScaleToNative(dy), 0) shr 1) >= 0) and ((Max(y + ScaleToNative(dy), 0) shr 1) < ScaleToNative(ySizeBig)) then
           ImpPtr[dy] := PixelPointer(BigImp, 0, ScaleToNative(ySrc) + (Max(y + ScaleToNative(dy), 0) shr 1));

@@ -81,7 +81,7 @@ begin
   GetMem(SelfReport, SizeOf(TEnemyReport) - 2 * (INFIN + 1));
   ReportText := TStringList.Create;
   InitButtons();
-  ContactBtn.Template := Templates;
+  ContactBtn.Template := Templates.Data;
   HelpContext := 'DIPLOMACY';
   ToggleBtn.Hint := Phrases.Lookup('BTN_SELECT');
   ContactBtn.Hint := Phrases.Lookup('BTN_DIALOG');

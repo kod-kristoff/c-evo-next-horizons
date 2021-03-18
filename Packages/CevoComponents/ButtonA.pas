@@ -3,7 +3,7 @@ unit ButtonA;
 interface
 
 uses
-  ButtonBase, Classes, Graphics, LCLIntf, LCLType, ScreenTools;
+  ButtonBase, Classes, Graphics, LCLIntf, LCLType, ScreenTools, Types;
 
 type
   TButtonA = class(TButtonBase)
@@ -40,18 +40,18 @@ begin
 end;
 
 procedure TButtonA.Paint;
+var
+  TextSize: TSize;
 begin
   with Canvas do
-    if FGraphic <> nil then
-    begin
+    if FGraphic <> nil then begin
       BitBltCanvas(Canvas, 0, 0, 100, 25, Graphic.Canvas, 195,
         243 + 26 * Byte(Down));
       Canvas.Brush.Style := bsClear;
-      Textout(50 - (TextWidth(FCaption) + 1) div 2, 12 - textheight(FCaption)
-        div 2, FCaption);
-    end
-    else
-    begin
+      TextSize := TextExtent(FCaption);
+      TextOut(50 - (TextSize.Width + 1) div 2,
+        12 - TextSize.Height div 2, FCaption);
+    end else begin
       Brush.Color := $0000FF;
       FrameRect(Rect(0, 0, 100, 25))
     end;

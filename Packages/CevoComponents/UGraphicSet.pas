@@ -59,6 +59,7 @@ type
   TGraphicSets = class(TFPGObjectList<TGraphicSet>)
     function SearchByName(Name: string): TGraphicSet;
     function AddNew(Name: string): TGraphicSet;
+    procedure ResetPixUsed;
   end;
 
 const
@@ -256,6 +257,14 @@ begin
   Result := TGraphicSet.Create;
   Result.Name := Name;
   Add(Result);
+end;
+
+procedure TGraphicSets.ResetPixUsed;
+var
+  I: Integer;
+begin
+  for I := 0 to Count - 1 do
+    Items[I].ResetPixUsed;
 end;
 
 end.

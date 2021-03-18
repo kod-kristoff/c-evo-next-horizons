@@ -39,6 +39,7 @@ procedure EditFrame(ca: TCanvas; p: TRect; const T: TTexture);
 function HexStringToColor(S: string): integer;
 function LoadGraphicFile(Bmp: TBitmap; FileName: string; Options: TLoadGraphicFileOptions = []): boolean;
 function LoadGraphicSet(const Name: string): TGraphicSet;
+function LoadGraphicSet2(const Name: string): TGraphicSet;
 procedure Dump(dst: TBitmap; HGr: TGraphicSet; xDst, yDst, Width, Height, xGr, yGr: integer);
 procedure Sprite(Canvas: TCanvas; HGr: TGraphicSet; xDst, yDst, Width, Height, xGr, yGr: integer);
   overload;
@@ -106,10 +107,13 @@ function ScaleToNative(Value: Integer): Integer;
 function ScaleFromNative(Value: Integer): Integer;
 
 const
+  TransparentColor1 = $FF00FF;
+  TransparentColor2 = $7F007F;
+
   wMainTexture = 640;
   hMainTexture = 480;
 
-  // template positions in Template.bmp
+  // template positions in Templates.png
   xLogo = 1;
   yLogo = 1;
   wLogo = 122;
@@ -171,10 +175,11 @@ var
   CityMark1: TGraphicSetItem;
   CityMark2: TGraphicSetItem;
   Ornament: TGraphicSetItem;
+  Logo: TGraphicSetItem;
   ClickFrameColor: Integer;
   MainTextureAge: Integer;
   MainTexture: TTexture;
-  Templates: TBitmap;
+  Templates: TGraphicSet;
   Colors: TBitmap;
   Paper: TBitmap;
   BigImp: TBitmap;
@@ -473,7 +478,6 @@ function LoadGraphicSet(const Name: string): TGraphicSet;
 var
   x: Integer;
   y: Integer;
-  xmax: Integer;
   OriginalColor: Integer;
   FileName: string;
   DataPixel: TPixelPointer;
@@ -483,7 +487,8 @@ begin
   if not Assigned(Result) then begin
     Result := GrExt.AddNew(Name);
     FileName := GetGraphicsDir + DirectorySeparator + Name;
-    if not LoadGraphicFile(Result.Data, FileName) then begin
+    // Do not apply gamma during file load as it would affect also transparency colors
+    if not LoadGraphicFile(Result.Data, FileName, [gfNoGamma]) then begin
       Result := nil;
       Exit;
     end;
@@ -494,11 +499,6 @@ begin
 
     Result.ResetPixUsed;
 
-    xmax := Result.Data.Width - 1; // allows 4-byte access even for last pixel
-    // Why there was that limit?
-    //if xmax > 970 then
-    //  xmax := 970;
-
     Result.Mask.SetSize(Result.Data.Width, Result.Data.Height);
 
     Result.Data.BeginUpdate;
@@ -506,17 +506,19 @@ begin
     DataPixel := PixelPointer(Result.Data);
     MaskPixel := PixelPointer(Result.Mask);
     for y := 0 to ScaleToNative(Result.Data.Height) - 1 do begin
-      for x := 0 to ScaleToNative(xmax) - 1 do begin
+      for x := 0 to ScaleToNative(Result.Data.Width) - 1 do begin
         OriginalColor := DataPixel.Pixel^.ARGB and $FFFFFF;
-        if (OriginalColor = $FF00FF) or (OriginalColor = $7F007F) then
-        begin // transparent
-          MaskPixel.Pixel^.ARGB := $FFFFFF;
-          DataPixel.Pixel^.ARGB := DataPixel.Pixel^.ARGB and $FF000000;
-        end
-        else begin
-          MaskPixel.Pixel^.ARGB := $000000; // non-transparent
-          if Gamma <> 100 then
-            DataPixel.Pixel^ := ApplyGammaToPixel(DataPixel.Pixel^);
+        if (OriginalColor = TransparentColor1) or (OriginalColor = TransparentColor2) then begin
+          MaskPixel.Pixel^.R := $FF;
+          MaskPixel.Pixel^.G := $FF;
+          MaskPixel.Pixel^.B := $FF;
+          DataPixel.Pixel^.R := 0;
+          DataPixel.Pixel^.G := 0;
+          DataPixel.Pixel^.B := 0;
+        end else begin
+          MaskPixel.Pixel^.R := $00;
+          MaskPixel.Pixel^.G := $00;
+          MaskPixel.Pixel^.B := $00;
         end;
         DataPixel.NextPixel;
         MaskPixel.NextPixel;
@@ -526,6 +528,30 @@ begin
     end;
     Result.Data.EndUpdate;
     Result.Mask.EndUpdate;
+
+    if Gamma <> 100 then
+      ApplyGammaToBitmap(Result.Data);
+  end;
+end;
+
+function LoadGraphicSet2(const Name: string): TGraphicSet;
+var
+  FileName: string;
+begin
+  Result := GrExt.SearchByName(Name);
+  if not Assigned(Result) then begin
+    Result := GrExt.AddNew(Name);
+    FileName := GetGraphicsDir + DirectorySeparator + Name;
+    if not LoadGraphicFile(Result.Data, FileName, [gfNoGamma]) then begin
+      Result := nil;
+      Exit;
+    end;
+
+    FileName := ExtractFileNameWithoutExt(FileName) + GraphicSetFileExt;
+    if FileExists(FileName) then
+      Result.LoadFromFile(FileName);
+
+    Result.ResetPixUsed;
   end;
 end;
 
@@ -1113,9 +1139,9 @@ end;
 
 procedure Corner(ca: TCanvas; x, y, Kind: Integer; const T: TTexture);
 begin
-  { BitBltCanvas(ca,x,y,8,8,GrExt[T.HGr].Mask.Canvas,
+  { BitBltCanvas(ca,x,y,8,8,T.HGr.Mask.Canvas,
     T.xGr+29+Kind*9,T.yGr+89,SRCAND);
-    BitBltCanvas(ca,x,y,8,8,GrExt[T.HGr].Data.Canvas,
+    BitBltCanvas(ca,x,y,8,8,T.HGr.Data.Canvas,
     T.xGr+29+Kind*9,T.yGr+89,SRCPAINT); }
 end;
 
@@ -1133,6 +1159,7 @@ var
   p, xp: Integer;
   sp: string;
   shadow: Boolean;
+  Text: string;
 begin
   Inc(x);
   Inc(y);
@@ -1156,8 +1183,9 @@ begin
           end
           else
           begin
-            Textout(xp, y, copy(sp, 1, p - 1));
-            Inc(xp, ca.TextWidth(copy(sp, 1, p - 1)));
+            Text := Copy(sp, 1, p - 1);
+            Textout(xp, y, Text);
+            Inc(xp, ca.TextWidth(Text));
             if not shadow then
               case sp[p + 1] of
                 'c': PaintIcon(xp + 1, y, 6);
@@ -1470,7 +1498,7 @@ begin
   // TODO: Explicitly clear background to black but in fact BitBlt SRCCOPY should do it
   LogoBuffer.Canvas.FillRect(0, 0, LogoBuffer.Width, LogoBuffer.Height);
   BitBltCanvas(LogoBuffer.Canvas, 0, 0, wLogo, hLogo, ca, x, y);
-  ImageOp_BCC(LogoBuffer, Templates, 0, 0, 1, 1, wLogo, hLogo,
+  ImageOp_BCC(LogoBuffer, Templates.Data, 0, 0, 1, 1, wLogo, hLogo,
     clLight, clShade);
   BitBltCanvas(ca, x, y, wLogo, hLogo, LogoBuffer.Canvas, 0, 0);
 end;
@@ -1652,8 +1680,7 @@ procedure LoadAssets;
 begin
   LoadPhrases;
   LoadFonts;
-  LoadGraphicFile(Templates, GetGraphicsDir + DirectorySeparator +
-    'Templates.png', [gfNoGamma]);
+  Templates := LoadGraphicSet2('Templates.png');
   LoadGraphicFile(Colors, GetGraphicsDir + DirectorySeparator + 'Colors.png');
   LoadGraphicFile(Paper, GetGraphicsDir + DirectorySeparator + 'Paper.jpg');
   LoadGraphicFile(BigImp, GetGraphicsDir + DirectorySeparator + 'Icons.png');
@@ -1687,8 +1714,6 @@ begin
   HGrSystem2 := LoadGraphicSet('System2.png');
   Ornament := HGrSystem2.GetItem('Ornament');
 
-  Templates := TBitmap.Create;
-  Templates.PixelFormat := pf24bit;
   Colors := TBitmap.Create;
   Colors.PixelFormat := pf24bit;
   Paper := TBitmap.Create;
@@ -1705,8 +1730,6 @@ begin
 end;
 
 procedure UnitDone;
-var
-  I: Integer;
 begin
   RestoreResolution;
   FreeAndNil(GrExt);
@@ -1716,7 +1739,6 @@ begin
   FreeAndNil(LogoBuffer);
   FreeAndNil(BigImp);
   FreeAndNil(Paper);
-  FreeAndNil(Templates);
   FreeAndNil(Colors);
   FreeAndNil(MainTexture.Image);
 end;

@@ -818,7 +818,7 @@ begin
           ClientHeight - 29, s);
         BitBltCanvas(ScienceNationDot.Canvas, 0, 0, 17, 17, Canvas,
           xScreen - 10, ClientHeight - 27);
-        ImageOp_BCC(ScienceNationDot, Templates, 0, 0, 114, 211, 17, 17,
+        ImageOp_BCC(ScienceNationDot, Templates.Data, 0, 0, 114, 211, 17, 17,
           MainTexture.clBevelShade, Tribe[ScienceNation].Color);
         BitBltCanvas(Canvas, xScreen - 10, ClientHeight - 27, 17, 17,
           ScienceNationDot.Canvas, 0, 0);

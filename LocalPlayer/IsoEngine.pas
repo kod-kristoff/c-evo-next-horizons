@@ -627,8 +627,8 @@ begin
         Sprite(HGr, x, y, 64, 48, pix mod 10 * 65 + 1, pix div 10 * 49 + 1);
       if Flags and unFortified <> 0 then
       begin
-        { DataCanvas:=GrExt[HGrTerrain].Data.Canvas;
-          MaskCanvas:=GrExt[HGrTerrain].Mask.Canvas;
+        { DataCanvas:=HGrTerrain.Data.Canvas;
+          MaskCanvas:=HGrTerrain.Mask.Canvas;
           TSprite(x,y+16,12*9+7); }
         Sprite(HGrStdUnits, x, y, xxu * 2, yyu * 2, 1 + 6 * (xxu * 2 + 1), 1);
       end;

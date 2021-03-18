@@ -309,7 +309,7 @@ begin
             Trunc(Screwed[ix, iy, 1] / Screwed[ix, iy, 3]) shl 8 +
             Trunc(Screwed[ix, iy, 0] / Screwed[ix, iy, 3]) shl 16;
 
-  ImageOp_BCC(LogoBuffer, Templates, 0, 0, xb, yb, wb, hb, clCover, clPage);
+  ImageOp_BCC(LogoBuffer, Templates.Data, 0, 0, xb, yb, wb, hb, clCover, clPage);
 
   BitBltCanvas(ca, x, y, wb, hb, LogoBuffer.Canvas, 0, 0);
 end;
@@ -440,7 +440,7 @@ begin
       begin
         BitBltCanvas(Buffer.Canvas, 0, 0, 140, 120, Canvas,
           (ClientWidth - 140) div 2, 24);
-        ImageOp_BCC(Buffer, Templates, 0, 0, 1, 279, 140, 120, 0, $FFFFFF);
+        ImageOp_BCC(Buffer, Templates.Data, 0, 0, 1, 279, 140, 120, 0, $FFFFFF);
         BitBltCanvas(Canvas, (ClientWidth - 140) div 2, 24, 140, 120,
           Buffer.Canvas, 0, 0);
       end;

@@ -274,10 +274,10 @@ begin
         begin
           x := xDomain + d * DomainPitch;
           if d = Domain then
-            ImageOp_BCC(offscreen, Templates, x, yDomain, 142, 246 + 37 * d, 36,
+            ImageOp_BCC(offscreen, Templates.Data, x, yDomain, 142, 246 + 37 * d, 36,
               36, 0, $00C0FF)
           else
-            ImageOp_BCC(offscreen, Templates, x, yDomain, 142, 246 + 37 * d, 36,
+            ImageOp_BCC(offscreen, Templates.Data, x, yDomain, 142, 246 + 37 * d, 36,
               36, 0, $606060);
         end;
       Frame(offscreen.Canvas, xDomain - 11, yDomain - 3,
@@ -299,10 +299,10 @@ begin
     begin
       for i := 0 to MaxWeight - 1 do
         if i < Weight then
-          ImageOp_BCC(offscreen, Templates, xWeight + 20 * i, yWeight, 123, 400,
+          ImageOp_BCC(offscreen, Templates.Data, xWeight + 20 * i, yWeight, 123, 400,
             18, 20, 0, $949494)
         else
-          ImageOp_BCC(offscreen, Templates, xWeight + 20 * i, yWeight, 105, 400,
+          ImageOp_BCC(offscreen, Templates.Data, xWeight + 20 * i, yWeight, 105, 400,
             18, 20, 0, $949494);
     end;
 

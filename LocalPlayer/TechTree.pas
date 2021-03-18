@@ -130,8 +130,6 @@ var
   s: string;
   NewWidth: Integer;
   NewHeight: Integer;
-const
-  TransparentColor: Cardinal = $7F007F;
 begin
   if Image = nil then begin
     Image := TBitmap.Create;
@@ -155,7 +153,7 @@ begin
               Delete(s, Length(s), 1);
             TextOut(xStart + X * xPitch + 2, yStart + Y * yPitch, s);
             Pixels[xStart + X * xPitch + 10, yStart + Y * yPitch - 1]
-              := TransparentColor;
+              := TransparentColor2;
           end
         end;
 
@@ -170,7 +168,7 @@ begin
         Phrases2.Lookup('ADVTREE_OTHER'));
     end;
 
-    Texturize(Image, Paper, TransparentColor);
+    Texturize(Image, Paper, TransparentColor2);
   end;
 
   // fit window to image, center image in window, center window to screen
