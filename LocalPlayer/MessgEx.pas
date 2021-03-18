@@ -232,7 +232,8 @@ const
   wScrewed = 43;
   hScrewed = 27;
 var
-  ix, iy, xDst, yDst, dx, dy, xIcon, yIcon, xb, yb, wb, hb: integer;
+  ix, iy, xDst, yDst, dx, dy, xIcon, yIcon: integer;
+  BookRect: TRect;
   x1, xR, yR, share: single;
   Screwed: array [0 .. wScrewed - 1, 0 .. hScrewed - 1, 0 .. 3] of single;
   SrcPtr: TPixelPointer;
@@ -281,24 +282,18 @@ begin
       SrcPtr.NextLine;
     end;
     BigImp.EndUpdate;
-    xb := xBBook;
-    yb := yBBook;
-    wb := wBBook;
-    hb := hBBook;
+    BookRect := BigBook.BoundsRect;
   end
   else
   begin
-    xb := xSBook;
-    yb := ySBook;
-    wb := wSBook;
-    hb := hSBook;
+    BookRect := SmallBook.BoundsRect;
   end;
-  x := x - wb div 2;
+  x := x - BookRect.Width div 2;
 
   // paint
   // TODO: Explicitly clear background to black but in fact BitBlt SRCCOPY should do it
   LogoBuffer.Canvas.FillRect(0, 0, LogoBuffer.Width, LogoBuffer.Height);
-  BitBltCanvas(LogoBuffer.Canvas, 0, 0, wb, hb, ca, x, y);
+  BitBltCanvas(LogoBuffer.Canvas, 0, 0, BookRect.Width, BookRect.Height, ca, x, y);
 
   if IconIndex >= 0 then
     for iy := 0 to hScrewed - 1 do
@@ -309,9 +304,9 @@ begin
             Trunc(Screwed[ix, iy, 1] / Screwed[ix, iy, 3]) shl 8 +
             Trunc(Screwed[ix, iy, 0] / Screwed[ix, iy, 3]) shl 16;
 
-  ImageOp_BCC(LogoBuffer, Templates.Data, 0, 0, xb, yb, wb, hb, clCover, clPage);
+  ImageOp_BCC(LogoBuffer, Templates.Data, Point(0, 0), BookRect, clCover, clPage);
 
-  BitBltCanvas(ca, x, y, wb, hb, LogoBuffer.Canvas, 0, 0);
+  BitBltCanvas(ca, x, y, BookRect.Width, BookRect.Height, LogoBuffer.Canvas, 0, 0);
 end;
 
 procedure TMessgExDlg.PaintMyArmy;

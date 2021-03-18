@@ -826,16 +826,18 @@ begin
     Frame(Canvas, TabOffset + (Integer(Tab) + 1) * TabSize + 1, 3,
       TabOffset + (Integer(Tab) + 1) * TabSize + 2, TabHeight, MainTexture.clBevelShade,
       MainTexture.clBevelShade); // Tab shadow
+
+  // Paint menu logo
   // TODO: Explicitly clear background to black but in fact BitBlt SRCCOPY should do it
   LogoBuffer.Canvas.FillRect(0, 0, LogoBuffer.Width, LogoBuffer.Height);
-  BitBltCanvas(LogoBuffer.Canvas, 0, 0, 36, 36, Canvas, 6,
+  BitBltCanvas(LogoBuffer.Canvas, 0, 0, MenuLogo.Width, MenuLogo.Height, Canvas, 6,
     3 + 2 * integer(Tab <> tbMain));
 
-  ImageOp_BCC(LogoBuffer, Templates.Data, 0, 0, 145, 38, 36, 27, $BFBF20, $4040DF);
-  // logo part 1
-  ImageOp_BCC(LogoBuffer, Templates.Data, 10, 27, 155, 38 + 27, 26, 9, $BFBF20,
-    $4040DF); // logo part 2
-  BitBltCanvas(Canvas, 6, 3 + 2 * integer(Tab <> tbMain), 36, 36,
+  ImageOp_BCC(LogoBuffer, Templates.Data, 0, 0, MenuLogo.Left, MenuLogo.Top,
+    MenuLogo.Width, MenuLogo.Height - 9, $BFBF20, $4040DF); // logo part 1
+  ImageOp_BCC(LogoBuffer, Templates.Data, 10, 27, MenuLogo.Left + 10,
+    MenuLogo.Top + 27, MenuLogo.Width - 10, 9, $BFBF20, $4040DF); // logo part 2
+  BitBltCanvas(Canvas, 6, 3 + 2 * integer(Tab <> tbMain), MenuLogo.Width, MenuLogo.Height,
     LogoBuffer.Canvas, 0, 0);
 
   if Page = pgMain then begin

@@ -48,8 +48,10 @@ procedure Sprite(dst: TBitmap; HGr: TGraphicSet; xDst, yDst, Width, Height, xGr,
 procedure MakeBlue(Dst: TBitmap; X, Y, Width, Height: Integer);
 procedure MakeRed(Dst: TBitmap; X, Y, Width, Height: Integer);
 procedure ImageOp_B(dst, Src: TBitmap; xDst, yDst, xSrc, ySrc, Width, Height: Integer);
-procedure ImageOp_BCC(dst, Src: TBitmap;
-  xDst, yDst, xSrc, ySrc, Width, Height, Color1, Color2: Integer);
+procedure ImageOp_BCC(Dst, Src: TBitmap;
+  xDst, yDst, xSrc, ySrc, Width, Height, Color1, Color2: Integer); overload;
+procedure ImageOp_BCC(Dst, Src: TBitmap;
+  DstPos: TPoint; SrcRect: TRect; Color1, Color2: Integer); overload;
 procedure ImageOp_CBC(Dst, Src: TBitmap; xDst, yDst, xSrc, ySrc, Width, Height,
   Color0, Color2: Integer);
 procedure ImageOp_CCC(bmp: TBitmap; x, y, Width, Height, Color0, Color1, Color2: Integer);
@@ -114,18 +116,6 @@ const
   hMainTexture = 480;
 
   // template positions in Templates.png
-  xLogo = 1;
-  yLogo = 1;
-  wLogo = 122;
-  hLogo = 23; // logo
-  xBBook = 1;
-  yBBook = 74;
-  wBBook = 143;
-  hBBook = 73; // big book
-  xSBook = 72;
-  ySBook = 37;
-  wSBook = 72;
-  hSBook = 36; // small book
   xNation = 1;
   yNation = 25;
   xCoal = 1;
@@ -176,6 +166,9 @@ var
   CityMark2: TGraphicSetItem;
   Ornament: TGraphicSetItem;
   Logo: TGraphicSetItem;
+  BigBook: TGraphicSetItem;
+  SmallBook: TGraphicSetItem;
+  MenuLogo: TGraphicSetItem;
   ClickFrameColor: Integer;
   MainTextureAge: Integer;
   MainTexture: TTexture;
@@ -733,6 +726,13 @@ begin
   end;
   Src.EndUpdate;
   dst.EndUpdate;
+end;
+
+procedure ImageOp_BCC(Dst, Src: TBitmap; DstPos: TPoint; SrcRect: TRect;
+  Color1, Color2: Integer);
+begin
+  ImageOp_BCC(Dst, Src, DstPos.X, DstPos.Y, SrcRect.Left, SrcRect.Top,
+    SrcRect.Width, SrcRect.Height, Color1, Color2);
 end;
 
 procedure ImageOp_CBC(Dst, Src: TBitmap; xDst, yDst, xSrc, ySrc, Width, Height,
@@ -1497,10 +1497,10 @@ procedure PaintLogo(ca: TCanvas; x, y, clLight, clShade: Integer);
 begin
   // TODO: Explicitly clear background to black but in fact BitBlt SRCCOPY should do it
   LogoBuffer.Canvas.FillRect(0, 0, LogoBuffer.Width, LogoBuffer.Height);
-  BitBltCanvas(LogoBuffer.Canvas, 0, 0, wLogo, hLogo, ca, x, y);
-  ImageOp_BCC(LogoBuffer, Templates.Data, 0, 0, 1, 1, wLogo, hLogo,
+  BitBltCanvas(LogoBuffer.Canvas, 0, 0, Logo.Width, Logo.Height, ca, x, y);
+  ImageOp_BCC(LogoBuffer, Templates.Data, Point(0, 0), Logo.BoundsRect,
     clLight, clShade);
-  BitBltCanvas(ca, x, y, wLogo, hLogo, LogoBuffer.Canvas, 0, 0);
+  BitBltCanvas(ca, x, y, Logo.Width, Logo.Height, LogoBuffer.Canvas, 0, 0);
 end;
 
 function SetMainTextureByAge(Age: Integer): Boolean;
@@ -1681,6 +1681,10 @@ begin
   LoadPhrases;
   LoadFonts;
   Templates := LoadGraphicSet2('Templates.png');
+  Logo := Templates.GetItem('Logo');
+  BigBook := Templates.GetItem('BigBook');
+  SmallBook := Templates.GetItem('SmallBook');
+  MenuLogo := Templates.GetItem('MenuLogo');
   LoadGraphicFile(Colors, GetGraphicsDir + DirectorySeparator + 'Colors.png');
   LoadGraphicFile(Paper, GetGraphicsDir + DirectorySeparator + 'Paper.jpg');
   LoadGraphicFile(BigImp, GetGraphicsDir + DirectorySeparator + 'Icons.png');
@@ -1697,10 +1701,6 @@ begin
   EnumDisplaySettings(nil, $FFFFFFFF, StartResolution);
   ResolutionChanged := False;
   {$ENDIF}
-
-  LogoBuffer := TBitmap.Create;
-  LogoBuffer.PixelFormat := pf24bit;
-  LogoBuffer.SetSize(wBBook, hBBook);
 
   for Section := Low(TFontType) to High(TFontType) do
     UniFont[Section] := TFont.Create;
@@ -1727,6 +1727,10 @@ begin
   GenerateNames := True;
 
   LoadAssets;
+
+  LogoBuffer := TBitmap.Create;
+  LogoBuffer.PixelFormat := pf24bit;
+  LogoBuffer.SetSize(BigBook.Width, BigBook.Height);
 end;
 
 procedure UnitDone;

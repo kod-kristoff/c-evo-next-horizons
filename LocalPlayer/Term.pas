@@ -4842,7 +4842,7 @@ begin
       TopBarHeight - 7, MainTexture.clBevelShade, MainTexture.clBevelLight);
   end;
   if GameMode <> cMovie then
-    ImageOp_BCC(TopBar, Templates.Data, 2, 1, 145, 38, 36, 36, $BFBF20, $4040DF);
+    ImageOp_BCC(TopBar, Templates.Data, Point(2, 1), MenuLogo.BoundsRect, $BFBF20, $4040DF);
   if MyRO.nCity > 0 then
   begin
     TrueMoney := MyRO.Money;
