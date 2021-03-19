@@ -299,11 +299,11 @@ begin
     begin
       for i := 0 to MaxWeight - 1 do
         if i < Weight then
-          ImageOp_BCC(offscreen, Templates.Data, xWeight + 20 * i, yWeight, 123, 400,
-            18, 20, 0, $949494)
+          ImageOp_BCC(offscreen, Templates.Data, Point(xWeight + 20 * i, yWeight),
+            WeightOn.BoundsRect, 0, $949494)
         else
-          ImageOp_BCC(offscreen, Templates.Data, xWeight + 20 * i, yWeight, 105, 400,
-            18, 20, 0, $949494);
+          ImageOp_BCC(offscreen, Templates.Data, Point(xWeight + 20 * i, yWeight),
+            WeightOff.BoundsRect, 0, $949494);
     end;
 
     with offscreen.Canvas do

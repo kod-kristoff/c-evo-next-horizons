@@ -751,7 +751,7 @@ var
 begin
   for emix := 0 to MyRO.nEnemyModel - 1 do
     with MyRO.EnemyModel[emix] do
-      if Tribe[Owner].ModelPicture[mix].HGr = HGrSystem then
+      if not Assigned(Tribe[Owner].ModelPicture[mix].HGr) then
         InitEnemyModel(emix);
 end;
 
@@ -834,14 +834,14 @@ begin
   with Tribe[me] do
     while MyData.ToldModels < MyRO.nModel do
     begin { new Unit class available }
-      if (ModelPicture[MyData.ToldModels].HGr <> HGrSystem) and
+      if Assigned(ModelPicture[MyData.ToldModels].HGr) and
         (MyModel[MyData.ToldModels].Kind <> mkSelfDeveloped) then
       begin // save picture of DevModel
         ModelPicture[MyData.ToldModels + 1] := ModelPicture[MyData.ToldModels];
         ModelName[MyData.ToldModels + 1] := ModelName[MyData.ToldModels];
-        ModelPicture[MyData.ToldModels].HGr := HGrSystem
+        ModelPicture[MyData.ToldModels].HGr := nil;
       end;
-      if ModelPicture[MyData.ToldModels].HGr = HGrSystem then
+      if not Assigned(ModelPicture[MyData.ToldModels].HGr) then
         InitMyModel(MyData.ToldModels, true);
       { only run if no researched model }
       with MessgExDlg do
@@ -872,7 +872,7 @@ begin
           ModelNameInfo.NewName := EInput.Text;
           Server(cSetModelName + (Length(ModelNameInfo.NewName) + 1 + 4 + 3)
             div 4, me, 0, ModelNameInfo);
-        end
+        end;
       end;
       if MyModel[MyData.ToldModels].Kind = mkSettler then
       begin // engineers make settlers obsolete
@@ -1042,7 +1042,7 @@ begin
       begin
         DraftDlg.ShowNewContent(wmModal);
         if DraftDlg.ModalResult <> mrOK then
-          Tribe[me].ModelPicture[MyRO.nModel].HGr := HGrSystem
+          Tribe[me].ModelPicture[MyRO.nModel].HGr := nil
       end;
     until (ChosenResearch <> adMilitary) or (DraftDlg.ModalResult = mrOK);
 
@@ -2784,7 +2784,7 @@ begin
             begin
               ItsMeAgain(p1);
               for mix := 0 to MyRO.nModel - 1 do
-                if Tribe[me].ModelPicture[mix].HGr = HGrSystem then
+                if not Assigned(Tribe[me].ModelPicture[mix].HGr) then
                   InitMyModel(mix, true);
             end;
           me := -1;
@@ -3074,7 +3074,7 @@ begin
         with TShowMove(Data) do
         begin
           CurrentMoveInfo.DoShow := false;
-          if not idle and (Tribe[Owner].ModelPicture[mix].HGr = HGrSystem) then
+          if not idle and (not Assigned(Tribe[Owner].ModelPicture[mix].HGr)) then
             InitEnemyModel(emix);
 
           ToLoc := dLoc(FromLoc, dx, dy);
@@ -3269,7 +3269,7 @@ begin
           if CurrentMoveInfo.DoShow then
           begin
             ToLoc := dLoc(FromLoc, dx, dy);
-            if Tribe[Owner].ModelPicture[mix].HGr = HGrSystem then
+            if not Assigned(Tribe[Owner].ModelPicture[mix].HGr) then
               InitEnemyModel(emix);
 
             if (MyMap[ToLoc] and (fCity or fUnit or fOwned) = fCity or fOwned)
@@ -3402,8 +3402,8 @@ begin
           with TModelNameInfo(Data) do
             if TribeOriginal[NewPlayer] then
               Tribe[NewPlayer].ModelName[mix] := NewName;
-      end
-  end
+      end;
+  end;
 end;
 
 { *** main part *** }
@@ -4858,14 +4858,14 @@ begin
     end;
 
     // treasury section
-    ImageOp_BCC(TopBar, Templates.Data, xTreasurySection + 8, 1, 145, 1, 36, 36,
+    ImageOp_BCC(TopBar, Templates.Data, Point(xTreasurySection + 8, 1), TreasuryIcon.BoundsRect,
       $40A040, $4030C0);
     s := IntToStr(TrueMoney);
     LoweredTextOut(TopBar.Canvas, -1, MainTexture, xTreasurySection + 48, 0,
       s + '%c');
     if MyRO.Government <> gAnarchy then
     begin
-      ImageOp_BCC(TopBar, Templates.Data, xTreasurySection + 48, 22, 124, 1, 14, 14,
+      ImageOp_BCC(TopBar, Templates.Data, Point(xTreasurySection + 48, 22), ChangeIcon.BoundsRect,
         $0000C0, $0080C0);
       if TaxSum >= 0 then
         s := Format(Phrases.Lookup('MONEYGAINPOS'), [TaxSum])
@@ -4876,7 +4876,7 @@ begin
     end;
 
     // research section
-    ImageOp_BCC(TopBar, Templates.Data, xResearchSection + 8, 1, 145, 75, 36, 36,
+    ImageOp_BCC(TopBar, Templates.Data, Point(xResearchSection + 8, 1), ResearchIcon.BoundsRect,
       $FF0000, $00FFE0);
     if MyData.FarTech <> adNexus then
     begin
@@ -4927,8 +4927,8 @@ begin
       CostFactor := 0;
     if (MyData.FarTech <> adNexus) and (ScienceSum > 0) then
     begin
-      ImageOp_BCC(TopBar, Templates.Data, xResearchSection + 48 + CostFactor + 11,
-        22, 124, 1, 14, 14, $0000C0, $0080C0);
+      ImageOp_BCC(TopBar, Templates.Data, Point(xResearchSection + 48 + CostFactor + 11,
+        22), ChangeIcon.BoundsRect, $0000C0, $0080C0);
       s := Format(Phrases.Lookup('TECHGAIN'), [ScienceSum]);
       LoweredTextOut(TopBar.Canvas, -1, MainTexture, xResearchSection + 48 +
         CostFactor + 26, 18, s);
@@ -5352,7 +5352,7 @@ begin
               (Server(sCreateUnit - sExecute + p1 shl 4, me,
               MyRO.EnemyModel[emix].mix, MouseLoc) >= rExecuted) then
             begin
-              if Tribe[p1].ModelPicture[MyRO.EnemyModel[emix].mix].HGr = HGrSystem then
+              if not Assigned(Tribe[p1].ModelPicture[MyRO.EnemyModel[emix].mix].HGr) then
                 InitEnemyModel(emix);
               m2 := TMenuItem.Create(m);
               m2.Caption := Tribe[p1].ModelName[MyRO.EnemyModel[emix].mix];
@@ -6446,7 +6446,7 @@ begin
     ItsMeAgain(p);
     SumCities(TaxSum, ScienceSum);
     for i := 0 to MyRO.nModel - 1 do
-      if Tribe[me].ModelPicture[i].HGr = HGrSystem then
+      if not Assigned(Tribe[me].ModelPicture[i].HGr) then
         InitMyModel(i, True);
 
     SetTroopLoc(-1);

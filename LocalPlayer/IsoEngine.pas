@@ -586,7 +586,7 @@ begin
         mixShow := -1 // building site
       else
         mixShow := mix;
-      if (Tribe[Owner].ModelPicture[mixShow].HGr = HGrSystem) and
+      if (not Assigned(Tribe[Owner].ModelPicture[mixShow].HGr)) and
         (@OnInitEnemyModel <> nil) then
         if not OnInitEnemyModel(emix) then
           exit;

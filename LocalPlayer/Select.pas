@@ -52,7 +52,7 @@ type
     code: array [0 .. MaxLayer - 1, 0 .. 4095] of integer;
     Column: array [0 .. nPl - 1] of integer;
     Closable, MultiPage: boolean;
-    ScienceNationDot: TBitmap;
+    ScienceNationDotBuffer: TBitmap;
     procedure ScrollBarUpdate(Sender: TObject);
     procedure InitLines;
     procedure line(ca: TCanvas; l: integer; NonText, lit: boolean);
@@ -109,16 +109,16 @@ begin
   Layer0Btn.Hint := Phrases.Lookup('BTN_IMPRS');
   Layer1Btn.Hint := Phrases.Lookup('BTN_WONDERS');
   Layer2Btn.Hint := Phrases.Lookup('BTN_CLASSES');
-  ScienceNationDot := TBitmap.Create;
-  ScienceNationDot.PixelFormat := pf24bit;
-  ScienceNationDot.SetSize(17, 17);
-  ScienceNationDot.Canvas.FillRect(0, 0, ScienceNationDot.Width, ScienceNationDot.Height);
+  ScienceNationDotBuffer := TBitmap.Create;
+  ScienceNationDotBuffer.PixelFormat := pf24bit;
+  ScienceNationDotBuffer.SetSize(17, 17);
+  ScienceNationDotBuffer.Canvas.FillRect(0, 0, ScienceNationDotBuffer.Width, ScienceNationDotBuffer.Height);
 end;
 
 procedure TListDlg.FormDestroy(Sender: TObject);
 begin
   FreeAndNil(sb);
-  FreeAndNil(ScienceNationDot);
+  FreeAndNil(ScienceNationDotBuffer);
 end;
 
 procedure TListDlg.CloseBtnClick(Sender: TObject);
@@ -816,14 +816,14 @@ begin
         xScreen := (ClientWidth - BiColorTextWidth(Canvas, s)) div 2;
         LoweredTextOut(Canvas, -1, MainTexture, xScreen + 10,
           ClientHeight - 29, s);
-        BitBltCanvas(ScienceNationDot.Canvas, 0, 0, 17, 17, Canvas,
-          xScreen - 10, ClientHeight - 27);
-        ImageOp_BCC(ScienceNationDot, Templates.Data, 0, 0, 114, 211, 17, 17,
-          MainTexture.clBevelShade, Tribe[ScienceNation].Color);
-        BitBltCanvas(Canvas, xScreen - 10, ClientHeight - 27, 17, 17,
-          ScienceNationDot.Canvas, 0, 0);
+        BitBltCanvas(ScienceNationDotBuffer.Canvas, 0, 0, ScienceNationDot.Width,
+          ScienceNationDot.Height, Canvas, xScreen - 10, ClientHeight - 27);
+        ImageOp_BCC(ScienceNationDotBuffer, Templates.Data, Point(0, 0),
+          ScienceNationDot.BoundsRect, MainTexture.clBevelShade, Tribe[ScienceNation].Color);
+        BitBltCanvas(Canvas, xScreen - 10, ClientHeight - 27, ScienceNationDot.Width,
+          ScienceNationDot.Height, ScienceNationDotBuffer.Canvas, 0, 0);
       end;
-    end
+    end;
   end;
 end;
 
@@ -854,12 +854,12 @@ begin
     if CityDlg.Visible then
     begin
       CityDlg.FormShow(nil);
-      CityDlg.Invalidate
+      CityDlg.Invalidate;
     end;
-    result := true
+    result := true;
   end
   else
-    result := false
+    result := false;
 end;
 
 function TListDlg.RenameModel(mix: integer): boolean;
@@ -880,12 +880,12 @@ begin
     if UnitStatDlg.Visible then
     begin
       UnitStatDlg.FormShow(nil);
-      UnitStatDlg.Invalidate
+      UnitStatDlg.Invalidate;
     end;
-    result := true
+    result := true;
   end
   else
-    result := false
+    result := false;
 end;
 
 procedure TListDlg.PaintBox1MouseDown(Sender: TObject; Button: TMouseButton;
@@ -904,8 +904,8 @@ begin
     begin
       result := lix;
       Closable := true;
-      Close
-    end
+      Close;
+    end;
   end
   else if (ssLeft in Shift) and (ssShift in Shift) then
   begin // show help/info popup
@@ -948,7 +948,7 @@ begin
             miscGovList);
         kShipPart, kEShipPart:
           ;
-      end
+      end;
   end
   else if ssRight in Shift then
   begin
@@ -960,8 +960,8 @@ begin
         kModels:
           if RenameModel(lix) then
             SmartUpdateContent;
-      end
-  end
+      end;
+  end;
 end;
 
 procedure TListDlg.InitLines;
@@ -990,7 +990,7 @@ var
           begin
             swap := code[0, i];
             code[0, i] := code[0, j];
-            code[0, j] := swap
+            code[0, j] := swap;
           end;
   end;
 
@@ -1005,7 +1005,7 @@ var
         begin
           swap := code[0, i];
           code[0, i] := code[0, j];
-          code[0, j] := swap
+          code[0, j] := swap;
         end;
   end;
 
@@ -1046,7 +1046,7 @@ var
         MarkPreqs(AdvPreq[i, 0]);
       if (AdvPreq[i, 1] >= 0) then
         MarkPreqs(AdvPreq[i, 1]);
-    end
+    end;
   end;
 
 var
@@ -1059,7 +1059,7 @@ begin
   for i := 0 to MaxLayer - 1 do
   begin
     Lines[i] := 0;
-    FirstShrinkedLine[i] := MaxInt
+    FirstShrinkedLine[i] := MaxInt;
   end;
   case Kind of
     kProject:
@@ -1102,7 +1102,7 @@ begin
                     ((MyMap[Loc1] and fTerrain = fShore) or
                     (MyMap[Loc1] and fCanal > 0)) then
                     ok := true;
-                end
+                end;
           end
           else
             ok := true;
@@ -1111,12 +1111,12 @@ begin
             if MyModel[i].Status and msObsolete = 0 then
             begin
               code[2, Lines[2]] := i;
-              inc(Lines[2])
+              inc(Lines[2]);
             end;
             if MyModel[i].Status and msAllowConscripts <> 0 then
             begin
               code[2, Lines[2]] := i + cpConscripts;
-              inc(Lines[2])
+              inc(Lines[2]);
             end;
           end;
         end;
@@ -1152,7 +1152,7 @@ begin
         if ok then { new unit class }
         begin
           code[0, Lines[0]] := adMilitary;
-          inc(Lines[0])
+          inc(Lines[0]);
         end;
       end;
     kFarAdvance:
@@ -1269,7 +1269,7 @@ begin
             if MyCity[i].Loc >= 0 then
             begin
               code[0, Lines[0]] := i;
-              inc(Lines[0])
+              inc(Lines[0]);
             end;
         SortCities;
         FirstShrinkedLine[0] := 0
@@ -1281,10 +1281,10 @@ begin
           then
           begin
             code[0, Lines[0]] := i;
-            inc(Lines[0])
+            inc(Lines[0]);
           end;
         SortCities;
-        FirstShrinkedLine[0] := 0
+        FirstShrinkedLine[0] := 0;
       end;
     { kChooseECity:
       begin
@@ -1304,7 +1304,7 @@ begin
         end;
         Lines[0] := MyRO.nModel;
         SortModels;
-        FirstShrinkedLine[0] := 0
+        FirstShrinkedLine[0] := 0;
       end;
     kChooseModel:
       begin
@@ -1328,9 +1328,9 @@ begin
         // if Lines[0]>1 then
         begin
           code[0, Lines[0]] := mixAll;
-          inc(Lines[0]);
+          inc(Lines[0]);;
         end;
-        FirstShrinkedLine[0] := 0
+        FirstShrinkedLine[0] := 0;
       end;
     kChooseEModel:
       begin
@@ -1348,8 +1348,8 @@ begin
         for emix := 0 to MyRO.nEnemyModel - 1 do
           if ModelOk[emix] then
           begin
-            if Tribe[DipMem[me].pContact].ModelPicture
-              [MyRO.EnemyModel[emix].mix].HGr = HGrSystem then
+            if not Assigned(Tribe[DipMem[me].pContact].ModelPicture
+              [MyRO.EnemyModel[emix].mix].HGr) then
               InitEnemyModel(emix);
             code[0, Lines[0]] := emix;
             code[2, Lines[0]] := ModelSortValue(MyRO.EnemyModel[emix]);
@@ -1361,7 +1361,7 @@ begin
           code[0, Lines[0]] := mixAll;
           inc(Lines[0]);
         end;
-        FirstShrinkedLine[0] := 0
+        FirstShrinkedLine[0] := 0;
       end;
     kEModels:
       begin
@@ -1372,7 +1372,7 @@ begin
             not((MyRO.EnemyModel[code[1, Lines[0]]].Owner = pView) and
             (MyRO.EnemyModel[code[1, Lines[0]]].mix = i)) do
             dec(code[1, Lines[0]]);
-          if Tribe[pView].ModelPicture[i].HGr = HGrSystem then
+          if not Assigned(Tribe[pView].ModelPicture[i].HGr) then
             InitEnemyModel(code[1, Lines[0]]);
           code[0, Lines[0]] := i;
           code[2, Lines[0]] :=
@@ -1380,7 +1380,7 @@ begin
           inc(Lines[0]);
         end;
         SortModels;
-        FirstShrinkedLine[0] := 0
+        FirstShrinkedLine[0] := 0;
       end;
     kAllEModels:
       begin
@@ -1393,7 +1393,7 @@ begin
           begin
             PPicture := @Tribe[MyRO.EnemyModel[emix].Owner].ModelPicture
               [MyRO.EnemyModel[emix].mix];
-            if PPicture.HGr = HGrSystem then
+            if not Assigned(PPicture.HGr) then
               InitEnemyModel(emix);
             ok := true;
             if MainScreen.mNames.Checked then
@@ -1408,7 +1408,7 @@ begin
                 begin
                   code[1, j] := 1;
                   ok := false;
-                  Break
+                  Break;
                 end;
               end;
             if ok then
@@ -1417,7 +1417,7 @@ begin
               code[1, Lines[0]] := 0;
               code[2, Lines[0]] := ModelSortValue(MyRO.EnemyModel[emix], true);
               inc(Lines[0]);
-            end
+            end;
           end;
         SortModels;
         FirstShrinkedLine[0] := 0
@@ -1426,7 +1426,7 @@ begin
       for i := 0 to TribeNames.Count - 1 do
       begin
         code[0, Lines[0]] := i;
-        inc(Lines[0])
+        inc(Lines[0]);
       end;
     (* kDeliver:
       if MyRO.Treaty[DipMem[me].pContact]<trAlliance then
@@ -1471,13 +1471,13 @@ begin
         then
         begin
           code[0, Lines[0]] := i;
-          inc(Lines[0])
+          inc(Lines[0]);
         end;
     kMission:
       for i := 0 to nSpyMission - 1 do
       begin
         code[0, Lines[0]] := i;
-        inc(Lines[0])
+        inc(Lines[0]);
       end;
   end;
 
@@ -1585,7 +1585,7 @@ begin
         begin
           TechNameSpace := TechNameSpace + 640 - InnerWidth - 2 * SideFrame;
           InnerWidth := 640 - 2 * SideFrame
-        end
+        end;
       end;
     kAdvance, kFarAdvance:
       InnerWidth := 104 - 33 + 15 + 8 + TechNameSpace + 24 +
@@ -1694,17 +1694,17 @@ begin
   if Kind = kAdvance then
   begin
     ToggleBtn.ButtonIndex := 13;
-    ToggleBtn.Hint := Phrases.Lookup('FARTECH')
+    ToggleBtn.Hint := Phrases.Lookup('FARTECH');
   end
   else if Kind = kCities then
   begin
     ToggleBtn.ButtonIndex := 15;
-    ToggleBtn.Hint := Phrases.Lookup('BTN_PAGE')
+    ToggleBtn.Hint := Phrases.Lookup('BTN_PAGE');
   end
   else
   begin
     ToggleBtn.ButtonIndex := 28;
-    ToggleBtn.Hint := Phrases.Lookup('BTN_SELECT')
+    ToggleBtn.Hint := Phrases.Lookup('BTN_SELECT');
   end;
 
   if Kind = kAdvance then // show focus button?
@@ -1739,7 +1739,7 @@ begin
   if p = me then
     ShowNewContent(NewMode, kModels)
   else
-    ShowNewContent(NewMode, kEModels)
+    ShowNewContent(NewMode, kEModels);
 end;
 
 procedure TListDlg.PlayerClick(Sender: TObject);
@@ -1755,7 +1755,7 @@ begin
   Sel := -2;
   sb.Init(Lines[Layer] - 1, DispLines);
   OffscreenPaint;
-  Invalidate
+  Invalidate;
 end;
 
 procedure TListDlg.ModeBtnClick(Sender: TObject);
@@ -1767,7 +1767,7 @@ begin
 
   Sel := -2;
   sb.Init(Lines[Layer] - 1, DispLines);
-  SmartUpdateContent
+  SmartUpdateContent;
 end;
 
 procedure TListDlg.ToggleBtnClick(Sender: TObject);
@@ -1780,7 +1780,7 @@ begin
       begin
         result := adFar;
         Closable := true;
-        Close
+        Close;
       end;
     kCities, kCityEvents:
       begin
@@ -1820,8 +1820,8 @@ begin
           end;
         Popup.Popup(Left + ToggleBtn.Left, Top + ToggleBtn.Top +
           ToggleBtn.Height);
-      end
-  end
+      end;
+  end;
 end;
 
 procedure TListDlg.FormKeyDown(Sender: TObject; var Key: word;
@@ -1834,13 +1834,13 @@ begin
   else if ((Key = VK_ESCAPE) or (Key = VK_RETURN)) and not CloseBtn.Visible then
   // prevent closing
   else
-    inherited
+    inherited;
 end;
 
 procedure TListDlg.EcoChange;
 begin
   if Visible and (Kind = kCities) then
-    SmartUpdateContent
+    SmartUpdateContent;
 end;
 
 procedure TListDlg.TechChange;

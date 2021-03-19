@@ -880,11 +880,11 @@ begin
               Canvas.Font.Assign(UniFont[ftNormal]);
               // TODO: Explicitly clear background to black but in fact BitBlt SRCCOPY should do it
               LogoBuffer.Canvas.FillRect(0, 0, LogoBuffer.Width, LogoBuffer.Height);
-              BitBltCanvas(LogoBuffer.Canvas, 0, 0, 91, 25, Canvas,
+              BitBltCanvas(LogoBuffer.Canvas, 0, 0, LinkArrows.Width, LinkArrows.Height, Canvas,
                 xActionIcon, y + 2);
-              ImageOp_BCC(LogoBuffer, Templates.Data, 0, 0, 1, 400, 91, 25, 0,
+              ImageOp_BCC(LogoBuffer, Templates.Data, Point(0, 0), LinkArrows.BoundsRect, 0,
                 Colors.Canvas.Pixels[clkAge0 - 1, cliDimmedText]);
-              BitBltCanvas(Canvas, xActionIcon, y + 2, 91, 25,
+              BitBltCanvas(Canvas, xActionIcon, y + 2, LinkArrows.Width, LinkArrows.Height,
                 LogoBuffer.Canvas, 0, 0);
             end;
         end;

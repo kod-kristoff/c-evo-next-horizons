@@ -135,7 +135,7 @@ begin
       with MyRO.EnemyUn[euixShow] do
       begin
         mox := @MyRO.EnemyModel[emix];
-        if Tribe[owner].ModelPicture[mix].HGr = HGrSystem then
+        if not Assigned(Tribe[owner].ModelPicture[mix].HGr) then
           InitEnemyModel(emix);
       end
     end

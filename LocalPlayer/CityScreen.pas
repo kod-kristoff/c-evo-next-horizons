@@ -1051,7 +1051,7 @@ begin
       while (emix > 0) and ((MyRO.EnemyModel[emix].Owner <> cOwner) or
         (integer(MyRO.EnemyModel[emix].mix) <> c.Project and cpIndex)) do
         dec(emix);
-      if Tribe[cOwner].ModelPicture[c.Project and cpIndex].HGr = HGrSystem then
+      if not Assigned(Tribe[cOwner].ModelPicture[c.Project and cpIndex].HGr) then
         InitEnemyModel(emix);
     end;
 

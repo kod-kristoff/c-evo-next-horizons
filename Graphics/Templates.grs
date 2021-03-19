@@ -29,5 +29,61 @@
       <Width>36</Width>
       <Height>36</Height>
     </Item>
+    <Item>
+      <Name>LinkArrows</Name>
+      <Left>1</Left>
+      <Top>400</Top>
+      <Width>91</Width>
+      <Height>25</Height>
+    </Item>
+    <Item>
+      <Name>ScienceNationDot</Name>
+      <Left>114</Left>
+      <Top>211</Top>
+      <Width>17</Width>
+      <Height>17</Height>
+    </Item>   
+    <Item>
+      <Name>Research</Name>
+      <Left>145</Left>
+      <Top>75</Top>
+      <Width>36</Width>
+      <Height>36</Height>
+    </Item>   
+    <Item>
+      <Name>Change</Name>
+      <Left>124</Left>
+      <Top>1</Top>
+      <Width>14</Width>
+      <Height>14</Height>
+    </Item>   
+    <Item>
+      <Name>Treasury</Name>
+      <Left>145</Left>
+      <Top>1</Top>
+      <Width>36</Width>
+      <Height>36</Height>
+    </Item>   
+    <Item>
+      <Name>StarshipDeparted</Name>
+      <Left>1</Left>
+      <Top>279</Top>
+      <Width>140</Width>
+      <Height>120</Height>
+    </Item>   
+    <Item>
+      <Name>WeightOff</Name>
+      <Left>105</Left>
+      <Top>400</Top>
+      <Width>18</Width>
+      <Height>20</Height>
+    </Item>   
+    <Item>
+      <Name>WeightOn</Name>
+      <Left>123</Left>
+      <Top>400</Top>
+      <Width>18</Width>
+      <Height>20</Height>
+    </Item>   
   </Items>
 </GraphicSet>

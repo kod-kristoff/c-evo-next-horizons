@@ -636,7 +636,7 @@ begin
             begin
               ScreenTools.Frame(OffScreen.Canvas, 8 - 1 + x0[i], 2 - 1 + i * 24,
                 8 + 36 + x0[i], 2 + 20 + i * 24, $000000, $000000);
-              Dump(OffScreen, HGrSystem,  8 + x0[i], 2 + i * 24, 36, 20,
+              Dump(OffScreen, HGrSystem, 8 + x0[i], 2 + i * 24, 36, 20,
                 75 + HelpLineInfo.Picpix * 37, 295);
               x0[i] := x0[i] + (8 + 8 + 36);
             end;

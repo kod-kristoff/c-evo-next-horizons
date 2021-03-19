@@ -435,7 +435,7 @@ begin
       begin
         BitBltCanvas(Buffer.Canvas, 0, 0, 140, 120, Canvas,
           (ClientWidth - 140) div 2, 24);
-        ImageOp_BCC(Buffer, Templates.Data, 0, 0, 1, 279, 140, 120, 0, $FFFFFF);
+        ImageOp_BCC(Buffer, Templates.Data, Point(0, 0), StarshipDeparted.BoundsRect, 0, $FFFFFF);
         BitBltCanvas(Canvas, (ClientWidth - 140) div 2, 24, 140, 120,
           Buffer.Canvas, 0, 0);
       end;

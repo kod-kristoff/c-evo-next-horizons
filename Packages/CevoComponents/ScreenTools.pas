@@ -101,7 +101,7 @@ procedure PaintProgressBar(ca: TCanvas; Kind, x, y, pos, Growth, max: integer;
 procedure PaintRelativeProgressBar(ca: TCanvas;
   Kind, x, y, size, pos, Growth, max: integer; IndicateComplete: boolean;
   const T: TTexture);
-procedure PaintLogo(ca: TCanvas; x, y, clLight, clShade: integer);
+procedure PaintLogo(Canvas: TCanvas; X, Y, LightColor, ShadeColor: integer);
 function SetMainTextureByAge(Age: integer): boolean;
 procedure LoadPhrases;
 procedure Texturize(Dest, Texture: TBitmap; TransparentColor: Cardinal);
@@ -163,13 +163,6 @@ var
   GrExt: TGraphicSets;
   HGrSystem: TGraphicSet;
   HGrSystem2: TGraphicSet;
-  CityMark1: TGraphicSetItem;
-  CityMark2: TGraphicSetItem;
-  Ornament: TGraphicSetItem;
-  Logo: TGraphicSetItem;
-  BigBook: TGraphicSetItem;
-  SmallBook: TGraphicSetItem;
-  MenuLogo: TGraphicSetItem;
   ClickFrameColor: Integer;
   MainTextureAge: Integer;
   MainTexture: TTexture;
@@ -182,6 +175,23 @@ var
   GenerateNames: Boolean;
   InitOrnamentDone: Boolean;
   Phrases2FallenBackToEnglish: Boolean;
+
+  // Graphic set items
+  CityMark1: TGraphicSetItem;
+  CityMark2: TGraphicSetItem;
+  Ornament: TGraphicSetItem;
+  Logo: TGraphicSetItem;
+  BigBook: TGraphicSetItem;
+  SmallBook: TGraphicSetItem;
+  MenuLogo: TGraphicSetItem;
+  LinkArrows: TGraphicSetItem;
+  ScienceNationDot: TGraphicSetItem;
+  ResearchIcon: TGraphicSetItem;
+  ChangeIcon: TGraphicSetItem;
+  TreasuryIcon: TGraphicSetItem;
+  StarshipDeparted: TGraphicSetItem;
+  WeightOn: TGraphicSetItem;
+  WeightOff: TGraphicSetItem;
 
   UniFont: array [TFontType] of TFont;
   Gamma: Integer; // global gamma correction (cent)
@@ -1501,14 +1511,14 @@ begin
     Sprite(ca, HGrSystem, x + size - 10, y - 7, 23, 16, 1, 129);
 end;
 
-procedure PaintLogo(ca: TCanvas; x, y, clLight, clShade: Integer);
+procedure PaintLogo(Canvas: TCanvas; X, Y, LightColor, ShadeColor: Integer);
 begin
   // TODO: Explicitly clear background to black but in fact BitBlt SRCCOPY should do it
   LogoBuffer.Canvas.FillRect(0, 0, LogoBuffer.Width, LogoBuffer.Height);
-  BitBltCanvas(LogoBuffer.Canvas, 0, 0, Logo.Width, Logo.Height, ca, x, y);
+  BitBltCanvas(LogoBuffer.Canvas, 0, 0, Logo.Width, Logo.Height, Canvas, X, Y);
   ImageOp_BCC(LogoBuffer, Templates.Data, Point(0, 0), Logo.BoundsRect,
-    clLight, clShade);
-  BitBltCanvas(ca, x, y, Logo.Width, Logo.Height, LogoBuffer.Canvas, 0, 0);
+    LightColor, ShadeColor);
+  BitBltCanvas(Canvas, X, Y, Logo.Width, Logo.Height, LogoBuffer.Canvas, 0, 0);
 end;
 
 function SetMainTextureByAge(Age: Integer): Boolean;
@@ -1689,10 +1699,21 @@ begin
   LoadPhrases;
   LoadFonts;
   Templates := LoadGraphicSet2('Templates.png');
-  Logo := Templates.GetItem('Logo');
-  BigBook := Templates.GetItem('BigBook');
-  SmallBook := Templates.GetItem('SmallBook');
-  MenuLogo := Templates.GetItem('MenuLogo');
+  with Templates do begin
+    Logo := GetItem('Logo');
+    BigBook := GetItem('BigBook');
+    SmallBook := GetItem('SmallBook');
+    MenuLogo := GetItem('MenuLogo');
+    LinkArrows := GetItem('LinkArrows');
+    ScienceNationDot := GetItem('ScienceNationDot');
+    ResearchIcon := GetItem('Research');
+    ChangeIcon := GetItem('Change');
+    TreasuryIcon := GetItem('Treasury');
+    StarshipDeparted := GetItem('StarshipDeparted');
+    WeightOn := GetItem('WeightOn');
+    WeightOff := GetItem('WeightOff');
+  end;
+
   LoadGraphicFile(Colors, GetGraphicsDir + DirectorySeparator + 'Colors.png');
   LoadGraphicFile(Paper, GetGraphicsDir + DirectorySeparator + 'Paper.jpg');
   LoadGraphicFile(BigImp, GetGraphicsDir + DirectorySeparator + 'Icons.png');
