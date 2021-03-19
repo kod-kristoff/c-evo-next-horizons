@@ -10,6 +10,7 @@ uses
 
 type
   TPlayStyle = (psAsync, psSync);
+  TSoundMode = (smOff, smOn, smOnAlt);
 
   { TSoundPlayer }
 
@@ -49,15 +50,9 @@ procedure PlaySound(FileName: string);
 function Play(Item: string; Index: Integer = -1): Boolean;
 procedure PreparePlay(Item: string; Index: Integer = -1);
 
-const
-  // sound modes
-  smOff = 0;
-  smOn = 1;
-  smOnAlt = 2;
-
 var
   Sounds: TStringTable;
-  SoundMode: Integer;
+  SoundMode: TSoundMode;
   SoundPlayer: TSoundPlayer;
   SoundList: TFPGObjectList<TSound>;
   PlayingSound: TSound;

@@ -152,7 +152,7 @@ end;
 procedure TBufferedDrawDlg.FormDeactivate(Sender: TObject);
 begin
   if FWindowMode = wmSubmodal then
-    Close
+    Close;
 end;
 
 procedure TBufferedDrawDlg.OffscreenPaint;
@@ -315,7 +315,7 @@ begin
       MainTexture := MainTexture
     else
       MainTexture := MainTexture;
-    MainTexture := MainTexture
+    MainTexture := MainTexture;
   end;
   Canvas.Font.Assign(UniFont[ftCaption]);
   l := BiColorTextWidth(Canvas, Caption);
@@ -329,7 +329,7 @@ begin
   if FullCaption then
   begin
     FrameTop := 0;
-    FrameBottom := ClientHeight
+    FrameBottom := ClientHeight;
   end
   else
   begin
@@ -337,7 +337,7 @@ begin
     if WideBottom then
       FrameBottom := ClientHeight - (WideFrame - NarrowFrame)
     else
-      FrameBottom := ClientHeight
+      FrameBottom := ClientHeight;
   end;
   Fill(Canvas, 3, InnerBottom + 1, ClientWidth - 6, ClientHeight - InnerBottom -
     4, xTexOffset, yTexOffset);
@@ -385,7 +385,7 @@ begin
         Pen.Color := MainTexture.clBevelLight;
         MoveTo(ClientWidth - 3 - ModalFrameIndent, 3);
         LineTo(ClientWidth - 3 - ModalFrameIndent, TitleHeight);
-      end
+      end;
   end
   else
   begin
@@ -440,7 +440,7 @@ begin
         MoveTo(ClientWidth - CaptionLeft - 2, ClientHeight - WideFrame);
         LineTo(ClientWidth - CaptionLeft - 2, FrameBottom - 2);
       end;
-    end
+    end;
   end;
   RisedTextOut(Canvas, Cut - 1, 7, Caption);
 

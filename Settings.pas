@@ -27,18 +27,22 @@ type
 
   TSettingsDlg = class(TDrawDlg)
     ButtonFullscreen: TButtonC;
+    Down2Btn: TButtonC;
     List: TListBox;
     OKBtn: TButtonA;
     CancelBtn: TButtonA;
+    Up2Btn: TButtonC;
     procedure ButtonFullscreenClick(Sender: TObject);
     procedure CancelBtnClick(Sender: TObject);
+    procedure Down2BtnClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormPaint(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure OKBtnClick(Sender: TObject);
+    procedure Up2BtnClick(Sender: TObject);
   private
-    { private declarations }
+    LocalGamma: Integer;
   public
     Languages: TLanguages;
     procedure LoadData;
@@ -110,6 +114,15 @@ begin
   ModalResult := mrCancel;
 end;
 
+procedure TSettingsDlg.Down2BtnClick(Sender: TObject);
+begin
+  if LocalGamma > 50 then
+  begin
+    Dec(LocalGamma);
+    Invalidate;
+  end;
+end;
+
 procedure TSettingsDlg.ButtonFullscreenClick(Sender: TObject);
 begin
   ButtonFullscreen.ButtonIndex := ButtonFullscreen.ButtonIndex xor 1;
@@ -138,9 +151,13 @@ begin
     ButtonFullscreen.Left + 12, ButtonFullscreen.Top + 12, MainTexture.clBevelShade,
     MainTexture.clBevelLight);
 
-  s := Phrases.Lookup('SETTINGS', 0);
+  S := Phrases.Lookup('SETTINGS', 0);
   LoweredTextOut(Canvas, -2, MainTexture, ButtonFullscreen.Left + 32,
-    ButtonFullscreen.Top - 4, s);
+    ButtonFullscreen.Top - 4, S);
+
+  // Gamma
+  UnderlinedTitleValue(Canvas, Phrases.Lookup('SETTINGS', 1), IntToStr(LocalGamma) + '%',
+    Up2Btn.Left - 150 - 4, Up2Btn.Top + 2, 150);
 end;
 
 procedure TSettingsDlg.FormShow(Sender: TObject);
@@ -156,6 +173,14 @@ begin
   ModalResult := mrOk;
 end;
 
+procedure TSettingsDlg.Up2BtnClick(Sender: TObject);
+begin
+  if LocalGamma < 150 then begin
+    Inc(LocalGamma);
+    Invalidate;
+  end;
+end;
+
 procedure TSettingsDlg.LoadData;
 begin
   List.ItemIndex := Languages.Search(LocaleCode);
@@ -163,12 +188,18 @@ begin
     List.ItemIndex := 0;
   if FullScreen then ButtonFullscreen.ButtonIndex := 3
     else ButtonFullscreen.ButtonIndex := 2;
+  LocalGamma := Gamma;
 end;
 
 procedure TSettingsDlg.SaveData;
+var
+  NeedRestart: Boolean;
 begin
+  NeedRestart := Gamma <> LocalGamma;
   LocaleCode := Languages[List.ItemIndex].ShortName;
   FullScreen := (ButtonFullscreen.ButtonIndex and 1) = 1;
+  Gamma := LocalGamma;
+  if NeedRestart then SimpleMessage(Phrases.Lookup('SETTINGS', 2));
 end;
 
 end.

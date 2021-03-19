@@ -91,6 +91,7 @@ procedure LightGradient(ca: TCanvas; x, y, Width, Color: integer);
 procedure DarkGradient(ca: TCanvas; x, y, Width, Kind: integer);
 procedure VLightGradient(ca: TCanvas; x, y, Height, Color: integer);
 procedure VDarkGradient(ca: TCanvas; x, y, Height, Kind: integer);
+procedure UnderlinedTitleValue(Canvas: TCanvas; Title, Value: string; X, Y, Width: Integer);
 procedure NumberBar(dst: TBitmap; x, y: integer; Cap: string; val: integer;
   const T: TTexture);
 procedure CountBar(dst: TBitmap; x, y, w: integer; Kind: integer;
@@ -1312,6 +1313,13 @@ const
 begin
   Gradient(ca, x, y, 1, 0, 0, Height,
     HGrSystem.Data.Canvas.Pixels[187, 137 + Kind], Brightness);
+end;
+
+procedure UnderlinedTitleValue(Canvas: TCanvas; Title, Value: string; X, Y, Width: Integer);
+begin
+  DLine(Canvas, X, X + Width, Y + 19, MainTexture.clBevelLight, MainTexture.clBevelShade);
+  RisedTextOut(Canvas, X, Y, Title);
+  RisedTextOut(Canvas, X + Width - BiColorTextWidth(Canvas, Value), Y, Value);
 end;
 
 procedure NumberBar(dst: TBitmap; x, y: integer; Cap: string;

@@ -893,11 +893,9 @@ begin
   end
   else if Page in [pgStartRandom, pgStartMap] then
   begin
-    DLine(Canvas, 344, 514, y0Mini + 61 + 19, MainTexture.clBevelLight,
-      MainTexture.clBevelShade);
-    RisedTextOut(Canvas, 344, y0Mini + 61, Phrases.Lookup('STARTCONTROLS', 10));
-    s := TurnToString(MaxTurn);
-    RisedTextOut(Canvas, 514 - BiColorTextWidth(Canvas, s), y0Mini + 61, s);
+    UnderlinedTitleValue(Canvas, Phrases.Lookup('STARTCONTROLS', 10),
+      TurnToString(MaxTurn), 344, y0Mini + 61, 170);
+
     s := Phrases.Lookup('STARTCONTROLS', 7);
     w := Canvas.TextWidth(s);
     LoweredTextOut(Canvas, -2, MainTexture, x0Brain + 32 - w div 2,
@@ -973,6 +971,7 @@ begin
       else
         s := IntToStr(nMapStartPositions - 1);
       RisedTextOut(Canvas, 198 - BiColorTextWidth(Canvas, s), yMain + 140, s);
+
       DLine(Canvas, 24, xDefault - 6, yMain + 164 + 19,
         MainTexture.clBevelLight, MainTexture.clBevelShade);
       RisedTextOut(Canvas, 24 { x0Brain+32-BiColorTextWidth(Canvas,s) div 2 } ,
@@ -985,6 +984,7 @@ begin
           0, 0, true);
       DLine(Canvas, 56, 272, y0Mini + 61 + 19, MainTexture.clBevelLight,
         MainTexture.clBevelShade);
+
       RisedTextOut(Canvas, 56, y0Mini + 61,
         Phrases.Lookup('STARTCONTROLS', 14));
       s := Phrases.Lookup('AUTODIFF', AutoDiff - 1);
@@ -1023,17 +1023,12 @@ begin
   end
   else if Page = pgEditRandom then
   begin
-    DLine(Canvas, 344, 514, y0Mini - 77 + 19, MainTexture.clBevelLight,
-      MainTexture.clBevelShade);
-    RisedTextOut(Canvas, 344, y0Mini - 77, Phrases.Lookup('STARTCONTROLS', 5));
-    s := IntToStr((WorldSizes[WorldSize].X * WorldSizes[WorldSize].Y * 20 +
-      DefaultWorldTiles div 2) div DefaultWorldTiles * 5) + '%';
-    RisedTextOut(Canvas, 514 - BiColorTextWidth(Canvas, s), y0Mini - 77, s);
-    DLine(Canvas, 344, 514, y0Mini + 61 + 19, MainTexture.clBevelLight,
-      MainTexture.clBevelShade);
-    RisedTextOut(Canvas, 344, y0Mini + 61, Phrases.Lookup('STARTCONTROLS', 6));
-    s := IntToStr(StartLandMass) + '%';
-    RisedTextOut(Canvas, 514 - BiColorTextWidth(Canvas, s), y0Mini + 61, s);
+    UnderlinedTitleValue(Canvas, Phrases.Lookup('STARTCONTROLS', 5),
+      IntToStr((WorldSizes[WorldSize].X * WorldSizes[WorldSize].Y * 20 +
+      DefaultWorldTiles div 2) div DefaultWorldTiles * 5) + '%',
+      344, y0Mini - 77, 170);
+    UnderlinedTitleValue(Canvas, Phrases.Lookup('STARTCONTROLS', 6),
+      IntToStr(StartLandMass) + '%', 344, y0Mini + 61, 170);
   end
   else if Page = pgEditMap then
   begin
