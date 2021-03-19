@@ -1327,7 +1327,7 @@ begin
   WonderInWork := 0;
   for iix := 0 to 27 do
     if (Imp[iix].Preq <> preNA) and ((Imp[iix].Preq = preNone) or
-      IsResearched(Imp[iix].Preq)) and (RO.Wonder[iix].CityID = -1) then
+      IsResearched(Imp[iix].Preq)) and (RO.Wonder[iix].CityID = WonderNotBuiltYet) then
       Inc(WonderAvailable, 1 shl iix);
   for cix := 0 to RO.nCity - 1 do
     if MyCity[cix].Loc >= 0 then
@@ -1499,7 +1499,7 @@ begin
                     HasSettler := True;
               if ((RO.Government <> gDespotism) or (RO.nUn >= RO.nCity * 4)) and
                 not IsResearched(adMassProduction) and (Built[imPalace] > 0) and
-                (RO.Wonder[woZeus].CityID = -1) and City_Improvable(cix, woZeus) then
+                (RO.Wonder[woZeus].CityID = WonderNotBuiltYet) and City_Improvable(cix, woZeus) then
                 City_StartImprovement(cix, woZeus)
               else if (City_CurrentImprovementProject(cix) >= 0) and
                 (City_CurrentImprovementProject(cix) < 28) then

@@ -1264,6 +1264,10 @@ mcDefense = mcArmor;
 mcLongRange = mcArtillery;
 mcHospital = mcSupplyShip;
 
+// Wonders CityID constants
+WonderNotBuiltYet = -1;
+WonderDestroyed = -2;
+
 type
   TServerCall = function (Command, Player, Subject: Integer; var Data)
     : Integer; stdcall;
@@ -1766,6 +1770,7 @@ function SpecialTile(Loc, TerrType, lx: Integer): Integer;
 function DelphiRandom(const pi_Max: Integer): Integer; overload;
 function DelphiRandom: Extended; overload;
 procedure DelphiRandomize;
+
 
 implementation
 

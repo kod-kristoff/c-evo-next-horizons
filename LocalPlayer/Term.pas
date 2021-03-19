@@ -1361,7 +1361,7 @@ begin
   begin
     need := false;
     for i := 0 to 27 do
-      if MyRO.Wonder[i].CityID <> -1 then
+      if MyRO.Wonder[i].CityID <> WonderNotBuiltYet then
         need := true;
     if need then
     begin
@@ -2023,7 +2023,7 @@ begin
           OwnWonder := true;
       if MyRO.Wonder[i].CityID <> MyData.ToldWonders[i].CityID then
       begin
-        if MyRO.Wonder[i].CityID = -2 then
+        if MyRO.Wonder[i].CityID = WonderDestroyed then
           with MessgExDlg do
           begin { tell about destroyed wonders }
             OpenSound := 'WONDER_DESTROYED';
@@ -2075,7 +2075,7 @@ begin
         end
       end
       else if (MyRO.Wonder[i].EffectiveOwner <> MyData.ToldWonders[i]
-        .EffectiveOwner) and (MyRO.Wonder[i].CityID > -2) then
+        .EffectiveOwner) and (MyRO.Wonder[i].CityID > WonderDestroyed) then
         if MyRO.Wonder[i].EffectiveOwner < 0 then
         begin
           if i <> woMIR then
@@ -5906,7 +5906,7 @@ begin
     if CityCaptured and (MyMap[ToLoc] and fCity = 0) then
     begin // city destroyed
       for i := 0 to 27 do { tell about destroyed wonders }
-        if (MyRO.Wonder[i].CityID = -2) and (MyData.ToldWonders[i].CityID <> -2)
+        if (MyRO.Wonder[i].CityID = WonderDestroyed) and (MyData.ToldWonders[i].CityID <> WonderDestroyed)
         then
           with MessgExDlg do
           begin
@@ -7315,7 +7315,7 @@ begin
       or (MyRO.TestFlags and (tfAllTechs or tfUncover or tfAllContact) <> 0);
     mEUnitStat.Enabled := MyRO.nEnemyModel > 0;
     { mWonders.Enabled:= false;
-      for i:=0 to 27 do if MyRO.Wonder[i].CityID<>-1 then
+      for i:=0 to 27 do if MyRO.Wonder[i].CityID <> WonderNotBuiltYet then
       mWonders.Enabled:=true; }
     mDiagram.Enabled := MyRO.Turn >= 2;
     mShips.Enabled := false;

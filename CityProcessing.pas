@@ -971,7 +971,7 @@ begin
 
     // check if wonder already built
     if (Project and cpImp <> 0) and (Project and cpIndex < 28) and
-      (GWonder[Project and cpIndex].CityID <> -1) then
+      (GWonder[Project and cpIndex].CityID <> WonderNotBuiltYet) then
     begin
       inc(Flags, chOldWonder);
       DoProd := false;

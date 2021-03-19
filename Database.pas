@@ -3194,7 +3194,7 @@ begin
   begin
     for i := 0 to 27 do
       if Built[i] > 0 then
-        GWonder[i].CityID := -2; // wonder destroyed
+        GWonder[i].CityID := WonderDestroyed;
     V21_to_Loc(Loc, Radius);
     for V21 := 1 to 26 do
       if 1 shl V21 and Tiles <> 0 then

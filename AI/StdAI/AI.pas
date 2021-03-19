@@ -2595,7 +2595,7 @@ begin
           iix := City_CurrentImprovementProject(cix);
           if (iix >= 0) and (((Imp[iix].Kind in [ikNatLocal, ikNatGlobal]) and
             (RO.NatBuilt[iix] > 0)) or ((Imp[iix].Kind = ikWonder) and
-            (RO.Wonder[iix].CityID <> -1))) then
+            (RO.Wonder[iix].CityID <> WonderNotBuiltYet))) then
             CheckProd := True;
         end;
         if CheckProd then

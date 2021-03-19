@@ -99,7 +99,6 @@ var
   Y: Integer;
   ax: Integer;
   R: Integer;
-  I: Integer;
   C: Integer;
   Ch: Integer;
   Line: array [0..3] of TPixelPointer;
@@ -222,56 +221,26 @@ begin
 
   PaintBackgroundShape;
 
-  for I := 0 to 20 do
-    if Imp[I].Preq <> preNA then
-    begin
-      case MyRO.Wonder[I].CityID of
-        - 1: // not built yet
-          begin
-            Fill(Offscreen.Canvas, Center.X - xSizeBig div 2 + RingPosition[I].X - 3,
-              Center.Y - ySizeBig div 2 + RingPosition[I].Y - 3, xSizeBig + 6,
-              ySizeBig + 6, (wMaintexture - ClientWidth) div 2,
-              (hMaintexture - ClientHeight) div 2);
-            DarkIcon(I);
-          end;
-        -2: // destroyed
-          begin
-            Glow(I, $000000);
-          end;
-      else
-        begin
-          if MyRO.Wonder[I].EffectiveOwner >= 0 then
-            Glow(I, Tribe[MyRO.Wonder[I].EffectiveOwner].Color)
-          else
-            Glow(I, $000000);
-        end;
-      end;
-    end;
-
+  // Draw all bitmaps first
   HaveWonder := False;
-  for I := 0 to 20 do
-    if Imp[I].Preq <> preNA then
-    begin
+  for I := 0 to 20 do begin
+    if Imp[I].Preq <> preNA then begin
       case MyRO.Wonder[I].CityID of
-        -1: // not built yet
-          begin
-            Fill(Offscreen.Canvas, Center.X - xSizeBig div 2 + RingPosition[I].X - 3,
-              Center.Y - ySizeBig div 2 + RingPosition[I].Y - 3, xSizeBig + 6,
-              ySizeBig + 6, (wMaintexture - ClientWidth) div 2,
-              (hMaintexture - ClientHeight) div 2);
-            DarkIcon(I);
-          end;
-        -2: // destroyed
-          begin
-            HaveWonder := True;
-            BitBltCanvas(Offscreen.Canvas,
-              Center.X - xSizeBig div 2 + RingPosition[I].X,
-              Center.Y - ySizeBig div 2 + RingPosition[I].Y, xSizeBig,
-              ySizeBig, BigImp.Canvas, 0, (SystemIconLines + 3) *
-              ySizeBig);
-          end;
-      else
-        begin
+        WonderNotBuiltYet: begin
+          Fill(Offscreen.Canvas, Center.X - xSizeBig div 2 + RingPosition[I].X - 3,
+            Center.Y - ySizeBig div 2 + RingPosition[I].Y - 3, xSizeBig + 6,
+            ySizeBig + 6, (wMaintexture - ClientWidth) div 2,
+            (hMaintexture - ClientHeight) div 2);
+        end;
+        WonderDestroyed: begin
+          HaveWonder := True;
+          BitBltCanvas(Offscreen.Canvas,
+            Center.X - xSizeBig div 2 + RingPosition[I].X,
+            Center.Y - ySizeBig div 2 + RingPosition[I].Y, xSizeBig,
+            ySizeBig, BigImp.Canvas, 0, (SystemIconLines + 3) *
+            ySizeBig);
+        end;
+        else begin
           HaveWonder := True;
           BitBltCanvas(Offscreen.Canvas,
             Center.X - xSizeBig div 2 + RingPosition[I].X,
@@ -281,6 +250,25 @@ begin
         end;
       end;
     end;
+  end;
+
+  // Do direct pixel postprocessing separately to avoid bitmap copying in memory
+  Offscreen.Canvas.FillRect(0, 0, 0, 0);
+  Offscreen.BeginUpdate;
+  for I := 0 to 20 do begin
+    if Imp[I].Preq <> preNA then begin
+      case MyRO.Wonder[I].CityID of
+        WonderNotBuiltYet: DarkIcon(I);
+        WonderDestroyed: Glow(I, $000000);
+        else begin
+          if MyRO.Wonder[I].EffectiveOwner >= 0 then
+            Glow(I, Tribe[MyRO.Wonder[I].EffectiveOwner].Color)
+          else Glow(I, $000000);
+        end;
+      end;
+    end;
+  end;
+  Offscreen.EndUpdate;
 
   if not HaveWonder then
   begin
@@ -322,7 +310,7 @@ begin
       (wMaintexture - ClientWidth) div 2, (hMaintexture - ClientHeight) div 2);
     if Selection >= 0 then
     begin
-      if MyRO.Wonder[Selection].CityID = -1 then
+      if MyRO.Wonder[Selection].CityID = WonderNotBuiltYet then
       begin // not built yet
         { S:=Phrases.Lookup('IMPROVEMENTS',Selection);
           Canvas.Font.Color:=$000000;
@@ -337,13 +325,13 @@ begin
       else
       begin
         S := Phrases.Lookup('IMPROVEMENTS', Selection);
-        if MyRO.Wonder[Selection].CityID <> -2 then
+        if MyRO.Wonder[Selection].CityID <> WonderDestroyed then
           S := Format(Phrases.Lookup('WONDEROF'),
             [S, CityName(MyRO.Wonder[Selection].CityID)]);
         LoweredTextOut(Canvas, -1, MainTexture,
           (ClientWidth - BiColorTextWidth(Canvas, S)) div 2,
           ClientHeight - 3 - 36 - 10, S);
-        if MyRO.Wonder[Selection].CityID = -2 then
+        if MyRO.Wonder[Selection].CityID = WonderDestroyed then
           S := Phrases.Lookup('DESTROYED')
         else if MyRO.Wonder[Selection].EffectiveOwner < 0 then
           S := Phrases.Lookup('EXPIRED')

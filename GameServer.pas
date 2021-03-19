@@ -4217,7 +4217,7 @@ begin { >>>server }
                 else if built[NewProject and cpIndex] > 0 then
                   result := eInvalid
                 else if (NewProject and cpIndex < 28) and
-                  (GWonder[NewProject and cpIndex].CityID <> -1) then
+                  (GWonder[NewProject and cpIndex].CityID <> WonderNotBuiltYet) then
                   result := eViolation // wonder already exists
                 else if (NewProject and cpIndex = imSpacePort) and
                   (RW[Player].NatBuilt[imSpacePort] > 0) then
