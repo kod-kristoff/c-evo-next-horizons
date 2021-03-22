@@ -18,10 +18,9 @@ uses
 const
   WM_EOT = WM_USER;
 
-  pltsNormal = 0;
-  pltsBlink = 1;
-
 type
+  TPaintLocTempStyle = (pltsNormal, pltsBlink);
+  TTileSize = (tsSmall, tsMedium, tsBig);
 
   { TMainScreen }
 
@@ -256,7 +255,7 @@ type
     procedure ProcessRect(x0, y0, nx, ny, Options: integer);
     procedure PaintLoc(Loc: integer; Radius: integer = 0);
     procedure PaintLoc_BeforeMove(FromLoc: integer);
-    procedure PaintLocTemp(Loc: integer; Style: integer = pltsNormal);
+    procedure PaintLocTemp(Loc: integer; Style: TPaintLocTempStyle = pltsNormal);
     procedure PaintBufferToScreen(xMap, yMap, width, height: integer);
     procedure PaintDestination;
     procedure SetUnFocus(uix: integer);
@@ -276,7 +275,7 @@ type
     procedure SetDebugMap(p: integer);
     procedure SetViewpoint(p: integer);
     function LocationOfScreenPixel(x, y: integer): integer;
-    procedure SetTileSize(x, y: integer);
+    procedure SetTileSize(TileSize: TTileSize);
     procedure RectInvalidate(Left, Top, Rigth, Bottom: integer);
     procedure ShowEnemyShipChange(ShowShipChange: TShowShipChange);
     procedure SmartRectInvalidate(Left, Top, Rigth, Bottom: integer);
@@ -311,14 +310,17 @@ type
     trix: integer;
     FileName: ShortString;
   end;
+
   TCityNameInfo = record
     ID: integer;
     NewName: ShortString;
   end;
+
   TModelNameInfo = record
     mix: integer;
     NewName: ShortString;
   end;
+
   TPriceSet = Set of $00 .. $FF;
 
 const
@@ -413,6 +415,8 @@ const
   sbTurn = $10;
   sbAll = $FF;
 
+  TileSizes: array [TTileSize] of TPoint = ((X: 33; Y: 16), (X: 48; Y: 24), (X: 72; Y: 36));
+
 type
   TPersistentData = record
     FarTech: Integer;
@@ -433,7 +437,9 @@ var
   MyData: ^TPersistentData;
   AdvIcon: array [0 .. nAdv - 1] of Integer;
   { icons displayed with the technologies }
-  xxt, yyt, // half of tile size x/y
+  xxt: Integer; // half of tile size x/y
+  yyt: Integer; // half of tile size x/y
+  TileSize: TTileSize;
   GameMode: Integer;
   ClientMode: Integer;
   Age: Integer;
@@ -1605,9 +1611,8 @@ begin
     for y := 0 to 1 do
       MiniColors[x, y] := HGrSystem.Data.Canvas.Pixels[66 + x, 67 + y];
   IsoEngine.Init(InitEnemyModel);
-  if not IsoEngine.ApplyTileSize(xxt, yyt) and ((xxt <> 48) or (yyt <> 24) or (xxt <> 72))
-  then
-    ApplyTileSize(48, 24);
+  if not IsoEngine.ApplyTileSize(TileSize) and (TileSize <> tsMedium) then
+    ApplyTileSize(tsMedium);
   // non-default tile size is missing a file, switch to default
   MainMap := TIsoMap.Create;
   MainMap.SetOutput(offscreen);
@@ -3536,6 +3541,9 @@ begin
   if sb.ProcessMouseWheel(WheelDelta) then begin
     PanelPaint;
     Update;
+  end else begin
+    if (WheelDelta > 0) and (TileSize < High(TTileSize)) then SetTileSize(Succ(TileSize))
+    else if (WheelDelta < 0) and (TileSize > Low(TTileSize)) then SetTileSize(Pred(TileSize));
   end;
 end;
 
@@ -3980,7 +3988,7 @@ begin
   end
 end;
 
-procedure TMainScreen.PaintLocTemp(Loc: integer; Style: integer);
+procedure TMainScreen.PaintLocTemp(Loc: integer; Style: TPaintLocTempStyle);
 var
   y0, x0, xMap, yMap: integer;
 begin
@@ -7294,9 +7302,9 @@ begin
           mDebugMap.Add(m);
         end;
     end;
-    mSmallTiles.Checked := xxt = 33;
-    mNormalTiles.Checked := xxt = 48;
-    mBigTiles.Checked := xxt = 72;
+    mSmallTiles.Checked := TileSize = tsSmall;
+    mNormalTiles.Checked := TileSize = tsMedium;
+    mBigTiles.Checked := TileSize = tsBig;
   end
   else if Popup = StatPopup then
   begin
@@ -7758,10 +7766,10 @@ begin
   Reg := TRegistry.Create;
   with Reg do try
     OpenKey(AppRegistryKey, False);
-    if ValueExists('TileWidth') then xxt := ReadInteger('TileWidth') div 2
-      else xxt := 48;
-    if ValueExists('TileHeight') then yyt := ReadInteger('TileHeight') div 2
-      else yyt := 24;
+    if ValueExists('TileSize') then TileSize := TTileSize(ReadInteger('TileSize'))
+      else TileSize := tsMedium;
+    xxt := TileSizes[TileSize].X;
+    yyt := TileSizes[TileSize].Y;
     if ValueExists('OptionChecked') then OptionChecked := ReadInteger('OptionChecked')
       else OptionChecked := DefaultOptionChecked;
     if ValueExists('MapOptionChecked') then MapOptionChecked := ReadInteger('MapOptionChecked')
@@ -7990,26 +7998,26 @@ end;
 
 procedure TMainScreen.mSmallTilesClick(Sender: TObject);
 begin
-  SetTileSize(33, 16);
+  SetTileSize(tsSmall);
 end;
 
 procedure TMainScreen.mNormalTilesClick(Sender: TObject);
 begin
-  SetTileSize(48, 24);
+  SetTileSize(tsMedium);
 end;
 
 procedure TMainScreen.mBigTilesClick(Sender: TObject);
 begin
-  SetTileSize(72, 36);
+  SetTileSize(tsBig);
 end;
 
-procedure TMainScreen.SetTileSize(x, y: integer);
+procedure TMainScreen.SetTileSize(TileSize: TTileSize);
 var
   i, CenterLoc: integer;
 begin
   CenterLoc := (xw + MapWidth div (xxt * 4)) mod G.lx +
     (yw + MapHeight div (yyt * 2)) * G.lx;
-  IsoEngine.ApplyTileSize(x, y);
+  IsoEngine.ApplyTileSize(TileSize);
   FormResize(nil);
   Centre(CenterLoc);
   PaintAllMaps;
@@ -8035,8 +8043,7 @@ begin
   with Reg do
   try
     OpenKey(AppRegistryKey, true);
-    WriteInteger('TileWidth', xxt * 2);
-    WriteInteger('TileHeight', yyt * 2);
+    WriteInteger('TileSize', Integer(TileSize));
     WriteInteger('OptionChecked', OptionChecked);
     WriteInteger('MapOptionChecked', MapOptionChecked);
     WriteInteger('CityReport', integer(CityRepMask));
@@ -8060,3 +8067,4 @@ end;
 initialization
 
 end.
+

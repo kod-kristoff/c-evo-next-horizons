@@ -549,6 +549,9 @@ AI測試地圖
 只顯示巡邏、攻擊及占領行動
 只顯示巡邏、攻擊及占領行動
 地塊尺寸
+Small
+Medium
+Big
 
 #ADVANCES
 智能飛行
@@ -961,3 +964,5 @@ AI測試地圖
 
 #SETTINGS
 Full screen
+Gamma
+Restart is needed to apply changes

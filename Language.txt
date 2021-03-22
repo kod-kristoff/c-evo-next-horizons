@@ -541,6 +541,9 @@ Don't Show
 Patrols, Attacks and Captures Only
 Patrols, Attacks and Captures Only
 Tile Size
+Small
+Medium
+Big
 
 #ADVANCES
 Advanced Flight

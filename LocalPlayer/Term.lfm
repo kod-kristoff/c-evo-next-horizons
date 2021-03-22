@@ -445,17 +445,17 @@ object MainScreen: TMainScreen
         Tag = 96
         GroupIndex = 1
         object mSmallTiles: TMenuItem
-          Caption = '40px'
+          Tag = 97
           RadioItem = True
           OnClick = mSmallTilesClick
         end
         object mNormalTiles: TMenuItem
-          Caption = '60px'
+          Tag = 98
           RadioItem = True
           OnClick = mNormalTilesClick
         end
         object mBigTiles: TMenuItem
-          Caption = '90px'
+          Tag = 99
           RadioItem = True
           OnClick = mBigTilesClick
         end

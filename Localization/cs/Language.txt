@@ -541,6 +541,9 @@ Nezobrazovat
 Pouze hlídkování, útoky a obsazení
 Pouze hlídkování, útoky a obsazení
 Velikost políčka
+Malá
+Střední
+Velká
 
 #ADVANCES
 Pokročilý let

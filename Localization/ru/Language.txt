@@ -557,6 +557,9 @@ On (Альтернатива)
 Только военные действия
 Только военные действия
 Размер секции
+Small
+Medium
+Big
 
 #ADVANCES
 Передовые полеты
@@ -969,3 +972,5 @@ Recycling
 
 #SETTINGS
 Full screen
+Gamma
+Restart is needed to apply changes

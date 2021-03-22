@@ -531,6 +531,9 @@ Non mostrare
 Solo pattuglie, attacchi e conquiste
 Solo pattuglie, attacchi e conquiste
 Dimensione casella
+Small
+Medium
+Big
 
 #ADVANCES
 Aviazione avanzata
@@ -934,3 +937,5 @@ Massimizza\produzione
 
 #SETTINGS
 Full screen
+Gamma
+Restart is needed to apply changes

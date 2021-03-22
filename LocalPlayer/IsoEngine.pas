@@ -76,7 +76,7 @@ var
 
 function IsJungle(y: integer): boolean;
 procedure Init(InitEnemyModelHandler: TInitEnemyModelEvent);
-function ApplyTileSize(xxtNew, yytNew: integer): boolean;
+function ApplyTileSize(ATileSize: TTileSize): boolean;
 procedure Done;
 procedure Reset;
 
@@ -136,7 +136,7 @@ begin
   NoMap := TIsoMap.Create;
 end;
 
-function ApplyTileSize(xxtNew, yytNew: integer): boolean;
+function ApplyTileSize(ATileSize: TTileSize): boolean;
 var
   i: Integer;
   x: Integer;
@@ -150,7 +150,11 @@ var
   LandMore, OceanMore, DitherMask, Mask24: TBitmap;
   MaskLine: array [0 .. 50 * 3 - 1] of TPixelPointer; // 32 = assumed maximum for yyt
   Border: boolean;
+  xxtNew: Integer;
+  yytNew: Integer;
 begin
+  xxtNew := TileSizes[ATileSize].X;
+  yytNew := TileSizes[ATileSize].Y;
   result := false;
   HGrTerrainNew := LoadGraphicSet(Format('Terrain%dx%d.png',
     [xxtNew * 2, yytNew * 2]));
@@ -162,6 +166,7 @@ begin
     exit;
   xxt := xxtNew;
   yyt := yytNew;
+  TileSize := ATileSize;
   HGrTerrain := HGrTerrainNew;
   HGrCities := HGrCitiesNew;
   result := true;

@@ -550,6 +550,9 @@ Keine Züge Verbündeter anzeigen
 Nur Angriffe und Eroberungen
 Nur Angriffe und Eroberungen
 Tile Size
+Small
+Medium
+Big
 
 #ADVANCES
 Moderne Luftfahrt
@@ -962,3 +965,5 @@ maximale\Produktion
 
 #SETTINGS
 Full screen
+Gamma
+Restart is needed to apply changes
