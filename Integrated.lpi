@@ -94,7 +94,7 @@
         <PackageName Value="LCL"/>
       </Item2>
     </RequiredPackages>
-    <Units Count="42">
+    <Units Count="43">
       <Unit0>
         <Filename Value="Integrated.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -335,6 +335,10 @@
         <Filename Value="LocalPlayer\UKeyBindings.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit41>
+      <Unit42>
+        <Filename Value="UMiniMap.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit42>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
