@@ -223,17 +223,47 @@ type
     procedure BareBtnDownChanged(Sender: TObject);
     procedure MovieSpeedBtnClick(Sender: TObject);
   private
-    xw, yw, xwd, ywd, xwMini, ywMini, xMidPanel, xRightPanel, xTroop, xTerrain,
-      xMini, yMini, ywmax, ywcenter, TroopLoc, TrCnt, TrRow, TrPitch, MapWidth,
-      MapOffset, MapHeight, BlinkTime, BrushLoc, EditLoc, xMouse,
-      yMouse: integer;
+    xw: Integer;
+    yw: Integer;
+    xwd: Integer;
+    ywd: Integer;
+    xwMini: Integer;
+    ywMini: Integer;
+    xMidPanel: Integer;
+    xRightPanel: Integer;
+    xTroop: Integer;
+    xTerrain: Integer;
+    xMini: Integer;
+    yMini: Integer;
+    ywmax: Integer;
+    ywcenter: Integer;
+    TroopLoc: Integer;
+    TrCnt: Integer;
+    TrRow: Integer;
+    TrPitch: Integer;
+    MapWidth: Integer;
+    MapOffset: Integer;
+    MapHeight: Integer;
+    BlinkTime: Integer;
+    BrushLoc: Integer;
+    EditLoc: Integer;
+    xMouse: Integer;
+    yMouse: Integer;
     BrushType: Cardinal;
-    trix: array [0 .. 63] of integer;
+    trix: array [0 .. 63] of Integer;
     AILogo: array [0 .. nPl - 1] of TBitmap;
-    Mini, Panel, TopBar: TBitmap;
+    Mini: TBitmap;
+    Panel: TBitmap;
+    TopBar: TBitmap;
     sb: TPVScrollbar;
-    Closable, RepaintOnResize, Tracking, TurnComplete, Edited, GoOnPhase,
-      HaveStrategyAdvice, FirstMovieTurn: boolean;
+    Closable: Boolean;
+    RepaintOnResize: Boolean;
+    Tracking: Boolean;
+    TurnComplete: Boolean;
+    Edited: Boolean;
+    GoOnPhase: Boolean;
+    HaveStrategyAdvice: Boolean;
+    FirstMovieTurn: Boolean;
     PrevWindowState: TWindowState;
     CurrentWindowState: TWindowState;
     function ChooseUnusedTribe: integer;
@@ -321,7 +351,7 @@ type
     NewName: ShortString;
   end;
 
-  TPriceSet = Set of $00 .. $FF;
+  TPriceSet = set of $00 .. $FF;
 
 const
   crImpDrag = 2;
@@ -415,7 +445,8 @@ const
   sbTurn = $10;
   sbAll = $FF;
 
-  TileSizes: array [TTileSize] of TPoint = ((X: 33; Y: 16), (X: 48; Y: 24), (X: 72; Y: 36));
+  TileSizes: array [TTileSize] of TPoint = ((X: 33; Y: 16), (X: 48; Y: 24),
+    (X: 72; Y: 36));
 
 type
   TPersistentData = record
@@ -431,6 +462,15 @@ type
     ImpOrder: array [0 .. nCityType - 1] of TImpOrder;
     ToldWonders: array [0 .. 27] of TWonderInfo;
     ToldTech: array [0 .. nAdv - 1] of ShortInt;
+  end;
+
+  TDipMem = record
+    pContact: Integer;
+    SentCommand: Integer;
+    FormerTreaty: Integer;
+    SentOffer: TOffer;
+    DeliveredPrices: TPriceSet;
+    ReceivedPrices: TPriceSet;
   end;
 
 var
@@ -467,14 +507,7 @@ var
   TribeNames: TStringList;
   TribeOriginal: array [0 .. nPl - 1] of Boolean;
   LostArmy: array [0 .. nPl * nMmax - 1] of Integer;
-  DipMem: array [0 .. nPl - 1] of record
-    pContact: Integer;
-    SentCommand: Integer;
-    FormerTreaty: Integer;
-    SentOffer: TOffer;
-    DeliveredPrices: TPriceSet;
-    ReceivedPrices: TPriceSet;
-  end;
+  DipMem: array [0 .. nPl - 1] of TDipMem;
 
 function CityEventName(i: integer): string;
 function RoughCredibility(Credibility: integer): integer;
@@ -4188,7 +4221,7 @@ begin
       FillRect(Rect(0, 0, MapWidth, MapHeight));
       Brush.Style := bsClear;
       OffscreenUser := self;
-      exit
+      exit;
     end;
 
   MainMap.SetPaintBounds(0, 0, MapWidth, MapHeight);
@@ -4213,7 +4246,7 @@ begin
   begin
     offscreen.Canvas.Font.Assign(UniFont[ftSmall]);
     ProcessRect(xw, yw, MapWidth div xxt, MapHeight div yyt,
-      prPaint or prInvalidate)
+      prPaint or prInvalidate);
   end
   else
   begin
@@ -4284,7 +4317,7 @@ begin
       RectInvalidate(MapOffset, TopBarHeight, MapOffset + MapWidth,
         TopBarHeight + MapHeight - overlap);
     RectInvalidate(xMidPanel, TopBarHeight + MapHeight - overlap, xRightPanel,
-      TopBarHeight + MapHeight)
+      TopBarHeight + MapHeight);
   end;
   // if (xwd<>xw) or (ywd<>yw) then
   // Server(sChangeSuperView,me,yw*G.lx+xw,nil^); // for synchronizing client side viewer, not used currently
@@ -4952,7 +4985,7 @@ begin
     TopBar.Canvas.Font.Assign(UniFont[ftNormal]);
   end;
   RectInvalidate(0, 0, ClientWidth, TopBarHeight);
-end; { PanelPaint }
+end;
 
 procedure TMainScreen.FocusOnLoc(Loc: integer; Options: integer = 0);
 var
@@ -4967,7 +5000,7 @@ begin
   if Outside then
   begin
     Centre(Loc);
-    PaintAllMaps
+    PaintAllMaps;
   end
   else if not MapValid then
     PaintAllMaps
@@ -5002,7 +5035,7 @@ begin
         if NearLoc < 0 then
         begin
           NewFocus := uix;
-          Break
+          Break;
         end
         else
         begin
@@ -5010,9 +5043,9 @@ begin
           if (NewFocus < 0) or (TestDist < Dist) then
           begin
             NewFocus := uix;
-            Dist := TestDist
-          end
-        end
+            Dist := TestDist;
+          end;
+        end;
     end;
     if GotoOnly then
       if NewFocus < 0 then
@@ -5042,7 +5075,7 @@ begin
     SetTroopLoc(-1);
     PanelPaint;
   end;
-end; { NextUnit }
+end;
 
 procedure TMainScreen.Scroll(dx, dy: integer);
 begin
@@ -5082,8 +5115,8 @@ begin
         if UnFocus >= 0 then
           PaintLocTemp(MyUn[UnFocus].Loc)
         else if TurnComplete and not supervising then
-          EOT.SetButtonIndexFast(eotBlinkOn)
-      end
+          EOT.SetButtonIndexFast(eotBlinkOn);
+      end;
     end
     else
     begin
@@ -5112,7 +5145,7 @@ begin
             (@Screen.ActiveForm.OnDeactivate <> nil) then
             Screen.ActiveForm.OnDeactivate(nil);
           Scroll(dx, dy);
-        end
+        end;
       end;
 
       BlinkTime := (BlinkTime + 1) mod (BlinkOnTime + BlinkOffTime);
@@ -5133,9 +5166,9 @@ begin
         if BlinkTime = 0 then
           EOT.SetButtonIndexFast(eotBlinkOff)
         else if BlinkTime = BlinkOffTime then
-          EOT.SetButtonIndexFast(eotBlinkOn)
-      end
-    end
+          EOT.SetButtonIndexFast(eotBlinkOn);
+      end;
+    end;
 end;
 
 procedure TMainScreen.Centre(Loc: integer);
@@ -5154,7 +5187,7 @@ begin
       yw := 0
     else if yw > ywmax then
       yw := ywmax;
-  end
+  end;
 end;
 
 function TMainScreen.ZoomToCity(Loc: integer; NextUnitOnClose: boolean = false;

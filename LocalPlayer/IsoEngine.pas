@@ -14,6 +14,9 @@ type
 
   TIsoMap = class
   private
+    const
+      Dirx: array [0..7] of Integer = (1, 2, 1, 0, -1, -2, -1, 0);
+      Diry: array [0..7] of Integer = (-1, 0, 1, 2, 1, 0, -1, -2);
     procedure CityGrid(xm, ym: integer; CityAllowClick: Boolean);
     function IsShoreTile(Loc: integer): boolean;
     procedure MakeDark(Line: PPixelPointer; Length: Integer);
@@ -752,7 +755,7 @@ begin { virtual pole tile }
     if (MyMap[dLoc(Loc, 0, 2)] and fObserved <> 0) and
       (MyMap[dLoc(Loc, -2, 2)] and fObserved <> 0) and
       (MyMap[dLoc(Loc, 2, 2)] and fObserved <> 0) then
-      result := result or fObserved
+      result := result or fObserved;
   end
   else if Loc < 0 then
   begin
@@ -761,7 +764,7 @@ begin { virtual pole tile }
       result := fArctic;
     if (MyMap[dLoc(Loc, -1, 1)] and fObserved <> 0) and
       (MyMap[dLoc(Loc, 1, 1)] and fObserved <> 0) then
-      result := result or fObserved
+      result := result or fObserved;
   end
   else if Loc < G.lx * (G.ly + 1) then
   begin
@@ -770,7 +773,7 @@ begin { virtual pole tile }
       result := fArctic;
     if (MyMap[dLoc(Loc, -1, -1)] and fObserved <> 0) and
       (MyMap[dLoc(Loc, 1, -1)] and fObserved <> 0) then
-      result := result or fObserved
+      result := result or fObserved;
   end
   else if Loc < G.lx * (G.ly + 2) then
   begin
@@ -781,13 +784,9 @@ begin { virtual pole tile }
     if (MyMap[dLoc(Loc, 0, -2)] and fObserved <> 0) and
       (MyMap[dLoc(Loc, -2, -2)] and fObserved <> 0) and
       (MyMap[dLoc(Loc, 2, -2)] and fObserved <> 0) then
-      result := result or fObserved
-  end
+      result := result or fObserved;
+  end;
 end;
-
-const
-  Dirx: array [0 .. 7] of integer = (1, 2, 1, 0, -1, -2, -1, 0);
-  Diry: array [0 .. 7] of integer = (-1, 0, 1, 2, 1, 0, -1, -2);
 
 function TIsoMap.Connection4(Loc, Mask, Value: integer): integer;
 begin
@@ -810,7 +809,8 @@ end;
 
 function TIsoMap.Connection8(Loc, Mask: integer): integer;
 var
-  Dir, ConnLoc: integer;
+  Dir: Integer;
+  ConnLoc: Integer;
 begin
   result := 0;
   for Dir := 0 to 7 do
@@ -824,7 +824,8 @@ end;
 
 function TIsoMap.OceanConnection(Loc: integer): integer;
 var
-  Dir, ConnLoc: integer;
+  Dir: Integer;
+  ConnLoc: Integer;
 begin
   result := 0;
   for Dir := 0 to 7 do
@@ -838,7 +839,8 @@ end;
 
 procedure TIsoMap.PaintShore(x, y, Loc: integer);
 var
-  Conn, Tile: integer;
+  Conn: Integer;
+  Tile: Integer;
 begin
   if (y <= FTop - yyt * 2) or (y > FBottom) or (x <= FLeft - xxt * 2) or
     (x > FRight) then
@@ -1332,11 +1334,9 @@ begin
 end;
 
 function TIsoMap.IsShoreTile(Loc: integer): boolean;
-const
-  Dirx: array [0 .. 7] of integer = (1, 2, 1, 0, -1, -2, -1, 0);
-  Diry: array [0 .. 7] of integer = (-1, 0, 1, 2, 1, 0, -1, -2);
 var
-  Dir, ConnLoc: integer;
+  Dir: Integer;
+  ConnLoc: integer;
 begin
   result := false;
   for Dir := 0 to 7 do
@@ -1344,8 +1344,8 @@ begin
     ConnLoc := dLoc(Loc, Dirx[Dir], Diry[Dir]);
     if (ConnLoc < 0) or (ConnLoc >= G.lx * G.ly) or
       ((MyMap[ConnLoc] - 2) and fTerrain < 13) then
-      result := true
-  end
+      result := true;
+  end;
 end;
 
 procedure TIsoMap.MakeDark(Line: PPixelPointer; Length: Integer);

@@ -4,9 +4,7 @@ unit CityScreen;
 interface
 
 uses
-  {$IFDEF LINUX}
-  LMessages,
-  {$ENDIF}
+  {$IFDEF LINUX}LMessages,{$ENDIF}
   Protocol, ClientTools, Term, ScreenTools, IsoEngine, BaseWin,
   LCLIntf, LCLType, Messages, SysUtils, Classes, Graphics, Controls, Forms, ExtCtrls,
   ButtonA, ButtonC, Area, GraphType;
@@ -52,7 +50,43 @@ type
     // procedure AdviceBtnClick(Sender: TObject);
     procedure PageUpBtnClick(Sender: TObject);
     procedure PageDownBtnClick(Sender: TObject);
-
+  private
+    c: TCity;
+    Report: TCityReportNew;
+    cOwner: Integer;
+    cGov: Integer;
+    emix: Integer; { enemy model index of produced unit }
+    cix: Integer;
+    cLoc: Integer;
+    Mode: Integer;
+    ZoomArea: Integer;
+    Page: Integer;
+    PageCount: Integer;
+    BlinkTime: Integer;
+    OpenSoundEvent: Integer;
+    SizeClass: Integer;
+    AgePrepared: Integer;
+    Optimize_cixTileChange: Integer;
+    Optimize_TilesBeforeChange: Integer;
+    Happened: cardinal;
+    imix: array [0 .. 15] of integer;
+    CityAreaInfo: TCityAreaInfo;
+    AreaMap: TIsoMap;
+    CityMapTemplate: TBitmap;
+    SmallCityMapTemplate: TBitmap;
+    Back: TBitmap;
+    SmallCityMap: TBitmap;
+    ZoomCityMap: TBitmap;
+    Template: TBitmap;
+    IsPort: Boolean;
+    ProdHint: Boolean;
+    AllowChange: Boolean;
+    procedure InitSmallCityMap;
+    procedure InitZoomCityMap;
+    procedure ChooseProject;
+    procedure ChangeCity(d: integer);
+    procedure ChangeResourceWeights(iResourceWeights: integer);
+    procedure OnPlaySound(var Msg: TMessage); message WM_PLAYSOUND;
   public
     RestoreUnFocus: integer;
     CloseAction: TCityCloseAction;
@@ -60,36 +94,16 @@ type
     procedure ShowNewContent(NewMode, Loc: integer; ShowEvent: cardinal);
     procedure Reset;
     procedure CheckAge;
-
-  private
-    c: TCity;
-    Report: TCityReportNew;
-    cOwner, cGov, emix { enemy model index of produced unit } , cix, cLoc, Mode,
-      ZoomArea, Page, PageCount, BlinkTime, OpenSoundEvent, SizeClass,
-      AgePrepared: integer;
-    Optimize_cixTileChange, Optimize_TilesBeforeChange: integer;
-    Happened: cardinal;
-    imix: array [0 .. 15] of integer;
-    CityAreaInfo: TCityAreaInfo;
-    AreaMap: TIsoMap;
-    CityMapTemplate, SmallCityMapTemplate, Back, SmallCityMap, ZoomCityMap,
-      Template: TBitmap;
-    IsPort, ProdHint, AllowChange: boolean;
-    procedure InitSmallCityMap;
-    procedure InitZoomCityMap;
-    procedure ChooseProject;
-    procedure ChangeCity(d: integer);
-    procedure ChangeResourceWeights(iResourceWeights: integer);
-    procedure OnPlaySound(var Msg: TMessage); message WM_PLAYSOUND;
   end;
 
 var
   CityDlg: TCityDlg;
 
+
 implementation
 
 uses
-  Select, Messg, MessgEx, Help, Tribes, Directories, Math, UPixelPointer, Sound;
+  Select, Messg, MessgEx, Help, Tribes, Directories, Math, Sound;
 
 {$R *.lfm}
 
@@ -277,12 +291,9 @@ begin
   if cix >= 0 then
     c := MyCity[cix];
   case MyMap[cLoc] and fTerrain of
-    fPrairie:
-      cli1 := cliPrairie;
-    fHills:
-      cli1 := cliHills;
-    fTundra:
-      cli1 := cliTundra;
+    fPrairie: cli1 := cliPrairie;
+    fHills: cli1 := cliHills;
+    fTundra: cli1 := cliTundra;
   else
     cli1 := cliPlains;
   end;
@@ -1339,7 +1350,7 @@ begin
               MyCity[cix].Status := MyCity[cix].Status and
                 not csResourceWeightsMask; // off
               c.Status := MyCity[cix].Status;
-              SmartUpdateContent
+              SmartUpdateContent;
             end;
             exit;
           end;
@@ -1736,7 +1747,7 @@ begin
   if Page > 0 then
   begin
     dec(Page);
-    SmartUpdateContent
+    SmartUpdateContent;
   end;
 end;
 
@@ -1745,7 +1756,7 @@ begin
   if Page < PageCount - 1 then
   begin
     inc(Page);
-    SmartUpdateContent
+    SmartUpdateContent;
   end;
 end;
 
