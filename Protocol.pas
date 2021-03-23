@@ -1290,6 +1290,7 @@ type
     AirLoad: Byte; // number of transported air units
     Flags: Cardinal;
   end;
+  PUn = ^TUn;
 
   { TCity }
 
@@ -1313,6 +1314,7 @@ type
     Built: array [0 .. (nImp + 3) div 4 * 4 - 1] of ShortInt;
     // array value =1 indicates built improvement
   end;
+  PCity = ^TCity;
 
   TModel = packed record
     Status: LongInt; // free for AI use
@@ -1351,6 +1353,7 @@ type
     Load: Byte; { number of transported units }
     Flags: Word;
   end;
+  PUnitInfo = ^TUnitInfo;
 
   TCityInfo = packed record
     Loc: LongInt;
@@ -1361,6 +1364,7 @@ type
     Size: Word;
     Flags: Word;
   end;
+  PCityInfo = ^TCityInfo;
 
   TModelInfo = packed record
     Owner: Word; // Player which owns the model
@@ -1590,6 +1594,7 @@ type
   end;
 
   TTileList = array [0 .. INFIN] of Cardinal;
+  PTileList = ^TTileList;
   TTileObservedLastList = array [0 .. INFIN] of SmallInt;
   TOwnerList = array [0 .. INFIN] of ShortInt;
   TByteList = array [0 .. INFIN] of Byte;

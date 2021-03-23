@@ -13,7 +13,7 @@ uses
   Protocol, Tribes, PVSB, ClientTools, ScreenTools, BaseWin, Messg, ButtonBase,
   LCLIntf, LCLType, SysUtils, Classes, Graphics, Controls, DrawDlg, Types,
   Forms, Menus, ExtCtrls, dateutils, Platform, ButtonB, ButtonC, EOTButton, Area,
-  UGraphicSet;
+  UGraphicSet, UMiniMap;
 
 const
   WM_EOT = WM_USER;
@@ -252,7 +252,7 @@ type
     BrushType: Cardinal;
     trix: array [0 .. 63] of Integer;
     AILogo: array [0 .. nPl - 1] of TBitmap;
-    Mini: TBitmap;
+    MiniMap: TMiniMap;
     Panel: TBitmap;
     TopBar: TBitmap;
     sb: TPVScrollbar;
@@ -273,7 +273,7 @@ type
     procedure ScrollBarUpdate(Sender: TObject);
     procedure ArrangeMidPanel;
     procedure MainOffscreenPaint;
-    procedure MiniPaint;
+    procedure MiniMapPaint;
     procedure PaintAll;
     procedure PaintAllMaps;
     procedure CopyMiniToPanel;
@@ -1265,6 +1265,7 @@ end;
 
 procedure TMainScreen.SetMapOptions;
 begin
+  MiniMap.Options := MapOptionChecked;
   IsoEngine.Options := MapOptionChecked;
   if ClientMode = cEditMap then
     IsoEngine.Options := IsoEngine.Options or (1 shl moEditMode);
@@ -2585,7 +2586,7 @@ begin
           Jump[0] := 999999;
         GameMode := Command;
         GrExt.ResetPixUsed;
-        IsoEngine.Reset;
+        IsoEngineReset;
         Tribes.Init;
         GetTribeList;
         for p1 := 0 to nPl - 1 do
@@ -2638,7 +2639,7 @@ begin
         HelpDlg.ClearHistory;
         CityDlg.Reset;
 
-        Mini.SetSize(G.lx * 2, G.ly);
+        MiniMap.Size := Point(G.lx, G.ly);
         for i := 0 to nPl - 1 do
         begin
           Tribe[i] := nil;
@@ -2841,7 +2842,7 @@ begin
           ItsMeAgain(NewPlayer);
           MyData := G.RO[NewPlayer].Data;
           SetTroopLoc(-1);
-          MiniPaint;
+          MiniMapPaint;
           InitAllEnemyModels; // necessary for correct replay
           if not EndTurn(true) then
             SkipTurn := false;
@@ -3523,8 +3524,7 @@ begin
     mRep[i].Checked := CityRepMask and (1 shl j) <> 0;
   end;
 
-  Mini := TBitmap.Create;
-  Mini.PixelFormat := pf24bit;
+  MiniMap := TMiniMap.Create;
   Panel := TBitmap.Create;
   Panel.PixelFormat := pf24bit;
   Panel.Canvas.Font.Assign(UniFont[ftSmall]);
@@ -3559,7 +3559,7 @@ begin
   MainFormKeyDown := nil;
   FreeAndNil(sb);
   FreeAndNil(TopBar);
-  FreeAndNil(Mini);
+  FreeAndNil(MiniMap);
   FreeAndNil(Buffer);
   FreeAndNil(Panel);
   for I := 0 to nPl - 1 do
@@ -4105,100 +4105,6 @@ begin
   end;
 end;
 
-procedure TMainScreen.MiniPaint;
-var
-  uix, cix, x, y, Loc, i, hw, xm, cm, cmPolOcean, cmPolNone: integer;
-  PrevMiniPixel: TPixelPointer;
-  MiniPixel: TPixelPointer;
-  TerrainTile: Cardinal;
-begin
-  if not Assigned(MyMap) then Exit;
-  cmPolOcean := HGrSystem.Data.Canvas.Pixels[101, 67];
-  cmPolNone := HGrSystem.Data.Canvas.Pixels[102, 67];
-  hw := MapWidth div (xxt * 2);
-  with Mini.Canvas do begin
-    Brush.Color := $000000;
-    FillRect(Rect(0, 0, Mini.width, Mini.height));
-  end;
-  Mini.BeginUpdate;
-  MiniPixel := PixelPointer(Mini);
-  PrevMiniPixel := PixelPointer(Mini);
-  for y := 0 to ScaleToNative(G.ly) - 1 do begin
-    for x := 0 to ScaleToNative(G.lx) - 1 do begin
-      Loc := ScaleFromNative(x) + G.lx * ScaleFromNative(y);
-      if (MyMap[Loc] and fTerrain) <> fUNKNOWN then begin
-        for i := 0 to 1 do begin
-          xm := ((x - ScaleToNative(xwMini)) * 2 + i + y and 1 - ScaleToNative(hw) +
-            ScaleToNative(G.lx) * 5) mod (ScaleToNative(G.lx) * 2);
-          MiniPixel.SetXY(xm, y);
-          TerrainTile := MyMap[Loc] and fTerrain;
-          if TerrainTile > 11 then TerrainTile := 0;
-          cm := MiniColors[TerrainTile, i];
-          if ClientMode = cEditMap then
-          begin
-            if MyMap[Loc] and (fPrefStartPos or fStartPos) <> 0 then
-              cm := $FFFFFF;
-          end
-          else if MyMap[Loc] and fCity <> 0 then
-          begin
-            cix := MyRO.nCity - 1;
-            while (cix >= 0) and (MyCity[cix].Loc <> Loc) do
-              dec(cix);
-            if cix >= 0 then
-              cm := Tribe[me].Color
-            else
-            begin
-              cix := MyRO.nEnemyCity - 1;
-              while (cix >= 0) and (MyRO.EnemyCity[cix].Loc <> Loc) do
-                dec(cix);
-              if cix >= 0 then
-                cm := Tribe[MyRO.EnemyCity[cix].Owner].Color
-            end;
-            cm := $808080 or cm shr 1; { increase brightness }
-            if y > 0 then begin
-              // 2x2 city dot covers two lines
-              PrevMiniPixel.SetXY(xm, y - 1);
-              PrevMiniPixel.Pixel^.B := cm shr 16;
-              PrevMiniPixel.Pixel^.G := cm shr 8 and $FF;
-              PrevMiniPixel.Pixel^.R := cm and $FF;
-            end;
-          end
-          else if (i = 0) and (MyMap[Loc] and fUnit <> 0) then
-          begin
-            uix := MyRO.nUn - 1;
-            while (uix >= 0) and (MyUn[uix].Loc <> Loc) do
-              dec(uix);
-            if uix >= 0 then
-              cm := Tribe[me].Color
-            else
-            begin
-              uix := MyRO.nEnemyUn - 1;
-              while (uix >= 0) and (MyRO.EnemyUn[uix].Loc <> Loc) do
-                dec(uix);
-              if uix >= 0 then
-                cm := Tribe[MyRO.EnemyUn[uix].Owner].Color
-            end;
-            cm := $808080 or cm shr 1; { increase brightness }
-          end
-          else if MapOptionChecked and (1 shl moPolitical) <> 0 then
-          begin
-            if MyMap[Loc] and fTerrain < fGrass then
-              cm := cmPolOcean
-            else if MyRO.Territory[Loc] < 0 then
-              cm := cmPolNone
-            else
-              cm := Tribe[MyRO.Territory[Loc]].Color;
-          end;
-          MiniPixel.Pixel^.B := cm shr 16;
-          MiniPixel.Pixel^.G := cm shr 8 and $FF;
-          MiniPixel.Pixel^.R := cm and $FF;
-        end;
-      end;
-    end;
-  end;
-  Mini.EndUpdate;
-end;
-
 {$IFDEF LINUX}
 // Can't do scrolling of DC under Linux, then fallback into BitBlt.
 function ScrollDC(Canvas: TCanvas; dx: longint; dy: longint; const lprcScroll:TRect; const lprcClip:TRect; hrgnUpdate:HRGN; lprcUpdate: PRect):Boolean;
@@ -4326,12 +4232,17 @@ begin
   MapValid := true;
 end;
 
+procedure TMainScreen.MiniMapPaint;
+begin
+  MiniMap.Paint(MyMap, MapWidth, ClientMode, xxt, xwMini);
+end;
+
 procedure TMainScreen.PaintAll;
 begin
   MainOffscreenPaint;
   xwMini := xw;
   ywMini := yw;
-  MiniPaint;
+  MiniMapPaint;
   PanelPaint;
 end;
 
@@ -4340,7 +4251,7 @@ begin
   MainOffscreenPaint;
   xwMini := xw;
   ywMini := yw;
-  MiniPaint;
+  MiniMapPaint;
   CopyMiniToPanel;
   RectInvalidate(xMini + 2, TopBarHeight + MapHeight - overlap + yMini + 2,
     xMini + 2 + G.lx * 2, TopBarHeight + MapHeight - overlap + yMini +
@@ -4350,20 +4261,22 @@ end;
 procedure TMainScreen.CopyMiniToPanel;
 begin
   BitBltCanvas(Panel.Canvas, xMini + 2, yMini + 2, G.lx * 2, G.ly,
-    Mini.Canvas, 0, 0);
+    MiniMap.Bitmap.Canvas, 0, 0);
   if MarkCityLoc >= 0 then
     Sprite(Panel, HGrSystem, xMini - 2 + (4 * G.lx + 2 * (MarkCityLoc mod G.lx)
       + (G.lx - MapWidth div (xxt * 2)) - 2 * xwd) mod (2 * G.lx) +
       MarkCityLoc div G.lx and 1, yMini - 3 + MarkCityLoc div G.lx, CityMark2.Width,
       CityMark2.Height, CityMark2.Left, CityMark2.Top)
   else if ywmax <= 0 then
-    Frame(Panel.Canvas, xMini + 2 + G.lx - MapWidth div (xxt * 2), yMini + 2,
+    Frame(Panel.Canvas,
+      xMini + 2 + G.lx - MapWidth div (xxt * 2), yMini + 2,
       xMini + 1 + G.lx + MapWidth div (xxt * 2), yMini + 2 + G.ly - 1,
       MainTexture.clMark, MainTexture.clMark)
   else
-    Frame(Panel.Canvas, xMini + 2 + G.lx - MapWidth div (xxt * 2),
-      yMini + 2 + yw, xMini + 1 + G.lx + MapWidth div (xxt * 2),
-      yMini + yw + MapHeight div yyt, MainTexture.clMark, MainTexture.clMark);
+    Frame(Panel.Canvas,
+      xMini + 2 + G.lx - MapWidth div (xxt * 2), yMini + 2 + yw,
+      xMini + 1 + G.lx + MapWidth div (xxt * 2), yMini + yw + MapHeight div yyt,
+      MainTexture.clMark, MainTexture.clMark);
 end;
 
 procedure TMainScreen.PanelPaint;
@@ -5091,7 +5004,7 @@ begin
   MainOffscreenPaint;
   xwMini := xw;
   ywMini := yw;
-  MiniPaint;
+  MiniMapPaint;
   CopyMiniToPanel;
   RectInvalidate(xMini + 2, TopBarHeight + MapHeight - overlap + yMini + 2,
     xMini + 2 + G.lx * 2, TopBarHeight + MapHeight - overlap + yMini +
@@ -5297,9 +5210,9 @@ begin
       Edited := true;
       BrushLoc := MouseLoc;
       PaintLoc(MouseLoc, 2);
-      MiniPaint;
+      MiniMapPaint;
       BitBltCanvas(Panel.Canvas, xMini + 2, yMini + 2, G.lx * 2, G.ly,
-        Mini.Canvas, 0, 0);
+        MiniMap.Bitmap.Canvas, 0, 0);
       if ywmax <= 0 then
         Frame(Panel.Canvas, xMini + 2 + G.lx - MapWidth div (2 * xxt),
           yMini + 2, xMini + 1 + G.lx + MapWidth div (2 * xxt),
@@ -7569,7 +7482,7 @@ begin
         else if yw > ywmax then
           yw := ywmax;
       end;
-      BitBltCanvas(Buffer.Canvas, 0, 0, G.lx * 2, G.ly, Mini.Canvas, 0, 0);
+      BitBltCanvas(Buffer.Canvas, 0, 0, G.lx * 2, G.ly, MiniMap.Bitmap.Canvas, 0, 0);
       if ywmax <= 0 then
         Frame(Buffer.Canvas, x - xMini - 2 - MapWidth div (xxt * 2), 0,
           x - xMini - 2 + MapWidth div (xxt * 2) - 1, G.ly - 1,
@@ -7599,7 +7512,7 @@ begin
     Tracking := false;
     xwMini := xw;
     ywMini := yw;
-    MiniPaint;
+    MiniMapPaint;
     PanelPaint;
   end;
 end;
@@ -7880,7 +7793,7 @@ begin
         PaintAllMaps;
       end
       else if Flag = tfAllTechs then
-        TellNewModels
+        TellNewModels;
     end;
   end;
 end;
@@ -7891,12 +7804,12 @@ begin
   begin
     MapOptionChecked := MapOptionChecked xor (1 shl (Tag shr 8));
     SetMapOptions;
-    ButtonIndex := MapOptionChecked shr (Tag shr 8) and 1 + 2
+    ButtonIndex := MapOptionChecked shr (Tag shr 8) and 1 + 2;
   end;
   if Sender = MapBtn0 then
   begin
-    MiniPaint;
-    PanelPaint
+    MiniMapPaint;
+    PanelPaint;
   end // update mini map only
   else
   begin

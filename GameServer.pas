@@ -44,11 +44,6 @@ const
   fDotNet = $20000000;
   fUsed = $40000000;
 
-  // save map tile flags
-  smOwned = $20;
-  smUnit = $40;
-  smCity = $80;
-
   maxBrain = 255;
 
 type

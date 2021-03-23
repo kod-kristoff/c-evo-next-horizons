@@ -58,6 +58,10 @@ procedure CityOptimizer_ReleaseCityTiles(cix, ReleasedTiles: integer);
 procedure CityOptimizer_BeforeRemoveUnit(uix: integer);
 procedure CityOptimizer_AfterRemoveUnit;
 procedure CityOptimizer_EndOfTurn;
+function GetMyCityByLoc(Loc: Integer): PCity;
+function GetEnemyCityByLoc(Loc: Integer): PCityInfo;
+function GetMyUnitByLoc(Loc: Integer): PUn;
+function GetEnemyUnitByLoc(Loc: Integer): PUnitInfo;
 
 
 implementation
@@ -694,6 +698,47 @@ begin
   end;
 {$ENDIF}
 end;
+
+function GetMyCityByLoc(Loc: Integer): PCity;
+var
+  I: Integer;
+begin
+  I := MyRO.nCity - 1;
+  while (I >= 0) and (MyCity[I].Loc <> Loc) do Dec(I);
+  if I >= 0 then Result := @MyCity[I]
+    else Result := nil;
+end;
+
+function GetEnemyCityByLoc(Loc: Integer): PCityInfo;
+var
+  I: Integer;
+begin
+  I := MyRO.nEnemyCity - 1;
+  while (I >= 0) and (MyRo.EnemyCity[I].Loc <> Loc) do Dec(I);
+  if I >= 0 then Result := @MyRo.EnemyCity[I]
+    else Result := nil;
+end;
+
+function GetMyUnitByLoc(Loc: Integer): PUn;
+var
+  I: Integer;
+begin
+  I := MyRO.nUn - 1;
+  while (I >= 0) and (MyUn[I].Loc <> Loc) do Dec(I);
+  if I >= 0 then Result := @MyUn[I]
+    else Result := nil;
+end;
+
+function GetEnemyUnitByLoc(Loc: Integer): PUnitInfo;
+var
+  I: Integer;
+begin
+  I := MyRO.nEnemyUn - 1;
+  while (I >= 0) and (MyRO.EnemyUn[I].Loc <> Loc) do Dec(I);
+  if I >= 0 then Result := @MyRO.EnemyUn[I]
+    else Result := nil;
+end;
+
 
 initialization
 

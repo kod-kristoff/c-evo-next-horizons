@@ -79,14 +79,14 @@ const
 
 var
   NoMap: TIsoMap;
-  Options: integer;
-  pDebugMap: integer; // -1 for off
+  Options: Integer;
+  pDebugMap: Integer; // -1 for off
 
 function IsJungle(y: integer): boolean;
 procedure Init(InitEnemyModelHandler: TInitEnemyModelEvent);
 function ApplyTileSize(ATileSize: TTileSize): boolean;
 procedure Done;
-procedure Reset;
+procedure IsoEngineReset;
 
 implementation
 
@@ -465,7 +465,7 @@ begin
   FreeAndNil(Borders);
 end;
 
-procedure Reset;
+procedure IsoEngineReset;
 begin
   BordersOK := 0;
 end;
