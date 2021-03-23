@@ -13,22 +13,6 @@ type
   { TIsoMap }
 
   TIsoMap = class
-    constructor Create;
-    procedure SetOutput(Output: TBitmap);
-    procedure SetPaintBounds(Left, Top, Right, Bottom: integer);
-    procedure Paint(x, y, Loc, nx, ny, CityLoc, CityOwner: integer;
-      UseBlink: boolean = false; CityAllowClick: boolean = false);
-    procedure PaintUnit(x, y: integer; const UnitInfo: TUnitInfo;
-      Status: integer);
-    procedure PaintCity(x, y: integer; const CityInfo: TCityInfo;
-      accessory: boolean = true);
-    procedure BitBltBitmap(Src: TBitmap; x, y, Width, Height, xSrc, ySrc,
-      Rop: integer);
-
-    procedure AttackBegin(const ShowMove: TShowMove);
-    procedure AttackEffect(const ShowMove: TShowMove);
-    procedure AttackEnd;
-
   private
     procedure CityGrid(xm, ym: integer; CityAllowClick: Boolean);
     function IsShoreTile(Loc: integer): boolean;
@@ -36,8 +20,16 @@ type
     procedure ShadeOutside(x0, y0, Width, Height, xm, ym: integer);
   protected
     FOutput: TBitmap;
-    FLeft, FTop, FRight, FBottom, RealTop, RealBottom, AttLoc, DefLoc,
-      DefHealth, FAdviceLoc: integer;
+    FLeft: Integer;
+    FTop: Integer;
+    FRight: Integer;
+    FBottom: Integer;
+    RealTop: Integer;
+    RealBottom: Integer;
+    AttLoc: Integer;
+    DefLoc: Integer;
+    DefHealth: Integer;
+    FAdviceLoc: Integer;
     DataCanvas: TCanvas;
     MaskCanvas: TCanvas;
     function Connection4(Loc, Mask, Value: integer): integer;
@@ -52,8 +44,21 @@ type
     procedure Textout(x, y, Color: integer; const s: string);
     procedure Sprite(HGr: TGraphicSet; xDst, yDst, Width, Height, xGr, yGr: integer);
     procedure TSprite(xDst, yDst, grix: integer; PureBlack: boolean = false);
-
   public
+    constructor Create;
+    procedure SetOutput(Output: TBitmap);
+    procedure SetPaintBounds(Left, Top, Right, Bottom: integer);
+    procedure Paint(x, y, Loc, nx, ny, CityLoc, CityOwner: integer;
+      UseBlink: boolean = false; CityAllowClick: boolean = false);
+    procedure PaintUnit(x, y: integer; const UnitInfo: TUnitInfo;
+      Status: integer);
+    procedure PaintCity(x, y: integer; const CityInfo: TCityInfo;
+      accessory: boolean = true);
+    procedure BitBltBitmap(Src: TBitmap; x, y, Width, Height, xSrc, ySrc,
+      Rop: integer);
+    procedure AttackBegin(const ShowMove: TShowMove);
+    procedure AttackEffect(const ShowMove: TShowMove);
+    procedure AttackEnd;
     property AdviceLoc: integer read FAdviceLoc write FAdviceLoc;
   end;
 
@@ -1035,10 +1040,7 @@ var
       begin
         if BordersOK and (1 shl p1) = 0 then
         begin
-          // Clearing before BitBltBitmap SRCCOPY shouldn't be neccesary but for some
-          // reason without it code works different then under Delphi
-          Borders.Canvas.FillRect(Bounds(0, p1 * (yyt * 2), xxt * 2, yyt * 2));
-
+          UnshareBitmap(Borders);
           BitBltCanvas(Borders.Canvas, 0, p1 * (yyt * 2), xxt * 2,
             yyt * 2, HGrTerrain.Data.Canvas,
             1 + 8 * (xxt * 2 + 1), 1 + yyt + 16 * (yyt * 3 + 1));

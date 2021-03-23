@@ -1731,9 +1731,6 @@ end;
   AdvisorDlg.GiveCityAdvice(cix);
   end; }
 
-var
-  i, j, k: integer;
-
 procedure TCityDlg.PageUpBtnClick(Sender: TObject);
 begin
   if Page > 0 then
@@ -1770,17 +1767,23 @@ begin
   end;
 end;
 
+procedure SortImprovements;
+var
+  i, j, k: integer;
+begin
+  for i := 0 to nImp - 1 do
+    ImpSorted[i] := i;
+  for i := 0 to nImp - 2 do
+    for j := i + 1 to nImp - 1 do
+      if Prio(ImpSorted[i]) > Prio(ImpSorted[j]) then begin
+        k := ImpSorted[i];
+        ImpSorted[i] := ImpSorted[j];
+        ImpSorted[j] := k;
+      end;
+end;
+
 initialization
 
-for i := 0 to nImp - 1 do
-  ImpSorted[i] := i;
-for i := 0 to nImp - 2 do
-  for j := i + 1 to nImp - 1 do
-    if Prio(ImpSorted[i]) > Prio(ImpSorted[j]) then
-    begin
-      k := ImpSorted[i];
-      ImpSorted[i] := ImpSorted[j];
-      ImpSorted[j] := k;
-    end;
+SortImprovements;
 
 end.
