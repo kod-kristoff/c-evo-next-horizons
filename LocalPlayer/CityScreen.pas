@@ -258,9 +258,7 @@ begin
   begin
     AgePrepared := MainTextureAge;
 
-    // TODO: FillRect should not be needed as BitBlt is with SRCCOPY
-    Back.Canvas.FillRect(0, 0, ClientWidth, ClientHeight);
-
+    UnshareBitmap(Back);
     BitBltCanvas(Back.Canvas, 0, 0, ClientWidth, ClientHeight,
       MainTexture.Image.Canvas, 0, 0);
     ImageOp_B(Back, Template, 0, 0, 0, 0, ClientWidth, ClientHeight);
@@ -357,9 +355,7 @@ end;
 
 procedure TCityDlg.InitZoomCityMap;
 begin
-  // TODO: FillRect should not be needed as BitBlt is with SRCCOPY
-  ZoomCityMap.Canvas.FillRect(0, 0, ZoomCityMap.Width, ZoomCityMap.Height);
-
+  UnshareBitmap(ZoomCityMap);
   BitBltCanvas(ZoomCityMap.Canvas, 0, 0, wZoomMap, hZoomMap,
     Back.Canvas, xZoomMap, yZoomMap);
   if Mode = mImp then begin

@@ -232,8 +232,7 @@ var
   i, j, x, d, n, TextColor, CapWeight, DomainCount: integer;
 begin
   inherited;
-  // TODO: Explicitly clear background to black but in fact BitBlt SRCCOPY should do it
-  Back.Canvas.FillRect(0, 0, Back.Width, Back.Height);
+  UnshareBitmap(Back);
 
   ClientHeight := Template.Height - Cut;
   if ClientHeight > hMainTexture then

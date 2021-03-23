@@ -502,8 +502,7 @@ begin
   BiColorTextOut(Canvas, Colors.Canvas.Pixels[clkAge0 - 1, cliDimmedText],
     $000000, xAction, y + 21, Phrases2.Lookup(TextItem));
 
-  // TODO: Explicitly clear background to black but in fact BitBlt SRCCOPY should do it
-  LogoBuffer.Canvas.FillRect(0, 0, LogoBuffer.Width, LogoBuffer.Height);
+  UnshareBitmap(LogoBuffer);
   BitBltCanvas(LogoBuffer.Canvas, 0, 0, 50, 50, Canvas,
     xActionIcon - 2, y - 2);
   GlowFrame(LogoBuffer, 8, 8, 34, 34, $202020);
@@ -602,8 +601,7 @@ begin
       MainTexture.clBevelShade); // Tab shadow
 
   // Paint menu logo
-  // TODO: Explicitly clear background to black but in fact BitBlt SRCCOPY should do it
-  LogoBuffer.Canvas.FillRect(0, 0, LogoBuffer.Width, LogoBuffer.Height);
+  UnshareBitmap(LogoBuffer);
   BitBltCanvas(LogoBuffer.Canvas, 0, 0, MenuLogo.Width, MenuLogo.Height, Canvas, 6,
     3 + 2 * integer(Tab <> tbMain));
 
@@ -626,8 +624,8 @@ begin
         then
           h := ClientHeight - ActionBottomBorder -
             (yAction + Integer(SelectedAction) * ActionPitch - 8);
-        // TODO: Explicitly clear background to black but in fact BitBlt SRCCOPY should do it
-        LogoBuffer.Canvas.FillRect(0, 0, LogoBuffer.Width, LogoBuffer.Height);
+
+        UnshareBitmap(LogoBuffer);
         BitBltCanvas(LogoBuffer.Canvas, 0, 0, w, h, Canvas,
           ActionSideBorder + i * wBuffer, yAction + Integer(SelectedAction) * ActionPitch
           - 8);
@@ -652,8 +650,8 @@ begin
               RisedTextOut(Canvas, xActionIcon + 99, y,
                 Format(Phrases2.Lookup('ACTIONHEADER_WEB'), [CevoHomepageShort]));
               Canvas.Font.Assign(UniFont[ftNormal]);
-              // TODO: Explicitly clear background to black but in fact BitBlt SRCCOPY should do it
-              LogoBuffer.Canvas.FillRect(0, 0, LogoBuffer.Width, LogoBuffer.Height);
+
+              UnshareBitmap(LogoBuffer);
               BitBltCanvas(LogoBuffer.Canvas, 0, 0, LinkArrows.Width, LinkArrows.Height, Canvas,
                 xActionIcon, y + 2);
               ImageOp_BCC(LogoBuffer, Templates.Data, Point(0, 0), LinkArrows.BoundsRect, 0,

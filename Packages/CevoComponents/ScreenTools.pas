@@ -108,6 +108,7 @@ procedure Texturize(Dest, Texture: TBitmap; TransparentColor: Cardinal);
 procedure DarkenImage(Bitmap: TBitmap; Change: Integer);
 function ScaleToNative(Value: Integer): Integer;
 function ScaleFromNative(Value: Integer): Integer;
+procedure UnshareBitmap(Bitmap: TBitmap);
 
 const
   TransparentColor1 = $FF00FF;
@@ -1513,8 +1514,7 @@ end;
 
 procedure PaintLogo(Canvas: TCanvas; X, Y, LightColor, ShadeColor: Integer);
 begin
-  // TODO: Explicitly clear background to black but in fact BitBlt SRCCOPY should do it
-  LogoBuffer.Canvas.FillRect(0, 0, LogoBuffer.Width, LogoBuffer.Height);
+  UnshareBitmap(LogoBuffer);
   BitBltCanvas(LogoBuffer.Canvas, 0, 0, Logo.Width, Logo.Height, Canvas, X, Y);
   ImageOp_BCC(LogoBuffer, Templates.Data, Point(0, 0), Logo.BoundsRect,
     LightColor, ShadeColor);
@@ -1625,6 +1625,12 @@ end;
 function ScaleFromNative(Value: Integer): Integer;
 begin
   Result := Value;
+end;
+
+procedure UnshareBitmap(Bitmap: TBitmap);
+begin
+  // FillRect cause image data to be freed so subsequent BitBlt can access valid image data
+  Bitmap.Canvas.FillRect(0, 0, 0, 0);
 end;
 
 procedure LoadFonts;

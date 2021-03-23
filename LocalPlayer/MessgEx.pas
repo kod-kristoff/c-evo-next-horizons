@@ -291,8 +291,7 @@ begin
   x := x - BookRect.Width div 2;
 
   // paint
-  // TODO: Explicitly clear background to black but in fact BitBlt SRCCOPY should do it
-  LogoBuffer.Canvas.FillRect(0, 0, LogoBuffer.Width, LogoBuffer.Height);
+  UnshareBitmap(LogoBuffer);
   BitBltCanvas(LogoBuffer.Canvas, 0, 0, BookRect.Width, BookRect.Height, ca, x, y);
 
   if IconIndex >= 0 then
@@ -373,8 +372,7 @@ begin
       if Imp[IconIndex].Kind = ikWonder then
       begin
         p1 := MyRO.Wonder[IconIndex].EffectiveOwner;
-        // TODO: Explicitly clear background to black but in fact BitBlt SRCCOPY should do it
-        Buffer.Canvas.FillRect(0, 0, 1, 1);
+        UnshareBitmap(Buffer);
         BitBltCanvas(Buffer.Canvas, 0, 0, xSizeBig + 2 * GlowRange,
           ySizeBig + 2 * GlowRange, Canvas,
           ClientWidth div 2 - (28 + GlowRange), 24 - GlowRange);
