@@ -22,6 +22,9 @@ type
   TPaintLocTempStyle = (pltsNormal, pltsBlink);
   TTileSize = (tsSmall, tsMedium, tsBig);
 
+  TSoundBlock = (sbStart, sbWonder, sbScience, sbContact, sbTurn);
+  TSoundBlocks = set of TSoundBlock;
+
   { TMainScreen }
 
   TMainScreen = class(TDrawDlg)
@@ -314,7 +317,7 @@ type
     procedure SaveSettings;
     procedure OnScroll(var m: TMessage); message WM_VSCROLL;
     procedure OnEOT(var Msg: TMessage); message WM_EOT;
-    procedure SoundPreload(Check: integer);
+    procedure SoundPreload(Check: TSoundBlocks);
     procedure UpdateKeyShortcuts;
     procedure SetFullScreen(Active: Boolean);
   public
@@ -434,14 +437,6 @@ const
     'CITY_WONDEREX', 'CITY_EMDELAY', 'CITY_FOUNDED', 'CITY_FOUNDED', '',
     'CITY_INVALIDTYPE');
 
-  // sound blocks for preload
-  sbStart = $01;
-  sbWonder = $02;
-  sbScience = $04;
-  sbContact = $08;
-  sbTurn = $10;
-  sbAll = $FF;
-
   TileSizes: array [TTileSize] of TPoint = ((X: 33; Y: 16), (X: 48; Y: 24),
     (X: 72; Y: 36));
 
@@ -493,7 +488,7 @@ var
   nLostArmy: Integer;
   ScienceSum: Integer;
   TaxSum: Integer;
-  SoundPreloadDone: Integer;
+  SoundPreloadDone: TSoundBlocks;
   MarkCityLoc: Integer;
   HGrTerrain: TGraphicSet;
   HGrCities: TGraphicSet;
@@ -1361,7 +1356,7 @@ begin
       end;
 end;
 
-procedure TMainScreen.SoundPreload(Check: integer);
+procedure TMainScreen.SoundPreload(Check: TSoundBlocks);
 const
   nStartBlock = 27;
   StartBlock: array [0 .. nStartBlock - 1] of string = ('INVALID', 'TURNEND',
@@ -1397,41 +1392,35 @@ var
   need: boolean;
   mi: TModelInfo;
 begin
-  if Check and sbStart and not SoundPreloadDone <> 0 then
-  begin
+  if (sbStart in Check) and not (sbStart in SoundPreloadDone) then begin
     for i := 0 to nStartBlock - 1 do
       PreparePlay(StartBlock[i]);
-    SoundPreloadDone := SoundPreloadDone or sbStart;
+    SoundPreloadDone := SoundPreloadDone + [sbStart];
   end;
-  if Check and sbWonder and not SoundPreloadDone <> 0 then
-  begin
+  if (sbWonder in Check) and not (sbWonder in SoundPreloadDone) then begin
     need := false;
     for i := 0 to nWonder - 1 do
       if MyRO.Wonder[i].CityID <> WonderNotBuiltYet then
         need := true;
-    if need then
-    begin
+    if need then begin
       for i := 0 to nWonderBlock - 1 do
         PreparePlay(WonderBlock[i]);
-      SoundPreloadDone := SoundPreloadDone or sbWonder;
+      SoundPreloadDone := SoundPreloadDone + [sbWonder];
     end;
   end;
-  if (Check and sbScience and not SoundPreloadDone <> 0) and
-    (MyRO.Tech[adScience] >= tsApplicable) then
-  begin
+  if ((sbScience in Check) and not (sbScience in SoundPreloadDone)) and
+    (MyRO.Tech[adScience] >= tsApplicable) then begin
     for i := 0 to nScienceBlock - 1 do
       PreparePlay(ScienceBlock[i]);
-    SoundPreloadDone := SoundPreloadDone or sbScience;
+    SoundPreloadDone := SoundPreloadDone + [sbScience];
   end;
-  if (Check and sbContact and not SoundPreloadDone <> 0) and
-    (MyRO.nEnemyModel + MyRO.nEnemyCity > 0) then
-  begin
+  if ((sbContact in Check) and not (sbContact in SoundPreloadDone)) and
+    (MyRO.nEnemyModel + MyRO.nEnemyCity > 0) then begin
     for i := 0 to nContactBlock - 1 do
       PreparePlay(ContactBlock[i]);
-    SoundPreloadDone := SoundPreloadDone or sbContact;
+    SoundPreloadDone := SoundPreloadDone + [sbContact];
   end;
-  if Check and sbTurn <> 0 then
-  begin
+  if sbTurn in Check then begin
     if MyRO.Happened and phShipComplete <> 0 then
       PreparePlay('MSG_YOUWIN');
     if MyData.ToldAlive <> MyRO.Alive then
@@ -1658,7 +1647,7 @@ begin
   SmallImp := TBitmap.Create;
   SmallImp.PixelFormat := pf24bit;
   InitSmallImp;
-  SoundPreloadDone := 0;
+  SoundPreloadDone := [];
   StartRunning := false;
   StayOnTop_Ensured := false;
 
@@ -1680,6 +1669,7 @@ const
     (Adv: adNuclearFission; Icon: woManhattan), (Adv: adRecycling;
     Icon: imRecycling), (Adv: adComputers; Icon: imResLab),
     (Adv: adSpaceFlight; Icon: woMIR));
+  sbAll = [sbStart, sbWonder, sbScience, sbContact, sbTurn];
 var
   p1, i, ad, uix, cix, MoveOptions, MoveResult, Loc1,
     NewAgeCenterTo, Winners, NewGovAvailable, dx,
@@ -2617,7 +2607,7 @@ begin
                 end;
               FillChar(ToldTech, SizeOf(ToldTech), Byte(tsNA));
               if G.Difficulty[p1] > 0 then
-                SoundPreload(sbStart);
+                SoundPreload([sbStart]);
             end;
 
         // arrange dialogs
