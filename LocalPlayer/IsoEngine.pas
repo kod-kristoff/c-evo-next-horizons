@@ -65,21 +65,9 @@ type
     property AdviceLoc: integer read FAdviceLoc write FAdviceLoc;
   end;
 
-const
-  // options switched by buttons
-  moPolitical = 0;
-  moCityNames = 1;
-  moGreatWall = 4;
-  moGrid = 5;
-  moBareTerrain = 6;
-
-  // other options
-  moEditMode = 16;
-  moLocCodes = 17;
-
 var
   NoMap: TIsoMap;
-  Options: Integer;
+  MapOptions: TMapOptions;
   pDebugMap: Integer; // -1 for off
 
 function IsJungle(y: integer): boolean;
@@ -1003,7 +991,7 @@ var
     IsCapital: boolean;
   begin
     BehindCityInfo.Loc := Loc - 2 * G.lx;
-    if ShowCityNames and (Options and (1 shl moEditMode) = 0) and
+    if ShowCityNames and not (moEditMode in MapOptions) and
       (BehindCityInfo.Loc >= 0) and (BehindCityInfo.Loc < G.lx * G.ly) and
       (MyMap[BehindCityInfo.Loc] and fCity <> 0) then
     begin
@@ -1024,7 +1012,7 @@ var
 
   procedure ShowSpacePort;
   begin
-    if ShowObjects and (Options and (1 shl moEditMode) = 0) and
+    if ShowObjects and not (moEditMode in MapOptions) and
       (Tile and fCity <> 0) and (CityInfo.Flags and ciSpacePort <> 0) then
       TSprite(x + xxt, y - 6, spSpacePort);
   end;
@@ -1092,7 +1080,7 @@ begin
     Tile := PoleTile(Loc)
   else
     Tile := MyMap[Loc];
-  if ShowObjects and (Options and (1 shl moEditMode) = 0) and
+  if ShowObjects and not (moEditMode in MapOptions) and
     (Tile and fCity <> 0) then
     GetCityInfo(Loc, cix, CityInfo);
   if (y <= FTop - yyt * 2) or (y > FBottom) or (x <= FLeft - xxt * 2) or
@@ -1147,7 +1135,7 @@ begin
   if (Tile and fDeadLands) <> 0 then
     TSprite(x, y, spMinerals + (Tile shr 25 and 3) * TerrainIconCols);
 
-  if Options and (1 shl moEditMode) <> 0 then
+  if moEditMode in MapOptions then
     fog := (Loc < 0) or (Loc >= G.lx * G.ly)
     // else if CityLoc>=0 then
     // fog:= (Loc<0) or (Loc>=G.lx*G.ly) or (Distance(Loc,CityLoc)>5)
@@ -1181,7 +1169,7 @@ begin
         TSprite(x, y, spBlink2)
   end;
 {$ENDIF}
-  if Options and (1 shl moEditMode) <> 0 then
+  if moEditMode in MapOptions then
   begin
     if Tile and fPrefStartPos <> 0 then
       TSprite(x, y, spPrefStartPos)
@@ -1426,14 +1414,14 @@ var
   dx, dy, xm, ym, ALoc, BLoc, ATer, BTer, Aix, bix: integer;
 begin
   FoW := true;
-  ShowLoc := Options and (1 shl moLocCodes) <> 0;
+  ShowLoc := moLocCodes in MapOptions;
   ShowDebug := pDebugMap >= 0;
-  ShowObjects := (CityOwner >= 0) or (Options and (1 shl moBareTerrain) = 0);
+  ShowObjects := (CityOwner >= 0) or not (moBareTerrain in MapOptions);
   ShowCityNames := ShowObjects and (CityOwner < 0) and
-    (Options and (1 shl moCityNames) <> 0);
+    (moCityNames in MapOptions);
   ShowBorder := true;
   ShowMyBorder := CityOwner < 0;
-  ShowGrWall := (CityOwner < 0) and (Options and (1 shl moGreatWall) <> 0);
+  ShowGrWall := (CityOwner < 0) and (moGreatWall in MapOptions);
   if ShowDebug then
     Server(sGetDebugMap, me, pDebugMap, DebugMap)
   else
@@ -1621,8 +1609,8 @@ begin
   end
   else
   begin
-    if ShowLoc or (Options and (1 shl moEditMode) <> 0) or
-      (Options and (1 shl moGrid) <> 0) then
+    if ShowLoc or (moEditMode in MapOptions) or
+      (moGrid in MapOptions) then
       PaintGrid(x, y, nx, ny);
     for dy := -2 to ny + 1 do
       for dx := -2 to nx + 1 do

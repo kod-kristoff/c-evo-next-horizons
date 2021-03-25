@@ -270,6 +270,7 @@ type
     procedure GetTribeList;
     procedure InitModule;
     procedure InitTurn(NewPlayer: integer);
+    procedure SaveMenuItemsState;
     procedure ScrollBarUpdate(Sender: TObject);
     procedure ArrangeMidPanel;
     procedure MainOffscreenPaint;
@@ -420,10 +421,6 @@ const
   SystemIconLines = 2;
   // lines of system icons in icons.bmp before improvements
 
-  // save options apart from what's defined by SaveOption
-  soTellAI = 30;
-  soExtraMask = $40000000;
-
   nCityEventPriority = 16;
   CityEventPriority: array [0 .. nCityEventPriority - 1] of integer =
     (chDisorder, chImprovementLost, chUnitLost, chAllImpsMade, chProduction,
@@ -484,8 +481,8 @@ var
   ClientMode: Integer;
   Age: Integer;
   UnFocus: Integer;
-  OptionChecked: Integer;
-  MapOptionChecked: Integer;
+  OptionChecked: TSaveOptions;
+  MapOptionChecked: TMapOptions;
   nLostArmy: Integer;
   ScienceSum: Integer;
   TaxSum: Integer;
@@ -569,14 +566,12 @@ const
   flRepaintPanel = $0001;
   flImmUpdate = $0002;
 
-  nSaveOption = 22;
-
 var
   Jump: array [0 .. nPl - 1] of integer;
   pTurn, pLogo, UnStartLoc, ToldSlavery: integer;
   SmallScreen, GameOK, MapValid, skipped, idle: boolean;
 
-  SaveOption: array [0..nSaveOption - 1] of integer;
+  SaveOption: array of integer;
   MiniColors: array [0..11, 0..1] of TColor;
   MainMap: TIsoMap;
   CurrentMoveInfo: record AfterMovePaintRadius, AfterAttackExpeller: integer;
@@ -1265,12 +1260,12 @@ end;
 
 procedure TMainScreen.SetMapOptions;
 begin
-  MiniMap.Options := MapOptionChecked;
-  IsoEngine.Options := MapOptionChecked;
+  MiniMap.MapOptions := MapOptionChecked;
+  IsoEngine.MapOptions := MapOptionChecked;
   if ClientMode = cEditMap then
-    IsoEngine.Options := IsoEngine.Options or (1 shl moEditMode);
+    IsoEngine.MapOptions := IsoEngine.MapOptions + [moEditMode];
   if mLocCodes.Checked then
-    IsoEngine.Options := IsoEngine.Options or (1 shl moLocCodes);
+    IsoEngine.MapOptions := IsoEngine.MapOptions + [moLocCodes];
 end;
 
 procedure TMainScreen.UpdateViews(UpdateCityScreen: boolean);
@@ -3457,7 +3452,8 @@ begin
   MainFormKeyDown := FormKeyDown;
   BaseWin.CreateOffscreen(Offscreen);
 
-   // define which menu settings to save
+  // define which menu settings to save
+  SetLength(SaveOption, 22);
   SaveOption[0] := mAlEffectiveMovesOnly.Tag;
   SaveOption[1] := mEnMoves.Tag;
   SaveOption[2] := mEnAttacks.Tag;
@@ -3489,22 +3485,20 @@ begin
   // tag-controlled language
   for i := 0 to ComponentCount - 1 do
     if Components[i].Tag and $FF <> 0 then
-      if Components[i] is TMenuItem then
-      begin
+      if Components[i] is TMenuItem then begin
         TMenuItem(Components[i]).Caption := Phrases.Lookup('CONTROLS',
           -1 + Components[i].Tag and $FF);
-        for j := 0 to nSaveOption - 1 do
+        for j := 0 to Length(SaveOption) - 1 do
           if Components[i].Tag and $FF = SaveOption[j] then
-            TMenuItem(Components[i]).Checked := ((1 shl j) and OptionChecked) <> 0;
-      end
-      else if Components[i] is TButtonBase then
-      begin
+            TMenuItem(Components[i]).Checked := TSaveOption(j) in OptionChecked;
+      end else
+      if Components[i] is TButtonBase then begin
         TButtonBase(Components[i]).Hint := Phrases.Lookup('CONTROLS',
           -1 + Components[i].Tag and $FF);
         if (Components[i] is TButtonC) and
           (TButtonC(Components[i]).ButtonIndex <> 1) then
           TButtonC(Components[i]).ButtonIndex :=
-            MapOptionChecked shr (Components[i].Tag shr 8) and 1 + 2
+            Integer(MapOptionChecked) shr (Components[i].Tag shr 8) and 1 + 2
       end;
 
   // non-tag-controlled language
@@ -5014,7 +5008,7 @@ end;
 
 procedure TMainScreen.Timer1Timer(Sender: TObject);
 var
-  dx, dy, speed: integer;
+  dx, dy, ScrollSpeed: integer;
 begin
   if idle and (me >= 0) and (GameMode <> cMovie) then
     if (fsModal in Screen.ActiveForm.FormState) or
@@ -5035,23 +5029,21 @@ begin
     begin
       if Application.Active and not mScrollOff.Checked then
       begin
-        if mScrollFast.Checked then
-          speed := 2
-        else
-          speed := 1;
+        if mScrollFast.Checked then ScrollSpeed := 2
+          else ScrollSpeed := 1;
         dx := 0;
         dy := 0;
         if Mouse.CursorPos.y < Screen.height - PanelHeight then
           if Mouse.CursorPos.x = 0 then
-            dx := -speed // scroll left
+            dx := -ScrollSpeed // scroll left
           else if Mouse.CursorPos.x = Screen.width - 1 then
-            dx := speed; // scroll right
+            dx := ScrollSpeed; // scroll right
         if Mouse.CursorPos.y = 0 then
-          dy := -speed // scroll up
+          dy := -ScrollSpeed // scroll up
         else if (Mouse.CursorPos.y = Screen.height - 1) and
           (Mouse.CursorPos.x >= TerrainBtn.Left + TerrainBtn.width) and
           (Mouse.CursorPos.x < xRightPanel + 10 - 8) then
-          dy := speed; // scroll down
+          dy := ScrollSpeed; // scroll down
         if (dx <> 0) or (dy <> 0) then
         begin
           if (Screen.ActiveForm <> MainScreen) and
@@ -6381,7 +6373,7 @@ end;
 procedure TMainScreen.SetDebugMap(p: integer);
 begin
   IsoEngine.pDebugMap := p;
-  IsoEngine.Options := IsoEngine.Options and not(1 shl moLocCodes);
+  IsoEngine.MapOptions := IsoEngine.MapOptions - [moLocCodes];
   mLocCodes.Checked := false;
   MapValid := false;
   MainOffscreenPaint;
@@ -7705,10 +7697,10 @@ end;
 procedure TMainScreen.LoadSettings;
 var
   Reg: TRegistry;
-  DefaultOptionChecked: Integer;
+  DefaultOptionChecked: TSaveOptions;
 begin
-  DefaultOptionChecked := 1 shl 1 + 1 shl 7 + 1 shl 10 + 1 shl 12 + 1 shl 14 +
-    1 shl 18 + 1 shl 19;
+  DefaultOptionChecked := [soEnMoves, soSlowMoves, soNames, soRepScreens,
+    soSoundOn, soScrollOff, soAlSlowMoves];
   Reg := TRegistry.Create;
   with Reg do try
     OpenKey(AppRegistryKey, False);
@@ -7716,23 +7708,24 @@ begin
       else TileSize := tsMedium;
     xxt := TileSizes[TileSize].X;
     yyt := TileSizes[TileSize].Y;
-    if ValueExists('OptionChecked') then OptionChecked := ReadInteger('OptionChecked')
+    if ValueExists('OptionChecked') then OptionChecked := TSaveOptions(ReadInteger('OptionChecked'))
       else OptionChecked := DefaultOptionChecked;
-    if ValueExists('MapOptionChecked') then MapOptionChecked := ReadInteger('MapOptionChecked')
-      else MapOptionChecked := 1 shl moCityNames;
+    if ValueExists('MapOptionChecked') then MapOptionChecked := TMapOptions(ReadInteger('MapOptionChecked'))
+      else MapOptionChecked := [moCityNames];
     if ValueExists('CityReport') then CityRepMask := Cardinal(ReadInteger('CityReport'))
       else CityRepMask := Cardinal(not chPopIncrease and not chNoGrowthWarning and
           not chCaptured);
-    if OptionChecked and (7 shl 16) = 0 then
-      OptionChecked := OptionChecked or (1 shl 16);
+    if (not (soScrollFast in OptionChecked)) and (not (soScrollSlow in OptionChecked)) and
+      (not (soScrollOff in OptionChecked)) then
+      OptionChecked := OptionChecked + [soScrollSlow];
       // old regver with no scrolling
   finally
     Free;
   end;
 
-  if 1 shl 13 and OptionChecked <> 0 then
+  if soSoundOff in OptionChecked  then
     SoundMode := smOff
-  else if 1 shl 15 and OptionChecked <> 0 then
+  else if soSoundOnAlt in OptionChecked then
     SoundMode := smOnAlt
   else
     SoundMode := smOn;
@@ -7802,9 +7795,9 @@ procedure TMainScreen.MapBtnClick(Sender: TObject);
 begin
   with TButtonC(Sender) do
   begin
-    MapOptionChecked := MapOptionChecked xor (1 shl (Tag shr 8));
+    MapOptionChecked := TMapOptions(Integer(MapOptionChecked) xor (1 shl (Tag shr 8)));
     SetMapOptions;
-    ButtonIndex := MapOptionChecked shr (Tag shr 8) and 1 + 2;
+    ButtonIndex := Integer(MapOptionChecked) shr (Tag shr 8) and 1 + 2;
   end;
   if Sender = MapBtn0 then
   begin
@@ -7822,12 +7815,12 @@ procedure TMainScreen.GrWallBtnDownChanged(Sender: TObject);
 begin
   if TButtonBase(Sender).Down then
   begin
-    MapOptionChecked := MapOptionChecked or (1 shl moGreatWall);
+    MapOptionChecked := MapOptionChecked + [moGreatWall];
     TButtonBase(Sender).Hint := '';
   end
   else
   begin
-    MapOptionChecked := MapOptionChecked and not(1 shl moGreatWall);
+    MapOptionChecked := MapOptionChecked - [moGreatWall];
     TButtonBase(Sender).Hint := Phrases.Lookup('CONTROLS',
       -1 + TButtonBase(Sender).Tag and $FF);
   end;
@@ -7840,12 +7833,12 @@ procedure TMainScreen.BareBtnDownChanged(Sender: TObject);
 begin
   if TButtonBase(Sender).Down then
   begin
-    MapOptionChecked := MapOptionChecked or (1 shl moBareTerrain);
+    MapOptionChecked := MapOptionChecked + [moBareTerrain];
     TButtonBase(Sender).Hint := '';
   end
   else
   begin
-    MapOptionChecked := MapOptionChecked and not(1 shl moBareTerrain);
+    MapOptionChecked := MapOptionChecked - [moBareTerrain];
     TButtonBase(Sender).Hint := Phrases.Lookup('CONTROLS',
       -1 + TButtonBase(Sender).Tag and $FF);
   end;
@@ -7972,26 +7965,33 @@ begin
       TBufferedDrawDlg(Screen.Forms[i]).SmartUpdateContent(false);
 end;
 
-procedure TMainScreen.SaveSettings;
+procedure TMainScreen.SaveMenuItemsState;
 var
   i, j: integer;
-  Reg: TRegistry;
 begin
-  OptionChecked := OptionChecked and soExtraMask;
+  if soTellAI in OptionChecked then OptionChecked := [soTellAI]
+    else OptionChecked := [];
   for i := 0 to ComponentCount - 1 do
     if Components[i] is TMenuItem then
-      for j := 0 to nSaveOption - 1 do
+      for j := 0 to Length(SaveOption) - 1 do
         if TMenuItem(Components[i]).Checked and
           (TMenuItem(Components[i]).Tag = SaveOption[j]) then
-          inc(OptionChecked, 1 shl j);
+          OptionChecked := OptionChecked + [TSaveOption(j)];
+end;
+
+procedure TMainScreen.SaveSettings;
+var
+  Reg: TRegistry;
+begin
+  SaveMenuItemsState;
 
   Reg := TRegistry.Create;
   with Reg do
   try
     OpenKey(AppRegistryKey, true);
     WriteInteger('TileSize', Integer(TileSize));
-    WriteInteger('OptionChecked', OptionChecked);
-    WriteInteger('MapOptionChecked', MapOptionChecked);
+    WriteInteger('OptionChecked', Integer(OptionChecked));
+    WriteInteger('MapOptionChecked', Integer(MapOptionChecked));
     WriteInteger('CityReport', integer(CityRepMask));
   finally
     Free;

@@ -140,7 +140,7 @@ begin
     (ReportText.Count > ReportLines);
   ScrollDownBtn.Visible := (CurrentReport.TurnOfCivilReport >= 0) and
     (ReportText.Count > ReportLines);
-  if OptionChecked and (1 shl soTellAI) <> 0 then
+  if soTellAI in OptionChecked then
     TellAIBtn.ButtonIndex := 3
   else
     TellAIBtn.ButtonIndex := 2;
@@ -389,12 +389,10 @@ begin
         yReport + hReport div 2 - 10, s);
     end;
 
-    if OptionChecked and (1 shl soTellAI) <> 0 then
-    begin
+    if soTellAI in OptionChecked then begin
       Server(sGetAIInfo, me, pView, ps);
       LoweredTextOut(Canvas, -1, MainTexture, 42, 445, ps);
-    end
-    else
+    end else
       LoweredTextOut(Canvas, -2, MainTexture, 42, 445,
         Phrases2.Lookup('MENU_TELLAI'));
   end;
@@ -536,8 +534,9 @@ end;
 
 procedure TNatStatDlg.TellAIBtnClick(Sender: TObject);
 begin
-  OptionChecked := OptionChecked xor (1 shl soTellAI);
-  if OptionChecked and (1 shl soTellAI) <> 0 then
+  if soTellAI in OptionChecked then OptionChecked := OptionChecked - [soTellAI]
+    else OptionChecked := OptionChecked + [soTellAI];
+  if soTellAI in OptionChecked then
     TellAIBtn.ButtonIndex := 3
   else
     TellAIBtn.ButtonIndex := 2;

@@ -16,6 +16,22 @@ type
   TEnhancementJobs = array [0 .. 11, 0 .. 7] of byte;
   JobResultSet = set of 0 .. 39;
 
+  TMapOption = (
+    // options switched by buttons
+    moPolitical = 0, moCityNames = 1, moGreatWall = 4, moGrid = 5, moBareTerrain = 6,
+    // other options
+    moEditMode = 16, moLocCodes = 17
+  );
+  TMapOptions = set of TMapOption;
+
+  TSaveOption = (soAlEffectiveMovesOnly = 0, soEnMoves = 1, soEnAttacks = 2,
+    soEnNoMoves = 3, soWaitTurn = 4, soEffectiveMovesOnly = 5, soEnFastMoves = 6,
+    soSlowMoves = 7, soFastMoves = 8, soVeryFastMoves = 9, soNames = 10,
+    soRepList = 11, soRepScreens = 12, soSoundOff = 13, soSoundOn = 14,
+    soSoundOnAlt = 15, soScrollSlow = 16, soScrollFast = 17, soScrollOff = 18,
+    soAlSlowMoves = 19, soAlFastMoves = 20, somAlNoMoves = 21, soTellAI = 30);
+  TSaveOptions = set of TSaveOption;
+
 var
   Server: TServerCall;
   G: TNewGameData;

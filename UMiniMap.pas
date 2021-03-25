@@ -4,7 +4,7 @@ unit UMiniMap;
 interface
 
 uses
-  Classes, SysUtils, Graphics, Protocol;
+  Classes, SysUtils, Graphics, Protocol, ClientTools;
 
 type
   TMiniMode = (mmNone, mmPicture, mmMultiPlayer);
@@ -21,7 +21,7 @@ type
     Size: TPoint;
     Colors: array [0 .. 11, 0 .. 1] of TColor;
     Mode: TMiniMode;
-    Options: Integer;
+    MapOptions: TMapOptions;
     procedure LoadFromLogFile(FileName: string; var LastTurn: Integer; DefaultSize: TPoint);
     procedure LoadFromMapFile(FileName: string; var nMapLandTiles, nMapStartPositions: Integer);
     procedure PaintRandom(Brightness, StartLandMass: Integer; WorldSize: TPoint);
@@ -36,7 +36,7 @@ type
 implementation
 
 uses
-  ScreenTools, UPixelPointer, Global, GameServer, IsoEngine, Tribes, ClientTools;
+  ScreenTools, UPixelPointer, Global, GameServer, IsoEngine, Tribes;
 
 const
   // save map tile flags
@@ -309,7 +309,7 @@ begin
             end;
             cm := $808080 or cm shr 1; { increase brightness }
           end
-          else if Options and (1 shl moPolitical) <> 0 then begin
+          else if moPolitical in MapOptions then begin
             // Political
             if MyMap[Loc] and fTerrain < fGrass then
               cm := cmPolOcean
