@@ -291,7 +291,7 @@ begin
     else
     begin { improvement project }
       result := Imp[Project and cpIndex].Cost;
-      if (Project and cpIndex < 28) and (GWonder[woColossus].EffectiveOwner = p)
+      if (Project and cpIndex < nWonder) and (GWonder[woColossus].EffectiveOwner = p)
       then
         result := result * ColossusEffect div 100;
     end;
@@ -369,7 +369,7 @@ begin
         if Size > 4 then
           BaseHappiness := Size;
       end;
-      for i := 0 to 27 do
+      for i := 0 to nWonder - 1 do
         if Built[i] = 1 then
         begin
           inc(Happy);
@@ -772,7 +772,7 @@ var
   i: integer;
 begin
   with RW[p], City[cix] do
-    for i := 28 to nImp - 1 do
+    for i := nWonder to nImp - 1 do
       if (Built[i] > 0) and (Project0 and (cpImp or cpIndex) <> (cpImp or i))
       then // don't pay maintenance when just completed
       begin
@@ -970,7 +970,7 @@ begin
       (Prod >= CityProjectCost);
 
     // check if wonder already built
-    if (Project and cpImp <> 0) and (Project and cpIndex < 28) and
+    if (Project and cpImp <> 0) and (Project and cpIndex < nWonder) and
       (GWonder[Project and cpIndex].CityID <> WonderNotBuiltYet) then
     begin
       inc(Flags, chOldWonder);
@@ -1049,7 +1049,7 @@ begin
           end;
         end;
 
-        if NewImp < 28 then
+        if NewImp < nWonder then
         begin // wonder
           GWonder[NewImp].CityID := ID;
           GWonder[NewImp].EffectiveOwner := p;
@@ -1059,7 +1059,7 @@ begin
           case NewImp of
             woEiffel:
               begin // reactivate wonders
-                for i := 0 to 27 do
+                for i := 0 to nWonder - 1 do
                   if Imp[i].Expiration >= 0 then
                     for cix2 := 0 to nCity - 1 do
                       if (City[cix2].Loc >= 0) and (City[cix2].Built[i] = 1)
@@ -1302,10 +1302,10 @@ begin
               begin
                 dxdy(Loc, Loc1, dx, dy);
                 dec(SubCriterion[(dy + 3) shl 2 + (dx + 3) shr 1], 160);
-              end
-            end
-          end
-        end
+              end;
+            end;
+          end;
+        end;
       end;
 
     GetCityAreaInfo(p, Loc, CityAreaInfo);
@@ -1413,7 +1413,7 @@ begin
           Hierarchy[iH, iT].Prod := TileInfo.Prod;
           Hierarchy[iH, iT].Trade := TileInfo.Trade;
           Hierarchy[iH, iT].SubValue := SubCriterion[V21];
-        end
+        end;
       end;
     if NeedRare <> 0 then
     begin // rare tiles need own hierarchy

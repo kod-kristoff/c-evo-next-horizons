@@ -1241,7 +1241,7 @@ const
       (WonderAvailable and PrimeWonder and not CoastalWonder > 0)) then
       WonderAvailable := WonderAvailable and PrimeWonder; // alway prefer prime wonders
     Count := 0;
-    for iix := 0 to 27 do
+    for iix := 0 to nWonder - 1 do
     begin
       if (1 shl iix) and WonderAvailable <> 0 then
         if (1 shl iix) and CoastalWonder <> 0 then
@@ -1253,7 +1253,7 @@ const
           Inc(Count);
     end;
     Count := Random(Count);
-    for iix := 0 to 27 do
+    for iix := 0 to nWonder - 1 do
     begin
       if (1 shl iix) and WonderAvailable <> 0 then
         if (1 shl iix) and CoastalWonder <> 0 then
@@ -1325,7 +1325,7 @@ begin
   cixNewCapital := -1;
   WonderAvailable := 0;
   WonderInWork := 0;
-  for iix := 0 to 27 do
+  for iix := 0 to nWonder - 1 do
     if (Imp[iix].Preq <> preNA) and ((Imp[iix].Preq = preNone) or
       IsResearched(Imp[iix].Preq)) and (RO.Wonder[iix].CityID = WonderNotBuiltYet) then
       Inc(WonderAvailable, 1 shl iix);
@@ -1333,7 +1333,7 @@ begin
     if MyCity[cix].Loc >= 0 then
     begin
       iix := City_CurrentImprovementProject(cix);
-      if (iix >= 0) and (iix < 28) then
+      if (iix >= 0) and (iix < nWonder) then
         Inc(WonderInWork, 1 shl iix)
       else if iix = imPalace then
         cixNewCapital := cix;
@@ -1427,7 +1427,7 @@ begin
           end;
 
           iix := City_CurrentImprovementProject(cix);
-          if (iix >= 0) and (iix < 28) or (iix = imPalace) or
+          if (iix >= 0) and (iix < nWonder) or (iix = imPalace) or
             (iix = imShipComp) or (iix = imShipPow) or (iix = imShipHab) then
             City_OptimizeTiles(cix, rwMaxProd)
           else if size < 8 then
@@ -1446,7 +1446,7 @@ begin
 
           if cix = cixNewCapital then
             City_StartImprovement(cix, imPalace)
-          else if (iix >= 0) and (iix < 28) and ((1 shl iix) and
+          else if (iix >= 0) and (iix < nWonder) and ((1 shl iix) and
             WonderAvailable <> 0) then
           // complete wonder production first
           else if (mixProduce >= 0) and (City_CurrentUnitProject(cix) >= 0) and
@@ -1502,7 +1502,7 @@ begin
                 (RO.Wonder[woZeus].CityID = WonderNotBuiltYet) and City_Improvable(cix, woZeus) then
                 City_StartImprovement(cix, woZeus)
               else if (City_CurrentImprovementProject(cix) >= 0) and
-                (City_CurrentImprovementProject(cix) < 28) then
+                (City_CurrentImprovementProject(cix) < nWonder) then
               begin// wonder already built, try to switch to different one
                 if (WonderAvailable and not WonderInWork > 0) and
                   (IsCoastal or (WonderAvailable and not WonderInWork and
@@ -1552,7 +1552,7 @@ begin
               else if ProjectComplete then
               begin // low prio projects
                 ImportantCity := WillProduceColonyShip or (Built[imPalace] > 0);
-                for iix := 0 to 27 do
+                for iix := 0 to nWonder - 1 do
                   if Built[iix] > 0 then
                     ImportantCity := True;
                 City_GetReportNew(cix, Report);
@@ -1604,7 +1604,7 @@ begin
             2 div 3) then
             City_RebuildImprovement(cix, imTownHall)
           else if (RO.Government = gFundamentalism) and not WillProduceColonyShip then
-            for iix := 28 to nImp - 1 do
+            for iix := nWonder to nImp - 1 do
               if (Built[iix] > 0) and
                 ((iix in [imTemple, imTheater, imCathedral, imColosseum,
                 imLibrary, imUniversity, imResLab, imHarbor, imSuperMarket]) or

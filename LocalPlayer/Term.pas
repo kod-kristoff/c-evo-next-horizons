@@ -457,7 +457,7 @@ type
     PeaceEvaHappened: Integer;
     EnhancementJobs: TEnhancementJobs;
     ImpOrder: array [0 .. nCityType - 1] of TImpOrder;
-    ToldWonders: array [0 .. 27] of TWonderInfo;
+    ToldWonders: array [0 .. nWonder - 1] of TWonderInfo;
     ToldTech: array [0 .. nAdv - 1] of ShortInt;
   end;
 
@@ -468,6 +468,13 @@ type
     SentOffer: TOffer;
     DeliveredPrices: TPriceSet;
     ReceivedPrices: TPriceSet;
+  end;
+
+  TCurrentMoveInfo = record
+    AfterMovePaintRadius: Integer;
+    AfterAttackExpeller: Integer;
+    DoShow: Boolean;
+    IsAlly: Boolean;
   end;
 
 var
@@ -567,16 +574,20 @@ const
   flImmUpdate = $0002;
 
 var
-  Jump: array [0 .. nPl - 1] of integer;
-  pTurn, pLogo, UnStartLoc, ToldSlavery: integer;
-  SmallScreen, GameOK, MapValid, skipped, idle: boolean;
+  Jump: array [0 .. nPl - 1] of Integer;
+  pTurn: Integer;
+  pLogo: Integer;
+  UnStartLoc: Integer;
+  ToldSlavery: Integer;
+  SmallScreen: Boolean;
+  GameOK: Boolean;
+  MapValid: Boolean;
+  Skipped: Boolean;
+  Idle: Boolean;
 
-  SaveOption: array of integer;
-  MiniColors: array [0..11, 0..1] of TColor;
+  SaveOption: array of Integer;
   MainMap: TIsoMap;
-  CurrentMoveInfo: record AfterMovePaintRadius, AfterAttackExpeller: integer;
-  DoShow, IsAlly: boolean;
-end;
+  CurrentMoveInfo: TCurrentMoveInfo;
 
 function CityEventName(i: integer): string;
 begin
@@ -1069,7 +1080,7 @@ begin
       if ModalSelectDlg.result < 0 then
       begin
         result := false;
-        exit
+        exit;
       end;
       ChosenResearch := ModalSelectDlg.result;
       if ChosenResearch = adMilitary then
@@ -1395,7 +1406,7 @@ begin
   if Check and sbWonder and not SoundPreloadDone <> 0 then
   begin
     need := false;
-    for i := 0 to 27 do
+    for i := 0 to nWonder - 1 do
       if MyRO.Wonder[i].CityID <> WonderNotBuiltYet then
         need := true;
     if need then
@@ -1491,18 +1502,18 @@ begin
           abs(integer(UnusedTribeFiles.Objects[j]) and
           $FF - Tribe[i].Color and $FF) * 2;
         if TestColorDistance < ColorDistance then
-          ColorDistance := TestColorDistance
+          ColorDistance := TestColorDistance;
       end;
     if ColorDistance > BestColorDistance then
     begin
       CountBest := 0;
-      BestColorDistance := ColorDistance
+      BestColorDistance := ColorDistance;
     end;
     if ColorDistance = BestColorDistance then
     begin
       inc(CountBest);
       if DelphiRandom(CountBest) = 0 then
-        result := j
+        result := j;
     end;
   end;
 end;
@@ -1573,7 +1584,7 @@ begin
         if TestCost > MostCost then
         begin
           MostCost := TestCost;
-          IconIndex := imShipComp + i
+          IconIndex := imShipComp + i;
         end;
       end;
     end;
@@ -1585,7 +1596,7 @@ end;
 
 procedure TMainScreen.InitModule;
 var
-  x, y, i, j, Domain: integer;
+  i, j, Domain: integer;
 begin
   { search icons for advances: }
   for i := 0 to nAdv - 1 do
@@ -1609,16 +1620,16 @@ begin
                 AdvIcon[i] := 85
               else
                 AdvIcon[i] := 86 + Domain;
-      for j := 28 to nImp - 1 do
+      for j := nWonder to nImp - 1 do
         if Imp[j].Preq = i then
           AdvIcon[i] := j;
-      for j := 28 to nImp - 1 do
+      for j := nWonder to nImp - 1 do
         if (Imp[j].Preq = i) and (Imp[j].Kind <> ikCommon) then
           AdvIcon[i] := j;
       for j := 0 to nJob - 1 do
         if i = JobPreq[j] then
           AdvIcon[i] := 84;
-      for j := 0 to 27 do
+      for j := 0 to nWonder - 1 do
         if Imp[j].Preq = i then
           AdvIcon[i] := j;
       if AdvIcon[i] < 0 then
@@ -1636,9 +1647,6 @@ begin
   UnusedTribeFiles.Sorted := true;
   TribeNames := tstringlist.Create;
 
-  for x := 0 to 11 do
-    for y := 0 to 1 do
-      MiniColors[x, y] := HGrSystem.Data.Canvas.Pixels[66 + x, 67 + y];
   IsoEngine.Init(InitEnemyModel);
   if not IsoEngine.ApplyTileSize(TileSize) and (TileSize <> tsMedium) then
     ApplyTileSize(tsMedium);
@@ -2048,7 +2056,7 @@ begin
       MyData.ToldOwnCredibility := MyRO.Credibility;
     end;
 
-    for i := 0 to 27 do
+    for i := 0 to nWonder - 1 do
     begin
       OwnWonder := false;
       for cix := 0 to MyRO.nCity - 1 do
@@ -2220,7 +2228,7 @@ begin
         with MyCity[cix] do
           if (MyRO.Turn > 0) and (Loc >= 0) and (Flags and chCaptured = 0) and
             (WondersOnly = (Flags and chProduction <> 0) and
-            (Project0 and cpImp <> 0) and (Project0 and cpIndex < 28)) then
+            (Project0 and cpImp <> 0) and (Project0 and cpIndex < nWonder)) then
           begin
             if WondersOnly then
               with MessgExDlg do
@@ -2601,7 +2609,7 @@ begin
                 if G.Difficulty[i] > 0 then
                   inc(ToldAlive, 1 shl i);
               PeaceEvaHappened := 0;
-              for i := 0 to 27 do
+              for i := 0 to nWonder - 1 do
                 with ToldWonders[i] do
                 begin
                   CityID := -1;
@@ -5851,7 +5859,7 @@ begin
   begin
     if CityCaptured and (MyMap[ToLoc] and fCity = 0) then
     begin // city destroyed
-      for i := 0 to 27 do { tell about destroyed wonders }
+      for i := 0 to nWonder - 1 do { tell about destroyed wonders }
         if (MyRO.Wonder[i].CityID = WonderDestroyed) and (MyData.ToldWonders[i].CityID <> WonderDestroyed)
         then
           with MessgExDlg do
@@ -5873,7 +5881,7 @@ begin
     if CityCaptured and (MyMap[ToLoc] and fCity <> 0) then
     begin // city captured
       ListDlg.AddCity;
-      for i := 0 to 27 do { tell about capture of wonders }
+      for i := 0 to nWonder - 1 do { tell about capture of wonders }
         if MyRO.City[MyRO.nCity - 1].Built[i] > 0 then
           with MessgExDlg do
           begin
@@ -7182,7 +7190,7 @@ begin
       mCityTypes.Enabled := false;
       // check if city types already usefull:
       if MyRO.nCity > 0 then
-        for i := 28 to nImp - 1 do
+        for i := nWonder to nImp - 1 do
           if (i <> imTrGoods) and (Imp[i].Kind = ikCommon) and
             (Imp[i].Preq <> preNA) and
             ((Imp[i].Preq = preNone) or (MyRO.Tech[Imp[i].Preq] >= tsApplicable))
@@ -7261,7 +7269,7 @@ begin
       or (MyRO.TestFlags and (tfAllTechs or tfUncover or tfAllContact) <> 0);
     mEUnitStat.Enabled := MyRO.nEnemyModel > 0;
     { mWonders.Enabled:= false;
-      for i:=0 to 27 do if MyRO.Wonder[i].CityID <> WonderNotBuiltYet then
+      for i:=0 to nWonder - 1 do if MyRO.Wonder[i].CityID <> WonderNotBuiltYet then
       mWonders.Enabled:=true; }
     mDiagram.Enabled := MyRO.Turn >= 2;
     mShips.Enabled := false;

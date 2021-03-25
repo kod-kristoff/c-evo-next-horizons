@@ -1067,10 +1067,10 @@ begin
         // improvements
         code[0, 0] := cpImp + imTrGoods;
         Lines[0] := 1;
-        for i := 28 to nImp - 1 do
+        for i := nWonder to nImp - 1 do
           if Imp[i].Kind = ikCommon then
             TryAddImpLine(0, i + cpImp);
-        for i := 28 to nImp - 1 do
+        for i := nWonder to nImp - 1 do
           if not(Imp[i].Kind in [ikCommon, ikTrGoods]) and
             ((MyRO.NatBuilt[i] = 0) or (Imp[i].Kind = ikNatLocal)) then
             TryAddImpLine(0, i + cpImp);
@@ -1082,7 +1082,7 @@ begin
           end;
 
         // wonders
-        for i := 0 to 27 do
+        for i := 0 to nWonder - 1 do
           TryAddImpLine(1, i + cpImp);
 
         // units

@@ -1121,7 +1121,7 @@ begin
               (Size <= NeedSewerSize - 2) or (Size <= NeedAqueductSize - 2) then
             begin // settlers could be added to this city
               Happy := BasicHappy;
-              for i := 0 to 27 do
+              for i := 0 to nWonder - 1 do
                 if Built[i] > 0 then
                   Inc(Happy);
               if Built[imTemple] > 0 then

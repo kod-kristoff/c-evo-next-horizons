@@ -48,7 +48,7 @@ var
   GTurn: Integer; { current turn }
   GTestFlags: Integer;
   Mode: TGameMode;
-  GWonder: array [0 .. 27] of TWonderInfo;
+  GWonder: array [0 .. nWonder - 1] of TWonderInfo;
   ServerVersion: array [0 .. nPl - 1] of integer;
   ProcessClientData: array [0 .. nPl - 1] of boolean;
   CL: TCmdList;
@@ -451,7 +451,7 @@ begin
   if ad = adMassProduction then
     ResourceMask[p] := ResourceMask[p] or fModern;
 
-  for i := 0 to 27 do { check whether wonders expired }
+  for i := 0 to nWonder - 1 do { check whether wonders expired }
     if (GWonder[i].EffectiveOwner <> GWonder[woEiffel].EffectiveOwner) and
       (Imp[i].Expiration = ad) then
     begin
@@ -3148,18 +3148,18 @@ procedure StealCity(p, cix: integer; SaveUnits: boolean);
 var
   i, j, uix1, cix1, nearest: integer;
 begin
-  for i := 0 to 27 do
+  for i := 0 to nWonder - 1 do
     if RW[p].City[cix].Built[i] = 1 then
     begin
       GWonder[i].EffectiveOwner := -1;
       if i = woPyramids then
         FreeSlaves;
       if i = woEiffel then // deactivate expired wonders
-        for j := 0 to 27 do
+        for j := 0 to nWonder - 1 do
           if GWonder[j].EffectiveOwner = p then
             CheckExpiration(j);
     end;
-  for i := 28 to nImp - 1 do
+  for i := nWonder to nImp - 1 do
     if (Imp[i].Kind <> ikCommon) and (RW[p].City[cix].Built[i] > 0) then
     begin { destroy national projects }
       RW[p].NatBuilt[i] := 0;
@@ -3190,9 +3190,8 @@ var
   Radius: TVicinity21Loc;
 begin
   StealCity(p, cix, SaveUnits);
-  with RW[p].City[cix] do
-  begin
-    for i := 0 to 27 do
+  with RW[p].City[cix] do begin
+    for i := 0 to nWonder - 1 do
       if Built[i] > 0 then
         GWonder[i].CityID := WonderDestroyed;
     V21_to_Loc(Loc, Radius);
@@ -3242,20 +3241,20 @@ begin
       end;
     Built[imTownHall] := 0;
     Built[imCourt] := 0;
-    for i := 28 to nImp - 1 do
+    for i := nWonder to nImp - 1 do
       if Imp[i].Kind <> ikCommon then
         Built[i] := 0; { destroy national projects }
-    for i := 0 to 27 do
+    for i := 0 to nWonder - 1 do
       if Built[i] = 1 then
       begin // new wonder owner!
         GWonder[i].EffectiveOwner := pNew;
         if i = woEiffel then // reactivate expired wonders
         begin
-          for j := 0 to 27 do
+          for j := 0 to nWonder - 1 do
             if Imp[j].Expiration >= 0 then
               for cix1 := 0 to (RW[pNew].nCity - 1) do
                 if RW[pNew].City[cix1].Built[j] = 1 then
-                  GWonder[j].EffectiveOwner := pNew
+                  GWonder[j].EffectiveOwner := pNew;
         end
         else
           CheckExpiration(i);

@@ -311,12 +311,9 @@ begin
           end
           else if moPolitical in MapOptions then begin
             // Political
-            if MyMap[Loc] and fTerrain < fGrass then
-              cm := cmPolOcean
-            else if MyRO.Territory[Loc] < 0 then
-              cm := cmPolNone
-            else
-              cm := Tribe[MyRO.Territory[Loc]].Color;
+            if MyMap[Loc] and fTerrain < fGrass then cm := cmPolOcean
+            else if MyRO.Territory[Loc] < 0 then cm := cmPolNone
+            else cm := Tribe[MyRO.Territory[Loc]].Color;
           end;
           MiniPixel.Pixel^.B := (cm shr 16) and $ff;
           MiniPixel.Pixel^.G := (cm shr 8) and $ff;

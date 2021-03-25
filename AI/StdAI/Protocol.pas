@@ -10,6 +10,7 @@ const
   nAdv = 94; { number of advances }
   nImp = 70; { number of improvements }
   nPl = 15; { max number of players, don't change! }
+  nWonder = 28; { max number of wonders }
   nUmax = 4096; { max units/player, don't set above 4096 }
   nCmax = 1024; { max cities/player, don't set above 4096 }
   nMmax = 256; { max models/player, don't set above 1024 }
@@ -1290,6 +1291,7 @@ type
     AirLoad: Byte; // number of transported air units
     Flags: Cardinal;
   end;
+  PUn = ^TUn;
 
   { TCity }
 
@@ -1313,6 +1315,7 @@ type
     Built: array [0 .. (nImp + 3) div 4 * 4 - 1] of ShortInt;
     // array value =1 indicates built improvement
   end;
+  PCity = ^TCity;
 
   TModel = packed record
     Status: LongInt; // free for AI use
@@ -1351,6 +1354,7 @@ type
     Load: Byte; { number of transported units }
     Flags: Word;
   end;
+  PUnitInfo = ^TUnitInfo;
 
   TCityInfo = packed record
     Loc: LongInt;
@@ -1361,6 +1365,7 @@ type
     Size: Word;
     Flags: Word;
   end;
+  PCityInfo = ^TCityInfo;
 
   TModelInfo = packed record
     Owner: Word; // Player which owns the model
@@ -1590,6 +1595,7 @@ type
   end;
 
   TTileList = array [0 .. INFIN] of Cardinal;
+  PTileList = ^TTileList;
   TTileObservedLastList = array [0 .. INFIN] of SmallInt;
   TOwnerList = array [0 .. INFIN] of ShortInt;
   TByteList = array [0 .. INFIN] of Byte;
@@ -1644,9 +1650,9 @@ type
     EvaStart: array [0 .. nPl - 1] of Integer; // peace treaty: start of evacuation period
     Tribute: array [0 .. nPl - 1] of Integer; // no longer in use
     TributePaid: array [0 .. nPl - 1] of Integer; // no longer in use
-    Wonder: array [0 .. 27] of TWonderInfo;
+    Wonder: array [0 .. nWonder - 1] of TWonderInfo;
     Ship: array [0 .. nPl - 1] of TShipInfo;
-    NatBuilt: array [28 .. (nImp + 3) div 4 * 4 - 1] of ShortInt;
+    NatBuilt: array [nWonder .. (nImp + 3) div 4 * 4 - 1] of ShortInt;
     nBattleHistory: Integer;
     BattleHistory: ^TBattleList; // complete list of all my battles in the whole game
     BorderHelper: ^TByteList;

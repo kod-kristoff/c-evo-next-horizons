@@ -157,7 +157,7 @@ begin
   end;
 
   nPool := 0;
-  for iix := 28 to nImp - 1 do
+  for iix := nWonder to nImp - 1 do
     if not(iix in listed) and (Imp[iix].Kind = ikCommon) and (iix <> imTrGoods)
       and (Imp[iix].Preq <> preNA) and
       ((Imp[iix].Preq = preNone) or (MyRO.Tech[Imp[iix].Preq] >= tsApplicable))

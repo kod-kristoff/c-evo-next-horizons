@@ -10,6 +10,7 @@ const
   nAdv = 94; { number of advances }
   nImp = 70; { number of improvements }
   nPl = 15; { max number of players, don't change! }
+  nWonder = 28; { number of wonders }
   nUmax = 4096; { max units/player, don't set above 4096 }
   nCmax = 1024; { max cities/player, don't set above 4096 }
   nMmax = 256; { max models/player, don't set above 1024 }
@@ -1649,9 +1650,9 @@ type
     EvaStart: array [0 .. nPl - 1] of Integer; // peace treaty: start of evacuation period
     Tribute: array [0 .. nPl - 1] of Integer; // no longer in use
     TributePaid: array [0 .. nPl - 1] of Integer; // no longer in use
-    Wonder: array [0 .. 27] of TWonderInfo;
+    Wonder: array [0 .. nWonder - 1] of TWonderInfo;
     Ship: array [0 .. nPl - 1] of TShipInfo;
-    NatBuilt: array [28 .. (nImp + 3) div 4 * 4 - 1] of ShortInt;
+    NatBuilt: array [nWonder .. (nImp + 3) div 4 * 4 - 1] of ShortInt;
     nBattleHistory: Integer;
     BattleHistory: ^TBattleList; // complete list of all my battles in the whole game
     BorderHelper: ^TByteList;

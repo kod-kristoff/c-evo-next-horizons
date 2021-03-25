@@ -787,7 +787,7 @@ begin
     DebugMap[p1] := nil;
 
   GTurn := 0;
-  for i := 0 to 27 do
+  for i := 0 to nWonder - 1 do
     with GWonder[i] do
     begin
       CityID := -1;
@@ -4211,7 +4211,7 @@ begin { >>>server }
                   result := eNoPreq
                 else if built[NewProject and cpIndex] > 0 then
                   result := eInvalid
-                else if (NewProject and cpIndex < 28) and
+                else if (NewProject and cpIndex < nWonder) and
                   (GWonder[NewProject and cpIndex].CityID <> WonderNotBuiltYet) then
                   result := eViolation // wonder already exists
                 else if (NewProject and cpIndex = imSpacePort) and

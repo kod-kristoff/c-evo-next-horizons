@@ -1483,13 +1483,13 @@ begin { Prepare }
               AddLine(Phrases.Lookup('GOVERNMENT', i), pkGov, i,
                 hkMisc + hkCrossLink, miscGovList);
           NextSection('BUILDALLOW');
-          for i := 0 to 27 do
+          for i := 0 to nWonder - 1 do
             if Imp[i].Preq = no then
               AddImprovement(i);
-          for i := 28 to nImp - 1 do
+          for i := nWonder to nImp - 1 do
             if (Imp[i].Preq = no) and (Imp[i].Kind <> ikCommon) then
               AddImprovement(i);
-          for i := 28 to nImp - 1 do
+          for i := nWonder to nImp - 1 do
             if (Imp[i].Preq = no) and (Imp[i].Kind = ikCommon) then
               AddImprovement(i);
           NextSection('MODELALLOW');
@@ -1526,7 +1526,7 @@ begin { Prepare }
                     [upgrade[Domain, i].Cost]), pkNormal_Dot)
               end;
           NextSection('EXPIRATION');
-          for i := 0 to 27 do
+          for i := 0 to nWonder - 1 do
             if (Imp[i].Preq <> preNA) and (Imp[i].Expiration = no) then
               AddImprovement(i);
           NextSection('ADVEFFECT');
@@ -1544,7 +1544,7 @@ begin { Prepare }
           // AddLine(HelpText.Lookup('HELPTITLE_IMPLIST'),pkSection);
           List := THyperText.Create;
           List.OwnsObjects := True;
-          for i := 28 to nImp - 1 do
+          for i := nWonder to nImp - 1 do
             if (i <> imTrGoods) and (Imp[i].Preq <> preNA) and
               (Imp[i].Kind = ikCommon) then
               List.AddLine(Phrases.Lookup('IMPROVEMENTS', i), pkSmallIcon,
@@ -1557,7 +1557,7 @@ begin { Prepare }
         begin // complete nat. project list
           Caption := HelpText.Lookup('HELPTITLE_UNIQUELIST');
           // AddLine(HelpText.Lookup('HELPTITLE_UNIQUELIST'),pkSection);
-          for i := 28 to nImp - 1 do
+          for i := nWonder to nImp - 1 do
             if (Imp[i].Preq <> preNA) and
               ((Imp[i].Kind = ikNatLocal) or (Imp[i].Kind = ikNatGlobal)) then
               AddLine(Phrases.Lookup('IMPROVEMENTS', i), pkSmallIcon, i,
@@ -1565,7 +1565,7 @@ begin { Prepare }
           { LineFeed;
             LineFeed;
             AddLine(HelpText.Lookup('HELPTITLE_SHIPPARTLIST'),pkSection);
-            for i:=28 to nImp-1 do
+            for i:= nWonder to nImp-1 do
             if (Imp[i].Preq<>preNA) and (Imp[i].Kind=ikShipPart) then
             AddLine(Phrases.Lookup('IMPROVEMENTS',i),pkSmallIcon,i,hkImp,i); }
         end
@@ -1573,7 +1573,7 @@ begin { Prepare }
         begin // complete wonder list
           Caption := HelpText.Lookup('HELPTITLE_WONDERLIST');
           // AddLine(HelpText.Lookup('HELPTITLE_WONDERLIST'),pkSection);
-          for i := 0 to 27 do
+          for i := 0 to nWonder - 1 do
             if Imp[i].Preq <> preNA then
               AddLine(Phrases.Lookup('IMPROVEMENTS', i), pkSmallIcon, i,
                 hkImp, i);
@@ -1599,7 +1599,7 @@ begin { Prepare }
             AddFeature(mcWill);
             AddFeature(mcAcademy);
           end;
-          if (no < 28) and not Phrases2FallenBackToEnglish then
+          if (no < nWonder) and not Phrases2FallenBackToEnglish then
           begin
             LineFeed;
             if Imp[no].Expiration >= 0 then
@@ -1645,7 +1645,7 @@ begin { Prepare }
             AddLine(Format(HelpText.Lookup('RAREREQUIRED'),
               [Phrases.Lookup('TERRAIN', 3 * 12 + i)]), pkTer, 3 * 12 + i);
           end;
-          if (no < 28) and (Imp[no].Expiration >= 0) then
+          if (no < nWonder) and (Imp[no].Expiration >= 0) then
           begin
             NextSection('EXPIRATION');
             s := Format(HelpText.Lookup('EXPWITH'),
@@ -1655,7 +1655,7 @@ begin { Prepare }
             AddTextual(s);
           end;
           NextSection('SEEALSO');
-          if (no < 28) and (Imp[no].Expiration >= 0) then
+          if (no < nWonder) and (Imp[no].Expiration >= 0) then
             AddImprovement(woEiffel);
           for i := 0 to nImpReplacement - 1 do
             if ImpReplacement[i].OldImp = no then

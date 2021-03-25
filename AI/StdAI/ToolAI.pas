@@ -233,7 +233,7 @@ begin
       (CityReport.FoodRep > CityReport.Eaten) then
       Inc(Result, CityReport.FoodRep - CityReport.Eaten);
   end;
-  for i := 28 to nImp - 1 do
+  for i := nWonder to nImp - 1 do
     if MyCity[cix].Built[i] > 0 then
       Dec(Result, Imp[i].Maint);
 end;
