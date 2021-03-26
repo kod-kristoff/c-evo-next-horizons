@@ -6,7 +6,7 @@ interface
 uses
   Protocol, ScreenTools, BaseWin, StringTables, Math, LCLIntf, LCLType,
   Messages, SysUtils, Classes, Graphics, Controls, Forms, ExtCtrls,
-  ButtonB, PVSB, Types, fgl;
+  ButtonB, PVSB, Types, fgl, IsoEngine;
 
 const
   MaxHist = 16;
@@ -101,6 +101,7 @@ type
     HelpText: TStringTable;
     ExtPic, TerrIcon: TBitmap;
     ScrollBar: TPVScrollbar;
+    NoMap: TIsoMap;
     x0: array [-2..180] of Integer;
     procedure PaintTerrIcon(x, y, xSrc, ySrc: Integer);
     procedure ScrollBarUpdate(Sender: TObject);
@@ -272,6 +273,8 @@ const
 procedure THelpDlg.FormCreate(Sender: TObject);
 begin
   inherited;
+  NoMap := TIsoMap.Create;
+
   HistItems := THistItems.Create;
 
   CaptionLeft := BackBtn.Left + BackBtn.Width;
@@ -330,6 +333,7 @@ begin
   FreeAndNil(HelpText);
   // FreeAndNil(CaptionFont);
   FreeAndNil(HistItems);
+  FreeAndNil(NoMap);
 end;
 
 procedure THelpDlg.FormMouseWheel(Sender: TObject; Shift: TShiftState;
@@ -501,19 +505,21 @@ end;
 
 procedure THelpDlg.PaintTerrIcon(x, y, xSrc, ySrc: integer);
 begin
-  Frame(OffScreen.Canvas, x - 1, y - 1, x + xSizeBig, y + ySizeBig,
-    $000000, $000000);
-  if 2 * yyt < 40 then begin
-    Sprite(OffScreen, HGrTerrain, x, y, 56, 2 * yyt, xSrc, ySrc);
-    Sprite(OffScreen, HGrTerrain, x, y + 2 * yyt, 56, 40 - 2 * yyt,
+  with NoMap do begin
+    Frame(OffScreen.Canvas, x - 1, y - 1, x + xSizeBig, y + ySizeBig,
+      $000000, $000000);
+    if 2 * yyt < 40 then begin
+      Sprite(OffScreen, HGrTerrain, x, y, 56, 2 * yyt, xSrc, ySrc);
+      Sprite(OffScreen, HGrTerrain, x, y + 2 * yyt, 56, 40 - 2 * yyt,
+        xSrc, ySrc);
+    end else
+      Sprite(OffScreen, HGrTerrain, x, y, 56, 40, xSrc, ySrc);
+    Sprite(OffScreen, HGrTerrain, x, y, xxt, yyt, xSrc + xxt, ySrc + yyt);
+    Sprite(OffScreen, HGrTerrain, x, y + yyt, xxt, 40 - yyt, xSrc + xxt, ySrc);
+    Sprite(OffScreen, HGrTerrain, x + xxt, y, 56 - xxt, yyt, xSrc, ySrc + yyt);
+    Sprite(OffScreen, HGrTerrain, x + xxt, y + yyt, 56 - xxt, 40 - yyt,
       xSrc, ySrc);
-  end else
-    Sprite(OffScreen, HGrTerrain, x, y, 56, 40, xSrc, ySrc);
-  Sprite(OffScreen, HGrTerrain, x, y, xxt, yyt, xSrc + xxt, ySrc + yyt);
-  Sprite(OffScreen, HGrTerrain, x, y + yyt, xxt, 40 - yyt, xSrc + xxt, ySrc);
-  Sprite(OffScreen, HGrTerrain, x + xxt, y, 56 - xxt, yyt, xSrc, ySrc + yyt);
-  Sprite(OffScreen, HGrTerrain, x + xxt, y + yyt, 56 - xxt, 40 - yyt,
-    xSrc, ySrc);
+  end;
 end;
 
 procedure THelpDlg.OffscreenPaint;
@@ -604,7 +610,7 @@ begin
                   FrameImage(OffScreen.Canvas, HGrSystem2.Data,
                     12 + x0[i], -7 + i * 24, 56, 40, 137, 127);
                 1:
-                  begin
+                  with NoMap do begin
                     PaintTerrIcon(12 + x0[i], -7 + i * 24,
                       1 + 3 * (xxt * 2 + 1), 1 + yyt);
                     if 2 * yyt < 40 then
@@ -617,7 +623,7 @@ begin
                         - 28, 1 + yyt + 1 * (yyt * 3 + 1) + yyt - 20);
                   end;
                 2:
-                  begin
+                  with NoMap do begin
                     PaintTerrIcon(12 + x0[i], -7 + i * 24,
                       1 + 7 * (xxt * 2 + 1), 1 + yyt + 4 * (yyt * 3 + 1));
                     if 2 * yyt < 40 then
@@ -702,7 +708,7 @@ begin
               x0[i] := x0[i] + 8;
             end;
           pkTer, pkBigTer:
-            begin
+            with NoMap do begin
               if HelpLineInfo.Format = pkBigTer then
                 y := i * 24 - 3 + yyt
               else
@@ -757,7 +763,7 @@ begin
               end;
             end;
           pkTerImp:
-            begin
+            with NoMap do begin
               ofs := 8;
               if HelpLineInfo.Picpix = 5 then
               begin // display mine on hills

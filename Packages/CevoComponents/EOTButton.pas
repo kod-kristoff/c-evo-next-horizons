@@ -90,8 +90,7 @@ end;
 
 procedure TEOTButton.SetIndex(x: integer);
 begin
-  if x <> FIndex then
-  begin
+  if x <> FIndex then begin
     FIndex := x;
     Invalidate;
   end;
@@ -99,11 +98,10 @@ end;
 
 procedure TEOTButton.SetButtonIndexFast(x: integer);
 begin
-  if Visible and (x <> FIndex) then
-  begin
+  if Visible and (x <> FIndex) then begin
     FIndex := x;
     try
-      Paint
+      Paint;
     except
     end;
   end;

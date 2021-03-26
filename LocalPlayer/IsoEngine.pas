@@ -4,22 +4,38 @@ unit IsoEngine;
 interface
 
 uses
-  Protocol, ClientTools, ScreenTools, Tribes, {$IFNDEF SCR}Term, {$ENDIF}
+  Protocol, ClientTools, ScreenTools, Tribes,
   LCLIntf, LCLType, SysUtils, Classes, Graphics, UPixelPointer, UGraphicSet;
+
+const
+  TerrainIconLines = 21;
+  TerrainIconCols = 9;
 
 type
   TInitEnemyModelEvent = function(emix: integer): boolean;
+  TTileSize = (tsSmall, tsMedium, tsBig);
+
+  TTerrainSpriteSize = array of TRect;
+
+  { TCitiesPictures }
+
+  TCitiesPictures = class
+    Pictures: array [2..3, 0..3] of TCityPicture;
+    procedure Prepare(HGrCities: TGraphicSet; xxt, yyt: Integer);
+  end;
 
   { TIsoMap }
 
   TIsoMap = class
   private
+    FTileSize: TTileSize;
     const
       Dirx: array [0..7] of Integer = (1, 2, 1, 0, -1, -2, -1, 0);
       Diry: array [0..7] of Integer = (-1, 0, 1, 2, 1, 0, -1, -2);
     procedure CityGrid(xm, ym: integer; CityAllowClick: Boolean);
     function IsShoreTile(Loc: integer): boolean;
     procedure MakeDark(Line: PPixelPointer; Length: Integer);
+    procedure SetTileSize(AValue: TTileSize);
     procedure ShadeOutside(x0, y0, Width, Height, xm, ym: integer);
   protected
     FOutput: TBitmap;
@@ -35,6 +51,11 @@ type
     FAdviceLoc: Integer;
     DataCanvas: TCanvas;
     MaskCanvas: TCanvas;
+    LandPatch: TBitmap;
+    OceanPatch: TBitmap;
+    Borders: TBitmap;
+    BordersOK: PInteger;
+    CitiesPictures: TCitiesPictures;
     function Connection4(Loc, Mask, Value: integer): integer;
     function Connection8(Loc, Mask: integer): integer;
     function OceanConnection(Loc: integer): integer;
@@ -47,8 +68,18 @@ type
     procedure Textout(x, y, Color: integer; const s: string);
     procedure Sprite(HGr: TGraphicSet; xDst, yDst, Width, Height, xGr, yGr: integer);
     procedure TSprite(xDst, yDst, grix: integer; PureBlack: boolean = false);
+    procedure ApplyTileSize(ATileSize: TTileSize);
   public
+    xxt: Integer; // half of tile size x/y
+    yyt: Integer; // half of tile size x/y
+    TSpriteSize: TTerrainSpriteSize;
+    HGrTerrain: TGraphicSet;
+    HGrCities: TGraphicSet;
+    MapOptions: TMapOptions;
+    pDebugMap: Integer; // -1 for off
     constructor Create;
+    destructor Destroy; override;
+    procedure Reset;
     procedure SetOutput(Output: TBitmap);
     procedure SetPaintBounds(Left, Top, Right, Bottom: integer);
     procedure Paint(x, y, Loc, nx, ny, CityLoc, CityOwner: integer;
@@ -62,26 +93,43 @@ type
     procedure AttackBegin(const ShowMove: TShowMove);
     procedure AttackEffect(const ShowMove: TShowMove);
     procedure AttackEnd;
+    procedure ReduceTerrainIconsSize;
     property AdviceLoc: integer read FAdviceLoc write FAdviceLoc;
+    property TileSize: TTileSize read FTileSize write SetTileSize;
   end;
 
-var
-  NoMap: TIsoMap;
-  MapOptions: TMapOptions;
-  pDebugMap: Integer; // -1 for off
+  { TIsoMapCache }
+
+  TIsoMapCache = class
+    LandPatch: TBitmap;
+    OceanPatch: TBitmap;
+    Borders: TBitmap;
+    BordersOk: Integer;
+    TSpriteSize: TTerrainSpriteSize;
+    HGrTerrain: TGraphicSet;
+    HGrCities: TGraphicSet;
+    CitiesPictures: TCitiesPictures;
+    procedure AssignToIsoMap(IsoMap: TIsoMap);
+    constructor Create;
+    destructor Destroy; override;
+  end;
+
+const
+  DefaultTileSize: TTileSize = tsMedium;
+  TileSizes: array [TTileSize] of TPoint = ((X: 33; Y: 16), (X: 48; Y: 24),
+    (X: 72; Y: 36));
 
 function IsJungle(y: integer): boolean;
 procedure Init(InitEnemyModelHandler: TInitEnemyModelEvent);
-function ApplyTileSize(ATileSize: TTileSize): boolean;
-procedure Done;
-procedure IsoEngineReset;
+
 
 implementation
 
+uses
+  Term;
+
 const
   ShoreDither = fGrass;
-  TerrainIconLines = 21;
-  TerrainIconCols = 9;
 
   // sprites indexes
   spRow2 = 2 * TerrainIconCols + 6;
@@ -110,14 +158,8 @@ const
   spCanalMouths = 20 * TerrainIconCols;
 
 var
-  BordersOK: integer;
   OnInitEnemyModel: TInitEnemyModelEvent;
-  LandPatch: TBitmap;
-  OceanPatch: TBitmap;
-  Borders: TBitmap;
-  TSpriteSize: array [0 .. TerrainIconLines * TerrainIconCols - 1] of TRect;
   DebugMap: ^TTileList;
-  CitiesPictures: array [2 .. 3, 0 .. 3] of TCityPicture;
   FoW: Boolean;
   ShowLoc: Boolean;
   ShowCityNames: Boolean;
@@ -126,6 +168,7 @@ var
   ShowMyBorder: Boolean;
   ShowGrWall: Boolean;
   ShowDebug: Boolean;
+  IsoMapCache: array[TTileSize] of TIsoMapCache;
 
 function IsJungle(y: integer): boolean;
 begin
@@ -135,12 +178,61 @@ end;
 procedure Init(InitEnemyModelHandler: TInitEnemyModelEvent);
 begin
   OnInitEnemyModel := InitEnemyModelHandler;
-  if NoMap <> nil then
-    FreeAndNil(NoMap);
-  NoMap := TIsoMap.Create;
 end;
 
-procedure ReduceTerrainIconsSize;
+{ TCitiesPictures }
+
+procedure TCitiesPictures.Prepare(HGrCities: TGraphicSet; xxt, yyt: Integer);
+var
+  Age: Integer;
+  Size: Integer;
+begin
+  // prepare age 2+3 cities
+  for age := 2 to 3 do
+    for size := 0 to 3 do
+      with Pictures[Age, Size] do
+        FindPosition(HGrCities, Size * (xxt * 2 + 1), (Age - 2) * (yyt * 3 + 1),
+          xxt * 2 - 1, yyt * 3 - 1, $00FFFF, xShield, yShield);
+end;
+
+{ TIsoMapCache }
+
+procedure TIsoMapCache.AssignToIsoMap(IsoMap: TIsoMap);
+begin
+  IsoMap.HGrTerrain := HGrTerrain;
+  IsoMap.HGrCities := HGrCities;
+  IsoMap.Borders := Borders;
+  IsoMap.BordersOK := @BordersOk;
+  IsoMap.LandPatch := LandPatch;
+  IsoMap.OceanPatch := OceanPatch;
+  IsoMap.TSpriteSize := TSpriteSize;
+  IsoMap.CitiesPictures := CitiesPictures;
+end;
+
+constructor TIsoMapCache.Create;
+begin
+  LandPatch := TBitmap.Create;
+  LandPatch.PixelFormat := pf24bit;
+  OceanPatch := TBitmap.Create;
+  OceanPatch.PixelFormat := pf24bit;
+  Borders := TBitmap.Create;
+  Borders.PixelFormat := pf24bit;
+  HGrTerrain := nil;
+  HGrCities := nil;
+  SetLength(TSpriteSize, TerrainIconLines * TerrainIconCols);
+  CitiesPictures := TCitiesPictures.Create;
+end;
+
+destructor TIsoMapCache.Destroy;
+begin
+  FreeAndNil(CitiesPictures);
+  FreeAndNil(LandPatch);
+  FreeAndNil(OceanPatch);
+  FreeAndNil(Borders);
+  inherited;
+end;
+
+procedure TIsoMap.ReduceTerrainIconsSize;
 var
   MaskLine: array of TPixelPointer;
   Mask24: TBitmap;
@@ -205,59 +297,45 @@ begin
   FreeAndNil(Mask24);
 end;
 
-function ApplyTileSize(ATileSize: TTileSize): boolean;
+procedure TIsoMap.ApplyTileSize(ATileSize: TTileSize);
 var
   x: Integer;
   y: Integer;
   xSrc: Integer;
   ySrc: Integer;
-  HGrTerrainNew: TGraphicSet;
-  HGrCitiesNew: TGraphicSet;
-  Age: Integer;
-  Size: Integer;
   LandMore: TBitmap;
   OceanMore: TBitmap;
   DitherMask: TBitmap;
-  xxtNew: Integer;
-  yytNew: Integer;
+  FileName: string;
 begin
-  xxtNew := TileSizes[ATileSize].X;
-  yytNew := TileSizes[ATileSize].Y;
-  result := false;
-  HGrTerrainNew := LoadGraphicSet(Format('Terrain%dx%d.png',
-    [xxtNew * 2, yytNew * 2]));
-  if not Assigned(HGrTerrainNew) then
-    exit;
-  HGrCitiesNew := LoadGraphicSet(Format('Cities%dx%d.png',
-    [xxtNew * 2, yytNew * 2]));
-  if not Assigned(HGrCitiesNew) then
-    exit;
-  xxt := xxtNew;
-  yyt := yytNew;
-  TileSize := ATileSize;
-  HGrTerrain := HGrTerrainNew;
-  HGrCities := HGrCitiesNew;
-  Result := true;
+  FTileSize := ATileSize;
+  xxt := TileSizes[ATileSize].X;
+  yyt := TileSizes[ATileSize].Y;
 
-  // prepare age 2+3 cities
-  for age := 2 to 3 do
-    for size := 0 to 3 do
-      with CitiesPictures[age, size] do
-        FindPosition(HGrCities, size * (xxt * 2 + 1), (age - 2) * (yyt * 3 + 1),
-          xxt * 2 - 1, yyt * 3 - 1, $00FFFF, xShield, yShield);
+  if Assigned(IsoMapCache[ATileSize]) then begin
+    IsoMapCache[ATileSize].AssignToIsoMap(Self);
+    Exit;
+  end;
+  IsoMapCache[ATileSize] := TIsoMapCache.Create;
+
+  FileName := Format('Terrain%dx%d.png', [xxt * 2, yyt * 2]);
+  IsoMapCache[ATileSize].HGrTerrain := LoadGraphicSet(FileName);
+  if not Assigned(IsoMapCache[ATileSize].HGrTerrain) then
+    raise Exception.Create(FileName + ' not found.');
+
+  FileName := Format('Cities%dx%d.png', [xxt * 2, yyt * 2]);
+  IsoMapCache[ATileSize].HGrCities := LoadGraphicSet(FileName);
+  if not Assigned(IsoMapCache[ATileSize].HGrCities) then
+    raise Exception.Create(FileName + ' not found.');
+
+  IsoMapCache[ATileSize].AssignToIsoMap(Self);
+
+  CitiesPictures.Prepare(HGrCities, xxt, yyt);
 
   { prepare dithered ground tiles }
-  if not Assigned(LandPatch) then begin
-    LandPatch := TBitmap.Create;
-    LandPatch.PixelFormat := pf24bit;
-  end;
   LandPatch.Canvas.Brush.Color := 0;
   LandPatch.SetSize(xxt * 18, yyt * 9);
   LandPatch.Canvas.FillRect(0, 0, LandPatch.Width, LandPatch.Height);
-  if not Assigned(OceanPatch) then begin
-    OceanPatch := TBitmap.Create;
-    OceanPatch.PixelFormat := pf24bit;
-  end;
   OceanPatch.Canvas.Brush.Color := 0;
   OceanPatch.SetSize(xxt * 8, yyt * 4);
   OceanPatch.Canvas.FillRect(0, 0, OceanPatch.Width, OceanPatch.Height);
@@ -436,26 +514,14 @@ begin
 
   ReduceTerrainIconsSize;
 
-  if not Assigned(Borders) then begin
-    Borders := TBitmap.Create;
-    Borders.PixelFormat := pf24bit;
-  end;
   Borders.SetSize(xxt * 2, (yyt * 2) * nPl);
   Borders.Canvas.FillRect(0, 0, Borders.Width, Borders.Height);
-  BordersOK := 0;
+  BordersOK^ := 0;
 end;
 
-procedure Done;
+procedure TIsoMap.Reset;
 begin
-  FreeAndNil(NoMap);
-  FreeAndNil(LandPatch);
-  FreeAndNil(OceanPatch);
-  FreeAndNil(Borders);
-end;
-
-procedure IsoEngineReset;
-begin
-  BordersOK := 0;
+  BordersOK^ := 0;
 end;
 
 constructor TIsoMap.Create;
@@ -468,6 +534,12 @@ begin
   AttLoc := -1;
   DefLoc := -1;
   FAdviceLoc := -1;
+  TileSize := DefaultTileSize;
+end;
+
+destructor TIsoMap.Destroy;
+begin
+  inherited;
 end;
 
 procedure TIsoMap.SetOutput(Output: TBitmap);
@@ -710,7 +782,7 @@ begin
     end
     else
     begin
-      cpic := CitiesPictures[age, xGr];
+      cpic := CitiesPictures.Pictures[age, xGr];
       xShield := x - xxt + cpic.xShield;
       yShield := y - 2 * yyt + cpic.yShield;
     end;
@@ -1023,13 +1095,10 @@ var
     PixelPtr: TPixelPointer;
   begin
     if ShowBorder and (Loc >= 0) and (Loc < G.lx * G.ly) and
-      (Tile and fTerrain <> fUNKNOWN) then
-    begin
+      (Tile and fTerrain <> fUNKNOWN) then begin
       p1 := MyRO.Territory[Loc];
-      if (p1 >= 0) and (ShowMyBorder or (p1 <> me)) then
-      begin
-        if BordersOK and (1 shl p1) = 0 then
-        begin
+      if (p1 >= 0) and (ShowMyBorder or (p1 <> me)) then begin
+        if BordersOK^ and (1 shl p1) = 0 then begin
           UnshareBitmap(Borders);
           BitBltCanvas(Borders.Canvas, 0, p1 * (yyt * 2), xxt * 2,
             yyt * 2, HGrTerrain.Data.Canvas,
@@ -1048,11 +1117,10 @@ var
             PixelPtr.NextLine;
           end;
           Borders.EndUpdate;
-          BordersOK := BordersOK or 1 shl p1;
+          BordersOK^ := BordersOK^ or 1 shl p1;
         end;
         for dy := 0 to 1 do
-          for dx := 0 to 1 do
-          begin
+          for dx := 0 to 1 do begin
             Loc1 := dLoc(Loc, dx * 2 - 1, dy * 2 - 1);
             begin
               if (Loc1 < 0) or (Loc1 >= G.lx * G.ly) then
@@ -1070,7 +1138,7 @@ var
                   p1 * (yyt * 2) + dy * yyt, SRCPAINT);
               end;
             end;
-          end
+          end;
       end;
     end;
   end;
@@ -1346,6 +1414,13 @@ begin
     Line^.Pixel^.R := (Line^.Pixel^.R shr 1) and $7f;
     Line^.NextPixel;
   end;
+end;
+
+procedure TIsoMap.SetTileSize(AValue: TTileSize);
+begin
+  if FTileSize = AValue then Exit;
+  FTileSize := AValue;
+  ApplyTileSize(AValue);
 end;
 
 procedure TIsoMap.ShadeOutside(x0, y0, Width, Height, xm, ym: integer);
@@ -1640,11 +1715,16 @@ begin
   DefLoc := -1;
 end;
 
-initialization
+procedure IsoEngineDone;
+var
+  I: TTileSize;
+begin
+  for I := Low(IsoMapCache) to High(IsoMapCache) do
+    FreeAndNil(IsoMapCache[I]);
+end;
 
-NoMap := nil;
-LandPatch := nil;
-OceanPatch := nil;
-Borders := nil;
+finalization
+
+IsoEngineDone;
 
 end.

@@ -6,7 +6,7 @@ interface
 uses
   ScreenTools, BaseWin, Protocol, ClientTools, Term, LCLIntf, LCLType,
 
-  SysUtils, Classes, Graphics, Controls, Forms,
+  SysUtils, Classes, Graphics, Controls, Forms, IsoEngine,
   ButtonB, ButtonC, Menus;
 
 type
@@ -27,6 +27,7 @@ type
     job9: TButtonC;
     Popup: TPopupMenu;
     procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
     procedure FormPaint(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure CloseBtnClick(Sender: TObject);
@@ -34,6 +35,8 @@ type
     procedure TerrClick(Sender: TObject);
     procedure JobClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+  private
+    NoMap: TIsoMap;
   public
     procedure ShowNewContent(NewMode: integer; TerrType: integer = -1);
   protected
@@ -46,7 +49,8 @@ var
 
 implementation
 
-uses Help;
+uses
+  Help;
 
 {$R *.lfm}
 
@@ -56,6 +60,7 @@ var
   m: TMenuItem;
 begin
   inherited;
+  NoMap := TIsoMap.Create;
   CaptionRight := CloseBtn.Left;
   CaptionLeft := ToggleBtn.Left + ToggleBtn.Width;
   InitButtons();
@@ -82,6 +87,11 @@ begin
       m.OnClick := TerrClick;
       Popup.Items.Add(m);
     end;
+end;
+
+procedure TEnhanceDlg.FormDestroy(Sender: TObject);
+begin
+  FreeAndNil(NoMap);
 end;
 
 procedure TEnhanceDlg.FormPaint(Sender: TObject);
@@ -128,7 +138,8 @@ begin
   EndStage := 0;
   while (EndStage < 5) and (MyData.EnhancementJobs[Page, EndStage] <> jNone) do
     inc(EndStage);
-  x := InnerWidth div 2 - xxt - (xxt + 3) * EndStage;
+  with NoMap do
+    x := InnerWidth div 2 - xxt - (xxt + 3) * EndStage;
 
   TerrType := Page;
   TileImp := 0;
@@ -184,41 +195,43 @@ begin
       include(Done, MyData.EnhancementJobs[Page, stage - 1]);
     end;
 
-    if TerrType < fForest then
-      Sprite(offscreen, HGrTerrain, x, 64 - yyt, xxt * 2, yyt * 2,
-        1 + TerrType * (xxt * 2 + 1), 1 + yyt)
-    else
-    begin
-      Sprite(offscreen, HGrTerrain, x, 64 - yyt, xxt * 2, yyt * 2,
-        1 + 2 * (xxt * 2 + 1), 1 + yyt + 2 * (yyt * 3 + 1));
-      Sprite(offscreen, HGrTerrain, x, 64 - yyt, xxt * 2, yyt * 2,
-        1 + 7 * (xxt * 2 + 1), 1 + yyt + 2 * (2 + TerrType - fForest) *
-        (yyt * 3 + 1));
+    with NoMap do begin
+      if TerrType < fForest then
+        Sprite(offscreen, HGrTerrain, x, 64 - yyt, xxt * 2, yyt * 2,
+          1 + TerrType * (xxt * 2 + 1), 1 + yyt)
+      else
+      begin
+        Sprite(offscreen, HGrTerrain, x, 64 - yyt, xxt * 2, yyt * 2,
+          1 + 2 * (xxt * 2 + 1), 1 + yyt + 2 * (yyt * 3 + 1));
+        Sprite(offscreen, HGrTerrain, x, 64 - yyt, xxt * 2, yyt * 2,
+          1 + 7 * (xxt * 2 + 1), 1 + yyt + 2 * (2 + TerrType - fForest) *
+          (yyt * 3 + 1));
+      end;
+      if TileImp and fTerImp = tiFarm then
+        Sprite(offscreen, HGrTerrain, x, 64 - yyt, xxt * 2, yyt * 2,
+          1 + (xxt * 2 + 1), 1 + yyt + 12 * (yyt * 3 + 1))
+      else if TileImp and fTerImp = tiIrrigation then
+        Sprite(offscreen, HGrTerrain, x, 64 - yyt, xxt * 2, yyt * 2, 1,
+          1 + yyt + 12 * (yyt * 3 + 1));
+      if TileImp and fRR <> 0 then
+      begin
+        Sprite(offscreen, HGrTerrain, x, 64 - yyt, xxt * 2, yyt * 2,
+          1 + 6 * (xxt * 2 + 1), 1 + yyt + 10 * (yyt * 3 + 1));
+        Sprite(offscreen, HGrTerrain, x, 64 - yyt, xxt * 2, yyt * 2,
+          1 + 2 * (xxt * 2 + 1), 1 + yyt + 10 * (yyt * 3 + 1));
+      end
+      else if TileImp and fRoad <> 0 then
+      begin
+        Sprite(offscreen, HGrTerrain, x, 64 - yyt, xxt * 2, yyt * 2,
+          1 + 6 * (xxt * 2 + 1), 1 + yyt + 9 * (yyt * 3 + 1));
+        Sprite(offscreen, HGrTerrain, x, 64 - yyt, xxt * 2, yyt * 2,
+          1 + 2 * (xxt * 2 + 1), 1 + yyt + 9 * (yyt * 3 + 1));
+      end;
+      if TileImp and fTerImp = tiMine then
+        Sprite(offscreen, HGrTerrain, x, 64 - yyt, xxt * 2, yyt * 2,
+          1 + 2 * (xxt * 2 + 1), 1 + yyt + 12 * (yyt * 3 + 1));
+      inc(x, xxt * 2 + 6)
     end;
-    if TileImp and fTerImp = tiFarm then
-      Sprite(offscreen, HGrTerrain, x, 64 - yyt, xxt * 2, yyt * 2,
-        1 + (xxt * 2 + 1), 1 + yyt + 12 * (yyt * 3 + 1))
-    else if TileImp and fTerImp = tiIrrigation then
-      Sprite(offscreen, HGrTerrain, x, 64 - yyt, xxt * 2, yyt * 2, 1,
-        1 + yyt + 12 * (yyt * 3 + 1));
-    if TileImp and fRR <> 0 then
-    begin
-      Sprite(offscreen, HGrTerrain, x, 64 - yyt, xxt * 2, yyt * 2,
-        1 + 6 * (xxt * 2 + 1), 1 + yyt + 10 * (yyt * 3 + 1));
-      Sprite(offscreen, HGrTerrain, x, 64 - yyt, xxt * 2, yyt * 2,
-        1 + 2 * (xxt * 2 + 1), 1 + yyt + 10 * (yyt * 3 + 1));
-    end
-    else if TileImp and fRoad <> 0 then
-    begin
-      Sprite(offscreen, HGrTerrain, x, 64 - yyt, xxt * 2, yyt * 2,
-        1 + 6 * (xxt * 2 + 1), 1 + yyt + 9 * (yyt * 3 + 1));
-      Sprite(offscreen, HGrTerrain, x, 64 - yyt, xxt * 2, yyt * 2,
-        1 + 2 * (xxt * 2 + 1), 1 + yyt + 9 * (yyt * 3 + 1));
-    end;
-    if TileImp and fTerImp = tiMine then
-      Sprite(offscreen, HGrTerrain, x, 64 - yyt, xxt * 2, yyt * 2,
-        1 + 2 * (xxt * 2 + 1), 1 + yyt + 12 * (yyt * 3 + 1));
-    inc(x, xxt * 2 + 6)
   end;
 
   for i := 0 to Popup.Items.Count - 1 do

@@ -5,12 +5,16 @@ interface
 
 uses
   ScreenTools, Protocol, ButtonBase, ButtonA, Types, LCLIntf, LCLType,
-  SysUtils, Classes, Graphics, Controls, Forms, DrawDlg;
+  SysUtils, Classes, Graphics, Controls, Forms, DrawDlg, IsoEngine;
 
 type
+
+  { TBattleDlg }
+
   TBattleDlg = class(TDrawDlg)
     OKBtn: TButtonA;
     CancelBtn: TButtonA;
+    procedure FormDestroy(Sender: TObject);
     procedure FormPaint(Sender: TObject);
     procedure FormMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -20,6 +24,10 @@ type
     procedure FormShow(Sender: TObject);
     procedure OKBtnClick(Sender: TObject);
     procedure CancelBtnClick(Sender: TObject);
+    procedure PaintBattleOutcome(ca: TCanvas; xm, ym, uix, ToLoc: Integer;
+      Forecast: TBattleForecastEx);
+  private
+    IsoMap: TIsoMap;
   public
     uix, ToLoc: Integer;
     Forecast: TBattleForecastEx;
@@ -29,13 +37,10 @@ type
 var
   BattleDlg: TBattleDlg;
 
-procedure PaintBattleOutcome(ca: TCanvas; xm, ym, uix, ToLoc: Integer;
-  Forecast: TBattleForecastEx);
-
 implementation
 
 uses
-  Term, ClientTools, IsoEngine;
+  Term, ClientTools;
 
 {$R *.lfm}
 
@@ -47,7 +52,7 @@ const
   FanaticColor = $800080;
   FirstStrikeColor = $A0A0A0;
 
-procedure PaintBattleOutcome(ca: TCanvas; xm, ym, uix, ToLoc: Integer;
+procedure TBattleDlg.PaintBattleOutcome(ca: TCanvas; xm, ym, uix, ToLoc: Integer;
   Forecast: TBattleForecastEx);
 var
   euix, ADamage, DDamage, StrMax, DamageMax, MaxBar, LAStr, LDStr, LADamage,
@@ -171,7 +176,7 @@ begin
     RisedTextOut(ca, xm - (TextSize.cx + 1) div 2, ym + 8 + LAAvoidedDamage +
       (LADamage - LAAvoidedDamage - TextSize.cy) div 2, LabelText);
 
-  NoMap.SetOutput(Buffer);
+  IsoMap.SetOutput(Buffer);
   BitBltCanvas(Buffer.Canvas, 0, 0, 66, 48, ca, xm + 8 + 4,
     ym - 8 - 12 - 48);
   { if TerrType<fForest then
@@ -183,7 +188,7 @@ begin
     Sprite(Buffer,HGrTerrain,0,16,66,32,1+7*(xxt*2+1),1+yyt+19*(yyt*3+1))
     else Sprite(Buffer,HGrTerrain,0,16,66,32,1+7*(xxt*2+1),1+yyt+2*(2+TerrType-fForest)*(yyt*3+1));
     end; }
-  NoMap.PaintUnit(1, 0, UnitInfo, 0);
+  IsoMap.PaintUnit(1, 0, UnitInfo, 0);
   BitBltCanvas(ca, xm + 8 + 4, ym - 8 - 12 - 48, 66, 48, Buffer.Canvas,
     0, 0);
 
@@ -191,12 +196,13 @@ begin
     ym + 8 + 12);
   MakeUnitInfo(me, MyUn[uix], UnitInfo);
   UnitInfo.Flags := UnitInfo.Flags and not unFortified;
-  NoMap.PaintUnit(1, 0, UnitInfo, 0);
+  IsoMap.PaintUnit(1, 0, UnitInfo, 0);
   BitBltCanvas(ca, xm - 8 - 4 - 66, ym + 8 + 12, 66, 48, Buffer.Canvas, 0, 0);
 end; { PaintBattleOutcome }
 
 procedure TBattleDlg.FormCreate(Sender: TObject);
 begin
+  IsoMap := TIsoMap.Create;
   OKBtn.Caption := Phrases.Lookup('BTN_YES');
   CancelBtn.Caption := Phrases.Lookup('BTN_NO');
   InitButtons();
@@ -273,6 +279,11 @@ begin
   for cix := 0 to ControlCount - 1 do
     if (Controls[cix].Visible) and (Controls[cix] is TButtonBase) then
       BtnFrame(Canvas, Controls[cix].BoundsRect, MainTexture);
+end;
+
+procedure TBattleDlg.FormDestroy(Sender: TObject);
+begin
+  FreeAndNil(IsoMap);
 end;
 
 procedure TBattleDlg.FormMouseDown(Sender: TObject; Button: TMouseButton;

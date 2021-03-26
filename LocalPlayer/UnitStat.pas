@@ -6,7 +6,7 @@ interface
 uses
   Protocol, ClientTools, Term, ScreenTools, BaseWin,
   LCLIntf, LCLType, SysUtils, Classes, Graphics, Controls, Forms,
-  ButtonB, ButtonC;
+  ButtonB, ButtonC, IsoEngine;
 
 type
   TUnitStatDlg = class(TBufferedDrawDlg)
@@ -23,7 +23,8 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure HelpBtnClick(Sender: TObject);
-
+  private
+    NoMap: TIsoMap;
   public
     procedure CheckAge;
     procedure ShowNewContent_OwnModel(NewMode, mix: integer);
@@ -50,7 +51,7 @@ var
 implementation
 
 uses
-  Tribes, IsoEngine, Help, Directories;
+  Tribes, Help, Directories;
 
 {$R *.lfm}
 
@@ -72,6 +73,7 @@ const
 procedure TUnitStatDlg.FormCreate(Sender: TObject);
 begin
   inherited;
+  NoMap := TIsoMap.Create;
   AgePrepared := -2;
   TitleHeight := Screen.Height;
   InitButtons();
@@ -90,6 +92,7 @@ procedure TUnitStatDlg.FormDestroy(Sender: TObject);
 begin
   FreeAndNil(Template);
   FreeAndNil(Back);
+  FreeAndNil(NoMap);
 end;
 
 procedure TUnitStatDlg.CheckAge;
@@ -520,7 +523,7 @@ begin
     with Tribe[mi.owner].ModelPicture[mi.mix] do
     begin
       if Kind in [dkOwnUnit, dkEnemyUnit, dkEnemyCityDefense] then
-        with ui do
+        with ui, NoMap do
         begin
           { Frame(offscreen.canvas,xView-1,yView-1,xView+64,yView+48,
             MainTexture.clBevelShade,MainTexture.clBevelLight);

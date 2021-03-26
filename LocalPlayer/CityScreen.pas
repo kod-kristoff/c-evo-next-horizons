@@ -406,6 +406,7 @@ procedure TCityDlg.OffscreenPaint;
     TileInfo: TTileInfo;
     rare: boolean;
   begin
+    with AreaMap do begin
     if Server(sGetCityTileInfo, me, Loc, TileInfo) <> eOk then
     begin
       assert(cix < 0);
@@ -441,6 +442,7 @@ procedure TCityDlg.OffscreenPaint;
         xGr := 66 + 22;
       Sprite(offscreen, HGrSystem, x + xxt - 5 + d * (2 * i + 1 - Total),
         y + yyt - 5, 10, 10, xGr, yGr);
+    end;
     end;
   end;
 var
@@ -592,6 +594,7 @@ begin
     end;
   end;
 
+  with AreaMap do begin
   rx := (192 + xxt * 2 - 1) div (xxt * 2);
   ry := (96 + yyt * 2 - 1) div (yyt * 2);
   AreaMap.Paint(xmArea - xxt * 2 * rx, ymArea - yyt * 2 * ry - 3 * yyt,
@@ -618,6 +621,7 @@ begin
             PaintResources(xmArea - xxt + xxt * dx, ymArea - yyt + yyt * dy,
               Loc1, (dx = 0) and (dy = 0));
         end;
+  end;
 
   if Report.Working > 1 then
     d := (xService - (xmArea - 192) - 8 - 32) div (Report.Working - 1);
@@ -929,8 +933,8 @@ begin
             x := ((Cnt - 6 * Page) mod 3) * 64 + xZoomMap;
             y := ((Cnt - 6 * Page) div 3) * 52 + yZoomMap + 20;
             MakeUnitInfo(me, MyUn[i], UnitInfo);
-            NoMap.SetOutput(offscreen);
-            NoMap.PaintUnit(x, y, UnitInfo, MyUn[i].Status);
+            AreaMap.SetOutput(offscreen);
+            AreaMap.PaintUnit(x, y, UnitInfo, MyUn[i].Status);
 
             for j := 0 to UnitReport.FoodSupport - 1 do
               Sprite(offscreen, HGrSystem, x + 38 + 11 * j, y + 40, 10,
@@ -1316,6 +1320,7 @@ begin
     end
     else if (x >= xmArea - 192) and (x < xmArea + 192) and (y >= ymArea - 96)
       and (y < ymArea + 96) then
+    with AreaMap do
     begin
       qx := ((4000 * xxt * yyt) + (x - xmArea) * (yyt * 2) + (y - ymArea + yyt)
         * (xxt * 2)) div (xxt * yyt * 4) - 1000;

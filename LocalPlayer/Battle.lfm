@@ -1,46 +1,43 @@
 object BattleDlg: TBattleDlg
   Left = 246
+  Height = 288
   Top = 122
+  Width = 300
   BorderIcons = []
   BorderStyle = bsNone
   ClientHeight = 288
   ClientWidth = 300
   Color = clBtnFace
-  Font.Charset = DEFAULT_CHARSET
+  DesignTimePPI = 144
   Font.Color = clWindowText
   Font.Height = -11
   Font.Name = 'MS Sans Serif'
-  Font.Style = []
   FormStyle = fsStayOnTop
-  OldCreateOrder = False
-  Scaled = False
   OnCreate = FormCreate
   OnDeactivate = FormDeactivate
+  OnDestroy = FormDestroy
   OnKeyDown = FormKeyDown
   OnMouseDown = FormMouseDown
   OnPaint = FormPaint
   OnShow = FormShow
-  PixelsPerInch = 96
+  LCLVersion = '2.0.12.0'
   Scaled = False
-  TextHeight = 13
   object OKBtn: TButtonA
     Left = 46
+    Height = 25
     Top = 251
     Width = 100
-    Height = 25
     Down = False
     Permanent = False
     OnClick = OKBtnClick
-    Caption = ''
   end
   object CancelBtn: TButtonA
     Left = 154
+    Height = 25
     Top = 251
     Width = 100
-    Height = 25
     Down = False
     Permanent = False
     OnClick = CancelBtnClick
-    Caption = ''
   end
 end

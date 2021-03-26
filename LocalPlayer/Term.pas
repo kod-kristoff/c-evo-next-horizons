@@ -13,14 +13,13 @@ uses
   Protocol, Tribes, PVSB, ClientTools, ScreenTools, BaseWin, Messg, ButtonBase,
   LCLIntf, LCLType, SysUtils, Classes, Graphics, Controls, DrawDlg, Types,
   Forms, Menus, ExtCtrls, dateutils, Platform, ButtonB, ButtonC, EOTButton, Area,
-  UGraphicSet, UMiniMap;
+  UGraphicSet, UMiniMap, IsoEngine;
 
 const
   WM_EOT = WM_USER;
 
 type
   TPaintLocTempStyle = (pltsNormal, pltsBlink);
-  TTileSize = (tsSmall, tsMedium, tsBig);
 
   TSoundBlock = (sbStart, sbWonder, sbScience, sbContact, sbTurn);
   TSoundBlocks = set of TSoundBlock;
@@ -269,9 +268,13 @@ type
     FirstMovieTurn: Boolean;
     PrevWindowState: TWindowState;
     CurrentWindowState: TWindowState;
+    MainMap: TIsoMap;
+    NoMap: TIsoMap;
+    NoMapPanel: TIsoMap;
     function ChooseUnusedTribe: integer;
     procedure GetTribeList;
     procedure InitModule;
+    procedure DoneModule;
     procedure InitTurn(NewPlayer: integer);
     procedure SaveMenuItemsState;
     procedure ScrollBarUpdate(Sender: TObject);
@@ -320,6 +323,7 @@ type
     procedure SoundPreload(Check: TSoundBlocks);
     procedure UpdateKeyShortcuts;
     procedure SetFullScreen(Active: Boolean);
+    procedure PaintZoomedTile(dst: TBitmap; x, y, Loc: integer);
   public
     UsedOffscreenWidth, UsedOffscreenHeight: integer;
     Offscreen: TBitmap;
@@ -437,9 +441,6 @@ const
     'CITY_WONDEREX', 'CITY_EMDELAY', 'CITY_FOUNDED', 'CITY_FOUNDED', '',
     'CITY_INVALIDTYPE');
 
-  TileSizes: array [TTileSize] of TPoint = ((X: 33; Y: 16), (X: 48; Y: 24),
-    (X: 72; Y: 36));
-
 type
   TPersistentData = record
     FarTech: Integer;
@@ -476,9 +477,6 @@ var
   MyData: ^TPersistentData;
   AdvIcon: array [0 .. nAdv - 1] of Integer;
   { icons displayed with the technologies }
-  xxt: Integer; // half of tile size x/y
-  yyt: Integer; // half of tile size x/y
-  TileSize: TTileSize;
   GameMode: Integer;
   ClientMode: Integer;
   Age: Integer;
@@ -490,8 +488,6 @@ var
   TaxSum: Integer;
   SoundPreloadDone: TSoundBlocks;
   MarkCityLoc: Integer;
-  HGrTerrain: TGraphicSet;
-  HGrCities: TGraphicSet;
   MovieSpeed: Integer;
   CityRepMask: Cardinal;
   ReceivedOffer: TOffer;
@@ -523,7 +519,7 @@ procedure HelpOnTerrain(Loc, NewMode: integer);
 implementation
 
 uses
-  Directories, IsoEngine, CityScreen, Draft, MessgEx, Select, CityType, Help,
+  Directories, CityScreen, Draft, MessgEx, Select, CityType, Help,
   UnitStat, Log, Diagram, NatStat, Wonders, Enhance, Nego, UPixelPointer, Sound,
   Battle, Rates, TechTree, Registry, Global, UKeyBindings;
 
@@ -581,7 +577,6 @@ var
   Idle: Boolean;
 
   SaveOption: array of Integer;
-  MainMap: TIsoMap;
   CurrentMoveInfo: TCurrentMoveInfo;
 
 function CityEventName(i: integer): string;
@@ -924,140 +919,133 @@ begin
     end;
 end;
 
-procedure PaintZoomedTile(dst: TBitmap; x, y, Loc: integer);
+procedure TMainScreen.PaintZoomedTile(dst: TBitmap; x, y, Loc: integer);
 
   procedure TSprite(xDst, yDst, xSrc, ySrc: integer);
   begin
-    Sprite(dst, HGrTerrain, x + xDst, y + yDst, xxt * 2, yyt * 3,
-      1 + xSrc * (xxt * 2 + 1), 1 + ySrc * (yyt * 3 + 1));
+    with NoMapPanel do
+      Sprite(dst, HGrTerrain, x + xDst, y + yDst, xxt * 2, yyt * 3,
+        1 + xSrc * (xxt * 2 + 1), 1 + ySrc * (yyt * 3 + 1));
   end;
 
   procedure TSprite4(xSrc, ySrc: integer);
   begin
-    Sprite(dst, HGrTerrain, x + xxt, y + yyt + 2, xxt * 2, yyt * 2 - 2,
-      1 + xSrc * (xxt * 2 + 1), 3 + yyt + ySrc * (yyt * 3 + 1));
-    Sprite(dst, HGrTerrain, x + 4, y + 2 * yyt, xxt * 2 - 4, yyt * 2,
-      5 + xSrc * (xxt * 2 + 1), 1 + yyt + ySrc * (yyt * 3 + 1));
-    Sprite(dst, HGrTerrain, x + xxt * 2, y + 2 * yyt, xxt * 2 - 4, yyt * 2,
-      1 + xSrc * (xxt * 2 + 1), 1 + yyt + ySrc * (yyt * 3 + 1));
-    Sprite(dst, HGrTerrain, x + xxt, y + yyt * 3, xxt * 2, yyt * 2 - 2,
-      1 + xSrc * (xxt * 2 + 1), 1 + yyt + ySrc * (yyt * 3 + 1));
+    with NoMapPanel do begin
+      Sprite(dst, HGrTerrain, x + xxt, y + yyt + 2, xxt * 2, yyt * 2 - 2,
+        1 + xSrc * (xxt * 2 + 1), 3 + yyt + ySrc * (yyt * 3 + 1));
+      Sprite(dst, HGrTerrain, x + 4, y + 2 * yyt, xxt * 2 - 4, yyt * 2,
+        5 + xSrc * (xxt * 2 + 1), 1 + yyt + ySrc * (yyt * 3 + 1));
+      Sprite(dst, HGrTerrain, x + xxt * 2, y + 2 * yyt, xxt * 2 - 4, yyt * 2,
+        1 + xSrc * (xxt * 2 + 1), 1 + yyt + ySrc * (yyt * 3 + 1));
+      Sprite(dst, HGrTerrain, x + xxt, y + yyt * 3, xxt * 2, yyt * 2 - 2,
+        1 + xSrc * (xxt * 2 + 1), 1 + yyt + ySrc * (yyt * 3 + 1));
+    end;
   end;
 
 var
   cix, ySrc, Tile: integer;
 begin
-  Tile := MyMap[Loc];
-  if Tile and fCity <> 0 then
-  begin
-    if MyRO.Tech[adRailroad] >= tsApplicable then
-      Tile := Tile or fRR
-    else
-      Tile := Tile or fRoad;
-    if Tile and fOwned <> 0 then
+  with NoMapPanel do begin
+    Tile := MyMap[Loc];
+    if Tile and fCity <> 0 then
     begin
-      cix := MyRO.nCity - 1;
-      while (cix >= 0) and (MyCity[cix].Loc <> Loc) do
-        dec(cix);
-      assert(cix >= 0);
-      if MyCity[cix].Built[imSupermarket] > 0 then
-        Tile := Tile or tiFarm
+      if MyRO.Tech[adRailroad] >= tsApplicable then
+        Tile := Tile or fRR
       else
-        Tile := Tile or tiIrrigation;
-    end
-    else
-      Tile := Tile or tiIrrigation;
-  end;
-
-  if Tile and fTerrain >= fForest then
-    TSprite4(2, 2)
-  else
-    TSprite4(Tile and fTerrain, 0);
-  if Tile and fTerrain >= fForest then
-  begin
-    if (Tile and fTerrain = fForest) and IsJungle(Loc div G.lx) then
-      ySrc := 18
-    else
-      ySrc := 3 + 2 * (Tile and fTerrain - fForest);
-    TSprite(xxt, 0, 6, ySrc);
-    TSprite(0, yyt, 3, ySrc);
-    TSprite((xxt * 2), yyt, 4, ySrc + 1);
-    TSprite(xxt, (yyt * 2), 1, ySrc + 1);
-  end;
-
-  // irrigation
-  case Tile and fTerImp of
-    tiIrrigation:
+        Tile := Tile or fRoad;
+      if Tile and fOwned <> 0 then
       begin
+        cix := MyRO.nCity - 1;
+        while (cix >= 0) and (MyCity[cix].Loc <> Loc) do
+          dec(cix);
+        assert(cix >= 0);
+        if MyCity[cix].Built[imSupermarket] > 0 then
+          Tile := Tile or tiFarm
+        else
+          Tile := Tile or tiIrrigation;
+      end
+      else Tile := Tile or tiIrrigation;
+    end;
+
+    if Tile and fTerrain >= fForest then
+      TSprite4(2, 2)
+    else
+      TSprite4(Tile and fTerrain, 0);
+    if Tile and fTerrain >= fForest then
+    begin
+      if (Tile and fTerrain = fForest) and IsJungle(Loc div G.lx) then
+        ySrc := 18
+      else
+        ySrc := 3 + 2 * (Tile and fTerrain - fForest);
+      TSprite(xxt, 0, 6, ySrc);
+      TSprite(0, yyt, 3, ySrc);
+      TSprite((xxt * 2), yyt, 4, ySrc + 1);
+      TSprite(xxt, (yyt * 2), 1, ySrc + 1);
+    end;
+
+    // irrigation
+    case Tile and fTerImp of
+      tiIrrigation: begin
         TSprite(xxt, 0, 0, 12);
         TSprite(xxt * 2, yyt, 0, 12);
       end;
-    tiFarm:
-      begin
+      tiFarm: begin
         TSprite(xxt, 0, 1, 12);
         TSprite(xxt * 2, yyt, 1, 12);
-      end
-  end;
+      end;
+    end;
 
-  // river/canal/road/railroad
-  if Tile and fRiver <> 0 then
-  begin
-    TSprite(0, yyt, 2, 14);
-    TSprite(xxt, (yyt * 2), 2, 14);
-  end;
-  if Tile and fCanal <> 0 then
-  begin
-    TSprite(xxt, 0, 7, 11);
-    TSprite(xxt, 0, 3, 11);
-    TSprite(xxt * 2, yyt, 7, 11);
-    TSprite(xxt * 2, yyt, 3, 11);
-  end;
-  if Tile and fRR <> 0 then
-  begin
-    TSprite((xxt * 2), yyt, 1, 10);
-    TSprite((xxt * 2), yyt, 5, 10);
-    TSprite(xxt, (yyt * 2), 1, 10);
-    TSprite(xxt, (yyt * 2), 5, 10);
-  end
-  else if Tile and fRoad <> 0 then
-  begin
-    TSprite((xxt * 2), yyt, 8, 9);
-    TSprite((xxt * 2), yyt, 5, 9);
-    TSprite(xxt, (yyt * 2), 1, 9);
-    TSprite(xxt, (yyt * 2), 5, 9);
-  end;
+    // river/canal/road/railroad
+    if Tile and fRiver <> 0 then begin
+      TSprite(0, yyt, 2, 14);
+      TSprite(xxt, (yyt * 2), 2, 14);
+    end;
+    if Tile and fCanal <> 0 then begin
+      TSprite(xxt, 0, 7, 11);
+      TSprite(xxt, 0, 3, 11);
+      TSprite(xxt * 2, yyt, 7, 11);
+      TSprite(xxt * 2, yyt, 3, 11);
+    end;
+    if Tile and fRR <> 0 then begin
+      TSprite((xxt * 2), yyt, 1, 10);
+      TSprite((xxt * 2), yyt, 5, 10);
+      TSprite(xxt, (yyt * 2), 1, 10);
+      TSprite(xxt, (yyt * 2), 5, 10);
+    end
+    else if Tile and fRoad <> 0 then begin
+      TSprite((xxt * 2), yyt, 8, 9);
+      TSprite((xxt * 2), yyt, 5, 9);
+      TSprite(xxt, (yyt * 2), 1, 9);
+      TSprite(xxt, (yyt * 2), 5, 9);
+    end;
 
-  if Tile and fPoll <> 0 then
-    TSprite(xxt, (yyt * 2), 6, 12);
+    if Tile and fPoll <> 0 then
+      TSprite(xxt, (yyt * 2), 6, 12);
 
-  // special
-  if Tile and (fTerrain or fSpecial) = fGrass or fSpecial1 then
-    TSprite4(2, 1)
-  else if Tile and fSpecial <> 0 then
-    if Tile and fTerrain < fForest then
-      TSprite(0, yyt, Tile and fTerrain, Tile and fSpecial shr 5)
-    else if (Tile and fTerrain = fForest) and IsJungle(Loc div G.lx) then
-      TSprite(0, yyt, 8, 17 + Tile and fSpecial shr 5)
-    else
-      TSprite(0, yyt, 8, 2 + (Tile and fTerrain - fForest) * 2 + Tile and
-        fSpecial shr 5)
-  else if Tile and fDeadLands <> 0 then
-  begin
-    TSprite4(6, 2);
-    TSprite(xxt, yyt, 8, 12 + Tile shr 25 and 3);
-  end;
+    // special
+    if Tile and (fTerrain or fSpecial) = fGrass or fSpecial1 then TSprite4(2, 1)
+    else if Tile and fSpecial <> 0 then
+      if Tile and fTerrain < fForest then
+        TSprite(0, yyt, Tile and fTerrain, Tile and fSpecial shr 5)
+      else if (Tile and fTerrain = fForest) and IsJungle(Loc div G.lx) then
+        TSprite(0, yyt, 8, 17 + Tile and fSpecial shr 5)
+      else
+        TSprite(0, yyt, 8, 2 + (Tile and fTerrain - fForest) * 2 + Tile and
+          fSpecial shr 5)
+    else if Tile and fDeadLands <> 0 then begin
+      TSprite4(6, 2);
+      TSprite(xxt, yyt, 8, 12 + Tile shr 25 and 3);
+    end;
 
-  // other improvements
-  case Tile and fTerImp of
-    tiMine:
-      TSprite(xxt, 0, 2, 12);
-    tiFort:
-      begin
+    // other improvements
+    case Tile and fTerImp of
+      tiMine: TSprite(xxt, 0, 2, 12);
+      tiFort: begin
         TSprite(xxt, 0, 7, 12);
         TSprite(xxt, 0, 3, 12);
       end;
-    tiBase:
-      TSprite(xxt, 0, 4, 12);
+     tiBase: TSprite(xxt, 0, 4, 12);
+    end;
   end;
 end;
 
@@ -1267,11 +1255,11 @@ end;
 procedure TMainScreen.SetMapOptions;
 begin
   MiniMap.MapOptions := MapOptionChecked;
-  IsoEngine.MapOptions := MapOptionChecked;
+  MainMap.MapOptions := MapOptionChecked;
   if ClientMode = cEditMap then
-    IsoEngine.MapOptions := IsoEngine.MapOptions + [moEditMode];
+    MainMap.MapOptions := MainMap.MapOptions + [moEditMode];
   if mLocCodes.Checked then
-    IsoEngine.MapOptions := IsoEngine.MapOptions + [moLocCodes];
+    MainMap.MapOptions := MainMap.MapOptions + [moLocCodes];
 end;
 
 procedure TMainScreen.UpdateViews(UpdateCityScreen: boolean);
@@ -1637,10 +1625,7 @@ begin
   TribeNames := tstringlist.Create;
 
   IsoEngine.Init(InitEnemyModel);
-  if not IsoEngine.ApplyTileSize(TileSize) and (TileSize <> tsMedium) then
-    ApplyTileSize(tsMedium);
   // non-default tile size is missing a file, switch to default
-  MainMap := TIsoMap.Create;
   MainMap.SetOutput(offscreen);
 
   HGrStdUnits := LoadGraphicSet('StdUnits.png');
@@ -1653,6 +1638,14 @@ begin
 
   sb := TPVScrollbar.Create(Self);
   sb.OnUpdate := ScrollBarUpdate;
+end;
+
+procedure TMainScreen.DoneModule;
+begin
+  FreeAndNil(SmallImp);
+  FreeAndNil(UnusedTribeFiles);
+  FreeAndNil(TribeNames);
+  // AdvisorDlg.DeInit;
 end;
 
 procedure TMainScreen.InitTurn(NewPlayer: integer);
@@ -1838,7 +1831,7 @@ begin
   begin
     Loc1 := MyCity[0].Loc;
     if (ClientMode = cTurn) and (MyRO.Turn = 0) then
-    begin // move city out of center to not be covered by welcome screen
+    with MainMap do begin // move city out of center to not be covered by welcome screen
       dx := MapWidth div (xxt * 5);
       if dx > 5 then
         dx := 5;
@@ -2535,15 +2528,7 @@ begin
         TInitModuleData(Data).Flags := aiThreaded;
       end;
 
-    cReleaseModule:
-      begin
-        FreeAndNil(SmallImp);
-        FreeAndNil(UnusedTribeFiles);
-        FreeAndNil(TribeNames);
-        FreeAndNil(MainMap);
-        IsoEngine.Done;
-        // AdvisorDlg.DeInit;
-      end;
+    cReleaseModule: DoneModule;
 
     cHelpOnly, cStartHelp, cStartCredits:
       begin
@@ -2572,14 +2557,15 @@ begin
         pLogo := -1;
         ClientMode := -1;
         SetMapOptions;
-        IsoEngine.pDebugMap := -1;
+        MainMap.pDebugMap := -1;
         idle := false;
         FillChar(Jump, SizeOf(Jump), 0);
         if StartRunning then
           Jump[0] := 999999;
         GameMode := Command;
         GrExt.ResetPixUsed;
-        IsoEngineReset;
+        MainMap.Reset;
+        NoMap.Reset;
         Tribes.Init;
         GetTribeList;
         for p1 := 0 to nPl - 1 do
@@ -2896,7 +2882,7 @@ begin
       begin
         ClientMode := cEditMap;
         SetMapOptions;
-        IsoEngine.pDebugMap := -1;
+        MainMap.pDebugMap := -1;
         ItsMeAgain(0);
         MyData := nil;
         UnitInfoBtn.Visible := false;
@@ -3392,7 +3378,7 @@ begin
 
     cRefreshDebugMap:
       begin
-        if integer(Data) = IsoEngine.pDebugMap then
+        if integer(Data) = MainMap.pDebugMap then
         begin
           MapValid := false;
           MainOffscreenPaint;
@@ -3444,6 +3430,10 @@ procedure TMainScreen.FormCreate(Sender: TObject);
 var
   i, j: integer;
 begin
+  NoMap := TIsoMap.Create;
+  MainMap := TIsoMap.Create;
+  NoMapPanel := TIsoMap.Create;
+
   KeyBindings.LoadFromRegistry(HKEY_CURRENT_USER, AppRegistryKey + '\KeyBindings');
   UpdateKeyShortcuts;
 
@@ -3558,6 +3548,9 @@ begin
     if AILogo[i] <> nil then
       FreeAndNil(AILogo[I]);
   FreeAndNil(Offscreen);
+  FreeAndNil(MainMap);
+  FreeAndNil(NoMap);
+  FreeAndNil(NoMapPanel);
 end;
 
 procedure TMainScreen.FormMouseWheel(Sender: TObject; Shift: TShiftState;
@@ -3567,8 +3560,10 @@ begin
     PanelPaint;
     Update;
   end else begin
-    if (WheelDelta > 0) and (TileSize < High(TTileSize)) then SetTileSize(Succ(TileSize))
-    else if (WheelDelta < 0) and (TileSize > Low(TTileSize)) then SetTileSize(Pred(TileSize));
+    if (WheelDelta > 0) and (MainMap.TileSize < High(TTileSize)) then
+      SetTileSize(Succ(MainMap.TileSize))
+    else if (WheelDelta < 0) and (MainMap.TileSize > Low(TTileSize)) then
+      SetTileSize(Pred(MainMap.TileSize));
   end;
 end;
 
@@ -3577,32 +3572,31 @@ var
   MiniFrame, MaxMapWidth: integer;
 begin
   SmallScreen := ClientWidth < 1024;
-  MaxMapWidth := (G.lx * 2 - 3) * xxt;
-  // avoide the same tile being visible left and right
-  if ClientWidth <= MaxMapWidth then
-  begin
-    MapWidth := ClientWidth;
-    MapOffset := 0;
-  end
-  else
-  begin
-    MapWidth := MaxMapWidth;
-    MapOffset := (ClientWidth - MapWidth) div 2;
+  with MainMap do begin
+    MaxMapWidth := (G.lx * 2 - 3) * xxt;
+    // avoide the same tile being visible left and right
+    if ClientWidth <= MaxMapWidth then begin
+      MapWidth := ClientWidth;
+      MapOffset := 0;
+    end else begin
+      MapWidth := MaxMapWidth;
+      MapOffset := (ClientWidth - MapWidth) div 2;
+    end;
+    MapHeight := ClientHeight - TopBarHeight - PanelHeight + overlap;
+    Panel.SetSize(ClientWidth, PanelHeight);
+    TopBar.SetSize(ClientWidth, TopBarHeight);
+    MiniFrame := (lxmax_xxx - G.ly) div 2;
+    xMidPanel := (G.lx + MiniFrame) * 2 + 1;
+    xRightPanel := ClientWidth - LeftPanelWidth - 10;
+    if ClientMode = cEditMap then
+      TrPitch := 2 * xxt
+    else
+      TrPitch := 66;
+    xMini := MiniFrame - 5;
+    yMini := (PanelHeight - 26 - lxmax_xxx) div 2 + MiniFrame;
+    ywmax := (G.ly - MapHeight div yyt + 1) and not 1;
+    ywcenter := -((MapHeight - yyt * (G.ly - 1)) div (4 * yyt)) * 2;
   end;
-  MapHeight := ClientHeight - TopBarHeight - PanelHeight + overlap;
-  Panel.SetSize(ClientWidth, PanelHeight);
-  TopBar.SetSize(ClientWidth, TopBarHeight);
-  MiniFrame := (lxmax_xxx - G.ly) div 2;
-  xMidPanel := (G.lx + MiniFrame) * 2 + 1;
-  xRightPanel := ClientWidth - LeftPanelWidth - 10;
-  if ClientMode = cEditMap then
-    TrPitch := 2 * xxt
-  else
-    TrPitch := 66;
-  xMini := MiniFrame - 5;
-  yMini := (PanelHeight - 26 - lxmax_xxx) div 2 + MiniFrame;
-  ywmax := (G.ly - MapHeight div yyt + 1) and not 1;
-  ywcenter := -((MapHeight - yyt * (G.ly - 1)) div (4 * yyt)) * 2;
   // only for ywmax<=0
   if ywmax <= 0 then
     yw := ywcenter
@@ -3704,7 +3698,7 @@ begin
   if ClientMode = cEditMap then
     xTroop := xMidPanel + 15
   else
-  begin
+  with MainMap do begin
     if supervising then
       xTerrain := xMidPanel + 2 * xxt + 14
     else if ClientWidth < 1280 then
@@ -3973,65 +3967,67 @@ procedure TMainScreen.ProcessRect(x0, y0, nx, ny, Options: integer);
 var
   xs, ys, xl, yl: integer;
 begin
-  xl := nx * xxt + xxt;
-  yl := ny * yyt + yyt * 2;
-  xs := (x0 - xw) * (xxt * 2) + y0 and 1 * xxt - G.lx * (xxt * 2);
-  // |xs+xl/2-MapWidth/2| -> min
-  while abs(2 * (xs + G.lx * (xxt * 2)) + xl - MapWidth) <
-    abs(2 * xs + xl - MapWidth) do
-    inc(xs, G.lx * (xxt * 2));
-  ys := (y0 - yw) * yyt - yyt;
-  if xs + xl > MapWidth then
-    xl := MapWidth - xs;
-  if ys + yl > MapHeight then
-    yl := MapHeight - ys;
-  if (xl <= 0) or (yl <= 0) then
-    exit;
-  if Options and prPaint <> 0 then
-  begin
-    if Options and prAutoBounds <> 0 then
-      MainMap.SetPaintBounds(xs, ys, xs + xl, ys + yl);
-    MainMap.Paint(xs, ys, x0 + G.lx * y0, nx, ny, -1, -1);
+  with MainMap do begin
+    xl := nx * xxt + xxt;
+    yl := ny * yyt + yyt * 2;
+    xs := (x0 - xw) * (xxt * 2) + y0 and 1 * xxt - G.lx * (xxt * 2);
+    // |xs+xl/2-MapWidth/2| -> min
+    while abs(2 * (xs + G.lx * (xxt * 2)) + xl - MapWidth) <
+      abs(2 * xs + xl - MapWidth) do
+        inc(xs, G.lx * (xxt * 2));
+    ys := (y0 - yw) * yyt - yyt;
+    if xs + xl > MapWidth then
+      xl := MapWidth - xs;
+    if ys + yl > MapHeight then
+      yl := MapHeight - ys;
+    if (xl <= 0) or (yl <= 0) then
+      exit;
+    if Options and prPaint <> 0 then begin
+      if Options and prAutoBounds <> 0 then
+        MainMap.SetPaintBounds(xs, ys, xs + xl, ys + yl);
+      MainMap.Paint(xs, ys, x0 + G.lx * y0, nx, ny, -1, -1);
+    end;
+    if Options and prInvalidate <> 0 then
+      RectInvalidate(MapOffset + xs, TopBarHeight + ys, MapOffset + xs + xl,
+        TopBarHeight + ys + yl)
   end;
-  if Options and prInvalidate <> 0 then
-    RectInvalidate(MapOffset + xs, TopBarHeight + ys, MapOffset + xs + xl,
-      TopBarHeight + ys + yl)
 end;
 
 procedure TMainScreen.PaintLoc(Loc: integer; Radius: integer = 0);
 var
   yLoc, x0: integer;
 begin
-  if MapValid then
-  begin
+  if MapValid then begin
     yLoc := (Loc + G.lx * 1024) div G.lx - 1024;
     x0 := (Loc + (yLoc and 1 - 2 * Radius + G.lx * 1024) div 2) mod G.lx;
     offscreen.Canvas.Font.Assign(UniFont[ftSmall]);
     ProcessRect(x0, yLoc - 2 * Radius, 4 * Radius + 1, 4 * Radius + 1,
       prPaint or prAutoBounds or prInvalidate);
     Update;
-  end
+  end;
 end;
 
 procedure TMainScreen.PaintLocTemp(Loc: integer; Style: TPaintLocTempStyle);
 var
   y0, x0, xMap, yMap: integer;
 begin
-  if not MapValid then
-    exit;
-  Buffer.Canvas.Font.Assign(UniFont[ftSmall]);
-  y0 := Loc div G.lx;
-  x0 := Loc mod G.lx;
-  xMap := (x0 - xw) * (xxt * 2) + y0 and 1 * xxt - G.lx * (xxt * 2);
-  // |xMap+xxt-MapWidth/2| -> min
-  while abs(2 * (xMap + G.lx * (xxt * 2)) + 2 * xxt - MapWidth) <
-    abs(2 * xMap + 2 * xxt - MapWidth) do
-    inc(xMap, G.lx * (xxt * 2));
-  yMap := (y0 - yw) * yyt - yyt;
-  NoMap.SetOutput(Buffer);
-  NoMap.SetPaintBounds(0, 0, 2 * xxt, 3 * yyt);
-  NoMap.Paint(0, 0, Loc, 1, 1, -1, -1, Style = pltsBlink);
-  PaintBufferToScreen(xMap, yMap, 2 * xxt, 3 * yyt);
+  with NoMap do begin
+    if not MapValid then
+      exit;
+    Buffer.Canvas.Font.Assign(UniFont[ftSmall]);
+    y0 := Loc div G.lx;
+    x0 := Loc mod G.lx;
+    xMap := (x0 - xw) * (xxt * 2) + y0 and 1 * xxt - G.lx * (xxt * 2);
+    // |xMap+xxt-MapWidth/2| -> min
+    while abs(2 * (xMap + G.lx * (xxt * 2)) + 2 * xxt - MapWidth) <
+      abs(2 * xMap + 2 * xxt - MapWidth) do
+      inc(xMap, G.lx * (xxt * 2));
+    yMap := (y0 - yw) * yyt - yyt;
+    NoMap.SetOutput(Buffer);
+    NoMap.SetPaintBounds(0, 0, 2 * xxt, 3 * yyt);
+    NoMap.Paint(0, 0, Loc, 1, 1, -1, -1, Style = pltsBlink);
+    PaintBufferToScreen(xMap, yMap, 2 * xxt, 3 * yyt);
+  end;
 end;
 
 // paint content of buffer directly to screen instead of offscreen
@@ -4059,7 +4055,7 @@ begin
         height + yMap, Buffer.Canvas, -xMap, -yMap)
     else
       BitBltCanvas(Canvas, xMap + MapOffset, TopBarHeight, width,
-        height + yMap, Buffer.Canvas, 0, -yMap)
+        height + yMap, Buffer.Canvas, 0, -yMap);
   end
   else
   begin
@@ -4069,7 +4065,7 @@ begin
     else
       BitBltCanvas(Canvas, xMap + MapOffset, TopBarHeight + yMap, width,
         height, Buffer.Canvas, 0, 0);
-  end
+  end;
 end;
 
 procedure TMainScreen.PaintLoc_BeforeMove(FromLoc: integer);
@@ -4134,88 +4130,83 @@ begin
     OffscreenUser := self;
   end;
 
-  if xw - xwd > G.lx div 2 then
-    xwd := xwd + G.lx
-  else if xwd - xw > G.lx div 2 then
-    xwd := xwd - G.lx;
-  if not MapValid or (xw - xwd > MapWidth div (xxt * 2)) or
-    (xwd - xw > MapWidth div (xxt * 2)) or (yw - ywd > MapHeight div yyt) or
-    (ywd - yw > MapHeight div yyt) then
-  begin
-    offscreen.Canvas.Font.Assign(UniFont[ftSmall]);
-    ProcessRect(xw, yw, MapWidth div xxt, MapHeight div yyt,
-      prPaint or prInvalidate);
-  end
-  else
-  begin
-    if (xwd = xw) and (ywd = yw) then
-      exit; { map window not moved }
-    offscreen.Canvas.Font.Assign(UniFont[ftSmall]);
-    rec := Rect(0, 0, MapWidth, MapHeight);
-{$IFDEF WINDOWS}
-    ScrollDC(offscreen.Canvas.Handle, (xwd - xw) * (xxt * 2), (ywd - yw) * yyt,
-      rec, rec, 0, nil);
-{$ENDIF}
-{$IFDEF LINUX}
-    ScrollDC(offscreen.Canvas, (xwd - xw) * (xxt * 2), (ywd - yw) * yyt,
-      rec, rec, 0, nil);
-{$ENDIF}
-    for DoInvalidate := false to FastScrolling do
+  with MainMap do begin
+    if xw - xwd > G.lx div 2 then
+      xwd := xwd + G.lx
+    else if xwd - xw > G.lx div 2 then
+      xwd := xwd - G.lx;
+    if not MapValid or (xw - xwd > MapWidth div (xxt * 2)) or
+      (xwd - xw > MapWidth div (xxt * 2)) or (yw - ywd > MapHeight div yyt) or
+      (ywd - yw > MapHeight div yyt) then
     begin
-      if DoInvalidate then
-      begin
-        rec.Bottom := MapHeight - overlap;
+      offscreen.Canvas.Font.Assign(UniFont[ftSmall]);
+      ProcessRect(xw, yw, MapWidth div xxt, MapHeight div yyt,
+        prPaint or prInvalidate);
+    end else begin
+      if (xwd = xw) and (ywd = yw) then
+        exit; { map window not moved }
+      offscreen.Canvas.Font.Assign(UniFont[ftSmall]);
+      rec := Rect(0, 0, MapWidth, MapHeight);
 {$IFDEF WINDOWS}
-        ScrollDC(Canvas.Handle, (xwd - xw) * (xxt * 2), (ywd - yw) * yyt, rec,
-          rec, 0, nil);
+      ScrollDC(offscreen.Canvas.Handle, (xwd - xw) * (xxt * 2), (ywd - yw) * yyt,
+        rec, rec, 0, nil);
 {$ENDIF}
 {$IFDEF LINUX}
-        ScrollDC(Canvas, (xwd - xw) * (xxt * 2), (ywd - yw) * yyt,
-          rec, rec, 0, nil);
+      ScrollDC(offscreen.Canvas, (xwd - xw) * (xxt * 2), (ywd - yw) * yyt,
+        rec, rec, 0, nil);
 {$ENDIF}
-        ProcessOptions := prInvalidate;
-      end
-      else
-        ProcessOptions := prPaint or prAutoBounds;
-      if yw < ywd then
-      begin
-        ProcessRect(xw, yw, MapWidth div xxt, ywd - yw - 1, ProcessOptions);
-        if xw < xwd then
-          ProcessRect(xw, ywd, (xwd - xw) * 2 - 1, MapHeight div yyt - ywd + yw,
+      for DoInvalidate := false to FastScrolling do begin
+        if DoInvalidate then begin
+          rec.Bottom := MapHeight - overlap;
+{$IFDEF WINDOWS}
+          ScrollDC(Canvas.Handle, (xwd - xw) * (xxt * 2), (ywd - yw) * yyt, rec,
+            rec, 0, nil);
+{$ENDIF}
+{$IFDEF LINUX}
+          ScrollDC(Canvas, (xwd - xw) * (xxt * 2), (ywd - yw) * yyt,
+            rec, rec, 0, nil);
+{$ENDIF}
+          ProcessOptions := prInvalidate;
+        end
+        else ProcessOptions := prPaint or prAutoBounds;
+        if yw < ywd then begin
+          ProcessRect(xw, yw, MapWidth div xxt, ywd - yw - 1, ProcessOptions);
+          if xw < xwd then
+            ProcessRect(xw, ywd, (xwd - xw) * 2 - 1, MapHeight div yyt - ywd + yw,
+              ProcessOptions)
+          else if xw > xwd then
+            ProcessRect((xwd + MapWidth div (xxt * 2)) mod G.lx, ywd,
+              (xw - xwd) * 2 + 1, MapHeight div yyt - ywd + yw, ProcessOptions)
+        end
+        else if yw > ywd then begin
+          if DoInvalidate then
+            RectInvalidate(MapOffset, TopBarHeight + MapHeight - overlap -
+              (yw - ywd) * yyt, MapOffset + MapWidth, TopBarHeight + MapHeight
+              - overlap)
+          else
+            ProcessRect(xw, (ywd + MapHeight div (yyt * 2) * 2), MapWidth div xxt,
+              yw - ywd + 1, ProcessOptions);
+          if xw < xwd then
+            ProcessRect(xw, yw, (xwd - xw) * 2 - 1, MapHeight div yyt - yw + ywd -
+              2, ProcessOptions)
+          else if xw > xwd then
+            ProcessRect((xwd + MapWidth div (xxt * 2)) mod G.lx, yw,
+              (xw - xwd) * 2 + 1, MapHeight div yyt - yw + ywd - 2,
+              ProcessOptions);
+        end
+        else if xw < xwd then
+          ProcessRect(xw, yw, (xwd - xw) * 2 - 1, MapHeight div yyt,
             ProcessOptions)
-        else if xw > xwd then
-          ProcessRect((xwd + MapWidth div (xxt * 2)) mod G.lx, ywd,
-            (xw - xwd) * 2 + 1, MapHeight div yyt - ywd + yw, ProcessOptions)
-      end
-      else if yw > ywd then
-      begin
-        if DoInvalidate then
-          RectInvalidate(MapOffset, TopBarHeight + MapHeight - overlap -
-            (yw - ywd) * yyt, MapOffset + MapWidth, TopBarHeight + MapHeight
-            - overlap)
-        else
-          ProcessRect(xw, (ywd + MapHeight div (yyt * 2) * 2), MapWidth div xxt,
-            yw - ywd + 1, ProcessOptions);
-        if xw < xwd then
-          ProcessRect(xw, yw, (xwd - xw) * 2 - 1, MapHeight div yyt - yw + ywd -
-            2, ProcessOptions)
         else if xw > xwd then
           ProcessRect((xwd + MapWidth div (xxt * 2)) mod G.lx, yw,
-            (xw - xwd) * 2 + 1, MapHeight div yyt - yw + ywd - 2,
-            ProcessOptions)
-      end
-      else if xw < xwd then
-        ProcessRect(xw, yw, (xwd - xw) * 2 - 1, MapHeight div yyt,
-          ProcessOptions)
-      else if xw > xwd then
-        ProcessRect((xwd + MapWidth div (xxt * 2)) mod G.lx, yw,
-          (xw - xwd) * 2 + 1, MapHeight div yyt, ProcessOptions);
+            (xw - xwd) * 2 + 1, MapHeight div yyt, ProcessOptions);
+      end;
+      if not FastScrolling then
+        RectInvalidate(MapOffset, TopBarHeight, MapOffset + MapWidth,
+          TopBarHeight + MapHeight - overlap);
+      RectInvalidate(xMidPanel, TopBarHeight + MapHeight - overlap, xRightPanel,
+        TopBarHeight + MapHeight);
     end;
-    if not FastScrolling then
-      RectInvalidate(MapOffset, TopBarHeight, MapOffset + MapWidth,
-        TopBarHeight + MapHeight - overlap);
-    RectInvalidate(xMidPanel, TopBarHeight + MapHeight - overlap, xRightPanel,
-      TopBarHeight + MapHeight);
   end;
   // if (xwd<>xw) or (ywd<>yw) then
   // Server(sChangeSuperView,me,yw*G.lx+xw,nil^); // for synchronizing client side viewer, not used currently
@@ -4226,7 +4217,8 @@ end;
 
 procedure TMainScreen.MiniMapPaint;
 begin
-  MiniMap.Paint(MyMap, MapWidth, ClientMode, xxt, xwMini);
+  with MainMap do
+    MiniMap.Paint(MyMap, MapWidth, ClientMode, xxt, xwMini);
 end;
 
 procedure TMainScreen.PaintAll;
@@ -4252,23 +4244,25 @@ end;
 
 procedure TMainScreen.CopyMiniToPanel;
 begin
-  BitBltCanvas(Panel.Canvas, xMini + 2, yMini + 2, G.lx * 2, G.ly,
-    MiniMap.Bitmap.Canvas, 0, 0);
-  if MarkCityLoc >= 0 then
-    Sprite(Panel, HGrSystem, xMini - 2 + (4 * G.lx + 2 * (MarkCityLoc mod G.lx)
-      + (G.lx - MapWidth div (xxt * 2)) - 2 * xwd) mod (2 * G.lx) +
-      MarkCityLoc div G.lx and 1, yMini - 3 + MarkCityLoc div G.lx, CityMark2.Width,
-      CityMark2.Height, CityMark2.Left, CityMark2.Top)
-  else if ywmax <= 0 then
-    Frame(Panel.Canvas,
-      xMini + 2 + G.lx - MapWidth div (xxt * 2), yMini + 2,
-      xMini + 1 + G.lx + MapWidth div (xxt * 2), yMini + 2 + G.ly - 1,
-      MainTexture.clMark, MainTexture.clMark)
-  else
-    Frame(Panel.Canvas,
-      xMini + 2 + G.lx - MapWidth div (xxt * 2), yMini + 2 + yw,
-      xMini + 1 + G.lx + MapWidth div (xxt * 2), yMini + yw + MapHeight div yyt,
-      MainTexture.clMark, MainTexture.clMark);
+  with MainMap do begin
+    BitBltCanvas(Panel.Canvas, xMini + 2, yMini + 2, G.lx * 2, G.ly,
+      MiniMap.Bitmap.Canvas, 0, 0);
+    if MarkCityLoc >= 0 then
+      Sprite(Panel, HGrSystem, xMini - 2 + (4 * G.lx + 2 * (MarkCityLoc mod G.lx)
+        + (G.lx - MapWidth div (xxt * 2)) - 2 * xwd) mod (2 * G.lx) +
+        MarkCityLoc div G.lx and 1, yMini - 3 + MarkCityLoc div G.lx, CityMark2.Width,
+        CityMark2.Height, CityMark2.Left, CityMark2.Top)
+    else if ywmax <= 0 then
+      Frame(Panel.Canvas,
+        xMini + 2 + G.lx - MapWidth div (xxt * 2), yMini + 2,
+        xMini + 1 + G.lx + MapWidth div (xxt * 2), yMini + 2 + G.ly - 1,
+        MainTexture.clMark, MainTexture.clMark)
+    else
+      Frame(Panel.Canvas,
+        xMini + 2 + G.lx - MapWidth div (xxt * 2), yMini + 2 + yw,
+        xMini + 1 + G.lx + MapWidth div (xxt * 2), yMini + yw + MapHeight div yyt,
+        MainTexture.clMark, MainTexture.clMark);
+  end;
 end;
 
 procedure TMainScreen.PanelPaint;
@@ -4456,21 +4450,22 @@ begin
                 ySrc := 2
               end;
           end;
-          if xSrcBase >= 0 then
+          with MainMap do begin
+            if xSrcBase >= 0 then
+              Sprite(Panel, HGrTerrain, xTroop + 2 + x, yTroop + 9 - yyt, xxt * 2,
+                yyt * 3, 1 + xSrcBase * (xxt * 2 + 1),
+                1 + ySrcBase * (yyt * 3 + 1));
             Sprite(Panel, HGrTerrain, xTroop + 2 + x, yTroop + 9 - yyt, xxt * 2,
-              yyt * 3, 1 + xSrcBase * (xxt * 2 + 1),
-              1 + ySrcBase * (yyt * 3 + 1));
-          Sprite(Panel, HGrTerrain, xTroop + 2 + x, yTroop + 9 - yyt, xxt * 2,
-            yyt * 3, 1 + xSrc * (xxt * 2 + 1), 1 + ySrc * (yyt * 3 + 1));
-          if BrushTypes[i] = BrushType then
-          begin
-            ScreenTools.Frame(Panel.Canvas, xTroop + 2 + x,
-              yTroop + 7 - yyt div 2, xTroop + 2 * xxt + x,
-              yTroop + 2 * yyt + 11, $000000, $000000);
-            ScreenTools.Frame(Panel.Canvas, xTroop + 1 + x,
-              yTroop + 6 - yyt div 2, xTroop + 2 * xxt - 1 + x,
-              yTroop + 2 * yyt + 10, MainTexture.clMark, MainTexture.clMark);
-          end
+              yyt * 3, 1 + xSrc * (xxt * 2 + 1), 1 + ySrc * (yyt * 3 + 1));
+            if BrushTypes[i] = BrushType then begin
+              ScreenTools.Frame(Panel.Canvas, xTroop + 2 + x,
+                yTroop + 7 - yyt div 2, xTroop + 2 * xxt + x,
+                yTroop + 2 * yyt + 11, $000000, $000000);
+              ScreenTools.Frame(Panel.Canvas, xTroop + 1 + x,
+                yTroop + 6 - yyt div 2, xTroop + 2 * xxt - 1 + x,
+                yTroop + 2 * yyt + 10, MainTexture.clMark, MainTexture.clMark);
+            end;
+          end;
         end;
         inc(Count)
       end;
@@ -4636,8 +4631,8 @@ begin
                         CFrame(Panel.Canvas, xTroop + 3 + x, yTroop + 2,
                           xTroop + 63 + x, yTroop + 46, 8, MainTexture.clMark);
                       end;
-                      NoMap.SetOutput(Panel);
-                      NoMap.PaintUnit(xTroop + 2 + x, yTroop + 1, UnitInfo,
+                      NoMapPanel.SetOutput(Panel);
+                      NoMapPanel.PaintUnit(xTroop + 2 + x, yTroop + 1, UnitInfo,
                         unx.Status);
                       if (ClientMode < scContact) and
                         ((unx.Job > jNone) or
@@ -4654,13 +4649,13 @@ begin
                         RisedTextOut(Panel.Canvas,
                           xTroop + x + 34 - BiColorTextWidth(Panel.Canvas, s)
                           div 2, yTroop - 16, s);
-                      end
+                      end;
                     end;
                     inc(Count)
                   end;
                 end; // for uix:=0 to MyRO.nUn-1
             assert(Count = TrCnt);
-          end
+          end;
         end
         else
         begin
@@ -4672,17 +4667,17 @@ begin
             begin // display enemy units
               trix[i - TrRow * sb.Position] := i;
               x := (i - TrRow * sb.Position) * TrPitch;
-              NoMap.SetOutput(Panel);
-              NoMap.PaintUnit(xTroop + 2 + x, yTroop + 1,
+              NoMapPanel.SetOutput(Panel);
+              NoMapPanel.PaintUnit(xTroop + 2 + x, yTroop + 1,
                 MyRO.EnemyUn[MyRO.nEnemyUn + i], 0);
             end;
         end;
       end;
       if not SmallScreen or supervising then
       begin // show terrain and improvements
-        PaintZoomedTile(Panel, xTerrain - xxt * 2, 110 - yyt * 3, TroopLoc);
-        if (UnFocus >= 0) and (MyUn[UnFocus].Job <> jNone) then
-        begin
+        with NoMapPanel do
+          PaintZoomedTile(Panel, xTerrain - xxt * 2, 110 - yyt * 3, TroopLoc);
+        if (UnFocus >= 0) and (MyUn[UnFocus].Job <> jNone) then begin
           JobFocus := MyUn[UnFocus].Job;
           Server(sGetJobProgress, me, MyUn[UnFocus].Loc, JobProgressData);
           MakeBlue(Panel, xTerrain - 72, 148 - 17, 144, 31);
@@ -4730,7 +4725,7 @@ begin
           RFrame(Panel.Canvas, Left - 1, Top - self.ClientHeight +
             (PanelHeight - 1), Left + width, Top + height - self.ClientHeight +
             PanelHeight, MainTexture.clBevelShade, MainTexture.clBevelLight)
-    end { if TroopLoc>=0 }
+    end; { if TroopLoc>=0 }
   end;
 
   for i := 0 to ControlCount - 1 do
@@ -4760,7 +4755,7 @@ begin
           RFrame(Panel.Canvas, Left - 1, Top - self.ClientHeight +
             (PanelHeight - 1), Left + width, Top + height - self.ClientHeight +
             PanelHeight, MainTexture.clBevelShade, MainTexture.clBevelLight);
-        end
+        end;
   end;
   EOT.SetBack(Panel.Canvas, EOT.Left, EOT.Top - (ClientHeight - PanelHeight));
   SmartRectInvalidate(0, ClientHeight - PanelHeight, ClientWidth, ClientHeight);
@@ -4897,13 +4892,14 @@ var
   dx: integer;
   Outside, Changed: boolean;
 begin
-  dx := G.lx + 1 - (xw - Loc + G.lx * 1024 + 1) mod G.lx;
-  Outside := (dx >= (MapWidth + 1) div (xxt * 2) - 2) or (ywmax > 0) and
-    ((yw > 0) and (Loc div G.lx <= yw + 1) or (yw < ywmax) and
-    (Loc div G.lx >= yw + (MapHeight - 1) div yyt - 2));
+  with MainMap do begin
+    dx := G.lx + 1 - (xw - Loc + G.lx * 1024 + 1) mod G.lx;
+    Outside := (dx >= (MapWidth + 1) div (xxt * 2) - 2) or (ywmax > 0) and
+      ((yw > 0) and (Loc div G.lx <= yw + 1) or (yw < ywmax) and
+      (Loc div G.lx >= yw + (MapHeight - 1) div yyt - 2));
+  end;
   Changed := true;
-  if Outside then
-  begin
+  if Outside then begin
     Centre(Loc);
     PaintAllMaps;
   end
@@ -5076,20 +5072,21 @@ end;
 
 procedure TMainScreen.Centre(Loc: integer);
 begin
-  if FastScrolling and MapValid then
-    Update;
-  // necessary because ScrollDC for form canvas is called after
-  xw := (Loc mod G.lx - (MapWidth - xxt * 2 * ((Loc div G.lx) and 1))
-    div (xxt * 4) + G.lx) mod G.lx;
-  if ywmax <= 0 then
-    yw := ywcenter
-  else
-  begin
-    yw := (Loc div G.lx - MapHeight div (yyt * 2) + 1) and not 1;
-    if yw < 0 then
-      yw := 0
-    else if yw > ywmax then
-      yw := ywmax;
+  with MainMap do begin
+    if FastScrolling and MapValid then
+      Update;
+    // necessary because ScrollDC for form canvas is called after
+    xw := (Loc mod G.lx - (MapWidth - xxt * 2 * ((Loc div G.lx) and 1))
+      div (xxt * 4) + G.lx) mod G.lx;
+    if ywmax <= 0 then
+      yw := ywcenter
+    else begin
+      yw := (Loc div G.lx - MapHeight div (yyt * 2) + 1) and not 1;
+      if yw < 0 then
+        yw := 0
+      else if yw > ywmax then
+        yw := ywmax;
+    end;
   end;
 end;
 
@@ -5120,18 +5117,20 @@ begin
       MarkCityLoc := Loc;
       PanelPaint;
       ShowNewContent(wmPersistent, Loc, ShowEvent);
-    end
+    end;
 end;
 
 function TMainScreen.LocationOfScreenPixel(x, y: integer): integer;
 var
   qx, qy: integer;
 begin
-  qx := (x * (yyt * 2) + y * (xxt * 2) + xxt * yyt * 2) div (xxt * yyt * 4) - 1;
-  qy := (y * (xxt * 2) - x * (yyt * 2) - xxt * yyt * 2 + 4000 * xxt * yyt)
-    div (xxt * yyt * 4) - 999;
-  result := (xw + (qx - qy + 2048) div 2 - 1024 + G.lx) mod G.lx + G.lx *
-    (yw + qx + qy);
+  with MainMap do begin
+    qx := (x * (yyt * 2) + y * (xxt * 2) + xxt * yyt * 2) div (xxt * yyt * 4) - 1;
+    qy := (y * (xxt * 2) - x * (yyt * 2) - xxt * yyt * 2 + 4000 * xxt * yyt)
+      div (xxt * yyt * 4) - 999;
+    result := (xw + (qx - qy + 2048) div 2 - 1024 + G.lx) mod G.lx + G.lx *
+      (yw + qx + qy);
+  end;
 end;
 
 procedure TMainScreen.MapBoxMouseDown(Sender: TObject; Button: TMouseButton;
@@ -5203,15 +5202,17 @@ begin
       MiniMapPaint;
       BitBltCanvas(Panel.Canvas, xMini + 2, yMini + 2, G.lx * 2, G.ly,
         MiniMap.Bitmap.Canvas, 0, 0);
-      if ywmax <= 0 then
-        Frame(Panel.Canvas, xMini + 2 + G.lx - MapWidth div (2 * xxt),
-          yMini + 2, xMini + 1 + G.lx + MapWidth div (2 * xxt),
-          yMini + 2 + G.ly - 1, MainTexture.clMark, MainTexture.clMark)
-      else
-        Frame(Panel.Canvas, xMini + 2 + G.lx - MapWidth div (2 * xxt),
-          yMini + 2 + yw, xMini + 2 + G.lx + MapWidth div (2 * xxt) - 1,
-          yMini + 2 + yw + MapHeight div yyt - 2, MainTexture.clMark,
-          MainTexture.clMark);
+      with MainMap do begin
+        if ywmax <= 0 then
+          Frame(Panel.Canvas, xMini + 2 + G.lx - MapWidth div (2 * xxt),
+            yMini + 2, xMini + 1 + G.lx + MapWidth div (2 * xxt),
+            yMini + 2 + G.ly - 1, MainTexture.clMark, MainTexture.clMark)
+        else
+          Frame(Panel.Canvas, xMini + 2 + G.lx - MapWidth div (2 * xxt),
+            yMini + 2 + yw, xMini + 2 + G.lx + MapWidth div (2 * xxt) - 1,
+            yMini + 2 + yw + MapHeight div yyt - 2, MainTexture.clMark,
+            MainTexture.clMark);
+      end;
       RectInvalidate(xMini + 2, TopBarHeight + MapHeight - overlap + yMini + 2,
         xMini + 2 + G.lx * 2, TopBarHeight + MapHeight - overlap + yMini
         + 2 + G.ly)
@@ -5988,37 +5989,33 @@ begin
 
     xw1 := xw + G.lx;
     // ((xFromLoc-xw1)*2+yFromLoc and 1+1)*xxt+dx*xxt/2-MapWidth/2 -> min
-    while abs(((xFromLoc - xw1 + G.lx) * 2 + yFromLoc and 1 + 1) * xxt * 2 + dx
-      * xxt - MapWidth) < abs(((xFromLoc - xw1) * 2 + yFromLoc and 1 + 1) * xxt
-      * 2 + dx * xxt - MapWidth) do
-      dec(xw1, G.lx);
+    with MainMap do begin
+      while abs(((xFromLoc - xw1 + G.lx) * 2 + yFromLoc and 1 + 1) * xxt * 2 + dx
+        * xxt - MapWidth) < abs(((xFromLoc - xw1) * 2 + yFromLoc and 1 + 1) * xxt
+        * 2 + dx * xxt - MapWidth) do
+        dec(xw1, G.lx);
 
-    xTo := (xToLoc - xw1) * (xxt * 2) + yToLoc and 1 * xxt + (xxt - xxu);
-    yTo := (yToLoc - yw) * yyt + (yyt - yyu_anchor);
-    xFrom := (xFromLoc - xw1) * (xxt * 2) + yFromLoc and 1 * xxt + (xxt - xxu);
-    yFrom := (yFromLoc - yw) * yyt + (yyt - yyu_anchor);
-    if xFrom < xTo then
-    begin
-      xMin := xFrom;
-      xRange := xTo - xFrom
-    end
-    else
-    begin
-      xMin := xTo;
-      xRange := xFrom - xTo
+      xTo := (xToLoc - xw1) * (xxt * 2) + yToLoc and 1 * xxt + (xxt - xxu);
+      yTo := (yToLoc - yw) * yyt + (yyt - yyu_anchor);
+      xFrom := (xFromLoc - xw1) * (xxt * 2) + yFromLoc and 1 * xxt + (xxt - xxu);
+      yFrom := (yFromLoc - yw) * yyt + (yyt - yyu_anchor);
+      if xFrom < xTo then begin
+        xMin := xFrom;
+        xRange := xTo - xFrom
+      end else begin
+        xMin := xTo;
+        xRange := xFrom - xTo
+      end;
+      if yFrom < yTo then begin
+        yMin := yFrom;
+        yRange := yTo - yFrom
+      end else begin
+        yMin := yTo;
+        yRange := yFrom - yTo
+      end;
+      inc(xRange, xxt * 2);
+      inc(yRange, yyt * 3);
     end;
-    if yFrom < yTo then
-    begin
-      yMin := yFrom;
-      yRange := yTo - yFrom
-    end
-    else
-    begin
-      yMin := yTo;
-      yRange := yFrom - yTo
-    end;
-    inc(xRange, xxt * 2);
-    inc(yRange, yyt * 3);
 
     MainOffscreenPaint;
     NoMap.SetOutput(Buffer);
@@ -6120,7 +6117,7 @@ begin
       if GetMoveAdvice(UnFocus, Loc, MoveAdviceData) < rExecuted then
       begin
         assert(false);
-        Break
+        Break;
       end;
     until false;
 
@@ -6146,9 +6143,9 @@ begin
           MyUn[uix].Status := MyUn[uix].Status and not usWaiting;
           NextUnit(UnStartLoc, true)
         end;
-      end
-    end
-  end
+      end;
+    end;
+  end;
 end;
 
 procedure TMainScreen.PanelBoxMouseDown(Sender: TObject; Button: TMouseButton;
@@ -6165,15 +6162,16 @@ begin
       (y < yMini + 2 + G.ly) then
       if ssShift in Shift then
       begin
-        xMouse := (xwMini + (x - (xMini + 2) + MapWidth div (xxt * 2) + G.lx)
-          div 2) mod G.lx;
+        with MainMap do
+          xMouse := (xwMini + (x - (xMini + 2) + MapWidth div (xxt * 2) + G.lx)
+            div 2) mod G.lx;
         MouseLoc := xMouse + G.lx * (y - (yMini + 2));
         if MyMap[MouseLoc] and fTerrain <> fUNKNOWN then
         begin
           p1 := MyRO.Territory[MouseLoc];
           if (p1 = me) or (p1 >= 0) and (MyRO.Treaty[p1] >= trNone) then
             NatStatDlg.ShowNewContent(wmPersistent, p1);
-        end
+        end;
       end
       else
       begin
@@ -6268,7 +6266,7 @@ begin
               end;
               CheckTerrainBtnVisible;
               PanelPaint;
-            end
+            end;
           end
           else if Server(sGetUnits, me, TroopLoc, TrCnt) >= rExecuted then
             if ssShift in Shift then
@@ -6277,8 +6275,8 @@ begin
             else
               UnitStatDlg.ShowNewContent_EnemyUnit(wmPersistent,
                 MyRO.nEnemyUn + trix[i]); // unit info
-    end
-  end
+    end;
+  end;
 end;
 
 procedure TMainScreen.SetTroopLoc(Loc: integer);
@@ -6370,8 +6368,8 @@ end;
 
 procedure TMainScreen.SetDebugMap(p: integer);
 begin
-  IsoEngine.pDebugMap := p;
-  IsoEngine.MapOptions := IsoEngine.MapOptions - [moLocCodes];
+  MainMap.pDebugMap := p;
+  MainMap.MapOptions := MainMap.MapOptions - [moLocCodes];
   mLocCodes.Checked := false;
   MapValid := false;
   MainOffscreenPaint;
@@ -7233,14 +7231,14 @@ begin
           if p1 < 10 then
             m.ShortCut := ShortCut(48 + p1, [ssAlt]);
           m.RadioItem := true;
-          if m.Tag = IsoEngine.pDebugMap then
+          if m.Tag = MainMap.pDebugMap then
             m.Checked := true;
           mDebugMap.Add(m);
         end;
     end;
-    mSmallTiles.Checked := TileSize = tsSmall;
-    mNormalTiles.Checked := TileSize = tsMedium;
-    mBigTiles.Checked := TileSize = tsBig;
+    mSmallTiles.Checked := MainMap.TileSize = tsSmall;
+    mNormalTiles.Checked := MainMap.TileSize = tsMedium;
+    mBigTiles.Checked := MainMap.TileSize = tsBig;
   end
   else if Popup = StatPopup then
   begin
@@ -7431,14 +7429,14 @@ begin
       if SelectFocus then
         FocusOnLoc(TroopLoc, flRepaintPanel)
       else
-        PanelPaint
+        PanelPaint;
     end
     else if StepFocus then
       NextUnit(TroopLoc, true)
     else
     begin
       SetTroopLoc(-1);
-      PanelPaint
+      PanelPaint;
     end;
   end;
 end;
@@ -7454,7 +7452,7 @@ var
   xCentre, yCentre: integer;
 begin
   if Tracking and (ssLeft in Shift) then
-  begin
+  with MainMap do begin
     if (x >= xMini + 2) and (y >= yMini + 2) and (x < xMini + 2 + 2 * G.lx) and
       (y < yMini + 2 + G.ly) then
     begin
@@ -7702,10 +7700,9 @@ begin
   Reg := TRegistry.Create;
   with Reg do try
     OpenKey(AppRegistryKey, False);
-    if ValueExists('TileSize') then TileSize := TTileSize(ReadInteger('TileSize'))
-      else TileSize := tsMedium;
-    xxt := TileSizes[TileSize].X;
-    yyt := TileSizes[TileSize].Y;
+    if ValueExists('TileSize') then MainMap.TileSize := TTileSize(ReadInteger('TileSize'))
+      else MainMap.TileSize := tsMedium;
+    NoMap.TileSize := MainMap.TileSize;
     if ValueExists('OptionChecked') then OptionChecked := TSaveOptions(ReadInteger('OptionChecked'))
       else OptionChecked := DefaultOptionChecked;
     if ValueExists('MapOptionChecked') then MapOptionChecked := TMapOptions(ReadInteger('MapOptionChecked'))
@@ -7952,9 +7949,10 @@ procedure TMainScreen.SetTileSize(TileSize: TTileSize);
 var
   i, CenterLoc: integer;
 begin
-  CenterLoc := (xw + MapWidth div (xxt * 4)) mod G.lx +
-    (yw + MapHeight div (yyt * 2)) * G.lx;
-  IsoEngine.ApplyTileSize(TileSize);
+  CenterLoc := (xw + MapWidth div (MainMap.xxt * 4)) mod G.lx +
+    (yw + MapHeight div (MainMap.yyt * 2)) * G.lx;
+  MainMap.TileSize := TileSize;
+  NoMap.TileSize := TileSize;
   FormResize(nil);
   Centre(CenterLoc);
   PaintAllMaps;
@@ -7987,7 +7985,7 @@ begin
   with Reg do
   try
     OpenKey(AppRegistryKey, true);
-    WriteInteger('TileSize', Integer(TileSize));
+    WriteInteger('TileSize', Integer(MainMap.TileSize));
     WriteInteger('OptionChecked', Integer(OptionChecked));
     WriteInteger('MapOptionChecked', Integer(MapOptionChecked));
     WriteInteger('CityReport', integer(CityRepMask));
