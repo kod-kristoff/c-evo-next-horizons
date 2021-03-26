@@ -41,6 +41,7 @@ function LoadGraphicFile(Bmp: TBitmap; FileName: string; Options: TLoadGraphicFi
 function LoadGraphicSet(const Name: string): TGraphicSet;
 function LoadGraphicSet2(const Name: string): TGraphicSet;
 procedure Dump(dst: TBitmap; HGr: TGraphicSet; xDst, yDst, Width, Height, xGr, yGr: integer);
+procedure BitmapReplaceColor(Dst: TBitmap; X, Y, Width, Height: Integer; OldColor, NewColor: TColor);
 procedure Sprite(Canvas: TCanvas; HGr: TGraphicSet; xDst, yDst, Width, Height, xGr, yGr: integer);
   overload;
 procedure Sprite(dst: TBitmap; HGr: TGraphicSet; xDst, yDst, Width, Height, xGr, yGr: integer);
@@ -564,6 +565,25 @@ procedure Dump(dst: TBitmap; HGr: TGraphicSet; xDst, yDst, Width, Height, xGr, y
 begin
   BitBltCanvas(dst.Canvas, xDst, yDst, Width, Height,
     HGr.Data.Canvas, xGr, yGr);
+end;
+
+procedure BitmapReplaceColor(Dst: TBitmap; X, Y, Width, Height: Integer; OldColor, NewColor: TColor);
+var
+  XX, YY: Integer;
+  PixelPtr: TPixelPointer;
+begin
+  Dst.BeginUpdate;
+  PixelPtr := PixelPointer(Dst, ScaleToNative(X), ScaleToNative(Y));
+  for YY := 0 to ScaleToNative(Height) - 1 do begin
+    for XX := 0 to ScaleToNative(Width) - 1 do begin
+      if PixelPtr.Pixel^.RGB = SwapRedBlue(OldColor) then begin
+        PixelPtr.Pixel^.RGB := SwapRedBlue(NewColor);
+      end;
+      PixelPtr.NextPixel;
+    end;
+    PixelPtr.NextLine;
+  end;
+  Dst.EndUpdate;
 end;
 
 procedure MakeBlue(Dst: TBitmap; X, Y, Width, Height: Integer);

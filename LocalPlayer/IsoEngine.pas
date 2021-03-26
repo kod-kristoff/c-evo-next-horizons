@@ -1092,7 +1092,6 @@ var
   procedure PaintBorder;
   var
     dx, dy: integer;
-    PixelPtr: TPixelPointer;
   begin
     if ShowBorder and (Loc >= 0) and (Loc < G.lx * G.ly) and
       (Tile and fTerrain <> fUNKNOWN) then begin
@@ -1103,20 +1102,7 @@ var
           BitBltCanvas(Borders.Canvas, 0, p1 * (yyt * 2), xxt * 2,
             yyt * 2, HGrTerrain.Data.Canvas,
             1 + 8 * (xxt * 2 + 1), 1 + yyt + 16 * (yyt * 3 + 1));
-          Borders.BeginUpdate;
-          PixelPtr := PixelPointer(Borders, ScaleToNative(0), ScaleToNative(p1 * (yyt * 2)));
-          for dy := 0 to ScaleToNative(yyt * 2) - 1 do begin
-            for dx := 0 to ScaleToNative(xxt * 2) - 1 do begin
-              if PixelPtr.Pixel^.B = 99 then begin
-                PixelPtr.Pixel^.B := Tribe[p1].Color shr 16 and $FF;
-                PixelPtr.Pixel^.G := Tribe[p1].Color shr 8 and $FF;
-                PixelPtr.Pixel^.R := Tribe[p1].Color and $FF;
-              end;
-              PixelPtr.NextPixel;
-            end;
-            PixelPtr.NextLine;
-          end;
-          Borders.EndUpdate;
+          BitmapReplaceColor(Borders, 0, p1 * (yyt * 2), xxt * 2, yyt * 2, $636363, Tribe[p1].Color);
           BordersOK^ := BordersOK^ or 1 shl p1;
         end;
         for dy := 0 to 1 do

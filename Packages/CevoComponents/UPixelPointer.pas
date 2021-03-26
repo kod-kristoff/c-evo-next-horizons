@@ -8,7 +8,15 @@ uses
 type
   TColor32 = type Cardinal;
   TColor32Component = (ccBlue, ccGreen, ccRed, ccAlpha);
+
+  { TPixel32 }
+
   TPixel32 = packed record
+  private
+    function GetRGB: Cardinal;
+    procedure SetRGB(AValue: Cardinal);
+  public
+    property RGB: Cardinal read GetRGB write SetRGB;
     case Integer of
       0: (B, G, R, A: Byte);
       1: (ARGB: TColor32);
@@ -36,9 +44,23 @@ type
   PPixelPointer = ^TPixelPointer;
 
   function PixelPointer(Bitmap: TRasterImage; BaseX: Integer = 0; BaseY: Integer = 0): TPixelPointer; inline;
-
+  function SwapRedBlue(Color: TColor32): TColor32;
 
 implementation
+
+{ TPixel32 }
+
+function TPixel32.GetRGB: Cardinal;
+begin
+  Result := ARGB and $ffffff;
+end;
+
+procedure TPixel32.SetRGB(AValue: Cardinal);
+begin
+  R := (AValue shr 16) and $ff;
+  G := (AValue shr 8) and $ff;
+  B := (AValue shr 0) and $ff;
+end;
 
 { TPixelPointer }
 
@@ -83,6 +105,11 @@ begin
   Result.Base := PPixel32(Bitmap.RawImage.Data + BaseX * Result.BytesPerPixel +
     BaseY * Result.BytesPerLine);
   Result.SetXY(0, 0);
+end;
+
+function SwapRedBlue(Color: TColor32): TColor32;
+begin
+  Result := (Color and $ff00ff00) or ((Color and $ff) shl 16) or ((Color shr 16) and $ff);
 end;
 
 

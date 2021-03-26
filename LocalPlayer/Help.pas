@@ -770,7 +770,7 @@ begin
                 Sprite(OffScreen, HGrTerrain, ofs + 4, i * 24 + 13 - yyt,
                   xxt * 2 - 8, yyt * 2 - 4, 5 + 2 * (xxt * 2 + 1),
                   3 + yyt + 2 * (yyt * 3 + 1));
-                srcno := 45
+                srcno := 45;
               end
               else
                 srcno := fPrairie; // display on prairie
