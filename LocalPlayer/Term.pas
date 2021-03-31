@@ -225,8 +225,8 @@ type
     procedure BareBtnDownChanged(Sender: TObject);
     procedure MovieSpeedBtnClick(Sender: TObject);
   private
-    xw: Integer;
-    yw: Integer;
+    xw: Integer; // Base map x
+    yw: Integer; // Base map y
     xwd: Integer;
     ywd: Integer;
     xwMini: Integer;
@@ -287,6 +287,7 @@ type
     procedure PanelPaint;
     procedure NextUnit(NearLoc: integer; AutoTurn: boolean);
     procedure Scroll(dx, dy: integer);
+    procedure SetMapPos(Loc: integer; MapPos: TPoint);
     procedure Centre(Loc: integer);
     procedure SetTroopLoc(Loc: integer);
     procedure ProcessRect(x0, y0, nx, ny, Options: integer);
@@ -311,8 +312,10 @@ type
     procedure RememberPeaceViolation;
     procedure SetDebugMap(p: integer);
     procedure SetViewpoint(p: integer);
-    function LocationOfScreenPixel(x, y: integer): integer;
-    procedure SetTileSize(TileSize: TTileSize);
+    function LocationOfScreenPixel(x, y: integer): Integer;
+    function GetCenterLoc: Integer;
+    procedure SetTileSizeCenter(TileSize: TTileSize);
+    procedure SetTileSize(TileSize: TTileSize; Loc: Integer; MapPos: TPoint);
     procedure RectInvalidate(Left, Top, Rigth, Bottom: integer);
     procedure ShowEnemyShipChange(ShowShipChange: TShowShipChange);
     procedure SmartRectInvalidate(Left, Top, Rigth, Bottom: integer);
@@ -3555,15 +3558,21 @@ end;
 
 procedure TMainScreen.FormMouseWheel(Sender: TObject; Shift: TShiftState;
   WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
+var
+  MouseLoc: Integer;
 begin
   if sb.ProcessMouseWheel(WheelDelta) then begin
     PanelPaint;
     Update;
   end else begin
-    if (WheelDelta > 0) and (MainMap.TileSize < High(TTileSize)) then
-      SetTileSize(Succ(MainMap.TileSize))
-    else if (WheelDelta < 0) and (MainMap.TileSize > Low(TTileSize)) then
-      SetTileSize(Pred(MainMap.TileSize));
+    if (WheelDelta > 0) and (MainMap.TileSize < High(TTileSize)) then begin
+      MouseLoc := LocationOfScreenPixel(MousePos.X, MousePos.Y);
+      SetTileSize(Succ(MainMap.TileSize), MouseLoc, Point(MousePos.X, MousePos.Y));
+    end
+    else if (WheelDelta < 0) and (MainMap.TileSize > Low(TTileSize)) then begin
+      MouseLoc := LocationOfScreenPixel(MousePos.X, MousePos.Y);
+      SetTileSize(Pred(MainMap.TileSize), MouseLoc, Point(MousePos.X, MousePos.Y));
+    end;
   end;
 end;
 
@@ -5070,24 +5079,27 @@ begin
     end;
 end;
 
-procedure TMainScreen.Centre(Loc: integer);
+procedure TMainScreen.SetMapPos(Loc: integer; MapPos: TPoint);
 begin
   with MainMap do begin
     if FastScrolling and MapValid then
       Update;
     // necessary because ScrollDC for form canvas is called after
-    xw := (Loc mod G.lx - (MapWidth - xxt * 2 * ((Loc div G.lx) and 1))
-      div (xxt * 4) + G.lx) mod G.lx;
-    if ywmax <= 0 then
-      yw := ywcenter
+    xw := (Loc mod G.lx) - (MapPos.X - ((xxt * 2) * ((Loc div G.lx) and 1)) div 2)
+      div (xxt * 2);
+    xw := (xw + G.lx) mod G.lx;
+    if ywmax <= 0 then yw := ywcenter
     else begin
-      yw := (Loc div G.lx - MapHeight div (yyt * 2) + 1) and not 1;
-      if yw < 0 then
-        yw := 0
-      else if yw > ywmax then
-        yw := ywmax;
+      yw := (Loc div G.lx - (MapPos.Y * 2) div (yyt * 2) + 1) and not 1;
+      if yw < 0 then yw := 0
+        else if yw > ywmax then yw := ywmax;
     end;
   end;
+end;
+
+procedure TMainScreen.Centre(Loc: integer);
+begin
+  SetMapPos(Loc, Point(MapWidth div 2, MapHeight div 2));
 end;
 
 function TMainScreen.ZoomToCity(Loc: integer; NextUnitOnClose: boolean = false;
@@ -5120,7 +5132,7 @@ begin
     end;
 end;
 
-function TMainScreen.LocationOfScreenPixel(x, y: integer): integer;
+function TMainScreen.LocationOfScreenPixel(x, y: integer): Integer;
 var
   qx, qy: integer;
 begin
@@ -5128,9 +5140,15 @@ begin
     qx := (x * (yyt * 2) + y * (xxt * 2) + xxt * yyt * 2) div (xxt * yyt * 4) - 1;
     qy := (y * (xxt * 2) - x * (yyt * 2) - xxt * yyt * 2 + 4000 * xxt * yyt)
       div (xxt * yyt * 4) - 999;
-    result := (xw + (qx - qy + 2048) div 2 - 1024 + G.lx) mod G.lx + G.lx *
+    Result := (xw + (qx - qy + 2048) div 2 - 1024 + G.lx) mod G.lx + G.lx *
       (yw + qx + qy);
   end;
+end;
+
+function TMainScreen.GetCenterLoc: Integer;
+begin
+  Result := (xw + MapWidth div (MainMap.xxt * 4)) mod G.lx +
+    (yw + MapHeight div (MainMap.yyt * 2)) * G.lx;
 end;
 
 procedure TMainScreen.MapBoxMouseDown(Sender: TObject; Button: TMouseButton;
@@ -7932,29 +7950,32 @@ end;
 
 procedure TMainScreen.mSmallTilesClick(Sender: TObject);
 begin
-  SetTileSize(tsSmall);
+  SetTileSizeCenter(tsSmall);
 end;
 
 procedure TMainScreen.mNormalTilesClick(Sender: TObject);
 begin
-  SetTileSize(tsMedium);
+  SetTileSizeCenter(tsMedium);
 end;
 
 procedure TMainScreen.mBigTilesClick(Sender: TObject);
 begin
-  SetTileSize(tsBig);
+  SetTileSizeCenter(tsBig);
 end;
 
-procedure TMainScreen.SetTileSize(TileSize: TTileSize);
-var
-  i, CenterLoc: integer;
+procedure TMainScreen.SetTileSizeCenter(TileSize: TTileSize);
 begin
-  CenterLoc := (xw + MapWidth div (MainMap.xxt * 4)) mod G.lx +
-    (yw + MapHeight div (MainMap.yyt * 2)) * G.lx;
+  SetTileSize(TileSize, GetCenterLoc, Point(MapWidth div 2, MapHeight div 2));
+end;
+
+procedure TMainScreen.SetTileSize(TileSize: TTileSize; Loc: Integer; MapPos: TPoint);
+var
+  i: integer;
+begin
   MainMap.TileSize := TileSize;
   NoMap.TileSize := TileSize;
   FormResize(nil);
-  Centre(CenterLoc);
+  SetMapPos(Loc, MapPos);
   PaintAllMaps;
   for i := 0 to Screen.FormCount - 1 do
     if Screen.Forms[i].Visible and (Screen.Forms[i] is TBufferedDrawDlg) then

@@ -1670,8 +1670,8 @@ type
   end;
 
   TNewGameData = record
-    lx: Integer;
-    ly: Integer;
+    lx: Integer; // Map width
+    ly: Integer; // Map height
     LandMass: Integer;
     MaxTurn: Integer;
     Difficulty: array [0 .. nPl - 1] of Integer;
