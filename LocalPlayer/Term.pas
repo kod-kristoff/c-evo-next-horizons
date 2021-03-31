@@ -3561,9 +3561,12 @@ procedure TMainScreen.FormMouseWheel(Sender: TObject; Shift: TShiftState;
 var
   MouseLoc: Integer;
 begin
-  if sb.ProcessMouseWheel(WheelDelta) then begin
-    PanelPaint;
-    Update;
+  if (MousePos.Y > ClientHeight - MidPanelHeight) and
+    (MousePos.Y < ClientHeight) then begin
+    if sb.ProcessMouseWheel(WheelDelta) then begin
+      PanelPaint;
+      Update;
+    end;
   end else begin
     if (WheelDelta > 0) and (MainMap.TileSize < High(TTileSize)) then begin
       MouseLoc := LocationOfScreenPixel(MousePos.X, MousePos.Y);
@@ -4882,7 +4885,7 @@ begin
       s := Format(Phrases.Lookup('TECHGAIN'), [ScienceSum]);
       LoweredTextOut(TopBar.Canvas, -1, MainTexture, xResearchSection + 48 +
         CostFactor + 26, 18, s);
-    end
+    end;
   end;
   if ClientMode <> cEditMap then
   begin
@@ -5233,7 +5236,7 @@ begin
       end;
       RectInvalidate(xMini + 2, TopBarHeight + MapHeight - overlap + yMini + 2,
         xMini + 2 + G.lx * 2, TopBarHeight + MapHeight - overlap + yMini
-        + 2 + G.ly)
+        + 2 + G.ly);
     end
     else if MyMap[MouseLoc] and fCity <> 0 then { city clicked }
     begin
@@ -5246,7 +5249,7 @@ begin
       begin
         UnitStatDlg.ShowNewContent_EnemyCity(wmPersistent, MouseLoc);
         DoCenter := false;
-      end
+      end;
     end
     else if MyMap[MouseLoc] and fUnit <> 0 then { unit clicked }
       if MyMap[MouseLoc] and fOwned <> 0 then
@@ -5268,7 +5271,7 @@ begin
               uix := (uix + 1) mod MyRO.nUn;
             end;
             if i = 0 then
-              uix := UnFocus
+              uix := UnFocus;
           end
           else
             Server(sGetDefender, me, MouseLoc, uix);
@@ -5294,8 +5297,8 @@ begin
     if DoCenter then
     begin
       Centre(MouseLoc);
-      PaintAllMaps
-    end
+      PaintAllMaps;
+    end;
   end
   else if (ClientMode <> cEditMap) and (Button = mbRight) and
     not(ssShift in Shift) then
@@ -5345,7 +5348,7 @@ begin
           PaintDestination;
           Status := Status and ($FFFF - usStay - usRecover - usGoto - usEnhance)
             or usWaiting;
-          MoveUnit(dx, dy, muAutoNext) { simple move }
+          MoveUnit(dx, dy, muAutoNext); { simple move }
         end
         else if GetMoveAdvice(UnFocus, MouseLoc, MoveAdviceData) >= rExecuted
         then
@@ -5370,15 +5373,15 @@ begin
               BattleDlg.ShowModal;
               if BattleDlg.ModalResult <> mrOK then
                 exit;
-            end
+            end;
           end;
           DestinationMarkON := false;
           PaintDestination;
           Status := Status and not(usStay or usRecover or usEnhance) or
             usWaiting;
           MoveToLoc(MouseLoc, false); { goto }
-        end
-      end
+        end;
+      end;
   end
   else if (Button = mbMiddle) and (UnFocus >= 0) and
     (MyModel[MyUn[UnFocus].mix].Kind in [mkSettler, mkSlaves]) then
@@ -5391,7 +5394,7 @@ begin
     if MouseLoc <> MyUn[uix].Loc then
       MoveToLoc(MouseLoc, true); { goto }
     if (UnFocus = uix) and (MyUn[uix].Loc = MouseLoc) then
-      MenuClick(mEnhance)
+      MenuClick(mEnhance);
   end
   else if (Button = mbLeft) and (ssShift in Shift) and
     (MyMap[MouseLoc] and fTerrain <> fUNKNOWN) then
@@ -5426,8 +5429,8 @@ begin
         BattleDlg.Top := Screen.height - BattleDlg.height;
       BattleDlg.IsSuicideQuery := false;
       BattleDlg.Show;
-    end
-  end
+    end;
+  end;
 end;
 
 function TMainScreen.MoveUnit(dx, dy: integer; Options: integer): integer;
