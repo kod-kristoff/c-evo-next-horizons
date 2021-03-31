@@ -14,31 +14,6 @@ const
   FirstAICompatibleVersion = $000D00;
   FirstBookCompatibleVersion = $010103;
 
-  // notifications
-  ntCreateWorld = 0;
-  ntInitModule = $100;
-  ntInitLocalHuman = $1FF;
-  ntDLLError = $200;
-  ntAIError = $2FF;
-  ntClientError = $300;
-  ntInitPlayers = $400;
-  ntDeactivationMissing = $410;
-  ntSetAIName = $420;
-  ntException = $500;
-  ntLoadBegin = $600;
-  ntLoadState = $601;
-  ntEndInfo = $6FC;
-  ntBackOn = $6FD;
-  ntBackOff = $6FE;
-  ntLoadError = $6FF;
-  ntStartDone = $700;
-  ntStartGo = $701;
-  ntStartGoRefresh = $702;
-  ntStartGoRefreshMaps = $703;
-  ntChangeClient = $800;
-  ntNextPlayer = $810;
-  ntDeinitModule = $900;
-
   // module flags
   fMultiple = $10000000;
   fDotNet = $20000000;
@@ -47,7 +22,34 @@ const
   maxBrain = 255;
 
 type
-  TNotifyFunction = procedure(ID: integer);
+  // notifications
+  TNotify = (
+    ntCreateWorld = 0,
+    ntInitModule = $100,
+    ntInitLocalHuman = $1FF,
+    ntDLLError = $200,
+    ntAIError = $2FF,
+    ntClientError = $300,
+    ntInitPlayers = $400,
+    ntDeactivationMissing = $410,
+    ntSetAIName = $420,
+    ntException = $500,
+    ntLoadBegin = $600,
+    ntLoadState = $601,
+    ntEndInfo = $6FC,
+    ntBackOn = $6FD,
+    ntBackOff = $6FE,
+    ntLoadError = $6FF,
+    ntStartDone = $700,
+    ntStartGo = $701,
+    ntStartGoRefresh = $702,
+    ntStartGoRefreshMaps = $703,
+    ntChangeClient = $800,
+    ntNextPlayer = $810,
+    ntDeinitModule = $900
+  );
+
+  TNotifyFunction = procedure(ID: TNotify; Index: Integer = 0);
 
   TBrainType = (btNoTerm, btSuperVirtual, btTerm, btRandom, btAI);
 
@@ -364,7 +366,7 @@ begin
   if (Mode = moPlaying) and (bix[p].Flags and aiThreaded = 0) and
     (CCPlayer < 0) then
   begin
-    Notify(ntDeactivationMissing + p);
+    Notify(ntDeactivationMissing, p);
     ForceClientDeactivation;
   end
 end;
@@ -512,7 +514,7 @@ begin
       exit;
     if Kind = btAI then
     begin { get client function }
-      Notify(ntInitModule + Brains.IndexOf(bix));
+      Notify(ntInitModule, Brains.IndexOf(bix));
       if Flags and fDotNet > 0 then
         Client := DotNetClient
       else
@@ -521,15 +523,15 @@ begin
         if hm = 0 then
         begin
           Client := nil;
-          Notify(ntDLLError + Brains.IndexOf(bix));
+          Notify(ntDLLError, Brains.IndexOf(bix));
         end
         else
         begin
           Client := GetProcAddress(hm, 'client');
           if @Client = nil then
-            Notify(ntClientError + Brains.IndexOf(bix));
-        end
-      end
+            Notify(ntClientError, Brains.IndexOf(bix));
+        end;
+      end;
     end;
     if @Client <> nil then
     begin
@@ -544,8 +546,8 @@ begin
       if DataSize > MaxDataSize then
         DataSize := 0;
       Flags := Flags or InitModuleData.Flags;
-    end
-  end
+    end;
+  end;
 end;
 
 procedure SaveMap(FileName: string);
@@ -729,6 +731,7 @@ begin
 
   if bix[0].Kind <> btNoTerm then
     Notify(ntInitLocalHuman);
+
   BrainUsed := [];
   for p := 0 to nPl - 1 do
     if Assigned(bix[p]) and ((Mode <> moMovie) or (p = 0)) then
@@ -954,8 +957,8 @@ begin
           NotifyMessage := bix[p1].FileName
         else
           NotifyMessage := '';
-        Notify(ntSetAIName + p1);
-      end
+        Notify(ntSetAIName, p1);
+      end;
   end;
 
   CheckBorders(-1);
@@ -1277,7 +1280,7 @@ begin
 {$IFDEF TEXTLOG}WriteLn(TextLog, CmdInfo); {$ENDIF}
     end;
     if not MovieMode then
-      Notify(ntLoadState + CL.Progress * 128 div 1000);
+      Notify(ntLoadState, CL.Progress * 128 div 1000);
   end;
 
   if MovieMode then
@@ -3249,7 +3252,7 @@ begin { >>>server }
             if Brains[i].Initialized then
             begin
               if Brains[i].Kind = btAI then
-                Notify(ntDeinitModule + i);
+                Notify(ntDeinitModule, i);
               CallClient(i, cBreakGame, nil^);
             end;
           Notify(ntEndInfo);

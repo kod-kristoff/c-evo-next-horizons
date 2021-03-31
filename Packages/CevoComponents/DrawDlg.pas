@@ -85,6 +85,7 @@ end;
 
 procedure TDrawDlg.OnEraseBkgnd(var m: TMessage);
 begin
+  // Full area should be covered by Paint method
 end;
 
 procedure TDrawDlg.OnHitTest(var Msg: TMessage);

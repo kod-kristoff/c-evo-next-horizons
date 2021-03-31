@@ -7,7 +7,7 @@ uses
   Messg,
 
   LCLIntf, LCLType, {$IFDEF Linux}LMessages, {$ENDIF}Messages, SysUtils, Classes,
-  Graphics, Controls, Forms, DrawDlg;
+  Graphics, Controls, Forms, DrawDlg, GameServer;
 
 const
   WM_GO = WM_USER;
@@ -22,11 +22,12 @@ type
     procedure FormPaint(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
   public
-    procedure DlgNotify(ID: integer);
+    procedure DlgNotify(ID: TNotify; Index: Integer = 0);
   private
     Info: string;
-    State: integer;
-    Gone, Quick: boolean;
+    State: Integer;
+    Gone: Boolean;
+    Quick: Boolean;
     procedure SetInfo(x: string);
     procedure SetState(x: integer);
     procedure OnGo(var m: TMessage); message WM_GO;
@@ -41,36 +42,35 @@ var
 implementation
 
 uses
-  ScreenTools, Protocol, GameServer, Start, LocalPlayer, NoTerm, Back;
+  ScreenTools, Protocol, Start, LocalPlayer, NoTerm, Back;
 
 {$R *.lfm}
 
-procedure Notify(ID: integer);
+procedure Notify(ID: TNotify; Index: Integer = 0);
 begin
-  DirectDlg.DlgNotify(ID);
+  DirectDlg.DlgNotify(ID, Index);
 end;
 
-procedure TDirectDlg.DlgNotify(ID: integer);
+procedure TDirectDlg.DlgNotify(ID: TNotify; Index: Integer = 0);
 var
 //  hMem: Cardinal;
 //  p: pointer;
   s: string;
 begin
   case ID of
-    ntInitLocalHuman:
-      begin
-        SetMainTextureByAge(-1);
-        State := -1;
-        Info := Phrases.Lookup('BUSY_MODLH');
-        Show;
-        Invalidate;
-        Update;
-      end;
-    ntInitModule .. ntInitModule + maxBrain - 1:
+    ntInitLocalHuman: begin
+      SetMainTextureByAge(-1);
+      State := -1;
+      Info := Phrases.Lookup('BUSY_MODLH');
+      Show;
+      Application.ProcessMessages; // Repaint after show for Linux
+      Invalidate;
+      Update;
+    end;
+    ntInitModule:
       if visible then
       begin
-        s := Format(Phrases.Lookup('BUSY_MOD'),
-          [Brains[ID - ntInitModule].Name]);
+        s := Format(Phrases.Lookup('BUSY_MOD'), [Brains[Index].Name]);
         while BiColorTextWidth(Canvas, s) + 64 > ClientWidth do
           Delete(s, Length(s), 1);
         SetInfo(s);
@@ -81,35 +81,29 @@ begin
     ntInitPlayers:
       if visible then
         SetInfo(Phrases.Lookup('BUSY_INIT'));
-    ntDeactivationMissing .. ntDeactivationMissing + nPl - 1:
-      SimpleMessage(Format(Phrases.Lookup('MISSDEACT'),
-        [ID - ntDeactivationMissing]));
-    ntSetAIName .. ntSetAIName + nPl - 1:
-      LocalPlayer.SetAIName(ID - ntSetAIName, NotifyMessage);
-    ntException .. ntException + maxBrain - 1:
-      PostMessage(Handle, WM_AIEXCEPTION, ID - ntException, 0);
-    ntLoadBegin:
-      begin
-        Info := Phrases.Lookup('BUSY_LOAD');
-        SetState(0);
-      end;
-    ntLoadState .. ntLoadState + 128:
-      SetState(ID - ntLoadState);
-    ntDLLError .. ntDLLError + 128:
-      SimpleMessage(Format(Phrases.Lookup('DLLERROR'),
-        [Brains[ID - ntDLLError].FileName]));
+    ntDeactivationMissing:
+      SimpleMessage(Format(Phrases.Lookup('MISSDEACT'), [Index]));
+    ntSetAIName:
+      LocalPlayer.SetAIName(Index, NotifyMessage);
+    ntException:
+      PostMessage(Handle, WM_AIEXCEPTION, Index, 0);
+    ntLoadBegin: begin
+      Info := Phrases.Lookup('BUSY_LOAD');
+      SetState(0);
+    end;
+    ntLoadState: SetState(Index);
+    ntDLLError:
+      SimpleMessage(Format(Phrases.Lookup('DLLERROR'), [Brains[Index].FileName]));
     ntAIError:
       SimpleMessage(Format(Phrases.Lookup('AIERROR'), [NotifyMessage]));
-    ntClientError .. ntClientError + 128:
+    ntClientError:
       SimpleMessage(Format(Phrases.Lookup('CLIENTERROR'),
-        [Brains[ID - ntClientError].FileName]));
-    ntEndInfo:
-      begin
-        Hide;
-        background.Update;
-      end;
-    ntLoadError:
-      begin
+        [Brains[Index].FileName]));
+    ntEndInfo: begin
+      Hide;
+      Background.Update;
+    end;
+    ntLoadError: begin
 (* TODO        if OpenClipboard(Handle) then
         begin // copy file path to clipboard
           NotifyMessage := NotifyMessage + #0;
@@ -133,30 +127,25 @@ begin
     *)
       end;
     ntStartDone:
-      if not Quick then
-      begin
+      if not Quick then begin
         StartDlg.Hide;
-        background.Update;
+        Background.Update;
       end;
     ntStartGo, ntStartGoRefresh, ntStartGoRefreshMaps:
-      if Quick then
-        Close
-      else
-      begin
+      if Quick then Close
+      else begin
         if ID = ntStartGoRefresh then
           StartDlg.UpdateFormerGames
         else if ID = ntStartGoRefreshMaps then
           StartDlg.UpdateMaps;
         StartDlg.Show;
       end;
-    ntChangeClient:
-      PostMessage(Handle, WM_CHANGECLIENT, 0, 0);
-    ntNextPlayer:
-      PostMessage(Handle, WM_NEXTPLAYER, 0, 0);
-    ntDeinitModule .. ntDeinitModule + maxBrain - 1:
+    ntChangeClient: PostMessage(Handle, WM_CHANGECLIENT, 0, 0);
+    ntNextPlayer: PostMessage(Handle, WM_NEXTPLAYER, 0, 0);
+    ntDeinitModule:
       begin
         Info := Format(Phrases2.Lookup('BUSY_DEINIT'),
-          [Brains[ID - ntDeinitModule].Name]);
+          [Brains[Index].Name]);
         while BiColorTextWidth(Canvas, Info) + 64 > ClientWidth do
           Delete(Info, Length(Info), 1);
         SetMainTextureByAge(-1);
@@ -164,21 +153,20 @@ begin
         Show;
         Invalidate;
         Update;
+        Application.ProcessMessages;
       end;
-    ntBackOn:
-      begin
-        background.Show;
-        background.Update;
-        sleep(50); // prevent flickering
-      end;
-    ntBackOff:
-      background.Close;
+    ntBackOn: begin
+      Background.Show;
+      Background.Update;
+      Sleep(50); // prevent flickering
+    end;
+    ntBackOff: Background.Close;
   end;
 end;
 
 procedure TDirectDlg.FormCreate(Sender: TObject);
 begin
-  Gone := false;
+  Gone := False;
   State := -1;
   Info := '';
   GameServer.Init(Notify);
@@ -217,7 +205,7 @@ begin
   begin
     Application.MessageBox(PChar(Phrases.Lookup('NOAI')), 'C-evo', 0);
     Close;
-    exit;
+    Exit;
   end;
   Quick := false;
   if ParamCount > 0 then
@@ -233,7 +221,7 @@ begin
       begin
         Quick := true;
         DirectHelp(cHelpOnly);
-        Close
+        Close;
       end;
     end
     else if (FileExists(ParamStr(1))) then
@@ -248,7 +236,7 @@ begin
     end;
   end;
   if not Quick then begin
-    background.Show;
+    Background.Show;
     StartDlg.Show;
   end;
 end;
@@ -293,18 +281,17 @@ begin
   Info := x;
   Invalidate;
   Update;
+  Application.ProcessMessages;
 end;
 
 procedure TDirectDlg.SetState(x: integer);
 begin
-  if (x < 0) <> (State < 0) then
-  begin
+  if (x < 0) <> (State < 0) then begin
     State := x;
     Invalidate;
-    Update
+    Update;
   end
-  else if x <> State then
-  begin
+  else if x <> State then begin
     State := x;
     PaintProgressBar(Canvas, 6, ClientWidth div 2 - 64, 40, State, 128 - State,
       128, MainTexture);

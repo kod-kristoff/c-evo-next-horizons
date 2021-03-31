@@ -113,7 +113,7 @@ begin
       MainTexture.Image.Canvas, (wMainTexture - ClientWidth) div 2,
       (hMainTexture - ClientHeight) div 2);
     ImageOp_B(Back, Template, 0, 0, 0, 0, ClientWidth, ClientHeight);
-  end
+  end;
 end;
 
 procedure TNatStatDlg.FormShow(Sender: TObject);
