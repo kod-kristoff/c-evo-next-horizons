@@ -215,7 +215,7 @@ begin
   if ParamCount > 0 then
   begin
     s := ParamStr(1);
-    if (s[1] = '-') or (s[1] = '/') then
+    if (s[1] = '-') {$IFDEF WINDOWS}or (s[1] = '/'){$ENDIF} then
     begin // special mode
       Delete(s, 1, 1);
       for i := 1 to Length(s) do
@@ -230,7 +230,7 @@ begin
     end
     else if (FileExists(ParamStr(1))) then
     begin
-      Quick := true;
+      Quick := True;
       if not LoadGame(ExtractFilePath(ParamStr(1)), ExtractFileName(ParamStr(1)
         ), -1, false) then
       begin
