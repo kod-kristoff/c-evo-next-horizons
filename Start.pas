@@ -864,7 +864,7 @@ begin
     else if MiniMap.Mode = mmMultiPlayer then
       s := Phrases.Lookup('MPMAP')
     else if Page = pgStartMap then
-      s := Copy(MapFileName, 1, Length(MapFileName) - 9)
+      s := Copy(MapFileName, 1, Length(MapFileName) - Length(CevoMapExt))
     else if Page = pgEditMap then
       s := List.Items[List.ItemIndex]
     else if Page = pgNoLoad then
@@ -1007,7 +1007,7 @@ begin
         UnlistBackupFile(FileName);
       end;
     pgEditMap:
-      EditMap(MapFileName, lxmax, lymax, StartLandMass);
+      EditMap(GetMapsDir + DirectorySeparator + MapFileName, lxmax, lymax, StartLandMass);
     pgEditRandom: // new map
       begin
         Reg := TRegistry.Create;
@@ -1022,7 +1022,8 @@ begin
           Free;
         end;
         MapFileName := Format(Phrases.Lookup('MAP'), [MapCount]) + CevoMapExt;
-        EditMap(MapFileName, WorldSizes[WorldSize].X, WorldSizes[WorldSize].Y, StartLandMass);
+        EditMap(GetMapsDir + DirectorySeparator + MapFileName,
+          WorldSizes[WorldSize].X, WorldSizes[WorldSize].Y, StartLandMass);
       end;
   end;
 end;
@@ -1058,7 +1059,8 @@ begin
       begin
         if Page = pgEditMap then
           MapFileName := List.Items[List.ItemIndex] + CevoMapExt;
-        MiniMap.LoadFromMapFile(GetMapsDir + DirectorySeparator + MapFileName, nMapLandTiles, nMapStartPositions);
+        MiniMap.LoadFromMapFile(GetMapsDir + DirectorySeparator + MapFileName,
+          nMapLandTiles, nMapStartPositions);
         if Page = pgEditMap then
           SmartInvalidate(x0Mini - 112, y0Mini + 61, x0Mini + 112, y0Mini + 91);
       end;
@@ -1233,12 +1235,12 @@ begin
   Maps.Clear;
   if FindFirst(GetMapsDir + DirectorySeparator + '*' + CevoMapExt, $21, f) = 0 then
     repeat
-      Maps.Add(Copy(f.Name, 1, Length(f.Name) - 9));
+      Maps.Add(Copy(f.Name, 1, Length(f.Name) - Length(CevoMapExt)));
     until FindNext(f) <> 0;
   FindClose(F);
   Maps.Sort;
   Maps.Insert(0, Phrases.Lookup('RANMAP'));
-  ListIndex[tbMain] := Maps.IndexOf(Copy(MapFileName, 1, Length(MapFileName) - 9));
+  ListIndex[tbMain] := Maps.IndexOf(Copy(MapFileName, 1, Length(MapFileName) - Length(CevoMapExt)));
   if ListIndex[tbMain] < 0 then
     ListIndex[tbMain] := 0;
 end;

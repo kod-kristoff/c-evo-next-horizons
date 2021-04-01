@@ -54,6 +54,12 @@ Root: HKCR; Subkey: "{#FileTypeName}"; ValueType: string; ValueName: ""; ValueDa
 Root: HKCR; Subkey: "{#FileTypeName}\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName},0"
 Root: HKCR; Subkey: "{#FileTypeName}\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
 
+#define FileTypeName "C-evo map"
+Root: HKCR; Subkey: ".cevomap"; ValueType: string; ValueName: ""; ValueData: "{#FileTypeName}"; Flags: uninsdeletevalue
+Root: HKCR; Subkey: "{#FileTypeName}"; ValueType: string; ValueName: ""; ValueData: "{#FileTypeName}"; Flags: uninsdeletekey
+Root: HKCR; Subkey: "{#FileTypeName}\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName},0"
+Root: HKCR; Subkey: "{#FileTypeName}\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
+
 [Components]
 Name: "main"; Description: "Main Files"; Types: full compact custom; Flags: fixed
 Name: "maps"; Description: "Maps"; Types: full

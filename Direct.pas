@@ -42,7 +42,7 @@ var
 implementation
 
 uses
-  ScreenTools, Protocol, Start, LocalPlayer, NoTerm, Back;
+  ScreenTools, Protocol, Start, LocalPlayer, NoTerm, Back, Global;
 
 {$R *.lfm}
 
@@ -203,6 +203,7 @@ procedure TDirectDlg.OnGo(var m: TMessage);
 var
   i: integer;
   s: string;
+  FileName: string;
 begin
   Hide;
   if Brains.Count = 3 then
@@ -228,12 +229,20 @@ begin
         Close;
       end;
     end
-    else if (FileExists(ParamStr(1))) then
-    begin
-      Quick := True;
-      if not LoadGame(ExtractFilePath(ParamStr(1)), ExtractFileName(ParamStr(1)
-        ), -1, false) then
-      begin
+    else if (FileExists(ParamStr(1))) then begin
+      FileName := ParamStr(1);
+      if ExtractFileExt(FileName) = CevoExt then begin
+        Quick := True;
+        if not LoadGame(ExtractFilePath(ParamStr(1)), ExtractFileName(ParamStr(1)
+        ), -1, false) then begin
+          SimpleMessage(Phrases.Lookup('LOADERR'));
+          Close;
+        end;
+      end else
+      if ExtractFileExt(FileName) = CevoMapExt then begin
+        Quick := True;
+        EditMap(FileName, lxmax, lymax, 30);
+      end else begin
         SimpleMessage(Phrases.Lookup('LOADERR'));
         Close;
       end;

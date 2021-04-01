@@ -4,7 +4,7 @@ interface
 
 const
   CevoExt = '.cevo';
-  CevoMapExt = '.cevo map';
+  CevoMapExt = '.cevomap';
   CevoTribeExt = '.tribe.txt';
   CevoHomepageShort = 'app.zdechov.net/c-evo';
   CevoHomepage = 'https://' + CevoHomepageShort;

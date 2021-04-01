@@ -582,8 +582,7 @@ begin
   result := false;
   MapFile := nil;
   try
-    MapFile := TFileStream.Create(GetMapsDir + DirectorySeparator + FileName,
-      fmOpenRead or fmShareExclusive);
+    MapFile := TFileStream.Create(FileName, fmOpenRead or fmShareExclusive);
     MapFile.Position := 0;
     MapFile.read(s[1], 8); { file id }
     MapFile.read(i, 4); { format id }
