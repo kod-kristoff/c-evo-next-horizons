@@ -63,7 +63,9 @@ begin
       State := -1;
       Info := Phrases.Lookup('BUSY_MODLH');
       Show;
-      Application.ProcessMessages; // Repaint after show for Linux
+      {$IFDEF LINUX}
+      Application.ProcessMessages;
+      {$ENDIF}
       Invalidate;
       Update;
     end;
@@ -151,9 +153,11 @@ begin
         SetMainTextureByAge(-1);
         State := -1;
         Show;
+        {$IFDEF LINUX}
+        Application.ProcessMessages;
+        {$ENDIF}
         Invalidate;
         Update;
-        Application.ProcessMessages;
       end;
     ntBackOn: begin
       Background.Show;
@@ -281,7 +285,9 @@ begin
   Info := x;
   Invalidate;
   Update;
+  {$IFDEF LINUX}
   Application.ProcessMessages;
+  {$ENDIF}
 end;
 
 procedure TDirectDlg.SetState(x: integer);

@@ -1258,11 +1258,11 @@ end;
 procedure TMainScreen.SetMapOptions;
 begin
   MiniMap.MapOptions := MapOptionChecked;
-  MainMap.MapOptions := MapOptionChecked;
+  MapOptions := MapOptionChecked;
   if ClientMode = cEditMap then
-    MainMap.MapOptions := MainMap.MapOptions + [moEditMode];
+    MapOptions := MapOptions + [moEditMode];
   if mLocCodes.Checked then
-    MainMap.MapOptions := MainMap.MapOptions + [moLocCodes];
+    MapOptions := MapOptions + [moLocCodes];
 end;
 
 procedure TMainScreen.UpdateViews(UpdateCityScreen: boolean);
@@ -3520,14 +3520,10 @@ begin
   TopBar.Canvas.Brush.Style := bsClear;
   Buffer := TBitmap.Create;
   Buffer.PixelFormat := pf24bit;
-  if 2 * lxmax > 3 * xSizeBig then
-    Buffer.width := 2 * lxmax
-  else
-    Buffer.width := 3 * xSizeBig;
-  if lymax > 3 * ySizeBig then
-    Buffer.height := lymax
-  else
-    Buffer.height := 3 * ySizeBig;
+  if 2 * lxmax > 3 * xSizeBig then Buffer.width := 2 * lxmax
+    else Buffer.width := 3 * xSizeBig;
+  if lymax > 3 * ySizeBig then Buffer.height := lymax
+    else Buffer.height := 3 * ySizeBig;
   Buffer.Canvas.Font.Assign(UniFont[ftSmall]);
   for i := 0 to nPl - 1 do
     AILogo[i] := nil;
@@ -5070,7 +5066,7 @@ begin
           PaintDestination;
           // if MoveHintToLoc>=0 then
           // ShowMoveHint(MoveHintToLoc, true);
-        end
+        end;
       end
       else if TurnComplete and not supervising then
       begin
@@ -6390,7 +6386,7 @@ end;
 procedure TMainScreen.SetDebugMap(p: integer);
 begin
   MainMap.pDebugMap := p;
-  MainMap.MapOptions := MainMap.MapOptions - [moLocCodes];
+  MapOptions := MapOptions - [moLocCodes];
   mLocCodes.Checked := false;
   MapValid := false;
   MainOffscreenPaint;

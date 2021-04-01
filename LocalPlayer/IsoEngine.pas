@@ -56,6 +56,14 @@ type
     Borders: TBitmap;
     BordersOK: PInteger;
     CitiesPictures: TCitiesPictures;
+    ShowLoc: Boolean;
+    ShowCityNames: Boolean;
+    ShowObjects: Boolean;
+    ShowBorder: Boolean;
+    ShowMyBorder: Boolean;
+    ShowGrWall: Boolean;
+    ShowDebug: Boolean;
+    FoW: Boolean;
     function Connection4(Loc, Mask, Value: integer): integer;
     function Connection8(Loc, Mask: integer): integer;
     function OceanConnection(Loc: integer): integer;
@@ -75,7 +83,6 @@ type
     TSpriteSize: TTerrainSpriteSize;
     HGrTerrain: TGraphicSet;
     HGrCities: TGraphicSet;
-    MapOptions: TMapOptions;
     pDebugMap: Integer; // -1 for off
     constructor Create;
     destructor Destroy; override;
@@ -122,6 +129,9 @@ const
 function IsJungle(y: integer): boolean;
 procedure Init(InitEnemyModelHandler: TInitEnemyModelEvent);
 
+var
+  MapOptions: TMapOptions;
+
 
 implementation
 
@@ -160,14 +170,6 @@ const
 var
   OnInitEnemyModel: TInitEnemyModelEvent;
   DebugMap: ^TTileList;
-  FoW: Boolean;
-  ShowLoc: Boolean;
-  ShowCityNames: Boolean;
-  ShowObjects: Boolean;
-  ShowBorder: Boolean;
-  ShowMyBorder: Boolean;
-  ShowGrWall: Boolean;
-  ShowDebug: Boolean;
   IsoMapCache: array[TTileSize] of TIsoMapCache;
 
 function IsJungle(y: integer): boolean;
@@ -1549,23 +1551,23 @@ begin
                 if bix = fOcean + 2 then
                 begin
                   Aix := 0;
-                  bix := 0
+                  bix := 0;
                 end
                 else
                 begin
                   Aix := 0;
-                  bix := 1
+                  bix := 1;
                 end
               else if bix = -1 then
                 if Aix = fOcean + 2 then
                 begin
                   Aix := 1;
-                  bix := 1
+                  bix := 1;
                 end
                 else
                 begin
                   Aix := 1;
-                  bix := 0
+                  bix := 0;
                 end;
               BitBltBitmap(OceanPatch, x + dx * xxt, y + dy * yyt, xxt, yyt,
                 Aix * (xxt * 2) + (dx + dy + 1) and 1 * xxt, bix * yyt, SRCCOPY)
@@ -1602,7 +1604,7 @@ begin
             if (Aix = -2) and (bix = -2) then
             begin
               Aix := fDesert;
-              bix := fDesert
+              bix := fDesert;
             end
             else if Aix = -2 then
               if bix < 2 then
