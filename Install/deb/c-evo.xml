@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+  <mime-type type="application/cevo">
+    <comment>C-evo book</comment>
+    <glob pattern="*.cevo"/>
+  </mime-type>
+  <mime-type type="application/cevomap">
+    <comment>C-evo map</comment>
+    <glob pattern="*.cevomap"/>
+  </mime-type>
+</mime-info>
