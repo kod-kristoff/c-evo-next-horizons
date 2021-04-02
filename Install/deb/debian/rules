@@ -25,6 +25,8 @@ override_dh_auto_install:
 	install -m 755 Install/deb/c-evo.xml $(ROOT)/usr/share/mime/packages
 	install -d -m 755 $(ROOT)/usr/share/pixmaps
 	install -m 644 Graphics/c-evo_64x64.png $(ROOT)/usr/share/pixmaps/c-evo.png
+	install -m 644 Graphics/c-evo_64x64.png $(ROOT)/usr/share/pixmaps/application-cevo.png
+	install -m 644 Graphics/c-evo_64x64.png $(ROOT)/usr/share/pixmaps/application-cevomap.png
 	install -d -m 755 $(ROOT)/usr/share/c-evo/AI/StdAI
 	install -m 644 AI/StdAI/libstdai-$(DEB_HOST_ARCH).so $(ROOT)/usr/share/c-evo/AI/StdAI
 	
