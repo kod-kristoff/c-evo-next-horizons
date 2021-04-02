@@ -86,7 +86,6 @@ begin
   RegisterNoIcon([TFramedDlg]);
 end;
 
-
 constructor TBufferedDrawDlg.Create(AOwner: TComponent);
 begin
   BaseWin.CreateOffscreen(Offscreen);
@@ -111,10 +110,9 @@ end;
 
 procedure TBufferedDrawDlg.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-  if FWindowMode = wmPersistent then
-  begin
+  if FWindowMode = wmPersistent then begin
     UserLeft := Left;
-    UserTop := Top
+    UserTop := Top;
   end;
   if OffscreenUser = self then
     OffscreenUser := nil;
@@ -130,20 +128,19 @@ end;
 procedure TBufferedDrawDlg.FormKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
-  if Key = VK_ESCAPE then
-  begin
+  if Key = VK_ESCAPE then begin
     if fsModal in FormState then
-      ModalResult := mrCancel
-  end
-  else if Key = VK_RETURN then
-  begin
+      ModalResult := mrCancel;
+  end else
+  if Key = VK_RETURN then begin
     if fsModal in FormState then
-      ModalResult := mrOK
-  end
-  else if Key = VK_F1 then begin
+      ModalResult := mrOK;
+  end else
+  if Key = VK_F1 then begin
     if Assigned(ShowNewContentProc) then
       ShowNewContentProc(FWindowMode or wmPersistent, HelpContext);
-  end else if FWindowMode = wmPersistent then begin
+  end else
+  if FWindowMode = wmPersistent then begin
     if Assigned(MainFormKeyDown) then
       MainFormKeyDown(Sender, Key, Shift);
   end;

@@ -354,7 +354,7 @@ begin
         Popup.Items.Add(m);
       end;
     Popup.Popup(Left + ToggleBtn.Left, Top + ToggleBtn.Top + ToggleBtn.Height);
-  end
+  end;
 end;
 
 procedure TDiaDlg.PlayerClick(Sender: TObject);
@@ -369,7 +369,7 @@ begin
     ToggleBtnClick(nil)
   else if (Key = VK_F8) and (Kind = dkShip) then // my other key
   else
-    inherited
+    inherited;
 end;
 
 end.

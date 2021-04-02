@@ -680,7 +680,7 @@ end;
 
 procedure TNegoDlg.CloseBtnClick(Sender: TObject);
 begin
-  Close
+  Close;
 end;
 
 procedure TNegoDlg.FormKeyDown(Sender: TObject; var Key: Word;
@@ -689,10 +689,10 @@ begin
   if Key = VK_RETURN then
   begin
     if OkBtn.Visible then
-      OkBtnClick(nil)
+      OkBtnClick(nil);
   end
   else
-    inherited
+    inherited;
 end;
 
 procedure TNegoDlg.BuildCurrentOffer;

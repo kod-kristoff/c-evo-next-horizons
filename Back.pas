@@ -74,6 +74,8 @@ begin
     end;
   end else begin
     WindowState := wsNormal;
+    WindowState := wsFullScreen;
+    WindowState := wsNormal;
     BoundsRect := Bounds(StartDlg.Left - 8, StartDlg.Top - 8,
       StartDlg.Width + 16, StartDlg.Height + 16);
   end;

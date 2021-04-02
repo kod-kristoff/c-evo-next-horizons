@@ -5,7 +5,6 @@ interface
 
 uses
   Protocol, ClientTools, Term, ScreenTools, IsoEngine, PVSB, BaseWin,
-
   LCLIntf, LCLType, Messages, SysUtils, Classes, Graphics, Controls, Forms,
   ExtCtrls, ButtonB, ButtonBase, Menus, Types;
 
@@ -84,6 +83,7 @@ const
 var
   ListDlg: TListDlg;
   ModalSelectDlg: TModalSelectDlg;
+
 
 implementation
 

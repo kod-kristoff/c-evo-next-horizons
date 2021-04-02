@@ -142,7 +142,7 @@ var
 implementation
 
 uses
-  Global, Directories, Direct, ScreenTools, Inp, Back, Settings;
+  Global, Directories, Direct, ScreenTools, Inp, Back, Settings, UKeyBindings;
 
 {$R *.lfm}
 
@@ -1741,8 +1741,16 @@ end;
 
 procedure TStartDlg.FormKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
+var
+  ShortCut: TShortCut;
 begin
-  if KeyToShortCut(Key, Shift) = VK_F1 then
+  ShortCut := KeyToShortCut(Key, Shift);
+  if BFullScreen.Test(ShortCut) then begin
+    FullScreen := not FullScreen;
+    UpdateInterface;
+    Background.UpdateInterface;
+  end else
+  if BHelp.Test(ShortCut) then
     DirectHelp(cStartHelp);
 end;
 

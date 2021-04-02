@@ -47,10 +47,11 @@ type
 var
   EnhanceDlg: TEnhanceDlg;
 
+
 implementation
 
 uses
-  Help;
+  Help, UKeyBindings;
 
 {$R *.lfm}
 
@@ -230,7 +231,7 @@ begin
       if TileImp and fTerImp = tiMine then
         Sprite(offscreen, HGrTerrain, x, 64 - yyt, xxt * 2, yyt * 2,
           1 + 2 * (xxt * 2 + 1), 1 + yyt + 12 * (yyt * 3 + 1));
-      inc(x, xxt * 2 + 6)
+      inc(x, xxt * 2 + 6);
     end;
   end;
 
@@ -301,7 +302,7 @@ end; { OffscreenPaint }
 
 procedure TEnhanceDlg.CloseBtnClick(Sender: TObject);
 begin
-  Close
+  Close;
 end;
 
 procedure TEnhanceDlg.ToggleBtnClick(Sender: TObject);
@@ -316,7 +317,7 @@ end;
 procedure TEnhanceDlg.TerrClick(Sender: TObject);
 begin
   Page := TComponent(Sender).Tag;
-  SmartUpdateContent
+  SmartUpdateContent;
 end;
 
 procedure TEnhanceDlg.JobClick(Sender: TObject);
@@ -336,7 +337,7 @@ var
         if stage < 4 then
           move(MyData.EnhancementJobs[Page, stage + 1],
             MyData.EnhancementJobs[Page, stage], 4 - stage);
-        MyData.EnhancementJobs[Page, 4] := jNone
+        MyData.EnhancementJobs[Page, 4] := jNone;
       end
       else
         inc(stage);
@@ -363,22 +364,25 @@ begin
     if (NewJob = jRR) and not(jRoad in Done) then
     begin
       MyData.EnhancementJobs[Page, stage] := jRoad;
-      inc(stage)
+      inc(stage);
     end;
     if (NewJob = jFarm) and not(jIrr in Done) then
     begin
       MyData.EnhancementJobs[Page, stage] := jIrr;
-      inc(stage)
+      inc(stage);
     end;
-    MyData.EnhancementJobs[Page, stage] := NewJob
+    MyData.EnhancementJobs[Page, stage] := NewJob;
   end;
-  SmartUpdateContent
+  SmartUpdateContent;
 end;
 
 procedure TEnhanceDlg.FormKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
+var
+  ShortCut: TShortCut;
 begin
-  if Key = VK_F1 then
+  ShortCut := KeyToShortCut(Key, Shift);
+  if BHelp.Test(ShortCut) then
     HelpDlg.ShowNewContent(FWindowMode or wmPersistent, hkText,
       HelpDlg.TextIndex('MACRO'))
 end;
