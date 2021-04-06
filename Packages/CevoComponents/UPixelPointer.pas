@@ -45,6 +45,8 @@ type
 
   function PixelPointer(Bitmap: TRasterImage; BaseX: Integer = 0; BaseY: Integer = 0): TPixelPointer; inline;
   function SwapRedBlue(Color: TColor32): TColor32;
+  function Color32ToColor(Color: TColor32): TColor;
+  function ColorToColor32(Color: TColor): TColor32;
 
 implementation
 
@@ -112,6 +114,17 @@ begin
   Result := (Color and $ff00ff00) or ((Color and $ff) shl 16) or ((Color shr 16) and $ff);
 end;
 
+function Color32ToColor(Color: TColor32): TColor;
+begin
+  Result := ((Color shr 16) and $ff) or (Color and $00ff00) or
+    ((Color and $ff) shl 16);
+end;
+
+function ColorToColor32(Color: TColor): TColor32;
+begin
+  Result := $ff000000 or ((Color shr 16) and $ff) or (Color and $00ff00) or
+    ((Color and $ff) shl 16);
+end;
 
 end.
 

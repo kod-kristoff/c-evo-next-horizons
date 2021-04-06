@@ -1034,22 +1034,41 @@ end;
 
 procedure InitOrnament;
 var
-  x, y, p, Light, Shade: Integer;
+  P: TColor;
+  X, Y: Integer;
+  Light, Shade: TColor32;
+  PixelPtr: TPixelPointer;
 begin
   if InitOrnamentDone then Exit;
-  Light := MainTexture.clBevelLight;
+  Light := ColorToColor32(MainTexture.clBevelLight);
   // and $FCFCFC shr 2*3+MainTexture.clBevelShade and $FCFCFC shr 2;
-  Shade := MainTexture.clBevelShade and $FCFCFC shr 2 * 3 +
-    MainTexture.clBevelLight and $FCFCFC shr 2;
-  for x := 0 to Ornament.Width - 1 do
-    for y := 0 to Ornament.Height - 1 do begin
-      p := HGrSystem2.Data.Canvas.Pixels[Ornament.Left + x, Ornament.Top + y];
-      if p = $0000FF then
-        HGrSystem2.Data.Canvas.Pixels[Ornament.Left + x, Ornament.Top + y] := Light
-      else if p = $FF0000 then
-        HGrSystem2.Data.Canvas.Pixels[Ornament.Left + x, Ornament.Top + y] := Shade;
+  Shade := ColorToColor32(MainTexture.clBevelShade and $FCFCFC shr 2 * 3 +
+    MainTexture.clBevelLight and $FCFCFC shr 2);
+  HGrSystem2.Data.BeginUpdate;
+  PixelPtr := PixelPointer(HGrSystem2.Data, ScaleToNative(Ornament.Left), ScaleToNative(Ornament.Top));
+  if PixelPtr.BytesPerPixel = 3 then begin
+    for Y := 0 to ScaleToNative(Ornament.Height) - 1 do begin
+      for X := 0 to ScaleToNative(Ornament.Width) - 1 do begin
+        P := Color32ToColor(PixelPtr.Pixel^.RGB);
+        if P = $0000FF then PixelPtr.Pixel^.RGB := Light
+        else if P = $FF0000 then PixelPtr.Pixel^.RGB := Shade;
+        PixelPtr.NextPixel;
+      end;
+      PixelPtr.NextLine;
     end;
+  end else begin
+    for Y := 0 to ScaleToNative(Ornament.Height) - 1 do begin
+      for X := 0 to ScaleToNative(Ornament.Width) - 1 do begin
+        P := Color32ToColor(PixelPtr.Pixel^.ARGB);
+        if P = $0000FF then PixelPtr.Pixel^.ARGB := Light
+        else if P = $FF0000 then PixelPtr.Pixel^.ARGB := Shade;
+        PixelPtr.NextPixel;
+      end;
+      PixelPtr.NextLine;
+    end;
+  end;
   InitOrnamentDone := True;
+  HGrSystem2.Data.EndUpdate;
 end;
 
 procedure InitCityMark(const T: TTexture);

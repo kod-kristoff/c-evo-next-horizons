@@ -22,7 +22,7 @@ type
     TitleHeight: Integer;
     // defines area to grip the window for moving (from top)
     procedure InitButtons;
-    procedure OnEraseBkgnd(var m: TMessage); message WM_ERASEBKGND;
+    procedure OnEraseBkgnd(var Msg: TMessage); message WM_ERASEBKGND;
     procedure OnHitTest(var Msg: TMessage); message WM_NCHITTEST;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
       override;
@@ -83,7 +83,7 @@ begin
   inherited;
 end;
 
-procedure TDrawDlg.OnEraseBkgnd(var m: TMessage);
+procedure TDrawDlg.OnEraseBkgnd(var Msg: TMessage);
 begin
   // Full area should be covered by Paint method
 end;
@@ -117,7 +117,7 @@ begin
             Exit;
           end;
         end;
-      Msg.Result := HTCAPTION
+      Msg.Result := HTCAPTION;
     end;
   end;
 end;

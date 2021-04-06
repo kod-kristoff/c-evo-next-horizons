@@ -18,7 +18,7 @@ type
   private
     {$IFDEF WINDOWS}
     PrevWndProc: WNDPROC;
-    procedure OnMCI(var m: TMessage); message MM_MCINOTIFY;
+    procedure OnMCI(var Msg: TMessage); message MM_MCINOTIFY;
   public
     constructor Create(AOwner: TComponent); override;
     {$ENDIF}
@@ -254,9 +254,9 @@ begin
   Result := CallWindowProc(SoundPlayer.PrevWndProc, Ahwnd, uMsg, WParam, LParam);
 end;
 
-procedure TSoundPlayer.OnMCI(var m: TMessage);
+procedure TSoundPlayer.OnMCI(var Msg: TMessage);
 begin
-  if (m.wParam = MCI_NOTIFY_SUCCESSFUL) and (PlayingSound <> nil) then
+  if (Msg.wParam = MCI_NOTIFY_SUCCESSFUL) and (PlayingSound <> nil) then
   begin
     PlayingSound.Reset;
     PlayingSound := nil;

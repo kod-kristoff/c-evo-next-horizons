@@ -30,9 +30,9 @@ type
     Quick: Boolean;
     procedure SetInfo(x: string);
     procedure SetState(x: integer);
-    procedure OnGo(var m: TMessage); message WM_GO;
-    procedure OnChangeClient(var m: TMessage); message WM_CHANGECLIENT;
-    procedure OnNextPlayer(var m: TMessage); message WM_NEXTPLAYER;
+    procedure OnGo(var Msg: TMessage); message WM_GO;
+    procedure OnChangeClient(var Msg: TMessage); message WM_CHANGECLIENT;
+    procedure OnNextPlayer(var Msg: TMessage); message WM_NEXTPLAYER;
     procedure OnAIException(var Msg: TMessage); message WM_AIEXCEPTION;
   end;
 
@@ -199,7 +199,7 @@ begin
   GameServer.Done;
 end;
 
-procedure TDirectDlg.OnGo(var m: TMessage);
+procedure TDirectDlg.OnGo(var Msg: TMessage);
 var
   i: integer;
   s: string;
@@ -254,12 +254,12 @@ begin
   end;
 end;
 
-procedure TDirectDlg.OnChangeClient(var m: TMessage);
+procedure TDirectDlg.OnChangeClient(var Msg: TMessage);
 begin
   ChangeClient;
 end;
 
-procedure TDirectDlg.OnNextPlayer(var m: TMessage);
+procedure TDirectDlg.OnNextPlayer(var Msg: TMessage);
 begin
   NextPlayer;
 end;
