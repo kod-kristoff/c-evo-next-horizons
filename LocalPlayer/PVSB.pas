@@ -31,7 +31,7 @@ type
     destructor Destroy; override;
     procedure Init(Max, PageSize: Integer);
     procedure SetPos(Pos: Integer);
-    function Process(const m: TMessage): boolean;
+    function Process(const Msg: TMessage): boolean;
     function ProcessMouseWheel(Delta: Integer): Boolean;
     procedure Show(Visible: boolean);
     procedure EndSB;
@@ -64,7 +64,7 @@ begin
   end;
 end;
 
-function TPVScrollBar.Process(const m: TMessage): boolean;
+function TPVScrollBar.Process(const Msg: TMessage): boolean;
 var
   NewPos: integer;
 begin
@@ -72,12 +72,12 @@ begin
       result := false
     else
     begin
-      if (m.wParam and $ffff) in [SB_THUMBPOSITION, SB_THUMBTRACK] then
+      if (Msg.wParam and $ffff) in [SB_THUMBPOSITION, SB_THUMBTRACK] then
       begin
-        result := ((m.wParam shr 16) and $ffff) <> ScrollBar.Position;
-        ScrollBar.Position := (m.wParam shr 16) and $ffff;
+        result := ((Msg.wParam shr 16) and $ffff) <> ScrollBar.Position;
+        ScrollBar.Position := (Msg.wParam shr 16) and $ffff;
       end else begin
-        case (m.wParam and $ffff) of
+        case (Msg.wParam and $ffff) of
           SB_LINEUP:
             NewPos := ScrollBar.Position - 1;
           SB_LINEDOWN:
@@ -94,7 +94,7 @@ begin
         if NewPos > Max - ScrollBar.PageSize + 1 then
           NewPos := Max - ScrollBar.PageSize + 1;
         result := NewPos <> ScrollBar.Position;
-        if (NewPos <> ScrollBar.Position) or ((m.wParam and $ffff) = SB_ENDSCROLL) then
+        if (NewPos <> ScrollBar.Position) or ((Msg.wParam and $ffff) = SB_ENDSCROLL) then
         begin
           ScrollBar.Position := NewPos;
         end;

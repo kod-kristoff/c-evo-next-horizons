@@ -44,20 +44,29 @@ type
     procedure PlayerClick(Sender: TObject);
   private
     Kind: TListKind;
-    LineDistance, MaxLines, cixProject, pView, Sel, DispLines, Layer, nColumn,
-      TechNameSpace, ScienceNation: integer;
+    LineDistance: Integer;
+    MaxLines: Integer;
+    cixProject: Integer;
+    pView: Integer;
+    Sel: Integer;
+    DispLines: Integer;
+    Layer: Integer;
+    nColumn: Integer;
+    TechNameSpace: Integer;
+    ScienceNation: Integer;
     sb: TPVScrollbar;
     Lines, FirstShrinkedLine: array [0 .. MaxLayer - 1] of integer;
     code: array [0 .. MaxLayer - 1, 0 .. 4095] of integer;
     Column: array [0 .. nPl - 1] of integer;
-    Closable, MultiPage: boolean;
+    Closable: Boolean;
+    MultiPage: Boolean;
     ScienceNationDotBuffer: TBitmap;
     procedure ScrollBarUpdate(Sender: TObject);
     procedure InitLines;
     procedure line(ca: TCanvas; l: integer; NonText, lit: boolean);
     function RenameCity(cix: integer): boolean;
     function RenameModel(mix: integer): boolean;
-    procedure OnScroll(var m: TMessage); message WM_VSCROLL;
+    procedure OnScroll(var Msg: TMessage); message WM_VSCROLL;
     procedure OnMouseLeave(var Msg: TMessage); message CM_MOUSELEAVE;
   public
     result: integer;
@@ -132,10 +141,10 @@ begin
   CanClose := Closable or not(Kind in MustChooseKind);
 end;
 
-procedure TListDlg.OnScroll(var m: TMessage);
+procedure TListDlg.OnScroll(var Msg: TMessage);
 begin
   { TODO: Handled by MouseWheel event
-  if sb.Process(m) then  begin
+  if sb.Process(Msg) then  begin
     Sel := -2;
     SmartUpdateContent(true);
   end;

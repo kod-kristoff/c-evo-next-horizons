@@ -321,7 +321,7 @@ type
     procedure SmartRectInvalidate(Left, Top, Rigth, Bottom: integer);
     procedure LoadSettings;
     procedure SaveSettings;
-    procedure OnScroll(var m: TMessage); message WM_VSCROLL;
+    procedure OnScroll(var Msg: TMessage); message WM_VSCROLL;
     procedure OnEOT(var Msg: TMessage); message WM_EOT;
     procedure SoundPreload(Check: TSoundBlocks);
     procedure UpdateKeyShortcuts;
@@ -3667,9 +3667,9 @@ begin
     MenuClick(mResign);
 end;
 
-procedure TMainScreen.OnScroll(var m: TMessage);
+procedure TMainScreen.OnScroll(var Msg: TMessage);
 begin
-  if sb.Process(m) then begin
+  if sb.Process(Msg) then begin
     PanelPaint;
     Update;
   end;

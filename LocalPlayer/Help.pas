@@ -110,7 +110,7 @@ type
     procedure ShowNewContentProcExecute(NewMode: Integer; HelpContext: string);
     procedure WaterSign(x0, y0, iix: Integer);
     procedure Search(SearchString: string);
-    procedure OnScroll(var m: TMessage); message WM_VSCROLL;
+    procedure OnScroll(var Msg: TMessage); message WM_VSCROLL;
     procedure OnMouseLeave(var Msg: TMessage); message CM_MOUSELEAVE;
   public
     HistItems: THistItems;
@@ -350,10 +350,10 @@ begin
   Close;
 end;
 
-procedure THelpDlg.OnScroll(var m: TMessage);
+procedure THelpDlg.OnScroll(var Msg: TMessage);
 begin
   { TODO: Handled by MouseWheel event
-  if ScrollBar.Process(m) then begin
+  if ScrollBar.Process(Msg) then begin
     Sel := -1;
     SmartUpdateContent(true)
   end;
@@ -451,9 +451,10 @@ const
   nHeaven = 28;
   MaxSum = 9 * 9 * 255 * 75 div 100;
 var
-  x, y, dx, dy, xSrc, ySrc, sum, xx: integer;
+  x, y, dx, dy, xSrc, ySrc, Sum, xx: integer;
   Heaven: array [0..nHeaven] of integer;
-  PaintPtr, CoalPtr: TPixelPointer;
+  PaintPtr: TPixelPointer;
+  CoalPtr: TPixelPointer;
   ImpPtr: array [-1..1] of TPixelPointer;
 begin
   // assume eiffel tower has free common heaven
@@ -465,40 +466,45 @@ begin
   Offscreen.BeginUpdate;
   xSrc := iix mod 7 * xSizeBig;
   ySrc := (iix div 7 + 1) * ySizeBig;
-  for y := 0 to ScaleToNative(ySizeBig) * 2 - 1 do
+  PaintPtr := PixelPointer(OffScreen, ScaleToNative(x0), ScaleToNative(y0));
+  CoalPtr := PixelPointer(Templates.Data, ScaleToNative(xCoal), ScaleToNative(yCoal));
+  for dy := -1 to 1 do
+    ImpPtr[dy] := PixelPointer(BigImp, ScaleToNative(xSrc), ScaleToNative(ySrc));
+  for y := 0 to ScaleToNative(ySizeBig) * 2 - 1 do begin
     if ((ScaleToNative(y0) + y) >= 0) and ((ScaleToNative(y0) + y) < ScaleToNative(InnerHeight)) then begin
-      PaintPtr := PixelPointer(OffScreen, 0, ScaleToNative(y0) + y);
-      CoalPtr := PixelPointer(Templates.Data, 0, ScaleToNative(yCoal) + y);
       for dy := -1 to 1 do
         if ((Max(y + ScaleToNative(dy), 0) shr 1) >= 0) and ((Max(y + ScaleToNative(dy), 0) shr 1) < ScaleToNative(ySizeBig)) then
-          ImpPtr[dy] := PixelPointer(BigImp, 0, ScaleToNative(ySrc) + (Max(y + ScaleToNative(dy), 0) shr 1));
-      for x := 0 to ScaleToNative(xSizeBig) * 2 - 1 do begin
-        sum := 0;
+          ImpPtr[dy].SetXY(0, Max(y + ScaleToNative(dy), 0) shr 1);
+      for x := 0 to ScaleToNative(xSizeBig * 2) - 1 do begin
+        Sum := 0;
         for dx := -1 to 1 do begin
-          xx := ScaleToNative(xSrc) + Max((x + ScaleToNative(dx)), 0) shr 1;
+          xx := Max((x + ScaleToNative(dx)), 0) shr 1;
           for dy := -1 to 1 do begin
             ImpPtr[dy].SetX(xx);
             if ((y + ScaleToNative(dy)) shr 1 < 0) or ((y + ScaleToNative(dy)) shr 1 >= ScaleToNative(ySizeBig)) or
               ((x + ScaleToNative(dx)) shr 1 < 0) or ((x + ScaleToNative(dx)) shr 1 >= ScaleToNative(xSizeBig)) or
               ((y + ScaleToNative(dy)) shr 1 < ScaleToNative(nHeaven)) and
               (ImpPtr[dy].Pixel^.B shl 16 + ImpPtr[dy].Pixel^.G shl 8 +
-              ImpPtr[dy].Pixel^.R = Heaven[(ScaleFromNative(y) + dy) shr 1]) then
-              sum := sum + 9 * 255
+              ImpPtr[dy].Pixel^.R = Heaven[(ScaleFromNative(y + ScaleToNative(dy))) shr 1]) then
+              Sum := Sum + 9 * 255
             else
-              sum := sum + ImpPtr[dy].Pixel^.B + 5 * ImpPtr[dy].Pixel^.G + 3 *
+              Sum := Sum + ImpPtr[dy].Pixel^.B + 5 * ImpPtr[dy].Pixel^.G + 3 *
                 ImpPtr[dy].Pixel^.R;
           end;
         end;
-        if sum < MaxSum then begin // no saturation
-          CoalPtr.SetX(ScaleToNative(xCoal) + x);
-          sum := 1 shl 22 - (MaxSum - sum) * (256 - CoalPtr.Pixel^.B * 2);
-          PaintPtr.SetX(x0 + x);
-          PaintPtr.Pixel^.B := PaintPtr.Pixel^.B * sum shr 22;
-          PaintPtr.Pixel^.G := PaintPtr.Pixel^.G * sum shr 22;
-          PaintPtr.Pixel^.R := PaintPtr.Pixel^.R * sum shr 22;
+        if Sum < MaxSum then begin // no saturation
+          Sum := 1 shl 22 - (MaxSum - Sum) * (256 - CoalPtr.Pixel^.B * 2);
+          PaintPtr.Pixel^.B := Min(PaintPtr.Pixel^.B * Sum shr 22, 255);
+          PaintPtr.Pixel^.G := Min(PaintPtr.Pixel^.G * Sum shr 22, 255);
+          PaintPtr.Pixel^.R := Min(PaintPtr.Pixel^.R * Sum shr 22, 255);
         end;
+        PaintPtr.NextPixel;
+        CoalPtr.NextPixel;
       end;
     end;
+    PaintPtr.NextLine;
+    CoalPtr.NextLine;
+  end;
   Offscreen.EndUpdate;
   BigImp.EndUpdate;
 end;
