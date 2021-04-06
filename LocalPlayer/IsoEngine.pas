@@ -254,14 +254,15 @@ begin
   Mask24.BeginUpdate;
   for ySrc := 0 to TerrainIconLines - 1 do begin
     for i := 0 to yyt * 3 - 1 do
-      MaskLine[i] := PixelPointer(Mask24, 0, 1 + ySrc * (yyt * 3 + 1) + i);
+      MaskLine[i] := PixelPointer(Mask24, ScaleToNative(0),
+        ScaleToNative(1 + ySrc * (yyt * 3 + 1) + i));
     for xSrc := 0 to TerrainIconCols - 1 do begin
       i := ySrc * 9 + xSrc;
       TSpriteSize[i].Left := 0;
       repeat
         Border := true;
         for y := 0 to yyt * 3 - 1 do begin
-          MaskLine[y].SetX(1 + xSrc * (xxt * 2 + 1) + TSpriteSize[i].Left);
+          MaskLine[y].SetX(ScaleToNative(1 + xSrc * (xxt * 2 + 1) + TSpriteSize[i].Left));
           if MaskLine[y].Pixel^.B = 0 then Border := false;
         end;
         if Border then Inc(TSpriteSize[i].Left);
@@ -270,7 +271,7 @@ begin
       repeat
         Border := true;
         for x := 0 to xxt * 2 - 1 do begin
-          MaskLine[TSpriteSize[i].Top].SetX(1 + xSrc * (xxt * 2 + 1) + x);
+          MaskLine[TSpriteSize[i].Top].SetX(ScaleToNative(1 + xSrc * (xxt * 2 + 1) + x));
           if MaskLine[TSpriteSize[i].Top].Pixel^.B = 0 then Border := false;
         end;
         if Border then inc(TSpriteSize[i].Top);
@@ -279,7 +280,7 @@ begin
       repeat
         Border := true;
         for y := 0 to yyt * 3 - 1 do begin
-          MaskLine[y].SetX(xSrc * (xxt * 2 + 1) + TSpriteSize[i].Right);
+          MaskLine[y].SetX(ScaleToNative(xSrc * (xxt * 2 + 1) + TSpriteSize[i].Right));
           if MaskLine[y].Pixel^.B = 0 then Border := false;
         end;
         if Border then Dec(TSpriteSize[i].Right);
@@ -288,7 +289,7 @@ begin
       repeat
         Border := true;
         for x := 0 to xxt * 2 - 1 do begin
-          MaskLine[TSpriteSize[i].Bottom - 1].SetX(1 + xSrc * (xxt * 2 + 1) + x);
+          MaskLine[TSpriteSize[i].Bottom - 1].SetX(ScaleToNative(1 + xSrc * (xxt * 2 + 1) + x));
           if MaskLine[TSpriteSize[i].Bottom - 1].Pixel^.B = 0 then Border := false;
         end;
         if Border then Dec(TSpriteSize[i].Bottom);
