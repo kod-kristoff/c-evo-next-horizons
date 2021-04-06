@@ -205,7 +205,7 @@ begin
   IsoMap := TIsoMap.Create;
   OKBtn.Caption := Phrases.Lookup('BTN_YES');
   CancelBtn.Caption := Phrases.Lookup('BTN_NO');
-  InitButtons();
+  InitButtons;
 end;
 
 procedure TBattleDlg.FormShow(Sender: TObject);

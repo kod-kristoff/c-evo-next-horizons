@@ -300,7 +300,7 @@ begin
   CaptionFont := Font.Create;
   CaptionFont.Assign(UniFont[ftNormal]);
   CaptionFont.Style := CaptionFont.Style + [fsItalic, fsBold];
-  InitButtons();
+  InitButtons;
 
   TopBtn.Hint := Phrases.Lookup('BTN_CONTENTS');
   BackBtn.Hint := Phrases.Lookup('BTN_BACK');

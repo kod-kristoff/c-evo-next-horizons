@@ -207,7 +207,7 @@ begin
   OpenSoundEvent := -1;
   AgePrepared := -2;
   Optimize_cixTileChange := -1;
-  InitButtons();
+  InitButtons;
   // InitWindowRegion;
   CloseBtn.Caption := Phrases.Lookup('BTN_OK');
   BuyBtn.Hint := Phrases.Lookup('BTN_BUY');

@@ -62,7 +62,7 @@ procedure TCityTypeDlg.FormCreate(Sender: TObject);
 begin
   inherited;
   CaptionRight := CloseBtn.Left;
-  InitButtons();
+  InitButtons;
   HelpContext := 'MACRO';
   Caption := Phrases.Lookup('TITLE_CITYTYPES');
   DeleteBtn.Hint := Phrases.Lookup('BTN_DELETE');
@@ -70,7 +70,7 @@ end;
 
 procedure TCityTypeDlg.CloseBtnClick(Sender: TObject);
 begin
-  Close
+  Close;
 end;
 
 procedure TCityTypeDlg.FormPaint(Sender: TObject);
@@ -136,7 +136,7 @@ begin
       Font.Color := MainTexture.clTextLight;
       Textout(xList + 20 + i mod nListCol * 42 - TextWidth(s) div 2,
         yList + 15 + i div nListCol * 32 - TextHeight(s) div 2, s);
-    end
+    end;
   end;
 
   i := 0;
@@ -200,9 +200,9 @@ begin
   while MyData.ImpOrder[ctype, i] >= 0 do
   begin
     include(listed, MyData.ImpOrder[ctype, i]);
-    inc(i)
+    inc(i);
   end;
-  Changed := false
+  Changed := false;
 end;
 
 procedure TCityTypeDlg.SaveType;
@@ -214,7 +214,7 @@ begin
     for cix := 0 to MyRO.nCity - 1 do
       if (MyCity[cix].Loc >= 0) and (MyCity[cix].Status and 7 = ctype + 1) then
         AutoBuild(cix, MyData.ImpOrder[ctype]);
-    Changed := false
+    Changed := false;
   end;
 end;
 
@@ -251,7 +251,7 @@ begin
     begin
       dragiix := MyData.ImpOrder[ctype, i];
       Screen.Cursor := crImpDrag;
-      SmartUpdateContent
+      SmartUpdateContent;
     end;
     exit;
   end;
@@ -267,7 +267,7 @@ begin
     begin
       dragiix := Pooliix[i];
       Screen.Cursor := crImpDrag;
-      SmartUpdateContent
+      SmartUpdateContent;
     end;
     exit;
   end;
@@ -278,8 +278,8 @@ begin
   begin
     SaveType;
     LoadType(i);
-    SmartUpdateContent
-  end
+    SmartUpdateContent;
+  end;
 end;
 
 procedure TCityTypeDlg.PaintBox1MouseUp(Sender: TObject; Button: TMouseButton;
@@ -317,18 +317,18 @@ begin
         nImp - i - 1);
       MyData.ImpOrder[ctype, i] := dragiix;
       include(listed, dragiix);
-      Changed := true
+      Changed := true;
     end
     else if (dragiix in listed) and (x >= xPool) and (x < xPool + nPoolCol * 42)
       and (y >= yPool) and (y < yPool + nPoolRow * 32) then
     begin
       UnList(dragiix);
-      Changed := true
+      Changed := true;
     end;
     dragiix := -1;
-    SmartUpdateContent
+    SmartUpdateContent;
   end;
-  Screen.Cursor := crDefault
+  Screen.Cursor := crDefault;
 end;
 
 procedure TCityTypeDlg.FormClose(Sender: TObject; var Action: TCloseAction);

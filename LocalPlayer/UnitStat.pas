@@ -76,7 +76,7 @@ begin
   NoMap := TIsoMap.Create;
   AgePrepared := -2;
   TitleHeight := Screen.Height;
-  InitButtons();
+  InitButtons;
 
   Back := TBitmap.Create;
   Back.PixelFormat := pf24bit;

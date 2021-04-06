@@ -64,7 +64,7 @@ begin
   NoMap := TIsoMap.Create;
   CaptionRight := CloseBtn.Left;
   CaptionLeft := ToggleBtn.Left + ToggleBtn.Width;
-  InitButtons();
+  InitButtons;
   HelpContext := 'MACRO';
   Caption := Phrases.Lookup('TITLE_ENHANCE');
   ToggleBtn.Hint := Phrases.Lookup('BTN_SELECT');

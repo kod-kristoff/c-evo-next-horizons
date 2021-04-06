@@ -131,7 +131,7 @@ begin
   InnerHeight := Height - TitleHeight - NarrowFrame;
   CaptionRight := CloseBtn.Left;
   CaptionLeft := ToggleBtn.Left + ToggleBtn.Width;
-  InitButtons();
+  InitButtons;
 end;
 
 procedure TDiaDlg.CloseBtnClick(Sender: TObject);

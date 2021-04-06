@@ -41,7 +41,7 @@ const
 procedure TRatesDlg.FormCreate(Sender: TObject);
 begin
   TitleHeight := Screen.Height;
-  InitButtons();
+  InitButtons;
 end;
 
 procedure TRatesDlg.OffscreenPaint;

@@ -79,7 +79,7 @@ begin
   Canvas.Brush.Style := bsClear;
   Canvas.Font.Assign(UniFont[ftSmall]);
   TitleHeight := 36;
-  InitButtons();
+  InitButtons;
   LastShowYearTime := 0;
 end;
 

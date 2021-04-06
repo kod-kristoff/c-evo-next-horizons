@@ -80,7 +80,7 @@ begin
   AgePrepared := -2;
   GetMem(SelfReport, SizeOf(TEnemyReport) - 2 * (INFIN + 1));
   ReportText := TStringList.Create;
-  InitButtons();
+  InitButtons;
   ContactBtn.Template := Templates.Data;
   HelpContext := 'DIPLOMACY';
   ToggleBtn.Hint := Phrases.Lookup('BTN_SELECT');

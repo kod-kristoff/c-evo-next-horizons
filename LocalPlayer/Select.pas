@@ -113,7 +113,7 @@ begin
   sb := TPVScrollbar.Create(Self);
   sb.SetBorderSpacing(36, 10, 36);
   sb.OnUpdate := ScrollBarUpdate;
-  InitButtons();
+  InitButtons;
   Kind := kMission;
   Layer0Btn.Hint := Phrases.Lookup('BTN_IMPRS');
   Layer1Btn.Hint := Phrases.Lookup('BTN_WONDERS');

@@ -36,7 +36,7 @@ begin
   Canvas.Font.Assign(UniFont[ftNormal]);
   Canvas.Brush.Style := bsClear;
   TitleHeight := Height;
-  InitButtons();
+  InitButtons;
   Center := true;
 end;
 

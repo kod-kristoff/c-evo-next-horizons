@@ -143,7 +143,7 @@ procedure TNegoDlg.FormCreate(Sender: TObject);
 var
   cix: integer;
 begin
-  InitButtons();
+  InitButtons;
   for cix := 0 to ComponentCount - 1 do
     if Components[cix] is TButtonN then
       with TButtonN(Components[cix]) do

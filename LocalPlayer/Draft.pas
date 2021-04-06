@@ -67,7 +67,7 @@ const
 procedure TDraftDlg.FormCreate(Sender: TObject);
 begin
   inherited;
-  InitButtons();
+  InitButtons;
   HelpContext := 'CLASSES';
   Caption := Phrases.Lookup('TITLE_DRAFT');
   OKBtn.Caption := Phrases.Lookup('BTN_OK');
