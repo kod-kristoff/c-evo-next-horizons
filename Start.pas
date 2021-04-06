@@ -1749,6 +1749,7 @@ begin
     FullScreen := not FullScreen;
     UpdateInterface;
     Background.UpdateInterface;
+    SetFocus;
   end else
   if BHelp.Test(ShortCut) then
     DirectHelp(cStartHelp);
