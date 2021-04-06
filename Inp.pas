@@ -45,9 +45,9 @@ begin
   PaintBackground(self, 3, 3, ClientWidth - 6, ClientHeight - 6);
   Frame(Canvas, 0, 0, ClientWidth - 1, ClientHeight - 1, 0, 0);
   Frame(Canvas, 1, 1, ClientWidth - 2, ClientHeight - 2,
-    MainTexture.clBevelLight, MainTexture.clBevelShade);
+    MainTexture.ColorBevelLight, MainTexture.ColorBevelShade);
   Frame(Canvas, 2, 2, ClientWidth - 3, ClientHeight - 3,
-    MainTexture.clBevelLight, MainTexture.clBevelShade);
+    MainTexture.ColorBevelLight, MainTexture.ColorBevelShade);
   EditFrame(Canvas, EInput.BoundsRect, MainTexture);
   BtnFrame(Canvas, OKBtn.BoundsRect, MainTexture);
   RisedTextOut(Canvas, (ClientWidth - BiColorTextWidth(Canvas, Caption)) div 2,
@@ -83,7 +83,7 @@ end;
 procedure TInputDlg.FormShow(Sender: TObject);
 begin
   OKBtn.Caption := Phrases.Lookup('BTN_OK');
-  EInput.Font.Color := MainTexture.clMark;
+  EInput.Font.Color := MainTexture.ColorMark;
   EInput.SelStart := 0;
   EInput.SelLength := Length(EInput.Text);
   if Center then

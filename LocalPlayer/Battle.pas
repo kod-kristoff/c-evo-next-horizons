@@ -242,11 +242,11 @@ begin
       ClientWidth - (6 + 2 * Border), ClientHeight - (6 + 2 * Border))
   end;
   Frame(Canvas, Border + 1, Border + 1, ClientWidth - (2 + Border),
-    ClientHeight - (2 + Border), MainTexture.clBevelLight,
-    MainTexture.clBevelShade);
+    ClientHeight - (2 + Border), MainTexture.ColorBevelLight,
+    MainTexture.ColorBevelShade);
   Frame(Canvas, 2 + Border, 2 + Border, ClientWidth - (3 + Border),
-    ClientHeight - (3 + Border), MainTexture.clBevelLight,
-    MainTexture.clBevelShade);
+    ClientHeight - (3 + Border), MainTexture.ColorBevelLight,
+    MainTexture.ColorBevelShade);
 
   if IsSuicideQuery then
   begin

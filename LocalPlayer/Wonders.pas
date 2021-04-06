@@ -198,12 +198,12 @@ begin
   OffscreenUser := Self;
 
   Fill(Offscreen.Canvas, 3, 3, ClientWidth - 6, ClientHeight - 6,
-    (wMaintexture - ClientWidth) div 2, (hMaintexture - ClientHeight) div 2);
+    (Maintexture.Width - ClientWidth) div 2, (Maintexture.Height - ClientHeight) div 2);
   Frame(Offscreen.Canvas, 0, 0, ClientWidth - 1, ClientHeight - 1, 0, 0);
   Frame(Offscreen.Canvas, 1, 1, ClientWidth - 2, ClientHeight - 2,
-    MainTexture.clBevelLight, MainTexture.clBevelShade);
+    MainTexture.ColorBevelLight, MainTexture.ColorBevelShade);
   Frame(Offscreen.Canvas, 2, 2, ClientWidth - 3, ClientHeight - 3,
-    MainTexture.clBevelLight, MainTexture.clBevelShade);
+    MainTexture.ColorBevelLight, MainTexture.ColorBevelShade);
   Corner(Offscreen.Canvas, 1, 1, 0, MainTexture);
   Corner(Offscreen.Canvas, ClientWidth - 9, 1, 1, MainTexture);
   Corner(Offscreen.Canvas, 1, ClientHeight - 9, 2, MainTexture);
@@ -229,8 +229,8 @@ begin
         WonderNotBuiltYet: begin
           Fill(Offscreen.Canvas, Center.X - xSizeBig div 2 + RingPosition[I].X - 3,
             Center.Y - ySizeBig div 2 + RingPosition[I].Y - 3, xSizeBig + 6,
-            ySizeBig + 6, (wMaintexture - ClientWidth) div 2,
-            (hMaintexture - ClientHeight) div 2);
+            ySizeBig + 6, (Maintexture.Width - ClientWidth) div 2,
+            (Maintexture.Height - ClientHeight) div 2);
         end;
         WonderDestroyed: begin
           HaveWonder := True;
@@ -307,7 +307,7 @@ begin
   if Selection <> OldSelection then
   begin
     Fill(Canvas, 9, ClientHeight - 3 - 46, ClientWidth - 18, 44,
-      (wMaintexture - ClientWidth) div 2, (hMaintexture - ClientHeight) div 2);
+      (Maintexture.Width - ClientWidth) div 2, (Maintexture.Height - ClientHeight) div 2);
     if Selection >= 0 then
     begin
       if MyRO.Wonder[Selection].CityID = WonderNotBuiltYet then
@@ -317,7 +317,7 @@ begin
           Canvas.TextOut(
           (ClientWidth-BiColorTextWidth(Canvas,S)) div 2+1,
           ClientHeight-3-36+1, S);
-          Canvas.Font.Color:=MainTexture.clBevelLight;
+          Canvas.Font.Color:=MainTexture.ColorBevelLight;
           Canvas.TextOut(
           (ClientWidth-BiColorTextWidth(Canvas,S)) div 2,
           ClientHeight-3-36, S); }

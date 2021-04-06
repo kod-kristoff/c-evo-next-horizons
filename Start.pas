@@ -536,36 +536,36 @@ begin
   if Page in [pgStartRandom, pgStartMap] then
   begin
     Frame(Canvas, 328, yMain + 112 - 15, ClientWidth, Up2Btn.top + 38,
-      MainTexture.clBevelShade, MainTexture.clBevelLight);
+      MainTexture.ColorBevelShade, MainTexture.ColorBevelLight);
     if AutoDiff > 0 then
     begin
       Frame(Canvas, -1 { x0Brain-dxBrain } ,
         yMain + 112 - 15 { Up1Btn.Top-12 }{ y0Brain-dyBrain } ,
         x0Brain + dxBrain + 64, Up2Btn.top + 38 { y0Brain+dyBrain+64 } ,
-        MainTexture.clBevelShade, MainTexture.clBevelLight);
+        MainTexture.ColorBevelShade, MainTexture.ColorBevelLight);
     end;
   end
   else if Page <> pgMain then
     Frame(Canvas, 328, Up1Btn.top - 15, ClientWidth, Up2Btn.top + 38,
-      MainTexture.clBevelShade, MainTexture.clBevelLight);
+      MainTexture.ColorBevelShade, MainTexture.ColorBevelLight);
   Frame(Canvas, 0, 0, ClientWidth - 1, ClientHeight - 1, 0, 0);
 
   // draw tabs
   Frame(Canvas, 2, 2 + 2 * integer(Tab <> tbMain), TabOffset + (0 + 1) * TabSize - 1,
-    TabHeight, MainTexture.clBevelLight, MainTexture.clBevelShade);
+    TabHeight, MainTexture.ColorBevelLight, MainTexture.ColorBevelShade);
   Frame(Canvas, 1, 1 + 2 * integer(Tab <> tbMain), TabOffset + (0 + 1) * TabSize,
-    TabHeight, MainTexture.clBevelLight, MainTexture.clBevelShade);
-  Canvas.Pixels[1, 1 + 2 * integer(Tab <> tbMain)] := MainTexture.clBevelShade;
+    TabHeight, MainTexture.ColorBevelLight, MainTexture.ColorBevelShade);
+  Canvas.Pixels[1, 1 + 2 * integer(Tab <> tbMain)] := MainTexture.ColorBevelShade;
   for Tab2 := tbMap to tbPrevious do
   begin
     Frame(Canvas, TabOffset + Integer(Tab2) * TabSize + 2, 2 + 2 * integer(Tab <> Tab2),
-      TabOffset + (Integer(Tab2) + 1) * TabSize - 1, TabHeight, MainTexture.clBevelLight,
-      MainTexture.clBevelShade);
+      TabOffset + (Integer(Tab2) + 1) * TabSize - 1, TabHeight, MainTexture.ColorBevelLight,
+      MainTexture.ColorBevelShade);
     Frame(Canvas, TabOffset + Integer(Tab2) * TabSize + 1, 1 + 2 * integer(Tab <> Tab2),
-      TabOffset + (Integer(Tab2) + 1) * TabSize, TabHeight, MainTexture.clBevelLight,
-      MainTexture.clBevelShade);
+      TabOffset + (Integer(Tab2) + 1) * TabSize, TabHeight, MainTexture.ColorBevelLight,
+      MainTexture.ColorBevelShade);
     Canvas.Pixels[TabOffset + Integer(Tab2) * TabSize + 1, 1 + 2 * integer(Tab <> Tab2)] :=
-      MainTexture.clBevelShade;
+      MainTexture.ColorBevelShade;
   end;
   Canvas.Font.Assign(UniFont[ftNormal]);
   for Tab2 := tbMap to tbPrevious do
@@ -578,27 +578,27 @@ begin
   Frame(Canvas, TabOffset + 4 * TabSize + 1, -1, ClientWidth, TabHeight,
     $000000, $000000);
   Frame(Canvas, 1, TabHeight + 1, ClientWidth - 2, ClientHeight - 2,
-    MainTexture.clBevelLight, MainTexture.clBevelShade);
+    MainTexture.ColorBevelLight, MainTexture.ColorBevelShade);
   Frame(Canvas, 2, TabHeight + 2, ClientWidth - 3, ClientHeight - 3,
-    MainTexture.clBevelLight, MainTexture.clBevelShade);
+    MainTexture.ColorBevelLight, MainTexture.ColorBevelShade);
   if Tab = tbMain then
   begin
     PaintBackground(self, 3, TabHeight - 1, TabSize - 4 - 3 + TabOffset + 3, 4);
-    Canvas.Pixels[2, TabHeight] := MainTexture.clBevelLight;
+    Canvas.Pixels[2, TabHeight] := MainTexture.ColorBevelLight;
   end
   else
   begin
     PaintBackground(self, TabOffset + 3 + Integer(Tab) * TabSize, TabHeight - 1,
       TabSize - 4, 4);
     Canvas.Pixels[TabOffset + Integer(Tab) * TabSize + 2, TabHeight] :=
-      MainTexture.clBevelLight;
+      MainTexture.ColorBevelLight;
   end;
   Canvas.Pixels[TabOffset + (Integer(Tab) + 1) * TabSize - 1, TabHeight + 1] :=
-    MainTexture.clBevelShade;
+    MainTexture.ColorBevelShade;
   if Tab < tbPrevious then
     Frame(Canvas, TabOffset + (Integer(Tab) + 1) * TabSize + 1, 3,
-      TabOffset + (Integer(Tab) + 1) * TabSize + 2, TabHeight, MainTexture.clBevelShade,
-      MainTexture.clBevelShade); // Tab shadow
+      TabOffset + (Integer(Tab) + 1) * TabSize + 2, TabHeight, MainTexture.ColorBevelShade,
+      MainTexture.ColorBevelShade); // Tab shadow
 
   // Paint menu logo
   UnshareBitmap(LogoBuffer);
@@ -684,8 +684,8 @@ begin
           BitBltCanvas(Canvas, 9 + i * 27, yLogo - 2, Ornament.Width, Ornament.Height,
             HGrSystem2.Data.Canvas, Ornament.Left, Ornament.Top, SRCPAINT);
         end;
-      PaintLogo(Canvas, 69 + 11 * 27, yLogo, MainTexture.clBevelLight,
-        MainTexture.clBevelShade);
+      PaintLogo(Canvas, 69 + 11 * 27, yLogo, MainTexture.ColorBevelLight,
+        MainTexture.ColorBevelShade);
 
       for i := 0 to nPlOffered - 1 do
         if 1 shl i and SlotAvailable <> 0 then
@@ -705,7 +705,7 @@ begin
               yBrain[i] + (19 + 14), $000000, $000000);
             RFrame(Canvas, PlayerSlots[i].DiffUpBtn.left - 1, PlayerSlots[i].DiffUpBtn.top - 1,
               PlayerSlots[i].DiffUpBtn.left + 12, PlayerSlots[i].DiffUpBtn.top + 24,
-              MainTexture.clBevelShade, MainTexture.clBevelLight);
+              MainTexture.ColorBevelShade, MainTexture.ColorBevelLight);
             with Canvas do
             begin
               Brush.Color := $000000;
@@ -717,7 +717,7 @@ begin
             begin
               RFrame(Canvas, PlayerSlots[I].MultiBtn.left - 1, PlayerSlots[I].MultiBtn.top - 1,
                 PlayerSlots[I].MultiBtn.left + 12, PlayerSlots[I].MultiBtn.top + 12,
-                MainTexture.clBevelShade, MainTexture.clBevelLight);
+                MainTexture.ColorBevelShade, MainTexture.ColorBevelLight);
               BitBltCanvas(Canvas, xBrain[i] - 31, yBrain[i], 13, 12,
                 HGrSystem.Data.Canvas, 88, 47);
             end;
@@ -732,8 +732,8 @@ begin
     end
     else
     begin
-      DLine(Canvas, 24, 198, yMain + 140 + 19, MainTexture.clBevelLight,
-        MainTexture.clBevelShade);
+      DLine(Canvas, 24, 198, yMain + 140 + 19, MainTexture.ColorBevelLight,
+        MainTexture.ColorBevelShade);
       RisedTextOut(Canvas, 24 { x0Brain+32-BiColorTextWidth(Canvas,s) div 2 } ,
         yMain + 140 { y0Mini-77 } , Phrases.Lookup('STARTCONTROLS', 15));
       if Page = pgStartRandom then
@@ -745,7 +745,7 @@ begin
       RisedTextOut(Canvas, 198 - BiColorTextWidth(Canvas, s), yMain + 140, s);
 
       DLine(Canvas, 24, xDefault - 6, yMain + 164 + 19,
-        MainTexture.clBevelLight, MainTexture.clBevelShade);
+        MainTexture.ColorBevelLight, MainTexture.ColorBevelShade);
       RisedTextOut(Canvas, 24 { x0Brain+32-BiColorTextWidth(Canvas,s) div 2 } ,
         yMain + 164 { y0Mini-77 } , Phrases.Lookup('STARTCONTROLS', 16));
       if AutoDiff = 1 then
@@ -754,8 +754,8 @@ begin
       else
         FrameImage(Canvas, BrainDefault.Picture, xDefault, yDefault, 64, 64,
           0, 0, true);
-      DLine(Canvas, 56, 272, y0Mini + 61 + 19, MainTexture.clBevelLight,
-        MainTexture.clBevelShade);
+      DLine(Canvas, 56, 272, y0Mini + 61 + 19, MainTexture.ColorBevelLight,
+        MainTexture.ColorBevelShade);
 
       RisedTextOut(Canvas, 56, y0Mini + 61,
         Phrases.Lookup('STARTCONTROLS', 14));
@@ -770,8 +770,8 @@ begin
           BitBltCanvas(Canvas, 9 + i * 27, yLogo - 2, Ornament.Width, Ornament.Height,
             HGrSystem2.Data.Canvas, Ornament.Left, Ornament.Top, SRCPAINT);
         end;
-      PaintLogo(Canvas, 69, yLogo, MainTexture.clBevelLight,
-        MainTexture.clBevelShade);
+      PaintLogo(Canvas, 69, yLogo, MainTexture.ColorBevelLight,
+        MainTexture.ColorBevelShade);
     end;
   end
   else if Page = pgLoad then
@@ -787,8 +787,8 @@ begin
         + 2, yTurnSlider + 9, $FFFFFF, $B0B0B0);
     end
     else
-      DLine(Canvas, 344, 514, y0Mini + 61 + 19, MainTexture.clBevelLight,
-        MainTexture.clBevelShade);
+      DLine(Canvas, 344, 514, y0Mini + 61 + 19, MainTexture.ColorBevelLight,
+        MainTexture.ColorBevelShade);
     RisedTextOut(Canvas, 344, y0Mini + 61, Phrases.Lookup('STARTCONTROLS', 8));
     s := TurnToString(LoadTurn);
     RisedTextOut(Canvas, 514 - BiColorTextWidth(Canvas, s), y0Mini + 61, s);
@@ -804,7 +804,7 @@ begin
   end
   else if Page = pgEditMap then
   begin
-    // DLine(Canvas,344,514,y0Mini+61+19,MainTexture.clBevelLight,MainTexture.clBevelShade);
+    // DLine(Canvas,344,514,y0Mini+61+19,MainTexture.ColorBevelLight,MainTexture.ColorBevelShade);
     s := Format(Phrases2.Lookup('MAPPROP'),
       [(nMapLandTiles * 100 + 556) div 1112,
       // 1112 is typical for world with 100% size and default land mass
@@ -817,22 +817,22 @@ begin
     BtnFrame(Canvas, StartBtn.BoundsRect, MainTexture);
   if Up2Btn.Visible then
     RFrame(Canvas, Up2Btn.left - 1, Up2Btn.top - 1, Up2Btn.left + 12,
-      Up2Btn.top + 24, MainTexture.clBevelShade, MainTexture.clBevelLight);
+      Up2Btn.top + 24, MainTexture.ColorBevelShade, MainTexture.ColorBevelLight);
   if Up1Btn.Visible then
     RFrame(Canvas, Up1Btn.left - 1, Up1Btn.top - 1, Up1Btn.left + 12,
-      Up1Btn.top + 24, MainTexture.clBevelShade, MainTexture.clBevelLight);
+      Up1Btn.top + 24, MainTexture.ColorBevelShade, MainTexture.ColorBevelLight);
   if AutoDiffUpBtn.Visible then
     RFrame(Canvas, AutoDiffUpBtn.left - 1, AutoDiffUpBtn.top - 1,
-      AutoDiffUpBtn.left + 12, AutoDiffUpBtn.top + 24, MainTexture.clBevelShade,
-      MainTexture.clBevelLight);
+      AutoDiffUpBtn.left + 12, AutoDiffUpBtn.top + 24, MainTexture.ColorBevelShade,
+      MainTexture.ColorBevelLight);
   if AutoEnemyUpBtn.Visible then
     RFrame(Canvas, AutoEnemyUpBtn.left - 1, AutoEnemyUpBtn.top - 1,
       AutoEnemyUpBtn.left + 12, AutoEnemyUpBtn.top + 24,
-      MainTexture.clBevelShade, MainTexture.clBevelLight);
+      MainTexture.ColorBevelShade, MainTexture.ColorBevelLight);
   if CustomizeBtn.Visible then
     RFrame(Canvas, CustomizeBtn.left - 1, CustomizeBtn.top - 1,
-      CustomizeBtn.left + 12, CustomizeBtn.top + 12, MainTexture.clBevelShade,
-      MainTexture.clBevelLight);
+      CustomizeBtn.left + 12, CustomizeBtn.top + 12, MainTexture.ColorBevelShade,
+      MainTexture.ColorBevelLight);
   if List.Visible then
     EditFrame(Canvas, List.BoundsRect, MainTexture);
   if RenameBtn.Visible then
@@ -847,11 +847,11 @@ begin
     xMini := x0Mini - MiniMap.Size.X;
     yMini := y0Mini - MiniMap.Size.Y div 2;
     Frame(Canvas, xMini, yMini, xMini + 3 + MiniMap.Size.X * 2,
-      yMini + 3 + MiniMap.Size.Y, MainTexture.clBevelLight,
-      MainTexture.clBevelShade);
+      yMini + 3 + MiniMap.Size.Y, MainTexture.ColorBevelLight,
+      MainTexture.ColorBevelShade);
     Frame(Canvas, xMini + 1, yMini + 1, xMini + 2 + MiniMap.Size.X * 2,
-      yMini + 2 + MiniMap.Size.Y, MainTexture.clBevelShade,
-      MainTexture.clBevelLight);
+      yMini + 2 + MiniMap.Size.Y, MainTexture.ColorBevelShade,
+      MainTexture.ColorBevelLight);
 
     s := '';
     if MiniMap.Mode = mmPicture then
@@ -877,11 +877,11 @@ end;
 
 procedure TStartDlg.FormShow(Sender: TObject);
 begin
-  SetMainTextureByAge(-1);
-  List.Font.Color := MainTexture.clMark;
+  MainTexture.Age := -1;
+  List.Font.Color := MainTexture.ColorMark;
 
   Fill(EmptyPicture.Canvas, Bounds(0, 0, 64, 64),
-    Point((wMaintexture - 64) div 2, (hMaintexture - 64) div 2));
+    Point((Maintexture.Width - 64) div 2, (Maintexture.Height - 64) div 2));
 
   DarkenImage(EmptyPicture, 28);
 

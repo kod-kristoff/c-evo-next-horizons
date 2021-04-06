@@ -140,16 +140,16 @@ begin
   PaintBackground(self, 3, 3, ClientWidth - 6, ClientHeight - 6);
   Frame(Canvas, 0, 0, ClientWidth - 1, ClientHeight - 1, 0, 0);
   Frame(Canvas, 1, 1, ClientWidth - 2, ClientHeight - 2,
-    MainTexture.clBevelLight, MainTexture.clBevelShade);
+    MainTexture.ColorBevelLight, MainTexture.ColorBevelShade);
   Frame(Canvas, 2, 2, ClientWidth - 3, ClientHeight - 3,
-    MainTexture.clBevelLight, MainTexture.clBevelShade);
+    MainTexture.ColorBevelLight, MainTexture.ColorBevelShade);
   EditFrame(Canvas, List.BoundsRect, MainTexture);
   BtnFrame(Canvas, OKBtn.BoundsRect, MainTexture);
   BtnFrame(Canvas, CancelBtn.BoundsRect, MainTexture);
 
   RFrame(Canvas, ButtonFullscreen.Left - 1, ButtonFullscreen.Top - 1,
-    ButtonFullscreen.Left + 12, ButtonFullscreen.Top + 12, MainTexture.clBevelShade,
-    MainTexture.clBevelLight);
+    ButtonFullscreen.Left + 12, ButtonFullscreen.Top + 12, MainTexture.ColorBevelShade,
+    MainTexture.ColorBevelLight);
 
   S := Phrases.Lookup('SETTINGS', 0);
   LoweredTextOut(Canvas, -2, MainTexture, ButtonFullscreen.Left + 32,
@@ -163,7 +163,7 @@ end;
 procedure TSettingsDlg.FormShow(Sender: TObject);
 begin
   Languages.LoadToStrings(List.Items);
-  List.Font.Color := MainTexture.clMark;
+  List.Font.Color := MainTexture.ColorMark;
   LoadData;
 end;
 

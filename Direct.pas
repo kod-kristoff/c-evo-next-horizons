@@ -59,7 +59,7 @@ var
 begin
   case ID of
     ntInitLocalHuman: begin
-      SetMainTextureByAge(-1);
+      MainTexture.Age := -1;
       State := -1;
       Info := Phrases.Lookup('BUSY_MODLH');
       Show;
@@ -150,7 +150,7 @@ begin
           [Brains[Index].Name]);
         while BiColorTextWidth(Canvas, Info) + 64 > ClientWidth do
           Delete(Info, Length(Info), 1);
-        SetMainTextureByAge(-1);
+        MainTexture.Age := -1;
         State := -1;
         Show;
         {$IFDEF LINUX}
@@ -275,9 +275,9 @@ begin
   PaintBackground(self, 3, 3, ClientWidth - 6, ClientHeight - 6);
   Frame(Canvas, 0, 0, ClientWidth - 1, ClientHeight - 1, 0, 0);
   Frame(Canvas, 1, 1, ClientWidth - 2, ClientHeight - 2,
-    MainTexture.clBevelLight, MainTexture.clBevelShade);
+    MainTexture.ColorBevelLight, MainTexture.ColorBevelShade);
   Frame(Canvas, 2, 2, ClientWidth - 3, ClientHeight - 3,
-    MainTexture.clBevelLight, MainTexture.clBevelShade);
+    MainTexture.ColorBevelLight, MainTexture.ColorBevelShade);
   if State >= 0 then
     RisedTextOut(Canvas, (ClientWidth - BiColorTextWidth(Canvas, Info))
       div 2, 16, Info)

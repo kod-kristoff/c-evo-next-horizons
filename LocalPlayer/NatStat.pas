@@ -106,12 +106,11 @@ end;
 
 procedure TNatStatDlg.CheckAge;
 begin
-  if MainTextureAge <> AgePrepared then
-  begin
-    AgePrepared := MainTextureAge;
+  if MainTexture.Age <> AgePrepared then begin
+    AgePrepared := MainTexture.Age;
     BitBltCanvas(Back.Canvas, 0, 0, ClientWidth, ClientHeight,
-      MainTexture.Image.Canvas, (wMainTexture - ClientWidth) div 2,
-      (hMainTexture - ClientHeight) div 2);
+      MainTexture.Image.Canvas, (MainTexture.Width - ClientWidth) div 2,
+      (MainTexture.Height - ClientHeight) div 2);
     ImageOp_B(Back, Template, 0, 0, 0, 0, ClientWidth, ClientHeight);
   end;
 end;
@@ -357,7 +356,7 @@ begin
       FillSeamless(Canvas, xReport, yReport, wReport, hReport, 0, 0, Paper);
       with Canvas do
       begin
-        Brush.Color := MainTexture.clBevelShade;
+        Brush.Color := MainTexture.ColorBevelShade;
         FillRect(Rect(xReport + wReport, yReport + PaperShade,
           xReport + wReport + PaperShade, yReport + hReport + PaperShade));
         FillRect(Rect(xReport + PaperShade, yReport + hReport,

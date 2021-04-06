@@ -10,17 +10,33 @@ uses
   Forms, Menus, GraphType, fgl, UGraphicSet, LazFileUtils;
 
 type
-  TTexture = record
+
+  { TTexture }
+
+  TTexture = class
+  private
+    FAge: Integer;
+    function GetHeight: Integer;
+    function GetWidth: Integer;
+    procedure SetAge(AValue: Integer);
+  public
     Image: TBitmap;
-    clBevelLight: TColor;
-    clBevelShade: TColor;
-    clTextLight: TColor;
-    clTextShade: TColor;
-    clLitText: TColor;
-    clMark: TColor;
-    clPage: TColor;
-    clCover: TColor;
+    ColorBevelLight: TColor;
+    ColorBevelShade: TColor;
+    ColorTextLight: TColor;
+    ColorTextShade: TColor;
+    ColorLitText: TColor;
+    ColorMark: TColor;
+    ColorPage: TColor;
+    ColorCover: TColor;
+    constructor Create;
+    destructor Destroy; override;
+    procedure Assign(Source: TTexture);
+    property Age: Integer read FAge write SetAge;
+    property Width: Integer read GetWidth;
+    property Height: Integer read GetHeight;
   end;
+
   TLoadGraphicFileOption = (gfNoError, gfNoGamma);
   TLoadGraphicFileOptions = set of TLoadGraphicFileOption;
 
@@ -34,8 +50,8 @@ procedure EmptyMenu(MenuItems: TMenuItem; Keep: Integer = 0);
 function TurnToYear(Turn: integer): integer;
 function TurnToString(Turn: integer): string;
 function MovementToString(Movement: integer): string;
-procedure BtnFrame(ca: TCanvas; p: TRect; const T: TTexture);
-procedure EditFrame(ca: TCanvas; p: TRect; const T: TTexture);
+procedure BtnFrame(ca: TCanvas; p: TRect; T: TTexture);
+procedure EditFrame(ca: TCanvas; p: TRect; T: TTexture);
 function HexStringToColor(S: string): integer;
 function LoadGraphicFile(Bmp: TBitmap; FileName: string; Options: TLoadGraphicFileOptions = []): boolean;
 function LoadGraphicSet(const Name: string): TGraphicSet;
@@ -73,7 +89,7 @@ procedure FrameImage(ca: TCanvas; Src: TBitmap;
   x, y, Width, Height, xSrc, ySrc: integer; IsControl: boolean = False);
 procedure GlowFrame(Dst: TBitmap; x0, y0, Width, Height: integer; cl: TColor);
 procedure InitOrnament;
-procedure InitCityMark(const T: TTexture);
+procedure InitCityMark(T: TTexture);
 procedure Fill(ca: TCanvas; Left, Top, Width, Height, xOffset, yOffset: integer); overload;
 procedure Fill(Canvas: TCanvas; Rect: TRect; Offset: TPoint); overload;
 procedure FillLarge(ca: TCanvas; x0, y0, x1, y1, xm: integer);
@@ -82,9 +98,9 @@ procedure FillSeamless(ca: TCanvas; Left, Top, Width, Height, xOffset, yOffset: 
 procedure FillRectSeamless(ca: TCanvas; x0, y0, x1, y1, xOffset, yOffset: integer;
   const Texture: TBitmap);
 procedure PaintBackground(Form: TForm; Left, Top, Width, Height: integer);
-procedure Corner(ca: TCanvas; x, y, Kind: integer; const T: TTexture);
+procedure Corner(ca: TCanvas; x, y, Kind: integer; T: TTexture);
 procedure BiColorTextOut(ca: TCanvas; clMain, clBack: TColor; x, y: integer; s: string);
-procedure LoweredTextOut(ca: TCanvas; cl: TColor; const T: TTexture;
+procedure LoweredTextOut(ca: TCanvas; cl: TColor; T: TTexture;
   x, y: integer; s: string);
 function BiColorTextWidth(ca: TCanvas; s: string): integer;
 procedure RisedTextOut(ca: TCanvas; x, y: integer; s: string);
@@ -94,16 +110,15 @@ procedure VLightGradient(ca: TCanvas; x, y, Height, Color: integer);
 procedure VDarkGradient(ca: TCanvas; x, y, Height, Kind: integer);
 procedure UnderlinedTitleValue(Canvas: TCanvas; Title, Value: string; X, Y, Width: Integer);
 procedure NumberBar(dst: TBitmap; x, y: integer; Cap: string; val: integer;
-  const T: TTexture);
+  T: TTexture);
 procedure CountBar(dst: TBitmap; x, y, w: integer; Kind: integer;
-  Cap: string; val: integer; const T: TTexture);
+  Cap: string; val: integer; T: TTexture);
 procedure PaintProgressBar(ca: TCanvas; Kind, x, y, pos, Growth, max: integer;
-  const T: TTexture);
+  T: TTexture);
 procedure PaintRelativeProgressBar(ca: TCanvas;
   Kind, x, y, size, pos, Growth, max: integer; IndicateComplete: boolean;
-  const T: TTexture);
+  T: TTexture);
 procedure PaintLogo(Canvas: TCanvas; X, Y, LightColor, ShadeColor: integer);
-function SetMainTextureByAge(Age: integer): boolean;
 procedure LoadPhrases;
 procedure Texturize(Dest, Texture: TBitmap; TransparentColor: Cardinal);
 procedure DarkenImage(Bitmap: TBitmap; Change: Integer);
@@ -114,9 +129,6 @@ procedure UnshareBitmap(Bitmap: TBitmap);
 const
   TransparentColor1 = $FF00FF;
   TransparentColor2 = $7F007F;
-
-  wMainTexture = 640;
-  hMainTexture = 480;
 
   // template positions in Templates.png
   xNation = 1;
@@ -166,7 +178,6 @@ var
   HGrSystem: TGraphicSet;
   HGrSystem2: TGraphicSet;
   ClickFrameColor: Integer;
-  MainTextureAge: Integer;
   MainTexture: TTexture;
   Templates: TGraphicSet;
   Colors: TBitmap;
@@ -326,19 +337,19 @@ begin
   end;
 end;
 
-procedure BtnFrame(ca: TCanvas; p: TRect; const T: TTexture);
+procedure BtnFrame(ca: TCanvas; p: TRect; T: TTexture);
 begin
-  RFrame(ca, p.Left - 1, p.Top - 1, p.Right, p.Bottom, T.clBevelShade,
-    T.clBevelLight);
+  RFrame(ca, p.Left - 1, p.Top - 1, p.Right, p.Bottom, T.ColorBevelShade,
+    T.ColorBevelLight);
 end;
 
-procedure EditFrame(ca: TCanvas; p: TRect; const T: TTexture);
+procedure EditFrame(ca: TCanvas; p: TRect; T: TTexture);
 begin
   Frame(ca, p.Left - 1, p.Top - 1, p.Right, p.Bottom, $000000, $000000);
   Frame(ca, p.Left - 2, p.Top - 2, p.Right + 1, p.Bottom + 1, $000000, $000000);
   Frame(ca, p.Left - 3, p.Top - 3, p.Right + 2, p.Bottom + 1, $000000, $000000);
-  RFrame(ca, p.Left - 4, p.Top - 4, p.Right + 3, p.Bottom + 2, T.clBevelShade,
-    T.clBevelLight);
+  RFrame(ca, p.Left - 4, p.Top - 4, p.Right + 3, p.Bottom + 2, T.ColorBevelShade,
+    T.ColorBevelLight);
 end;
 
 function HexCharToInt(X: Char): Integer;
@@ -1040,10 +1051,10 @@ var
   PixelPtr: TPixelPointer;
 begin
   if InitOrnamentDone then Exit;
-  Light := ColorToColor32(MainTexture.clBevelLight);
-  // and $FCFCFC shr 2*3+MainTexture.clBevelShade and $FCFCFC shr 2;
-  Shade := ColorToColor32(MainTexture.clBevelShade and $FCFCFC shr 2 * 3 +
-    MainTexture.clBevelLight and $FCFCFC shr 2);
+  Light := ColorToColor32(MainTexture.ColorBevelLight);
+  // and $FCFCFC shr 2*3+MainTexture.ColorBevelShade and $FCFCFC shr 2;
+  Shade := ColorToColor32(MainTexture.ColorBevelShade and $FCFCFC shr 2 * 3 +
+    MainTexture.ColorBevelLight and $FCFCFC shr 2);
   HGrSystem2.Data.BeginUpdate;
   PixelPtr := PixelPointer(HGrSystem2.Data, ScaleToNative(Ornament.Left), ScaleToNative(Ornament.Top));
   if PixelPtr.BytesPerPixel = 3 then begin
@@ -1071,7 +1082,7 @@ begin
   HGrSystem2.Data.EndUpdate;
 end;
 
-procedure InitCityMark(const T: TTexture);
+procedure InitCityMark(T: TTexture);
 var
   x: Integer;
   y: Integer;
@@ -1084,8 +1095,8 @@ begin
         Intensity := HGrSystem.Data.Canvas.Pixels[CityMark1.Left +
           x, CityMark1.Top + y] and $FF;
         HGrSystem.Data.Canvas.Pixels[CityMark2.Left + x, CityMark2.Top + y] :=
-          T.clMark and $FF * Intensity div $FF + T.clMark shr 8 and
-          $FF * Intensity div $FF shl 8 + T.clMark shr 16 and
+          T.ColorMark and $FF * Intensity div $FF + T.ColorMark shr 8 and
+          $FF * Intensity div $FF shl 8 + T.ColorMark shr 16 and
           $FF * Intensity div $FF shl 16;
       end;
     end;
@@ -1096,8 +1107,8 @@ end;
 
 procedure Fill(ca: TCanvas; Left, Top, Width, Height, xOffset, yOffset: Integer);
 begin
-  Assert((Left + xOffset >= 0) and (Left + xOffset + Width <= wMainTexture) and
-    (Top + yOffset >= 0) and (Top + yOffset + Height <= hMainTexture));
+  Assert((Left + xOffset >= 0) and (Left + xOffset + Width <= MainTexture.Width) and
+    (Top + yOffset >= 0) and (Top + yOffset + Height <= MainTexture.Height));
   BitBltCanvas(ca, Left, Top, Width, Height, MainTexture.Image.Canvas,
     Left + xOffset, Top + yOffset);
 end;
@@ -1113,10 +1124,10 @@ procedure FillLarge(ca: TCanvas; x0, y0, x1, y1, xm: Integer);
   var
     n: integer;
   begin
-    n := ((hMainTexture div 2) div (y1 - y0)) * 2;
-    while hMainTexture div 2 + (I + 1) * (y1 - y0) > hMainTexture do
+    n := ((MainTexture.Height div 2) div (y1 - y0)) * 2;
+    while MainTexture.Height div 2 + (I + 1) * (y1 - y0) > MainTexture.Height do
       Dec(I, n);
-    while hMainTexture div 2 + I * (y1 - y0) < 0 do
+    while MainTexture.Height div 2 + I * (y1 - y0) < 0 do
       Inc(I, n);
     Result := I;
   end;
@@ -1124,22 +1135,22 @@ procedure FillLarge(ca: TCanvas; x0, y0, x1, y1, xm: Integer);
 var
   I: Integer;
 begin
-  for I := 0 to (x1 - xm) div wMainTexture - 1 do
-    BitBltCanvas(ca, xm + I * wMainTexture, y0, wMainTexture, y1 - y0,
-      MainTexture.Image.Canvas, 0, hMainTexture div 2 + Band(I) *
+  for I := 0 to (x1 - xm) div MainTexture.Width - 1 do
+    BitBltCanvas(ca, xm + I * MainTexture.Width, y0, MainTexture.Width, y1 - y0,
+      MainTexture.Image.Canvas, 0, MainTexture.Height div 2 + Band(I) *
       (y1 - y0));
-  BitBltCanvas(ca, xm + ((x1 - xm) div wMainTexture) * wMainTexture, y0,
-    x1 - (xm + ((x1 - xm) div wMainTexture) * wMainTexture), y1 - y0,
-    MainTexture.Image.Canvas, 0, hMainTexture div 2 + Band(
-    (x1 - xm) div wMainTexture) * (y1 - y0));
-  for I := 0 to (xm - x0) div wMainTexture - 1 do
-    BitBltCanvas(ca, xm - (I + 1) * wMainTexture, y0, wMainTexture, y1 - y0,
-      MainTexture.Image.Canvas, 0, hMainTexture div 2 +
+  BitBltCanvas(ca, xm + ((x1 - xm) div MainTexture.Width) * MainTexture.Width, y0,
+    x1 - (xm + ((x1 - xm) div MainTexture.Width) * MainTexture.Width), y1 - y0,
+    MainTexture.Image.Canvas, 0, MainTexture.Height div 2 + Band(
+    (x1 - xm) div MainTexture.Width) * (y1 - y0));
+  for I := 0 to (xm - x0) div MainTexture.Width - 1 do
+    BitBltCanvas(ca, xm - (I + 1) * MainTexture.Width, y0, MainTexture.Width, y1 - y0,
+      MainTexture.Image.Canvas, 0, MainTexture.Height div 2 +
       Band(-I - 1) * (y1 - y0));
-  BitBltCanvas(ca, x0, y0, xm - ((xm - x0) div wMainTexture) *
-    wMainTexture - x0, y1 - y0, MainTexture.Image.Canvas,
-    ((xm - x0) div wMainTexture + 1) * wMainTexture - (xm - x0),
-    hMainTexture div 2 + Band(-(xm - x0) div wMainTexture - 1) * (y1 - y0));
+  BitBltCanvas(ca, x0, y0, xm - ((xm - x0) div MainTexture.Width) *
+    MainTexture.Width - x0, y1 - y0, MainTexture.Image.Canvas,
+    ((xm - x0) div MainTexture.Width + 1) * MainTexture.Width - (xm - x0),
+    MainTexture.Height div 2 + Band(-(xm - x0) div MainTexture.Width - 1) * (y1 - y0));
 end;
 
 procedure FillSeamless(ca: TCanvas; Left, Top, Width, Height, xOffset, yOffset: Integer;
@@ -1184,11 +1195,11 @@ end;
 
 procedure PaintBackground(Form: TForm; Left, Top, Width, Height: Integer);
 begin
-  Fill(Form.Canvas, Left, Top, Width, Height, (wMainTexture - Form.ClientWidth) div
-    2, (hMainTexture - Form.ClientHeight) div 2);
+  Fill(Form.Canvas, Left, Top, Width, Height, (MainTexture.Width - Form.ClientWidth) div
+    2, (MainTexture.Height - Form.ClientHeight) div 2);
 end;
 
-procedure Corner(ca: TCanvas; x, y, Kind: Integer; const T: TTexture);
+procedure Corner(ca: TCanvas; x, y, Kind: Integer; T: TTexture);
 begin
   { BitBltCanvas(ca,x,y,8,8,T.HGr.Mask.Canvas,
     T.xGr+29+Kind*9,T.yGr+89,SRCAND);
@@ -1283,16 +1294,16 @@ begin
   until False;
 end;
 
-procedure LoweredTextOut(ca: TCanvas; cl: TColor; const T: TTexture;
+procedure LoweredTextOut(ca: TCanvas; cl: TColor; T: TTexture;
   x, y: Integer; s: string);
 begin
   if cl = -2 then
-    BiColorTextOut(ca, (T.clBevelShade and $FEFEFE) shr 1,
-      T.clBevelLight, x, y, s)
+    BiColorTextOut(ca, (T.ColorBevelShade and $FEFEFE) shr 1,
+      T.ColorBevelLight, x, y, s)
   else if cl < 0 then
-    BiColorTextOut(ca, T.clTextShade, T.clTextLight, x, y, s)
+    BiColorTextOut(ca, T.ColorTextShade, T.ColorTextLight, x, y, s)
   else
-    BiColorTextOut(ca, cl, T.clTextLight, x, y, s);
+    BiColorTextOut(ca, cl, T.ColorTextLight, x, y, s);
 end;
 
 procedure RisedTextOut(ca: TCanvas; x, y: integer; s: string);
@@ -1367,20 +1378,20 @@ end;
 
 procedure UnderlinedTitleValue(Canvas: TCanvas; Title, Value: string; X, Y, Width: Integer);
 begin
-  DLine(Canvas, X, X + Width, Y + 19, MainTexture.clBevelLight, MainTexture.clBevelShade);
+  DLine(Canvas, X, X + Width, Y + 19, MainTexture.ColorBevelLight, MainTexture.ColorBevelShade);
   RisedTextOut(Canvas, X, Y, Title);
   RisedTextOut(Canvas, X + Width - BiColorTextWidth(Canvas, Value), Y, Value);
 end;
 
 procedure NumberBar(dst: TBitmap; x, y: integer; Cap: string;
-  val: Integer; const T: TTexture);
+  val: Integer; T: TTexture);
 var
   s: string;
 begin
   if val > 0 then
   begin
-    DLine(dst.Canvas, x - 2, x + 170, y + 16, T.clBevelShade,
-      T.clBevelLight);
+    DLine(dst.Canvas, x - 2, x + 170, y + 16, T.ColorBevelShade,
+      T.ColorBevelLight);
     LoweredTextOut(dst.Canvas, -1, T, x - 2, y, Cap);
     s := IntToStr(val);
     RisedTextOut(dst.Canvas, x + 170 - BiColorTextWidth(dst.Canvas,
@@ -1389,7 +1400,7 @@ begin
 end;
 
 procedure CountBar(dst: TBitmap; x, y, w: Integer; Kind: Integer;
-  Cap: string; val: Integer; const T: TTexture);
+  Cap: string; val: Integer; T: TTexture);
 var
   i, sd, ld, cl, xIcon, yIcon: Integer;
   s: string;
@@ -1402,12 +1413,12 @@ begin
   begin
     // xIcon:=x+100;
     // yIcon:=y;
-    // DLine(dst.Canvas,x-2,x+170+32,y+16,T.clBevelShade,T.clBevelLight);
+    // DLine(dst.Canvas,x-2,x+170+32,y+16,T.ColorBevelShade,T.ColorBevelLight);
 
     xIcon := x - 5;
     yIcon := y + 15;
-    DLine(dst.Canvas, x - 2, xIcon + w + 2, yIcon + 16, T.clBevelShade,
-      T.clBevelLight);
+    DLine(dst.Canvas, x - 2, xIcon + w + 2, yIcon + 16, T.ColorBevelShade,
+      T.ColorBevelLight);
 
     s := IntToStr(val);
     if val < 0 then
@@ -1485,7 +1496,7 @@ begin
 end;
 
 procedure PaintProgressBar(ca: TCanvas; Kind, x, y, pos, Growth, max: Integer;
-  const T: TTexture);
+  T: TTexture);
 var
   i: Integer;
 begin
@@ -1503,8 +1514,8 @@ begin
   else if pos + Growth > max then
     Growth := max - pos;
   Frame(ca, x - 1, y - 1, x + max, y + 7, $000000, $000000);
-  RFrame(ca, x - 2, y - 2, x + max + 1, y + 8, T.clBevelShade,
-    T.clBevelLight);
+  RFrame(ca, x - 2, y - 2, x + max + 1, y + 8, T.ColorBevelShade,
+    T.ColorBevelLight);
   with ca do
   begin
     for i := 0 to pos div 8 - 1 do
@@ -1539,7 +1550,7 @@ end;
 // pos and growth are relative to max, set size independent
 procedure PaintRelativeProgressBar(ca: TCanvas;
   Kind, x, y, size, pos, Growth, max: Integer; IndicateComplete: Boolean;
-  const T: TTexture);
+  T: TTexture);
 begin
   if Growth > 0 then
     PaintProgressBar(ca, Kind, x, y, pos * size div max,
@@ -1558,27 +1569,6 @@ begin
   ImageOp_BCC(LogoBuffer, Templates.Data, Point(0, 0), Logo.BoundsRect,
     LightColor, ShadeColor);
   BitBltCanvas(Canvas, X, Y, Logo.Width, Logo.Height, LogoBuffer.Canvas, 0, 0);
-end;
-
-function SetMainTextureByAge(Age: Integer): Boolean;
-begin
-  if Age <> MainTextureAge then
-    with MainTexture do begin
-      MainTextureAge := Age;
-      LoadGraphicFile(Image, GetGraphicsDir + DirectorySeparator +
-        'Texture' + IntToStr(Age + 1) + '.jpg');
-      clBevelLight := Colors.Canvas.Pixels[clkAge0 + Age, cliBevelLight];
-      clBevelShade := Colors.Canvas.Pixels[clkAge0 + Age, cliBevelShade];
-      clTextLight := Colors.Canvas.Pixels[clkAge0 + Age, cliTextLight];
-      clTextShade := Colors.Canvas.Pixels[clkAge0 + Age, cliTextShade];
-      clLitText := Colors.Canvas.Pixels[clkAge0 + Age, cliLitText];
-      clMark := Colors.Canvas.Pixels[clkAge0 + Age, cliMark];
-      clPage := Colors.Canvas.Pixels[clkAge0 + Age, cliPage];
-      clCover := Colors.Canvas.Pixels[clkAge0 + Age, cliCover];
-      Result := True;
-    end
-  else
-    Result := False;
 end;
 
 procedure LoadPhrases;
@@ -1794,8 +1784,7 @@ begin
   Paper.PixelFormat := pf24bit;
   BigImp := TBitmap.Create;
   BigImp.PixelFormat := pf24bit;
-  MainTexture.Image := TBitmap.Create;
-  MainTextureAge := -2;
+  MainTexture := TTexture.Create;
   ClickFrameColor := HGrSystem.Data.Canvas.Pixels[187, 175];
   InitOrnamentDone := False;
   GenerateNames := True;
@@ -1818,7 +1807,61 @@ begin
   FreeAndNil(BigImp);
   FreeAndNil(Paper);
   FreeAndNil(Colors);
-  FreeAndNil(MainTexture.Image);
+  FreeAndNil(MainTexture);
+end;
+
+{ TTexture }
+
+procedure TTexture.SetAge(AValue: Integer);
+begin
+  if FAge = AValue then Exit;
+  FAge := AValue;
+  LoadGraphicFile(Image, GetGraphicsDir + DirectorySeparator +
+    'Texture' + IntToStr(Age + 1) + '.jpg');
+  ColorBevelLight := Colors.Canvas.Pixels[clkAge0 + Age, cliBevelLight];
+  ColorBevelShade := Colors.Canvas.Pixels[clkAge0 + Age, cliBevelShade];
+  ColorTextLight := Colors.Canvas.Pixels[clkAge0 + Age, cliTextLight];
+  ColorTextShade := Colors.Canvas.Pixels[clkAge0 + Age, cliTextShade];
+  ColorLitText := Colors.Canvas.Pixels[clkAge0 + Age, cliLitText];
+  ColorMark := Colors.Canvas.Pixels[clkAge0 + Age, cliMark];
+  ColorPage := Colors.Canvas.Pixels[clkAge0 + Age, cliPage];
+  ColorCover := Colors.Canvas.Pixels[clkAge0 + Age, cliCover];
+end;
+
+function TTexture.GetHeight: Integer;
+begin
+  Result := Image.Height;
+end;
+
+function TTexture.GetWidth: Integer;
+begin
+  Result := Image.Width;
+end;
+
+constructor TTexture.Create;
+begin
+  Image := TBitmap.Create;
+  FAge := -2;
+end;
+
+destructor TTexture.Destroy;
+begin
+  FreeAndNil(Image);
+  inherited;
+end;
+
+procedure TTexture.Assign(Source: TTexture);
+begin
+  FAge := Source.FAge;
+  Image.Assign(Image);
+  ColorBevelLight := Source.ColorBevelLight;
+  ColorBevelShade := Source.ColorBevelShade;
+  ColorTextLight := Source.ColorTextLight;
+  ColorTextShade := Source.ColorTextShade;
+  ColorLitText := Source.ColorLitText;
+  ColorMark := Source.ColorMark;
+  ColorPage := Source.ColorPage;
+  ColorCover := Source.ColorCover;
 end;
 
 end.

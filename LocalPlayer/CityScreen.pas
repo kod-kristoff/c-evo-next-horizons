@@ -81,6 +81,8 @@ type
     IsPort: Boolean;
     ProdHint: Boolean;
     AllowChange: Boolean;
+    RedTex: TTexture;
+    BarTex: TTexture;
     procedure InitSmallCityMap;
     procedure InitZoomCityMap;
     procedure ChooseProject;
@@ -196,6 +198,8 @@ var
 procedure TCityDlg.FormCreate(Sender: TObject);
 begin
   inherited;
+  RedTex := TTexture.Create;
+  BarTex := TTexture.Create;
   AreaMap := TIsoMap.Create;
   AreaMap.SetOutput(offscreen);
   AreaMap.SetPaintBounds(xmArea - 192, ymArea - 96 - 32, xmArea + 192,
@@ -258,6 +262,8 @@ begin
   FreeAndNil(CityMapTemplate);
   FreeAndNil(Template);
   FreeAndNil(Back);
+  FreeAndNil(RedTex);
+  FreeAndNil(BarTex);
 end;
 
 procedure TCityDlg.Reset;
@@ -268,9 +274,8 @@ end;
 
 procedure TCityDlg.CheckAge;
 begin
-  if MainTextureAge <> AgePrepared then
-  begin
-    AgePrepared := MainTextureAge;
+  if MainTexture.Age <> AgePrepared then begin
+    AgePrepared := MainTexture.Age;
 
     UnshareBitmap(Back);
     BitBltCanvas(Back.Canvas, 0, 0, ClientWidth, ClientHeight,
@@ -387,17 +392,14 @@ procedure TCityDlg.OffscreenPaint;
 
   procedure FillBar(x, y, pos, Growth, max, Kind: integer;
     IndicateComplete: boolean);
-  var
-    Tex: TTexture;
   begin
-    Tex := MainTexture;
-    if Kind = 3 then
-    begin
-      Tex.clBevelLight := HGrSystem.Data.Canvas.Pixels[104, 36];
-      Tex.clBevelShade := Tex.clBevelLight;
+    BarTex.Assign(MainTexture);
+    if Kind = 3 then begin
+      BarTex.ColorBevelLight := HGrSystem.Data.Canvas.Pixels[104, 36];
+      BarTex.ColorBevelShade := BarTex.ColorBevelLight;
     end;
     PaintRelativeProgressBar(offscreen.Canvas, Kind, x - 3, y, wBar - 4, pos,
-      Growth, max, IndicateComplete, Tex);
+      Growth, max, IndicateComplete, BarTex);
   end;
 
   procedure PaintResources(x, y, Loc: integer; Add4Happy: boolean);
@@ -491,7 +493,6 @@ var
   PrName, s: string;
   UnitInfo: TUnitInfo;
   UnitReport: TUnitReport;
-  RedTex: TTexture;
   IsCityAlive, CanGrow: boolean;
 begin
   inherited;
@@ -523,11 +524,11 @@ begin
   if not IsCityAlive then
     Report.Working := c.Size;
 
-  RedTex := MainTexture;
-  RedTex.clBevelLight := $0000FF;
-  RedTex.clBevelShade := $000000;
-  RedTex.clTextLight := $000000;
-  RedTex.clTextShade := $0000FF;
+  RedTex.Assign(MainTexture);
+  RedTex.ColorBevelLight := $0000FF;
+  RedTex.ColorBevelShade := $000000;
+  RedTex.ColorTextLight := $000000;
+  RedTex.ColorTextShade := $0000FF;
 
   BitBltCanvas(offscreen.Canvas, 0, 0, 640, 480, Back.Canvas, 0, 0);
 
@@ -796,8 +797,8 @@ begin
   if Mode = mImp then
     Frame(offscreen.Canvas, xSmallMap + 48 * (ZoomArea div 3),
       ySmallMap + 24 * (ZoomArea mod 3), xSmallMap + 48 * (ZoomArea div 3) + 49,
-      ySmallMap + 24 * (ZoomArea mod 3) + 25, MainTexture.clMark,
-      MainTexture.clMark);
+      ySmallMap + 24 * (ZoomArea mod 3) + 25, MainTexture.ColorMark,
+      MainTexture.ColorMark);
   Frame(offscreen.Canvas, xSmallMap - 1, ySmallMap - 1, xSmallMap + wSmallMap,
     ySmallMap + hSmallMap, $B0B0B0, $FFFFFF);
   RFrame(offscreen.Canvas, xSmallMap - 2, ySmallMap - 2, xSmallMap + wSmallMap +
@@ -811,7 +812,7 @@ begin
   y := ySupport + hSupport div 2;
   if Mode = mSupp then
   begin
-    offscreen.Canvas.brush.Color := MainTexture.clMark;
+    offscreen.Canvas.brush.Color := MainTexture.ColorMark;
     offscreen.Canvas.FillRect(Rect(x - 27, y - 6, x + 27, y + 6));
     offscreen.Canvas.brush.style := bsClear;
   end;

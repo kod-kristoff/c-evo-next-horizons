@@ -201,8 +201,8 @@ procedure TListDlg.line(ca: TCanvas; l: integer; NonText, lit: boolean);
     else
     begin
       Frame(offscreen.Canvas, x + (16 - 1), y + (16 - 2), x + (16 + xSizeSmall),
-        y + (16 - 1 + ySizeSmall), MainTexture.clBevelLight,
-        MainTexture.clBevelShade);
+        y + (16 - 1 + ySizeSmall), MainTexture.ColorBevelLight,
+        MainTexture.ColorBevelShade);
       if pix and cpType = 0 then
         if (pix and cpIndex = imPalace) and (MyRO.Government <> gAnarchy) then
           BitBltCanvas(offscreen.Canvas, x + 16, y + (16 - 1), xSizeSmall,
@@ -230,8 +230,8 @@ procedure TListDlg.line(ca: TCanvas; l: integer; NonText, lit: boolean);
       TextSize.cy := ca.TextHeight(s);
       if y + TextSize.cy >= TitleHeight + InnerHeight then
         TextSize.cy := TitleHeight + InnerHeight - y;
-      Fill(ca, x, y, TextSize.cx, TextSize.cy, (wMaintexture - ClientWidth)
-        div 2, (hMaintexture - ClientHeight) div 2);
+      Fill(ca, x, y, TextSize.cx, TextSize.cy, (Maintexture.Width - ClientWidth)
+        div 2, (Maintexture.Height - ClientHeight) div 2);
     end;
     LoweredTextOut(ca, Color, MainTexture, x, y, s);
   end;
@@ -259,10 +259,10 @@ begin
       if ca = Canvas then
       begin
         x := x + SideFrame;
-        y := y + TitleHeight
+        y := y + TitleHeight;
       end;
       if lit then
-        TextColor := MainTexture.clLitText
+        TextColor := MainTexture.ColorLitText
       else
         TextColor := -1;
       s := CityName(ID);
@@ -433,7 +433,7 @@ begin
       y := y + TitleHeight
     end;
     if lit then
-      TextColor := MainTexture.clLitText
+      TextColor := MainTexture.ColorLitText
     else
       TextColor := -1;
     if Kind = kModels then
@@ -555,26 +555,26 @@ begin
               if lix = adNexus then
               begin
                 Frame(offscreen.Canvas, (8 + 16 - 1), y0 - 1, (8 + 16 + 36),
-                  y0 + 20, MainTexture.clBevelLight, MainTexture.clBevelShade);
+                  y0 + 20, MainTexture.ColorBevelLight, MainTexture.ColorBevelShade);
                 Dump(offscreen, HGrSystem, (8 + 16), y0, 36, 20, 223, 295)
               end
               else if lix = adNone then
               begin
                 Frame(offscreen.Canvas, (8 + 16 - 1), y0 - 1, (8 + 16 + 36),
-                  y0 + 20, MainTexture.clBevelLight, MainTexture.clBevelShade);
+                  y0 + 20, MainTexture.ColorBevelLight, MainTexture.ColorBevelShade);
                 Dump(offscreen, HGrSystem, (8 + 16), y0, 36, 20, 260, 295)
               end
               else if lix = adMilitary then
               begin
                 Frame(offscreen.Canvas, (8 + 16 - 1), y0 - 1, (8 + 16 + 36),
-                  y0 + 20, MainTexture.clBevelLight, MainTexture.clBevelShade);
+                  y0 + 20, MainTexture.ColorBevelLight, MainTexture.ColorBevelShade);
                 Dump(offscreen, HGrSystem, (8 + 16), y0, 36, 20, 38, 295)
               end
               else
               begin
                 Frame(offscreen.Canvas, (8 + 16 - 1), y0 - 1,
                   (8 + 16 + xSizeSmall), y0 + ySizeSmall,
-                  MainTexture.clBevelLight, MainTexture.clBevelShade);
+                  MainTexture.ColorBevelLight, MainTexture.ColorBevelShade);
                 if AdvIcon[lix] < 84 then
                   BitBltCanvas(offscreen.Canvas, (8 + 16), y0, xSizeSmall,
                     ySizeSmall, SmallImp.Canvas,
@@ -680,7 +680,7 @@ begin
           begin
             Frame(offscreen.Canvas, 8 + 16 - 1, y0 - 15 + (16 - 2),
               8 + 16 + xSizeSmall, y0 - 15 + (16 - 1 + ySizeSmall),
-              MainTexture.clBevelLight, MainTexture.clBevelShade);
+              MainTexture.ColorBevelLight, MainTexture.ColorBevelShade);
             BitBltCanvas(offscreen.Canvas, 8 + 16, y0 - 15 + (16 - 1),
               xSizeSmall, ySizeSmall, SmallImp.Canvas,
               (lix - 1) * xSizeSmall, ySizeSmall);
@@ -711,7 +711,7 @@ begin
       y := y + TitleHeight
     end;
     if lit then
-      TextColor := MainTexture.clLitText
+      TextColor := MainTexture.ColorLitText
     else
       TextColor := -1;
     { if Kind=kTribe then ReplaceText_Tribe(x,y,TextColor,
@@ -811,8 +811,8 @@ begin
     if ScienceNation <> OldScienceNation then
     begin
       Fill(Canvas, 9, ClientHeight - 29, ClientWidth - 18, 24,
-        (wMaintexture - ClientWidth) div 2,
-        (hMaintexture - ClientHeight) div 2);
+        (Maintexture.Width - ClientWidth) div 2,
+        (Maintexture.Height - ClientHeight) div 2);
       if ScienceNation >= 0 then
       begin
         s := Tribe[ScienceNation].TPhrase('SHORTNAME');
@@ -828,7 +828,7 @@ begin
         BitBltCanvas(ScienceNationDotBuffer.Canvas, 0, 0, ScienceNationDot.Width,
           ScienceNationDot.Height, Canvas, xScreen - 10, ClientHeight - 27);
         ImageOp_BCC(ScienceNationDotBuffer, Templates.Data, Point(0, 0),
-          ScienceNationDot.BoundsRect, MainTexture.clBevelShade, Tribe[ScienceNation].Color);
+          ScienceNationDot.BoundsRect, MainTexture.ColorBevelShade, Tribe[ScienceNation].Color);
         BitBltCanvas(Canvas, xScreen - 10, ClientHeight - 27, ScienceNationDot.Width,
           ScienceNationDot.Height, ScienceNationDotBuffer.Canvas, 0, 0);
       end;
@@ -1531,13 +1531,13 @@ begin
   if Kind = kTribe then
   begin
     LineDistance := 21; // looks ugly with scrollbar
-    MaxLines := (hMaintexture - (24 + TitleHeight + NarrowFrame))
+    MaxLines := (Maintexture.Height - (24 + TitleHeight + NarrowFrame))
       div LineDistance - 1;
   end
   else
   begin
     LineDistance := 24;
-    MaxLines := (hMaintexture - (24 + TitleHeight + WideFrame))
+    MaxLines := (Maintexture.Height - (24 + TitleHeight + WideFrame))
       div LineDistance - 1;
   end;
   InitLines;
@@ -1573,7 +1573,7 @@ begin
     InnerHeight := LineDistance * (DispLines + 1) + 24;
     ClientHeight := InnerHeight + TitleHeight + NarrowFrame;
   end;
-  assert(ClientHeight <= hMaintexture);
+  assert(ClientHeight <= Maintexture.Height);
 
   TechNameSpace := 224;
   case Kind of

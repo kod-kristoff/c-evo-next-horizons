@@ -509,12 +509,12 @@ begin
   OkBtn.Visible := OkEnabled;
 
   Fill(Offscreen.Canvas, 3, 3, ClientWidth - 6, ClientHeight - 6,
-    (wMaintexture - ClientWidth) div 2, (hMaintexture - ClientHeight) div 2);
+    (Maintexture.Width - ClientWidth) div 2, (Maintexture.Height - ClientHeight) div 2);
   Frame(Offscreen.Canvas, 0, 0, ClientWidth - 1, ClientHeight - 1, 0, 0);
   Frame(Offscreen.Canvas, 1, 1, ClientWidth - 2, ClientHeight - 2,
-    MainTexture.clBevelLight, MainTexture.clBevelShade);
+    MainTexture.ColorBevelLight, MainTexture.ColorBevelShade);
   Frame(Offscreen.Canvas, 2, 2, ClientWidth - 3, ClientHeight - 3,
-    MainTexture.clBevelLight, MainTexture.clBevelShade);
+    MainTexture.ColorBevelLight, MainTexture.ColorBevelShade);
   Corner(Offscreen.Canvas, 1, 1, 0, MainTexture);
   Corner(Offscreen.Canvas, ClientWidth - 9, 1, 1, MainTexture);
   Corner(Offscreen.Canvas, 1, ClientHeight - 9, 2, MainTexture);
@@ -564,7 +564,7 @@ begin
   end;
   with Offscreen.Canvas do
   begin
-    Brush.Color := MainTexture.clBevelShade;
+    Brush.Color := MainTexture.ColorBevelShade;
     if History[me].Text[Page - 1] <> '' then
     begin
       FillRect(Rect(xText0 + wText, yText0 + PaperShade,

@@ -55,12 +55,12 @@ begin
   OffscreenUser := self;
 
   Fill(Offscreen.Canvas, 0, 0, ClientWidth, ClientHeight,
-    (wMaintexture - ClientWidth) div 2, (hMaintexture - ClientHeight) div 2);
+    (Maintexture.Width - ClientWidth) div 2, (Maintexture.Height - ClientHeight) div 2);
   Frame(Offscreen.Canvas, 0, 0, ClientWidth - 1, ClientHeight - 1, 0, 0);
   Frame(Offscreen.Canvas, 1, 1, ClientWidth - 2, ClientHeight - 2,
-    MainTexture.clBevelLight, MainTexture.clBevelShade);
+    MainTexture.ColorBevelLight, MainTexture.ColorBevelShade);
   Frame(Offscreen.Canvas, 2, 2, ClientWidth - 3, ClientHeight - 3,
-    MainTexture.clBevelLight, MainTexture.clBevelShade);
+    MainTexture.ColorBevelLight, MainTexture.ColorBevelShade);
 
   BtnFrame(Offscreen.Canvas, CloseBtn.BoundsRect, MainTexture);
   Offscreen.Canvas.Font.Assign(UniFont[ftCaption]);
@@ -117,7 +117,7 @@ begin
     max := 120;
     Frame(Offscreen.Canvas, x - 1, y - 1, x + max, y + 7, $000000, $000000);
     RFrame(Offscreen.Canvas, x - 2, y - 2, x + max + 1, y + 8,
-      MainTexture.clBevelShade, MainTexture.clBevelLight);
+      MainTexture.ColorBevelShade, MainTexture.ColorBevelLight);
     with Offscreen.Canvas do
     begin
       for i := 0 to current div 8 - 1 do
@@ -137,12 +137,12 @@ begin
     PaintProgressBar(Offscreen.Canvas, 5, 16 + 160, 81,
       MyRO.LuxRate * 120 div 100, 0, 120, MainTexture);
     RFrame(Offscreen.Canvas, ScienceBtn.Left - 1, LuxBtn.Top - 1,
-      LuxBtn.Left + 12, LuxBtn.Top + 12, MainTexture.clBevelShade,
-      MainTexture.clBevelLight);
+      LuxBtn.Left + 12, LuxBtn.Top + 12, MainTexture.ColorBevelShade,
+      MainTexture.ColorBevelLight);
   end;
 
-  DLine(Offscreen.Canvas, 1, ClientWidth - 2, 154, MainTexture.clBevelShade,
-    MainTexture.clBevelLight);
+  DLine(Offscreen.Canvas, 1, ClientWidth - 2, 154, MainTexture.ColorBevelShade,
+    MainTexture.ColorBevelLight);
   RisedTextOut(Offscreen.Canvas, 16 + 80, 164, Phrases.Lookup('TAXRATE'));
   s := Format('%d%%', [MyRO.TaxRate]);
   RisedTextOut(Offscreen.Canvas,
@@ -150,8 +150,8 @@ begin
   PaintProgressBar(Offscreen.Canvas, 0, 16 + 80, 201,
     MyRO.TaxRate * 120 div 100, 0, 120, MainTexture);
   RFrame(Offscreen.Canvas, TaxUpBtn.Left - 1, TaxUpBtn.Top - 1,
-    TaxUpBtn.Left + 12, TaxDownBtn.Top + 12, MainTexture.clBevelShade,
-    MainTexture.clBevelLight);
+    TaxUpBtn.Left + 12, TaxDownBtn.Top + 12, MainTexture.ColorBevelShade,
+    MainTexture.ColorBevelLight);
 
   MarkUsedOffscreen(ClientWidth, ClientHeight);
 end;

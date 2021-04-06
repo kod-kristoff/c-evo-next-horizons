@@ -97,26 +97,25 @@ end;
 
 procedure TUnitStatDlg.CheckAge;
 begin
-  if MainTextureAge <> AgePrepared then
-  begin
-    AgePrepared := MainTextureAge;
+  if MainTexture.Age <> AgePrepared then begin
+    AgePrepared := MainTexture.Age;
     BitBltCanvas(Back.Canvas, 0, 0, wCommon, hOwnModel,
-      MainTexture.Image.Canvas, (wMainTexture - wCommon) div 2,
-      (hMainTexture - hOwnModel) div 2);
+      MainTexture.Image.Canvas, (MainTexture.Width - wCommon) div 2,
+      (MainTexture.Height - hOwnModel) div 2);
     BitBltCanvas(Back.Canvas, wCommon, 0, wCommon, hEnemyModel,
-      MainTexture.Image.Canvas, (wMainTexture - wCommon) div 2,
-      (hMainTexture - hEnemyModel) div 2);
+      MainTexture.Image.Canvas, (MainTexture.Width - wCommon) div 2,
+      (MainTexture.Height - hEnemyModel) div 2);
     BitBltCanvas(Back.Canvas, 2 * wCommon, 0, wCommon, hEnemyUnit,
-      MainTexture.Image.Canvas, (wMainTexture - wCommon) div 2,
-      (hMainTexture - hEnemyUnit) div 2);
+      MainTexture.Image.Canvas, (MainTexture.Width - wCommon) div 2,
+      (MainTexture.Height - hEnemyUnit) div 2);
     BitBltCanvas(Back.Canvas, 3 * wCommon, 0, wCommon, hEnemyCityDefense,
-      MainTexture.Image.Canvas, (wMainTexture - wCommon) div 2,
-      (hMainTexture - hEnemyCityDefense) div 2);
+      MainTexture.Image.Canvas, (MainTexture.Width - wCommon) div 2,
+      (MainTexture.Height - hEnemyCityDefense) div 2);
     BitBltCanvas(Back.Canvas, 4 * wCommon, 0, wCommon, hEnemyCity,
-      MainTexture.Image.Canvas, (wMainTexture - wCommon) div 2,
-      (hMainTexture - hEnemyCity) div 2);
+      MainTexture.Image.Canvas, (MainTexture.Width - wCommon) div 2,
+      (MainTexture.Height - hEnemyCity) div 2);
     ImageOp_B(Back, Template, 0, 0, 0, 0, 5 * wCommon, hMax);
-  end
+  end;
 end;
 
 procedure TUnitStatDlg.FormShow(Sender: TObject);
@@ -304,7 +303,7 @@ var
   end;
 
   procedure FeatureBar(dst: TBitmap; x, y: integer; const mi: TModelInfo;
-    const T: TTexture);
+    T: TTexture);
   var
     i, w, dx, num: integer;
     s: string;
@@ -370,10 +369,9 @@ var
       end;
   end; { featurebar }
 
-  procedure NumberBarS(dst: TBitmap; x, y: integer; Cap, s: string;
-    const T: TTexture);
+  procedure NumberBarS(dst: TBitmap; x, y: integer; Cap, s: string; T: TTexture);
   begin
-    DLine(dst.Canvas, x - 2, x + 170, y + 16, T.clBevelShade, T.clBevelLight);
+    DLine(dst.Canvas, x - 2, x + 170, y + 16, T.ColorBevelShade, T.ColorBevelLight);
     LoweredTextOut(dst.Canvas, -1, T, x - 2, y, Cap);
     RisedTextout(dst.Canvas, x + 170 - BiColorTextWidth(dst.Canvas, s), y, s);
   end;
@@ -446,8 +444,8 @@ begin
             j := imBunker
         end;
         Frame(offscreen.Canvas, x - 1, yImp - 1, x + xSizeSmall,
-          yImp + ySizeSmall, MainTexture.clBevelLight,
-          MainTexture.clBevelShade);
+          yImp + ySizeSmall, MainTexture.ColorBevelLight,
+          MainTexture.ColorBevelShade);
         BitBltCanvas(offscreen.Canvas, x, yImp, xSizeSmall, ySizeSmall,
           SmallImp.Canvas, j mod 7 * xSizeSmall,
           (j + SystemIconLines * 7) div 7 * ySizeSmall);
@@ -526,9 +524,9 @@ begin
         with ui, NoMap do
         begin
           { Frame(offscreen.canvas,xView-1,yView-1,xView+64,yView+48,
-            MainTexture.clBevelShade,MainTexture.clBevelLight);
+            MainTexture.ColorBevelShade,MainTexture.ColorBevelLight);
             RFrame(offscreen.canvas,xView-2,yView-2,xView+65,yView+49,
-            MainTexture.clBevelShade,MainTexture.clBevelLight); }
+            MainTexture.ColorBevelShade,MainTexture.ColorBevelLight); }
           with offscreen.Canvas do
           begin
             Brush.Color := HGrSystem.Data.Canvas.Pixels[98, 67];
@@ -614,7 +612,7 @@ begin
       LoweredTextOut(offscreen.Canvas, -1, MainTexture, xTotal - 2, yTotal + 57,
         Phrases.Lookup('UNITCOST'));
       DLine(offscreen.Canvas, xTotal - 2, xTotal + 170, yTotal + 57 + 16,
-        MainTexture.clBevelShade, MainTexture.clBevelLight);
+        MainTexture.ColorBevelShade, MainTexture.ColorBevelLight);
       if G.Difficulty[me] = 0 then
         s := IntToStr(mi.cost)
       else
@@ -635,8 +633,8 @@ begin
             LoweredTextOut(offscreen.Canvas, -1, MainTexture, xTotal - 2,
               (yTotal + StatDown - 19), Phrases.Lookup('UNITINTRO'));
           DLine(offscreen.Canvas, xTotal - 2, xTotal + 170,
-            (yTotal + StatDown - 19) + 16, MainTexture.clTextShade,
-            MainTexture.clTextLight);
+            (yTotal + StatDown - 19) + 16, MainTexture.ColorTextShade,
+            MainTexture.ColorTextLight);
           s := TurnToString(MyModel[mixShow].IntroTurn);
           RisedTextout(offscreen.Canvas,
             xTotal + 170 - BiColorTextWidth(offscreen.Canvas, s),

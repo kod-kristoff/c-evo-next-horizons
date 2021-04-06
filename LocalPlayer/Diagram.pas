@@ -62,9 +62,9 @@ begin
   Canvas.FillRect(Rect(Left, Top, Left + Width, Top + 200));
   Canvas.Brush.Style := bsClear;
     ScreenTools.Frame(canvas, Left - 1, Top - 1, Left + Width, Top + 200,
-      MainTexture.clBevelShade, MainTexture.clBevelLight);
+      MainTexture.ColorBevelShade, MainTexture.ColorBevelLight);
     RFrame(canvas, Left - 2, Top - 2, Left + Width + 1, Top + 200 + 1,
-      MainTexture.clBevelShade, MainTexture.clBevelLight);
+      MainTexture.ColorBevelShade, MainTexture.ColorBevelLight);
 
     // stars
     DelphiRandSeed := Player * 11111;
@@ -162,8 +162,8 @@ var
   procedure ShareBar(x, y: integer; Cap: string; val0, val1: integer);
   begin
     LoweredTextOut(offscreen.canvas, -1, MainTexture, x - 2, y, Cap);
-    DLine(offscreen.canvas, x - 2, x + 169, y + 16, MainTexture.clTextShade,
-      MainTexture.clTextLight);
+    DLine(offscreen.canvas, x - 2, x + 169, y + 16, MainTexture.ColorTextShade,
+      MainTexture.ColorTextLight);
     if val0 > 0 then
       s := Format(Phrases.Lookup('SHARE'), [val0, val1])
     else

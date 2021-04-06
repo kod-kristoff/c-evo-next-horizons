@@ -291,10 +291,10 @@ procedure TFramedDlg.VPaint;
 
   procedure CornerFrame(x0, y0, x1, y1: integer);
   begin
-    Frame(Canvas, x0 + 1, y0 + 1, x1 - 2, y1 - 2, MainTexture.clBevelLight,
-      MainTexture.clBevelShade);
-    Frame(Canvas, x0 + 2, y0 + 2, x1 - 3, y1 - 3, MainTexture.clBevelLight,
-      MainTexture.clBevelShade);
+    Frame(Canvas, x0 + 1, y0 + 1, x1 - 2, y1 - 2, MainTexture.ColorBevelLight,
+      MainTexture.ColorBevelShade);
+    Frame(Canvas, x0 + 2, y0 + 2, x1 - 3, y1 - 3, MainTexture.ColorBevelLight,
+      MainTexture.ColorBevelShade);
     Corner(Canvas, x0 + 1, y0 + 1, 0, MainTexture);
     Corner(Canvas, x1 - 9, y0 + 1, 1, MainTexture);
     Corner(Canvas, x0 + 1, y1 - 9, 2, MainTexture);
@@ -317,8 +317,8 @@ begin
   Canvas.Font.Assign(UniFont[ftCaption]);
   l := BiColorTextWidth(Canvas, Caption);
   Cut := (ClientWidth - l) div 2;
-  xTexOffset := (wMaintexture - ClientWidth) div 2;
-  yTexOffset := (hMaintexture - ClientHeight) div 2;
+  xTexOffset := (Maintexture.Width - ClientWidth) div 2;
+  yTexOffset := (Maintexture.Height - ClientHeight) div 2;
   if WideBottom then
     InnerBottom := ClientHeight - WideFrame
   else
@@ -344,9 +344,9 @@ begin
     InnerBottom - TitleHeight + 4, xTexOffset, yTexOffset);
   Frame(Canvas, 0, FrameTop, ClientWidth - 1, FrameBottom - 1, 0, 0);
   Frame(Canvas, SideFrame - 1, TitleHeight - 1, ClientWidth - SideFrame,
-    InnerBottom, MainTexture.clBevelShade, MainTexture.clBevelLight);
+    InnerBottom, MainTexture.ColorBevelShade, MainTexture.ColorBevelLight);
   // RFrame(Canvas,SideFrame-2,TitleHeight-2,ClientWidth-SideFrame+1,
-  // InnerBottom+1,MainTexture.clBevelShade,MainTexture.clBevelLight);
+  // InnerBottom+1,MainTexture.ColorBevelShade,MainTexture.ColorBevelLight);
   if FullCaption then
   begin
     if (FWindowMode <> wmModal) or not ModalIndication then
@@ -366,20 +366,20 @@ begin
         Fill(Canvas, 3, 3 + FrameTop, ModalFrameIndent, TitleHeight - FrameTop -
           4, xTexOffset, yTexOffset);
         CornerFrame(0, FrameTop, ClientWidth, FrameBottom);
-        Pen.Color := MainTexture.clBevelShade;
+        Pen.Color := MainTexture.ColorBevelShade;
         MoveTo(3 + ModalFrameIndent, 2);
         LineTo(3 + ModalFrameIndent, TitleHeight);
-        Pen.Color := MainTexture.clBevelShade;
+        Pen.Color := MainTexture.ColorBevelShade;
         MoveTo(4 + ModalFrameIndent, TitleHeight - 1);
         LineTo(ClientWidth - 4 - ModalFrameIndent, TitleHeight - 1);
         LineTo(ClientWidth - 4 - ModalFrameIndent, 1);
-        Pen.Color := MainTexture.clBevelLight;
+        Pen.Color := MainTexture.ColorBevelLight;
         MoveTo(ClientWidth - 5 - ModalFrameIndent, 2);
         LineTo(4 + ModalFrameIndent, 2);
         LineTo(4 + ModalFrameIndent, TitleHeight);
         MoveTo(ClientWidth - 4 - ModalFrameIndent, 1);
         LineTo(3 + ModalFrameIndent, 1);
-        Pen.Color := MainTexture.clBevelLight;
+        Pen.Color := MainTexture.ColorBevelLight;
         MoveTo(ClientWidth - 3 - ModalFrameIndent, 3);
         LineTo(ClientWidth - 3 - ModalFrameIndent, TitleHeight);
       end;
@@ -396,18 +396,18 @@ begin
       TitleHeight - 4, xTexOffset, yTexOffset);
 
     Frame(Canvas, CaptionLeft + 1, 0 + 1, ClientWidth - CaptionLeft - 2,
-      TitleHeight - 1, MainTexture.clBevelLight, MainTexture.clBevelShade);
+      TitleHeight - 1, MainTexture.ColorBevelLight, MainTexture.ColorBevelShade);
     Frame(Canvas, CaptionLeft + 2, 0 + 2, ClientWidth - CaptionLeft - 3,
-      TitleHeight - 1, MainTexture.clBevelLight, MainTexture.clBevelShade);
+      TitleHeight - 1, MainTexture.ColorBevelLight, MainTexture.ColorBevelShade);
     Corner(Canvas, CaptionLeft + 1, 0 + 1, 0, MainTexture);
     Corner(Canvas, ClientWidth - CaptionLeft - 9, 0 + 1, 1, MainTexture);
 
     with Canvas do
     begin
-      Pen.Color := MainTexture.clBevelShade;
+      Pen.Color := MainTexture.ColorBevelShade;
       MoveTo(CaptionLeft + 1, FrameTop + 2);
       LineTo(CaptionLeft + 1, TitleHeight);
-      Pen.Color := MainTexture.clBevelLight;
+      Pen.Color := MainTexture.ColorBevelLight;
       MoveTo(ClientWidth - CaptionLeft - 2, FrameTop + 2);
       LineTo(ClientWidth - CaptionLeft - 2, TitleHeight);
     end;
@@ -420,20 +420,20 @@ begin
         yTexOffset);
       Frame(Canvas, CaptionLeft + 1, ClientHeight - WideFrame - 1 + 1,
         ClientWidth - CaptionLeft - 2, ClientHeight - 2,
-        MainTexture.clBevelLight, MainTexture.clBevelShade);
+        MainTexture.ColorBevelLight, MainTexture.ColorBevelShade);
       Frame(Canvas, CaptionLeft + 2, ClientHeight - WideFrame - 1 + 1,
         ClientWidth - CaptionLeft - 3, ClientHeight - 3,
-        MainTexture.clBevelLight, MainTexture.clBevelShade);
+        MainTexture.ColorBevelLight, MainTexture.ColorBevelShade);
       Corner(Canvas, CaptionLeft + 1, ClientHeight - 9, 2, MainTexture);
       Corner(Canvas, ClientWidth - CaptionLeft - 9, ClientHeight - 9, 3,
         MainTexture);
 
       with Canvas do
       begin
-        Pen.Color := MainTexture.clBevelShade;
+        Pen.Color := MainTexture.ColorBevelShade;
         MoveTo(CaptionLeft + 1, ClientHeight - WideFrame);
         LineTo(CaptionLeft + 1, FrameBottom - 2);
-        Pen.Color := MainTexture.clBevelLight;
+        Pen.Color := MainTexture.ColorBevelLight;
         MoveTo(ClientWidth - CaptionLeft - 2, ClientHeight - WideFrame);
         LineTo(ClientWidth - CaptionLeft - 2, FrameBottom - 2);
       end;
@@ -485,8 +485,8 @@ end;
 procedure TFramedDlg.FillOffscreen(Left, Top, Width, Height: integer);
 begin
   Fill(Offscreen.Canvas, Left, Top, Width, Height,
-    SideFrame + (wMaintexture - ClientWidth) div 2,
-    TitleHeight + (hMaintexture - ClientHeight) div 2);
+    SideFrame + (Maintexture.Width - ClientWidth) div 2,
+    TitleHeight + (Maintexture.Height - ClientHeight) div 2);
 end;
 
 procedure CreateOffscreen(var Offscreen: TBitmap);

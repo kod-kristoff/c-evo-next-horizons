@@ -92,27 +92,27 @@ begin
     yPool - yList - 32 * nListRow);
 
   Frame(offscreen.Canvas, 0, yList + 32 * nListRow, InnerWidth - 255,
-    yPool - 23, MainTexture.clBevelLight, MainTexture.clBevelShade);
+    yPool - 23, MainTexture.ColorBevelLight, MainTexture.ColorBevelShade);
   Frame(offscreen.Canvas, InnerWidth - 254, yList + 32 * nListRow,
-    InnerWidth - 89, yPool - 23, MainTexture.clBevelLight,
-    MainTexture.clBevelShade);
+    InnerWidth - 89, yPool - 23, MainTexture.ColorBevelLight,
+    MainTexture.ColorBevelShade);
   Frame(offscreen.Canvas, InnerWidth - 88, yList + 32 * nListRow,
-    InnerWidth - 1, yPool - 23, MainTexture.clBevelLight,
-    MainTexture.clBevelShade);
+    InnerWidth - 1, yPool - 23, MainTexture.ColorBevelLight,
+    MainTexture.ColorBevelShade);
   Frame(offscreen.Canvas, 0, yPool - 22, InnerWidth - 1, yPool - 1,
-    MainTexture.clBevelLight, MainTexture.clBevelShade);
+    MainTexture.ColorBevelLight, MainTexture.ColorBevelShade);
   for i := 0 to nCityType - 1 do
   begin
     RFrame(offscreen.Canvas, xSwitch + i * 42, ySwitch, xSwitch + 39 + i * 42,
-      ySwitch + 23, MainTexture.clBevelShade, MainTexture.clBevelLight);
+      ySwitch + 23, MainTexture.ColorBevelShade, MainTexture.ColorBevelLight);
     if i = ctype then
       Frame(offscreen.Canvas, xSwitch + 1 + i * 42, ySwitch + 1,
-        xSwitch + 38 + i * 42, ySwitch + 22, MainTexture.clBevelShade,
-        MainTexture.clBevelLight)
+        xSwitch + 38 + i * 42, ySwitch + 22, MainTexture.ColorBevelShade,
+        MainTexture.ColorBevelLight)
     else
       Frame(offscreen.Canvas, xSwitch + 1 + i * 42, ySwitch + 1,
-        xSwitch + 38 + i * 42, ySwitch + 22, MainTexture.clBevelLight,
-        MainTexture.clBevelShade);
+        xSwitch + 38 + i * 42, ySwitch + 22, MainTexture.ColorBevelLight,
+        MainTexture.ColorBevelShade);
     BitBltCanvas(offscreen.Canvas, xSwitch + 2 + i * 42, ySwitch + 2,
       xSizeSmall, ySizeSmall, SmallImp.Canvas, (i + 3) * xSizeSmall, 0);
   end;
@@ -129,11 +129,11 @@ begin
   begin
     for i := 1 to nListRow - 1 do
       DLine(offscreen.Canvas, xList - 5, xList + 4 + 42 * nListCol,
-        yList - 1 + 32 * i, MainTexture.clBevelLight, MainTexture.clBevelShade);
+        yList - 1 + 32 * i, MainTexture.ColorBevelLight, MainTexture.ColorBevelShade);
     for i := 0 to nListCol * nListRow - 1 do
     begin
       s := IntToStr(i + 1);
-      Font.Color := MainTexture.clTextLight;
+      Font.Color := MainTexture.ColorTextLight;
       Textout(xList + 20 + i mod nListCol * 42 - TextWidth(s) div 2,
         yList + 15 + i div nListCol * 32 - TextHeight(s) div 2, s);
     end;
@@ -146,7 +146,7 @@ begin
       42, yList + 15 - ySizeSmall div 2 + i div nListCol * 32,
       xList + 21 + xSizeSmall div 2 + i mod nListCol * 42,
       yList + 16 + ySizeSmall div 2 + i div nListCol * 32,
-      MainTexture.clBevelLight, MainTexture.clBevelShade);
+      MainTexture.ColorBevelLight, MainTexture.ColorBevelShade);
     BitBltCanvas(offscreen.Canvas, xList + 21 - xSizeSmall div 2 +
       i mod nListCol * 42, yList + 16 - ySizeSmall div 2 + i div nListCol * 32,
       xSizeSmall, ySizeSmall, SmallImp.Canvas,
@@ -168,8 +168,8 @@ begin
         nPool mod nPoolCol * 42, yPool + 15 - ySizeSmall div 2 +
         nPool div nPoolCol * 32, xPool + 21 + xSizeSmall div 2 +
         nPool mod nPoolCol * 42, yPool + 16 + ySizeSmall div 2 +
-        nPool div nPoolCol * 32, MainTexture.clBevelLight,
-        MainTexture.clBevelShade);
+        nPool div nPoolCol * 32, MainTexture.ColorBevelLight,
+        MainTexture.ColorBevelShade);
       BitBltCanvas(offscreen.Canvas, xPool + 21 - xSizeSmall div 2 +
         nPool mod nPoolCol * 42, yPool + 16 - ySizeSmall div 2 +
         nPool div nPoolCol * 32, xSizeSmall, ySizeSmall, SmallImp.Canvas,

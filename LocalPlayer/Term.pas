@@ -1690,7 +1690,7 @@ begin
       if Controls[i] is TButtonC then
         Controls[i].Visible := false;
     me := -1;
-    SetMainTextureByAge(-1);
+    MainTexture.Age := -1;
     with Panel.Canvas do
     begin
       Brush.Color := $000000;
@@ -1727,14 +1727,16 @@ begin
 
     { if MyRO.Happened and phGameEnd<>0 then
       begin
-      Age:=3;
-      SetMainTextureByAge(-1);
+      Age := 3;
+      MainTexture.Age := -1;
       end
       else }
     begin
       Age := GetAge(me);
-      if SetMainTextureByAge(Age) then
+      if MainTexture.Age <> Age then begin
+        MainTexture.Age := Age;
         EOT.Invalidate; // has visible background parts in its bounds
+      end;
     end;
     // age:=MyRO.Turn mod 4; //!!!
     if ClientMode = cMovieTurn then
@@ -1747,7 +1749,7 @@ begin
   else
   begin
     Age := 0;
-    SetMainTextureByAge(-1);
+    MainTexture.Age := -1;
     if ClientMode = cMovieTurn then
       EOT.ButtonIndex := eotCancel
     else
@@ -2537,7 +2539,7 @@ begin
       begin
         Age := 0;
         if Command = cHelpOnly then
-          SetMainTextureByAge(-1);
+          MainTexture.Age := -1;
         Tribes.Init;
         HelpDlg.UserLeft := (Screen.width - HelpDlg.width) div 2;
         HelpDlg.UserTop := (Screen.height - HelpDlg.height) div 2;
@@ -4264,12 +4266,12 @@ begin
       Frame(Panel.Canvas,
         xMini + 2 + G.lx - MapWidth div (xxt * 2), yMini + 2,
         xMini + 1 + G.lx + MapWidth div (xxt * 2), yMini + 2 + G.ly - 1,
-        MainTexture.clMark, MainTexture.clMark)
+        MainTexture.ColorMark, MainTexture.ColorMark)
     else
       Frame(Panel.Canvas,
         xMini + 2 + G.lx - MapWidth div (xxt * 2), yMini + 2 + yw,
         xMini + 1 + G.lx + MapWidth div (xxt * 2), yMini + yw + MapHeight div yyt,
-        MainTexture.clMark, MainTexture.clMark);
+        MainTexture.ColorMark, MainTexture.ColorMark);
   end;
 end;
 
@@ -4300,9 +4302,9 @@ begin
   with Panel.Canvas do
   begin
     Fill(Panel.Canvas, 0, 3, xMidPanel + 7 - 10, PanelHeight - 3,
-      wMainTexture - (xMidPanel + 7 - 10), hMainTexture - PanelHeight);
+      MainTexture.Width - (xMidPanel + 7 - 10), MainTexture.Height - PanelHeight);
     Fill(Panel.Canvas, xRightPanel + 10 - 7, 3, Panel.width - xRightPanel - 10 +
-      7, PanelHeight - 3, -(xRightPanel + 10 - 7), hMainTexture - PanelHeight);
+      7, PanelHeight - 3, -(xRightPanel + 10 - 7), MainTexture.Height - PanelHeight);
     FillLarge(Panel.Canvas, xMidPanel - 2, PanelHeight - MidPanelHeight,
       xRightPanel + 2, PanelHeight, ClientWidth div 2);
 
@@ -4314,17 +4316,17 @@ begin
     LineTo(xRightPanel, PanelHeight - MidPanelHeight);
     LineTo(xRightPanel, 0);
     LineTo(ClientWidth, 0);
-    Pen.Color := MainTexture.clBevelLight;
+    Pen.Color := MainTexture.ColorBevelLight;
     MoveTo(xMidPanel + 7 - 9, PanelHeight - MidPanelHeight + 2);
     LineTo(xRightPanel + 10 - 8, PanelHeight - MidPanelHeight + 2);
-    Pen.Color := MainTexture.clBevelLight;
+    Pen.Color := MainTexture.ColorBevelLight;
     MoveTo(0, 1);
     LineTo(xMidPanel + 7 - 9, 1);
-    Pen.Color := MainTexture.clBevelShade;
+    Pen.Color := MainTexture.ColorBevelShade;
     LineTo(xMidPanel + 7 - 9, PanelHeight - MidPanelHeight + 1);
-    Pen.Color := MainTexture.clBevelLight;
+    Pen.Color := MainTexture.ColorBevelLight;
     LineTo(xRightPanel + 10 - 9, PanelHeight - MidPanelHeight + 1);
-    Pen.Color := MainTexture.clBevelLight;
+    Pen.Color := MainTexture.ColorBevelLight;
     LineTo(xRightPanel + 10 - 9, 1);
     LineTo(ClientWidth, 1);
     MoveTo(ClientWidth, 2);
@@ -4332,7 +4334,7 @@ begin
     LineTo(xRightPanel + 10 - 8, PanelHeight);
     MoveTo(0, 2);
     LineTo(xMidPanel + 7 - 10, 2);
-    Pen.Color := MainTexture.clBevelShade;
+    Pen.Color := MainTexture.ColorBevelShade;
     LineTo(xMidPanel + 7 - 10, PanelHeight);
     Corner(Panel.Canvas, xMidPanel + 7 - 16, 1, 1, MainTexture);
     Corner(Panel.Canvas, xRightPanel + 10 - 9, 1, 0, MainTexture);
@@ -4471,7 +4473,7 @@ begin
                 yTroop + 2 * yyt + 11, $000000, $000000);
               ScreenTools.Frame(Panel.Canvas, xTroop + 1 + x,
                 yTroop + 6 - yyt div 2, xTroop + 2 * xxt - 1 + x,
-                yTroop + 2 * yyt + 10, MainTexture.clMark, MainTexture.clMark);
+                yTroop + 2 * yyt + 10, MainTexture.ColorMark, MainTexture.ColorMark);
             end;
           end;
         end;
@@ -4589,10 +4591,10 @@ begin
           x := xTroop - 8
         else
           x := xTroop - 152;
-        Pen.Color := MainTexture.clBevelShade;
+        Pen.Color := MainTexture.ColorBevelShade;
         MoveTo(x - 1, PanelHeight - MidPanelHeight + 2);
         LineTo(x - 1, PanelHeight);
-        Pen.Color := MainTexture.clBevelLight;
+        Pen.Color := MainTexture.ColorBevelLight;
         MoveTo(x, PanelHeight - MidPanelHeight + 2);
         LineTo(x, PanelHeight);
       end;
@@ -4630,14 +4632,14 @@ begin
                           $000000, $000000);
                         ScreenTools.Frame(Panel.Canvas, xTroop + 3 + x,
                           yTroop + 2, xTroop + 63 + x, yTroop + 46,
-                          MainTexture.clMark, MainTexture.clMark);
+                          MainTexture.ColorMark, MainTexture.ColorMark);
                       end
                       else if (unx.Master >= 0) and (unx.Master = UnFocus) then
                       begin
                         CFrame(Panel.Canvas, xTroop + 4 + x, yTroop + 3,
                           xTroop + 64 + x, yTroop + 47, 8, $000000);
                         CFrame(Panel.Canvas, xTroop + 3 + x, yTroop + 2,
-                          xTroop + 63 + x, yTroop + 46, 8, MainTexture.clMark);
+                          xTroop + 63 + x, yTroop + 46, 8, MainTexture.ColorMark);
                       end;
                       NoMapPanel.SetOutput(Panel);
                       NoMapPanel.PaintUnit(xTroop + 2 + x, yTroop + 1, UnitInfo,
@@ -4732,7 +4734,7 @@ begin
         with TerrainBtn do
           RFrame(Panel.Canvas, Left - 1, Top - self.ClientHeight +
             (PanelHeight - 1), Left + width, Top + height - self.ClientHeight +
-            PanelHeight, MainTexture.clBevelShade, MainTexture.clBevelLight)
+            PanelHeight, MainTexture.ColorBevelShade, MainTexture.ColorBevelLight)
     end; { if TroopLoc>=0 }
   end;
 
@@ -4748,7 +4750,7 @@ begin
             25, 25, 1 + 26 * ButtonIndex, 337);
           RFrame(Panel.Canvas, Left - 1, Top - self.ClientHeight +
             (PanelHeight - 1), Left + width, Top + height - self.ClientHeight +
-            PanelHeight, MainTexture.clBevelShade, MainTexture.clBevelLight);
+            PanelHeight, MainTexture.ColorBevelShade, MainTexture.ColorBevelLight);
         end;
       end;
 
@@ -4762,7 +4764,7 @@ begin
             12, 12, 169, 178 + 13 * ButtonIndex);
           RFrame(Panel.Canvas, Left - 1, Top - self.ClientHeight +
             (PanelHeight - 1), Left + width, Top + height - self.ClientHeight +
-            PanelHeight, MainTexture.clBevelShade, MainTexture.clBevelLight);
+            PanelHeight, MainTexture.ColorBevelShade, MainTexture.ColorBevelLight);
         end;
   end;
   EOT.SetBack(Panel.Canvas, EOT.Left, EOT.Top - (ClientHeight - PanelHeight));
@@ -4779,16 +4781,16 @@ begin
     Pen.Color := $000000;
     MoveTo(0, TopBarHeight - 1);
     LineTo(ClientWidth, TopBarHeight - 1);
-    Pen.Color := MainTexture.clBevelShade;
+    Pen.Color := MainTexture.ColorBevelShade;
     MoveTo(0, TopBarHeight - 2);
     LineTo(ClientWidth, TopBarHeight - 2);
     MoveTo(0, TopBarHeight - 3);
     LineTo(ClientWidth, TopBarHeight - 3);
-    Pen.Color := MainTexture.clBevelLight;
+    Pen.Color := MainTexture.ColorBevelLight;
     ScreenTools.Frame(TopBar.Canvas, 40, -1, xTreasurySection - 1,
-      TopBarHeight - 7, MainTexture.clBevelShade, MainTexture.clBevelLight);
+      TopBarHeight - 7, MainTexture.ColorBevelShade, MainTexture.ColorBevelLight);
     ScreenTools.Frame(TopBar.Canvas, xResearchSection + 332, -1, ClientWidth,
-      TopBarHeight - 7, MainTexture.clBevelShade, MainTexture.clBevelLight);
+      TopBarHeight - 7, MainTexture.ColorBevelShade, MainTexture.ColorBevelLight);
   end;
   if GameMode <> cMovie then
     ImageOp_BCC(TopBar, Templates.Data, Point(2, 1), MenuLogo.BoundsRect, $BFBF20, $4040DF);
@@ -5223,12 +5225,12 @@ begin
         if ywmax <= 0 then
           Frame(Panel.Canvas, xMini + 2 + G.lx - MapWidth div (2 * xxt),
             yMini + 2, xMini + 1 + G.lx + MapWidth div (2 * xxt),
-            yMini + 2 + G.ly - 1, MainTexture.clMark, MainTexture.clMark)
+            yMini + 2 + G.ly - 1, MainTexture.ColorMark, MainTexture.ColorMark)
         else
           Frame(Panel.Canvas, xMini + 2 + G.lx - MapWidth div (2 * xxt),
             yMini + 2 + yw, xMini + 2 + G.lx + MapWidth div (2 * xxt) - 1,
-            yMini + 2 + yw + MapHeight div yyt - 2, MainTexture.clMark,
-            MainTexture.clMark);
+            yMini + 2 + yw + MapHeight div yyt - 2, MainTexture.ColorMark,
+            MainTexture.ColorMark);
       end;
       RectInvalidate(xMini + 2, TopBarHeight + MapHeight - overlap + yMini + 2,
         xMini + 2 + G.lx * 2, TopBarHeight + MapHeight - overlap + yMini
@@ -7491,11 +7493,11 @@ begin
       if ywmax <= 0 then
         Frame(Buffer.Canvas, x - xMini - 2 - MapWidth div (xxt * 2), 0,
           x - xMini - 2 + MapWidth div (xxt * 2) - 1, G.ly - 1,
-          MainTexture.clMark, MainTexture.clMark)
+          MainTexture.ColorMark, MainTexture.ColorMark)
       else
         Frame(Buffer.Canvas, x - xMini - 2 - MapWidth div (xxt * 2), yw,
           x - xMini - 2 + MapWidth div (xxt * 2) - 1, yw + MapHeight div yyt -
-          2, MainTexture.clMark, MainTexture.clMark);
+          2, MainTexture.ColorMark, MainTexture.ColorMark);
       BitBltCanvas(Panel.Canvas, xMini + 2, yMini + 2, G.lx * 2, G.ly,
         Buffer.Canvas, 0, 0);
       MainOffscreenPaint;

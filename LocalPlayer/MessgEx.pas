@@ -356,13 +356,13 @@ var
 begin
   if (IconKind = mikImp) and (IconIndex = 27) then
   begin // "YOU WIN" message
-    clSaveTextLight := MainTexture.clTextLight;
-    clSaveTextShade := MainTexture.clTextShade;
-    MainTexture.clTextLight := $000000; // gold
-    MainTexture.clTextShade := $0FDBFF;
+    clSaveTextLight := MainTexture.ColorTextLight;
+    clSaveTextShade := MainTexture.ColorTextShade;
+    MainTexture.ColorTextLight := $000000; // gold
+    MainTexture.ColorTextShade := $0FDBFF;
     inherited;
-    MainTexture.clTextLight := clSaveTextLight;
-    MainTexture.clTextShade := clSaveTextShade;
+    MainTexture.ColorTextLight := clSaveTextLight;
+    MainTexture.ColorTextShade := clSaveTextShade;
   end
   else
     inherited;
@@ -410,8 +410,8 @@ begin
           pix div 10 * 49 + 1, SRCPAINT);
       end;
     mikBook:
-      PaintBook(Canvas, ClientWidth div 2, 24, MainTexture.clPage,
-        MainTexture.clCover);
+      PaintBook(Canvas, ClientWidth div 2, 24, MainTexture.ColorPage,
+        MainTexture.ColorCover);
     mikTribe:
       if Assigned(Tribe[IconIndex].faceHGr) then
       begin

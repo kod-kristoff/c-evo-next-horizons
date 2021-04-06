@@ -200,15 +200,12 @@ function GetAge(p: integer): integer;
 var
   i: integer;
 begin
-  if p = me then
-  begin
+  if p = me then begin
     Result := 0;
     for i := 1 to 3 do
       if MyRO.Tech[AgePreq[i]] >= tsApplicable then
         Result := i;
-  end
-  else
-  begin
+  end else begin
     Result := 0;
     for i := 1 to 3 do
       if MyRO.EnemyReport[p].Tech[AgePreq[i]] >= tsApplicable then

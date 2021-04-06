@@ -182,9 +182,9 @@ procedure TDraftDlg.OffscreenPaint;
       LoweredTextOut(offscreen.Canvas, -1, MainTexture, xTotal - 2, y,
         Phrases.Lookup('UNITSPEED'));
       DLine(offscreen.Canvas, xTotal - 2, xTotal + 174, y + 16,
-        MainTexture.clBevelShade, MainTexture.clBevelLight);
+        MainTexture.ColorBevelShade, MainTexture.ColorBevelLight);
       DLine(offscreen.Canvas, xTotal2 + 176, xTotal2 + 263, y + 16,
-        MainTexture.clBevelShade, MainTexture.clBevelLight);
+        MainTexture.ColorBevelShade, MainTexture.ColorBevelLight);
       s := MovementToString(MyRO.DevModel.Speed);
       RisedTextOut(offscreen.Canvas, xTotal2 + 170 + 64 + 30 -
         TextWidth(s), y, s);
@@ -198,9 +198,9 @@ procedure TDraftDlg.OffscreenPaint;
       LoweredTextOut(offscreen.Canvas, -1, MainTexture,
         xTotal2 + 148 + 30, y, '=');
       DLine(offscreen.Canvas, xTotal - 2, xTotal + 174, y + 16,
-        MainTexture.clBevelShade, MainTexture.clBevelLight);
+        MainTexture.ColorBevelShade, MainTexture.ColorBevelLight);
       DLine(offscreen.Canvas, xTotal2 + 176, xTotal2 + 263, y + 16,
-        MainTexture.clBevelShade, MainTexture.clBevelLight);
+        MainTexture.ColorBevelShade, MainTexture.ColorBevelLight);
       s := IntToStr(MyRO.DevModel.Cost);
       RisedTextOut(offscreen.Canvas, xTotal2 + 170 + 64 + 30 - 12 -
         TextWidth(s), y, s);
@@ -215,9 +215,9 @@ procedure TDraftDlg.OffscreenPaint;
         LoweredTextOut(offscreen.Canvas, -1, MainTexture,
           xTotal2 + 148 + 30, y, '=');
         DLine(offscreen.Canvas, xTotal - 2, xTotal + 174, y + 16,
-          MainTexture.clBevelShade, MainTexture.clBevelLight);
+          MainTexture.ColorBevelShade, MainTexture.ColorBevelLight);
         DLine(offscreen.Canvas, xTotal2 + 176, xTotal2 + 263, y + 16,
-          MainTexture.clBevelShade, MainTexture.clBevelLight);
+          MainTexture.ColorBevelShade, MainTexture.ColorBevelLight);
         s := IntToStr(MyRO.DevModel.Cost * BuildCostMod
           [G.Difficulty[me]] div 12);
         RisedTextOut(offscreen.Canvas, xTotal2 + 170 + 64 + 30 - 12 -
@@ -235,20 +235,20 @@ begin
   UnshareBitmap(Back);
 
   ClientHeight := Template.Height - Cut;
-  if ClientHeight > hMainTexture then
+  if ClientHeight > MainTexture.Height then
   // assemble background from 2 texture tiles
   begin
     BitBltCanvas(Back.Canvas, 0, 0, ClientWidth, 64,
-      MainTexture.Image.Canvas, (wMainTexture - ClientWidth) div 2,
-      hMainTexture - 64);
+      MainTexture.Image.Canvas, (MainTexture.Width - ClientWidth) div 2,
+      MainTexture.Height - 64);
     BitBltCanvas(Back.Canvas, 0, 64, ClientWidth, ClientHeight - 64,
-      MainTexture.Image.Canvas, (wMainTexture - ClientWidth) div 2,
+      MainTexture.Image.Canvas, (MainTexture.Width - ClientWidth) div 2,
       0);
   end
   else
     BitBltCanvas(Back.Canvas, 0, 0, ClientWidth, ClientHeight,
-      MainTexture.Image.Canvas, (wMainTexture - ClientWidth) div 2,
-      (hMainTexture - ClientHeight) div 2);
+      MainTexture.Image.Canvas, (MainTexture.Width - ClientWidth) div 2,
+      (MainTexture.Height - ClientHeight) div 2);
   ImageOp_B(Back, Template, 0, 0, 0, 0, Template.Width, 64);
   ImageOp_B(Back, Template, 0, 64, 0, 64 + Cut, Template.Width,
     Template.Height - 64 - Cut);
@@ -319,8 +319,8 @@ begin
               i, 12, 12, 169, 159);
             RFrame(offscreen.Canvas, xFeature - (21 + 1),
               yFeature + 2 + LinePitch * i - 1, xFeature - (21 - 24),
-              yFeature + 2 + LinePitch * i + 12, MainTexture.clBevelShade,
-              MainTexture.clBevelLight);
+              yFeature + 2 + LinePitch * i + 12, MainTexture.ColorBevelShade,
+              MainTexture.ColorBevelLight);
           end
           else
           begin
@@ -328,8 +328,8 @@ begin
               i, 12, 12, 169, 185 + 13 * MyRO.DevModel.Cap[code[i]]);
             RFrame(offscreen.Canvas, xFeature - (9 + 1),
               yFeature + 2 + LinePitch * i - 1, xFeature - (21 - 24),
-              yFeature + 2 + LinePitch * i + 12, MainTexture.clBevelShade,
-              MainTexture.clBevelLight);
+              yFeature + 2 + LinePitch * i + 12, MainTexture.ColorBevelShade,
+              MainTexture.ColorBevelLight);
           end;
 
           // paint cost
@@ -361,7 +361,7 @@ begin
           * i, 10, 10, 66 + code[i] mod 11 * 11, 137 + code[i] div 11 * 11);
 
         if MyRO.DevModel.Cap[code[i]] > 0 then
-          TextColor := MainTexture.clLitText
+          TextColor := MainTexture.ColorLitText
         else
           TextColor := -1;
 

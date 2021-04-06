@@ -309,9 +309,9 @@ begin
   Fill(Canvas, 3, 3, ClientWidth - 6, ClientHeight - 6, 0, 0);
   Frame(Canvas, 0, 0, ClientWidth - 1, ClientHeight - 1, $000000, $000000);
   Frame(Canvas, 1, 1, ClientWidth - 2, ClientHeight - 2,
-    MainTexture.clBevelLight, MainTexture.clBevelShade);
+    MainTexture.ColorBevelLight, MainTexture.ColorBevelShade);
   Frame(Canvas, 2, 2, ClientWidth - 3, ClientHeight - 3,
-    MainTexture.clBevelLight, MainTexture.clBevelShade);
+    MainTexture.ColorBevelLight, MainTexture.ColorBevelShade);
   Corner(Canvas, 1, 1, 0, MainTexture);
   Corner(Canvas, ClientWidth - 9, 1, 1, MainTexture);
   Corner(Canvas, 1, ClientHeight - 9, 2, MainTexture);
@@ -324,8 +324,8 @@ begin
     if Assigned(PlayersBrain[i]) then
     begin
       Frame(Canvas, xBrain[i] - 24, yBrain[i] - 8 - 16, xBrain[i] - 24 + 111,
-        yBrain[i] - 8 - 16 + 111, MainTexture.clBevelShade,
-        MainTexture.clBevelShade);
+        yBrain[i] - 8 - 16 + 111, MainTexture.ColorBevelShade,
+        MainTexture.ColorBevelShade);
       FrameImage(Canvas, PlayersBrain[i].Picture, xBrain[i],
         yBrain[i] - 16, 64, 64, 0, 0);
       if 1 shl i and G.RO[me].Alive = 0 then

@@ -257,11 +257,11 @@ begin
     Frame(Canvas, i, i, ClientWidth - 1 - i, ClientHeight - 1 - i,
       $000000, $000000);
   Frame(Canvas, Border + 1, Border + 1, ClientWidth - (2 + Border),
-    ClientHeight - (2 + Border), MainTexture.clBevelLight,
-    MainTexture.clBevelShade);
+    ClientHeight - (2 + Border), MainTexture.ColorBevelLight,
+    MainTexture.ColorBevelShade);
   Frame(Canvas, 2 + Border, 2 + Border, ClientWidth - (3 + Border),
-    ClientHeight - (3 + Border), MainTexture.clBevelLight,
-    MainTexture.clBevelShade);
+    ClientHeight - (3 + Border), MainTexture.ColorBevelLight,
+    MainTexture.ColorBevelShade);
   SplitText(false);
 
   for cix := 0 to ControlCount - 1 do
