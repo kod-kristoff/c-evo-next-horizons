@@ -147,8 +147,8 @@ var
   LastOffer: TOffer;
   CCData: array [0 .. 14] of integer;
   bix: TBrains; { brain of the players }
-  DevModelTurn, { turn of last call to sResetModel }
-  OriginalDataVersion: array [0 .. nPl - 1] of integer;
+  DevModelTurn: array [0 .. nPl - 1] of Integer; { turn of last call to sResetModel }
+  OriginalDataVersion: array [0 .. nPl - 1] of Integer;
   SavedTiles { , SavedResourceWeights } : array [0 .. ncmax - 1] of Cardinal;
   SavedData: array [0 .. nPl - 1] of pointer;
   LogFileName: string;

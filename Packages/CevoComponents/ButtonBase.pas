@@ -79,7 +79,7 @@ begin
         DownChangedProc(self);
     end;
     if (Button = mbLeft) and (@ClickProc <> nil) then
-      ClickProc(self)
+      ClickProc(self);
   end
   else
   begin
@@ -115,7 +115,7 @@ begin
       Paint;
       if @DownChangedProc <> nil then
         DownChangedProc(self);
-    end
+    end;
 end;
 
 procedure TButtonBase.SetDown(x: boolean);
