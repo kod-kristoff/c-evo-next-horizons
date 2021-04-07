@@ -64,6 +64,8 @@ begin
       Info := Phrases.Lookup('BUSY_MODLH');
       Show;
       {$IFDEF LINUX}
+      // Force shown window repaint on Gtk2 widgetset
+      Sleep(1);
       Application.ProcessMessages;
       {$ENDIF}
       Invalidate;
@@ -154,6 +156,8 @@ begin
         State := -1;
         Show;
         {$IFDEF LINUX}
+        // Force shown window repaint on Gtk2 widgetset
+        Sleep(1);
         Application.ProcessMessages;
         {$ENDIF}
         Invalidate;
