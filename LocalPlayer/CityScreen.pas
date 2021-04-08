@@ -73,6 +73,7 @@ type
     imix: array [0 .. 15] of integer;
     CityAreaInfo: TCityAreaInfo;
     AreaMap: TIsoMap;
+    NoMap: TIsoMap;
     CityMapTemplate: TBitmap;
     SmallCityMapTemplate: TBitmap;
     Back: TBitmap;
@@ -197,6 +198,7 @@ begin
   inherited;
   RedTex := TTexture.Create;
   BarTex := TTexture.Create;
+  NoMap := TIsoMap.Create;
   AreaMap := TIsoMap.Create;
   AreaMap.SetOutput(offscreen);
   AreaMap.SetPaintBounds(xmArea - 192, ymArea - 96 - 32, xmArea + 192,
@@ -252,6 +254,7 @@ end;
 
 procedure TCityDlg.FormDestroy(Sender: TObject);
 begin
+  FreeAndNil(NoMap);
   FreeAndNil(AreaMap);
   FreeAndNil(SmallCityMap);
   FreeAndNil(ZoomCityMap);
@@ -593,32 +596,31 @@ begin
   end;
 
   with AreaMap do begin
-  rx := (192 + xxt * 2 - 1) div (xxt * 2);
-  ry := (96 + yyt * 2 - 1) div (yyt * 2);
-  AreaMap.Paint(xmArea - xxt * 2 * rx, ymArea - yyt * 2 * ry - 3 * yyt,
-    dLoc(cLoc, -2 * rx + 1, -2 * ry - 1), 4 * rx - 1, 4 * ry + 1, cLoc, cOwner,
-    false, AllowChange and IsCityAlive and
-    (c.Status and csResourceWeightsMask = 0));
-  BitBltCanvas(offscreen.Canvas, xmArea + 102, 42, 90, 33, Back.Canvas,
-    xmArea + 102, 42);
+    rx := (192 + xxt * 2 - 1) div (xxt * 2);
+    ry := (96 + yyt * 2 - 1) div (yyt * 2);
+    AreaMap.Paint(xmArea - xxt * 2 * rx, ymArea - yyt * 2 * ry - 3 * yyt,
+      dLoc(cLoc, -2 * rx + 1, -2 * ry - 1), 4 * rx - 1, 4 * ry + 1, cLoc, cOwner,
+      false, AllowChange and IsCityAlive and
+      (c.Status and csResourceWeightsMask = 0));
+    BitBltCanvas(offscreen.Canvas, xmArea + 102, 42, 90, 33, Back.Canvas,
+      xmArea + 102, 42);
 
-  if IsCityAlive then
-    for dy := -3 to 3 do
-      for dx := -3 to 3 do
-        if ((dx + dy) and 1 = 0) and (dx * dx * dy * dy < 81) then
-        begin
-          Loc1 := dLoc(cLoc, dx, dy);
-          av := CityAreaInfo.Available[(dy + 3) shl 2 + (dx + 3) shr 1];
-          if ((av = faNotAvailable) or (av = faTreaty) or (av = faInvalid)) and
-            ((Loc1 < 0) or (Loc1 >= G.lx * G.ly) or (MyMap[Loc1] and fCity = 0))
-          then
-            Sprite(offscreen, HGrTerrain, xmArea - xxt + xxt * dx,
-              ymArea - yyt + yyt * dy, xxt * 2, yyt * 2, 1 + 5 * (xxt * 2 + 1),
-              1 + yyt + 15 * (yyt * 3 + 1));
-          if (1 shl ((dy + 3) shl 2 + (dx + 3) shr 1) and c.Tiles <> 0) then
-            PaintResources(xmArea - xxt + xxt * dx, ymArea - yyt + yyt * dy,
-              Loc1, (dx = 0) and (dy = 0));
-        end;
+    if IsCityAlive then
+      for dy := -3 to 3 do
+        for dx := -3 to 3 do
+          if ((dx + dy) and 1 = 0) and (dx * dx * dy * dy < 81) then begin
+            Loc1 := dLoc(cLoc, dx, dy);
+            av := CityAreaInfo.Available[(dy + 3) shl 2 + (dx + 3) shr 1];
+            if ((av = faNotAvailable) or (av = faTreaty) or (av = faInvalid)) and
+              ((Loc1 < 0) or (Loc1 >= G.lx * G.ly) or (MyMap[Loc1] and fCity = 0))
+            then
+              Sprite(offscreen, HGrTerrain, xmArea - xxt + xxt * dx,
+                ymArea - yyt + yyt * dy, xxt * 2, yyt * 2, 1 + 5 * (xxt * 2 + 1),
+                1 + yyt + 15 * (yyt * 3 + 1));
+            if (1 shl ((dy + 3) shl 2 + (dx + 3) shr 1) and c.Tiles <> 0) then
+              PaintResources(xmArea - xxt + xxt * dx, ymArea - yyt + yyt * dy,
+                Loc1, (dx = 0) and (dy = 0));
+          end;
   end;
 
   if Report.Working > 1 then
@@ -914,7 +916,7 @@ begin
     else
       Imp5Area.Hint := '';
   end
-  else { if SmallMapMode=smSupportedUnits then }
+  else { if SmallMapMode = smSupportedUnits then }
   begin
     LoweredTextout(offscreen.Canvas, -1, MainTexture, xZoomMap + 6,
       yZoomMap + 2, Phrases.Lookup('SUPUNITS'));
@@ -931,8 +933,8 @@ begin
             x := ((Cnt - 6 * Page) mod 3) * 64 + xZoomMap;
             y := ((Cnt - 6 * Page) div 3) * 52 + yZoomMap + 20;
             MakeUnitInfo(me, MyUn[i], UnitInfo);
-            AreaMap.SetOutput(offscreen);
-            AreaMap.PaintUnit(x, y, UnitInfo, MyUn[i].Status);
+            NoMap.SetOutput(offscreen);
+            NoMap.PaintUnit(x, y, UnitInfo, MyUn[i].Status);
 
             for j := 0 to UnitReport.FoodSupport - 1 do
               Sprite(offscreen, HGrSystem, x + 38 + 11 * j, y + 40, 10,
@@ -1318,8 +1320,7 @@ begin
     end
     else if (x >= xmArea - 192) and (x < xmArea + 192) and (y >= ymArea - 96)
       and (y < ymArea + 96) then
-    with AreaMap do
-    begin
+    with AreaMap do begin
       qx := ((4000 * xxt * yyt) + (x - xmArea) * (yyt * 2) + (y - ymArea + yyt)
         * (xxt * 2)) div (xxt * yyt * 4) - 1000;
       qy := ((4000 * xxt * yyt) + (y - ymArea + yyt) * (xxt * 2) - (x - xmArea)
