@@ -14,6 +14,7 @@ const
 
 type
   TCityCloseAction = (None, RestoreFocus, StepFocus);
+  TSmallMapMode = (smSupportedUnits, smImprovements);
 
   TCityDlg = class(TBufferedDrawDlg)
     Timer1: TTimer;
@@ -58,7 +59,7 @@ type
     emix: Integer; { enemy model index of produced unit }
     cix: Integer;
     cLoc: Integer;
-    Mode: Integer;
+    SmallMapMode: TSmallMapMode;
     ZoomArea: Integer;
     Page: Integer;
     PageCount: Integer;
@@ -110,10 +111,6 @@ uses
 {$R *.lfm}
 
 const
-  { modes }
-  mSupp = 1;
-  mImp = 2;
-
   wBar = 106;
   xDiv = 400;
   xService = 296;
@@ -204,7 +201,7 @@ begin
   AreaMap.SetOutput(offscreen);
   AreaMap.SetPaintBounds(xmArea - 192, ymArea - 96 - 32, xmArea + 192,
     ymArea + 96);
-  Mode := mImp;
+  SmallMapMode := smImprovements;
   ZoomArea := 1;
   ProdHint := false;
   RestoreUnFocus := -1;
@@ -268,7 +265,7 @@ end;
 
 procedure TCityDlg.Reset;
 begin
-  Mode := mImp;
+  SmallMapMode := smImprovements;
   ZoomArea := 1;
 end;
 
@@ -374,7 +371,7 @@ begin
   UnshareBitmap(ZoomCityMap);
   BitBltCanvas(ZoomCityMap.Canvas, 0, 0, wZoomMap, hZoomMap,
     Back.Canvas, xZoomMap, yZoomMap);
-  if Mode = mImp then begin
+  if SmallMapMode = smImprovements then begin
     if ZoomArea < 3 then begin
       ImageOp_B(ZoomCityMap, CityMapTemplate, 0, 0, 376 * SizeClass,
         112 * ZoomArea, wZoomMap, hZoomMap);
@@ -794,7 +791,7 @@ begin
   // small map
   BitBltCanvas(offscreen.Canvas, xSmallMap, ySmallMap, wSmallMap, hSmallMap,
     SmallCityMap.Canvas, 0, 0);
-  if Mode = mImp then
+  if SmallMapMode = smImprovements then
     Frame(offscreen.Canvas, xSmallMap + 48 * (ZoomArea div 3),
       ySmallMap + 24 * (ZoomArea mod 3), xSmallMap + 48 * (ZoomArea div 3) + 49,
       ySmallMap + 24 * (ZoomArea mod 3) + 25, MainTexture.ColorMark,
@@ -810,7 +807,7 @@ begin
     ySupport + hSupport + 1, $FFFFFF, $B0B0B0);
   x := xSupport + wSupport div 2;
   y := ySupport + hSupport div 2;
-  if Mode = mSupp then
+  if SmallMapMode = smSupportedUnits then
   begin
     offscreen.Canvas.brush.Color := MainTexture.ColorMark;
     offscreen.Canvas.FillRect(Rect(x - 27, y - 6, x + 27, y + 6));
@@ -825,7 +822,7 @@ begin
 
   for i := 0 to 5 do
     imix[i] := -1;
-  if Mode = mImp then
+  if SmallMapMode = smImprovements then
   begin
     if ZoomArea = 5 then
     begin
@@ -917,7 +914,7 @@ begin
     else
       Imp5Area.Hint := '';
   end
-  else { if mode=mSupp then }
+  else { if SmallMapMode=smSupportedUnits then }
   begin
     LoweredTextout(offscreen.Canvas, -1, MainTexture, xZoomMap + 6,
       yZoomMap + 2, Phrases.Lookup('SUPUNITS'));
@@ -1048,7 +1045,7 @@ begin
   end
   else { enemy city }
   begin
-    Mode := mImp;
+    SmallMapMode := smImprovements;
     Server(sGetCity, me, cLoc, GetCityData);
     c := GetCityData.c;
     cOwner := GetCityData.Owner;
@@ -1146,7 +1143,7 @@ begin
   if (ssLeft in Shift) and (x >= xSmallMap) and (x < xSmallMap + wSmallMap) and
     (y >= ySmallMap) and (y < ySmallMap + hSmallMap) then
   begin
-    Mode := mImp;
+    SmallMapMode := smImprovements;
     ZoomArea := (y - ySmallMap) * 3 div hSmallMap + 3 *
       ((x - xSmallMap) * 2 div wSmallMap);
     Page := 0;
@@ -1157,7 +1154,7 @@ begin
   if (ssLeft in Shift) and (x >= xSupport) and (x < xSupport + wSupport) and
     (y >= ySupport) and (y < ySupport + hSupport) then
   begin
-    Mode := mSupp;
+    SmallMapMode := smSupportedUnits;
     Page := 0;
     InitZoomCityMap;
     SmartUpdateContent;
@@ -1189,7 +1186,7 @@ begin
         end;
         ChooseProject;
       end
-    else if (Mode = mImp) and (x >= xZoomMap) and (x < xZoomMap + wZoomMap) and
+    else if (SmallMapMode = smImprovements) and (x >= xZoomMap) and (x < xZoomMap + wZoomMap) and
       (y >= yZoomMap) and (y < yZoomMap + hZoomMap) then
     begin
       i := 5;
@@ -1203,7 +1200,7 @@ begin
         iix := imix[i];
         if iix >= 0 then
           if ssShift in Shift then
-            HelpDlg.ShowNewContent(Mode or wmPersistent, hkImp, iix)
+            HelpDlg.ShowNewContent(FWindowMode or wmPersistent, hkImp, iix)
           else if (ClientMode < scContact) then
             with MessgExDlg do
             begin
@@ -1300,7 +1297,7 @@ begin
             end;
       end;
     end
-    else if (Mode = mSupp) and (x >= xZoomMap) and (x < xZoomMap + wZoomMap) and
+    else if (SmallMapMode = smSupportedUnits) and (x >= xZoomMap) and (x < xZoomMap + wZoomMap) and
       (y >= yZoomMap) and (y < yZoomMap + hZoomMap) then
     begin
       i := 5;
@@ -1335,7 +1332,7 @@ begin
         begin // terrain help
           Loc1 := dLoc(cLoc, dx, dy);
           if (Loc1 >= 0) and (Loc1 < G.lx * G.ly) then
-            HelpOnTerrain(Loc1, Mode or wmPersistent)
+            HelpOnTerrain(Loc1, FWindowMode or wmPersistent)
         end
         else if (ClientMode < scContact) and (cGov <> gAnarchy) and
           (c.Flags and chCaptured = 0) then
