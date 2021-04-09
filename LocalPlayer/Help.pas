@@ -1247,9 +1247,9 @@ var
           AddPreqAdv(JobPreq[JobHelp[i]]);
           MainText[Count - 1] := Format(HelpText.Lookup('REQUIRED'),
             [MainText[Count - 1]]);
-        end
+        end;
       end;
-    end
+    end;
   end;
 
   procedure AddGraphicCredits;
@@ -1421,8 +1421,8 @@ begin { Prepare }
                   begin
                     LineFeed;
                     LineFeed;
-                  end
-                end
+                  end;
+                end;
               end;
             miscSearchResult:
               begin
@@ -1641,7 +1641,7 @@ begin { Prepare }
               begin
                 NextSection('REPLACE');
                 AddItem('REPLACETEXT');
-                j := 1
+                j := 1;
               end;
               AddImprovement(ImpReplacement[i].OldImp);
             end;
@@ -1675,7 +1675,7 @@ begin { Prepare }
           if no = imSupermarket then
             AddLine(HelpText.Lookup('HELPTITLE_JOBLIST'), pkNormal, 0,
               hkMisc + hkCrossLink, miscJobList);
-          CheckSeeAlso := true
+          CheckSeeAlso := true;
         end;
 
       hkTer:
@@ -1695,7 +1695,7 @@ begin { Prepare }
           if no = 3 * 12 then
           begin
             TerrType := fDesert;
-            TerrSubType := 0
+            TerrSubType := 0;
           end;
           with Terrain[TerrType] do
           begin
@@ -1765,7 +1765,7 @@ begin { Prepare }
                 AddLine(Format(HelpText.Lookup('TRAFO'),
                   [Phrases.Lookup('TERRAIN', fGrass + 12)]), pkTer, fGrass + 12,
                   hkTer + hkCrossLink, fGrass + 12);
-              end
+              end;
             end;
             NextSection('SPECIAL');
             if no = 3 * 12 then
@@ -1777,7 +1777,7 @@ begin { Prepare }
                   LineFeed;
                 AddLine(Phrases.Lookup('TERRAIN', 3 * 12 + Special), pkTer,
                   3 * 12 + Special);
-              end
+              end;
             end
             else if (no < 12) and (no <> fGrass) and (no <> fOcean) then
             begin
@@ -1813,8 +1813,8 @@ begin { Prepare }
               NextSection('SEEALSO');
               AddImprovement(woGardens);
               CheckSeeAlso := true
-            end
-          end
+            end;
+          end;
         end;
 
       hkFeature:
@@ -1881,7 +1881,7 @@ begin { Prepare }
               if no = mcDefense then
                 AddLine(Format(HelpText.Lookup('WEIGHT'), ['+2']),
                   pkDomain, dGround);
-            end
+            end;
           end;
           if Feature[no].Preq <> preNone then
           begin
@@ -1968,8 +1968,8 @@ begin
     if Sel0 <> -1 then
       Line(Canvas, Sel0, False);
     if Sel <> -1 then
-      Line(Canvas, Sel, True)
-  end
+      Line(Canvas, Sel, True);
+  end;
 end;
 
 procedure THelpDlg.PaintBox1MouseDown(Sender: TObject; Button: TMouseButton;
@@ -1991,7 +1991,7 @@ begin
           ShowNewContent(FWindowMode, hkText, Link and $3FFF)
         else
           ShowNewContent(FWindowMode, Link shr 8 and $3F, Link and $FF);
-      end
+      end;
 end;
 
 procedure THelpDlg.BackBtnClick(Sender: TObject);
@@ -2035,7 +2035,7 @@ end;
 
 function THelpDlg.TextIndex(Item: string): Integer;
 begin
-  Result := HelpText.Gethandle(Item)
+  Result := HelpText.Gethandle(Item);
 end;
 
 procedure THelpDlg.FormKeyDown(Sender: TObject; var Key: Word;

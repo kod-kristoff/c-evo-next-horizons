@@ -9,6 +9,10 @@ uses
   ButtonB, StdCtrls, DrawDlg;
 
 type
+  TMessageIconKind = (mikNone, mikImp, mikModel, mikTribe, mikBook, mikAge,
+    mikPureIcon, mikMyArmy, mikEnemyArmy, mikFullControl, mikShip, mikBigIcon,
+    mikEnemyShipComplete);
+
   TMessgExDlg = class(TBaseMessgDlg)
     Button1: TButtonA;
     Button2: TButtonA;
@@ -25,7 +29,12 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure RemoveBtnClick(Sender: TObject);
   public
-    Kind, IconKind, IconIndex, HelpKind, HelpNo, CenterTo: integer;
+    Kind: TMessageKind;
+    IconIndex: Integer;
+    HelpKind: Integer;
+    HelpNo: Integer;
+    CenterTo: Integer;
+    IconKind: TMessageIconKind;
     OpenSound: string;
     function ShowModal: integer; override;
     procedure CancelMovie;
@@ -37,34 +46,12 @@ type
     procedure OnPlaySound(var Msg: TMessage); message WM_PLAYSOUND;
   end;
 
-const
-  // extra message kinds
-  mkYesNoCancel = 4;
-  mkOkCancelRemove = 5;
-  mkOkHelp = 6;
-  mkModel = 7;
-
-  // message icon kinds
-  mikNone = -1;
-  mikImp = 0;
-  mikModel = 1;
-  mikTribe = 2;
-  mikBook = 3;
-  mikAge = 4;
-  mikPureIcon = 5;
-  mikMyArmy = 6;
-  mikEnemyArmy = 7;
-  mikFullControl = 8;
-  mikShip = 9;
-  mikBigIcon = 10;
-  mikEnemyShipComplete = 11;
-
 var
   MessgExDlg: TMessgExDlg;
 
 procedure SoundMessageEx(SimpleText, SoundItem: string);
 procedure TribeMessage(p: integer; SimpleText, SoundItem: string);
-function SimpleQuery(QueryKind: integer; SimpleText, SoundItem: string)
+function SimpleQuery(QueryKind: TMessageKind; SimpleText, SoundItem: string)
   : integer;
 procedure ContextMessage(SimpleText, SoundItem: string;
   ContextKind, ContextNo: integer);
@@ -198,7 +185,8 @@ end;
 
 function TMessgExDlg.ShowModal: integer;
 var
-  Ticks0, Ticks: TDateTime;
+  Ticks0: TDateTime;
+  Ticks: TDateTime;
 begin
   if GameMode = cMovie then
   begin
@@ -515,7 +503,7 @@ begin
   end;
 end;
 
-function SimpleQuery(QueryKind: integer; SimpleText, SoundItem: string)
+function SimpleQuery(QueryKind: TMessageKind; SimpleText, SoundItem: string)
   : integer;
 begin
   with MessgExDlg do

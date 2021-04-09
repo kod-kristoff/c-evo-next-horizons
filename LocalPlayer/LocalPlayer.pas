@@ -4,16 +4,13 @@ unit LocalPlayer;
 interface
 
 procedure Client(Command, Player: integer; var Data); stdcall;
-
 procedure SetAIName(p: integer; Name: string);
 
 implementation
 
 uses
   Term, CityScreen, Draft, MessgEx, Select, CityType, Help, UnitStat, Diagram,
-  NatStat, Wonders, Nego, Enhance, BaseWin, Battle, Rates, TechTree,
-
-  Forms;
+  NatStat, Wonders, Nego, Enhance, BaseWin, Battle, Rates, TechTree, Forms;
 
 var
   FormsCreated: boolean;

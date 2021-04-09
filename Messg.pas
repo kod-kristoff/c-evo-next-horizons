@@ -11,6 +11,9 @@ const
   WM_PLAYSOUND = WM_USER;
 
 type
+  TMessageKind = (mkOK, mkOKCancel, mkYesNo, mkYesNoCancel, mkOkCancelRemove,
+    mkOkHelp, mkModel);
+
   TMessgDlg = class(TBaseMessgDlg)
     Button1: TButtonA;
     Button2: TButtonA;
@@ -21,17 +24,11 @@ type
     procedure Button2Click(Sender: TObject);
     procedure FormKeyPress(Sender: TObject; var Key: char);
   public
-    Kind: integer;
+    Kind: TMessageKind;
     OpenSound: string;
   private
     procedure OnPlaySound(var Msg: TMessage); message WM_PLAYSOUND;
   end;
-
-const
-  // message kinds
-  mkOK = 1;
-  mkOKCancel = 2;
-  mkYesNo = 3;
 
 var
   MessgDlg: TMessgDlg;
