@@ -1113,7 +1113,7 @@ begin
       if PlayersBrain[PlayerPopupIndex].Kind = btNoTerm then
       begin // turn all local players off
         for I := 1 to PlayerSlots.Count - 1 do
-          if PlayersBrain[I].Kind = btTerm then begin
+          if Assigned(PlayersBrain[I]) and (PlayersBrain[I].Kind = btTerm) then begin
             PlayersBrain[I] := nil;
             PlayerSlots[I].DiffUpBtn.Visible := false;
             PlayerSlots[I].DiffUpBtn.Tag := 0;
