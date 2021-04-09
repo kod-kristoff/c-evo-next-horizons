@@ -1550,10 +1550,13 @@ begin
     not Phrases2FallenBackToEnglish and
     (Kind in [kProject, kAdvance, kFarAdvance]);
   if (Kind = kAdvance) and (MyData.FarTech <> adNone) or (Kind = kModels) or
-    (Kind = kEModels) then
-    TitleHeight := WideFrame + 20
-  else
+    (Kind = kEModels) then begin
+    sb.SetBorderSpacing(56, 10, 10);
+    TitleHeight := WideFrame + 20;
+  end else begin
+    sb.SetBorderSpacing(36, 10, 34);
     TitleHeight := WideFrame;
+  end;
 
   DispLines := Lines[0];
   for i := 0 to MaxLayer - 1 do
