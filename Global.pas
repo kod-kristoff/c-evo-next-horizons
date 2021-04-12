@@ -11,6 +11,7 @@ const
   CevoContactShort = 'app.zdechov.net/c-evo#Contact';
   CevoContact = 'https://' + CevoContactShort;
   CevoContactBug = 'https://app.zdechov.net/c-evo/report/1';
+  CevoNetworkPort = 41363;
   AppRegistryKey = '\SOFTWARE\C-evo';
   AITemplateManual = 'AI development manual';
   AITemplateFileName = 'AI Template' + DirectorySeparator + AITemplateManual + '.html';

@@ -2909,7 +2909,7 @@ begin
         MapValid := false;
         FormResize(nil); // calculate geometrics and paint all
         SetTroopLoc(-1);
-        idle := true
+        idle := true;
       end;
 
     (* cNewContact:
@@ -2942,12 +2942,12 @@ begin
               NegoDlg.Respond;
               DipMem[me].DeliveredPrices := [];
               DipMem[me].ReceivedPrices := [];
-              DipCall(scDipStart)
+              DipCall(scDipStart);
             end
             else
             begin
               DipCall(scReject);
-              EndNego
+              EndNego;
             end;
           end;
         end;
@@ -2986,7 +2986,7 @@ begin
             Play('ACCEPTOFFER');
         end;
         NegoDlg.Start;
-        idle := true
+        idle := true;
       end;
 
     cShowCancelTreaty:
@@ -3038,7 +3038,7 @@ begin
           else if CurrentMoveInfo.IsAlly then
             CurrentMoveInfo.DoShow := not mAlNoMoves.Checked
           else
-            CurrentMoveInfo.DoShow := not mEnNoMoves.Checked
+            CurrentMoveInfo.DoShow := not mEnNoMoves.Checked;
         end
         else if Command = cShowUnitChanged then
         begin
@@ -3050,7 +3050,7 @@ begin
               not(mAlNoMoves.Checked or mAlEffectiveMovesOnly.Checked)
           else
             CurrentMoveInfo.DoShow :=
-              not(mEnNoMoves.Checked or mEnAttacks.Checked)
+              not(mEnNoMoves.Checked or mEnAttacks.Checked);
         end;
         // else keep DoShow from cShowMove/cShowAttack
 
@@ -3144,8 +3144,8 @@ begin
                   AnimationSpeed := 4;
                 ShowMoveDomain := Domain;
                 IsAlpine := Cap[mcAlpine] > 0;
-              end
-            end
+              end;
+            end;
           end
           else
           begin
@@ -3197,7 +3197,7 @@ begin
                     (MyMap[ToLoc] and fTerImp = tiBase) then
                     CurrentMoveInfo.AfterMovePaintRadius := 2
                   else
-                    CurrentMoveInfo.AfterMovePaintRadius := 1
+                    CurrentMoveInfo.AfterMovePaintRadius := 1;
               end
               else
               begin
@@ -3264,7 +3264,7 @@ begin
           end // if CurrentMoveInfo.DoShow
           else
             MapValid := false;
-        end
+        end;
       end;
 
     cShowAttacking:
@@ -3349,7 +3349,7 @@ begin
           end // if CurrentMoveInfo.DoShow
           else
             MapValid := false;
-        end
+        end;
       end;
 
     cShowMissionResult:
@@ -3361,7 +3361,7 @@ begin
         for p1 := 0 to nPl - 1 do
           if 3 shl (p1 * 2) and Cardinal(Data) <> 0 then
             s := s + '\' + Tribe[p1].TPhrase('SHORTNAME');
-        SoundMessageEx(s, '')
+        SoundMessageEx(s, '');
       end;
 
     cShowShipChange:

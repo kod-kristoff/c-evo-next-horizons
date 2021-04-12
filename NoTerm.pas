@@ -8,6 +8,8 @@ uses
   SysUtils, Classes, Graphics, Controls, Forms, ButtonB, DrawDlg;
 
 type
+  TRunMode = (rmStop, rmStopped, rmRunning, rmQuit);
+
   TNoTermDlg = class(TDrawDlg)
     QuitBtn: TButtonB;
     GoBtn: TButtonB;
@@ -19,17 +21,25 @@ type
   public
     procedure Client(Command, Player: integer; var Data);
   private
-    me, Active, ToldAlive, Round: integer;
-    LastShowYearTime, LastShowTurnChange, LastNewTurn: TDateTime;
-    TurnTime, TotalStatTime: extended;
+    Me: Integer;
+    Active: Integer;
+    ToldAlive: Integer;
+    Round: Integer;
+    LastShowYearTime: TDateTime;
+    LastShowTurnChange: TDateTime;
+    LastNewTurn: TDateTime;
+    TurnTime: Extended;
+    TotalStatTime: Extended;
     G: TNewGameData;
     Server: TServerCall;
     Shade: TBitmap;
     State: TBitmap;
-    WinStat, ExtStat, AloneStat: array [0 .. nPl - 1] of integer;
-    DisallowShowActive: array [0 .. nPl - 1] of boolean;
-    TimeStat: array [0 .. nPl - 1] of extended;
-    Mode: (Stop, Stopped, Running, Quit);
+    WinStat: array [0 .. nPl - 1] of Integer;
+    ExtStat: array [0 .. nPl - 1] of Integer;
+    AloneStat: array [0 .. nPl - 1] of Integer;
+    DisallowShowActive: array [0 .. nPl - 1] of Boolean;
+    TimeStat: array [0 .. nPl - 1] of Extended;
+    Mode: TRunMode;
     procedure NewStat;
     procedure EndPlaying;
     procedure ShowActive(p: integer; Active: boolean);
@@ -91,7 +101,7 @@ begin
   FillChar(AloneStat, SizeOf(AloneStat), 0);
   FillChar(TimeStat, SizeOf(TimeStat), 0);
   TotalStatTime := 0;
-  Mode := Stop;
+  Mode := rmStop;
 end;
 
 procedure TNoTermDlg.EndPlaying;
@@ -108,7 +118,7 @@ begin
       if ModalResult = mrIgnore then
         EndCommand := sResign
       else
-        EndCommand := sBreak
+        EndCommand := sBreak;
     end
   else
     EndCommand := sResign;
@@ -170,10 +180,10 @@ begin
     cNewGame, cLoadGame:
       begin
         inc(Round);
-        if Mode = Running then
+        if Mode = rmRunning then
         begin
           Invalidate;
-          Update
+          Update;
         end
         else
           Show;
@@ -191,12 +201,12 @@ begin
     cBreakGame:
       begin
         LogDlg.List.Clear;
-        if Mode <> Running then
+        if Mode <> rmRunning then
         begin
           if LogDlg.Visible then
             LogDlg.Close;
           Close;
-        end
+        end;
       end;
 
     cTurn, cResume, cContinue:
@@ -205,7 +215,7 @@ begin
         if Active >= 0 then
         begin
           ShowActive(Active, false);
-          Active := -1
+          Active := -1;
         end; // should not happen
 
         nowt := NowPrecise;
@@ -228,7 +238,7 @@ begin
           ToldAlive := G.RO[me].Alive;
         end;
         Application.ProcessMessages;
-        if Mode = Quit then
+        if Mode = rmQuit then
           EndPlaying
         else if G.RO[me].Happened and phGameEnd <> 0 then
         begin // game ended, update statistics
@@ -247,15 +257,15 @@ begin
                 if ShipComplete then
                   inc(WinStat[p]);
               end;
-          if Mode = Running then
-            Server(sNextRound, me, 0, nil^)
+          if Mode = rmRunning then
+            Server(sNextRound, me, 0, nil^);
         end
-        else if Mode = Running then
+        else if Mode = rmRunning then
           Server(sTurn, me, 0, nil^);
-        if Mode = Stop then
+        if Mode = rmStop then
         begin
           GoBtn.ButtonIndex := 22;
-          Mode := Stopped;
+          Mode := rmStopped;
         end;
       end;
 
@@ -283,11 +293,11 @@ end;
 
 procedure TNoTermDlg.GoBtnClick(Sender: TObject);
 begin
-  if Mode = Running then
-    Mode := Stop
-  else if Mode = Stopped then
+  if Mode = rmRunning then
+    Mode := rmStop
+  else if Mode = rmStopped then
   begin
-    Mode := Running;
+    Mode := rmRunning;
     GoBtn.ButtonIndex := 23;
     GoBtn.Update;
     Server(sTurn, me, 0, nil^);
@@ -296,10 +306,8 @@ end;
 
 procedure TNoTermDlg.QuitBtnClick(Sender: TObject);
 begin
-  if Mode = Stopped then
-    EndPlaying
-  else
-    Mode := Quit;
+  if Mode = rmStopped then EndPlaying
+    else Mode := rmQuit;
 end;
 
 procedure TNoTermDlg.FormPaint(Sender: TObject);
@@ -361,7 +369,7 @@ begin
   // BtnFrame(Canvas,StatBtn.BoundsRect,MainTexture);
 end;
 
-procedure Client;
+procedure Client(Command, Player: integer; var Data);
 begin
   if not FormsCreated then
   begin
@@ -383,6 +391,6 @@ end;
 
 initialization
 
-FormsCreated := false;
+FormsCreated := False;
 
 end.

@@ -413,6 +413,8 @@
 #NOFARTECH (Erinnern)
 #UTILIZE Anwenden
 #INTEGRATE Integrieren
+#NETWORK_SERVER Network Server
+#NETWORK_CLIENT Network Client
 
 'Busy Messages
 #BUSY_START Welt wird erstellt ...

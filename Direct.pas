@@ -42,7 +42,8 @@ var
 implementation
 
 uses
-  ScreenTools, Protocol, Start, LocalPlayer, NoTerm, Back, Global;
+  ScreenTools, Protocol, Start, LocalPlayer, NoTerm, Back, Global, UNetworkServer,
+  UNetworkClient;
 
 {$R *.lfm}
 
@@ -184,6 +185,10 @@ begin
   BrainSuperVirtual.Name := Phrases.Lookup('SUPER');
   BrainTerm.Client := LocalPlayer.Client;
   BrainTerm.Name := Phrases.Lookup('HUMAN');
+  BrainNetworkServer.Client := UNetworkServer.Client;
+  BrainNetworkServer.Name := Phrases.Lookup('NETWORK_SERVER');
+  BrainNetworkClient.Client := UNetworkClient.Client;
+  BrainNetworkClient.Name := Phrases.Lookup('NETWORK_CLIENT');
   BrainRandom.Name := Phrases.Lookup('RANDOMAI');
   Canvas.Font.Assign(UniFont[ftNormal]);
   Canvas.Brush.Style := bsClear;

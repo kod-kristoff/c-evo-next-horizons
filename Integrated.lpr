@@ -2,6 +2,9 @@
 program Integrated;
 
 uses
+  {$IFDEF UNIX}
+  cthreads, clocale,
+  {$ENDIF}
   Forms, Interfaces, SysUtils, Protocol, GameServer, Direct, Start, Messg, Inp,
   Back, Log, LocalPlayer, ClientTools, Tribes, IsoEngine, Term, CityScreen, Nego,
   NoTerm, ScreenTools, Directories;

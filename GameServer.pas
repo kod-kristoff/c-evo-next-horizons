@@ -48,7 +48,7 @@ type
 
 var
   // PARAMETERS
-  PlayersBrain: TBrains; { brain of the players }
+  PlayersBrain: TBrains; { brain of the players view }
   Difficulty: array [0 .. nPl - 1] of integer absolute Database.Difficulty;
   { difficulty }
 
@@ -61,6 +61,8 @@ var
   BrainSuperVirtual: TBrain;
   BrainTerm: TBrain;
   BrainRandom: TBrain;
+  BrainNetworkClient: TBrain;
+  BrainNetworkServer: TBrain;
 
 procedure Init(NotifyFunction: TNotifyFunction);
 procedure Done;
@@ -146,7 +148,7 @@ begin
     dec(nHandoverStack, 2);
 {$ELSE}
     try
-      Brain[bix[p]].Client(Command, p, Data);
+      bix[p].Client(Command, p, Data);
     except
       Notify(ntException + bix[p]);
     end;
@@ -198,24 +200,36 @@ begin
   BrainNoTerm := Brains.AddNew;
   BrainNoTerm.FileName := ':AIT';
   BrainNoTerm.Flags := 0;
-  BrainNoTerm.Initialized := false;
+  BrainNoTerm.Initialized := False;
   BrainNoTerm.Kind := btNoTerm;
   BrainSuperVirtual := Brains.AddNew;
   BrainSuperVirtual.FileName := ':Supervisor';
   BrainSuperVirtual.Flags := 0;
-  BrainSuperVirtual.Initialized := false;
+  BrainSuperVirtual.Initialized := False;
   BrainSuperVirtual.Kind := btSuperVirtual;
+  BrainNetworkClient := Brains.AddNew;
+  BrainNetworkClient.FileName := ':NetworkClient';
+  BrainNetworkClient.Flags := fMultiple;
+  BrainNetworkClient.Initialized := False;
+  BrainNetworkClient.ServerVersion := Version;
+  BrainNetworkClient.Kind := btNetworkClient;
   BrainTerm := Brains.AddNew;
   BrainTerm.FileName := ':StdIntf';
   BrainTerm.Flags := fMultiple;
-  BrainTerm.Initialized := false;
+  BrainTerm.Initialized := False;
   BrainTerm.ServerVersion := Version;
   BrainTerm.Kind := btTerm;
   BrainRandom := Brains.AddNew;
   BrainRandom.FileName := ':Random';
   BrainRandom.Flags := fMultiple;
-  BrainRandom.Initialized := false;
+  BrainRandom.Initialized := False;
   BrainRandom.Kind := btRandom;
+  BrainNetworkServer := Brains.AddNew;
+  BrainNetworkServer.FileName := ':NetworkServer';
+  BrainNetworkServer.Flags := fMultiple;
+  BrainNetworkServer.Initialized := False;
+  BrainNetworkServer.ServerVersion := Version;
+  BrainNetworkServer.Kind := btNetworkServer;
 
   if FindFirst(GetAiDir + DirectorySeparator + '*', faDirectory or faArchive or faReadOnly, f) = 0 then
   repeat
@@ -329,7 +343,7 @@ begin
   begin
     Notify(ntDeactivationMissing, p);
     ForceClientDeactivation;
-  end
+  end;
 end;
 
 procedure Inform(p: integer);
@@ -2385,14 +2399,14 @@ begin
       assert(Movement >= 100);
       if PModel.Attack = 0 then
         Flags := Flags and not unBombsLoaded;
-      dec(Movement, 100)
+      dec(Movement, 100);
     end
     else if MoveInfo.MoveType = mtExpel then
     begin
       assert(Movement >= 100);
       Job := jNone;
       Flags := Flags and not unFortified;
-      dec(Movement, 100)
+      dec(Movement, 100);
     end
     else
     begin
@@ -2442,7 +2456,7 @@ begin
           UpdateLoc[nUpdateLoc] := Loc;
           inc(nUpdateLoc);
           Flags := Flags or unWithdrawn;
-        end
+        end;
       end
     else if (MoveInfo.MoveType = mtAttack) and (MoveInfo.EndHealthDef > 0) then
       with RW[MoveInfo.Defender].Un[MoveInfo.Duix] do
@@ -2480,7 +2494,7 @@ begin
               if (Loc >= 0) and (Home = MoveInfo.Dcix) then
               begin
                 UpdateLoc[nUpdateLoc] := Loc;
-                inc(nUpdateLoc)
+                inc(nUpdateLoc);
               end;
           // unit will be removed -- remember position and update for all players
           DestroyCity_TellPlayers(MoveInfo.Defender, MoveInfo.Dcix, false);
@@ -2528,8 +2542,8 @@ begin
           if SeeTo and (MoveInfo.MoveType = mtExpel) and (ExpelToLoc >= 0) then
             CallPlayer(cShowUnitChanged, p1, ExpelToLoc);
         end;
-    end
-  end
+    end;
+  end;
 end; // ExecuteAttack
 
 function MoveUnit(p, uix, dx, dy: integer; TestOnly: boolean): integer;
@@ -2545,7 +2559,7 @@ begin
     if (ToLoc < 0) or (ToLoc >= MapSize) then
     begin
       result := eInvalid;
-      exit
+      exit;
     end;
     result := CalculateMove(p, uix, ToLoc, 3 - dy and 1, TestOnly, MoveInfo);
     if result = eZOC_EnemySpotted then
@@ -2579,9 +2593,9 @@ begin
         mtMove, mtCapture, mtSpyMission:
           result := ExecuteMove(p, uix, ToLoc, MoveInfo, ShowMove) or result;
         mtAttack, mtBombard, mtExpel:
-          result := ExecuteAttack(p, uix, ToLoc, MoveInfo, ShowMove) or result
+          result := ExecuteAttack(p, uix, ToLoc, MoveInfo, ShowMove) or result;
       end;
-    end
+    end;
   end; // with
 end; { MoveUnit }
 
@@ -2655,7 +2669,7 @@ const
     else if Imp[Project and cpIndex].Kind = ikShipPart then
       result := ptShip
     else
-      result := ptImp
+      result := ptImp;
   end;
 
 var
@@ -2686,7 +2700,7 @@ begin { >>>server }
   if (Command < 0) or (Command >= $10000) then
   begin
     result := eUnknown;
-    exit
+    exit;
   end;
 
   if (Player < 0) or (Player >= nPl) or
@@ -2694,7 +2708,7 @@ begin { >>>server }
     ((Subject < 0) or (Subject >= $1000))) then
   begin
     result := eInvalid;
-    exit
+    exit;
   end;
 
   if (1 shl Player and (GAlive or GWatching) = 0) and
@@ -2704,7 +2718,7 @@ begin { >>>server }
   begin
     PutMessage(1 shl 16 + 1, Format('NOT Alive: %d', [Player]));
     result := eNoTurn;
-    exit
+    exit;
   end;
 
   result := eOK;
@@ -2731,7 +2745,7 @@ begin { >>>server }
     PutMessage(1 shl 16 + 1, Format('No Turn: %d calls %x',
       [Player, Command shr 4]));
     result := eNoTurn;
-    exit
+    exit;
   end;
 
   // do not use EXIT hereafter!
@@ -2857,7 +2871,7 @@ begin { >>>server }
           result := eNoPreq
         else
           result := GetTileInfo(Player, TTileInfo(Data).ExplCity, Subject,
-            TTileInfo(Data))
+            TTileInfo(Data));
       end
       else
         result := eInvalid;
@@ -2868,7 +2882,7 @@ begin { >>>server }
         if ObserveLevel[Subject] shr (Player * 2) and 3 = 0 then
           result := eNoPreq
         else
-          result := GetJobProgress(Player, Subject, TJobProgressData(Data))
+          result := GetJobProgress(Player, Subject, TJobProgressData(Data));
       end
       else
         result := eInvalid;
@@ -2917,7 +2931,7 @@ begin { >>>server }
               TBattleForecastEx(Data).DBaseDamage := DBaseDamage;
             end;
             if result = eOK then
-              result := eInvalid // no enemy unit there!
+              result := eInvalid; // no enemy unit there!
           end
           else
             result := eInvalid
@@ -2948,7 +2962,7 @@ begin { >>>server }
         if CanPlaneReturn(Player, Subject, TPlaneReturnData(Data)) then
           result := eOK
         else
-          result := eNoWay
+          result := eNoWay;
       end;
 
     sGetCity:
@@ -3000,7 +3014,7 @@ begin { >>>server }
         TCityReport(Data).HypoTiles := -1;
         TCityReport(Data).HypoTax := -1;
         TCityReport(Data).HypoLux := -1;
-        GetCityReport(p1, cix1, TCityReport(Data))
+        GetCityReport(p1, cix1, TCityReport(Data));
       end
       else
         result := eInvalid;
@@ -3031,7 +3045,7 @@ begin { >>>server }
         if p1 < 0 then
           p1 := 1;
         SearchCity(Subject, p1, cix1);
-        GetCityAreaInfo(p1, Subject, TCityAreaInfo(Data))
+        GetCityAreaInfo(p1, Subject, TCityAreaInfo(Data));
       end
       else
         result := eInvalid;
@@ -3095,7 +3109,7 @@ begin { >>>server }
             begin
               LogChanges;
               SaveGame('~' + LogFileName, true);
-            end
+            end;
 {$ENDIF}
           end
           else if (Mode = moMovie) and (pTurn = 0) then
@@ -3124,7 +3138,7 @@ begin { >>>server }
           if Mode < moPlaying then // check checksum
           begin
             if CheckSum <> Subject then
-              LoadOK := false
+              LoadOK := false;
           end
           else // save checksum
             CL.Put(Command, Player, CheckSum, @Data);
@@ -3170,7 +3184,7 @@ begin { >>>server }
           begin
             CCCommand := cTurn;
             CCPlayer := pTurn;
-            Notify(ntNextPlayer)
+            Notify(ntNextPlayer);
           end
           else
           begin
@@ -3234,7 +3248,7 @@ begin { >>>server }
                 LandMass, MaxTurn);
             sReload:
               LoadGame(SavePath, LogFileName, integer(Data), false);
-          end
+          end;
         end
         else
           result := eInvalid;
@@ -3251,7 +3265,7 @@ begin { >>>server }
         if Command = sSaveMap then
           Notify(ntStartGoRefreshMaps)
         else
-          Notify(ntStartGo)
+          Notify(ntStartGo);
       end
       else
         result := eInvalid;
@@ -3291,7 +3305,7 @@ begin { >>>server }
           pDipActive := -1;
           assert(Mode = moPlaying);
           ChangeClientWhenDone(cContinue, pTurn, nil^, 0);
-        end
+        end;
       end
       else
         result := eInvalid;
@@ -3308,7 +3322,7 @@ begin { >>>server }
           assert(Mode = moPlaying);
           IntServer(sIntHaveContact, pTurn, pContacted, nil^);
           ChangeClientWhenDone(scDipStart, pDipActive, nil^, 0);
-        end
+        end;
       end
       else
         result := eInvalid;
@@ -3367,7 +3381,7 @@ begin { >>>server }
                       -integer(Price[i] and $FFFF);
                     ShowShipChange.Ship2Change[Price[i] shr 16 and 3] :=
                       +integer(Price[i] and $FFFF);
-                  end
+                  end;
                 end;
               if HasShipChanged then
               begin
@@ -3381,8 +3395,8 @@ begin { >>>server }
                     move(GShip, RW[p2].Ship, SizeOf(GShip));
                     if 1 shl p2 and GWatching <> 0 then
                       CallPlayer(cShowShipChange, p2, ShowShipChange);
-                  end
-              end
+                  end;
+              end;
             end;
           end
         else if (Command and not sExecute = scDipCancelTreaty and not sExecute)
@@ -3407,7 +3421,7 @@ begin { >>>server }
                 i := p2;
                 CallPlayer(cShowCancelTreatyByAlliance, pDipActive, i);
               end;
-          end
+          end;
         end
         else
           result := eInvalid;
@@ -3430,7 +3444,7 @@ begin { >>>server }
               end;
             pDipActive := p1;
             ChangeClientWhenDone(Command, pDipActive, nil^, 0);
-          end
+          end;
       end
       else
         result := eInvalid;
@@ -3448,7 +3462,7 @@ begin { >>>server }
             CallPlayer(cShowEndContact, pContacted, nil^);
             assert(Mode = moPlaying);
             ChangeClientWhenDone(cContinue, pTurn, nil^, 0);
-          end
+          end;
         end
         else
         begin

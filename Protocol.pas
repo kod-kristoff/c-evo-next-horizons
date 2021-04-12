@@ -1274,6 +1274,59 @@ type
     : Integer; stdcall;
   TClientCall = procedure (Command, Player: Integer; var Data); stdcall;
 
+  TCommand = (
+    cmInitModule = $0000,
+    cmReleaseModule = $0100,
+    cmBroadcast = $0200,
+    cmHelpOnly = $0700,
+    cmStartHelp = $0710,
+    cmStartCredits = $0720,
+
+    cmNewGame = $0800,
+    cmLoadGame = $0810,
+    cmMovie = $0820,
+    cmNewGameEx = $0840,
+    cmLoadGameEx = $0850,
+    cmNewMap = $0880,
+    cmReplay = $08E0,
+    cmGetReady = $08F0,
+    cmBreakGame = $0900,
+
+    cmTurn = $2000,
+    cmResume = $2010,
+    cmContinue = $2080,
+    cmMovieTurn = $2100,
+    cmMovieEndTurn = $2110,
+    cmEditMap = $2800,
+
+    // cShowTileM=$3000;cShowTileA=$3010;cShowFoundCity=$3020;
+    cmShowUnitChanged = $3030,
+    cmShowAfterMove = $3040,
+    cmShowAfterAttack = $3050,
+    cmShowCityChanged = $3090,
+    // cShowMove=$3100;cShowCapture=$3110;
+    // cShowAttackBegin=$3200;cShowAttackWon=$3210;cShowAttackLost=$3220;
+    cmShowMoving = $3140,
+    cmShowCapturing = $3150,
+    cmShowAttacking = $3240,
+    cmShowMissionResult = $3300,
+    cmShowShipChange = $3400,
+    cmShowGreatLibTech = $3500,
+    cmShowTurnChange = $3700,
+    cmShowCancelTreaty = $3800,
+    cmShowEndContact = $3810,
+    cmShowCancelTreatyByAlliance = $3820,
+    cmShowSupportAllianceAgainst = $3830,
+    cmShowPeaceViolation = $3880,
+    cmShowGame = $3F00, { cShowSuperView=$3F80; }
+    cmRefreshDebugMap = $3F90,
+
+    // diplomacy commands equal to server, see below
+
+    cmDebugMessage = $7000,
+    cmShowNego = $7010
+  );
+
   TUn = packed record
     Loc: LongInt; { location }
     Status: LongInt; // free for AI use
@@ -1776,6 +1829,7 @@ function SpecialTile(Loc, TerrType, lx: Integer): Integer;
 function DelphiRandom(const pi_Max: Integer): Integer; overload;
 function DelphiRandom: Extended; overload;
 procedure DelphiRandomize;
+function GetCommandDataSize(Command: TCommand): Integer;
 
 
 implementation
@@ -1917,6 +1971,22 @@ begin
   Randomize;
   DelphiRandSeed := RandSeed;
 end;
+
+function GetCommandDataSize(Command: TCommand): Integer;
+begin
+  case Command of
+    cmInitModule: Result := SizeOf(TInitModuleData);
+    cmGetReady: Result := 0;
+    cmTurn: Result := 0;
+    cmShowTurnChange: Result := SizeOf(Integer);
+    cmShowNego: Result := SizeOf(TShowNegoData);
+    cmNewGame, cmLoadGame, cmMovie, cmNewMap: Result := SizeOf(TNewGameData);
+    else begin
+      Result := 0;
+    end;
+  end;
+end;
+
 
 initialization
 

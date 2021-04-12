@@ -15,7 +15,7 @@ uses
 var
   FormsCreated: boolean;
 
-procedure Client;
+procedure Client(Command, Player: integer; var Data);
 begin
   if not FormsCreated then
   begin

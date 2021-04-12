@@ -420,6 +420,8 @@
 #NOFARTECH Без цели
 #UTILIZE Использовать
 #INTEGRATE Внедрить
+#NETWORK_SERVER Network Server
+#NETWORK_CLIENT Network Client
 
 'Сообщения паузы
 #BUSY_START Создать новый Мир...

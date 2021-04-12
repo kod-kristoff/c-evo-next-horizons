@@ -412,6 +412,8 @@
 #NOFARTECH 没有目标
 #UTILIZE 参建
 #INTEGRATE 整编
+#NETWORK_SERVER Network Server
+#NETWORK_CLIENT Network Client
 
 'Busy Messages
 #BUSY_START 创建世界…

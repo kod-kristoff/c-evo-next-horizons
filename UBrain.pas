@@ -14,7 +14,8 @@ const
   fUsed = $40000000;
 
 type
-  TBrainType = (btNoTerm, btSuperVirtual, btTerm, btRandom, btAI);
+  TBrainType = (btNoTerm, btSuperVirtual, btTerm, btRandom, btAI, btNetworkServer,
+    btNetworkClient);
 
   { TBrain }
 

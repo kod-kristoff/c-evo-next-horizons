@@ -394,6 +394,8 @@
 #NOFARTECH Nessun obiettivo
 #UTILIZE Ricicla
 #INTEGRATE Integra
+#NETWORK_SERVER Network Server
+#NETWORK_CLIENT Network Client
 
 'Busy Messages
 #BUSY_START Creo il mondo...

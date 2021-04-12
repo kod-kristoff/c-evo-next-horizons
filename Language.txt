@@ -404,6 +404,8 @@ that is not willing to cooperate. You leave us no choice but to cancel this pact
 #NOFARTECH No Focus
 #UTILIZE Utilize
 #INTEGRATE Integrate
+#NETWORK_SERVER Network Server
+#NETWORK_CLIENT Network Client
 
 'Busy Messages
 #BUSY_START Creating the World...

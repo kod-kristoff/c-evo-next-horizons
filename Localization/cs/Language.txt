@@ -404,6 +404,8 @@ který není ochoten spolupracovat. Nedáváte nám jinou možnost než ukončit
 #NOFARTECH Žádné zaměření výzkumu
 #UTILIZE Využít
 #INTEGRATE Sloučit
+#NETWORK_SERVER Síťový server
+#NETWORK_CLIENT Síťový klient
 
 'Busy Messages
 #BUSY_START Vytvářím svět...

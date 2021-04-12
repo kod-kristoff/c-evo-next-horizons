@@ -9,6 +9,9 @@ uses
   Menus, Registry,  DrawDlg, fgl, Protocol, UMiniMap, UBrain;
 
 type
+
+  { TPlayerSlot }
+
   TPlayerSlot = class
     DiffUpBtn: TButtonC;
     DiffDownBtn: TButtonC;
@@ -83,10 +86,6 @@ type
     procedure AutoEnemyUpBtnClick(Sender: TObject);
     procedure AutoEnemyDownBtnClick(Sender: TObject);
     procedure ReplayBtnClick(Sender: TObject);
-  public
-    EmptyPicture: TBitmap;
-    procedure UpdateFormerGames;
-    procedure UpdateMaps;
   private
     WorldSize: Integer;
     StartLandMass: Integer;
@@ -133,6 +132,11 @@ type
     procedure SaveConfig;
     procedure LoadAiBrainsPictures;
     procedure UpdateInterface;
+    procedure ShowSettings;
+  public
+    EmptyPicture: TBitmap;
+    procedure UpdateFormerGames;
+    procedure UpdateMaps;
   end;
 
 var
@@ -491,6 +495,18 @@ begin
     BoundsRect := Bounds((Screen.Width - Width) div 2,
       (Screen.Height - Height) div 2, Width, Height)
   end;
+end;
+
+procedure TStartDlg.ShowSettings;
+begin
+  SettingsDlg := TSettingsDlg.Create(nil);
+  if SettingsDlg.ShowModal = mrOk then begin
+    LoadAssets;
+    Invalidate;
+    UpdateInterface;
+    Background.UpdateInterface;
+  end;
+  FreeAndNil(SettingsDlg);
 end;
 
 procedure TStartDlg.DrawAction(y, IconIndex: integer; HeaderItem, TextItem: string);
@@ -967,31 +983,32 @@ begin
           end;
 
           OpenKey(AppRegistryKey, True);
-          if AutoDiff > 0 then
-          begin
-            WriteString('DefaultAI', BrainDefault.FileName);
-            SlotAvailable := 0; // PlayerSlot will be invalid hereafter
-            PlayersBrain[0] := BrainTerm;
-            Difficulty[0] := PlayerAutoDiff[AutoDiff];
-            for I := 1 to nPl - 1 do
-              if (Page = pgStartRandom) and (I <= AutoEnemies) or
-                (Page = pgStartMap) and (I < nMapStartPositions) then begin
-                if AutoDiff = 1 then PlayersBrain[I] := Brains.GetBeginner
-                  else PlayersBrain[I] := BrainDefault;
-                Difficulty[I] := EnemyAutoDiff[AutoDiff];
-              end  else PlayersBrain[I] := nil;
-          end else begin
-            for I := 6 to 8 do
-              if (PlayersBrain[0].Kind <> btNoTerm) and (MultiControl and (1 shl I) <> 0)
-              then begin
-                PlayersBrain[I + 3] := PlayersBrain[I];
-                Difficulty[I + 3] := Difficulty[I];
-                PlayersBrain[I + 6] := PlayersBrain[I];
-                Difficulty[I + 6] := Difficulty[I];
-              end else begin
-                PlayersBrain[I + 3] := nil;
-                PlayersBrain[I + 6] := nil;
-              end;
+          if BrainDefault.Kind <> btNetworkClient then begin
+            if AutoDiff > 0 then begin
+              WriteString('DefaultAI', BrainDefault.FileName);
+              SlotAvailable := 0; // PlayerSlot will be invalid hereafter
+              PlayersBrain[0] := BrainTerm;
+              Difficulty[0] := PlayerAutoDiff[AutoDiff];
+              for I := 1 to nPl - 1 do
+                if (Page = pgStartRandom) and (I <= AutoEnemies) or
+                  (Page = pgStartMap) and (I < nMapStartPositions) then begin
+                  if AutoDiff = 1 then PlayersBrain[I] := Brains.GetBeginner
+                    else PlayersBrain[I] := BrainDefault;
+                  Difficulty[I] := EnemyAutoDiff[AutoDiff];
+                end else PlayersBrain[I] := nil;
+            end else begin
+              for I := 6 to 8 do
+                if (PlayersBrain[0].Kind <> btNoTerm) and (MultiControl and (1 shl I) <> 0)
+                then begin
+                  PlayersBrain[I + 3] := PlayersBrain[I];
+                  Difficulty[I + 3] := Difficulty[I];
+                  PlayersBrain[I + 6] := PlayersBrain[I];
+                  Difficulty[I + 6] := Difficulty[I];
+                end else begin
+                  PlayersBrain[I + 3] := nil;
+                  PlayersBrain[I + 6] := nil;
+                end;
+            end;
           end;
 
           WriteInteger('AutoDiff', AutoDiff);
@@ -1161,10 +1178,18 @@ var
   MenuItem: TMenuItem;
   AIBrains: TBrains;
 begin
+  FixedLines := 0;
   PlayerPopupIndex := PlayerIndex;
   EmptyMenu(PopupMenu1.Items);
   if PlayerPopupIndex < 0 then begin // select default AI
-    FixedLines := 0;
+    OfferBrain(BrainNetworkClient, FixedLines);
+    Inc(FixedLines);
+
+    MenuItem := TMenuItem.Create(PopupMenu1);
+    MenuItem.Caption := '-';
+    PopupMenu1.Items.Add(MenuItem);
+
+    Inc(FixedLines);
     if Brains.GetKindCount(btAI) >= 2 then begin
       OfferBrain(BrainRandom, FixedLines);
       Inc(FixedLines);
@@ -1176,7 +1201,6 @@ begin
         OfferBrain(AIBrains[I], FixedLines);
     FreeAndNil(AIBrains);
   end else begin
-    FixedLines := 0;
     if PlayerPopupIndex > 0 then begin
       OfferBrain(nil, FixedLines);
       Inc(FixedLines);
@@ -1188,6 +1212,9 @@ begin
         Inc(FixedLines);
       end;
     if PlayerPopupIndex > 0 then begin
+      OfferBrain(BrainNetworkServer, FixedLines);
+      Inc(FixedLines);
+
       MenuItem := TMenuItem.Create(PopupMenu1);
       MenuItem.Caption := '-';
       PopupMenu1.Items.Add(MenuItem);
@@ -1266,7 +1293,7 @@ begin
           if i = 0 then
           begin
             PlayersBrain[0] := BrainSuperVirtual;
-            Difficulty[0] := 0
+            Difficulty[0] := 0;
           end;
           if PlayersBrain[0].Kind in [btNoTerm, btSuperVirtual] then
             inc(i);
@@ -1423,28 +1450,13 @@ begin
     ListIndex[Tab] := List.ItemIndex;
     ChangeTab(TStartTab((x - TabOffset) div TabSize));
   end
-  else if Page = pgMain then
-  begin
+  else if Page = pgMain then begin
     case SelectedAction of
-      maConfig:
-        begin
-          SettingsDlg := TSettingsDlg.Create(nil);
-          if SettingsDlg.ShowModal = mrOk then begin
-            LoadAssets;
-            Invalidate;
-            UpdateInterface;
-            Background.UpdateInterface;
-          end;
-          FreeAndNil(SettingsDlg);
-        end;
-      maManual:
-        DirectHelp(cStartHelp);
-      maCredits:
-        DirectHelp(cStartCredits);
-      maAIDev:
-        OpenDocument(HomeDir + AITemplateFileName);
-      maWeb:
-        OpenURL(CevoHomepage);
+      maConfig: ShowSettings;
+      maManual: DirectHelp(cStartHelp);
+      maCredits: DirectHelp(cStartCredits);
+      maAIDev: OpenDocument(HomeDir + AITemplateFileName);
+      maWeb: OpenURL(CevoHomepage);
     end;
   end
   else if (AutoDiff < 0) and ((Page = pgStartRandom) or (Page = pgStartMap) and
@@ -1459,7 +1471,7 @@ begin
           PopupMenu1.Popup(left + xBrain[I] + 4, top + yBrain[I] + 60)
         else
           PopupMenu1.Popup(left + xBrain[I] + 4, top + yBrain[I] + 4);
-      end
+      end;
   end
   else if (AutoDiff > 1) and ((Page = pgStartRandom) or (Page = pgStartMap)) and
     (x >= xDefault) and (y >= yDefault) and (x < xDefault + 64) and
