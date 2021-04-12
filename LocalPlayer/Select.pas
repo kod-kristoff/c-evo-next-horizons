@@ -1567,7 +1567,7 @@ begin
     if DispLines > MaxLines then
       DispLines := MaxLines;
     InnerHeight := LineDistance * (DispLines + 1) + 24;
-    ClientHeight := InnerHeight + TitleHeight + WideFrame
+    ClientHeight := InnerHeight + TitleHeight + WideFrame;
   end
   else
   begin

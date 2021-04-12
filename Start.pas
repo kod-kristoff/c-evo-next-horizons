@@ -6,7 +6,7 @@ interface
 uses
   GameServer, Messg, ButtonBase, ButtonA, ButtonC, ButtonB, Area, Types,
   LCLIntf, LCLType, SysUtils, Classes, Graphics, Controls, Forms, StdCtrls,
-  Menus, Registry,  DrawDlg, fgl, Protocol, UMiniMap;
+  Menus, Registry,  DrawDlg, fgl, Protocol, UMiniMap, UBrain;
 
 type
   TPlayerSlot = class
@@ -749,7 +749,7 @@ begin
       RisedTextOut(Canvas, 24 { x0Brain+32-BiColorTextWidth(Canvas,s) div 2 } ,
         yMain + 164 { y0Mini-77 } , Phrases.Lookup('STARTCONTROLS', 16));
       if AutoDiff = 1 then
-        FrameImage(Canvas, BrainBeginner.Picture, xDefault, yDefault, 64,
+        FrameImage(Canvas, Brains.GetBeginner.Picture, xDefault, yDefault, 64,
           64, 0, 0, false)
       else
         FrameImage(Canvas, BrainDefault.Picture, xDefault, yDefault, 64, 64,
@@ -976,7 +976,7 @@ begin
             for I := 1 to nPl - 1 do
               if (Page = pgStartRandom) and (I <= AutoEnemies) or
                 (Page = pgStartMap) and (I < nMapStartPositions) then begin
-                if AutoDiff = 1 then PlayersBrain[I] := BrainBeginner
+                if AutoDiff = 1 then PlayersBrain[I] := Brains.GetBeginner
                   else PlayersBrain[I] := BrainDefault;
                 Difficulty[I] := EnemyAutoDiff[AutoDiff];
               end  else PlayersBrain[I] := nil;
