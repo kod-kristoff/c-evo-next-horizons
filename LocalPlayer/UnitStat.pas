@@ -149,7 +149,7 @@ begin
       while (ecixShow >= 0) and (MyRO.EnemyCity[ecixShow].Loc <> UnitLoc) do
         dec(ecixShow);
       assert(ecixShow >= 0);
-    end
+    end;
   end;
   case Kind of
     dkOwnModel:
@@ -295,11 +295,11 @@ var
         [MyRO.EnemyModel[emix].mix];
       result := (PPicture.HGr = PTestPicture.HGr) and
         (PPicture.pix = PTestPicture.pix) and
-        (ModelHash(mox^) = ModelHash(MyRO.EnemyModel[emix]))
+        (ModelHash(mox^) = ModelHash(MyRO.EnemyModel[emix]));
     end
     else
       result := (MyRO.EnemyModel[emix].owner = mox.owner) and
-        (MyRO.EnemyModel[emix].mix = mox.mix)
+        (MyRO.EnemyModel[emix].mix = mox.mix);
   end;
 
   procedure FeatureBar(dst: TBitmap; x, y: integer; const mi: TModelInfo;
@@ -434,14 +434,10 @@ begin
       if MyRO.EnemyCity[ecixShow].Flags and (2 shl i) <> 0 then
       begin
         case i of
-          0:
-            j := imWalls;
-          1:
-            j := imCoastalFort;
-          2:
-            j := imMissileBat;
-          3:
-            j := imBunker
+          0: j := imWalls;
+          1: j := imCoastalFort;
+          2: j := imMissileBat;
+          3: j := imBunker
         end;
         Frame(offscreen.Canvas, x - 1, yImp - 1, x + xSizeSmall,
           yImp + ySizeSmall, MainTexture.ColorBevelLight,
@@ -449,7 +445,7 @@ begin
         BitBltCanvas(offscreen.Canvas, x, yImp, xSizeSmall, ySizeSmall,
           SmallImp.Canvas, j mod 7 * xSizeSmall,
           (j + SystemIconLines * 7) div 7 * ySizeSmall);
-        inc(x, xSizeSmall + 4)
+        inc(x, xSizeSmall + 4);
       end;
   end;
 
@@ -466,7 +462,7 @@ begin
           for uix := 0 to Cnt - 1 do
             if IsToCount(MyRO.EnemyUn[MyRO.nEnemyUn + uix].emix) then
               inc(Available);
-        end
+        end;
       end
     else // no supervisor -- can only count stack top units
       for uix := 0 to MyRO.nEnemyUn - 1 do
@@ -509,13 +505,13 @@ begin
     else if Kind = dkOwnUnit then
     begin
       MakeUnitInfo(me, MyUn[uixShow], ui);
-      MakeModelInfo(me, MyUn[uixShow].mix, MyModel[MyUn[uixShow].mix], mi)
+      MakeModelInfo(me, MyUn[uixShow].mix, MyModel[MyUn[uixShow].mix], mi);
     end
     else
     begin
       mi := mox^;
       if Kind in [dkEnemyUnit, dkEnemyCityDefense] then
-        ui := MyRO.EnemyUn[euixShow]
+        ui := MyRO.EnemyUn[euixShow];
     end;
 
     with Tribe[mi.owner].ModelPicture[mi.mix] do
@@ -538,12 +534,12 @@ begin
           if MyMap[Loc] and fTerrain >= fForest then
           begin
             x := 1 + 2 * (xxt * 2 + 1);
-            y := 1 + yyt + 2 * (yyt * 3 + 1)
+            y := 1 + yyt + 2 * (yyt * 3 + 1);
           end
           else
           begin
             x := integer(MyMap[Loc] and fTerrain) * (xxt * 2 + 1) + 1;
-            y := 1 + yyt
+            y := 1 + yyt;
           end;
           for j := -1 to 1 do
             for i := -1 to 1 do
@@ -591,7 +587,7 @@ begin
             LoweredTextOut(offscreen.Canvas, -1, MainTexture,
               (ClientWidth - BiColorTextWidth(offscreen.Canvas, s)) div 2,
               yView + 80, s);
-          end
+          end;
         end
       else
       begin
@@ -672,7 +668,7 @@ begin
         begin
           ConscriptsBtn.ButtonIndex := 29;
           ConscriptsBtn.Hint := Phrases.Lookup('BTN_ALLOWCONSCRIPTS');
-        end
+        end;
       end
       else if Kind = dkEnemyModel then
       begin
@@ -682,7 +678,7 @@ begin
         if Available > 0 then
           NumberBar(offscreen, xTotal, yTotal + StatDown,
             Phrases.Lookup('UNITKNOWN'), Available, MainTexture);
-      end
+      end;
     end;
   end;
 
@@ -702,7 +698,7 @@ end; { OffscreenPaint }
 
 procedure TUnitStatDlg.ModelBoxChange(Sender: TObject);
 begin
-  SmartUpdateContent
+  SmartUpdateContent;
 end;
 
 procedure TUnitStatDlg.SwitchBtnClick(Sender: TObject);
@@ -717,7 +713,7 @@ begin
   begin
     SwitchBtn.ButtonIndex := 11;
     SwitchBtn.Hint := Phrases.Lookup('BTN_NONOBSOLETE');
-  end
+  end;
 end;
 
 procedure TUnitStatDlg.ConscriptsBtnClick(Sender: TObject);
@@ -732,12 +728,12 @@ begin
   begin
     ConscriptsBtn.ButtonIndex := 29;
     ConscriptsBtn.Hint := Phrases.Lookup('BTN_ALLOWCONSCRIPTS');
-  end
+  end;
 end;
 
 procedure TUnitStatDlg.HelpBtnClick(Sender: TObject);
 begin
-  HelpDlg.ShowNewContent(wmPersistent, hkModel, 0)
+  HelpDlg.ShowNewContent(wmPersistent, hkModel, 0);
 end;
 
 end.

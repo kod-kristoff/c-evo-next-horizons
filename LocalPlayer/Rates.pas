@@ -205,7 +205,7 @@ begin
     CityOptimizer_BeginOfTurn;
     SmartUpdateContent;
     MainScreen.UpdateViews(true);
-  end
+  end;
 end;
 
 end.
