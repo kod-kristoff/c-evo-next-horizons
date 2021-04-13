@@ -23,14 +23,16 @@ type
   TNetworkServerConnection = class
   private
     DataAvailableHandle: Pointer;
+    ReceiveBuffer: TMemoryStream;
     procedure DisconnectExecute(Sender: TObject);
+    procedure DataAvailableSync;
+    procedure DataAvailableExecute(Sender: TObject);
   public
     NetworkServer: TNetworkServer;
     Socket: TSocketStream;
     ServerEventLoop: TEventLoop;
     Player: TNetworkServerPlayer;
     Connected: Boolean;
-    procedure DataAvailableExecute(Sender: TObject);
     procedure Run;
     constructor Create;
     destructor Destroy; override;
@@ -83,7 +85,7 @@ procedure Client(Command, Player: integer; var Data); stdcall;
 implementation
 
 uses
-  Global;
+  Global, UNetworkCommon;
 
 procedure Client(Command, Player: integer; var Data);
 begin
@@ -158,14 +160,15 @@ end;
 
 procedure TNetworkServerConnection.DisconnectExecute(Sender: TObject);
 begin
-  Connected := False;
+  {Connected := False;
   if Assigned(Player) then begin
     Player.Connection := nil;
     Player := nil;
   end;
+  }
 end;
 
-procedure TNetworkServerConnection.DataAvailableExecute(Sender: TObject);
+procedure TNetworkServerConnection.DataAvailableSync;
 var
   Data: array of Byte;
   ReadCount: Integer;
@@ -173,23 +176,31 @@ var
   Subject: Integer;
   Command: TCommand;
 begin
-  if not Connected then Exit;
-  Command := TCommand(Socket.ReadDWord);
-  PlayerIndex := Socket.ReadDWord;
-  Subject := Socket.ReadDWord;
-  SetLength(Data, GetCommandDataSize(TCommand(Command)));
-  if Length(Data) > 0 then begin
-    ReadCount := Socket.Read(Data[0], Length(Data));
-    SetLength(Data, ReadCount);
-  end;
-  if Assigned(Player) then begin
-    if Length(Data) > 0 then
-      Player.Server(Command, PlayerIndex, Subject, Data[0])
-      else Player.Server(Command, PlayerIndex, Subject, nil^);
-  end;
+  StreamAppend(ReceiveBuffer, Socket);
+  while ReceiveBuffer.Size >= 3 * SizeOf(Integer) do begin
+    ReceiveBuffer.Position := 0;
 
-  NetworkServer.TCPServer.EventLoop.ClearDataAvailableNotify(DataAvailableHandle);
-  DataAvailableHandle := NetworkServer.TCPServer.EventLoop.SetDataAvailableNotify(Socket.Handle, DataAvailableExecute, nil);
+    Command := TCommand(ReceiveBuffer.ReadDWord);
+    PlayerIndex := ReceiveBuffer.ReadDWord;
+    Subject := ReceiveBuffer.ReadDWord;
+    SetLength(Data, GetCommandDataSize(TCommand(Command)));
+    if Length(Data) > 0 then begin
+      ReadCount := ReceiveBuffer.Read(Data[0], Length(Data));
+      SetLength(Data, ReadCount);
+    end;
+    if Assigned(Player) then begin
+      if Length(Data) > 0 then
+        Player.Server(Command, PlayerIndex, Subject, Data[0])
+        else Player.Server(Command, PlayerIndex, Subject, nil^);
+    end;
+    StreamRemoveRead(ReceiveBuffer);
+  end;
+end;
+
+procedure TNetworkServerConnection.DataAvailableExecute(Sender: TObject);
+begin
+  NetworkServer.TCPServerThread.Synchronize(NetworkServer.TCPServerThread, DataAvailableSync);
+  Sleep(10); // TODO: How to reset this event
 end;
 
 procedure TNetworkServerConnection.Run;
@@ -201,14 +212,17 @@ end;
 
 constructor TNetworkServerConnection.Create;
 begin
+  ReceiveBuffer := TMemoryStream.Create;
 end;
 
 destructor TNetworkServerConnection.Destroy;
 begin
   if Assigned(Player) then Player.Connection := nil;
-  NetworkServer.TCPServer.EventLoop.ClearDataAvailableNotify(DataAvailableHandle);
+  if Assigned(DataAvailableHandle) then
+    NetworkServer.TCPServer.EventLoop.ClearDataAvailableNotify(DataAvailableHandle);
   FreeAndNil(Socket);
   NetworkServer.Connections.Remove(Self);
+  FreeAndNil(ReceiveBuffer);
   inherited;
 end;
 
@@ -220,6 +234,7 @@ var
   NewConnection: TNetworkServerConnection;
   Player: TNetworkServerPlayer;
   I: Integer;
+  InitModuleData: TInitModuleData;
 begin
   NewConnection := TNetworkServerConnection.Create;;
   NewConnection.Socket := AStream;
@@ -238,7 +253,7 @@ begin
   if Assigned(Player) then begin
     NewConnection.Player := Player;
     Player.Connection := NewConnection;
-    Player.Client(cmInitModule, -1, nil^);
+    Player.Client(cmInitModule, Player.Id, InitModuleData);
   end else AStream.Free;
 end;
 

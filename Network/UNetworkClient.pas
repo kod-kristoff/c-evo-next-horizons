@@ -7,17 +7,7 @@ interface
 uses
   Classes, SysUtils, fpsock, fpAsync, Protocol;
 
-
-procedure Client(Command, Player: Integer; var Data); stdcall;
-
-
-implementation
-
-uses
-  LocalPlayer, Global;
-
 type
-
   { TTCPClientThread }
 
   TTCPClientThread = class(TThread)
@@ -32,10 +22,10 @@ type
     DataAvailableHandle: Pointer;
     TCPClientThread: TTCPClientThread;
     ReceiveBuffer: TMemoryStream;
-    procedure AppendStream(Stream: TStream; SourceStream: TStream);
     procedure DataAvailableExecute(Sender: TObject);
     procedure ConnectionStateChangeExecute(Sender: TClientConnectionSocket;
       OldState, NewState: TConnectionState);
+    procedure DataAvailableSync;
   public
     AuxServer: TServerCall;
     LocalClient: TClientCall;
@@ -48,6 +38,20 @@ type
 
 var
   NetworkClient: TNetworkClient;
+
+procedure Client(Command, Player: Integer; var Data); stdcall;
+
+
+implementation
+
+uses
+  LocalPlayer, Global, UNetworkCommon;
+
+function LocalServer(Command, Player, Subject: Integer; var Data): Integer; stdcall;
+begin
+  if Assigned(NetworkClient) then
+    Result := NetworkClient.Server(TCommand(Command), Player, Subject, Data);
+end;
 
 procedure Client(Command, Player: Integer; var Data);
 var
@@ -77,47 +81,9 @@ end;
 
 { TNetworkClient }
 
-procedure TNetworkClient.AppendStream(Stream: TStream; SourceStream: TStream);
-var
-  Buffer: array of Byte;
-  ReadCount: Integer;
-  Base: Integer;
-const
-  ChunkSize = 4096;
-begin
-  SetLength(Buffer, 0);
-  Base := 0;
-  repeat
-    SetLength(Buffer, Length(Buffer) + ChunkSize);
-    ReadCount := SourceStream.Read(Buffer[Base], ChunkSize);
-    Inc(Base, ReadCount);
-    SetLength(Buffer, Base);
-  until ReadCount < ChunkSize;
-
-  if Length(Buffer) > 0 then begin
-    Stream.Position := Stream.Size;
-    Stream.Write(Buffer[0], Length(Buffer));
-  end;
-end;
-
 procedure TNetworkClient.DataAvailableExecute(Sender: TObject);
-var
-  Command: Integer;
-  Player: Integer;
-  Data: array of Byte;
 begin
-  AppendStream(ReceiveBuffer, TCPClient.Stream);
-  ReceiveBuffer.Position := 0;
-  Command := Integer(ReceiveBuffer.ReadDWord);
-  Player := Integer(ReceiveBuffer.ReadDWord);
-  SetLength(Data, GetCommandDataSize(TCommand(Command)));
-  if Length(Data) > 0 then
-    LocalClient(Command, Player, Data[0])
-    else LocalClient(Command, Player, nil^);
-
-  // Remove already read data from start of memory stream
-  Move(PByte(ReceiveBuffer.Memory + ReceiveBuffer.Position)^, ReceiveBuffer.Memory^, ReceiveBuffer.Size - ReceiveBuffer.Position);
-  ReceiveBuffer.SetSize(ReceiveBuffer.Size - ReceiveBuffer.Position);
+  TCPClientThread.Synchronize(TCPClientThread, DataAvailableSync);
 
   ClientEventLoop.ClearDataAvailableNotify(DataAvailableHandle);
   DataAvailableHandle := ClientEventLoop.SetDataAvailableNotify(TCPClient.Stream.Handle, DataAvailableExecute, nil);
@@ -128,6 +94,37 @@ procedure TNetworkClient.ConnectionStateChangeExecute(
 begin
   if NewState = connConnected then
     DataAvailableHandle := ClientEventLoop.SetDataAvailableNotify(TCPClient.Stream.Handle, DataAvailableExecute, nil);
+end;
+
+procedure TNetworkClient.DataAvailableSync;
+var
+  Command: Integer;
+  ReadCount: Integer;
+  Player: Integer;
+  Data: array of Byte;
+begin
+  StreamAppend(ReceiveBuffer, TCPClient.Stream);
+  while ReceiveBuffer.Size >= 2 * SizeOf(Integer) do begin
+    ReceiveBuffer.Position := 0;
+    Command := Integer(ReceiveBuffer.ReadDWord);
+    Player := Integer(ReceiveBuffer.ReadDWord);
+    SetLength(Data, GetCommandDataSize(TCommand(Command)));
+    if Length(Data) > 0 then begin
+      ReadCount := ReceiveBuffer.Read(Data[0], Length(Data));
+      SetLength(Data, ReadCount);
+    end;
+
+    // Rewrite server address received from network by local handler
+    if Command = cInitModule then begin
+      PInitModuleData(@Data[0])^.Server := LocalServer;
+    end;
+
+    if Length(Data) > 0 then
+      LocalClient(Command, Player, Data[0])
+      else LocalClient(Command, Player, nil^);
+
+    StreamRemoveRead(ReceiveBuffer);
+  end;
 end;
 
 function TNetworkClient.Server(Command: TCommand; Player, Subject: Integer;

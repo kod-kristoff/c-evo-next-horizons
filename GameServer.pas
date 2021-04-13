@@ -1479,8 +1479,8 @@ begin
             if 1 shl p1 and GWatching <> 0 then
               CallPlayer(cShowShipChange, p1, ShowShipChange);
           end;
-      end
-    end
+      end;
+    end;
 end;
 
 procedure DestroyCity_TellPlayers(p, cix: integer; SaveUnits: boolean);

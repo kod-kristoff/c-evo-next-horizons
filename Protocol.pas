@@ -1721,6 +1721,7 @@ type
     DataSize: Integer;
     Flags: Integer;
   end;
+  PInitModuleData = ^TInitModuleData;
 
   TNewGameData = record
     lx: Integer; // Map width
@@ -1981,6 +1982,19 @@ begin
     cmShowTurnChange: Result := SizeOf(Integer);
     cmShowNego: Result := SizeOf(TShowNegoData);
     cmNewGame, cmLoadGame, cmMovie, cmNewMap: Result := SizeOf(TNewGameData);
+    cmShowShipChange: Result := SizeOf(TShowShipChange);
+    cmShowGreatLibTech: Result := SizeOf(Integer);
+    cmShowCityChanged: Result := SizeOf(Integer);
+    cmShowPeaceViolation: Result := SizeOf(Integer);
+    cmShowMoving: Result := SizeOf(TShowMove);
+    cmShowUnitChanged: Result := SizeOf(Integer);
+    cmShowMissionResult: Result := SizeOf(Cardinal);
+    cmShowAfterMove: Result := SizeOf(Integer);
+    cmShowAfterAttack: Result := SizeOf(Integer);
+    cmShowSupportAllianceAgainst: Result := SizeOf(Integer);
+    cmShowCancelTreatyByAlliance: Result := SizeOf(Integer);
+    cmShowEndContact: Result := 0;
+    //sIntCancelTreaty: Result := SizeOf(Integer);
     else begin
       Result := 0;
     end;
