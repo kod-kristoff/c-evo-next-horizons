@@ -5,7 +5,7 @@ unit UBrain;
 interface
 
 uses
-  Classes, SysUtils, fgl, Graphics, Protocol, LazFileUtils;
+  Classes, SysUtils, fgl, Graphics, Protocol, LazFileUtils, dynlibs;
 
 const
   // module flags
