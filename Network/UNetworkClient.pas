@@ -5,8 +5,9 @@ unit UNetworkClient;
 interface
 
 uses
-  Classes, SysUtils, fpsock, fpAsync, Protocol;
+  Classes, SysUtils{$IFDEF LINUX}, fpAsync, fpsock{$ENDIF}, Protocol;
 
+{$IFDEF LINUX}
 type
   { TTCPClientThread }
 
@@ -38,6 +39,7 @@ type
 
 var
   NetworkClient: TNetworkClient;
+{$ENDIF}
 
 procedure Client(Command, Player: Integer; var Data); stdcall;
 
@@ -47,16 +49,11 @@ implementation
 uses
   LocalPlayer, Global, UNetworkCommon;
 
-function LocalServer(Command, Player, Subject: Integer; var Data): Integer; stdcall;
-begin
-  if Assigned(NetworkClient) then
-    Result := NetworkClient.Server(TCommand(Command), Player, Subject, Data);
-end;
-
 procedure Client(Command, Player: Integer; var Data);
 var
   Cmd: TCommand;
 begin
+  {$IFDEF LINUX}
   Cmd := TCommand(Command);
   case Cmd of
     cmInitModule: begin
@@ -70,6 +67,14 @@ begin
       FreeAndNil(NetworkClient);
     end;
   end;
+  {$ENDIF}
+end;
+
+{$IFDEF LINUX}
+function LocalServer(Command, Player, Subject: Integer; var Data): Integer; stdcall;
+begin
+  if Assigned(NetworkClient) then
+    Result := NetworkClient.Server(TCommand(Command), Player, Subject, Data);
 end;
 
 { TTCPClientThread }
@@ -166,6 +171,7 @@ begin
   FreeAndNil(ReceiveBuffer);
   inherited;
 end;
+{$ENDIF}
 
 end.
 

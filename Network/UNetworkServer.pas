@@ -5,8 +5,9 @@ unit UNetworkServer;
 interface
 
 uses
-  Classes, SysUtils, fgl, fpAsync, fpsock, Protocol, fphttpclient;
+  Classes, SysUtils, fgl{$IFDEF LINUX}, fpAsync, fpsock{$ENDIF}, Protocol, fphttpclient;
 
+{$IFDEF LINUX}
 type
   TNetworkServer = class;
   TNetworkServerPlayer = class;
@@ -78,6 +79,7 @@ type
 
 var
   NetworkServer: TNetworkServer;
+{$ENDIF}
 
 procedure Client(Command, Player: integer; var Data); stdcall;
 
@@ -89,6 +91,7 @@ uses
 
 procedure Client(Command, Player: integer; var Data);
 begin
+  {$IFDEF LINUX}
   if not Assigned(NetworkServer) then begin
     NetworkServer := TNetworkServer.Create;
   end;
@@ -98,7 +101,10 @@ begin
     end;
   end;
   NetworkServer.Client(TCommand(Command), Player, Data);
+  {$ENDIF}
 end;
+
+{$IFDEF LINUX}
 
 { TNetworkServerPlayers }
 
@@ -325,6 +331,8 @@ procedure TTCPServerThread.Execute;
 begin
   TCPServer.EventLoop.Run;
 end;
+
+{$ENDIF}
 
 end.
 
