@@ -359,7 +359,9 @@ var
   Reg: TRegistry;
   I: Integer;
   S: string;
+  {$IFDEF WINDOWS}
   ResolutionX, ResolutionY, ResolutionBPP, ResolutionFreq: Integer;
+  {$ENDIF}
   ScreenMode: Integer;
 begin
   Reg := TRegistry.Create;
@@ -397,11 +399,17 @@ begin
        else ShowTab := tbNew;
     if ValueExists('LastGame') then LastGame := Reg.ReadString('LastGame')
        else LastGame := '';
+    if ValueExists('NetworkEnabled') then NetworkEnabled := Reg.ReadBool('NetworkEnabled')
+       else NetworkEnabled := False;
 
     if ValueExists('ScreenMode') then
       ScreenMode := ReadInteger('ScreenMode')
       else ScreenMode := 1;
     FullScreen := ScreenMode > 0;
+    if ValueExists('MultiControl') then
+      MultiControl := ReadInteger('MultiControl')
+      else MultiControl := 0;
+    {$IFDEF WINDOWS}
     if ValueExists('ResolutionX') then
       ResolutionX := ReadInteger('ResolutionX');
     if ValueExists('ResolutionY') then
@@ -410,10 +418,6 @@ begin
       ResolutionBPP := ReadInteger('ResolutionBPP');
     if ValueExists('ResolutionFreq') then
       ResolutionFreq := ReadInteger('ResolutionFreq');
-    if ValueExists('MultiControl') then
-      MultiControl := ReadInteger('MultiControl')
-      else MultiControl := 0;
-    {$IFDEF WINDOWS}
     if ScreenMode = 2 then
       ChangeResolution(ResolutionX, ResolutionY, ResolutionBPP,
         ResolutionFreq);
@@ -439,6 +443,7 @@ begin
     WriteInteger('MultiControl', MultiControl);
     WriteInteger('StartTab', Integer(ShowTab));
     WriteString('LastGame', LastGame);
+    WriteBool('NetworkEnabled', NetworkEnabled);
   finally
     Free;
   end;
@@ -923,7 +928,7 @@ begin
   begin
     FormerGames.Delete(I);
     if ListIndex[tbNew] = I then
-      ListIndex[tbNew] := 0
+      ListIndex[tbNew] := 0;
   end;
 end;
 
@@ -1182,8 +1187,10 @@ begin
   PlayerPopupIndex := PlayerIndex;
   EmptyMenu(PopupMenu1.Items);
   if PlayerPopupIndex < 0 then begin // select default AI
-    OfferBrain(BrainNetworkClient, FixedLines);
-    Inc(FixedLines);
+    if NetworkEnabled then begin
+      OfferBrain(BrainNetworkClient, FixedLines);
+      Inc(FixedLines);
+    end;
 
     MenuItem := TMenuItem.Create(PopupMenu1);
     MenuItem.Caption := '-';
@@ -1212,8 +1219,10 @@ begin
         Inc(FixedLines);
       end;
     if PlayerPopupIndex > 0 then begin
-      OfferBrain(BrainNetworkServer, FixedLines);
-      Inc(FixedLines);
+      if NetworkEnabled then begin
+        OfferBrain(BrainNetworkServer, FixedLines);
+        Inc(FixedLines);
+      end;
 
       MenuItem := TMenuItem.Create(PopupMenu1);
       MenuItem.Caption := '-';

@@ -185,10 +185,12 @@ begin
   BrainSuperVirtual.Name := Phrases.Lookup('SUPER');
   BrainTerm.Client := LocalPlayer.Client;
   BrainTerm.Name := Phrases.Lookup('HUMAN');
-  BrainNetworkServer.Client := UNetworkServer.Client;
-  BrainNetworkServer.Name := Phrases.Lookup('NETWORK_SERVER');
-  BrainNetworkClient.Client := UNetworkClient.Client;
-  BrainNetworkClient.Name := Phrases.Lookup('NETWORK_CLIENT');
+  if NetworkEnabled then begin
+    BrainNetworkServer.Client := UNetworkServer.Client;
+    BrainNetworkServer.Name := Phrases.Lookup('NETWORK_SERVER');
+    BrainNetworkClient.Client := UNetworkClient.Client;
+    BrainNetworkClient.Name := Phrases.Lookup('NETWORK_CLIENT');
+  end;
   BrainRandom.Name := Phrases.Lookup('RANDOMAI');
   Canvas.Font.Assign(UniFont[ftNormal]);
   Canvas.Brush.Style := bsClear;

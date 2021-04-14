@@ -236,7 +236,7 @@ var
   I: Integer;
   InitModuleData: TInitModuleData;
 begin
-  NewConnection := TNetworkServerConnection.Create;;
+  NewConnection := TNetworkServerConnection.Create;
   NewConnection.Socket := AStream;
   NewConnection.NetworkServer := Self;
   Connections.Add(NewConnection);

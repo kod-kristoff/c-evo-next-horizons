@@ -64,6 +64,8 @@ var
   BrainNetworkClient: TBrain;
   BrainNetworkServer: TBrain;
 
+  NetworkEnabled: Boolean;
+
 procedure Init(NotifyFunction: TNotifyFunction);
 procedure Done;
 
@@ -156,6 +158,15 @@ begin
   end
 end;
 
+procedure CallAllPlayers(Command: Integer; var Data);
+var
+  I: Integer;
+begin
+  for I := 0 to nPl - 1 do
+    if Assigned(bix[I]) then
+      CallPlayer(Command, I, Data);
+end;
+
 procedure CallClient(bix, Command: integer; var Data);
 begin
   if ((Mode <> moMovie) or (bix = Brains.IndexOf(GameServer.bix[0]))) then
@@ -207,12 +218,14 @@ begin
   BrainSuperVirtual.Flags := 0;
   BrainSuperVirtual.Initialized := False;
   BrainSuperVirtual.Kind := btSuperVirtual;
-  BrainNetworkClient := Brains.AddNew;
-  BrainNetworkClient.FileName := ':NetworkClient';
-  BrainNetworkClient.Flags := fMultiple;
-  BrainNetworkClient.Initialized := False;
-  BrainNetworkClient.ServerVersion := Version;
-  BrainNetworkClient.Kind := btNetworkClient;
+  if NetworkEnabled then begin
+    BrainNetworkClient := Brains.AddNew;
+    BrainNetworkClient.FileName := ':NetworkClient';
+    BrainNetworkClient.Flags := fMultiple;
+    BrainNetworkClient.Initialized := False;
+    BrainNetworkClient.ServerVersion := Version;
+    BrainNetworkClient.Kind := btNetworkClient;
+  end;
   BrainTerm := Brains.AddNew;
   BrainTerm.FileName := ':StdIntf';
   BrainTerm.Flags := fMultiple;
@@ -224,12 +237,14 @@ begin
   BrainRandom.Flags := fMultiple;
   BrainRandom.Initialized := False;
   BrainRandom.Kind := btRandom;
-  BrainNetworkServer := Brains.AddNew;
-  BrainNetworkServer.FileName := ':NetworkServer';
-  BrainNetworkServer.Flags := fMultiple;
-  BrainNetworkServer.Initialized := False;
-  BrainNetworkServer.ServerVersion := Version;
-  BrainNetworkServer.Kind := btNetworkServer;
+  if NetworkEnabled then begin
+    BrainNetworkServer := Brains.AddNew;
+    BrainNetworkServer.FileName := ':NetworkServer';
+    BrainNetworkServer.Flags := fMultiple;
+    BrainNetworkServer.Initialized := False;
+    BrainNetworkServer.ServerVersion := Version;
+    BrainNetworkServer.Kind := btNetworkServer;
+  end;
 
   if FindFirst(GetAiDir + DirectorySeparator + '*', faDirectory or faArchive or faReadOnly, f) = 0 then
   repeat
@@ -1329,8 +1344,8 @@ begin
     else
     begin
       CL.State := FormerCLState;
-      Break
-    end
+      Break;
+    end;
   end;
 {$IFOPT O-}InvalidTreatyMap := 0; {$ENDIF}
 end;
@@ -1338,7 +1353,7 @@ end;
 procedure StartNewGame(const Path, FileName, Map: string;
   Newlx, Newly, NewLandMass, NewMaxTurn: integer);
 var
-  p: integer;
+  I: Integer;
 begin
   Notify(ntStartDone);
   SavePath := Path;
@@ -1363,9 +1378,7 @@ begin
   CL := TCmdList.Create;
   StartGame;
   NoLogChanges;
-  for p := 0 to nPl - 1 do
-    if Assigned(bix[p]) then
-      CallPlayer(cGetReady, p, nil^);
+  CallAllPlayers(cGetReady, nil^);
   LogChanges;
   CL.Put(sTurn, 0, 0, nil);
   BeforeTurn0;
@@ -1373,7 +1386,10 @@ begin
   GenerateStat(pTurn);
   nLogOpened := -1;
   LastEndClientCommand := -1;
-  bix[0].Client(cShowGame, 0, nil^);
+  CallPlayer(cShowGame, 0, nil^);
+  for I := 0 to nPl - 1 do
+    if Assigned(bix[I]) and (bix[I].Kind = btNetworkServer) then
+      CallPlayer(cShowGame, I, nil^);
   Notify(ntBackOff);
   Inform(pTurn);
   ChangeClientWhenDone(cTurn, 0, nil^, 0)

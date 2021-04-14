@@ -1994,6 +1994,7 @@ begin
     cmShowSupportAllianceAgainst: Result := SizeOf(Integer);
     cmShowCancelTreatyByAlliance: Result := SizeOf(Integer);
     cmShowEndContact: Result := 0;
+    cmShowGame: Result := 0;
     //sIntCancelTreaty: Result := SizeOf(Integer);
     else begin
       Result := 0;
