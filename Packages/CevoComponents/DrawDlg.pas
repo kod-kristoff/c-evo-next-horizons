@@ -137,7 +137,8 @@ begin
     // HitTest is not supported under Linux GTK2 so use form inside move mechanizm
     NewFormPos := ScreenToClient(Mouse.CursorPos);
     if (NewFormPos.X >= 0) and (NewFormPos.X < Width) and
-      (NewFormPos.Y >= 0) and (NewFormPos.Y < Height) then begin
+      (NewFormPos.Y >= 0) and (NewFormPos.Y < Height) and
+      (NewFormPos.Y < TitleHeight) then begin
       MoveMousePos := ClientToScreen(Point(X, Y));
       MoveFormPos := Point(Left, Top);
       MousePosNew := Mouse.CursorPos;
