@@ -56,6 +56,8 @@ type
     AutoEnemyUpBtn: TButtonC;
     AutoEnemyDownBtn: TButtonC;
     ReplayBtn: TButtonB;
+    procedure ListKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure ListKeyPress(Sender: TObject; var Key: char);
     procedure StartBtnClick(Sender: TObject);
     procedure FormPaint(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -1048,6 +1050,20 @@ begin
           WorldSizes[WorldSize].X, WorldSizes[WorldSize].Y, StartLandMass);
       end;
   end;
+end;
+
+procedure TStartDlg.ListKeyPress(Sender: TObject; var Key: char);
+begin
+  if Key = #13 then StartBtnClick(Sender);
+end;
+
+procedure TStartDlg.ListKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+const
+  DelKey = 46;
+begin
+  if Key = DelKey then DeleteBtnClick(Sender)
+    else FormKeyDown(Sender, Key, Shift);
 end;
 
 procedure TStartDlg.PaintInfo;

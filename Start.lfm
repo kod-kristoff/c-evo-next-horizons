@@ -195,7 +195,9 @@ object StartDlg: TStartDlg
     IntegralHeight = True
     ItemHeight = 0
     OnClick = ListClick
-    OnKeyDown = FormKeyDown
+    OnDblClick = StartBtnClick
+    OnKeyPress = ListKeyPress
+    OnKeyDown = ListKeyDown
     ParentFont = False
     ScrollWidth = 266
     TabOrder = 0
