@@ -125,6 +125,7 @@ procedure DarkenImage(Bitmap: TBitmap; Change: Integer);
 function ScaleToNative(Value: Integer): Integer;
 function ScaleFromNative(Value: Integer): Integer;
 procedure UnshareBitmap(Bitmap: TBitmap);
+procedure Gtk2Fix;
 
 const
   TransparentColor1 = $FF00FF;
@@ -1660,6 +1661,19 @@ procedure UnshareBitmap(Bitmap: TBitmap);
 begin
   // FillRect cause image data to be freed so subsequent BitBlt can access valid image data
   Bitmap.Canvas.FillRect(0, 0, 0, 0);
+end;
+
+procedure Gtk2Fix;
+var
+  I: Integer;
+begin
+  {$IFDEF LINUX}
+  // Wait and process messages little bit to avoid crash or force repaint under Gtk2
+  for I := 0 to 10 do begin
+    Sleep(1);
+    Application.ProcessMessages;
+  end;
+  {$ENDIF}
 end;
 
 procedure LoadFonts;

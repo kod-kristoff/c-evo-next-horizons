@@ -57,18 +57,14 @@ var
 //  hMem: Cardinal;
 //  p: pointer;
   s: string;
-begin
+Begin
   case ID of
     ntInitLocalHuman: begin
       MainTexture.Age := -1;
       State := -1;
       Info := Phrases.Lookup('BUSY_MODLH');
       Show;
-      {$IFDEF LINUX}
-      // Force shown window repaint on Gtk2 widgetset
-      Sleep(1);
-      Application.ProcessMessages;
-      {$ENDIF}
+      Gtk2Fix;
       Invalidate;
       Update;
     end;
@@ -197,6 +193,8 @@ begin
 end;
 
 procedure TDirectDlg.FormShow(Sender: TObject);
+var
+  I: Integer;
 begin
   if not Gone then
   begin

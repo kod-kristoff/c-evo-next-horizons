@@ -1491,7 +1491,7 @@ begin
           if NewProject and (cpImp or cpIndex) <> MyCity[cix].Project0 and
             (cpImp or cpIndex) then
           begin // loss of material -- do query
-            Application.ProcessMessages; // TODO: Needed for Gtk2, Lazarus gtk2 bug?
+            Gtk2Fix;
             if (pt1 = ptTrGoods) or (pt1 = ptShip) or (pt1 <> pt0) and
               (pt0 <> ptCaravan) then begin
               QueryOk := SimpleQuery(mkOkCancel,
