@@ -3,13 +3,13 @@ title: "C-evo: New Horizons"
 version: '1.3.0'
 summary: A turn-based empire building game inspired by Civilization II game.
 description: |
-  This is a fork and Lazarus port of the original game which can be 
-  found at ​www.c-evo.org.
-confinement: devmode
-#base: core20
-base: core18
+  This is a fork and Lazarus port of the original game.
+confinement: strict
+base: core20
+#base: core18
 grade: devel
 icon: Graphics/c-evo_64x64.png
+license: NLPL
 
 parts:
   c-evo:
@@ -65,9 +65,9 @@ parts:
       install -m 644 Language.txt $ROOT/usr/share/c-evo
       install -m 644 Language2.txt $ROOT/usr/share/c-evo
       install -m 644 Fonts.txt $ROOT/usr/share/c-evo
-      install -d -m 755 $ROOT/bin
-      install -m 755 Install/snap/local/desktop-launch $ROOT/bin
-      install -m 755 Install/snap/local/c-evo $ROOT/bin/c-evo
+      #install -d -m 755 $ROOT/bin
+      #install -m 755 Install/snap/local/desktop-launch $ROOT/bin
+      #install -m 755 Install/snap/local/c-evo $ROOT/bin/c-evo
       #install -d -m 755 $ROOT/usr/bin      
       install -d -m 755 $ROOT/usr/share/applications
       install -m 755 Install/deb/c-evo.desktop $ROOT/usr/share/applications
@@ -90,8 +90,8 @@ parts:
       cp -r Saved $ROOT/usr/share/c-evo
       cp -r "AI Template" $ROOT/usr/share/c-evo
     stage:
-      - bin
-      - lib
+      #- bin
+      #- lib
       - etc
       - usr
       - usr/share/c-evo
@@ -101,14 +101,14 @@ parts:
 apps:
   c-evo:
     #command: desktop-launch $SNAP/c-evo-snap
-    #command: usr/share/c-evo/c-evo
-    command: usr/share/c-evo/command-c-evo-gtk.wrapper
+    command: usr/share/c-evo/c-evo
+    #command: usr/share/c-evo/command-c-evo-gtk.wrapper
     desktop: usr/share/applications/c-evo.desktop    
-    extensions: [gnome-3-28]
+    #extensions: [gnome-3-28]
     plugs:
       - home      
       - pulseaudio
       - desktop
-      - desktop-legacy
+      #- desktop-legacy
       - x11
   
