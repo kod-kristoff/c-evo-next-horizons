@@ -1,0 +1,4 @@
+#!/bin/bash
+
+cd $SNAP/usr/share/c-evo
+./c-evo "$@"

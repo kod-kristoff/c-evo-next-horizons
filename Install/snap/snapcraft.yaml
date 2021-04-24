@@ -1,0 +1,114 @@
+name: c-evo
+title: "C-evo: New Horizons"
+version: '1.3.0'
+summary: A turn-based empire building game inspired by Civilization II game.
+description: |
+  This is a fork and Lazarus port of the original game which can be 
+  found at ​www.c-evo.org.
+confinement: devmode
+#base: core20
+base: core18
+grade: devel
+icon: Graphics/c-evo_64x64.png
+
+parts:
+  c-evo:
+    plugin: nil
+    source: .
+    source-type: local
+    build-packages: 
+    - fpc
+    - lazarus
+    - lcl
+    - lcl-utils
+    stage-packages:    
+    - libatk1.0-0
+    - libcairo2
+    - libdatrie1
+    - libfontconfig1
+    - libfreetype6
+    - libgdk-pixbuf2.0-0
+    - libgraphite2-3
+    - libgtk2.0-0
+    - libharfbuzz0b
+    - libpango-1.0-0
+    - libpangocairo-1.0-0
+    - libpangoft2-1.0-0
+    - libpixman-1-0
+    - libpng16-16
+    - libthai0
+    - libx11-6
+    - libxau6
+    - libxcb-render0
+    - libxcb-shm0
+    - libxcb1
+    - libxcomposite1
+    - libxcursor1
+    - libxdamage1
+    - libxdmcp6
+    - libxext6
+    - libxfixes3
+    - libxi6
+    - libxinerama1
+    - libxrandr2
+    - libxrender1
+    #- sox
+    #- libsox-fmt-mp3
+    override-build: |
+      (cd AI/StdAI &&lazbuild --build-mode=Release StdAI.lpi)
+      mv AI/StdAI/libstdai.so AI/StdAI/libstdai-amd64.so
+      lazbuild --build-mode=Release Integrated.lpi
+      ROOT=/root/parts/c-evo/install
+      install -d -m 755 $ROOT/usr/share/c-evo
+      install -s -m 755 c-evo $ROOT/usr/share/c-evo
+      install -m 755 Install/snap/local/command-c-evo-gtk.wrapper $ROOT/usr/share/c-evo     
+      install -m 644 Language.txt $ROOT/usr/share/c-evo
+      install -m 644 Language2.txt $ROOT/usr/share/c-evo
+      install -m 644 Fonts.txt $ROOT/usr/share/c-evo
+      install -d -m 755 $ROOT/bin
+      install -m 755 Install/snap/local/desktop-launch $ROOT/bin
+      install -m 755 Install/snap/local/c-evo $ROOT/bin/c-evo
+      #install -d -m 755 $ROOT/usr/bin      
+      install -d -m 755 $ROOT/usr/share/applications
+      install -m 755 Install/deb/c-evo.desktop $ROOT/usr/share/applications
+      install -d -m 755 $ROOT/usr/share/mime/packages
+      install -m 755 Install/deb/c-evo.xml $ROOT/usr/share/mime/packages
+      install -d -m 755 $ROOT/usr/share/pixmaps
+      install -m 644 Graphics/c-evo_64x64.png $ROOT/usr/share/pixmaps/c-evo.png
+      install -m 644 Graphics/c-evo_64x64.png $ROOT/usr/share/pixmaps/application-cevo.png
+      install -m 644 Graphics/c-evo_64x64.png $ROOT/usr/share/pixmaps/application-cevomap.png
+      install -d -m 755 $ROOT/usr/share/c-evo/AI/StdAI
+      install -m 644 AI/StdAI/libstdai-amd64.so $ROOT/usr/share/c-evo/AI/StdAI
+      install -m 644 AI/StdAI/StdAI.ai.txt $ROOT/usr/share/c-evo/AI/StdAI
+      install -m 644 AI/StdAI/StdAI.png $ROOT/usr/share/c-evo/AI/StdAI
+      cp -r Graphics $ROOT/usr/share/c-evo
+      cp -r Help $ROOT/usr/share/c-evo
+      cp -r Sounds $ROOT/usr/share/c-evo
+      cp -r Tribes $ROOT/usr/share/c-evo
+      cp -r Localization $ROOT/usr/share/c-evo
+      cp -r Maps $ROOT/usr/share/c-evo
+      cp -r Saved $ROOT/usr/share/c-evo
+      cp -r "AI Template" $ROOT/usr/share/c-evo
+    stage:
+      - bin
+      - lib
+      - etc
+      - usr
+      - usr/share/c-evo
+      - usr/share/applications/c-evo.desktop
+      - usr/share/mime/packages/c-evo.xml
+
+apps:
+  c-evo:
+    #command: desktop-launch $SNAP/c-evo-snap
+    #command: usr/share/c-evo/c-evo
+    command: usr/share/c-evo/command-c-evo-gtk.wrapper
+    desktop: usr/share/applications/c-evo.desktop    
+    extensions: [gnome-3-28]
+    plugs:
+      - home      
+      - pulseaudio
+      - desktop
+      - desktop-legacy
+      - x11
+  
