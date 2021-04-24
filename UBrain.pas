@@ -51,6 +51,9 @@ type
 
 implementation
 
+uses
+  ScreenTools;
+
 { TBrain }
 
 procedure TBrain.LoadFromFile(AIFileName: string);

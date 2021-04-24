@@ -53,6 +53,7 @@ function MovementToString(Movement: integer): string;
 procedure BtnFrame(ca: TCanvas; p: TRect; T: TTexture);
 procedure EditFrame(ca: TCanvas; p: TRect; T: TTexture);
 function HexStringToColor(S: string): integer;
+function ExtractFileNameWithoutExt(const Filename: string): string;
 function LoadGraphicFile(Bmp: TBitmap; FileName: string; Options: TLoadGraphicFileOptions = []): boolean;
 function LoadGraphicSet(const Name: string): TGraphicSet;
 function LoadGraphicSet2(const Name: string): TGraphicSet;
@@ -490,6 +491,24 @@ begin
 
   if (not (gfNoGamma in Options)) and (Gamma <> 100) then
     ApplyGammaToBitmap(Bmp);
+end;
+
+function ExtractFileNameWithoutExt(const Filename: string): string;
+var
+  P: Integer;
+begin
+  Result := Filename;
+  P := Length(Result);
+  while P > 0 do begin
+    case Result[P] of
+      PathDelim: Exit;
+      {$ifdef windows}
+      '/': if ('/' in AllowDirectorySeparators) then Exit;
+      {$endif}
+      '.': Exit(Copy(Result, 1, P - 1));
+    end;
+    Dec(P);
+  end;
 end;
 
 function LoadGraphicSet(const Name: string): TGraphicSet;
