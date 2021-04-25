@@ -149,6 +149,10 @@ begin
   if (Result = '') then
     if (FindDefaultExecutablePath('afplay') <> '') then
       Result := 'afplay';
+  // Try mpg321
+  if (Result = '') then
+    if (FindDefaultExecutablePath('mpg321') <> '') then
+      Result := 'mpg321 -q';
 end;
 
 
