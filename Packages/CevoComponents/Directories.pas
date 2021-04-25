@@ -78,6 +78,14 @@ begin
   FindClose(Src);
 end;
 
+procedure CopyFiles;
+begin
+  if DirectoryExists(GetSavedDir(True)) and not DirectoryExists(GetSavedDir(False)) then
+    CopyDir(GetSavedDir(True), GetSavedDir(False), '*.*');
+  if DirectoryExists(GetMapsDir(True)) and not DirectoryExists(GetMapsDir(False)) then
+    CopyDir(GetMapsDir(True), GetMapsDir(False), '*.*');
+end;
+
 procedure UnitInit;
 var
   AppDataDir: string;
@@ -86,16 +94,12 @@ begin
   HomeDir := ExtractFilePath(ParamStr(0));
 
   AppDataDir := GetAppConfigDir(False);
-  if AppDataDir = '' then
-    DataDir := HomeDir
-  else
-  begin
+  if AppDataDir = '' then DataDir := HomeDir
+  else begin
     if not DirectoryExists(AppDataDir) then ForceDirectories(AppDataDir);
     DataDir := AppDataDir;
   end;
-
-  CopyDir(GetSavedDir(True), GetSavedDir(False), '*.*');
-  CopyDir(GetMapsDir(True), GetMapsDir(False), '*.*');
+  CopyFiles;
 end;
 
 function GetSavedDir(Home: Boolean = False): string;

@@ -1623,6 +1623,7 @@ var
   NewName: string;
   f: file;
   ok: boolean;
+  MapPictureFileName: string;
 begin
   if List.ItemIndex >= 0 then
   begin
@@ -1643,7 +1644,7 @@ begin
         if NewName[i] in ['\', '/', ':', '*', '?', '"', '<', '>', '|'] then
         begin
           SimpleMessage(Format(Phrases.Lookup('NOFILENAME'), [NewName[i]]));
-          exit
+          Exit;
         end;
       if Page = pgLoad then
         AssignFile(f, GetSavedDir + DirectorySeparator + List.Items[List.ItemIndex] + CevoExt)
@@ -1658,17 +1659,21 @@ begin
           Rename(f, GetMapsDir + DirectorySeparator + NewName + CevoMapExt);
       except
         // Play('INVALID');
-        ok := false
+        ok := False;
       end;
-      if Page <> pgLoad then
-        try // rename map picture
+      if Page <> pgLoad then begin
+        // Rename map picture
+        MapPictureFileName := GetMapsDir + DirectorySeparator +
+          List.Items[List.ItemIndex] + CevoMapPictureExt;
+        if FileExists(MapPictureFileName) then
+        try
           AssignFile(f, GetMapsDir + DirectorySeparator + List.Items[List.ItemIndex]
-            + '.png');
-          Rename(f, GetMapsDir + DirectorySeparator + NewName + '.png');
+            + CevoMapPictureExt);
+          Rename(f, GetMapsDir + DirectorySeparator + NewName + CevoMapPictureExt);
         except
         end;
-      if ok then
-      begin
+      end;
+      if ok then begin
         if Page = pgLoad then
           FormerGames[List.ItemIndex] := NewName
         else

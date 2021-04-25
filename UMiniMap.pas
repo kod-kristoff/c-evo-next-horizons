@@ -114,7 +114,7 @@ var
   MapRow: array [0 .. lxmax - 1] of Cardinal;
   ImageFileName: string;
 begin
-  ImageFileName := Copy(FileName, 1, Length(FileName) - Length(CevoMapExt)) + '.png';
+  ImageFileName := Copy(FileName, 1, Length(FileName) - Length(CevoMapExt)) + CevoMapPictureExt;
   Mode := mmPicture;
   if LoadGraphicFile(Bitmap, ImageFileName, [gfNoError]) then
   begin
