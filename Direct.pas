@@ -193,8 +193,6 @@ begin
 end;
 
 procedure TDirectDlg.FormShow(Sender: TObject);
-var
-  I: Integer;
 begin
   if not Gone then
   begin

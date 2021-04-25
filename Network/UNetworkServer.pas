@@ -5,7 +5,7 @@ unit UNetworkServer;
 interface
 
 uses
-  Classes, SysUtils, fgl{$IFDEF LINUX}, fpAsync, fpsock{$ENDIF}, Protocol, fphttpclient;
+  Classes, SysUtils{$IFDEF LINUX}, fgl, fpAsync, fpsock, fphttpclient{$ENDIF}, Protocol;
 
 {$IFDEF LINUX}
 type
@@ -86,8 +86,10 @@ procedure Client(Command, Player: integer; var Data); stdcall;
 
 implementation
 
+{$IFDEF LINUX}
 uses
   Global, UNetworkCommon;
+{$ENDIF}
 
 procedure Client(Command, Player: integer; var Data);
 begin

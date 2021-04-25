@@ -47,11 +47,13 @@ procedure Client(Command, Player: Integer; var Data); stdcall;
 implementation
 
 uses
-  LocalPlayer, Global, UNetworkCommon;
+  LocalPlayer{$IFDEF LINUX}, Global, UNetworkCommon{$ENDIF};
 
 procedure Client(Command, Player: Integer; var Data);
+{$IFDEF LINUX}
 var
   Cmd: TCommand;
+{$ENDIF}
 begin
   {$IFDEF LINUX}
   Cmd := TCommand(Command);
