@@ -51,7 +51,7 @@ var
 implementation
 
 uses
-  Tribes, Help, Directories;
+  Tribes, Help, Directories, UTexture;
 
 {$R *.lfm}
 

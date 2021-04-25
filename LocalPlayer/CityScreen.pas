@@ -7,7 +7,7 @@ uses
   {$IFDEF LINUX}LMessages,{$ENDIF}
   Protocol, ClientTools, Term, ScreenTools, IsoEngine, BaseWin,
   LCLIntf, LCLType, Messages, SysUtils, Classes, Graphics, Controls, Forms, ExtCtrls,
-  ButtonA, ButtonC, Area, GraphType;
+  ButtonA, ButtonC, Area, GraphType, UTexture;
 
 const
   WM_PLAYSOUND = WM_USER;
