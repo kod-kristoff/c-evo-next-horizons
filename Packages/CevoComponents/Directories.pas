@@ -66,7 +66,7 @@ procedure CopyDir(SourceDir, DestinationDir, Filter: string);
 var
   Src, Dst: TSearchRec;
 begin
-  if not DirectoryExists(DestinationDir) then CreateDir(DestinationDir);
+  if not DirectoryExists(DestinationDir) then ForceDirectories(DestinationDir);
   if FindFirst(SourceDir + DirectorySeparator + Filter, $21, Src) = 0 then
     repeat
       if (FindFirst(DestinationDir + DirectorySeparator + Src.Name, $21, Dst) <> 0) or
@@ -90,7 +90,7 @@ begin
     DataDir := HomeDir
   else
   begin
-    if not DirectoryExists(AppDataDir) then CreateDir(AppDataDir);
+    if not DirectoryExists(AppDataDir) then ForceDirectories(AppDataDir);
     DataDir := AppDataDir;
   end;
 
