@@ -36,6 +36,7 @@ type
     procedure LoadToStrings(Strings: TStrings);
     procedure Assign(Source: TKeyBindings);
     procedure ResetToDefault;
+    procedure RemoveShortCut(ShortCut: TShortCut);
   end;
 
 var
@@ -270,6 +271,16 @@ var
 begin
   for I := 0 to Count - 1 do
     Items[I].SetDefault;
+end;
+
+procedure TKeyBindings.RemoveShortCut(ShortCut: TShortCut);
+var
+  I: Integer;
+begin
+  for I := 0 to Count - 1 do begin
+    if Items[I].ShortCut = ShortCut then Items[I].ShortCut := 0;
+    if Items[I].ShortCut2 = ShortCut then Items[I].ShortCut2 := 0;
+  end;
 end;
 
 

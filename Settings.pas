@@ -243,6 +243,10 @@ end;
 procedure TSettingsDlg.UpdateShortCutItem;
 begin
   if Assigned(CurrentKeyBinding) then begin
+    if CurrentKeyBinding.ShortCut > 0 then
+      LocalKeyBindings.RemoveShortCut(CurrentKeyBinding.ShortCut);
+    if CurrentKeyBinding.ShortCut2 > 0 then
+      LocalKeyBindings.RemoveShortCut(CurrentKeyBinding.ShortCut2);
     CurrentKeyBinding.ShortCut := TextToShortCut(EditShortCutPrimary.Text);
     CurrentKeyBinding.ShortCut2 := TextToShortCut(EditShortCutSecondary.Text);
     LocalKeyBindings.LoadToStrings(ListKeyBindings.Items);
