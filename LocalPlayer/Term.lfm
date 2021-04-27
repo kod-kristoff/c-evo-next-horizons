@@ -1,7 +1,7 @@
 object MainScreen: TMainScreen
-  Left = 169
+  Left = 516
   Height = 480
-  Top = 596
+  Top = 834
   Width = 800
   HorzScrollBar.Visible = False
   VertScrollBar.Visible = False
@@ -664,6 +664,19 @@ object MainScreen: TMainScreen
     object mCentre: TMenuItem
       Tag = 12
       ShortCut = 67
+      OnClick = MenuClick
+    end
+    object N13: TMenuItem
+      Caption = '-'
+    end
+    object mPrevUnit: TMenuItem
+      Tag = 100
+      ShortCut = 46
+      OnClick = MenuClick
+    end
+    object mNextUnit: TMenuItem
+      Tag = 101
+      ShortCut = 45
       OnClick = MenuClick
     end
   end

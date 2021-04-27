@@ -547,6 +547,8 @@ Tile Size
 Small
 Medium
 Big
+Previous Unit
+Next Unit
 
 #ADVANCES
 Advanced Flight

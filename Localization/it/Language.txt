@@ -537,6 +537,8 @@ Dimensione casella
 Small
 Medium
 Big
+Previous Unit
+Next Unit
 
 #ADVANCES
 Aviazione avanzata

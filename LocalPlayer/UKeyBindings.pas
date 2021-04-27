@@ -60,6 +60,8 @@ var
   BCenterUnit: TKeyBinding;
   BStay: TKeyBinding;
   BNoOrders: TKeyBinding;
+  BPrevUnit: TKeyBinding;
+  BNextUnit: TKeyBinding;
   BCancel: TKeyBinding;
   BPillage: TKeyBinding;
   BSelectTransport: TKeyBinding;
@@ -307,6 +309,8 @@ with KeyBindings do begin
   BCenterUnit := AddItem('CenterUnit', 'Center', 'C');
   BStay := AddItem('Stay', 'Stay', 'S');
   BNoOrders := AddItem('NoOrders', 'No orders', 'Space');
+  BPrevUnit := AddItem('PrevUnit', 'Previous unit', 'Del');
+  BNextUnit := AddItem('NextUnit', 'Next unit', 'Ins');
   BCancel := AddItem('Cancel', 'Cancel', 'Ctrl+C');
   BPillage := AddItem('Pillage', 'Pillage', 'Ctrl+P');
   BSelectTransport := AddItem('SelectTransport', 'Select transport', 'Ctrl+T');

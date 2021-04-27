@@ -547,6 +547,8 @@ Velikost políčka
 Malá
 Střední
 Velká
+Předchozí jednotka
+Další jednotka
 
 #ADVANCES
 Pokročilý let

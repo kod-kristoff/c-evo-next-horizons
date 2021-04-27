@@ -563,6 +563,8 @@ On (Альтернатива)
 Small
 Medium
 Big
+Previous Unit
+Next Unit
 
 #ADVANCES
 Передовые полеты

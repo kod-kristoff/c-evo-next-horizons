@@ -555,6 +555,8 @@ AI測試地圖
 Small
 Medium
 Big
+Previous Unit
+Next Unit
 
 #ADVANCES
 智能飛行

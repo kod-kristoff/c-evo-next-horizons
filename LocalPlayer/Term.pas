@@ -28,6 +28,9 @@ type
 
   TMainScreen = class(TDrawDlg)
     mBigTiles: TMenuItem;
+    mNextUnit: TMenuItem;
+    N13: TMenuItem;
+    mPrevUnit: TMenuItem;
     Timer1: TTimer;
     GamePopup: TPopupMenu;
     UnitPopup: TPopupMenu;
@@ -285,7 +288,8 @@ type
     procedure PaintAllMaps;
     procedure CopyMiniToPanel;
     procedure PanelPaint;
-    procedure NextUnit(NearLoc: integer; AutoTurn: boolean);
+    procedure FocusNextUnit(Dir: Integer = 1);
+    procedure NextUnit(NearLoc: Integer; AutoTurn: Boolean);
     procedure Scroll(dx, dy: integer);
     procedure SetMapPos(Loc: integer; MapPos: TPoint);
     procedure Centre(Loc: integer);
@@ -2426,7 +2430,7 @@ begin
   if supervising or (GameMode = cMovie) then
   begin
     SetTroopLoc(-1);
-    PaintAll
+    PaintAll;
   end { supervisor }
   { else if (ClientMode=cTurn) and (MyRO.Turn=0) then
     begin
@@ -2448,7 +2452,7 @@ begin
         else
           FocusOnLoc(G.lx * G.ly div 2);
       SetTroopLoc(-1);
-      PanelPaint
+      PanelPaint;
     end;
     if ShowCityList then
       ListDlg.ShowNewContent(wmPersistent, kCityEvents);
@@ -4895,6 +4899,29 @@ begin
   RectInvalidate(0, 0, ClientWidth, TopBarHeight);
 end;
 
+procedure TMainScreen.FocusNextUnit(Dir: Integer);
+var
+  i, uix, NewFocus: Integer;
+begin
+  if ClientMode >= scContact then
+    Exit;
+  DestinationMarkON := False;
+  PaintDestination;
+  NewFocus := -1;
+  for i := 1 to MyRO.nUn do begin
+    uix := (UnFocus + i * Dir + MyRO.nUn) mod MyRO.nUn;
+    if (MyUn[uix].Loc >= 0) and (MyUn[uix].Status and usStay = 0) then begin
+      NewFocus := uix;
+      Break;
+    end;
+  end;
+  if NewFocus >= 0 then begin
+    SetUnFocus(NewFocus);
+    SetTroopLoc(MyUn[NewFocus].Loc);
+    FocusOnLoc(TroopLoc, flRepaintPanel);
+  end;
+end;
+
 procedure TMainScreen.FocusOnLoc(Loc: integer; Options: integer = 0);
 var
   dx: integer;
@@ -4921,65 +4948,53 @@ begin
     Update;
 end;
 
-procedure TMainScreen.NextUnit(NearLoc: integer; AutoTurn: boolean);
+procedure TMainScreen.NextUnit(NearLoc: Integer; AutoTurn: Boolean);
 var
-  Dist, TestDist: single;
-  i, uix, NewFocus: integer;
-  GotoOnly: boolean;
+  Dist, TestDist: Single;
+  i, uix, NewFocus: Integer;
+  GotoOnly: Boolean;
 begin
   Dist := 0;
   if ClientMode >= scContact then
-    exit;
-  DestinationMarkON := false;
+    Exit;
+  DestinationMarkON := False;
   PaintDestination;
-  for GotoOnly := GoOnPhase downto false do
-  begin
+  for GotoOnly := GoOnPhase downto False do begin
     NewFocus := -1;
-    for i := 1 to MyRO.nUn do
-    begin
+    for i := 1 to MyRO.nUn do begin
       uix := (UnFocus + i) mod MyRO.nUn;
       if (MyUn[uix].Loc >= 0) and (MyUn[uix].Job = jNone) and
         (MyUn[uix].Status and (usStay or usRecover or usWaiting) = usWaiting)
         and (not GotoOnly or (MyUn[uix].Status and usGoto <> 0)) then
-        if NearLoc < 0 then
-        begin
+        if NearLoc < 0 then begin
           NewFocus := uix;
           Break;
-        end
-        else
-        begin
+        end else begin
           TestDist := Distance(NearLoc, MyUn[uix].Loc);
-          if (NewFocus < 0) or (TestDist < Dist) then
-          begin
+          if (NewFocus < 0) or (TestDist < Dist) then begin
             NewFocus := uix;
             Dist := TestDist;
           end;
         end;
     end;
     if GotoOnly then
-      if NewFocus < 0 then
-        GoOnPhase := false
-      else
-        Break;
+      if NewFocus < 0 then GoOnPhase := False
+        else Break;
   end;
-  if NewFocus >= 0 then
-  begin
+  if NewFocus >= 0 then begin
     SetUnFocus(NewFocus);
     SetTroopLoc(MyUn[NewFocus].Loc);
-    FocusOnLoc(TroopLoc, flRepaintPanel)
-  end
-  else if AutoTurn and not mWaitTurn.Checked then
-  begin
-    TurnComplete := true;
+    FocusOnLoc(TroopLoc, flRepaintPanel);
+  end else
+  if AutoTurn and not mWaitTurn.Checked then begin
+    TurnComplete := True;
     SetUnFocus(-1);
     SetTroopLoc(-1);
-    PostMessage(Handle, WM_EOT, 0, 0)
-  end
-  else
-  begin
+    PostMessage(Handle, WM_EOT, 0, 0);
+  end else begin
     if { (UnFocus>=0) and } not TurnComplete and EOT.Visible then
       Play('TURNEND');
-    TurnComplete := true;
+    TurnComplete := True;
     SetUnFocus(-1);
     SetTroopLoc(-1);
     PanelPaint;
@@ -5953,7 +5968,7 @@ begin
           PaintLoc(ToLoc); // don't show unit in city if not selected
         end
         else
-          NextUnit(UnStartLoc, true)
+          NextUnit(UnStartLoc, true);
     end
     else if (UnFocus < 0) and (Options and muAutoNext <> 0) then
       NextUnit(UnStartLoc, result <> eMissionDone);
@@ -6158,7 +6173,7 @@ begin
         if (StopReason = NoTime) and (UnFocus = uix) then
         begin
           MyUn[uix].Status := MyUn[uix].Status and not usWaiting;
-          NextUnit(UnStartLoc, true)
+          NextUnit(UnStartLoc, true);
         end;
       end;
     end;
@@ -6319,7 +6334,7 @@ begin
             if uix = UnFocus then
               trixFocus := TrCnt;
             inc(TrCnt);
-          end
+          end;
     end
     else // count enemy units here
       Server(sGetUnits, me, Loc, TrCnt);
@@ -6434,6 +6449,8 @@ begin
   mCentre.ShortCut := BCenterUnit.ShortCut;
   mStay.ShortCut := BStay.ShortCut;
   mNoOrders.ShortCut := BNoOrders.ShortCut;
+  mPrevUnit.ShortCut := BPrevUnit.ShortCut;
+  mNextUnit.ShortCut := BNextUnit.ShortCut;
   mCancel.ShortCut := BCancel.ShortCut;
   mPillage.ShortCut := BPillage.ShortCut;
   mTechTree.ShortCut := BTechTree.ShortCut;
@@ -6627,6 +6644,8 @@ begin
     else if BCenterUnit.Test(ShortCut) then MenuClick(mCentre)
     else if BStay.Test(ShortCut) then MenuClick(mStay)
     else if BNoOrders.Test(ShortCut) then MenuClick(mNoOrders)
+    else if BPrevUnit.Test(ShortCut) then MenuClick(mPrevUnit)
+    else if BNextUnit.Test(ShortCut) then MenuClick(mNextUnit)
     else if BCancel.Test(ShortCut) then MenuClick_Check(UnitPopup, mCancel)
     else if BPillage.Test(ShortCut) then MenuClick_Check(UnitPopup, mPillage)
     else if BSelectTransport.Test(ShortCut) then MenuClick_Check(UnitPopup, mSelectTransport)
@@ -6709,11 +6728,11 @@ procedure TMainScreen.MenuClick(Sender: TObject);
             NextUnit(UnStartLoc, true);
           end
           else
-            PanelPaint
+            PanelPaint;
         end
         else
           NextUnit(UnStartLoc, true);
-      end
+      end;
     end;
     case result of
       eNoBridgeBuilding:
@@ -6726,7 +6745,7 @@ procedure TMainScreen.MenuClick(Sender: TObject);
     else
       if result < rExecuted then
         Play('INVALID')
-    end
+    end;
   end;
 
 var
@@ -6905,7 +6924,7 @@ begin
     NextUnit(-1, false);
   end
   else if UnFocus >= 0 then
-    with MyUn[UnFocus] do
+    with TUn(MyUn[UnFocus]) do
       if Sender = mGoOn then
       begin
         if Status shr 16 = $7FFF then
@@ -6936,7 +6955,7 @@ begin
       else if Sender = mCentre then
       begin
         Centre(Loc);
-        PaintAllMaps
+        PaintAllMaps;
       end
       else if Sender = mCity then
       begin
@@ -6948,7 +6967,7 @@ begin
             MapValid := false;
             PaintAll;
             ZoomToCity(Loc0, true, chFounded);
-          end
+          end;
         end
         else
         begin
@@ -7009,7 +7028,7 @@ begin
         Status := Status and ($FFFF - usRecover - usGoto - usEnhance) or usStay;
         if Job > jNone then
           Server(sStartJob + jNone shl 4, me, UnFocus, nil^);
-        NextUnit(UnStartLoc, true)
+        NextUnit(UnStartLoc, true);
       end
       else if Sender = mRecover then
       begin
@@ -7018,12 +7037,22 @@ begin
         Status := Status and ($FFFF - usStay - usGoto - usEnhance) or usRecover;
         if Job > jNone then
           Server(sStartJob + jNone shl 4, me, UnFocus, nil^);
-        NextUnit(UnStartLoc, true)
+        NextUnit(UnStartLoc, true);
       end
       else if Sender = mNoOrders then
       begin
         Status := Status and not usWaiting;
-        NextUnit(UnStartLoc, true)
+        NextUnit(UnStartLoc, true);
+      end
+      else if Sender = mPrevUnit then
+      begin
+        Status := Status and not usWaiting;
+        FocusNextUnit(-1);
+      end
+      else if Sender = mNextUnit then
+      begin
+        Status := Status and not usWaiting;
+        FocusNextUnit(1);
       end
       else if Sender = mCancel then
       begin
@@ -7104,7 +7133,7 @@ begin
             if MyModel[mix].Domain <> dAir then
               NextUnit(Loc, true)
             else
-              PanelPaint
+              PanelPaint;
           end
           else if i = eNoTime_Load then
             if MyModel[mix].Domain = dAir then
