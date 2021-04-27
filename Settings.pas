@@ -6,45 +6,45 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  ScreenTools, Messg, ButtonA, Registry, fgl, Directories, DrawDlg, ButtonC;
+  LCLProc, ScreenTools, Messg, ButtonA, Registry, fgl, Directories, DrawDlg,
+  ButtonC, UKeyBindings, ULanguages;
 
 type
-  TLanguage = class
-    ShortName: string;
-    FullName: string;
-    Author: string;
-  end;
-
-  { TLanguages }
-
-  TLanguages = class(TFPGObjectList<TLanguage>)
-    procedure AddItem(const ShortName, FullName: string);
-    procedure LoadToStrings(Strings: TStrings);
-    function Search(ShortName: string): Integer;
-  end;
-
   { TSettingsDlg }
 
   TSettingsDlg = class(TDrawDlg)
     ButtonFullscreen: TButtonC;
     Down2Btn: TButtonC;
-    List: TListBox;
-    OKBtn: TButtonA;
-    CancelBtn: TButtonA;
+    EditShortCutPrimary: TEdit;
+    EditShortCutSecondary: TEdit;
+    ListLanguages: TListBox;
+    ListKeyBindings: TListBox;
+    ButtonOk: TButtonA;
+    ButtonCancel: TButtonA;
+    ButtonReset: TButtonA;
     Up2Btn: TButtonC;
     procedure ButtonFullscreenClick(Sender: TObject);
-    procedure CancelBtnClick(Sender: TObject);
+    procedure ButtonCancelClick(Sender: TObject);
+    procedure ButtonResetClick(Sender: TObject);
     procedure Down2BtnClick(Sender: TObject);
+    procedure EditShortCutPrimaryKeyUp(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure EditShortCutSecondaryKeyUp(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormPaint(Sender: TObject);
     procedure FormShow(Sender: TObject);
-    procedure OKBtnClick(Sender: TObject);
+    procedure ListKeyBindingsSelectionChange(Sender: TObject; User: boolean);
+    procedure ButtonOkClick(Sender: TObject);
     procedure Up2BtnClick(Sender: TObject);
   private
     LocalGamma: Integer;
+    LocalKeyBindings: TKeyBindings;
+    CurrentKeyBinding: TKeyBinding;
+    procedure UpdateShortCutItem;
   public
-    Languages: TLanguages;
     procedure LoadData;
     procedure SaveData;
   end;
@@ -52,66 +52,56 @@ type
 var
   SettingsDlg: TSettingsDlg;
 
+
 implementation
 
 {$R *.lfm}
 
-{ TLanguages }
-
-procedure TLanguages.AddItem(const ShortName, FullName: string);
 var
-  Language: TLanguage;
-begin
-  Language := TLanguage.Create;
-  Language.ShortName := ShortName;
-  Language.FullName := FullName;
-  Add(Language);
-end;
+  SFullScreen, SGamma, SRestartMsg, SShortCutPrimary, SShortCutSecondary,
+  SLanguages, SKeyBindings: string;
 
-procedure TLanguages.LoadToStrings(Strings: TStrings);
-var
-  I: Integer;
+procedure ReloadLanguages;
 begin
-  Strings.Clear;
-  for I := 0 to Count - 1 do
-    Strings.Add(Items[I].FullName);
-end;
-
-function TLanguages.Search(ShortName: string): Integer;
-var
-  I: Integer;
-begin
-  I := 0;
-  while (I < Count) and (Items[I].ShortName <> ShortName) do Inc(I);
-  if I < Count then Result := I
-    else Result := -1;
+  SFullScreen := Phrases.Lookup('SETTINGS', 0);
+  SGamma := Phrases.Lookup('SETTINGS', 1);
+  SRestartMsg := Phrases.Lookup('SETTINGS', 2);
+  SShortCutPrimary := Phrases.Lookup('SETTINGS', 3);
+  SShortCutSecondary := Phrases.Lookup('SETTINGS', 4);
+  SLanguages := Phrases.Lookup('SETTINGS', 5);
+  SKeyBindings := Phrases.Lookup('SETTINGS', 6);
 end;
 
 { TSettingsDlg }
 
 procedure TSettingsDlg.FormCreate(Sender: TObject);
 begin
+  LocalKeyBindings := TKeyBindings.Create;
+
   Canvas.Font.Assign(UniFont[ftNormal]);
   Canvas.Brush.Style := bsClear;
 
-  Languages := TLanguages.Create;
-  Languages.AddItem('', 'System');
-  Languages.AddItem('cs', 'Czech');
-  Languages.AddItem('de', 'German');
-  Languages.AddItem('en', 'English');
-  Languages.AddItem('it', 'Italian');
-  Languages.AddItem('ru', 'Russian');
-  Languages.AddItem('zh-Hant', 'Traditional Chinese');
-  Languages.AddItem('zh-Hans', 'Simplified Chinese');
-
-  OKBtn.Caption := Phrases.Lookup('BTN_OK');
-  CancelBtn.Caption := Phrases.Lookup('BTN_CANCEL');
+  ButtonOk.Caption := Phrases.Lookup('BTN_OK');
+  ButtonCancel.Caption := Phrases.Lookup('BTN_CANCEL');
+  ButtonReset.Caption := Phrases.Lookup('BTN_RESET');
   InitButtons;
 end;
 
-procedure TSettingsDlg.CancelBtnClick(Sender: TObject);
+procedure TSettingsDlg.ButtonCancelClick(Sender: TObject);
 begin
   ModalResult := mrCancel;
+end;
+
+procedure TSettingsDlg.ButtonResetClick(Sender: TObject);
+begin
+  ListLanguages.ItemIndex := 0;
+  ButtonFullscreen.ButtonIndex := 3;
+  LocalGamma := 100;
+  ListKeyBindings.ItemIndex := -1;
+  ListKeyBindingsSelectionChange(nil, False);
+  LocalKeyBindings.ResetToDefault;
+  LocalKeyBindings.LoadToStrings(ListKeyBindings.Items);
+  Repaint;
 end;
 
 procedure TSettingsDlg.Down2BtnClick(Sender: TObject);
@@ -123,6 +113,40 @@ begin
   end;
 end;
 
+procedure TSettingsDlg.EditShortCutPrimaryKeyUp(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if (Sender is TEdit) and Assigned(CurrentKeyBinding) and not (Key in [16..18]) then begin
+    CurrentKeyBinding.ShortCut := Key or
+      (scShift * Integer(ssShift in Shift)) or
+      (scCtrl * Integer(ssCtrl in Shift)) or
+      (scAlt * Integer(ssAlt in Shift));
+    EditShortCutPrimary.Text := ShortCutToText(CurrentKeyBinding.ShortCut);
+    Key := 0;
+    UpdateShortCutItem;
+  end;
+end;
+
+procedure TSettingsDlg.EditShortCutSecondaryKeyUp(Sender: TObject;
+  var Key: Word; Shift: TShiftState);
+begin
+  if (Sender is TEdit) and Assigned(CurrentKeyBinding) and not (Key in [16..18]) then begin
+    CurrentKeyBinding.ShortCut2 := Key or
+      (scShift * Integer(ssShift in Shift)) or
+      (scCtrl * Integer(ssCtrl in Shift)) or
+      (scAlt * Integer(ssAlt in Shift));
+    EditShortCutSecondary.Text := ShortCutToText(CurrentKeyBinding.ShortCut2);
+    Key := 0;
+    UpdateShortCutItem;
+  end;
+end;
+
+procedure TSettingsDlg.FormClose(Sender: TObject; var CloseAction: TCloseAction
+  );
+begin
+  ListKeyBindings.ItemIndex := -1;
+end;
+
 procedure TSettingsDlg.ButtonFullscreenClick(Sender: TObject);
 begin
   ButtonFullscreen.ButtonIndex := ButtonFullscreen.ButtonIndex xor 1;
@@ -130,12 +154,10 @@ end;
 
 procedure TSettingsDlg.FormDestroy(Sender: TObject);
 begin
-  FreeAndNil(Languages);
+  FreeAndNil(LocalKeyBindings);
 end;
 
 procedure TSettingsDlg.FormPaint(Sender: TObject);
-var
-  S: string;
 begin
   PaintBackground(self, 3, 3, ClientWidth - 6, ClientHeight - 6);
   Frame(Canvas, 0, 0, ClientWidth - 1, ClientHeight - 1, 0, 0);
@@ -143,31 +165,68 @@ begin
     MainTexture.ColorBevelLight, MainTexture.ColorBevelShade);
   Frame(Canvas, 2, 2, ClientWidth - 3, ClientHeight - 3,
     MainTexture.ColorBevelLight, MainTexture.ColorBevelShade);
-  EditFrame(Canvas, List.BoundsRect, MainTexture);
-  BtnFrame(Canvas, OKBtn.BoundsRect, MainTexture);
-  BtnFrame(Canvas, CancelBtn.BoundsRect, MainTexture);
+  EditFrame(Canvas, ListLanguages.BoundsRect, MainTexture);
+  BtnFrame(Canvas, ButtonOk.BoundsRect, MainTexture);
+  BtnFrame(Canvas, ButtonCancel.BoundsRect, MainTexture);
 
   RFrame(Canvas, ButtonFullscreen.Left - 1, ButtonFullscreen.Top - 1,
     ButtonFullscreen.Left + 12, ButtonFullscreen.Top + 12, MainTexture.ColorBevelShade,
     MainTexture.ColorBevelLight);
 
-  S := Phrases.Lookup('SETTINGS', 0);
+  LoweredTextOut(Canvas, -2, MainTexture, ListLanguages.Left,
+    ListLanguages.Top - 26, SLanguages);
+  LoweredTextOut(Canvas, -2, MainTexture, ListKeyBindings.Left,
+    ListKeyBindings.Top - 26, SKeyBindings);
   LoweredTextOut(Canvas, -2, MainTexture, ButtonFullscreen.Left + 32,
-    ButtonFullscreen.Top - 4, S);
-
-  // Gamma
-  UnderlinedTitleValue(Canvas, Phrases.Lookup('SETTINGS', 1), IntToStr(LocalGamma) + '%',
+    ButtonFullscreen.Top - 4, SFullScreen);
+  UnderlinedTitleValue(Canvas, SGamma, IntToStr(LocalGamma) + '%',
     Up2Btn.Left - 150 - 4, Up2Btn.Top + 2, 150);
+  LoweredTextOut(Canvas, -2, MainTexture, EditShortCutPrimary.Left,
+    EditShortCutPrimary.Top - 26, SShortCutPrimary);
+  LoweredTextOut(Canvas, -2, MainTexture, EditShortCutSecondary.Left,
+    EditShortCutSecondary.Top - 26, SShortCutSecondary);
 end;
 
 procedure TSettingsDlg.FormShow(Sender: TObject);
 begin
-  Languages.LoadToStrings(List.Items);
-  List.Font.Color := MainTexture.ColorMark;
+  ReloadLanguages;
+  Languages.LoadToStrings(ListLanguages.Items);
+  ListLanguages.Font.Color := MainTexture.ColorMark;
+  ListKeyBindings.Font.Color := MainTexture.ColorMark;
   LoadData;
+  LocalKeyBindings.LoadToStrings(ListKeyBindings.Items);
 end;
 
-procedure TSettingsDlg.OKBtnClick(Sender: TObject);
+procedure TSettingsDlg.ListKeyBindingsSelectionChange(Sender: TObject;
+  User: boolean);
+begin
+  if Assigned(CurrentKeyBinding) then begin
+    CurrentKeyBinding.ShortCut := TextToShortCut(EditShortCutPrimary.Text);
+    CurrentKeyBinding.ShortCut2 := TextToShortCut(EditShortCutSecondary.Text);
+  end;
+
+  if ListKeyBindings.ItemIndex >= 0 then
+    CurrentKeyBinding := LocalKeyBindings[ListKeyBindings.ItemIndex]
+    else CurrentKeyBinding := nil;
+
+  if Assigned(CurrentKeyBinding) then begin
+    if CurrentKeyBinding.ShortCut <> 0 then
+      EditShortCutPrimary.Text := ShortCutToText(CurrentKeyBinding.ShortCut)
+      else EditShortCutPrimary.Text := '';
+    EditShortCutPrimary.Enabled := True;
+    if CurrentKeyBinding.ShortCut2 <> 0 then
+      EditShortCutSecondary.Text := ShortCutToText(CurrentKeyBinding.ShortCut2)
+      else EditShortCutSecondary.Text := '';
+    EditShortCutSecondary.Enabled := True;
+  end else begin
+    EditShortCutPrimary.Text := '';
+    EditShortCutPrimary.Enabled := False;
+    EditShortCutSecondary.Text := '';
+    EditShortCutSecondary.Enabled := False;
+  end;
+end;
+
+procedure TSettingsDlg.ButtonOkClick(Sender: TObject);
 begin
   SaveData;
   ModalResult := mrOk;
@@ -181,14 +240,24 @@ begin
   end;
 end;
 
+procedure TSettingsDlg.UpdateShortCutItem;
+begin
+  if Assigned(CurrentKeyBinding) then begin
+    CurrentKeyBinding.ShortCut := TextToShortCut(EditShortCutPrimary.Text);
+    CurrentKeyBinding.ShortCut2 := TextToShortCut(EditShortCutSecondary.Text);
+    LocalKeyBindings.LoadToStrings(ListKeyBindings.Items);
+  end;
+end;
+
 procedure TSettingsDlg.LoadData;
 begin
-  List.ItemIndex := Languages.Search(LocaleCode);
-  if (List.ItemIndex = -1) and (Languages.Count > 0) then
-    List.ItemIndex := 0;
+  ListLanguages.ItemIndex := Languages.Search(LocaleCode);
+  if (ListLanguages.ItemIndex = -1) and (Languages.Count > 0) then
+    ListLanguages.ItemIndex := 0;
   if FullScreen then ButtonFullscreen.ButtonIndex := 3
     else ButtonFullscreen.ButtonIndex := 2;
   LocalGamma := Gamma;
+  LocalKeyBindings.Assign(KeyBindings);
 end;
 
 procedure TSettingsDlg.SaveData;
@@ -196,10 +265,11 @@ var
   NeedRestart: Boolean;
 begin
   NeedRestart := Gamma <> LocalGamma;
-  LocaleCode := Languages[List.ItemIndex].ShortName;
+  LocaleCode := Languages[ListLanguages.ItemIndex].ShortName;
   FullScreen := (ButtonFullscreen.ButtonIndex and 1) = 1;
   Gamma := LocalGamma;
-  if NeedRestart then SimpleMessage(Phrases.Lookup('SETTINGS', 2));
+  if NeedRestart then SimpleMessage(SRestartMsg);
+  KeyBindings.Assign(LocalKeyBindings);
 end;
 
 end.

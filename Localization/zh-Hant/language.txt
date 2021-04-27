@@ -343,6 +343,7 @@
 #BTN_YES ¬O
 #BTN_NO §_
 #BTN_INFO À°§U
+#BTN_RESET Reset
 
 'Button Tooltips
 #BTN_SELECT ¿ï¾Ü
@@ -968,3 +969,7 @@ Big
 Full screen
 Gamma
 Restart is needed to apply changes
+Primary
+Secondary
+Languages
+Key bindings

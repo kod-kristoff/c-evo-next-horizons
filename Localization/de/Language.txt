@@ -343,6 +343,7 @@
 #BTN_YES Ja
 #BTN_NO Nein
 #BTN_INFO Info
+#BTN_RESET Reset
 
 'Button Tooltips
 #BTN_SELECT Auswählen
@@ -969,3 +970,7 @@ maximale\Produktion
 Full screen
 Gamma
 Restart is needed to apply changes
+Primary
+Secondary
+Languages
+Key bindings

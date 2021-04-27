@@ -16,18 +16,26 @@ type
     FullName: string;
     ShortCut: TShortCut;
     ShortCut2: TShortCut;
+    DefaultShortCut: TShortCut;
+    DefaultShortCut2: TShortCut;
     function Test(AShortCut: TShortCut): Boolean;
+    procedure Assign(Source: TKeyBinding);
+    procedure SetDefault;
   end;
 
   { TKeyBindings }
 
   TKeyBindings = class(TFPGObjectList<TKeyBinding>)
+  private
   public
     function AddItem(const ShortName, FullName: string; ShortCut: TShortCut; ShortCut2: TShortCut = 0): TKeyBinding; overload;
     function AddItem(const ShortName, FullName: string; ShortCutText: string; ShortCutText2: string = ''): TKeyBinding; overload;
     function Search(ShortName: string): TKeyBinding;
     procedure LoadFromRegistry(RootKey: HKEY; Key: string);
     procedure SaveToRegistry(RootKey: HKEY; Key: string);
+    procedure LoadToStrings(Strings: TStrings);
+    procedure Assign(Source: TKeyBindings);
+    procedure ResetToDefault;
   end;
 
 var
@@ -122,6 +130,22 @@ begin
   Result := (AShortCut = ShortCut) or (AShortCut = ShortCut2);
 end;
 
+procedure TKeyBinding.Assign(Source: TKeyBinding);
+begin
+  ShortName := Source.ShortName;
+  FullName := Source.FullName;
+  ShortCut := Source.ShortCut;
+  ShortCut2 := Source.ShortCut2;
+  DefaultShortCut := Source.DefaultShortCut;
+  DefaultShortCut2 := Source.DefaultShortCut2;
+end;
+
+procedure TKeyBinding.SetDefault;
+begin
+  ShortCut := DefaultShortCut;
+  ShortCut2 := DefaultShortCut2;
+end;
+
 { TKeyBindings }
 
 function TKeyBindings.AddItem(const ShortName, FullName: string; ShortCut: TShortCut;
@@ -132,6 +156,8 @@ begin
   Result.FullName := FullName;
   Result.ShortCut := ShortCut;
   Result.ShortCut2 := ShortCut2;
+  Result.DefaultShortCut := ShortCut;
+  Result.DefaultShortCut2 := ShortCut2;
   Add(Result);
 end;
 
@@ -204,6 +230,46 @@ begin
   finally
     Free;
   end;
+end;
+
+procedure TKeyBindings.LoadToStrings(Strings: TStrings);
+var
+  I: Integer;
+  Text: string;
+begin
+  Strings.Clear;
+  for I := 0 to Count - 1 do begin
+    Text:= '';
+    if Items[I].ShortCut <> 0 then
+      Text:= Text + ShortCutToText(Items[I].ShortCut);
+    if Items[I].ShortCut2 <> 0 then begin
+      if Text <> '' then Text := Text + ', ';
+      Text:= Text + ShortCutToText(Items[I].ShortCut2);
+    end;
+    if Text <> '' then Text := Items[I].FullName + ' (' + Text + ')'
+      else Text := Items[I].FullName;
+    Strings.Add(Text);
+  end;
+end;
+
+procedure TKeyBindings.Assign(Source: TKeyBindings);
+var
+  I: Integer;
+begin
+  while Count < Source.Count do
+    Add(TKeyBinding.Create);
+  while Count > Source.Count do
+    Delete(Count - 1);
+  for I := 0 to Count - 1 do
+    Items[I].Assign(Source.Items[I]);
+end;
+
+procedure TKeyBindings.ResetToDefault;
+var
+  I: Integer;
+begin
+  for I := 0 to Count - 1 do
+    Items[I].SetDefault;
 end;
 
 

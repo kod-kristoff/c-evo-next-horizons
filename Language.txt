@@ -340,6 +340,7 @@ that is not willing to cooperate. You leave us no choice but to cancel this pact
 #BTN_YES Yes
 #BTN_NO No
 #BTN_INFO Info
+#BTN_RESET Reset
 
 'Button Tooltips
 #BTN_SELECT Select
@@ -951,3 +952,7 @@ Maximize\Production
 Full screen
 Gamma
 Restart is needed to apply changes
+Primary
+Secondary
+Languages
+Key bindings

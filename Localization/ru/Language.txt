@@ -350,6 +350,7 @@
 #BTN_YES Да
 #BTN_NO Нет
 #BTN_INFO Информация
+#BTN_RESET Reset
 
 'Названия кнопок-инструментов
 #BTN_SELECT Выбор
@@ -976,3 +977,7 @@ Recycling
 Full screen
 Gamma
 Restart is needed to apply changes
+Primary
+Secondary
+Languages
+Key bindings

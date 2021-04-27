@@ -1221,7 +1221,7 @@ begin
       sExecute) then
     begin
       GenerateStat(pTurn);
-      StatRequest := false
+      StatRequest := false;
     end;
     // complete all internal commands following an sTurn before generating statistics
     if (Command = sTurn) and not started then

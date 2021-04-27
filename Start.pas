@@ -427,6 +427,8 @@ begin
   finally
     Free;
   end;
+
+  KeyBindings.LoadFromRegistry(HKEY_CURRENT_USER, AppRegistryKey + '\KeyBindings');
 end;
 
 procedure TStartDlg.SaveConfig;
@@ -449,6 +451,8 @@ begin
   finally
     Free;
   end;
+
+  KeyBindings.SaveToRegistry(HKEY_CURRENT_USER, AppRegistryKey + '\KeyBindings');
 end;
 
 procedure TStartDlg.LoadAiBrainsPictures;

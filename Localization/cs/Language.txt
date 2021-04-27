@@ -340,6 +340,7 @@ který není ochoten spolupracovat. Nedáváte nám jinou možnost než ukončit
 #BTN_YES Ano
 #BTN_NO Ne
 #BTN_INFO Info
+#BTN_RESET Výchozí
 
 'Button Tooltips
 #BTN_SELECT Vybrat
@@ -951,3 +952,7 @@ Maximální\produkce
 Celá obrazovka
 Gamma
 Pro projevení změn je potřeba restart
+Hlavní
+Vedlejší
+Jazyky
+Klávesové zkratky

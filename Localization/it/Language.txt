@@ -330,6 +330,7 @@
 #BTN_YES Si
 #BTN_NO No
 #BTN_INFO Dati
+#BTN_RESET Reset
 
 'Button Tooltips
 #BTN_SELECT Seleziona
@@ -941,3 +942,7 @@ Massimizza\produzione
 Full screen
 Gamma
 Restart is needed to apply changes
+Primary
+Secondary
+Languages
+Key bindings
