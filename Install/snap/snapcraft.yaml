@@ -15,6 +15,14 @@ grade: devel
 icon: Graphics/c-evo_64x64.png
 license: NLPL
 
+environment:
+  LD_LIBRARY_PATH: $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pulseaudio
+  PULSE_SERVER: unix:/run/user/1000/pulse/native
+
+layout:
+  /usr/lib/$SNAPCRAFT_ARCH_TRIPLET/sox:
+    bind: $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/sox   
+  
 parts:
   c-evo:
     plugin: nil
@@ -62,6 +70,7 @@ parts:
     - libxrandr2
     - libxrender1
     override-build: |
+      snapcraftctl build
       (cd AI/StdAI &&lazbuild --build-mode=Release StdAI.lpi)
       mv AI/StdAI/libstdai.so AI/StdAI/libstdai-amd64.so
       lazbuild --build-mode=Release Integrated.lpi
@@ -106,3 +115,4 @@ apps:
       - home
       - audio-playback
       - desktop
+      - x11
