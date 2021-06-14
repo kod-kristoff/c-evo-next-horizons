@@ -23,10 +23,10 @@ Name: "ai\seti"; Description: "SETI"; Types: full
 Name: "ai\shah"; Description: "Shah"; Types: full
 
 [Files]
-Source: "{#MyAppSubDir}\lib\x86_64-win64-Release\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion; Components: main; Check: not Is64BitInstallMode
-Source: "{#MyAppSubDir}\lib\i386-win32-Release\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion; Components: main; Check: Is64BitInstallMode
-Source: "{#MyAppSubDir}\AI\StdAI\lib\i386-win32-Release\StdAI.dll"; DestDir: "{app}\AI\StdAI"; DestName: "StdAI-win32.dll"; Flags: ignoreversion; Components: ai\stdai; Check: not Is64BitInstallMode
+Source: "{#MyAppSubDir}\lib\x86_64-win64-Release\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion; Components: main; Check: Is64BitInstallMode
+Source: "{#MyAppSubDir}\lib\i386-win32-Release\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion; Components: main; Check: not Is64BitInstallMode
 Source: "{#MyAppSubDir}\AI\StdAI\lib\x86_64-win64-Release\StdAI.dll"; DestDir: "{app}\AI\StdAI"; DestName: "StdAI-win64.dll"; Flags: ignoreversion; Components: ai\stdai; Check: Is64BitInstallMode
+Source: "{#MyAppSubDir}\AI\StdAI\lib\i386-win32-Release\StdAI.dll"; DestDir: "{app}\AI\StdAI"; DestName: "StdAI-win32.dll"; Flags: ignoreversion; Components: ai\stdai; Check: not Is64BitInstallMode
 Source: "{#MyAppSubDir}\AI\AI_UO\*.*"; DestDir: "{app}\AI\AI_UO"; Flags: ignoreversion; Components: ai\ai_uo; Check: not Is64BitInstallMode
 Source: "{#MyAppSubDir}\AI\AIAS\*.*"; DestDir: "{app}\AI\AIAS"; Flags: ignoreversion; Components: ai\aias; Check: not Is64BitInstallMode
 Source: "{#MyAppSubDir}\AI\Capital AI\*.*"; DestDir: "{app}\AI\Capital AI"; Flags: ignoreversion; Components: ai\capital_ai; Check: not Is64BitInstallMode
