@@ -6,7 +6,8 @@ interface
 
 uses
   Classes, SysUtils, Forms, LCLIntf, LCLType, {$IFDEF LINUX}LMessages,{$ENDIF}
-  Messages, Graphics, Controls, ButtonBase, ButtonA, ButtonB, Area, ScreenTools;
+  Messages, Graphics, Controls, ButtonBase, ButtonA, ButtonB, Area, ScreenTools
+  {$IFDEF LCLGTK2}, Gtk2Globals{$ENDIF};
 
 type
   { TDrawDlg }
@@ -186,6 +187,11 @@ end;
 procedure TDrawDlg.VisibleChangedHandler(Sender: TObject);
 begin
   MoveActive := False;
+
+  {$IFDEF LCLGTK2}
+  // GTK2 bug workaround https://bugs.freepascal.org/view.php?id=35720
+  if Visible then LastMouse.WinControl := Self;
+  {$ENDIF}
 end;
 
 procedure TDrawDlg.DoDeactivate(Sender: TObject);
