@@ -72,8 +72,8 @@
         </CompilerOptions>
       </Item2>
       <SharedMatrixOptions Count="2">
-        <Item1 ID="151739052537" Targets="CevoComponents" Modes="Debug" Value="-g -gl -gh -CirotR -O1"/>
-        <Item2 ID="186701832267" Targets="CevoComponents" Modes="Release" Value="-CX -XX -O3"/>
+        <Item1 ID="151739052537" Targets="CevoComponents,Common" Modes="Debug" Value="-g -gl -gh -CirotR -O1"/>
+        <Item2 ID="186701832267" Targets="CevoComponents,Common" Modes="Release" Value="-CX -XX -O3"/>
       </SharedMatrixOptions>
     </BuildModes>
     <PublishOptions>
@@ -85,14 +85,18 @@
         <Mode0 Name="default"/>
       </Modes>
     </RunParams>
-    <RequiredPackages Count="2">
+    <RequiredPackages Count="3">
       <Item1>
-        <PackageName Value="CevoComponents"/>
-        <DefaultFilename Value="Packages\CevoComponents\CevoComponents.lpk" Prefer="True"/>
+        <PackageName Value="Common"/>
+        <DefaultFilename Value="Packages\Common\Common.lpk" Prefer="True"/>
       </Item1>
       <Item2>
-        <PackageName Value="LCL"/>
+        <PackageName Value="CevoComponents"/>
+        <DefaultFilename Value="Packages\CevoComponents\CevoComponents.lpk" Prefer="True"/>
       </Item2>
+      <Item3>
+        <PackageName Value="LCL"/>
+      </Item3>
     </RequiredPackages>
     <Units Count="48">
       <Unit0>

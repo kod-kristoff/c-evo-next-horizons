@@ -36,7 +36,7 @@
     </CompilerOptions>
     <Description Value="C-evo components"/>
     <Version Major="1" Minor="2"/>
-    <Files Count="18">
+    <Files Count="16">
       <Item1>
         <Filename Value="Area.pas"/>
         <HasRegisterProc Value="True"/>
@@ -98,33 +98,28 @@
         <UnitName Value="BaseWin"/>
       </Item13>
       <Item14>
-        <Filename Value="UPixelPointer.pas"/>
-        <UnitName Value="UPixelPointer"/>
-      </Item14>
-      <Item15>
         <Filename Value="AsyncProcess2.pas"/>
         <UnitName Value="AsyncProcess2"/>
-      </Item15>
-      <Item16>
+      </Item14>
+      <Item15>
         <Filename Value="UGraphicSet.pas"/>
         <UnitName Value="UGraphicSet"/>
-      </Item16>
-      <Item17>
-        <Filename Value="UXMLUtils.pas"/>
-        <UnitName Value="UXMLUtils"/>
-      </Item17>
-      <Item18>
+      </Item15>
+      <Item16>
         <Filename Value="UTexture.pas"/>
         <UnitName Value="UTexture"/>
-      </Item18>
+      </Item16>
     </Files>
-    <RequiredPkgs Count="2">
+    <RequiredPkgs Count="3">
       <Item1>
-        <PackageName Value="LCL"/>
+        <PackageName Value="Common"/>
       </Item1>
       <Item2>
-        <PackageName Value="FCL"/>
+        <PackageName Value="LCL"/>
       </Item2>
+      <Item3>
+        <PackageName Value="FCL"/>
+      </Item3>
     </RequiredPkgs>
     <UsageOptions>
       <UnitPath Value="$(PkgOutDir)"/>

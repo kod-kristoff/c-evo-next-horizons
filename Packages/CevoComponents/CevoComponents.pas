@@ -9,8 +9,7 @@ interface
 
 uses
   Area, ButtonA, ButtonB, ButtonC, ButtonN, EOTButton, ButtonBase, DrawDlg, 
-  Sound, BaseWin, UPixelPointer, AsyncProcess2, UGraphicSet, UXMLUtils, 
-  UTexture, LazarusPackageIntf;
+  Sound, BaseWin, AsyncProcess2, UGraphicSet, UTexture, LazarusPackageIntf;
 
 implementation
 
