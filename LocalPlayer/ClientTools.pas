@@ -635,7 +635,7 @@ end;
 
 procedure CityOptimizer_CityChange(cix: integer);
 begin
-  if (MyRO.Government <> gAnarchy) and (MyCity[cix].Flags and
+  if (MyRO.Government <> gAnarchy) and (cix <> -1) and (MyCity[cix].Flags and
     chCaptured = 0) then
   begin
     CityNeedsOptimize[cix] := True;
