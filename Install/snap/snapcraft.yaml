@@ -11,7 +11,7 @@ description: |
   * Many other small improvements
 confinement: strict
 base: core20
-grade: devel
+grade: stable
 icon: Graphics/c-evo_64x64.png
 license: NLPL
 
