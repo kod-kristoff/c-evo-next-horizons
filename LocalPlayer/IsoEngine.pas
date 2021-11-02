@@ -1006,29 +1006,29 @@ begin
     end;
   end;
 
-  if ShowObjects then
-  begin
-    if (Tile and fCanal <> 0) or (Tile and fCity <> 0) then
-    begin // paint canal connections
+  if ShowObjects then begin
+    // Paint canal connections
+    if (Tile and fCanal <> 0) or (Tile and fCity <> 0) then begin
       Conn := Connection8(Loc, fCanal or fCity);
       if Tile and fCanal <> 0 then
         Conn := Conn or ($FF - OceanConnection(Loc));
-      if Conn = 0 then
-      begin
+      if Conn = 0 then begin
         if Tile and fCanal <> 0 then
-          TSprite(x, y, spCanal)
+          TSprite(x, y, spCanal);
       end
       else
         for Dir := 0 to 7 do
           if (1 shl Dir) and Conn <> 0 then
             TSprite(x, y, spCanal + 1 + Dir);
     end;
+
     if Tile and (fRR or fCity) <> 0 then
       RRConn := Connection8(Loc, fRR or fCity)
     else
       RRConn := 0;
-    if Tile and (fRoad or fRR or fCity) <> 0 then
-    begin // paint road connections
+
+    // Paint road connections
+    if Tile and (fRoad or fRR or fCity) <> 0 then begin
       Conn := Connection8(Loc, fRoad or fRR or fCity) and not RRConn;
       if (Conn = 0) and (Tile and (fRR or fCity) = 0) then
         TSprite(x, y, spRoad)
@@ -1037,13 +1037,15 @@ begin
           if (1 shl Dir) and Conn <> 0 then
             TSprite(x, y, spRoad + 1 + Dir);
     end;
-    // paint railroad connections
+
+    // Paint railroad connections
     if (Tile and fRR <> 0) and (RRConn = 0) then
       TSprite(x, y, spRailRoad)
-    else if RRConn > 0 then
+    else if RRConn > 0 then begin
       for Dir := 0 to 7 do
         if (1 shl Dir) and RRConn <> 0 then
           TSprite(x, y, spRailRoad + 1 + Dir);
+    end;
   end;
 end;
 

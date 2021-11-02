@@ -377,7 +377,7 @@ const
   fSpecial2 = $00000040;
   fRiver = $00000080;
   fRoad = $00000100;
-  fRR = $00000200;
+  fRR = $00000200; // railroad
   fCanal = $00000400;
   fPoll = $00000800;
   fPrefStartPos = $00200000;
