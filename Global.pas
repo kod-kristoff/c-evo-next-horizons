@@ -17,7 +17,7 @@ const
   AITemplateManual = 'AI development manual';
   AITemplateFileName = 'AI Template' + DirectorySeparator + AITemplateManual + '.html';
   CevoVersionMajor = 1;
-  CevoVersionMinor = 3;
+  CevoVersionMinor = 4;
   CevoVersionBugFix = 0;
   CevoVersion = ((CevoVersionMajor and $ff) shl 16) or
     ((CevoVersionMinor and $ff) shl 8) or

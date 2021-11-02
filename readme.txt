@@ -28,7 +28,7 @@ C-evo: New Horizons
 
 == Release new version ==
 
-* Update version in GameServer.pas Version constant.
+* Update version in Global.pas CevoVersion constants.
 * Update version in Install\win\Common.iss MyAppVersion define.
 * Update version in Install\rpm\c-evo.spec Version field.
 * Update version in Install\deb\control Standards-Version field.

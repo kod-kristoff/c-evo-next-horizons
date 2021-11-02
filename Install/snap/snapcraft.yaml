@@ -1,6 +1,6 @@
 name: c-evo
 title: "C-evo: New Horizons"
-version: '1.3.0'
+version: '1.4.0'
 summary: A turn-based empire building game inspired by Civilization II game.
 description: |
   This is a fork and Lazarus/FPC port of the original C-evo 1.2.0 game.

@@ -1,5 +1,5 @@
 Name:           c-evo
-Version:        1.3.0
+Version:        1.4.0
 Release:        1%{?dist}
 Summary:        Empire building game
 
