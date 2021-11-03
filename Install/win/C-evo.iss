@@ -9,7 +9,7 @@ ArchitecturesInstallIn64BitMode=x64
 ; Note: We don't set ProcessorsAllowed because we want this
 ; installation to run on all architectures (including Itanium,
 ; since it's capable of running 32-bit code too).
-OutputBaseFilename=Install-{#MyAppName}-{#MyAppVersion}
+OutputBaseFilename=Install-{#MyAppNameShort}-{#MyAppVersion}{#MyAppVersionSuffix}
 
 [Components]
 Name: "ai\ai_uo"; Description: "AI_UO"; Types: full

@@ -9,7 +9,7 @@ const
   CevoTribeExt = '.tribe.txt';
   CevoHomepageShort = 'app.zdechov.net/c-evo';
   CevoHomepage = 'https://' + CevoHomepageShort;
-  CevoContactShort = 'app.zdechov.net/c-evo#Contact';
+  CevoContactShort = 'app.zdechov.net/c-evo#Support';
   CevoContact = 'https://' + CevoContactShort;
   CevoContactBug = 'https://app.zdechov.net/c-evo/report/1';
   CevoNetworkPort = 41363;

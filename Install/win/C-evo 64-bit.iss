@@ -3,7 +3,7 @@
 [Setup]
 ArchitecturesAllowed=x64
 ArchitecturesInstallIn64BitMode=x64
-OutputBaseFilename=Install-{#MyAppName}-{#MyAppVersion}-win64
+OutputBaseFilename=Install-{#MyAppNameShort}-{#MyAppVersion}{#MyAppVersionSuffix}-win64
 
 [Files]
 Source: "{#MyAppSubDir}\lib\x86_64-win64-Release\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion; Components: main

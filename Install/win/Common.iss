@@ -2,7 +2,10 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "C-evo"
-#define MyAppVersion "1.3.0"
+#define MyAppTitle "C-evo: New Horizons"
+#define MyAppNameShort "C-evo-nh"
+#define MyAppVersion "1.4.0"
+#define MyAppVersionSuffix "alfa"
 #define MyAppPublisher "Chronosoft"
 #define MyAppPublisherShort "Chronosoft"
 #define MyAppURL "https://app.zdechov.net/c-evo"
@@ -16,10 +19,15 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 WizardStyle=modern
 AppId={{6B40AF4D-C38C-4474-9614-8F0C4376C1CF}
-AppName={#MyAppName}
-AppVersion={#MyAppVersion}
-AppVerName={#MyAppName} {#MyAppVersion}
-UninstallDisplayName={#MyAppName}
+AppName={#MyAppTitle}
+#ifdef MyAppVersionSuffix
+#define MyAppVersionSuffix "-" + MyAppVersionSuffix
+#else
+#define MyAppVersionSuffix ""
+#endif
+AppVersion={#MyAppVersion}{#MyAppVersionSuffix}
+AppVerName={#MyAppName} {#MyAppVersion}{#MyAppVersionSuffix}
+UninstallDisplayName={#MyAppTitle}
 UninstallDisplayIcon="{app}\{#MyAppExeName}"
 VersionInfoVersion={#MyAppVersion}
 VersionInfoCompany={#MyAppPublisher}  

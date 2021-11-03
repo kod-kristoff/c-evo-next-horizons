@@ -1,7 +1,7 @@
 #include "Common.iss"
 
 [Setup]
-OutputBaseFilename=Install-{#MyAppName}-{#MyAppVersion}-win32
+OutputBaseFilename=Install-{#MyAppNameShort}-{#MyAppVersion}{#MyAppVersionSuffix}-win32
 
 [Components]
 Name: "ai\ai_uo"; Description: "AI_UO"; Types: full

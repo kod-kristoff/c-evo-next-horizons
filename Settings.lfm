@@ -112,7 +112,8 @@ object SettingsDlg: TSettingsDlg
   end
   object EditShortCutPrimary: TEdit
     Left = 176
-    Height = 40
+    Height = 19
+	BorderStyle = bsNone
     Top = 256
     Width = 136
     Color = clBlack
@@ -128,7 +129,8 @@ object SettingsDlg: TSettingsDlg
   end
   object EditShortCutSecondary: TEdit
     Left = 328
-    Height = 40
+    Height = 19
+	BorderStyle = bsNone
     Top = 257
     Width = 136
     Color = clBlack
