@@ -112,20 +112,34 @@ object SettingsDlg: TSettingsDlg
   end
   object EditShortCutPrimary: TEdit
     Left = 176
-    Height = 42
+    Height = 40
     Top = 256
     Width = 136
+    Color = clBlack
     Enabled = False
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = 4176863
+    Font.Height = -15
+    Font.Name = 'Times New Roman'
+    Font.Style = [fsBold]
     OnKeyUp = EditShortCutPrimaryKeyUp
+    ParentFont = False
     TabOrder = 2
   end
   object EditShortCutSecondary: TEdit
     Left = 328
-    Height = 42
+    Height = 40
     Top = 257
     Width = 136
+    Color = clBlack
     Enabled = False
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = 4176863
+    Font.Height = -15
+    Font.Name = 'Times New Roman'
+    Font.Style = [fsBold]
     OnKeyUp = EditShortCutSecondaryKeyUp
+    ParentFont = False
     TabOrder = 3
   end
   object ButtonReset: TButtonA
