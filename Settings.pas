@@ -36,7 +36,7 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure FormPaint(Sender: TObject);
     procedure FormShow(Sender: TObject);
-    procedure ListKeyBindingsSelectionChange(Sender: TObject; User: boolean);
+    procedure ListKeyBindingsSelectionChange(Sender: TObject; User: Boolean);
     procedure ButtonOkClick(Sender: TObject);
     procedure Up2BtnClick(Sender: TObject);
   private
@@ -165,6 +165,8 @@ begin
     MainTexture.ColorBevelLight, MainTexture.ColorBevelShade);
   Frame(Canvas, 2, 2, ClientWidth - 3, ClientHeight - 3,
     MainTexture.ColorBevelLight, MainTexture.ColorBevelShade);
+  EditFrame(Canvas, EditShortCutPrimary.BoundsRect, MainTexture);
+  EditFrame(Canvas, EditShortCutSecondary.BoundsRect, MainTexture);
   EditFrame(Canvas, ListLanguages.BoundsRect, MainTexture);
   BtnFrame(Canvas, ButtonOk.BoundsRect, MainTexture);
   BtnFrame(Canvas, ButtonCancel.BoundsRect, MainTexture);
@@ -195,10 +197,12 @@ begin
   ListKeyBindings.Font.Color := MainTexture.ColorMark;
   LoadData;
   LocalKeyBindings.LoadToStrings(ListKeyBindings.Items);
+  EditShortCutPrimary.Font.Color := MainTexture.ColorMark;
+  EditShortCutSecondary.Font.Color := MainTexture.ColorMark;
 end;
 
 procedure TSettingsDlg.ListKeyBindingsSelectionChange(Sender: TObject;
-  User: boolean);
+  User: Boolean);
 begin
   if Assigned(CurrentKeyBinding) then begin
     CurrentKeyBinding.ShortCut := TextToShortCut(EditShortCutPrimary.Text);

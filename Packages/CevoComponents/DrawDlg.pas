@@ -45,7 +45,8 @@ type
   public
     MessgText: string;
   protected
-    Lines, TopSpace: integer;
+    Lines: Integer;
+    TopSpace: Integer;
     procedure SplitText(preview: boolean);
     procedure CorrectHeight;
   end;
@@ -70,6 +71,7 @@ end;
 constructor TDrawDlg.Create(AOwner: TComponent);
 begin
   inherited;
+  Color := clBlack;
   TitleHeight := 0;
   MoveActive := False;
   AddHandlerOnVisibleChanged(VisibleChangedHandler);

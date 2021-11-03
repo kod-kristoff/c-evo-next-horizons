@@ -4,9 +4,8 @@ unit Inp;
 interface
 
 uses
-  ScreenTools, Messg,
-  LCLIntf, LCLType, SysUtils, Classes, Graphics, Controls, Forms, DrawDlg,
-  ButtonA, StdCtrls;
+  ScreenTools, LCLIntf, LCLType, SysUtils, Classes, Graphics, Controls, Forms,
+  DrawDlg, ButtonA, StdCtrls;
 
 type
   TInputDlg = class(TDrawDlg)
@@ -37,7 +36,7 @@ begin
   Canvas.Brush.Style := bsClear;
   TitleHeight := Height;
   InitButtons;
-  Center := true;
+  Center := True;
 end;
 
 procedure TInputDlg.FormPaint(Sender: TObject);
@@ -63,7 +62,7 @@ begin
   if EInput.Text = '' then
     ModalResult := mrCancel
   else
-    ModalResult := mrOK
+    ModalResult := mrOK;
 end;
 
 procedure TInputDlg.EInputKeyPress(Sender: TObject; var Key: Char);
@@ -71,13 +70,13 @@ begin
   if (Key = #13) and (EInput.Text <> '') then
   begin
     Key := #0;
-    ModalResult := mrOK
+    ModalResult := mrOK;
   end
   else if Key = #27 then
   begin
     Key := #0;
-    ModalResult := mrCancel
-  end
+    ModalResult := mrCancel;
+  end;
 end;
 
 procedure TInputDlg.FormShow(Sender: TObject);
@@ -92,12 +91,12 @@ end;
 
 procedure TInputDlg.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-  Center := true
+  Center := True;
 end;
 
 procedure TInputDlg.CenterToRect(Rect: TRect);
 begin
-  Center := false;
+  Center := False;
   Left := Rect.Left + (Rect.Right - Rect.Left - Width) div 2;
   Top := Rect.Top + (Rect.Bottom - Rect.Top - Height) div 2;
 end;

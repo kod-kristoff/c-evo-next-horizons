@@ -13,24 +13,27 @@ type
 
   TBufferedDrawDlg = class(TDrawDlg)
   public
-    UserLeft, UserTop: integer;
+    UserLeft: Integer;
+    UserTop: Integer;
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormPaint(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormDeactivate(Sender: TObject);
-    procedure SmartUpdateContent(ImmUpdate: boolean = false);
+    procedure SmartUpdateContent(ImmUpdate: Boolean = false);
     procedure StayOnTop_Workaround;
   protected
-    FWindowMode, ModalFrameIndent: integer;
+    FWindowMode: Integer;
+    ModalFrameIndent: Integer;
     HelpContext: string;
-    procedure ShowNewContent(NewMode: integer; forceclose: boolean = false);
-    procedure MarkUsedOffscreen(xMax, yMax: integer);
+    procedure ShowNewContent(NewMode: Integer; ForceClose: Boolean = False);
+    procedure MarkUsedOffscreen(xMax, yMax: Integer);
     procedure OffscreenPaint; virtual;
     procedure VPaint; virtual;
   public
-    UsedOffscreenWidth, UsedOffscreenHeight: integer;
+    UsedOffscreenWidth: Integer;
+    UsedOffscreenHeight: Integer;
     Offscreen: TBitmap;
     OffscreenUser: TForm;
     property WindowMode: integer read FWindowMode;
@@ -52,7 +55,7 @@ type
     ModalIndication: Boolean;
     procedure InitWindowRegion;
     procedure VPaint; override;
-    procedure FillOffscreen(Left, Top, Width, Height: integer);
+    procedure FillOffscreen(Left, Top, Width, Height: Integer);
   end;
 
 var
@@ -154,9 +157,9 @@ end;
 
 procedure TBufferedDrawDlg.OffscreenPaint;
 begin
-  if (OffscreenUser <> nil) and (OffscreenUser <> self) then
+  if (OffscreenUser <> nil) and (OffscreenUser <> Self) then
     OffscreenUser.Update; // complete working with old owner to prevent rebound
-  OffscreenUser := self;
+  OffscreenUser := Self;
 end;
 
 procedure TBufferedDrawDlg.VPaint;
@@ -164,12 +167,11 @@ begin
   BitBltCanvas(Canvas, 0, 0, ClientWidth, ClientHeight, Offscreen.Canvas, 0, 0);
 end;
 
-procedure TBufferedDrawDlg.ShowNewContent(NewMode: integer;
-  forceclose: boolean);
+procedure TBufferedDrawDlg.ShowNewContent(NewMode: Integer;
+  ForceClose: Boolean);
 begin
-  if Visible then
-  begin
-    assert((NewMode = wmModal) or (FWindowMode <> wmModal));
+  if Visible then begin
+    Assert((NewMode = wmModal) or (FWindowMode <> wmModal));
     // don't make modal window non-modal
     if (NewMode = wmModal) and (forceclose or (FWindowMode <> wmModal)) then
     begin // make modal
@@ -193,8 +195,8 @@ begin
       if @OnShow <> nil then
         OnShow(nil);
       Invalidate;
-      BringToFront
-    end
+      BringToFront;
+    end;
   end
   else
   begin
@@ -204,14 +206,13 @@ begin
     if FWindowMode = wmModal then
       ShowModal
     else
-      Show
-  end
+      Show;
+  end;
 end;
 
-procedure TBufferedDrawDlg.SmartUpdateContent(ImmUpdate: boolean);
+procedure TBufferedDrawDlg.SmartUpdateContent(ImmUpdate: Boolean);
 begin
-  if Visible then
-  begin
+  if Visible then begin
     OffscreenPaint;
     SmartInvalidate;
     if ImmUpdate then
@@ -219,7 +220,7 @@ begin
   end;
 end;
 
-procedure TBufferedDrawDlg.MarkUsedOffscreen(xMax, yMax: integer);
+procedure TBufferedDrawDlg.MarkUsedOffscreen(xMax, yMax: Integer);
 begin
   if xMax > UsedOffscreenWidth then
     UsedOffscreenWidth := xMax;
@@ -255,10 +256,10 @@ procedure TFramedDlg.FormCreate(Sender: TObject);
 begin
   CaptionLeft := 0;
   CaptionRight := $FFFF;
-  WideBottom := false;
-  FullCaption := true;
-  TexOverride := false;
-  ModalIndication := true;
+  WideBottom := False;
+  FullCaption := True;
+  TexOverride := False;
+  ModalIndication := True;
   Canvas.Brush.Style := bsClear;
   InnerWidth := Width - 2 * SideFrame;
   InnerHeight := Height - TitleHeight - NarrowFrame;
@@ -283,7 +284,7 @@ begin
       CombineRgn(r0, r0, r1, RGN_DIFF);
       DeleteObject(r1);
     end;
-  InvalidateRgn(Handle, r0, false);
+  InvalidateRgn(Handle, r0, False);
   DeleteObject(r0);
 end;
 
@@ -347,8 +348,7 @@ begin
     InnerBottom, MainTexture.ColorBevelShade, MainTexture.ColorBevelLight);
   // RFrame(Canvas,SideFrame-2,TitleHeight-2,ClientWidth-SideFrame+1,
   // InnerBottom+1,MainTexture.ColorBevelShade,MainTexture.ColorBevelLight);
-  if FullCaption then
-  begin
+  if FullCaption then begin
     if (FWindowMode <> wmModal) or not ModalIndication then
     begin
       Fill(Canvas, 3, 3 + FrameTop, ClientWidth - 6, TitleHeight - FrameTop - 4,
@@ -478,11 +478,11 @@ begin
     CombineRgn(r0, r0, r1, RGN_DIFF);
     // DeleteObject(r1);
   end;
-  SetWindowRgn(Handle, r0, false);
+  SetWindowRgn(Handle, r0, False);
   // DeleteObject(r0); // causes crash with Windows 95
 end;
 
-procedure TFramedDlg.FillOffscreen(Left, Top, Width, Height: integer);
+procedure TFramedDlg.FillOffscreen(Left, Top, Width, Height: Integer);
 begin
   Fill(Offscreen.Canvas, Left, Top, Width, Height,
     SideFrame + (Maintexture.Width - ClientWidth) div 2,
@@ -492,7 +492,7 @@ end;
 procedure CreateOffscreen(var Offscreen: TBitmap);
 begin
   if Offscreen <> nil then
-    exit;
+    Exit;
   Offscreen := TBitmap.Create;
   Offscreen.PixelFormat := pf24bit;
   if Screen.Height - yUnused < 480 then
