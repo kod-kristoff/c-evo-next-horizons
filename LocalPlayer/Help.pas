@@ -2056,9 +2056,11 @@ begin
   begin
     Search(InputDlg.EInput.Text);
     case SearchResult.Count of
-      0:
+      0: begin
+        Gtk2Fix;
         SimpleMessage(Format(HelpText.Lookup('NOMATCHES'),
           [InputDlg.EInput.Text]));
+      end;
       1:
         with THelpLineInfo(SearchResult.Objects[0]) do
           if Link >= $8000 then
