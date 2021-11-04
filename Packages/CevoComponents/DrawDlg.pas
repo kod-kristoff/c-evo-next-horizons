@@ -101,8 +101,8 @@ begin
     inherited
   else
   begin
-    Pos := Point(Integer(Msg.LParam and $ffff),
-      Integer((Msg.LParam shr 16) and $ffff));
+    Pos := Point(ScaleFromNative(Integer(Msg.LParam and $ffff)),
+      ScaleFromNative(Integer((Msg.LParam shr 16) and $ffff)));
     if Pos.Y >= Top + TitleHeight then
       Msg.Result := HTCLIENT
     else
@@ -127,13 +127,17 @@ end;
 
 procedure TDrawDlg.MouseDown(Button: TMouseButton; Shift: TShiftState; X,
   Y: Integer);
-{$IFDEF LINUX}
 var
+  MousePos1: TPoint;
+  MousePos2: TPoint;
+{$IFDEF LINUX}
   MousePosNew: TPoint;
   NewFormPos: TPoint;
 {$ENDIF}
 begin
+  MousePos1 := Mouse.CursorPos;
   inherited;
+  MousePos2 := Mouse.CursorPos;
   {$IFDEF LINUX}
   // Only if client is not doing own mouse move handling
   if not Assigned(OnMouseDown) or not Assigned(OnMouseMove) or not Assigned(OnMouseUp) then begin
@@ -146,7 +150,7 @@ begin
       MoveFormPos := Point(Left, Top);
       MousePosNew := Mouse.CursorPos;
       // Activate move only if mouse position was not changed during inherited call
-      if (MousePosNew.X = MoveMousePos.X) and (MousePosNew.Y = MoveMousePos.Y) then begin
+      if (MousePos1.X = MousePos2.X) and (MousePos1.Y = MousePos2.Y) then begin
         MoveActive := True;
       end;
     end else MoveActive := False;
