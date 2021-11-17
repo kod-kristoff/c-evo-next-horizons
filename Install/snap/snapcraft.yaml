@@ -74,32 +74,31 @@ parts:
       (cd AI/StdAI &&lazbuild --build-mode=Release StdAI.lpi)
       mv AI/StdAI/libstdai.so AI/StdAI/libstdai-amd64.so
       lazbuild --build-mode=Release Integrated.lpi
-      ROOT=/root/parts/c-evo/install
-      install -d -m 755 $ROOT/usr/share/c-evo
-      install -s -m 755 c-evo $ROOT/usr/share/c-evo
-      install -m 644 Language.txt $ROOT/usr/share/c-evo
-      install -m 644 Language2.txt $ROOT/usr/share/c-evo
-      install -m 644 Fonts.txt $ROOT/usr/share/c-evo
-      install -d -m 755 $ROOT/usr/share/applications
-      install -m 755 Install/deb/c-evo.desktop $ROOT/usr/share/applications
-      install -d -m 755 $ROOT/usr/share/mime/packages
-      install -m 755 Install/deb/c-evo.xml $ROOT/usr/share/mime/packages
-      install -d -m 755 $ROOT/usr/share/pixmaps
-      install -m 644 Graphics/c-evo_64x64.png $ROOT/usr/share/pixmaps/c-evo.png
-      install -m 644 Graphics/c-evo_64x64.png $ROOT/usr/share/pixmaps/application-cevo.png
-      install -m 644 Graphics/c-evo_64x64.png $ROOT/usr/share/pixmaps/application-cevomap.png
-      install -d -m 755 $ROOT/usr/share/c-evo/AI/StdAI
-      install -m 644 AI/StdAI/libstdai-amd64.so $ROOT/usr/share/c-evo/AI/StdAI
-      install -m 644 AI/StdAI/StdAI.ai.txt $ROOT/usr/share/c-evo/AI/StdAI
-      install -m 644 AI/StdAI/StdAI.png $ROOT/usr/share/c-evo/AI/StdAI
-      cp -r Graphics $ROOT/usr/share/c-evo
-      cp -r Help $ROOT/usr/share/c-evo
-      cp -r Sounds $ROOT/usr/share/c-evo
-      cp -r Tribes $ROOT/usr/share/c-evo
-      cp -r Localization $ROOT/usr/share/c-evo
-      cp -r Maps $ROOT/usr/share/c-evo
-      cp -r Saved $ROOT/usr/share/c-evo
-      cp -r "AI Template" $ROOT/usr/share/c-evo
+      install -d -m 755 $SNAPCRAFT_PART_INSTALL/usr/share/c-evo
+      install -s -m 755 c-evo $SNAPCRAFT_PART_INSTALL/usr/share/c-evo
+      install -m 644 Language.txt $SNAPCRAFT_PART_INSTALL/usr/share/c-evo
+      install -m 644 Language2.txt $SNAPCRAFT_PART_INSTALL/usr/share/c-evo
+      install -m 644 Fonts.txt $SNAPCRAFT_PART_INSTALL/usr/share/c-evo
+      install -d -m 755 $SNAPCRAFT_PART_INSTALL/usr/share/applications
+      install -m 755 Install/deb/c-evo.desktop $SNAPCRAFT_PART_INSTALL/usr/share/applications
+      install -d -m 755 $SNAPCRAFT_PART_INSTALL/usr/share/mime/packages
+      install -m 644 Install/deb/c-evo.xml $SNAPCRAFT_PART_INSTALL/usr/share/mime/packages
+      install -d -m 755 $SNAPCRAFT_PART_INSTALL/usr/share/pixmaps
+      install -m 644 Graphics/c-evo_64x64.png $SNAPCRAFT_PART_INSTALL/usr/share/pixmaps/c-evo.png
+      install -m 644 Graphics/c-evo_64x64.png $SNAPCRAFT_PART_INSTALL/usr/share/pixmaps/application-cevo.png
+      install -m 644 Graphics/c-evo_64x64.png $SNAPCRAFT_PART_INSTALL/usr/share/pixmaps/application-cevomap.png
+      install -d -m 755 $SNAPCRAFT_PART_INSTALL/usr/share/c-evo/AI/StdAI
+      install -m 644 AI/StdAI/libstdai-amd64.so $SNAPCRAFT_PART_INSTALL/usr/share/c-evo/AI/StdAI
+      install -m 644 AI/StdAI/StdAI.ai.txt $SNAPCRAFT_PART_INSTALL/usr/share/c-evo/AI/StdAI
+      install -m 644 AI/StdAI/StdAI.png $SNAPCRAFT_PART_INSTALL/usr/share/c-evo/AI/StdAI
+      cp -r Graphics $SNAPCRAFT_PART_INSTALL/usr/share/c-evo
+      cp -r Help $SNAPCRAFT_PART_INSTALL/usr/share/c-evo
+      cp -r Sounds $SNAPCRAFT_PART_INSTALL/usr/share/c-evo
+      cp -r Tribes $SNAPCRAFT_PART_INSTALL/usr/share/c-evo
+      cp -r Localization $SNAPCRAFT_PART_INSTALL/usr/share/c-evo
+      cp -r Maps $SNAPCRAFT_PART_INSTALL/usr/share/c-evo
+      cp -r Saved $SNAPCRAFT_PART_INSTALL/usr/share/c-evo
+      cp -r "AI Template" $SNAPCRAFT_PART_INSTALL/usr/share/c-evo
     stage:
       - etc
       - usr
