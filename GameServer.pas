@@ -3613,7 +3613,7 @@ begin { >>>server }
             if (p1 <> Player) and ((GAlive or GWatching) and (1 shl p1) <> 0)
             then
               RW[p1].EnemyReport[Player].Government := Subject;
-        end
+        end;
       end;
 
     sSetRates, sSetRates - sExecute:
@@ -3628,7 +3628,7 @@ begin { >>>server }
         begin
           RW[Player].TaxRate := Subject and $F * 10;
           RW[Player].LuxRate := Subject shr 4 * 10;
-        end
+        end;
       end;
 
     sRevolution:

@@ -4,10 +4,8 @@ unit NatStat;
 interface
 
 uses
-  Protocol, ClientTools, Term, ScreenTools, BaseWin,
-
-  LCLIntf, LCLType, SysUtils, Classes, Graphics, Controls, Forms,
-  ButtonB, ButtonC, Menus, EOTButton;
+  Protocol, ClientTools, Term, ScreenTools, BaseWin, LCLIntf, LCLType, SysUtils,
+  Classes, Graphics, Controls, Forms, ButtonB, ButtonC, Menus, EOTButton;
 
 type
   PEnemyReport = ^TEnemyReport;
@@ -31,15 +29,12 @@ type
     procedure ScrollUpBtnClick(Sender: TObject);
     procedure ScrollDownBtnClick(Sender: TObject);
     procedure TellAIBtnClick(Sender: TObject);
-
   public
     procedure CheckAge;
     procedure ShowNewContent(NewMode: integer; p: integer = -1);
     procedure EcoChange;
-
   protected
     procedure OffscreenPaint; override;
-
   private
     pView, AgePrepared, LinesDown: integer;
     SelfReport, CurrentReport: PEnemyReport;
@@ -304,7 +299,7 @@ begin
         LoweredTextOut(Canvas, -1, MainTexture, xAttrib, yAttrib + 9,
           Phrases.Lookup('FREXTINCT'));
         LoweredTextOut(Canvas, -1, MainTexture, xAttrib, yAttrib + 28,
-          TurnToString(CurrentReport.TurnOfCivilReport))
+          TurnToString(CurrentReport.TurnOfCivilReport));
       end
       else
       begin
@@ -319,7 +314,7 @@ begin
       begin
         s := Phrases.Lookup('FRNOCONTACT');
         LoweredTextOut(Canvas, -1, MainTexture,
-          (ClientWidth - BiColorTextWidth(Canvas, s)) div 2, yRelation + 9, s)
+          (ClientWidth - BiColorTextWidth(Canvas, s)) div 2, yRelation + 9, s);
       end
       else if ShowContact then
       begin
@@ -378,7 +373,7 @@ begin
               $7F007F, xReport + 8, yReport + LineSpacing * y, s);
           end;
           inc(y);
-        end
+        end;
       end;
     end
     else
@@ -402,7 +397,7 @@ end; { OffscreenPaint }
 
 procedure TNatStatDlg.CloseBtnClick(Sender: TObject);
 begin
-  Close
+  Close;
 end;
 
 procedure TNatStatDlg.DialogBtnClick(Sender: TObject);
@@ -420,13 +415,13 @@ begin
       if MyRO.Treaty[pView] >= trPeace then
       begin
         if MainScreen.ContactRefused(pView, 'FRANARCHY') then
-          SmartUpdateContent
+          SmartUpdateContent;
       end
       else
         SoundMessage(Tribe[pView].TPhrase('FRANARCHY'), 'MSG_DEFAULT');
   end
   else
-    Close
+    Close;
 end;
 
 procedure TNatStatDlg.ToggleBtnClick(Sender: TObject);
@@ -500,7 +495,7 @@ begin
     PlayerClick(self); // no, this is not nice
   end
   else
-    inherited
+    inherited;
 end;
 
 procedure TNatStatDlg.EcoChange;
@@ -509,8 +504,8 @@ begin
   begin
     SelfReport.Government := MyRO.Government;
     SelfReport.Money := MyRO.Money;
-    SmartUpdateContent
-  end
+    SmartUpdateContent;
+  end;
 end;
 
 procedure TNatStatDlg.ScrollUpBtnClick(Sender: TObject);
@@ -519,7 +514,7 @@ begin
   begin
     dec(LinesDown);
     SmartUpdateContent;
-  end
+  end;
 end;
 
 procedure TNatStatDlg.ScrollDownBtnClick(Sender: TObject);
@@ -528,7 +523,7 @@ begin
   begin
     inc(LinesDown);
     SmartUpdateContent;
-  end
+  end;
 end;
 
 procedure TNatStatDlg.TellAIBtnClick(Sender: TObject);
@@ -539,7 +534,7 @@ begin
     TellAIBtn.ButtonIndex := 3
   else
     TellAIBtn.ButtonIndex := 2;
-  SmartUpdateContent
+  SmartUpdateContent;
 end;
 
 end.

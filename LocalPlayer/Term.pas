@@ -367,6 +367,7 @@ type
   end;
 
   TPriceSet = set of $00 .. $FF;
+  TFormAction = (faClose, faEnable, faDisable, faUpdate, faSmartUpdateContent);
 
 const
   crImpDrag = 2;
@@ -535,15 +536,13 @@ uses
 const
   lxmax_xxx = 130;
   LeftPanelWidth = 70;
-  LeftPanelWidth_Editor = 46;
   overlap = PanelHeight - MidPanelHeight;
   yTroop = PanelHeight - 83;
   xPalace = 66;
   yPalace = 24; // 120;
-  xAdvisor = 108;
-  yAdvisor = 48;
+{  xAdvisor = 108;
+  yAdvisor = 48;}
   xUnitText = 80;
-  PaperShade = 3;
   BlinkOnTime = 12;
   BlinkOffTime = 6;
   MoveTime = 300; // {time for moving a unit in ms}
@@ -1095,7 +1094,7 @@ begin
         begin
           ChosenResearch := ModalSelectDlg.result;
           // can be researched immediately
-          MyData.FarTech := adNone
+          MyData.FarTech := adNone;
         end;
     end;
   until ChosenResearch <> adFar;
@@ -1105,6 +1104,29 @@ begin
     Server(sSetResearch, me, ChosenResearch, nil^);
   ListDlg.TechChange;
   result := true;
+end;
+
+procedure ApplyToVisibleForms(FormAction: TFormAction);
+var
+  I: Integer;
+  Form: TForm;
+begin
+  for I := 0 to Screen.FormCount - 1 do begin
+    Form := Screen.Forms[I];
+    if Form.Visible and (Form is TBufferedDrawDlg) then begin
+      case FormAction of
+        faClose: Form.Close;
+        faEnable: Form.Enabled := True;
+        faDisable: Form.Enabled := False;
+        faUpdate: begin
+          if @Form.OnShow <> nil then Form.OnShow(nil);
+            Form.Invalidate;
+            Form.Update;
+        end;
+        faSmartUpdateContent: TBufferedDrawDlg(Form).SmartUpdateContent(False);
+      end;
+    end;
+  end;
 end;
 
 (* ** client function handling ** *)
@@ -1148,10 +1170,7 @@ begin
     CityDlg.CloseAction := None;
     if G.RO[DipMem[me].pContact] <> nil then
     begin // close windows for next player
-      for i := 0 to Screen.FormCount - 1 do
-        if Screen.Forms[i].Visible and (Screen.Forms[i] is TBufferedDrawDlg)
-        then
-          Screen.Forms[i].Close;
+      ApplyToVisibleForms(faClose);
     end
     else
     begin
@@ -1164,8 +1183,6 @@ begin
 end;
 
 function TMainScreen.OfferCall(var Offer: TOffer): integer;
-var
-  i: integer;
 begin
   result := Server(scDipOffer, me, 0, Offer);
   if result >= rExecuted then
@@ -1176,10 +1193,7 @@ begin
     CityDlg.CloseAction := None;
     if G.RO[DipMem[me].pContact] <> nil then
     begin // close windows for next player
-      for i := 0 to Screen.FormCount - 1 do
-        if Screen.Forms[i].Visible and (Screen.Forms[i] is TBufferedDrawDlg)
-        then
-          Screen.Forms[i].Close;
+      ApplyToVisibleForms(faClose);
     end
     else
     begin
@@ -1850,7 +1864,7 @@ begin
       if Loc1 >= G.lx * G.ly div 2 then
       begin
         NewAgeCenterTo := -1;
-        Loc1 := dLoc(Loc1, -dx, -dy)
+        Loc1 := dLoc(Loc1, -dx, -dy);
       end
       else
       begin
@@ -1858,12 +1872,10 @@ begin
         Loc1 := dLoc(Loc1, -dx, dy);
       end
     end;
-    Centre(Loc1)
+    Centre(Loc1);
   end;
 
-  for i := 0 to Screen.FormCount - 1 do
-    if Screen.Forms[i] is TBufferedDrawDlg then
-      Screen.Forms[i].Enabled := true;
+  ApplyToVisibleForms(faEnable);
 
   if ClientMode <> cResume then
   begin
@@ -1874,15 +1886,7 @@ begin
         gAnarchy { , GameMode<>cMovie } );
     // first turn after anarchy -- don't show despotism palace!
     Update;
-    for i := 0 to Screen.FormCount - 1 do
-      if (Screen.Forms[i].Visible) and (Screen.Forms[i] is TBufferedDrawDlg)
-      then
-      begin
-        if @Screen.Forms[i].OnShow <> nil then
-          Screen.Forms[i].OnShow(nil);
-        Screen.Forms[i].Invalidate;
-        Screen.Forms[i].Update;
-      end;
+    ApplyToVisibleForms(faUpdate);
 
     if MyRO.Happened and phGameEnd <> 0 then
       with MessgExDlg do
@@ -2707,10 +2711,7 @@ begin
       begin
         SaveSettings;
         CityDlg.CloseAction := None;
-        for i := 0 to Screen.FormCount - 1 do
-          if Screen.Forms[i].Visible and (Screen.Forms[i] is TBufferedDrawDlg)
-          then
-            Screen.Forms[i].Close;
+        ApplyToVisibleForms(faClose);
         if LogDlg.Visible then
           LogDlg.Close;
         LogDlg.List.Clear;
@@ -3758,7 +3759,7 @@ function TMainScreen.EndTurn(WasSkipped: boolean): boolean;
   end;
 
 var
-  i, p1, uix, cix, CenterLoc: integer;
+  p1, uix, cix, CenterLoc: integer;
   MsgItem: string;
   CityReport: TCityReport;
   PlaneReturnData: TPlaneReturnData;
@@ -3766,13 +3767,10 @@ var
 begin
   result := false;
   if ClientMode >= scDipOffer then
-    exit;
+    Exit;
 
-  if supervising and (me <> 0) then
-  begin
-    for i := 0 to Screen.FormCount - 1 do
-      if Screen.Forms[i].Visible and (Screen.Forms[i] is TBufferedDrawDlg) then
-        Screen.Forms[i].Close; // close windows
+  if supervising and (me <> 0) then begin
+    ApplyToVisibleForms(faClose);
     ItsMeAgain(0);
   end;
 
@@ -3914,22 +3912,16 @@ begin
     MyUn[uix].Status := MyUn[uix].Status and usPersistent;
 
   CityDlg.CloseAction := None;
-  if IsMultiPlayerGame then
-  begin // close windows for next player
-    for i := 0 to Screen.FormCount - 1 do
-      if Screen.Forms[i].Visible and (Screen.Forms[i] is TBufferedDrawDlg) then
-        Screen.Forms[i].Close;
-  end
-  else
-  begin
+  if IsMultiPlayerGame then begin
+    // Close windows for next player
+    ApplyToVisibleForms(faClose);
+  end else begin
     if CityDlg.Visible then
       CityDlg.Close;
     if UnitStatDlg.Visible then
       UnitStatDlg.Close;
   end;
-  for i := 0 to Screen.FormCount - 1 do
-    if Screen.Forms[i].Visible and (Screen.Forms[i] is TBufferedDrawDlg) then
-      Screen.Forms[i].Enabled := false;
+  ApplyToVisibleForms(faDisable);
 
   if Server(sTurn, pTurn, 0, nil^) >= rExecuted then
   begin
@@ -5899,7 +5891,7 @@ begin
             IconIndex := i;
             ShowModal;
             MyData.ToldWonders[i] := MyRO.Wonder[i];
-          end
+          end;
     end;
     if CityCaptured and (MyMap[ToLoc] and fCity <> 0) then
     begin // city captured
@@ -6414,9 +6406,7 @@ begin
   if supervising and (G.RO[0].Turn > 0) and
     ((p = 0) or (1 shl p and G.RO[0].Alive <> 0)) then
   begin
-    for i := 0 to Screen.FormCount - 1 do
-      if Screen.Forms[i].Visible and (Screen.Forms[i] is TBufferedDrawDlg) then
-        Screen.Forms[i].Close; // close windows
+    ApplyToVisibleForms(faClose);
     ItsMeAgain(p);
     SumCities(TaxSum, ScienceSum);
     for i := 0 to MyRO.nModel - 1 do
@@ -6744,7 +6734,7 @@ procedure TMainScreen.MenuClick(Sender: TObject);
           'NOMOVE_TREATY');
     else
       if result < rExecuted then
-        Play('INVALID')
+        Play('INVALID');
     end;
   end;
 
@@ -6769,7 +6759,7 @@ begin
         end
       end
       else
-        Server(sAbandonMap, me, 0, nil^)
+        Server(sAbandonMap, me, 0, nil^);
     end
     else
     begin
@@ -6780,11 +6770,11 @@ begin
           mrIgnore:
             Server(sResign, 0, 0, nil^);
           mrOK:
-            Server(sBreak, 0, 0, nil^)
+            Server(sBreak, 0, 0, nil^);
         end
       end
       else
-        Server(sResign, 0, 0, nil^)
+        Server(sResign, 0, 0, nil^);
     end
   else if Sender = mEmpire then
     RatesDlg.ShowNewContent(wmPersistent)
@@ -6810,7 +6800,7 @@ begin
           Server(sSetGovernment, me, ModalSelectDlg.result, nil^);
           CityOptimizer_BeginOfTurn;
           RevolutionChanged := true;
-        end
+        end;
       end
       else
       with MessgExDlg do
@@ -6833,7 +6823,7 @@ begin
       end;
       if RevolutionChanged then
         UpdateViews(true);
-    end
+    end;
   end
   else if Sender = mWebsite then
     OpenURL(CevoHomepage)
@@ -6846,7 +6836,7 @@ begin
       Edited := true;
       MapValid := false;
       PaintAllMaps;
-    end
+    end;
   end
   else if Sender = mJump then
   begin
@@ -6870,7 +6860,7 @@ begin
       EnhanceDlg.ShowNewContent(wmPersistent,
         MyMap[MyUn[UnFocus].Loc] and fTerrain)
     else
-      EnhanceDlg.ShowNewContent(wmPersistent)
+      EnhanceDlg.ShowNewContent(wmPersistent);
   end
   else if Sender = mCityTypes then
     CityTypeDlg.ShowNewContent(wmModal)
@@ -7153,18 +7143,18 @@ begin
               (MyUn[uix].Movement = integer(MyModel[MyUn[uix].mix].speed)) then
             begin
               MyUn[uix].Status := MyUn[uix].Status or usWaiting;
-              NewFocus := uix
+              NewFocus := uix;
             end;
           end;
           if NewFocus >= 0 then
           begin
             SetUnFocus(NewFocus);
             SetTroopLoc(Loc);
-            PanelPaint
+            PanelPaint;
           end;
         end
       else if Sender = mSelectTransport then
-        Server(sSelectTransport, me, UnFocus, nil^)
+        Server(sSelectTransport, me, UnFocus, nil^);
 end;
 
 procedure TMainScreen.InitPopup(Popup: TPopupMenu);
@@ -7997,17 +7987,13 @@ begin
 end;
 
 procedure TMainScreen.SetTileSize(TileSize: TTileSize; Loc: Integer; MapPos: TPoint);
-var
-  i: integer;
 begin
   MainMap.TileSize := TileSize;
   NoMap.TileSize := TileSize;
   FormResize(nil);
   SetMapPos(Loc, MapPos);
   PaintAllMaps;
-  for i := 0 to Screen.FormCount - 1 do
-    if Screen.Forms[i].Visible and (Screen.Forms[i] is TBufferedDrawDlg) then
-      TBufferedDrawDlg(Screen.Forms[i]).SmartUpdateContent(false);
+  ApplyToVisibleForms(faSmartUpdateContent);
 end;
 
 procedure TMainScreen.SaveMenuItemsState;
