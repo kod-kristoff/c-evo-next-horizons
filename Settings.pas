@@ -57,6 +57,9 @@ implementation
 
 {$R *.lfm}
 
+uses
+  Start;
+
 var
   SFullScreen, SGamma, SRestartMsg, SShortCutPrimary, SShortCutSecondary,
   SLanguages, SKeyBindings: string;
@@ -192,7 +195,7 @@ end;
 procedure TSettingsDlg.FormShow(Sender: TObject);
 begin
   ReloadLanguages;
-  Languages.LoadToStrings(ListLanguages.Items);
+  StartDlg.Translator.LanguageListToStrings(ListLanguages.Items);
   ListLanguages.Font.Color := MainTexture.ColorMark;
   ListKeyBindings.Font.Color := MainTexture.ColorMark;
   LoadData;
@@ -259,9 +262,10 @@ end;
 
 procedure TSettingsDlg.LoadData;
 begin
-  ListLanguages.ItemIndex := Languages.Search(LocaleCode);
-  if (ListLanguages.ItemIndex = -1) and (Languages.Count > 0) then
-    ListLanguages.ItemIndex := 0;
+  StartDlg.Translator.Language := StartDlg.Translator.Languages.SearchByCode(LocaleCode);
+  StartDlg.Translator.LanguageListToStrings(ListLanguages.Items, False);
+  ListLanguages.ItemIndex := ListLanguages.Items.IndexOfObject(StartDlg.Translator.Language);
+  if ListLanguages.ItemIndex = -1 then ListLanguages.ItemIndex := 0;
   if FullScreen then ButtonFullscreen.ButtonIndex := 3
     else ButtonFullscreen.ButtonIndex := 2;
   LocalGamma := Gamma;
@@ -273,7 +277,13 @@ var
   NeedRestart: Boolean;
 begin
   NeedRestart := Gamma <> LocalGamma;
-  LocaleCode := Languages[ListLanguages.ItemIndex].ShortName;
+  if ListLanguages.ItemIndex <> -1 then begin
+    StartDlg.Translator.Language := TLanguage(ListLanguages.Items.Objects[ListLanguages.ItemIndex]);
+    LocaleCode := StartDlg.Translator.Language.Code;
+  end else begin
+    StartDlg.Translator.Language := nil;
+    LocaleCode := '';
+  end;
   FullScreen := (ButtonFullscreen.ButtonIndex and 1) = 1;
   Gamma := LocalGamma;
   if NeedRestart then SimpleMessage(SRestartMsg);

@@ -289,7 +289,7 @@ begin
   ScrollBar.OnUpdate := ScrollBarUpdate;
 
   HelpText := TStringTable.Create;
-  HelpText.LoadFromFile(LocalizedFilePath('Help' + DirectorySeparator + 'help.txt'));
+  HelpText.LoadFromFile(LocalizedFilePath('Help' + DirectorySeparator + 'Help.txt'));
   hADVHELP := HelpText.Gethandle('ADVHELP');
   hIMPHELP := HelpText.Gethandle('IMPHELP');
   hFEATUREHELP := HelpText.Gethandle('FEATUREHELP');

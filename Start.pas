@@ -6,7 +6,7 @@ interface
 uses
   GameServer, Messg, ButtonBase, ButtonA, ButtonC, ButtonB, Area, Types,
   LCLIntf, LCLType, SysUtils, Classes, Graphics, Controls, Forms, StdCtrls,
-  Menus, Registry,  DrawDlg, fgl, Protocol, UMiniMap, UBrain;
+  Menus, Registry,  DrawDlg, fgl, Protocol, UMiniMap, UBrain, UTranslator;
 
 type
 
@@ -132,11 +132,13 @@ type
       invalidateTab0: boolean = false); overload;
     procedure LoadConfig;
     procedure SaveConfig;
+    procedure LoadLanguages;
     procedure LoadAiBrainsPictures;
     procedure UpdateInterface;
     procedure ShowSettings;
   public
     EmptyPicture: TBitmap;
+    Translator: TTranslator;
     procedure UpdateFormerGames;
     procedure UpdateMaps;
   end;
@@ -148,7 +150,8 @@ var
 implementation
 
 uses
-  Global, Directories, Direct, ScreenTools, Inp, Back, Settings, UKeyBindings;
+  Global, Directories, Direct, ScreenTools, Inp, Back, Settings, UKeyBindings,
+  ULanguages;
 
 {$R *.lfm}
 
@@ -225,6 +228,7 @@ begin
   end;
   LoadConfig;
   LoadAssets;
+  LoadLanguages;
 
   ActionsOffered := [maConfig, maManual, maCredits, maWeb];
   if FileExists(HomeDir + AITemplateFileName) then
@@ -324,6 +328,7 @@ end;
 procedure TStartDlg.FormDestroy(Sender: TObject);
 begin
   SaveConfig;
+  FreeAndNil(Translator);
   FreeAndNil(FormerGames);
   FreeAndNil(Maps);
   FreeAndNil(EmptyPicture);
@@ -453,6 +458,23 @@ begin
   end;
 
   KeyBindings.SaveToRegistry(HKEY_CURRENT_USER, AppRegistryKey + '\KeyBindings');
+end;
+
+procedure TStartDlg.LoadLanguages;
+var
+  I: Integer;
+begin
+  Translator := TTranslator.Create(nil);
+  with Translator, Languages do begin
+    AddNew('zh-Hant', 'Traditional Chinese');
+    AddNew('zh-Hans', 'Simplified Chinese');
+    SearchByCode('').Available := True;
+
+    for I := 1 to Languages.Count - 1 do
+    with Languages[I] do begin
+      Available := DirectoryExists(HomeDir + 'Localization' + DirectorySeparator + Code) or (Code = 'en');
+    end;
+  end;
 end;
 
 procedure TStartDlg.LoadAiBrainsPictures;
