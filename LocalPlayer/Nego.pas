@@ -135,13 +135,13 @@ const
   RomanNo: array [0 .. 15] of string = ('I', 'II', 'III', 'IV', 'V', 'VI',
     'VII', 'VIII', 'IX', 'X', 'XI', 'XII', 'XIII', 'XIV', 'XV', 'XVI');
 
-  ButtonPrice: array [0 .. 11] of cardinal = (opChoose, opCivilReport,
+  ButtonPrice: array [0 .. 11] of Cardinal = (opChoose, opCivilReport,
     opMilReport, opMap, opAllTech, opAllTech, opAllModel, opMoney, opTreaty,
     opLowTreaty, opShipParts, opShipParts);
 
 procedure TNegoDlg.FormCreate(Sender: TObject);
 var
-  cix: integer;
+  cix: Integer;
 begin
   InitButtons;
   for cix := 0 to ComponentCount - 1 do
@@ -152,14 +152,12 @@ begin
         Mask := HGrSystem.Mask;
         BackGraphic := HGrSystem2.Data;
         case Tag shr 8 of
-          1:
-            SmartHint := Phrases.Lookup('WANT', ButtonIndex - 6);
-          2:
-            SmartHint := Phrases.Lookup('OFFER', ButtonIndex - 6);
+          1: SmartHint := Phrases.Lookup('WANT', ButtonIndex - 6);
+          2: SmartHint := Phrases.Lookup('OFFER', ButtonIndex - 6);
         end;
       end;
 
-  fillchar(History, sizeof(History), 0);
+  FillChar(History, SizeOf(History), 0);
   RomanFont := TFont.Create;
   RomanFont.Name := 'Times New Roman';
   RomanFont.Size := Round(144 * 72 / RomanFont.PixelsPerInch);

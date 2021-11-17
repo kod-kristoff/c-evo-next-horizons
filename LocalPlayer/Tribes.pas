@@ -429,18 +429,15 @@ begin
       begin
         if CompareText(Item, 'stdcities') = 0 then
           case cpix of
-            3:
-              cpix := 0;
-            6:
-            begin
+            3: cpix := 0;
+            6: begin
               cpix := 0;
               Item := 'Nation2';
-            end
+            end;
           end;
         cHGr := LoadGraphicSet(Item + '.png');
         for x := 0 to 3 do
-          with CityPicture[x] do
-          begin
+          with CityPicture[x] do begin
             FindPosition(cHGr, x * 65, cpix * 49, 63, 47, $00FFFF,
               xShield, yShield);
             // FindPosition(cHGr,x*65,cpix*49,$FFFFFF,xf,yf);

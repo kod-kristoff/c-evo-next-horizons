@@ -8,5 +8,33 @@
       <Width>27</Width>
       <Height>26</Height>
     </Item>
+    <Item>
+      <Name>BrainNoTerm</Name>
+      <Left>1</Left>
+      <Top>111</Top>
+      <Width>64</Width>
+      <Height>64</Height>
+    </Item>
+    <Item>
+      <Name>BrainSuperVirtual</Name>
+      <Left>66</Left>
+      <Top>111</Top>
+      <Width>64</Width>
+      <Height>64</Height>
+    </Item>
+    <Item>
+      <Name>BrainTerm</Name>
+      <Left>131</Left>
+      <Top>111</Top>
+      <Width>64</Width>
+      <Height>64</Height>
+    </Item>
+    <Item>
+      <Name>BrainRandom</Name>
+      <Left>131</Left>
+      <Top>46</Top>
+      <Width>64</Width>
+      <Height>64</Height>
+    </Item>
   </Items>
 </GraphicSet>

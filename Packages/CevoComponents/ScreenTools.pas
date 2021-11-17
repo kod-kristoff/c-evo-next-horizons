@@ -28,8 +28,7 @@ procedure EditFrame(ca: TCanvas; p: TRect; T: TTexture);
 function HexStringToColor(S: string): integer;
 function ExtractFileNameWithoutExt(const Filename: string): string;
 function LoadGraphicFile(Bmp: TBitmap; FileName: string; Options: TLoadGraphicFileOptions = []): boolean;
-function LoadGraphicSet(const Name: string): TGraphicSet;
-function LoadGraphicSet2(const Name: string): TGraphicSet;
+function LoadGraphicSet(const Name: string; Transparency: Boolean = True): TGraphicSet;
 procedure Dump(dst: TBitmap; HGr: TGraphicSet; xDst, yDst, Width, Height, xGr, yGr: integer);
 procedure BitmapReplaceColor(Dst: TBitmap; X, Y, Width, Height: Integer; OldColor, NewColor: TColor);
 procedure Sprite(Canvas: TCanvas; HGr: TGraphicSet; xDst, yDst, Width, Height, xGr, yGr: integer);
@@ -150,24 +149,19 @@ var
   Phrases: TStringTable;
   Phrases2: TStringTable;
   GrExt: TGraphicSets;
-  HGrSystem: TGraphicSet;
-  HGrSystem2: TGraphicSet;
-  ClickFrameColor: Integer;
-  MainTexture: TTexture;
-  Templates: TGraphicSet;
-  Colors: TBitmap;
-  Paper: TBitmap;
-  BigImp: TBitmap;
-  LogoBuffer: TBitmap;
-  FullScreen: Boolean;
-  GenerateNames: Boolean;
-  InitOrnamentDone: Boolean;
-  Phrases2FallenBackToEnglish: Boolean;
 
-  // Graphic set items
+  HGrSystem: TGraphicSet;
   CityMark1: TGraphicSetItem;
   CityMark2: TGraphicSetItem;
+
+  HGrSystem2: TGraphicSet;
   Ornament: TGraphicSetItem;
+  GBrainNoTerm: TGraphicSetItem;
+  GBrainSuperVirtual: TGraphicSetItem;
+  GBrainTerm: TGraphicSetItem;
+  GBrainRandom: TGraphicSetItem;
+
+  Templates: TGraphicSet;
   Logo: TGraphicSetItem;
   BigBook: TGraphicSetItem;
   SmallBook: TGraphicSetItem;
@@ -180,6 +174,17 @@ var
   StarshipDeparted: TGraphicSetItem;
   WeightOn: TGraphicSetItem;
   WeightOff: TGraphicSetItem;
+
+  ClickFrameColor: Integer;
+  MainTexture: TTexture;
+  Colors: TBitmap;
+  Paper: TBitmap;
+  BigImp: TBitmap;
+  LogoBuffer: TBitmap;
+  FullScreen: Boolean;
+  GenerateNames: Boolean;
+  InitOrnamentDone: Boolean;
+  Phrases2FallenBackToEnglish: Boolean;
 
   UniFont: array [TFontType] of TFont;
   Gamma: Integer; // global gamma correction (cent)
@@ -484,7 +489,7 @@ begin
   end;
 end;
 
-function LoadGraphicSet(const Name: string): TGraphicSet;
+function LoadGraphicSet(const Name: string; Transparency: Boolean = True): TGraphicSet;
 var
   x: Integer;
   y: Integer;
@@ -509,59 +514,40 @@ begin
 
     Result.ResetPixUsed;
 
-    Result.Mask.SetSize(Result.Data.Width, Result.Data.Height);
+    if Transparency then begin
+      Result.Mask.SetSize(Result.Data.Width, Result.Data.Height);
 
-    Result.Data.BeginUpdate;
-    Result.Mask.BeginUpdate;
-    DataPixel := PixelPointer(Result.Data);
-    MaskPixel := PixelPointer(Result.Mask);
-    for y := 0 to ScaleToNative(Result.Data.Height) - 1 do begin
-      for x := 0 to ScaleToNative(Result.Data.Width) - 1 do begin
-        OriginalColor := DataPixel.Pixel^.ARGB and $FFFFFF;
-        if (OriginalColor = TransparentColor1) or (OriginalColor = TransparentColor2) then begin
-          MaskPixel.Pixel^.R := $FF;
-          MaskPixel.Pixel^.G := $FF;
-          MaskPixel.Pixel^.B := $FF;
-          DataPixel.Pixel^.R := 0;
-          DataPixel.Pixel^.G := 0;
-          DataPixel.Pixel^.B := 0;
-        end else begin
-          MaskPixel.Pixel^.R := $00;
-          MaskPixel.Pixel^.G := $00;
-          MaskPixel.Pixel^.B := $00;
+      Result.Data.BeginUpdate;
+      Result.Mask.BeginUpdate;
+      DataPixel := PixelPointer(Result.Data);
+      MaskPixel := PixelPointer(Result.Mask);
+      for y := 0 to ScaleToNative(Result.Data.Height) - 1 do begin
+        for x := 0 to ScaleToNative(Result.Data.Width) - 1 do begin
+          OriginalColor := DataPixel.Pixel^.ARGB and $FFFFFF;
+          if (OriginalColor = TransparentColor1) or (OriginalColor = TransparentColor2) then begin
+            MaskPixel.Pixel^.R := $FF;
+            MaskPixel.Pixel^.G := $FF;
+            MaskPixel.Pixel^.B := $FF;
+            DataPixel.Pixel^.R := 0;
+            DataPixel.Pixel^.G := 0;
+            DataPixel.Pixel^.B := 0;
+          end else begin
+            MaskPixel.Pixel^.R := $00;
+            MaskPixel.Pixel^.G := $00;
+            MaskPixel.Pixel^.B := $00;
+          end;
+          DataPixel.NextPixel;
+          MaskPixel.NextPixel;
         end;
-        DataPixel.NextPixel;
-        MaskPixel.NextPixel;
+        DataPixel.NextLine;
+        MaskPixel.NextLine;
       end;
-      DataPixel.NextLine;
-      MaskPixel.NextLine;
+      Result.Data.EndUpdate;
+      Result.Mask.EndUpdate;
+
+      if Gamma <> 100 then
+        ApplyGammaToBitmap(Result.Data);
     end;
-    Result.Data.EndUpdate;
-    Result.Mask.EndUpdate;
-
-    if Gamma <> 100 then
-      ApplyGammaToBitmap(Result.Data);
-  end;
-end;
-
-function LoadGraphicSet2(const Name: string): TGraphicSet;
-var
-  FileName: string;
-begin
-  Result := GrExt.SearchByName(Name);
-  if not Assigned(Result) then begin
-    Result := GrExt.AddNew(Name);
-    FileName := GetGraphicsDir + DirectorySeparator + Name;
-    if not LoadGraphicFile(Result.Data, FileName, [gfNoGamma]) then begin
-      Result := nil;
-      Exit;
-    end;
-
-    FileName := ExtractFileNameWithoutExt(FileName) + GraphicSetFileExt;
-    if FileExists(FileName) then
-      Result.LoadFromFile(FileName);
-
-    Result.ResetPixUsed;
   end;
 end;
 
@@ -1049,7 +1035,8 @@ begin
   Shade := ColorToColor32(MainTexture.ColorBevelShade and $FCFCFC shr 2 * 3 +
     MainTexture.ColorBevelLight and $FCFCFC shr 2);
   HGrSystem2.Data.BeginUpdate;
-  PixelPtr := PixelPointer(HGrSystem2.Data, ScaleToNative(Ornament.Left), ScaleToNative(Ornament.Top));
+  PixelPtr := PixelPointer(HGrSystem2.Data, ScaleToNative(Ornament.Left),
+    ScaleToNative(Ornament.Top));
   if PixelPtr.BytesPerPixel = 3 then begin
     for Y := 0 to ScaleToNative(Ornament.Height) - 1 do begin
       for X := 0 to ScaleToNative(Ornament.Width) - 1 do begin
@@ -1739,7 +1726,7 @@ procedure LoadAssets;
 begin
   LoadPhrases;
   LoadFonts;
-  Templates := LoadGraphicSet2('Templates.png');
+  Templates := LoadGraphicSet('Templates.png', False);
   with Templates do begin
     Logo := GetItem('Logo');
     BigBook := GetItem('BigBook');
@@ -1778,11 +1765,19 @@ begin
   GrExt := TGraphicSets.Create;
 
   HGrSystem := LoadGraphicSet('System.png');
-  CityMark1 := HGrSystem.GetItem('CityMark1');
-  CityMark2 := HGrSystem.GetItem('CityMark2');
+  with HGrSystem do begin
+    CityMark1 := GetItem('CityMark1');
+    CityMark2 := GetItem('CityMark2');
+  end;
 
   HGrSystem2 := LoadGraphicSet('System2.png');
-  Ornament := HGrSystem2.GetItem('Ornament');
+  with HGrSystem2 do begin
+    Ornament := GetItem('Ornament');
+    GBrainNoTerm := GetItem('BrainNoTerm');
+    GBrainSuperVirtual := GetItem('BrainSuperVirtual');
+    GBrainTerm := GetItem('BrainTerm');
+    GBrainRandom := GetItem('BrainRandom');
+  end;
 
   Colors := TBitmap.Create;
   Colors.PixelFormat := pf24bit;

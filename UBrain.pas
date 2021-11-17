@@ -5,7 +5,7 @@ unit UBrain;
 interface
 
 uses
-  Classes, SysUtils, fgl, Graphics, Protocol, LazFileUtils, dynlibs;
+  Classes, SysUtils, fgl, Graphics, Protocol, LazFileUtils, dynlibs, Types;
 
 const
   // module flags
@@ -34,6 +34,7 @@ type
     Kind: TBrainType;
     Picture: TBitmap;
     Beginner: Boolean;
+    procedure LoadPicture;
     procedure LoadFromFile(AIFileName: string);
     constructor Create;
     destructor Destroy; override;
@@ -46,15 +47,34 @@ type
     function GetKindCount(Kind: TBrainType): Integer;
     procedure GetByKind(Kind: TBrainType; Brains: TBrains);
     function GetBeginner: TBrain;
+    procedure LoadPictures;
   end;
 
 
 implementation
 
 uses
-  ScreenTools;
+  ScreenTools, Directories;
 
 { TBrain }
+
+procedure TBrain.LoadPicture;
+var
+  TextSize: TSize;
+begin
+  if not LoadGraphicFile(Picture, GetAiDir + DirectorySeparator +
+    FileName + DirectorySeparator + FileName + '.png', [gfNoError]) then begin
+    with Picture.Canvas do begin
+      Brush.Color := $904830;
+      FillRect(Rect(0, 0, 64, 64));
+      Font.Assign(UniFont[ftTiny]);
+      Font.Style := [];
+      Font.Color := $5FDBFF;
+      TextSize := TextExtent(FileName);
+      TextOut(32 - TextSize.Width div 2, 32 - TextSize.Height div 2, FileName);
+    end;
+  end;
+end;
 
 procedure TBrain.LoadFromFile(AIFileName: string);
 var
@@ -175,6 +195,15 @@ begin
   if I < Count then Result := Items[I]
     else Result := nil;
 end;
+
+procedure TBrains.LoadPictures;
+var
+  I: Integer;
+begin
+  for I := 0 to Count - 1 do
+    with Items[I] do LoadPicture;
+end;
+
 
 end.
 

@@ -122,7 +122,7 @@ begin
     end
   else
     EndCommand := sResign;
-  Server(EndCommand, me, 0, nil^)
+  Server(EndCommand, Me, 0, nil^);
 end;
 
 procedure TNoTermDlg.ShowActive(p: integer; Active: boolean);
@@ -369,11 +369,11 @@ begin
   // BtnFrame(Canvas,StatBtn.BoundsRect,MainTexture);
 end;
 
-procedure Client(Command, Player: integer; var Data);
+procedure Client(Command, Player: Integer; var Data);
 begin
   if not FormsCreated then
   begin
-    FormsCreated := true;
+    FormsCreated := True;
     Application.CreateForm(TNoTermDlg, NoTermDlg);
   end;
   NoTermDlg.Client(Command, Player, Data);

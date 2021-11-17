@@ -4334,7 +4334,7 @@ begin
     Corner(Panel.Canvas, xRightPanel + 10 - 9, 1, 0, MainTexture);
     if ClientMode <> cEditMap then
     begin
-      if supervising then
+      if Supervising then
       begin
         ScreenTools.Frame(Panel.Canvas, ClientWidth - xPalace - 1, yPalace - 1,
           ClientWidth - xPalace + xSizeBig, yPalace + ySizeBig,

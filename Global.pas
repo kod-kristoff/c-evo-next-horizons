@@ -23,7 +23,6 @@ const
     ((CevoVersionMinor and $ff) shl 8) or
     ((CevoVersionBugFix and $ff) shl 0);
 
-
 implementation
 
 end.

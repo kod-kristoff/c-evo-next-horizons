@@ -54,6 +54,8 @@ type
     destructor Destroy; override;
   end;
 
+  TGraphicSetClass = class of TGraphicSet;
+
   { TGraphicSets }
 
   TGraphicSets = class(TFPGObjectList<TGraphicSet>)

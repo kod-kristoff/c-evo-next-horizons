@@ -9,7 +9,6 @@ uses
   Menus, Registry,  DrawDlg, fgl, Protocol, UMiniMap, UBrain, UTranslator;
 
 type
-
   { TPlayerSlot }
 
   TPlayerSlot = class
@@ -294,10 +293,11 @@ begin
   else
     CustomizeBtn.ButtonIndex := 2;
 
-  BitBltBitmap(BrainNoTerm.Picture, 0, 0, 64, 64, HGrSystem2.Data, 1, 111);
-  BitBltBitmap(BrainSuperVirtual.Picture, 0, 0, 64, 64, HGrSystem2.Data, 66, 111);
-  BitBltBitmap(BrainTerm.Picture, 0, 0, 64, 64, HGrSystem2.Data, 131, 111);
-  BitBltBitmap(BrainRandom.Picture, 0, 0, 64, 64, HGrSystem2.Data, 131, 46);
+  BitBltBitmap(BrainNoTerm.Picture, 0, 0, 64, 64, HGrSystem2.Data, GBrainNoTerm.Left, GBrainNoTerm.Top);
+  BitBltBitmap(BrainSuperVirtual.Picture, 0, 0, 64, 64, HGrSystem2.Data, GBrainSuperVirtual.Left, GBrainSuperVirtual.Top);
+  BitBltBitmap(BrainTerm.Picture, 0, 0, 64, 64, HGrSystem2.Data, GBrainTerm.Left, GBrainTerm.Top);
+  BitBltBitmap(BrainRandom.Picture, 0, 0, 64, 64, HGrSystem2.Data, GBrainRandom.Left, GBrainRandom.Top);
+
   LoadAiBrainsPictures;
 
   EmptyPicture := TBitmap.Create;
@@ -479,29 +479,15 @@ end;
 
 procedure TStartDlg.LoadAiBrainsPictures;
 var
-  AIBrains: TBrains;
-  I: Integer;
-  TextSize: TSize;
+  AiBrains: TBrains;
 begin
-  AIBrains := TBrains.Create(False);
-  Brains.GetByKind(btAI, AIBrains);
-  for i := 0 to AIBrains.Count - 1 do
-  with AIBrains[I] do begin
-    if not LoadGraphicFile(AIBrains[i].Picture, GetAiDir + DirectorySeparator +
-      FileName + DirectorySeparator + FileName + '.png', [gfNoError]) then begin
-      with AIBrains[i].Picture.Canvas do begin
-        Brush.Color := $904830;
-        FillRect(Rect(0, 0, 64, 64));
-        Font.Assign(UniFont[ftTiny]);
-        Font.Style := [];
-        Font.Color := $5FDBFF;
-        TextSize := TextExtent(FileName);
-        Textout(32 - TextSize.Width div 2,
-          32 - TextSize.Height div 2, FileName);
-      end;
-    end;
+  AiBrains := TBrains.Create(False);
+  try
+    Brains.GetByKind(btAI, AiBrains);
+    AiBrains.LoadPictures;
+  finally
+    FreeAndNil(AiBrains);
   end;
-  FreeAndNil(AIBrains);
 end;
 
 procedure TStartDlg.UpdateInterface;
@@ -726,8 +712,7 @@ begin
     if AutoDiff < 0 then
     begin
       for i := 12 to 19 do
-        if (i < 13) or (i > 17) then
-        begin
+        if (i < 13) or (i > 17) then begin
           BitBltCanvas(Canvas, 9 + i * 27, yLogo - 2, Ornament.Width, Ornament.Height,
             HGrSystem2.Mask.Canvas, Ornament.Left, Ornament.Top, SRCAND);
           BitBltCanvas(Canvas, 9 + i * 27, yLogo - 2, Ornament.Width, Ornament.Height,
@@ -812,8 +797,7 @@ begin
       RisedTextOut(Canvas, 272 - BiColorTextWidth(Canvas, s), y0Mini + 61, s);
 
       for i := 0 to 19 do
-        if (i < 2) or (i > 6) then
-        begin
+        if (i < 2) or (i > 6) then begin
           BitBltCanvas(Canvas, 9 + i * 27, yLogo - 2, Ornament.Width, Ornament.Height,
             HGrSystem2.Mask.Canvas, Ornament.Left, Ornament.Top, SRCAND);
           BitBltCanvas(Canvas, 9 + i * 27, yLogo - 2, Ornament.Width, Ornament.Height,

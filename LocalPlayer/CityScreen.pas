@@ -92,7 +92,7 @@ type
     procedure ChangeResourceWeights(iResourceWeights: integer);
     procedure OnPlaySound(var Msg: TMessage); message WM_PLAYSOUND;
   public
-    RestoreUnFocus: integer;
+    RestoreUnFocus: Integer;
     CloseAction: TCityCloseAction;
     procedure OffscreenPaint; override;
     procedure ShowNewContent(NewMode, Loc: integer; ShowEvent: cardinal);
@@ -147,7 +147,8 @@ const
   hZoomMap = 124;
   wZoomEnvironment = 68;
 
-  ImpPosition: array [28 .. nImp - 1] of integer = (-1, // imTrGoods
+  ImpPosition: array [28 .. nImp - 1] of Integer = (
+    -1, // imTrGoods
     21, // imBarracks
     6, // imGranary
     1, // imTemple
@@ -191,7 +192,7 @@ const
     -1); // imShipHab
 
 var
-  ImpSorted: array [0 .. nImp - 1] of integer;
+  ImpSorted: array [0 .. nImp - 1] of Integer;
 
 procedure TCityDlg.FormCreate(Sender: TObject);
 begin
@@ -205,7 +206,7 @@ begin
     ymArea + 96);
   SmallMapMode := smImprovements;
   ZoomArea := 1;
-  ProdHint := false;
+  ProdHint := False;
   RestoreUnFocus := -1;
   OpenSoundEvent := -1;
   AgePrepared := -2;
@@ -488,12 +489,12 @@ var
 
 var
   x, y, xGr, i, j, iix, d, dx, dy, PrCost, Cnt, Loc1, FreeSupp, Paintiix,
-    HappyGain, OptiType, rx, ry, TrueFood, TrueProd, TruePoll: integer;
-  av: integer;
+    HappyGain, OptiType, rx, ry, TrueFood, TrueProd, TruePoll: Integer;
+  av: Integer;
   PrName, s: string;
   UnitInfo: TUnitInfo;
   UnitReport: TUnitReport;
-  IsCityAlive, CanGrow: boolean;
+  IsCityAlive, CanGrow: Boolean;
 begin
   inherited;
   if cix >= 0 then
@@ -508,15 +509,15 @@ begin
   TrueFood := c.Food;
   TrueProd := c.Prod;
   TruePoll := c.Pollution;
-  if supervising or (cix < 0) then
+  if Supervising or (cix < 0) then
   begin // normalize city from after-turn state
-    dec(TrueFood, Report.FoodSurplus);
+    Dec(TrueFood, Report.FoodSurplus);
     if TrueFood < 0 then
       TrueFood := 0; // shouldn't happen
-    dec(TrueProd, Report.Production);
+    Dec(TrueProd, Report.Production);
     if TrueProd < 0 then
       TrueProd := 0; // shouldn't happen
-    dec(TruePoll, Report.AddPollution);
+    Dec(TruePoll, Report.AddPollution);
     if TruePoll < 0 then
       TruePoll := 0; // shouldn't happen
   end;
@@ -533,17 +534,17 @@ begin
   BitBltCanvas(offscreen.Canvas, 0, 0, 640, 480, Back.Canvas, 0, 0);
 
   Offscreen.Canvas.Font.Assign(UniFont[ftCaption]);
-  RisedTextOut(offscreen.Canvas, 42, 7, Caption);
-  with offscreen.Canvas do
+  RisedTextOut(Offscreen.Canvas, 42, 7, Caption);
+  with Offscreen.Canvas do
   begin // city size
-    brush.Color := $000000;
+    Brush.Color := $000000;
     FillRect(Rect(8 + 1, 7 + 1, 36 + 1, 32 + 1));
-    brush.Color := $FFFFFF;
+    Brush.Color := $FFFFFF;
     FillRect(Rect(8, 7, 36, 32));
-    brush.style := bsClear;
+    Brush.style := bsClear;
     Font.Color := $000000;
-    s := inttostr(c.Size);
-    TextOut(8 + 14 - textwidth(s) div 2, 7, s);
+    s := IntToStr(c.Size);
+    TextOut(8 + 14 - TextWidth(s) div 2, 7, s);
   end;
   Offscreen.Canvas.Font.Assign(UniFont[ftSmall]);
 
@@ -958,8 +959,8 @@ begin
                   10, 154, 126)
           end // unit visible in display
           else
-            dec(FreeSupp, UnitReport.ProdSupport);
-          inc(Cnt);
+            Dec(FreeSupp, UnitReport.ProdSupport);
+          Inc(Cnt);
         end;
     PageCount := (Cnt + 5) div 6;
     Imp0Area.Hint := '';
@@ -972,7 +973,7 @@ begin
   PageUpBtn.Visible := PageCount > 1;
   PageDownBtn.Visible := PageCount > 1;
 
-  with offscreen.Canvas do
+  with Offscreen.Canvas do
   begin
     { display project now }
     DLine(offscreen.Canvas, xView + 9 + xSizeBig, xProd + 2 * wBar + 10,
@@ -1066,8 +1067,8 @@ begin
         InitEnemyModel(emix);
     end;
 
-    NextCityBtn.Visible := false;
-    PrevCityBtn.Visible := false;
+    NextCityBtn.Visible := False;
+    PrevCityBtn.Visible := False;
   end;
   Page := 0;
 
@@ -1081,15 +1082,15 @@ begin
     SizeClass := 3;
 
   // check if port
-  IsPort := false;
+  IsPort := False;
   for dx := -2 to 2 do
     for dy := -2 to 2 do
-      if abs(dx) + abs(dy) = 2 then
+      if Abs(dx) + Abs(dy) = 2 then
       begin
         Loc1 := dLoc(cLoc, dx, dy);
         if (Loc1 >= 0) and (Loc1 < G.lx * G.ly) and
           (MyMap[Loc1] and fTerrain < fGrass) then
-          IsPort := true;
+          IsPort := True;
       end;
 
   if WindowMode = wmModal then
@@ -1104,7 +1105,7 @@ begin
   InitZoomCityMap;
   OpenSoundEvent := -1;
   OffscreenPaint;
-  Timer1.Enabled := true;
+  Timer1.Enabled := True;
 end;
 
 procedure TCityDlg.ShowNewContent(NewMode, Loc: integer; ShowEvent: cardinal);
@@ -1151,7 +1152,7 @@ begin
     Page := 0;
     InitZoomCityMap;
     SmartUpdateContent;
-    exit;
+    Exit;
   end;
   if (ssLeft in Shift) and (x >= xSupport) and (x < xSupport + wSupport) and
     (y >= ySupport) and (y < ySupport + hSupport) then
@@ -1160,10 +1161,10 @@ begin
     Page := 0;
     InitZoomCityMap;
     SmartUpdateContent;
-    exit;
+    Exit;
   end;
   if not AllowChange then
-    exit; // not an own city
+    Exit; // Not an own city
 
   if (ssLeft in Shift) then
     if (ClientMode < scContact) and (x >= xView) and (y >= yView) and
@@ -1584,8 +1585,8 @@ end;
 
 procedure TCityDlg.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-  Timer1.Enabled := false;
-  ProdHint := false;
+  Timer1.Enabled := False;
+  ProdHint := False;
   MarkCityLoc := -1;
   if Optimize_cixTileChange >= 0 then
   begin
@@ -1750,7 +1751,7 @@ procedure TCityDlg.PageUpBtnClick(Sender: TObject);
 begin
   if Page > 0 then
   begin
-    dec(Page);
+    Dec(Page);
     SmartUpdateContent;
   end;
 end;
@@ -1759,7 +1760,7 @@ procedure TCityDlg.PageDownBtnClick(Sender: TObject);
 begin
   if Page < PageCount - 1 then
   begin
-    inc(Page);
+    Inc(Page);
     SmartUpdateContent;
   end;
 end;
