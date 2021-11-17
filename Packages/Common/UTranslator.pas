@@ -315,14 +315,19 @@ var
   ItemName: string;
 begin
   with Strings do begin
-    Clear;
-    for I := 0 to Languages.Count - 1 do
-    with TLanguage(Languages[I]) do
-      if Available then begin
-        ItemName := Name;
-        if WithCode and (Code <> '') then ItemName := ItemName + ' (' + Code + ')';
-        AddObject(ItemName, Languages[I]);
-      end;
+    BeginUpdate;
+    try
+      Clear;
+      for I := 0 to Languages.Count - 1 do
+      with Languages[I] do
+        if Available then begin
+          ItemName := Name;
+          if WithCode and (Code <> '') then ItemName := ItemName + ' (' + Code + ')';
+          AddObject(ItemName, Languages[I]);
+        end;
+    finally
+      EndUpdate;
+    end;
   end;
 end;
 
@@ -374,7 +379,7 @@ begin
   Languages.SearchByCode('').Available := True; // Automatic
 
   for I := 1 to Languages.Count - 1 do
-  with TLanguage(Languages[I]) do begin
+  with Languages[I] do begin
     Available := FileExists(LangDir + DirectorySeparator + ExtractFileNameOnly(Application.ExeName) +
       '.' + Code + ExtensionSeparator + 'po') or (Code = 'en');
   end;

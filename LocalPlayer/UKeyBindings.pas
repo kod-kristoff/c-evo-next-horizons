@@ -37,6 +37,7 @@ type
     procedure Assign(Source: TKeyBindings);
     procedure ResetToDefault;
     procedure RemoveShortCut(ShortCut: TShortCut);
+    procedure SortAlpha;
   end;
 
 var
@@ -240,18 +241,23 @@ var
   I: Integer;
   Text: string;
 begin
-  Strings.Clear;
-  for I := 0 to Count - 1 do begin
-    Text:= '';
-    if Items[I].ShortCut <> 0 then
-      Text:= Text + ShortCutToText(Items[I].ShortCut);
-    if Items[I].ShortCut2 <> 0 then begin
-      if Text <> '' then Text := Text + ', ';
-      Text:= Text + ShortCutToText(Items[I].ShortCut2);
+  Strings.BeginUpdate;
+  try
+    Strings.Clear;
+    for I := 0 to Count - 1 do begin
+      Text := '';
+      if Items[I].ShortCut <> 0 then
+        Text := Text + ShortCutToText(Items[I].ShortCut);
+      if Items[I].ShortCut2 <> 0 then begin
+        if Text <> '' then Text := Text + ', ';
+        Text := Text + ShortCutToText(Items[I].ShortCut2);
+      end;
+      if Text <> '' then Text := Items[I].FullName + ' (' + Text + ')'
+        else Text := Items[I].FullName;
+      Strings.Add(Text);
     end;
-    if Text <> '' then Text := Items[I].FullName + ' (' + Text + ')'
-      else Text := Items[I].FullName;
-    Strings.Add(Text);
+  finally
+    Strings.EndUpdate;
   end;
 end;
 
@@ -283,6 +289,16 @@ begin
     if Items[I].ShortCut = ShortCut then Items[I].ShortCut := 0;
     if Items[I].ShortCut2 = ShortCut then Items[I].ShortCut2 := 0;
   end;
+end;
+
+function CompareAlpha(const Item1, Item2: TKeyBinding): Integer;
+begin
+  Result := CompareStr(Item1.FullName, Item2.FullName);
+end;
+
+procedure TKeyBindings.SortAlpha;
+begin
+  Sort(CompareAlpha);
 end;
 
 
@@ -371,6 +387,7 @@ with KeyBindings do begin
   BMoveUp := AddItem('MoveUp', 'Move unit up', 'Num8', 'Up');
   BMoveLeftUp := AddItem('MoveLeftUp', 'Move unit left-up', 'Num7', 'Home');
   BMoveLeft := AddItem('MoveLeft', 'Move unit left', 'Num4', 'Left');
+  SortAlpha;
 end;
 
 
