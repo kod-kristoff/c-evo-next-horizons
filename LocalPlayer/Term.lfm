@@ -1,7 +1,7 @@
 object MainScreen: TMainScreen
-  Left = 516
+  Left = 469
   Height = 480
-  Top = 834
+  Top = 251
   Width = 800
   HorzScrollBar.Visible = False
   VertScrollBar.Visible = False
@@ -11,7 +11,7 @@ object MainScreen: TMainScreen
   Color = clBtnFace
   Constraints.MinHeight = 480
   Constraints.MinWidth = 800
-  DesignTimePPI = 144
+  DesignTimePPI = 120
   Font.Color = clWindowText
   Font.Height = -13
   Font.Name = 'MS Sans Serif'
@@ -226,12 +226,12 @@ object MainScreen: TMainScreen
     object mHelp: TMenuItem
       Tag = 7
       ShortCut = 112
-      OnClick = MenuClick
+      OnClick = mHelpClick
     end
     object mTechTree: TMenuItem
       GroupIndex = 1
       ShortCut = 84
-      OnClick = MenuClick
+      OnClick = mTechTreeClick
     end
     object N12: TMenuItem
       Caption = '-'
@@ -490,12 +490,12 @@ object MainScreen: TMainScreen
         object mJump: TMenuItem
           Tag = 54
           ShortCut = 16458
-          OnClick = MenuClick
+          OnClick = mJumpClick
         end
         object mRun: TMenuItem
           Tag = 63
           ShortCut = 16466
-          OnClick = MenuClick
+          OnClick = mRunClick
         end
         object mNames: TMenuItem
           Tag = 67
@@ -551,18 +551,18 @@ object MainScreen: TMainScreen
       GroupIndex = 1
       object mEnhanceDef: TMenuItem
         Tag = 40
-        OnClick = MenuClick
+        OnClick = mEnhanceDefClick
       end
       object mCityTypes: TMenuItem
         Tag = 11
-        OnClick = MenuClick
+        OnClick = mCityTypesClick
       end
     end
     object mRandomMap: TMenuItem
       Tag = 71
       GroupIndex = 1
       ShortCut = 16466
-      OnClick = MenuClick
+      OnClick = mRandomMapClick
     end
     object N3: TMenuItem
       Caption = '-'
@@ -571,7 +571,7 @@ object MainScreen: TMainScreen
     object mWebsite: TMenuItem
       Tag = 88
       GroupIndex = 1
-      OnClick = MenuClick
+      OnClick = mWebsiteClick
     end
     object N2: TMenuItem
       Caption = '-'
@@ -581,7 +581,7 @@ object MainScreen: TMainScreen
       Tag = 2
       GroupIndex = 1
       ShortCut = 16465
-      OnClick = MenuClick
+      OnClick = mResignClick
     end
   end
   object UnitPopup: TPopupMenu
@@ -591,80 +591,80 @@ object MainScreen: TMainScreen
     object mdisband: TMenuItem
       Tag = 72
       ShortCut = 16452
-      OnClick = MenuClick
+      OnClick = mDisbandOrUtilizeClick
     end
     object mUtilize: TMenuItem
       ShortCut = 90
-      OnClick = MenuClick
+      OnClick = mDisbandOrUtilizeClick
     end
     object N1: TMenuItem
       Caption = '-'
     end
     object mcity: TMenuItem
       ShortCut = 66
-      OnClick = MenuClick
+      OnClick = mcityClick
     end
     object mPillage: TMenuItem
       Tag = 19
       ShortCut = 16464
-      OnClick = MenuClick
+      OnClick = mPillageClick
     end
     object N5: TMenuItem
       Caption = '-'
     end
     object mhome: TMenuItem
       ShortCut = 72
-      OnClick = MenuClick
+      OnClick = mhomeClick
     end
     object mLoad: TMenuItem
       Tag = 24
       ShortCut = 76
-      OnClick = MenuClick
+      OnClick = mLoadClick
     end
     object mUnload: TMenuItem
       Tag = 70
       ShortCut = 85
-      OnClick = MenuClick
+      OnClick = mUnloadClick
     end
     object mSelectTransport: TMenuItem
       Tag = 73
       ShortCut = 16468
-      OnClick = MenuClick
+      OnClick = mSelectTransportClick
     end
     object mGoOn: TMenuItem
       Tag = 13
       ShortCut = 71
-      OnClick = MenuClick
+      OnClick = mGoOnClick
     end
     object mCancel: TMenuItem
       Tag = 1
       ShortCut = 16451
-      OnClick = MenuClick
+      OnClick = mCancelClick
     end
     object mRecover: TMenuItem
       Tag = 69
       ShortCut = 86
-      OnClick = MenuClick
+      OnClick = mRecoverClick
     end
     object mwait: TMenuItem
       Tag = 25
       ShortCut = 87
-      OnClick = MenuClick
+      OnClick = mwaitClick
     end
     object mnoorders: TMenuItem
       Tag = 26
       ShortCut = 32
-      OnClick = MenuClick
+      OnClick = mnoordersClick
     end
     object mstay: TMenuItem
       Tag = 22
       ShortCut = 83
-      OnClick = MenuClick
+      OnClick = mstayClick
     end
     object mCentre: TMenuItem
       Tag = 12
       ShortCut = 67
-      OnClick = MenuClick
+      OnClick = mCentreClick
     end
     object N13: TMenuItem
       Caption = '-'
@@ -672,12 +672,12 @@ object MainScreen: TMainScreen
     object mPrevUnit: TMenuItem
       Tag = 100
       ShortCut = 46
-      OnClick = MenuClick
+      OnClick = mPrevUnitClick
     end
     object mNextUnit: TMenuItem
       Tag = 101
       ShortCut = 45
-      OnClick = MenuClick
+      OnClick = mNextUnitClick
     end
   end
   object StatPopup: TPopupMenu
@@ -687,37 +687,37 @@ object MainScreen: TMainScreen
     object mUnitStat: TMenuItem
       Tag = 9
       ShortCut = 113
-      OnClick = MenuClick
+      OnClick = mUnitStatClick
     end
     object mCityStat: TMenuItem
       Tag = 37
       ShortCut = 114
-      OnClick = MenuClick
+      OnClick = mCityStatClick
     end
     object mScienceStat: TMenuItem
       Tag = 38
       ShortCut = 115
-      OnClick = MenuClick
+      OnClick = mScienceStatClick
     end
     object mEUnitStat: TMenuItem
       Tag = 50
       ShortCut = 116
-      OnClick = MenuClick
+      OnClick = mEUnitStatClick
     end
     object mDiagram: TMenuItem
       Tag = 21
       ShortCut = 117
-      OnClick = MenuClick
+      OnClick = mDiagramClick
     end
     object mWonders: TMenuItem
       Tag = 6
       ShortCut = 118
-      OnClick = MenuClick
+      OnClick = mWondersClick
     end
     object mShips: TMenuItem
       Tag = 41
       ShortCut = 119
-      OnClick = MenuClick
+      OnClick = mShipsClick
     end
     object N4: TMenuItem
       Caption = '-'
@@ -725,16 +725,16 @@ object MainScreen: TMainScreen
     object mNations: TMenuItem
       Tag = 55
       ShortCut = 120
-      OnClick = MenuClick
+      OnClick = mNationsClick
     end
     object mEmpire: TMenuItem
       Tag = 3
       ShortCut = 121
-      OnClick = MenuClick
+      OnClick = mEmpireClick
     end
     object mRevolution: TMenuItem
       Tag = 89
-      OnClick = MenuClick
+      OnClick = mRevolutionClick
     end
   end
   object EditPopup: TPopupMenu
@@ -750,67 +750,67 @@ object MainScreen: TMainScreen
     object mtrans: TMenuItem
       Tag = 273
       ShortCut = 79
-      OnClick = MenuClick
+      OnClick = mtransClick
     end
     object mAfforest: TMenuItem
       Tag = 301
       ShortCut = 77
-      OnClick = MenuClick
+      OnClick = mAfforestClick
     end
     object mClear: TMenuItem
       Tag = 298
       ShortCut = 73
-      OnClick = MenuClick
+      OnClick = mClearClick
     end
     object mfort: TMenuItem
       Tag = 276
       ShortCut = 70
-      OnClick = MenuClick
+      OnClick = mfortClick
     end
     object mAirBase: TMenuItem
       Tag = 272
       ShortCut = 65
-      OnClick = MenuClick
+      OnClick = mAirBaseClick
     end
     object mCanal: TMenuItem
       Tag = 279
       ShortCut = 78
-      OnClick = MenuClick
+      OnClick = mCanalClick
     end
     object mmine: TMenuItem
       Tag = 302
       ShortCut = 77
-      OnClick = MenuClick
+      OnClick = mmineClick
     end
     object mFarm: TMenuItem
       Tag = 300
       ShortCut = 73
-      OnClick = MenuClick
+      OnClick = mFarmClick
     end
     object mirrigation: TMenuItem
       Tag = 299
       ShortCut = 73
-      OnClick = MenuClick
+      OnClick = mirrigationClick
     end
-    object mrr: TMenuItem
+    object mRailRoad: TMenuItem
       Tag = 297
       ShortCut = 82
-      OnClick = MenuClick
+      OnClick = mRailRoadClick
     end
     object mroad: TMenuItem
       Tag = 296
       ShortCut = 82
-      OnClick = MenuClick
+      OnClick = mroadClick
     end
     object mpollution: TMenuItem
       Tag = 274
       ShortCut = 80
-      OnClick = MenuClick
+      OnClick = mpollutionClick
     end
     object mEnhance: TMenuItem
       Tag = 295
       ShortCut = 69
-      OnClick = MenuClick
+      OnClick = mEnhanceClick
     end
   end
 end

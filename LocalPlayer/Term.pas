@@ -67,7 +67,7 @@ type
     mUnitStat: TMenuItem;
     mWonders: TMenuItem;
     mScienceStat: TMenuItem;
-    mRR: TMenuItem;
+    mRailRoad: TMenuItem;
     mClear: TMenuItem;
     mFarm: TMenuItem;
     mAfforest: TMenuItem;
@@ -180,6 +180,55 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure FormMouseWheel(Sender: TObject; Shift: TShiftState;
       WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
+    procedure mAfforestClick(Sender: TObject);
+    procedure mAirBaseClick(Sender: TObject);
+    procedure mCanalClick(Sender: TObject);
+    procedure mCancelClick(Sender: TObject);
+    procedure mCentreClick(Sender: TObject);
+    procedure mcityClick(Sender: TObject);
+    procedure mCityStatClick(Sender: TObject);
+    procedure mCityTypesClick(Sender: TObject);
+    procedure mClearClick(Sender: TObject);
+    procedure mDiagramClick(Sender: TObject);
+    procedure mEmpireClick(Sender: TObject);
+    procedure mEnhanceClick(Sender: TObject);
+    procedure mEnhanceDefClick(Sender: TObject);
+    procedure mEUnitStatClick(Sender: TObject);
+    procedure mFarmClick(Sender: TObject);
+    procedure mfortClick(Sender: TObject);
+    procedure mGoOnClick(Sender: TObject);
+    procedure mHelpClick(Sender: TObject);
+    procedure mhomeClick(Sender: TObject);
+    procedure mirrigationClick(Sender: TObject);
+    procedure mirrigationDrawItem(Sender: TObject; ACanvas: TCanvas;
+      ARect: TRect; AState: TOwnerDrawState);
+    procedure mJumpClick(Sender: TObject);
+    procedure mLoadClick(Sender: TObject);
+    procedure mmineClick(Sender: TObject);
+    procedure mNationsClick(Sender: TObject);
+    procedure mNextUnitClick(Sender: TObject);
+    procedure mnoordersClick(Sender: TObject);
+    procedure mPillageClick(Sender: TObject);
+    procedure mpollutionClick(Sender: TObject);
+    procedure mPrevUnitClick(Sender: TObject);
+    procedure mRandomMapClick(Sender: TObject);
+    procedure mRecoverClick(Sender: TObject);
+    procedure mResignClick(Sender: TObject);
+    procedure mRevolutionClick(Sender: TObject);
+    procedure mroadClick(Sender: TObject);
+    procedure mRailRoadClick(Sender: TObject);
+    procedure mRunClick(Sender: TObject);
+    procedure mScienceStatClick(Sender: TObject);
+    procedure mSelectTransportClick(Sender: TObject);
+    procedure mShipsClick(Sender: TObject);
+    procedure mstayClick(Sender: TObject);
+    procedure mTechTreeClick(Sender: TObject);
+    procedure mtransClick(Sender: TObject);
+    procedure mUnitStatClick(Sender: TObject);
+    procedure mUnloadClick(Sender: TObject);
+    procedure mwaitClick(Sender: TObject);
+    procedure mWebsiteClick(Sender: TObject);
+    procedure mWondersClick(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure MapBoxMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; x, y: integer);
@@ -187,7 +236,7 @@ type
     procedure PanelBoxMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; x, y: integer);
     procedure FormKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
-    procedure MenuClick(Sender: TObject);
+    procedure mDisbandOrUtilizeClick(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure PanelBtnClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
@@ -275,6 +324,7 @@ type
     NoMap: TIsoMap;
     NoMapPanel: TIsoMap;
     function ChooseUnusedTribe: integer;
+    function DoJob(j0: Integer): Integer;
     procedure GetTribeList;
     procedure InitModule;
     procedure DoneModule;
@@ -3580,6 +3630,563 @@ begin
   end;
 end;
 
+procedure TMainScreen.mAfforestClick(Sender: TObject);
+begin
+  if UnFocus >= 0 then
+    with TUn(MyUn[UnFocus]) do
+      DoJob(jAfforest);
+end;
+
+procedure TMainScreen.mAirBaseClick(Sender: TObject);
+begin
+  if UnFocus >= 0 then
+    with TUn(MyUn[UnFocus]) do
+      DoJob(jBase);
+end;
+
+procedure TMainScreen.mCanalClick(Sender: TObject);
+begin
+  if UnFocus >= 0 then
+    with TUn(MyUn[UnFocus]) do
+      DoJob(jCanal);
+end;
+
+procedure TMainScreen.mCancelClick(Sender: TObject);
+begin
+  if UnFocus >= 0 then
+  with MyUn[UnFocus] do begin
+    DestinationMarkON := False;
+    PaintDestination;
+    Status := Status and ($FFFF - usRecover - usGoto - usEnhance);
+    if Job > jNone then
+      Server(sStartJob + jNone shl 4, me, UnFocus, nil^);
+  end;
+end;
+
+procedure TMainScreen.mCentreClick(Sender: TObject);
+begin
+  if UnFocus >= 0 then
+  with TUn(MyUn[UnFocus]) do begin
+    Centre(Loc);
+    PaintAllMaps;
+  end;
+end;
+
+procedure TMainScreen.mcityClick(Sender: TObject);
+var
+  Loc0: Integer;
+  cix: Integer;
+  ServerResult: Integer;
+begin
+  if UnFocus >= 0 then
+  with TUn(MyUn[UnFocus]) do begin
+    Loc0 := Loc;
+    if MyMap[Loc] and fCity = 0 then
+    begin // build city
+      if DoJob(jCity) = eCity then
+      begin
+        MapValid := false;
+        PaintAll;
+        ZoomToCity(Loc0, true, chFounded);
+      end;
+    end else begin
+      CityOptimizer_BeforeRemoveUnit(UnFocus);
+      ServerResult := Server(sAddToCity, me, UnFocus, nil^);
+      if ServerResult >= rExecuted then
+      begin
+        cix := MyRO.nCity - 1;
+        while (cix >= 0) and (MyCity[cix].Loc <> Loc0) do
+          dec(cix);
+        assert(cix >= 0);
+        CityOptimizer_CityChange(cix);
+        CityOptimizer_AfterRemoveUnit; // does nothing here
+        SetTroopLoc(Loc0);
+        UpdateViews(true);
+        DestinationMarkON := false;
+        PaintDestination;
+        UnFocus := -1;
+        PaintLoc(Loc0);
+        NextUnit(UnStartLoc, true);
+      end
+      else if ServerResult = eMaxSize then
+        SimpleMessage(Phrases.Lookup('ADDTOMAXSIZE'));
+    end;
+  end;
+end;
+
+procedure TMainScreen.mCityStatClick(Sender: TObject);
+begin
+  ListDlg.ShowNewContent(wmPersistent, kCities);
+end;
+
+procedure TMainScreen.mCityTypesClick(Sender: TObject);
+begin
+  CityTypeDlg.ShowNewContent(wmModal);
+  // must be modal because types are not saved before closing
+end;
+
+procedure TMainScreen.mClearClick(Sender: TObject);
+begin
+  if UnFocus >= 0 then
+    with TUn(MyUn[UnFocus]) do
+      DoJob(jClear);
+end;
+
+procedure TMainScreen.mDiagramClick(Sender: TObject);
+begin
+  DiaDlg.ShowNewContent_Charts(wmPersistent);
+end;
+
+procedure TMainScreen.mEmpireClick(Sender: TObject);
+begin
+  RatesDlg.ShowNewContent(wmPersistent);
+end;
+
+procedure TMainScreen.mEnhanceClick(Sender: TObject);
+begin
+  if UnFocus >= 0 then
+    with TUn(MyUn[UnFocus]) do
+      DoJob(-1);
+end;
+
+procedure TMainScreen.mEnhanceDefClick(Sender: TObject);
+begin
+  if UnFocus >= 0 then
+    EnhanceDlg.ShowNewContent(wmPersistent,
+      MyMap[MyUn[UnFocus].Loc] and fTerrain)
+  else
+    EnhanceDlg.ShowNewContent(wmPersistent);
+end;
+
+procedure TMainScreen.mEUnitStatClick(Sender: TObject);
+begin
+  if MyRO.nEnemyModel > 0 then
+    ListDlg.ShowNewContent(wmPersistent, kAllEModels);
+end;
+
+procedure TMainScreen.mFarmClick(Sender: TObject);
+begin
+  if UnFocus >= 0 then
+    with TUn(MyUn[UnFocus]) do
+      DoJob(jFarm);
+end;
+
+procedure TMainScreen.mfortClick(Sender: TObject);
+begin
+  if UnFocus >= 0 then
+    with TUn(MyUn[UnFocus]) do
+      DoJob(jFort);
+end;
+
+procedure TMainScreen.mGoOnClick(Sender: TObject);
+var
+  Destination: Integer;
+begin
+  if UnFocus >= 0 then
+  with TUn(MyUn[UnFocus]) do begin
+    if Status shr 16 = $7FFF then
+      Destination := maNextCity
+    else
+      Destination := Status shr 16;
+    Status := Status and not(usStay or usRecover) or usWaiting;
+    MoveToLoc(Destination, true);
+  end;
+end;
+
+procedure TMainScreen.mHelpClick(Sender: TObject);
+begin
+  if ClientMode = cEditMap then
+    HelpDlg.ShowNewContent(wmPersistent, hkText, HelpDlg.TextIndex('MAPEDIT'))
+  else
+    HelpDlg.ShowNewContent(wmPersistent, hkMisc, miscMain);
+end;
+
+procedure TMainScreen.mhomeClick(Sender: TObject);
+var
+  cixOldHome: Integer;
+begin
+  if UnFocus >= 0 then
+  with TUn(MyUn[UnFocus]) do begin
+    if MyMap[Loc] and fCity <> 0 then
+    begin
+      cixOldHome := Home;
+      if Server(sSetUnitHome, me, UnFocus, nil^) >= rExecuted then
+      begin
+        CityOptimizer_CityChange(cixOldHome);
+        CityOptimizer_CityChange(Home);
+        UpdateViews(true);
+      end
+      else
+        Play('INVALID');
+    end
+    else
+    begin
+      Status := Status and not(usStay or usRecover or usEnhance);
+      MoveToLoc(maNextCity, true);
+    end;
+  end;
+end;
+
+procedure TMainScreen.mirrigationClick(Sender: TObject);
+begin
+  if UnFocus >= 0 then
+    with TUn(MyUn[UnFocus]) do
+        DoJob(jIrr);
+end;
+
+procedure TMainScreen.mirrigationDrawItem(Sender: TObject; ACanvas: TCanvas;
+  ARect: TRect; AState: TOwnerDrawState);
+begin
+
+end;
+
+procedure TMainScreen.mJumpClick(Sender: TObject);
+begin
+  if supervising then
+    Jump[0] := 20
+  else
+    Jump[me] := 20;
+  EndTurn(true);
+end;
+
+procedure TMainScreen.mLoadClick(Sender: TObject);
+var
+  I: Integer;
+begin
+  if UnFocus >= 0 then
+  with MyUn[UnFocus] do begin
+    i := Server(sLoadUnit, me, UnFocus, nil^);
+    if i >= rExecuted then
+    begin
+      if MyModel[mix].Domain = dAir then
+        Play('MOVE_PLANELANDING')
+      else
+        Play('MOVE_LOAD');
+      DestinationMarkON := false;
+      PaintDestination;
+      Status := Status and ($FFFF - usWaiting - usStay - usRecover - usGoto - usEnhance);
+      NextUnit(UnStartLoc, true);
+    end
+    else if i = eNoTime_Load then
+      if MyModel[mix].Domain = dAir then
+        SoundMessage(Phrases.Lookup('NOTIMELOADAIR'), 'NOMOVE_TIME')
+      else
+        SoundMessage(Format(Phrases.Lookup('NOTIMELOADGROUND'),
+          [MovementToString(MyModel[mix].speed)]), 'NOMOVE_TIME');
+  end;
+end;
+
+procedure TMainScreen.mmineClick(Sender: TObject);
+begin
+  if UnFocus >= 0 then
+    with TUn(MyUn[UnFocus]) do
+      DoJob(jMine);
+end;
+
+procedure TMainScreen.mNationsClick(Sender: TObject);
+begin
+  NatStatDlg.ShowNewContent(wmPersistent);
+end;
+
+procedure TMainScreen.mNextUnitClick(Sender: TObject);
+begin
+  if UnFocus >= 0 then
+  with MyUn[UnFocus] do begin
+    Status := Status and not usWaiting;
+    FocusNextUnit(1);
+  end;
+end;
+
+procedure TMainScreen.mnoordersClick(Sender: TObject);
+begin
+  if UnFocus >= 0 then
+  with MyUn[UnFocus] do begin
+    Status := Status and not usWaiting;
+    NextUnit(UnStartLoc, true);
+  end;
+end;
+
+procedure TMainScreen.mPillageClick(Sender: TObject);
+begin
+  DoJob(jPillage);
+end;
+
+procedure TMainScreen.mpollutionClick(Sender: TObject);
+begin
+  if UnFocus >= 0 then
+    with TUn(MyUn[UnFocus]) do
+      DoJob(jPoll);
+end;
+
+procedure TMainScreen.mPrevUnitClick(Sender: TObject);
+begin
+  if UnFocus >= 0 then
+  with MyUn[UnFocus] do begin
+    Status := Status and not usWaiting;
+    FocusNextUnit(-1);
+  end;
+end;
+
+procedure TMainScreen.mRandomMapClick(Sender: TObject);
+begin
+  if not Edited or (SimpleQuery(mkYesNo, Phrases.Lookup('MAP_RANDOM'), '')
+      = mrOK) then begin
+    Server(sRandomMap, me, 0, nil^);
+    Edited := true;
+    MapValid := false;
+    PaintAllMaps;
+  end;
+end;
+
+procedure TMainScreen.mRecoverClick(Sender: TObject);
+begin
+  if UnFocus >= 0 then
+  with MyUn[UnFocus] do begin
+    DestinationMarkON := false;
+    PaintDestination;
+    Status := Status and ($FFFF - usStay - usGoto - usEnhance) or usRecover;
+    if Job > jNone then
+      Server(sStartJob + jNone shl 4, me, UnFocus, nil^);
+    NextUnit(UnStartLoc, true);
+  end;
+end;
+
+procedure TMainScreen.mResignClick(Sender: TObject);
+var
+  QueryText: string;
+begin
+  if ClientMode = cEditMap then begin
+    if Edited then begin
+      QueryText := Phrases.Lookup('MAP_CLOSE');
+      case SimpleQuery(mkYesNoCancel, QueryText, '') of
+        mrIgnore: Server(sAbandonMap, me, 0, nil^);
+        mrOK: Server(sSaveMap, me, 0, nil^);
+      end;
+    end else
+      Server(sAbandonMap, me, 0, nil^);
+  end else begin
+    if Server(sGetGameChanged, 0, 0, nil^) = eOK then begin
+      QueryText := Phrases.Lookup('RESIGN');
+      case SimpleQuery(mkYesNoCancel, QueryText, '') of
+        mrIgnore: Server(sResign, 0, 0, nil^);
+        mrOK: Server(sBreak, 0, 0, nil^);
+      end;
+    end else
+      Server(sResign, 0, 0, nil^);
+  end;
+end;
+
+procedure TMainScreen.mRevolutionClick(Sender: TObject);
+var
+  AltGovs: Boolean;
+  RevolutionChanged: Boolean;
+  I: Integer;
+begin
+  AltGovs := false;
+    for i := 2 to nGov - 1 do
+      if (GovPreq[i] <> preNA) and
+        ((GovPreq[i] = preNone) or (MyRO.Tech[GovPreq[i]] >= tsApplicable)) then
+        AltGovs := true;
+
+    if not AltGovs then
+      SoundMessage(Phrases.Lookup('NOALTGOVS'), 'MSG_DEFAULT')
+    else
+    begin
+      RevolutionChanged := false;
+      if MyRO.Happened and phChangeGov <> 0 then
+      begin
+        ModalSelectDlg.ShowNewContent(wmModal, kGov);
+        if ModalSelectDlg.result >= 0 then
+        begin
+          Play('NEWGOV');
+          Server(sSetGovernment, me, ModalSelectDlg.result, nil^);
+          CityOptimizer_BeginOfTurn;
+          RevolutionChanged := true;
+        end;
+      end
+      else
+      with MessgExDlg do
+      begin // revolution!
+        MessgExDlg.MessgText := Tribe[me].TPhrase('REVOLUTION');
+        MessgExDlg.Kind := mkYesNo;
+        MessgExDlg.IconKind := mikPureIcon;
+        MessgExDlg.IconIndex := 72; // anarchy palace
+        MessgExDlg.ShowModal;
+        if ModalResult = mrOK then
+        begin
+          Play('REVOLUTION');
+          Server(sRevolution, me, 0, nil^);
+          RevolutionChanged := true;
+          if NatStatDlg.Visible then
+            NatStatDlg.Close;
+          if CityDlg.Visible then
+            CityDlg.Close;
+        end
+      end;
+      if RevolutionChanged then
+        UpdateViews(true);
+    end;
+end;
+
+procedure TMainScreen.mroadClick(Sender: TObject);
+begin
+  if UnFocus >= 0 then
+    with TUn(MyUn[UnFocus]) do
+      DoJob(jRoad);
+end;
+
+procedure TMainScreen.mRailRoadClick(Sender: TObject);
+begin
+  if UnFocus >= 0 then
+    with TUn(MyUn[UnFocus]) do
+      DoJob(jRR);
+end;
+
+procedure TMainScreen.mRunClick(Sender: TObject);
+begin
+  if supervising then
+    Jump[0] := 999999
+  else
+    Jump[me] := 999999;
+  EndTurn(true);
+end;
+
+procedure TMainScreen.mScienceStatClick(Sender: TObject);
+begin
+  ListDlg.ShowNewContent(wmPersistent, kScience);
+end;
+
+procedure TMainScreen.mSelectTransportClick(Sender: TObject);
+begin
+  if UnFocus >= 0 then
+    with TUn(MyUn[UnFocus]) do
+      Server(sSelectTransport, me, UnFocus, nil^);
+end;
+
+procedure TMainScreen.mShipsClick(Sender: TObject);
+begin
+  DiaDlg.ShowNewContent_Ship(wmPersistent);
+end;
+
+procedure TMainScreen.mstayClick(Sender: TObject);
+begin
+  if UnFocus >= 0 then
+  with TUn(MyUn[UnFocus]) do begin
+    DestinationMarkON := false;
+    PaintDestination;
+    Status := Status and ($FFFF - usRecover - usGoto - usEnhance) or usStay;
+    if Job > jNone then
+      Server(sStartJob + jNone shl 4, me, UnFocus, nil^);
+    NextUnit(UnStartLoc, true);
+  end;
+end;
+
+procedure TMainScreen.mTechTreeClick(Sender: TObject);
+begin
+  TechTreeDlg.ShowModal;
+end;
+
+procedure TMainScreen.mtransClick(Sender: TObject);
+begin
+  if UnFocus >= 0 then
+    with TUn(MyUn[UnFocus]) do
+      DoJob(jTrans);
+end;
+
+procedure TMainScreen.mUnitStatClick(Sender: TObject);
+var
+  I: Integer;
+begin
+  if G.Difficulty[me] > 0 then
+    ListDlg.ShowNewContent_MilReport(wmPersistent, me)
+  else
+  begin
+    i := 1;
+    while (i < nPl) and (1 shl i and MyRO.Alive = 0) do
+      inc(i);
+    if i < nPl then
+      ListDlg.ShowNewContent_MilReport(wmPersistent, i);
+  end;
+end;
+
+procedure TMainScreen.mUnloadClick(Sender: TObject);
+var
+  I: Integer;
+  OldMaster: Integer;
+  NewFocus: Integer;
+  uix: Integer;
+begin
+  if UnFocus >= 0 then
+  with MyUn[UnFocus] do begin
+    if Master >= 0 then begin
+      OldMaster := Master;
+      i := Server(sUnloadUnit, me, UnFocus, nil^);
+      if i >= rExecuted then
+      begin
+        if MyModel[mix].Domain = dAir then
+          Play('MOVE_PLANESTART')
+        else if (MyModel[MyUn[OldMaster].mix].Domain = dAir) and
+          (MyMap[Loc] and fCity = 0) and (MyMap[Loc] and fTerImp <> tiBase)
+        then
+          Play('MOVE_PARACHUTE')
+        else
+          Play('MOVE_UNLOAD');
+        Status := Status and not usWaiting;
+        if MyModel[mix].Domain <> dAir then
+          NextUnit(Loc, true)
+        else
+          PanelPaint;
+      end
+      else if i = eNoTime_Load then
+        if MyModel[mix].Domain = dAir then
+          SoundMessage(Phrases.Lookup('NOTIMELOADAIR'), 'NOMOVE_TIME')
+        else
+          SoundMessage(Format(Phrases.Lookup('NOTIMELOADGROUND'),
+            [MovementToString(MyModel[mix].speed)]), 'NOMOVE_TIME');
+    end else begin
+      NewFocus := -1;
+      uix := UnFocus;
+      for i := 1 to MyRO.nUn - 1 do
+      begin
+        uix := (uix + MyRO.nUn - 1) mod MyRO.nUn;
+        if (MyUn[uix].Master = UnFocus) and
+          (MyUn[uix].Movement = integer(MyModel[MyUn[uix].mix].speed)) then
+        begin
+          MyUn[uix].Status := MyUn[uix].Status or usWaiting;
+          NewFocus := uix;
+        end;
+      end;
+      if NewFocus >= 0 then
+      begin
+        SetUnFocus(NewFocus);
+        SetTroopLoc(Loc);
+        PanelPaint;
+      end;
+    end;
+  end;
+end;
+
+procedure TMainScreen.mwaitClick(Sender: TObject);
+begin
+  if UnFocus >= 0 then
+  with MyUn[UnFocus] do begin
+    DestinationMarkON := false;
+    PaintDestination;
+    Status := Status and ($FFFF - usStay - usRecover - usGoto - usEnhance) or usWaiting;
+  end;
+  NextUnit(-1, false);
+end;
+
+procedure TMainScreen.mWebsiteClick(Sender: TObject);
+begin
+  OpenURL(CevoHomepage);
+end;
+
+procedure TMainScreen.mWondersClick(Sender: TObject);
+begin
+  WondersDlg.ShowNewContent(wmPersistent);
+end;
+
 procedure TMainScreen.FormResize(Sender: TObject);
 var
   MiniFrame, MaxMapWidth: integer;
@@ -3669,7 +4276,7 @@ procedure TMainScreen.FormCloseQuery(Sender: TObject; var CanClose: boolean);
 begin
   CanClose := Closable;
   if not Closable and idle and (me = 0) and (ClientMode < scContact) then
-    MenuClick(mResign);
+    mResign.Click;
 end;
 
 procedure TMainScreen.OnScroll(var Msg: TMessage);
@@ -5397,7 +6004,7 @@ begin
     if MouseLoc <> MyUn[uix].Loc then
       MoveToLoc(MouseLoc, true); { goto }
     if (UnFocus = uix) and (MyUn[uix].Loc = MouseLoc) then
-      MenuClick(mEnhance);
+      mEnhance.Click;
   end
   else if (Button = mbLeft) and (ssShift in Shift) and
     (MyMap[MouseLoc] and fTerrain <> fUNKNOWN) then
@@ -6464,7 +7071,7 @@ begin
   mCanal.ShortCut := BCanal.ShortCut;
   MTrans.ShortCut := BTrans.ShortCut;
   mPollution.ShortCut := BPollution.ShortCut;
-  mRR.ShortCut := BRailRoad.ShortCut;
+  mRailRoad.ShortCut := BRailRoad.ShortCut;
   mRoad.ShortCut := BRailRoad.ShortCut;
   mUnload.ShortCut := BUnload.ShortCut;
   mRecover.ShortCut := BRecover.ShortCut;
@@ -6506,7 +7113,7 @@ procedure TMainScreen.FormKeyDown(Sender: TObject; var Key: word;
   begin
     InitPopup(Popup);
     if Item.Visible and Item.Enabled then
-      MenuClick(Item);
+      Item.Click;
   end;
 
   procedure SetViewpointMe(p: Integer);
@@ -6541,9 +7148,9 @@ begin
   if not Idle then Exit;
 
   if ClientMode = cEditMap then begin
-    if BResign.Test(ShortCut) then MenuClick(mResign)
-    else if BRandomMap.Test(ShortCut) then MenuClick(mRandomMap)
-    else if BHelp.Test(ShortCut) then MenuClick(mHelp);
+    if BResign.Test(ShortCut) then mResign.Click
+    else if BRandomMap.Test(ShortCut) then mRandomMap.Click
+    else if BHelp.Test(ShortCut) then mHelp.Click;
     (*if Shift = [ssCtrl] then
       case char(Key) of
          'A':
@@ -6569,7 +7176,7 @@ begin
     FullScreen := not FullScreen;
     SetFullScreen(FullScreen);
   end
-  else if BHelp.Test(ShortCut) then MenuClick(mHelp)
+  else if BHelp.Test(ShortCut) then mHelp.Click
   else if BUnitStat.Test(ShortCut) then MenuClick_Check(StatPopup, mUnitStat)
   else if BCityStat.Test(ShortCut) then MenuClick_Check(StatPopup, mCityStat)
   else if BScienceStat.Test(ShortCut) then MenuClick_Check(StatPopup, mScienceStat)
@@ -6591,7 +7198,7 @@ begin
   else if BSetDebugMap8.Test(ShortCut) then SetDebugMap(8)
   else if BSetDebugMap9.Test(ShortCut) then SetDebugMap(9)
 
-  else if BJump.Test(ShortCut) then MenuClick(mJump)
+  else if BJump.Test(ShortCut) then mJump.Click
   else if BDebugMap.Test(ShortCut) then mShowClick(mDebugMap)
   else if BLocCodes.Test(ShortCut) then mShowClick(mLocCodes)
   else if BLogDlg.Test(ShortCut) then begin
@@ -6600,7 +7207,7 @@ begin
   end
   else if BNames.Test(ShortCut) then mNamesClick(mNames)
   else if BResign.Test(ShortCut) then MenuClick_Check(GamePopup, mResign)
-  else if BRun.Test(ShortCut) then MenuClick(mRun)
+  else if BRun.Test(ShortCut) then mRun.Click
   else if BTestMapRepaint.Test(ShortCut) then begin // test map repaint time
     Time0 := NowPrecise;
     MapValid := False;
@@ -6625,17 +7232,17 @@ begin
   else if BMapBtn4.Test(ShortCut) then MapBtnClick(MapBtn4)
   else if BMapBtn5.Test(ShortCut) then MapBtnClick(MapBtn5)
   else if BMapBtn6.Test(ShortCut) then MapBtnClick(MapBtn6)
-  else if BTechTree.Test(ShortCut) then MenuClick(mTechTree)
-  else if BWait.Test(ShortCut) then MenuClick(mWait);
+  else if BTechTree.Test(ShortCut) then mTechTree.Click
+  else if BWait.Test(ShortCut) then mWait.Click;
 
   if UnFocus >= 0 then begin
-    if BDisbandUnit.Test(ShortCut) then MenuClick(mDisband)
+    if BDisbandUnit.Test(ShortCut) then mDisband.Click
     else if BFortify.Test(ShortCut) then MenuClick_Check(TerrainPopup, mFort)
-    else if BCenterUnit.Test(ShortCut) then MenuClick(mCentre)
-    else if BStay.Test(ShortCut) then MenuClick(mStay)
-    else if BNoOrders.Test(ShortCut) then MenuClick(mNoOrders)
-    else if BPrevUnit.Test(ShortCut) then MenuClick(mPrevUnit)
-    else if BNextUnit.Test(ShortCut) then MenuClick(mNextUnit)
+    else if BCenterUnit.Test(ShortCut) then mCentre.Click
+    else if BStay.Test(ShortCut) then mStay.Click
+    else if BNoOrders.Test(ShortCut) then mNoOrders.Click
+    else if BPrevUnit.Test(ShortCut) then mPrevUnit.Click
+    else if BNextUnit.Test(ShortCut) then mNextUnit.Click
     else if BCancel.Test(ShortCut) then MenuClick_Check(UnitPopup, mCancel)
     else if BPillage.Test(ShortCut) then MenuClick_Check(UnitPopup, mPillage)
     else if BSelectTransport.Test(ShortCut) then MenuClick_Check(UnitPopup, mSelectTransport)
@@ -6643,28 +7250,28 @@ begin
     else if BBuildCity.Test(ShortCut) then MenuClick_Check(UnitPopup, mCity)
     else if BEnhance.Test(ShortCut) then begin
       InitPopup(TerrainPopup);
-      if mEnhance.Visible and mEnhance.Enabled then MenuClick(mEnhance)
-        else MenuClick(mEnhanceDef)
+      if mEnhance.Visible and mEnhance.Enabled then mEnhance.Click
+        else mEnhanceDef.Click
     end
     else if BGoOn.Test(ShortCut) then MenuClick_Check(UnitPopup, mGoOn)
     else if BHome.Test(ShortCut) then MenuClick_Check(UnitPopup, mHome)
     else if BFarmClearIrrigation.Test(ShortCut) then begin
       if JobTest(UnFocus, jFarm, [eTreaty]) then
-        MenuClick(mFarm)
+        mFarm.Click
       else if JobTest(UnFocus, jClear, [eTreaty]) then
-        MenuClick(mClear)
+        mClear.Click
       else MenuClick_Check(TerrainPopup, mIrrigation);
     end
     else if BLoad.Test(ShortCut) then MenuClick_Check(UnitPopup, mLoad)
     else if BAfforestMine.Test(ShortCut) then begin
-      if JobTest(UnFocus, jAfforest, [eTreaty]) then MenuClick(mAfforest)
+      if JobTest(UnFocus, jAfforest, [eTreaty]) then mAfforest.Click
         else MenuClick_Check(TerrainPopup, mMine);
     end
     else if BCanal.Test(ShortCut) then MenuClick_Check(TerrainPopup, mCanal)
     else if BTrans.Test(ShortCut) then MenuClick_Check(TerrainPopup, MTrans)
     else if BPollution.Test(ShortCut) then MenuClick_Check(TerrainPopup, mPollution)
     else if BRailRoad.Test(ShortCut) then begin
-      if JobTest(UnFocus, jRR, [eTreaty]) then MenuClick(mRR)
+      if JobTest(UnFocus, jRR, [eTreaty]) then mRailRoad.Click
         else MenuClick_Check(TerrainPopup, mRoad);
     end
     else if BUnload.Test(ShortCut) then MenuClick_Check(UnitPopup, mUnload)
@@ -6681,480 +7288,94 @@ begin
   end;
 end;
 
-procedure TMainScreen.MenuClick(Sender: TObject);
-
-  function DoJob(j0: integer): integer;
-  var
-    Loc0, Movement0: integer;
+function TMainScreen.DoJob(j0: Integer): Integer;
+var
+  Loc0, Movement0: integer;
+begin
+  with MyUn[UnFocus] do
   begin
-    with MyUn[UnFocus] do
+    DestinationMarkON := false;
+    PaintDestination;
+    Loc0 := Loc;
+    Movement0 := Movement;
+    if j0 < 0 then
+      result := ProcessEnhancement(UnFocus, MyData.EnhancementJobs)
+      // terrain enhancement
+    else
+      result := Server(sStartJob + j0 shl 4, me, UnFocus, nil^);
+    if result >= rExecuted then
     begin
-      DestinationMarkON := false;
-      PaintDestination;
-      Loc0 := Loc;
-      Movement0 := Movement;
-      if j0 < 0 then
-        result := ProcessEnhancement(UnFocus, MyData.EnhancementJobs)
-        // terrain enhancement
-      else
-        result := Server(sStartJob + j0 shl 4, me, UnFocus, nil^);
-      if result >= rExecuted then
+      if result = eDied then
+        UnFocus := -1;
+      PaintLoc(Loc0);
+      if UnFocus >= 0 then
       begin
-        if result = eDied then
-          UnFocus := -1;
-        PaintLoc(Loc0);
-        if UnFocus >= 0 then
+        if (j0 < 0) and (result <> eJobDone) then
+          // multi-turn terrain enhancement
+          Status := Status and ($FFFF - usStay - usRecover - usGoto) or
+            usEnhance
+        else
+          Status := Status and
+            ($FFFF - usStay - usRecover - usGoto - usEnhance);
+        if (Job <> jNone) or (Movement0 < 100) then
         begin
-          if (j0 < 0) and (result <> eJobDone) then
-            // multi-turn terrain enhancement
-            Status := Status and ($FFFF - usStay - usRecover - usGoto) or
-              usEnhance
-          else
-            Status := Status and
-              ($FFFF - usStay - usRecover - usGoto - usEnhance);
-          if (Job <> jNone) or (Movement0 < 100) then
-          begin
-            Status := Status and not usWaiting;
-            NextUnit(UnStartLoc, true);
-          end
-          else
-            PanelPaint;
+          Status := Status and not usWaiting;
+          NextUnit(UnStartLoc, true);
         end
         else
-          NextUnit(UnStartLoc, true);
-      end;
-    end;
-    case result of
-      eNoBridgeBuilding:
-        SoundMessage(Phrases.Lookup('NOBB'), 'INVALID');
-      eNoCityTerrain:
-        SoundMessage(Phrases.Lookup('NOCITY'), 'INVALID');
-      eTreaty:
-        SoundMessage(Tribe[MyRO.Territory[Loc0]].TPhrase('PEACE_NOWORK'),
-          'NOMOVE_TREATY');
-    else
-      if result < rExecuted then
-        Play('INVALID');
+          PanelPaint;
+      end
+      else
+        NextUnit(UnStartLoc, true);
     end;
   end;
+  case result of
+    eNoBridgeBuilding:
+      SoundMessage(Phrases.Lookup('NOBB'), 'INVALID');
+    eNoCityTerrain:
+      SoundMessage(Phrases.Lookup('NOCITY'), 'INVALID');
+    eTreaty:
+      SoundMessage(Tribe[MyRO.Territory[Loc0]].TPhrase('PEACE_NOWORK'),
+        'NOMOVE_TREATY');
+  else
+    if result < rExecuted then
+      Play('INVALID');
+  end;
+end;
 
+procedure TMainScreen.mDisbandOrUtilizeClick(Sender: TObject);
 var
-  i, uix, NewFocus, Loc0, OldMaster, Destination, cix, cixOldHome,
-    ServerResult: integer;
-  AltGovs, RevolutionChanged: boolean;
-  QueryText: string;
-
+  Loc0: Integer;
 begin
-  if Sender = mResign then
-    if ClientMode = cEditMap then
+  if UnFocus >= 0 then
+  with TUn(MyUn[UnFocus]) do begin
+    if (Sender = mUtilize) and
+      not(Server(sRemoveUnit - sExecute, me, UnFocus, nil^) = eUtilized) then
     begin
-      if Edited then
-      begin
-        QueryText := Phrases.Lookup('MAP_CLOSE');
-        case SimpleQuery(mkYesNoCancel, QueryText, '') of
-          mrIgnore:
-            Server(sAbandonMap, me, 0, nil^);
-          mrOK:
-            Server(sSaveMap, me, 0, nil^);
-        end
-      end
-      else
-        Server(sAbandonMap, me, 0, nil^);
-    end
-    else
-    begin
-      if Server(sGetGameChanged, 0, 0, nil^) = eOK then
-      begin
-        QueryText := Phrases.Lookup('RESIGN');
-        case SimpleQuery(mkYesNoCancel, QueryText, '') of
-          mrIgnore:
-            Server(sResign, 0, 0, nil^);
-          mrOK:
-            Server(sBreak, 0, 0, nil^);
-        end
-      end
-      else
-        Server(sResign, 0, 0, nil^);
-    end
-  else if Sender = mEmpire then
-    RatesDlg.ShowNewContent(wmPersistent)
-  else if Sender = mRevolution then
-  begin
-    AltGovs := false;
-    for i := 2 to nGov - 1 do
-      if (GovPreq[i] <> preNA) and
-        ((GovPreq[i] = preNone) or (MyRO.Tech[GovPreq[i]] >= tsApplicable)) then
-        AltGovs := true;
-
-    if not AltGovs then
-      SoundMessage(Phrases.Lookup('NOALTGOVS'), 'MSG_DEFAULT')
-    else
-    begin
-      RevolutionChanged := false;
-      if MyRO.Happened and phChangeGov <> 0 then
-      begin
-        ModalSelectDlg.ShowNewContent(wmModal, kGov);
-        if ModalSelectDlg.result >= 0 then
-        begin
-          Play('NEWGOV');
-          Server(sSetGovernment, me, ModalSelectDlg.result, nil^);
-          CityOptimizer_BeginOfTurn;
-          RevolutionChanged := true;
-        end;
-      end
-      else
-      with MessgExDlg do
-      begin // revolution!
-        MessgExDlg.MessgText := Tribe[me].TPhrase('REVOLUTION');
-        MessgExDlg.Kind := mkYesNo;
-        MessgExDlg.IconKind := mikPureIcon;
-        MessgExDlg.IconIndex := 72; // anarchy palace
-        MessgExDlg.ShowModal;
-        if ModalResult = mrOK then
-        begin
-          Play('REVOLUTION');
-          Server(sRevolution, me, 0, nil^);
-          RevolutionChanged := true;
-          if NatStatDlg.Visible then
-            NatStatDlg.Close;
-          if CityDlg.Visible then
-            CityDlg.Close;
-        end
-      end;
-      if RevolutionChanged then
-        UpdateViews(true);
+      SimpleMessage(Phrases2.Lookup('SHIP_UTILIZE'));
+      // freight for colony ship is the only case in which the command is
+      // available to player though not valid
+      exit;
     end;
-  end
-  else if Sender = mWebsite then
-    OpenURL(CevoHomepage)
-  else if Sender = mRandomMap then
-  begin
-    if not Edited or (SimpleQuery(mkYesNo, Phrases.Lookup('MAP_RANDOM'), '')
-      = mrOK) then
-    begin
-      Server(sRandomMap, me, 0, nil^);
-      Edited := true;
-      MapValid := false;
-      PaintAllMaps;
-    end;
-  end
-  else if Sender = mJump then
-  begin
-    if supervising then
-      Jump[0] := 20
+    if (Sender = mUtilize) and (Health < 100) then
+      if SimpleQuery(mkYesNo, Phrases.Lookup('DAMAGED_UTILIZE'), '') <> mrOK
+      then
+        exit;
+    Loc0 := Loc;
+    CityOptimizer_BeforeRemoveUnit(UnFocus);
+    if Server(sRemoveUnit, me, UnFocus, nil^) = eUtilized then
+      Play('CITY_UTILIZE')
     else
-      Jump[me] := 20;
-    EndTurn(true);
-  end
-  else if Sender = mRun then
-  begin
-    if supervising then
-      Jump[0] := 999999
-    else
-      Jump[me] := 999999;
-    EndTurn(true);
-  end
-  else if Sender = mEnhanceDef then
-  begin
-    if UnFocus >= 0 then
-      EnhanceDlg.ShowNewContent(wmPersistent,
-        MyMap[MyUn[UnFocus].Loc] and fTerrain)
-    else
-      EnhanceDlg.ShowNewContent(wmPersistent);
-  end
-  else if Sender = mCityTypes then
-    CityTypeDlg.ShowNewContent(wmModal)
-    // must be modal because types are not saved before closing
-  else if Sender = mUnitStat then
-  begin
-    if G.Difficulty[me] > 0 then
-      ListDlg.ShowNewContent_MilReport(wmPersistent, me)
-    else
-    begin
-      i := 1;
-      while (i < nPl) and (1 shl i and MyRO.Alive = 0) do
-        inc(i);
-      if i < nPl then
-        ListDlg.ShowNewContent_MilReport(wmPersistent, i);
-    end;
-  end
-  else if Sender = mEUnitStat then
-  begin
-    if MyRO.nEnemyModel > 0 then
-      ListDlg.ShowNewContent(wmPersistent, kAllEModels);
-  end
-  else if Sender = mCityStat then
-    ListDlg.ShowNewContent(wmPersistent, kCities)
-  else if Sender = mScienceStat then
-    ListDlg.ShowNewContent(wmPersistent, kScience)
-  else if Sender = mNations then
-    NatStatDlg.ShowNewContent(wmPersistent)
-  else if Sender = mHelp then
-    if ClientMode = cEditMap then
-      HelpDlg.ShowNewContent(wmPersistent, hkText, HelpDlg.TextIndex('MAPEDIT'))
-    else
-      HelpDlg.ShowNewContent(wmPersistent, hkMisc, miscMain)
-  else if Sender = mTechTree then
-    TechTreeDlg.ShowModal
-  else if Sender = mWonders then
-    WondersDlg.ShowNewContent(wmPersistent)
-  else if Sender = mDiagram then
-    DiaDlg.ShowNewContent_Charts(wmPersistent)
-  else if Sender = mShips then
-    DiaDlg.ShowNewContent_Ship(wmPersistent)
-  else if Sender = mWait then
-  begin
-    if UnFocus >= 0 then
-    begin
-      DestinationMarkON := false;
-      PaintDestination;
-      MyUn[UnFocus].Status := MyUn[UnFocus].Status and
-        ($FFFF - usStay - usRecover - usGoto - usEnhance) or usWaiting;
-    end;
-    NextUnit(-1, false);
-  end
-  else if UnFocus >= 0 then
-    with TUn(MyUn[UnFocus]) do
-      if Sender = mGoOn then
-      begin
-        if Status shr 16 = $7FFF then
-          Destination := maNextCity
-        else
-          Destination := Status shr 16;
-        Status := Status and not(usStay or usRecover) or usWaiting;
-        MoveToLoc(Destination, true);
-      end
-      else if Sender = mHome then
-        if MyMap[Loc] and fCity <> 0 then
-        begin
-          cixOldHome := Home;
-          if Server(sSetUnitHome, me, UnFocus, nil^) >= rExecuted then
-          begin
-            CityOptimizer_CityChange(cixOldHome);
-            CityOptimizer_CityChange(Home);
-            UpdateViews(true);
-          end
-          else
-            Play('INVALID');
-        end
-        else
-        begin
-          Status := Status and not(usStay or usRecover or usEnhance);
-          MoveToLoc(maNextCity, true)
-        end
-      else if Sender = mCentre then
-      begin
-        Centre(Loc);
-        PaintAllMaps;
-      end
-      else if Sender = mCity then
-      begin
-        Loc0 := Loc;
-        if MyMap[Loc] and fCity = 0 then
-        begin // build city
-          if DoJob(jCity) = eCity then
-          begin
-            MapValid := false;
-            PaintAll;
-            ZoomToCity(Loc0, true, chFounded);
-          end;
-        end
-        else
-        begin
-          CityOptimizer_BeforeRemoveUnit(UnFocus);
-          ServerResult := Server(sAddToCity, me, UnFocus, nil^);
-          if ServerResult >= rExecuted then
-          begin
-            cix := MyRO.nCity - 1;
-            while (cix >= 0) and (MyCity[cix].Loc <> Loc0) do
-              dec(cix);
-            assert(cix >= 0);
-            CityOptimizer_CityChange(cix);
-            CityOptimizer_AfterRemoveUnit; // does nothing here
-            SetTroopLoc(Loc0);
-            UpdateViews(true);
-            DestinationMarkON := false;
-            PaintDestination;
-            UnFocus := -1;
-            PaintLoc(Loc0);
-            NextUnit(UnStartLoc, true);
-          end
-          else if ServerResult = eMaxSize then
-            SimpleMessage(Phrases.Lookup('ADDTOMAXSIZE'));
-        end
-      end
-      else if Sender = mRoad then
-        DoJob(jRoad)
-      else if Sender = mRR then
-        DoJob(jRR)
-      else if Sender = mClear then
-        DoJob(jClear)
-      else if Sender = mIrrigation then
-        DoJob(jIrr)
-      else if Sender = mFarm then
-        DoJob(jFarm)
-      else if Sender = mAfforest then
-        DoJob(jAfforest)
-      else if Sender = mMine then
-        DoJob(jMine)
-      else if Sender = mCanal then
-        DoJob(jCanal)
-      else if Sender = MTrans then
-        DoJob(jTrans)
-      else if Sender = mFort then
-        DoJob(jFort)
-      else if Sender = mAirBase then
-        DoJob(jBase)
-      else if Sender = mPollution then
-        DoJob(jPoll)
-      else if Sender = mPillage then
-        DoJob(jPillage)
-      else if Sender = mEnhance then
-        DoJob(-1)
-      else if Sender = mStay then
-      begin
-        DestinationMarkON := false;
-        PaintDestination;
-        Status := Status and ($FFFF - usRecover - usGoto - usEnhance) or usStay;
-        if Job > jNone then
-          Server(sStartJob + jNone shl 4, me, UnFocus, nil^);
-        NextUnit(UnStartLoc, true);
-      end
-      else if Sender = mRecover then
-      begin
-        DestinationMarkON := false;
-        PaintDestination;
-        Status := Status and ($FFFF - usStay - usGoto - usEnhance) or usRecover;
-        if Job > jNone then
-          Server(sStartJob + jNone shl 4, me, UnFocus, nil^);
-        NextUnit(UnStartLoc, true);
-      end
-      else if Sender = mNoOrders then
-      begin
-        Status := Status and not usWaiting;
-        NextUnit(UnStartLoc, true);
-      end
-      else if Sender = mPrevUnit then
-      begin
-        Status := Status and not usWaiting;
-        FocusNextUnit(-1);
-      end
-      else if Sender = mNextUnit then
-      begin
-        Status := Status and not usWaiting;
-        FocusNextUnit(1);
-      end
-      else if Sender = mCancel then
-      begin
-        DestinationMarkON := false;
-        PaintDestination;
-        Status := Status and ($FFFF - usRecover - usGoto - usEnhance);
-        if Job > jNone then
-          Server(sStartJob + jNone shl 4, me, UnFocus, nil^);
-      end
-      else if (Sender = mDisband) or (Sender = mUtilize) then
-      begin
-        if (Sender = mUtilize) and
-          not(Server(sRemoveUnit - sExecute, me, UnFocus, nil^) = eUtilized)
-        then
-        begin
-          SimpleMessage(Phrases2.Lookup('SHIP_UTILIZE'));
-          // freight for colony ship is the only case in which the command is
-          // available to player though not valid
-          exit
-        end;
-        if (Sender = mUtilize) and (Health < 100) then
-          if SimpleQuery(mkYesNo, Phrases.Lookup('DAMAGED_UTILIZE'), '') <> mrOK
-          then
-            exit;
-        Loc0 := Loc;
-        CityOptimizer_BeforeRemoveUnit(UnFocus);
-        if Server(sRemoveUnit, me, UnFocus, nil^) = eUtilized then
-          Play('CITY_UTILIZE')
-        else
-          Play('DISBAND');
-        CityOptimizer_AfterRemoveUnit;
-        SetTroopLoc(Loc0);
-        UpdateViews(true);
-        DestinationMarkON := false;
-        PaintDestination;
-        UnFocus := -1;
-        PaintLoc(Loc0);
-        NextUnit(UnStartLoc, true);
-      end
-      else if Sender = mLoad then
-      begin
-        i := Server(sLoadUnit, me, UnFocus, nil^);
-        if i >= rExecuted then
-        begin
-          if MyModel[mix].Domain = dAir then
-            Play('MOVE_PLANELANDING')
-          else
-            Play('MOVE_LOAD');
-          DestinationMarkON := false;
-          PaintDestination;
-          Status := Status and ($FFFF - usWaiting - usStay - usRecover - usGoto
-            - usEnhance);
-          NextUnit(UnStartLoc, true);
-        end
-        else if i = eNoTime_Load then
-          if MyModel[mix].Domain = dAir then
-            SoundMessage(Phrases.Lookup('NOTIMELOADAIR'), 'NOMOVE_TIME')
-          else
-            SoundMessage(Format(Phrases.Lookup('NOTIMELOADGROUND'),
-              [MovementToString(MyModel[mix].speed)]), 'NOMOVE_TIME');
-      end
-      else if Sender = mUnload then
-        if Master >= 0 then
-        begin
-          OldMaster := Master;
-          i := Server(sUnloadUnit, me, UnFocus, nil^);
-          if i >= rExecuted then
-          begin
-            if MyModel[mix].Domain = dAir then
-              Play('MOVE_PLANESTART')
-            else if (MyModel[MyUn[OldMaster].mix].Domain = dAir) and
-              (MyMap[Loc] and fCity = 0) and (MyMap[Loc] and fTerImp <> tiBase)
-            then
-              Play('MOVE_PARACHUTE')
-            else
-              Play('MOVE_UNLOAD');
-            Status := Status and not usWaiting;
-            if MyModel[mix].Domain <> dAir then
-              NextUnit(Loc, true)
-            else
-              PanelPaint;
-          end
-          else if i = eNoTime_Load then
-            if MyModel[mix].Domain = dAir then
-              SoundMessage(Phrases.Lookup('NOTIMELOADAIR'), 'NOMOVE_TIME')
-            else
-              SoundMessage(Format(Phrases.Lookup('NOTIMELOADGROUND'),
-                [MovementToString(MyModel[mix].speed)]), 'NOMOVE_TIME');
-        end
-        else
-        begin
-          NewFocus := -1;
-          uix := UnFocus;
-          for i := 1 to MyRO.nUn - 1 do
-          begin
-            uix := (uix + MyRO.nUn - 1) mod MyRO.nUn;
-            if (MyUn[uix].Master = UnFocus) and
-              (MyUn[uix].Movement = integer(MyModel[MyUn[uix].mix].speed)) then
-            begin
-              MyUn[uix].Status := MyUn[uix].Status or usWaiting;
-              NewFocus := uix;
-            end;
-          end;
-          if NewFocus >= 0 then
-          begin
-            SetUnFocus(NewFocus);
-            SetTroopLoc(Loc);
-            PanelPaint;
-          end;
-        end
-      else if Sender = mSelectTransport then
-        Server(sSelectTransport, me, UnFocus, nil^);
+      Play('DISBAND');
+    CityOptimizer_AfterRemoveUnit;
+    SetTroopLoc(Loc0);
+    UpdateViews(true);
+    DestinationMarkON := false;
+    PaintDestination;
+    UnFocus := -1;
+    PaintLoc(Loc0);
+    NextUnit(UnStartLoc, true);
+  end;
 end;
 
 procedure TMainScreen.InitPopup(Popup: TPopupMenu);
@@ -7373,12 +7594,12 @@ begin
     then
     begin
       mRoad.Caption := Phrases.Lookup('BTN_BUILDBRIDGE');
-      mRR.Caption := Phrases.Lookup('BTN_BUILDRRBRIDGE');
+      mRailRoad.Caption := Phrases.Lookup('BTN_BUILDRRBRIDGE');
     end
     else
     begin
       mRoad.Caption := Phrases.Lookup('BTN_BUILDROAD');
-      mRR.Caption := Phrases.Lookup('BTN_BUILDRR');
+      mRailRoad.Caption := Phrases.Lookup('BTN_BUILDRR');
     end;
     if Tile and fTerrain = fForest then
       mClear.Caption := Phrases.Lookup('BTN_CLEAR')
@@ -7393,7 +7614,7 @@ begin
     if extended then
     begin
       mRoad.Visible := JobTest(UnFocus, jRoad, [eNoBridgeBuilding, eTreaty]);
-      mRR.Visible := JobTest(UnFocus, jRR, [eNoBridgeBuilding, eTreaty]);
+      mRailRoad.Visible := JobTest(UnFocus, jRR, [eNoBridgeBuilding, eTreaty]);
       mClear.Visible := JobTest(UnFocus, jClear, [eTreaty]);
       mIrrigation.Visible := JobTest(UnFocus, jIrr, [eTreaty]);
       mFarm.Visible := JobTest(UnFocus, jFarm, [eTreaty]);
