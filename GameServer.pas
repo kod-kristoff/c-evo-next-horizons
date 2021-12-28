@@ -1809,7 +1809,7 @@ begin
                 end;
             end;
           end;
-        exit
+        Exit;
       end;
 
       // check research
@@ -1825,7 +1825,7 @@ begin
 
         dec(Research, Cost);
         Happened := Happened or phTech;
-        ResearchTech := -1
+        ResearchTech := -1;
       end
       else if (ResearchTech = -2) and (nCity > 0) then
       begin
@@ -1858,7 +1858,7 @@ begin
             move(GShip, RW[p1].Ship, SizeOf(GShip));
             if 1 shl p1 and GWatching <> 0 then
               CallPlayer(cShowShipChange, p1, ShowShipChange);
-          end
+          end;
       end;
       if WinOnAlone and (GAlive and not(1 shl pTurn or 1) = 0) then
         GWinner := 1 shl pTurn; // break if only one nation left
@@ -1870,7 +1870,7 @@ begin
         for p1 := 0 to nPl - 1 do
           if (p1 <> pTurn) and ((GAlive or GWatching) and (1 shl p1) <> 0) then
             RW[p1].EnemyReport[pTurn].Government := gDespotism;
-        inc(Happened, phChangeGov)
+        inc(Happened, phChangeGov);
       end;
     end; // if Difficulty[pTurn]>0
 
@@ -2610,8 +2610,8 @@ begin
           result := ExecuteAttack(p, uix, ToLoc, MoveInfo, ShowMove) or result;
       end;
     end;
-  end; // with
-end; { MoveUnit }
+  end;
+end;
 
 function Server(Command, Player, Subject: integer; var Data): integer; stdcall;
 
@@ -2697,9 +2697,8 @@ var
   Radius: TVicinity21Loc;
   ShowShipChange: TShowShipChange;
   ShowNegoData: TShowNegoData;
-  logged, ok, HasShipChanged, AllHumansDead, OfferFullySupported: boolean;
-
-begin { >>>server }
+  logged, ok, HasShipChanged, AllHumansDead, OfferFullySupported: Boolean;
+begin
   if Command = sTurn then
   begin
     p2 := -1;
@@ -3565,8 +3564,8 @@ begin { >>>server }
               assert(Mode = moPlaying);
               ChangeClientWhenDone(scDipOffer, pDipActive, LastOffer,
                 SizeOf(LastOffer));
-            end
-          end
+            end;
+          end;
         end
       else
         result := eInvalid;

@@ -4418,7 +4418,7 @@ begin
               exit;
             end;
             MyUn[uix].Status := MyUn[uix].Status or usToldNoReturn;
-          end
+          end;
         end;
 
     if not supervising and (MyRO.TestFlags and tfImmImprove = 0) and
@@ -4433,7 +4433,7 @@ begin
         IconIndex := imTrGoods;
         ShowModal;
         if ModalResult <> mrOK then
-          exit
+          exit;
       end;
 
     if MyRO.Government <> gAnarchy then
@@ -4502,14 +4502,14 @@ begin
             if Zoom then
             begin // zoom to city
               ZoomToCity(Loc);
-              exit
-            end
+              Exit;
+            end;
           end;
 
     if (MyRO.Happened and phTech <> 0) and (MyRO.ResearchTech < 0) and
       (MyData.FarTech <> adNexus) then
       if not ChooseResearch then
-        exit;
+        Exit;
   end;
 
   RememberPeaceViolation;
@@ -4556,8 +4556,8 @@ begin
         skipped := true; // don't show enemy moves in hotseat mode
   end
   else
-    PanelPaint
-end; // EndTurn
+    PanelPaint;
+end;
 
 procedure TMainScreen.EndNego;
 begin
