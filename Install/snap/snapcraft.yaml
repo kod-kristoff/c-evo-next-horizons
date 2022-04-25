@@ -4,7 +4,7 @@ version: '1.4.0'
 summary: A turn-based empire building game inspired by Civilization II game.
 description: |
   This is a fork and Lazarus/FPC port of the original C-evo 1.2.0 game.
-  Now it is finally possible to play C-evo natively on Linux.  
+  Now it is finally possible to play C-evo natively on Linux.
   * Zoomable map by mouse wheel with three tile sizes
   * Many sample maps included
   * All available localizations include
@@ -21,7 +21,7 @@ environment:
 
 layout:
   /usr/lib/$SNAPCRAFT_ARCH_TRIPLET/sox:
-    bind: $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/sox   
+    bind: $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/sox
   
 parts:
   c-evo:
@@ -33,7 +33,7 @@ parts:
     - lazarus
     - lcl
     - lcl-utils
-    stage-packages:    
+    stage-packages:
     - sox
     - libsox-fmt-mp3
     - libsox-fmt-pulse
@@ -109,7 +109,7 @@ parts:
 apps:
   c-evo:
     command: usr/share/c-evo/c-evo
-    desktop: usr/share/applications/c-evo.desktop    
+    desktop: usr/share/applications/c-evo.desktop
     plugs:
       - home
       - audio-playback

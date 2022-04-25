@@ -22,7 +22,7 @@ override_dh_auto_install:
 	install -d -m 755 $(ROOT)/usr/share/applications
 	install -m 755 Install/deb/c-evo.desktop $(ROOT)/usr/share/applications
 	install -d -m 755 $(ROOT)/usr/share/mime/packages
-	install -m 755 Install/deb/c-evo.xml $(ROOT)/usr/share/mime/packages
+	install -m 644 Install/deb/c-evo.xml $(ROOT)/usr/share/mime/packages
 	install -d -m 755 $(ROOT)/usr/share/pixmaps
 	install -m 644 Graphics/c-evo_64x64.png $(ROOT)/usr/share/pixmaps/c-evo.png
 	install -m 644 Graphics/c-evo_64x64.png $(ROOT)/usr/share/pixmaps/application-cevo.png

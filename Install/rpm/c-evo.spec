@@ -10,10 +10,10 @@ Source0:        c-evo.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires:       sox
 
-#BuildRequires:  lazarus 
+BuildRequires:  lazarus >= 2.0.12
 
 %description
-Turn-based empire building game inspired by Civilization.
+A turn-based empire building game inspired by Civilization.
 
 %global debug_package %{nil}
 
@@ -71,7 +71,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 /usr/bin/c-evo
 /usr/share/applications/c-evo.desktop
-/usr/share/c-evo/*
+/usr/share/c-evo/
 /usr/share/pixmaps/c-evo.png
 
 %doc readme.txt
