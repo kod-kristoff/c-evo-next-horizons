@@ -69,7 +69,8 @@ begin
       FileName := GetGraphicsDir + DirectorySeparator + 'Background.png';
       if FileExists(FileName) then begin
         Img := TBitmap.Create;
-        LoadGraphicFile(img, FileName);
+        LoadGraphicFile(Img, FileName);
+        Repaint;
       end;
     end;
   end else begin

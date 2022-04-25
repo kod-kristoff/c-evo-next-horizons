@@ -7,16 +7,16 @@ object Background: TBackground
   BorderStyle = bsNone
   Caption = 'C-evo'
   Color = clBlack
+  DesignTimePPI = 144
   Font.Color = clWindowText
-  Font.Height = -13
+  Font.Height = -30
   Font.Name = 'MS Sans Serif'
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnPaint = FormPaint
   OnShow = FormShow
-  LCLVersion = '1.6.2.0'
-  WindowState = wsMaximized
-  PixelsPerInch = 96
+  LCLVersion = '2.2.0.4'
   Scaled = False
+  WindowState = wsFullScreen
 end

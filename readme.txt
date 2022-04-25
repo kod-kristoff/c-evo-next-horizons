@@ -1,7 +1,7 @@
 C-evo: New Horizons
 ===================
 
-* Developed with: Lazarus 2.0.12 (https://www.lazarus-ide.org/)
+* Developed with: Lazarus 2.2.0 (https://www.lazarus-ide.org/)
 * Supported platforms: Windows and Linux
 * Supported architectures: 32-bit and 64-bit x86
 
@@ -23,7 +23,7 @@ C-evo: New Horizons
 
 * Home page: https://app.zdechov.net/c-evo/
 * Source code: https://svn.zdechov.net/c-evo/
-* Developed in [http://www.lazarus-ide.org/ Lazarus/FPC] 2.0.12
+* Developed in [http://www.lazarus-ide.org/ Lazarus/FPC] 2.2.0
 * To build new Windows installer run Install/build.bat. InnoSetup (http://www.jrsoftware.org/isdl.php) needs to be installed).
 
 == Release new version ==
