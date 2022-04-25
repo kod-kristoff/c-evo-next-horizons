@@ -2,8 +2,6 @@ unit UScaleDPI;
 
 { See: http://wiki.lazarus.freepascal.org/High_DPI }
 
-{$mode delphi}{$H+}
-
 interface
 
 uses
@@ -226,7 +224,7 @@ begin
     ImgList.GetBitmap(I, TempBmp);
     Temp[I] := TBitmap.Create;
     Temp[I].SetSize(NewWidth, NewHeight);
-    {$IFDEF Linux}
+    {$IFDEF UNIX}
     Temp[I].PixelFormat := pf24bit;
     {$ELSE}
     Temp[I].PixelFormat := pf32bit;

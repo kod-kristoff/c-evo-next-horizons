@@ -1,11 +1,9 @@
 unit DrawDlg;
 
-{$mode delphi}{$H+}
-
 interface
 
 uses
-  Classes, SysUtils, Forms, LCLIntf, LCLType, {$IFDEF LINUX}LMessages,{$ENDIF}
+  Classes, SysUtils, Forms, LCLIntf, LCLType, {$IFDEF UNIX}LMessages,{$ENDIF}
   Messages, Graphics, Controls, ButtonBase, ButtonA, ButtonB, Area, ScreenTools
   {$IFDEF LCLGTK2}, Gtk2Globals{$ENDIF};
 
@@ -75,7 +73,7 @@ begin
   TitleHeight := 0;
   MoveActive := False;
   AddHandlerOnVisibleChanged(VisibleChangedHandler);
-  {$IFDEF LINUX}
+  {$IFDEF UNIX}
   OnDeactivate := DoDeactivate;
   {$ENDIF}
 end;
@@ -130,7 +128,7 @@ procedure TDrawDlg.MouseDown(Button: TMouseButton; Shift: TShiftState; X,
 var
   MousePos1: TPoint;
   MousePos2: TPoint;
-{$IFDEF LINUX}
+{$IFDEF UNIX}
   MousePosNew: TPoint;
   NewFormPos: TPoint;
 {$ENDIF}
@@ -138,7 +136,7 @@ begin
   MousePos1 := Mouse.CursorPos;
   inherited;
   MousePos2 := Mouse.CursorPos;
-  {$IFDEF LINUX}
+  {$IFDEF UNIX}
   // Only if client is not doing own mouse move handling
   if not Assigned(OnMouseDown) or not Assigned(OnMouseMove) or not Assigned(OnMouseUp) then begin
     // HitTest is not supported under Linux GTK2 so use form inside move mechanizm

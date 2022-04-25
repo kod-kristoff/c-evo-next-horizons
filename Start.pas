@@ -6,7 +6,7 @@ interface
 uses
   GameServer, Messg, ButtonBase, ButtonA, ButtonC, ButtonB, Area, Types,
   LCLIntf, LCLType, SysUtils, Classes, Graphics, Controls, Forms, StdCtrls,
-  Menus, Registry,  DrawDlg, fgl, Protocol, UMiniMap, UBrain, UTranslator;
+  Menus, Registry, DrawDlg, fgl, Protocol, UMiniMap, UBrain, UTranslator;
 
 type
   { TPlayerSlot }

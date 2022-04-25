@@ -6,7 +6,7 @@ interface
 uses
   Messg,
 
-  LCLIntf, LCLType, {$IFDEF Linux}LMessages, {$ENDIF}Messages, SysUtils, Classes,
+  LCLIntf, LCLType, {$IFDEF UNIX}LMessages, {$ENDIF}Messages, SysUtils, Classes,
   Graphics, Controls, Forms, DrawDlg, GameServer;
 
 const
@@ -152,7 +152,7 @@ Begin
         MainTexture.Age := -1;
         State := -1;
         Show;
-        {$IFDEF LINUX}
+        {$IFDEF UNIX}
         // Force shown window repaint on Gtk2 widgetset
         Sleep(1);
         Application.ProcessMessages;
@@ -301,7 +301,7 @@ begin
   Info := x;
   Invalidate;
   Update;
-  {$IFDEF LINUX}
+  {$IFDEF UNIX}
   Application.ProcessMessages;
   {$ENDIF}
 end;

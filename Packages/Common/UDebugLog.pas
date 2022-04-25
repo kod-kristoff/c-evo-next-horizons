@@ -1,7 +1,5 @@
 unit UDebugLog; 
 
-{$mode delphi}
-
 interface
 
 uses
@@ -43,6 +41,7 @@ type
   end;
 
 procedure Register;
+
 
 implementation
 

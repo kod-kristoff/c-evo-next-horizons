@@ -1,7 +1,5 @@
 unit UBrain;
 
-{$mode delphi}
-
 interface
 
 uses
@@ -125,11 +123,11 @@ begin
     else if Key = '#PATH_WIN64' then
       DLLName := BasePath + DirectorySeparator + Value
     {$ENDIF}{$ENDIF}
-    {$IFDEF LINUX}{$IFDEF CPU32}
+    {$IFDEF UNIX}{$IFDEF CPU32}
     else if Key = '#PATH_LINUX32' then
       DLLName := BasePath + DirectorySeparator + Value
     {$ENDIF}{$ENDIF}
-    {$IFDEF LINUX}{$IFDEF CPU64}
+    {$IFDEF UNIX}{$IFDEF CPU64}
     else if Key = '#PATH_LINUX64' then
       DLLName := BasePath + DirectorySeparator + Value
     {$ENDIF}{$ENDIF}

@@ -1,7 +1,5 @@
 unit UJobProgressView;
 
-{$MODE Delphi}
-
 interface
 
 uses

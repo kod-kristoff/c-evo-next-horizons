@@ -1646,7 +1646,7 @@ procedure Gtk2Fix;
 var
   I: Integer;
 begin
-  {$IFDEF LINUX}
+  {$IFDEF UNIX}
   // Wait and process messages little bit to avoid crash or force repaint under Gtk2
   for I := 0 to 10 do begin
     Sleep(1);

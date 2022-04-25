@@ -1,7 +1,5 @@
 unit URegistry;
 
-{$MODE delphi}
-
 interface
 
 uses
@@ -131,7 +129,7 @@ end;
 
 function TRegistryEx.OpenKey(const Key: string; CanCreate: Boolean): Boolean;
 begin
-  {$IFDEF Linux}
+  {$IFDEF UNIX}
   //CloseKey;
   {$ENDIF}
   Result := inherited OpenKey(Key, CanCreate);

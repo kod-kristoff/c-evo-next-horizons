@@ -4,7 +4,7 @@ unit CityScreen;
 interface
 
 uses
-  {$IFDEF LINUX}LMessages,{$ENDIF}
+  {$IFDEF UNIX}LMessages,{$ENDIF}
   Protocol, ClientTools, Term, ScreenTools, IsoEngine, BaseWin,
   LCLIntf, LCLType, Messages, SysUtils, Classes, Graphics, Controls, Forms, ExtCtrls,
   ButtonA, ButtonC, Area, GraphType, UTexture;

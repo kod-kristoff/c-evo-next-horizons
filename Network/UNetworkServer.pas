@@ -1,13 +1,11 @@
 unit UNetworkServer;
 
-{$mode delphi}
-
 interface
 
 uses
-  Classes, SysUtils{$IFDEF LINUX}, fgl, fpAsync, fpsock, fphttpclient{$ENDIF}, Protocol;
+  Classes, SysUtils{$IFDEF UNIX}, fgl, fpAsync, fpsock, fphttpclient{$ENDIF}, Protocol;
 
-{$IFDEF LINUX}
+{$IFDEF UNIX}
 type
   TNetworkServer = class;
   TNetworkServerPlayer = class;
@@ -86,14 +84,14 @@ procedure Client(Command, Player: integer; var Data); stdcall;
 
 implementation
 
-{$IFDEF LINUX}
+{$IFDEF UNIX}
 uses
   Global, UNetworkCommon;
 {$ENDIF}
 
 procedure Client(Command, Player: integer; var Data);
 begin
-  {$IFDEF LINUX}
+  {$IFDEF UNIX}
   if not Assigned(NetworkServer) then begin
     NetworkServer := TNetworkServer.Create;
   end;
@@ -106,7 +104,7 @@ begin
   {$ENDIF}
 end;
 
-{$IFDEF LINUX}
+{$IFDEF UNIX}
 
 { TNetworkServerPlayers }
 

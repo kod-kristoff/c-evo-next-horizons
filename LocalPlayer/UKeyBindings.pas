@@ -1,7 +1,5 @@
 unit UKeyBindings;
 
-{$mode delphi}
-
 interface
 
 uses

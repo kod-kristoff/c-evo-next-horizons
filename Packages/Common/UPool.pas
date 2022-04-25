@@ -1,7 +1,5 @@
 unit UPool;
 
-{$mode Delphi}{$H+}
-
 interface
 
 uses

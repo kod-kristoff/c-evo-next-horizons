@@ -1,7 +1,5 @@
 unit UMetaCanvas;
 
-{$mode delphi}
-
 interface
 
 uses

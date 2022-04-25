@@ -2,8 +2,6 @@ unit UListViewSort;
 
 // Date: 2019-05-17
 
-{$mode delphi}
-
 interface
 
 uses

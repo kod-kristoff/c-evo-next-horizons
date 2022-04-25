@@ -1,7 +1,5 @@
 unit ULanguages;
 
-{$mode delphi}{$H+}
-
 interface
 
 uses

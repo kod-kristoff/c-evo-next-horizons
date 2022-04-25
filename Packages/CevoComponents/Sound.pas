@@ -6,7 +6,7 @@ uses
   SysUtils, Classes, Graphics, Controls, Forms, fgl, FileUtil,
   StringTables, Directories, LCLType
   {$IFDEF WINDOWS}, MMSystem, Windows{$ENDIF}
-  {$IFDEF LINUX}, Process, AsyncProcess2{$ENDIF};
+  {$IFDEF UNIX}, Process, AsyncProcess2{$ENDIF};
 
 type
   TPlayStyle = (psAsync, psSync);
@@ -28,7 +28,7 @@ type
 
   TSound = class
   private
-    {$IFDEF LINUX}
+    {$IFDEF UNIX}
     PlayCommand: string;
     SoundPlayerAsyncProcess: TAsyncProcess;
     SoundPlayerSyncProcess: TProcess;
@@ -62,7 +62,7 @@ implementation
 
 {$R *.lfm}
 
-{$IFDEF LINUX}
+{$IFDEF UNIX}
 resourcestring
   SUnableToPlay = 'PlayStyle=%s: Unable to play %s Message:%s';
   SPlayCommandNotWork = 'The play command %s does not work on your system';
@@ -87,7 +87,7 @@ begin
     FDeviceID := OpenParm.wDeviceID;
   end
   {$ENDIF}
-  {$IFDEF LINUX}
+  {$IFDEF UNIX}
   PlayCommand := GetNonWindowsPlayCommand;
   FDeviceID := 1;
   {$ENDIF}
@@ -99,7 +99,7 @@ begin
   if FDeviceID <> 0 then
     mciSendCommand(FDeviceID, MCI_CLOSE, MCI_WAIT, 0);
   {$ENDIF}
-  {$IFDEF LINUX}
+  {$IFDEF UNIX}
   FreeAndNil(SoundPlayerSyncProcess);
   FreeAndNil(SoundPlayerAsyncProcess);
   {$ENDIF}
@@ -161,7 +161,7 @@ procedure TSound.Play(Handle: HWND);
 var
   PlayParm: TMCI_Play_Parms;
 {$ENDIF}
-{$IFDEF LINUX}
+{$IFDEF UNIX}
 var
   L: TStringList;
   I: Integer;
@@ -174,7 +174,7 @@ begin
     mciSendCommand(FDeviceID, MCI_PLAY, MCI_NOTIFY, DWORD_PTR(@PlayParm));
   end
   {$ENDIF}
-  {$IFDEF LINUX}
+  {$IFDEF UNIX}
   // How to play in Linux? Use generic Linux commands
   // Use asyncprocess to play sound as SND_ASYNC
   // proceed if we managed to find a valid command
@@ -231,7 +231,7 @@ begin
   {$IFDEF WINDOWS}
   mciSendCommand(FDeviceID, MCI_STOP, 0, 0);
   {$ENDIF}
-  {$IFDEF LINUX}
+  {$IFDEF UNIX}
   if SoundPlayerSyncProcess <> nil then SoundPlayerSyncProcess.Terminate(1);
   if SoundPlayerAsyncProcess <> nil then SoundPlayerAsyncProcess.Terminate(1);
   {$ENDIF}

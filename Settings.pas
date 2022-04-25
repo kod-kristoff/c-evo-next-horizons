@@ -1,7 +1,5 @@
 unit Settings;
 
-{$mode delphi}
-
 interface
 
 uses

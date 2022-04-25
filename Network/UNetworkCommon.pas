@@ -1,7 +1,5 @@
 unit UNetworkCommon;
 
-{$mode delphi}
-
 interface
 
 uses
@@ -9,6 +7,7 @@ uses
 
 procedure StreamAppend(Stream: TStream; SourceStream: TStream);
 procedure StreamRemoveRead(Stream: TMemoryStream);
+
 
 implementation
 

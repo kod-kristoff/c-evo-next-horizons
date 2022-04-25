@@ -1,13 +1,11 @@
 unit UNetworkClient;
 
-{$mode delphi}
-
 interface
 
 uses
-  Classes, SysUtils{$IFDEF LINUX}, fpAsync, fpsock{$ENDIF}, Protocol;
+  Classes, SysUtils{$IFDEF UNIX}, fpAsync, fpsock{$ENDIF}, Protocol;
 
-{$IFDEF LINUX}
+{$IFDEF UNIX}
 type
   { TTCPClientThread }
 
@@ -47,15 +45,15 @@ procedure Client(Command, Player: Integer; var Data); stdcall;
 implementation
 
 uses
-  LocalPlayer{$IFDEF LINUX}, Global, UNetworkCommon{$ENDIF};
+  LocalPlayer{$IFDEF UNIX}, Global, UNetworkCommon{$ENDIF};
 
 procedure Client(Command, Player: Integer; var Data);
-{$IFDEF LINUX}
+{$IFDEF UNIX}
 var
   Cmd: TCommand;
 {$ENDIF}
 begin
-  {$IFDEF LINUX}
+  {$IFDEF UNIX}
   Cmd := TCommand(Command);
   case Cmd of
     cmInitModule: begin
@@ -72,7 +70,7 @@ begin
   {$ENDIF}
 end;
 
-{$IFDEF LINUX}
+{$IFDEF UNIX}
 function LocalServer(Command, Player, Subject: Integer; var Data): Integer; stdcall;
 begin
   if Assigned(NetworkClient) then

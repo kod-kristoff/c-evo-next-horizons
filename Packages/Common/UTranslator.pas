@@ -1,7 +1,5 @@
 unit UTranslator;
 
-{$mode delphi}{$H+}
-
 interface
 
 uses

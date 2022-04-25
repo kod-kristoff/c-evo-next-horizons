@@ -1,7 +1,5 @@
 unit UThreading;
 
-{$mode delphi}
-
 interface
 
 uses

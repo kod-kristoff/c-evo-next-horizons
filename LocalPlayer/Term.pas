@@ -4,10 +4,10 @@ unit Term;
 interface
 
 uses
-{$IFDEF Windows}
+{$IFDEF WINDOWS}
   Windows,
 {$ENDIF}
-{$IFDEF Linux}
+{$IFDEF UNIX}
   LMessages, Messages,
 {$ENDIF}
   Protocol, Tribes, PVSB, ClientTools, ScreenTools, BaseWin, Messg, ButtonBase,
@@ -4704,7 +4704,7 @@ begin
   end;
 end;
 
-{$IFDEF LINUX}
+{$IFDEF UNIX}
 // Can't do scrolling of DC under Linux, then fallback into BitBlt.
 function ScrollDC(Canvas: TCanvas; dx: longint; dy: longint; const lprcScroll:TRect; const lprcClip:TRect; hrgnUpdate:HRGN; lprcUpdate: PRect):Boolean;
 begin
@@ -4762,7 +4762,7 @@ begin
       ScrollDC(offscreen.Canvas.Handle, (xwd - xw) * (xxt * 2), (ywd - yw) * yyt,
         rec, rec, 0, nil);
 {$ENDIF}
-{$IFDEF LINUX}
+{$IFDEF UNIX}
       ScrollDC(offscreen.Canvas, (xwd - xw) * (xxt * 2), (ywd - yw) * yyt,
         rec, rec, 0, nil);
 {$ENDIF}
@@ -4773,7 +4773,7 @@ begin
           ScrollDC(Canvas.Handle, (xwd - xw) * (xxt * 2), (ywd - yw) * yyt, rec,
             rec, 0, nil);
 {$ENDIF}
-{$IFDEF LINUX}
+{$IFDEF UNIX}
           ScrollDC(Canvas, (xwd - xw) * (xxt * 2), (ywd - yw) * yyt,
             rec, rec, 0, nil);
 {$ENDIF}
@@ -6671,8 +6671,8 @@ begin
       end;
       NoMap.PaintUnit(xMoving - xMin, yMoving - yMin, UnitInfo, 0);
       PaintBufferToScreen(xMin, yMin, xRange, yRange);
-      {$IFDEF LINUX}
-      // TODO: Force animation under linux
+      {$IFDEF UNIX}
+      // TODO: Force animation under UNIX
       Application.ProcessMessages;
       {$ENDIF}
 
