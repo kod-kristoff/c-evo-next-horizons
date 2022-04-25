@@ -6,8 +6,8 @@ unit GameServer;
 interface
 
 uses
-  Protocol, Database, dynlibs, Platform, dateutils, fgl, LazFileUtils,
-  Graphics, UBrain, Global;
+  Protocol, Database, dynlibs, Platform, dateutils, LazFileUtils, Graphics,
+  UBrain, Global;
 
 const
   FirstAICompatibleVersion = $000D00;

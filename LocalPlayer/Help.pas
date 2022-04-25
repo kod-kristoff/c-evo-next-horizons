@@ -6,7 +6,7 @@ interface
 uses
   Protocol, ScreenTools, BaseWin, StringTables, Math, LCLIntf, LCLType,
   Messages, SysUtils, Classes, Graphics, Controls, Forms, ExtCtrls,
-  ButtonB, PVSB, Types, fgl, IsoEngine;
+  ButtonB, PVSB, Types, Generics.Collections, IsoEngine;
 
 const
   MaxHist = 16;
@@ -59,7 +59,7 @@ type
 
   { THistItems }
 
-  THistItems = class(TFPGObjectList<THistItem>)
+  THistItems = class(TObjectList<THistItem>)
     function AddNew(Kind, No, Pos: Integer; SearchContent: string): THistItem;
   end;
 

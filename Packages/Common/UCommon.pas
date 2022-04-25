@@ -5,12 +5,11 @@ interface
 uses
   {$IFDEF WINDOWS}Windows,{$ENDIF}
   {$IFDEF UNIX}baseunix,{$ENDIF}
-  Classes, SysUtils, StrUtils, Dialogs, Process, LCLIntf,
+  Classes, SysUtils, StrUtils, Dialogs, Process, LCLIntf, Graphics,
   FileUtil; //, ShFolder, ShellAPI;
 
 type
   TArrayOfByte = array of Byte;
-  TArrayOfString = array of string;
   TExceptionEvent = procedure(Sender: TObject; E: Exception) of object;
 
   TUserNameFormat = (
@@ -32,10 +31,15 @@ var
   ExceptionHandler: TExceptionEvent;
   DLLHandle1: HModule;
 
-{$IFDEF WINDOWS}
-  GetUserNameEx: procedure (NameFormat: DWORD;
-    lpNameBuffer: LPSTR; nSize: PULONG); stdcall;
-{$ENDIF}
+  {$IFDEF WINDOWS}
+    GetUserNameEx: procedure (NameFormat: DWORD;
+      lpNameBuffer: LPSTR; nSize: PULONG); stdcall;
+  {$ENDIF}
+
+const
+  clLightBlue = TColor($FF8080);
+  clLightGreen = TColor($80FF80);
+  clLightRed = TColor($8080FF);
 
 function AddLeadingZeroes(const aNumber, Length : integer) : string;
 function BinToInt(BinStr: string): Int64;
@@ -48,6 +52,7 @@ procedure CopyStringArray(Dest: TStringArray; Source: array of string);
 function CombinePaths(Path1, Path2: string): string;
 function ComputerName: string;
 procedure DeleteFiles(APath, AFileSpec: string);
+function Explode(Separator: Char; Data: string): TStringArray;
 procedure ExecuteProgram(Executable: string; Parameters: array of string);
 procedure FileDialogUpdateFilterFileType(FileDialog: TOpenDialog);
 procedure FreeThenNil(var Obj);
@@ -62,9 +67,10 @@ function IntToBin(Data: Int64; Count: Byte): string;
 function LastPos(const SubStr: String; const S: String): Integer;
 function LoadFileToStr(const FileName: TFileName): AnsiString;
 function LoggedOnUserNameEx(Format: TUserNameFormat): string;
-function MergeArray(A, B: array of string): TArrayOfString;
+function MergeArray(A, B: array of string): TStringArray;
 function OccurenceOfChar(What: Char; Where: string): Integer;
 procedure OpenWebPage(URL: string);
+procedure OpenEmail(Email: string);
 procedure OpenFileInShell(FileName: string);
 function PosFromIndex(SubStr: string; Text: string;
   StartIndex: Integer): Integer;
@@ -80,8 +86,8 @@ procedure SearchFiles(AList: TStrings; Dir: string;
   FilterMethod: TFilterMethod = nil; FileNameMethod: TFileNameMethod = nil);
 function SplitString(var Text: string; Count: Word): string;
 function StripTags(const S: string): string;
-function TryHexToInt(Data: string; var Value: Integer): Boolean;
-function TryBinToInt(Data: string; var Value: Integer): Boolean;
+function TryHexToInt(Data: string; out Value: Integer): Boolean;
+function TryBinToInt(Data: string; out Value: Integer): Boolean;
 procedure SortStrings(Strings: TStrings);
 
 
@@ -243,7 +249,7 @@ begin
     Result := Result + Chars[(Data shr (I * 4)) and 15];
 end;
 
-function TryHexToInt(Data: string; var Value: Integer): Boolean;
+function TryHexToInt(Data: string; out Value: Integer): Boolean;
 var
   I: Integer;
 begin
@@ -259,7 +265,7 @@ begin
   end;
 end;
 
-function TryBinToInt(Data: string; var Value: Integer): Boolean;
+function TryBinToInt(Data: string; out Value: Integer): Boolean;
 var
   I: Integer;
 begin
@@ -287,16 +293,23 @@ begin
   end else Result := False;
 end;
 
-function Explode(Separator: char; Data: string): TArrayOfString;
+function Explode(Separator: Char; Data: string): TStringArray;
+var
+  Index: Integer;
 begin
-  SetLength(Result, 0);
-  while Pos(Separator, Data) > 0 do begin
+  Result := Default(TStringArray);
+  repeat
+    Index := Pos(Separator, Data);
+    if Index > 0 then begin
+      SetLength(Result, Length(Result) + 1);
+      Result[High(Result)] := Copy(Data, 1, Index - 1);
+      Delete(Data, 1, Index);
+    end else Break;
+  until False;
+  if Data <> '' then begin
     SetLength(Result, Length(Result) + 1);
-    Result[High(Result)] := Copy(Data, 1, Pos(Separator, Data) - 1);
-    Delete(Data, 1, Pos(Separator, Data));
+    Result[High(Result)] := Data;
   end;
-  SetLength(Result, Length(Result) + 1);
-  Result[High(Result)] := Data;
 end;
 
 {$IFDEF WINDOWS}
@@ -307,6 +320,7 @@ var
   L: LongWord;
 begin
   L := MAX_USERNAME_LENGTH + 2;
+  Result := Default(string);
   SetLength(Result, L);
   if Windows.GetUserName(PChar(Result), L) and (L > 0) then begin
     SetLength(Result, StrLen(PChar(Result)));
@@ -343,6 +357,7 @@ end;
 var
   Name: UtsName;
 begin
+  Name := Default(UtsName);
   fpuname(Name);
   Result := Name.Nodename;
 end;
@@ -470,6 +485,11 @@ begin
   OpenURL(URL);
 end;
 
+procedure OpenEmail(Email: string);
+begin
+  OpenURL('mailto:' + Email);
+end;
+
 procedure OpenFileInShell(FileName: string);
 begin
   ExecuteProgram('cmd.exe', ['/c', 'start', FileName]);
@@ -498,10 +518,11 @@ begin
     Dec(Result);
 end;
 
-function MergeArray(A, B: array of string): TArrayOfString;
+function MergeArray(A, B: array of string): TStringArray;
 var
   I: Integer;
 begin
+  Result := Default(TStringArray);
   SetLength(Result, Length(A) + Length(B));
   for I := 0 to Length(A) - 1 do
     Result[I] := A[I];

@@ -3,7 +3,7 @@ unit Sound;
 interface
 
 uses
-  SysUtils, Classes, Graphics, Controls, Forms, fgl, FileUtil,
+  SysUtils, Classes, Graphics, Controls, Forms, Generics.Collections, FileUtil,
   StringTables, Directories, LCLType
   {$IFDEF WINDOWS}, MMSystem, Windows{$ENDIF}
   {$IFDEF UNIX}, Process, AsyncProcess2{$ENDIF};
@@ -54,7 +54,7 @@ var
   Sounds: TStringTable;
   SoundMode: TSoundMode;
   SoundPlayer: TSoundPlayer;
-  SoundList: TFPGObjectList<TSound>;
+  SoundList: TObjectList<TSound>;
   PlayingSound: TSound;
 
 
@@ -332,7 +332,7 @@ end;
 
 procedure UnitInit;
 begin
-  SoundList := TFPGObjectList<TSound>.Create;
+  SoundList := TObjectList<TSound>.Create;
   PlayingSound := nil;
   SoundPlayer := nil;
 end;

@@ -7,7 +7,7 @@ uses
   Windows,
   {$ENDIF}
   StringTables, LCLIntf, LCLType, SysUtils, Classes, Graphics, Controls, Math,
-  Forms, Menus, GraphType, fgl, UGraphicSet, LazFileUtils, UTexture;
+  Forms, Menus, GraphType, UGraphicSet, LazFileUtils, UTexture;
 
 type
   TLoadGraphicFileOption = (gfNoError, gfNoGamma);

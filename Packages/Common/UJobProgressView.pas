@@ -4,7 +4,7 @@ interface
 
 uses
   SysUtils, Variants, Classes, Graphics, Controls, Forms, Syncobjs,
-  Dialogs, ComCtrls, StdCtrls, ExtCtrls, Contnrs, UThreading, Math,
+  Dialogs, ComCtrls, StdCtrls, ExtCtrls, Generics.Collections, UThreading, Math,
   DateUtils;
 
 const
@@ -68,7 +68,7 @@ type
     property Terminate: Boolean read FTerminate write SetTerminate;
   end;
 
-  TJobs = class(TObjectList)
+  TJobs = class(TObjectList<TJob>)
   end;
 
   TJobThread = class(TListedThread)
@@ -102,7 +102,6 @@ type
     procedure FormShow(Sender: TObject);
     procedure ReloadJobList;
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
-    procedure FormDestroy(Sender: TObject);
     procedure ListViewJobsData(Sender: TObject; Item: TListItem);
     procedure TimerUpdateTimer(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -161,6 +160,7 @@ procedure Register;
 
 resourcestring
   SExecuted = 'Executed';
+
 
 implementation
 
@@ -283,14 +283,10 @@ begin
   end;
 end;
 
-procedure TFormJobProgressView.FormDestroy(Sender:TObject);
-begin
-end;
-
 procedure TFormJobProgressView.ListViewJobsData(Sender: TObject; Item: TListItem);
 begin
   if (Item.Index >= 0) and (Item.Index < JobProgressView.Jobs.Count) then
-  with TJob(JobProgressView.Jobs[Item.Index]) do begin
+  with JobProgressView.Jobs[Item.Index] do begin
     Item.Caption := Title;
     if Item.Index = JobProgressView.CurrentJobIndex then Item.ImageIndex := 1
       else if Finished then Item.ImageIndex := 0
@@ -402,9 +398,9 @@ begin
 
     I := 0;
     while I < Jobs.Count do
-    with TJob(Jobs[I]) do begin
+    with Jobs[I] do begin
       CurrentJobIndex := I;
-      CurrentJob := TJob(Jobs[I]);
+      CurrentJob := Jobs[I];
       JobProgressChange(Self);
       StartTime := Now;
       Form.LabelEstimatedTimePart.Caption := Format(SEstimatedTime, ['']);
@@ -417,8 +413,8 @@ begin
         Thread := nil;
         Method(CurrentJob);
       end else begin
+        Thread := TJobThread.Create(True);
         try
-          Thread := TJobThread.Create(True);
           with Thread do begin
             FreeOnTerminate := False;
             Job := CurrentJob;
@@ -491,7 +487,7 @@ var
 begin
   if AValue = FTerminate then Exit;
   for I := 0 to Jobs.Count - 1 do
-    TJob(Jobs[I]).Terminate := AValue;
+    Jobs[I].Terminate := AValue;
   FTerminate := AValue;
 end;
 
@@ -617,8 +613,8 @@ end;
 
 procedure TProgress.Increment;
 begin
+  FLock.Acquire;
   try
-    FLock.Acquire;
     Value := Value + 1;
   finally
     FLock.Release;
@@ -627,8 +623,8 @@ end;
 
 procedure TProgress.Reset;
 begin
+  FLock.Acquire;
   try
-    FLock.Acquire;
     FValue := 0;
   finally
     FLock.Release;
@@ -675,7 +671,7 @@ end;
 
 destructor TJob.Destroy;
 begin
-  Progress.Free;
+  FreeAndNil(Progress);
   inherited;
 end;
 

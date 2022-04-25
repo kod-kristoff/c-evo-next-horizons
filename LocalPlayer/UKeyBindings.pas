@@ -3,7 +3,8 @@ unit UKeyBindings;
 interface
 
 uses
-  Classes, SysUtils, fgl, LCLProc, LCLType, Menus, Registry;
+  Classes, SysUtils, Generics.Collections, Generics.Defaults, LCLProc, LCLType,
+  Menus, Registry;
 
 type
 
@@ -23,7 +24,7 @@ type
 
   { TKeyBindings }
 
-  TKeyBindings = class(TFPGObjectList<TKeyBinding>)
+  TKeyBindings = class(TObjectList<TKeyBinding>)
   private
   public
     function AddItem(const ShortName, FullName: string; ShortCut: TShortCut; ShortCut2: TShortCut = 0): TKeyBinding; overload;
@@ -289,14 +290,14 @@ begin
   end;
 end;
 
-function CompareAlpha(const Item1, Item2: TKeyBinding): Integer;
+function CompareAlpha(constref Item1, Item2: TKeyBinding): Integer;
 begin
   Result := CompareStr(Item1.FullName, Item2.FullName);
 end;
 
 procedure TKeyBindings.SortAlpha;
 begin
-  Sort(CompareAlpha);
+  Sort(TComparer<TKeyBinding>.Construct(CompareAlpha));
 end;
 
 

@@ -6,7 +6,8 @@ interface
 uses
   GameServer, Messg, ButtonBase, ButtonA, ButtonC, ButtonB, Area, Types,
   LCLIntf, LCLType, SysUtils, Classes, Graphics, Controls, Forms, StdCtrls,
-  Menus, Registry, DrawDlg, fgl, Protocol, UMiniMap, UBrain, UTranslator;
+  Menus, Registry, DrawDlg, Generics.Collections, Protocol, UMiniMap, UBrain,
+  UTranslator;
 
 type
   { TPlayerSlot }
@@ -19,7 +20,7 @@ type
     Rect: TRect;
   end;
 
-  TPlayerSlots = class(TFPGObjectList<TPlayerSlot>)
+  TPlayerSlots = class(TObjectList<TPlayerSlot>)
   end;
 
   TStartPage = (

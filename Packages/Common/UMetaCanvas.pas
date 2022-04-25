@@ -3,7 +3,7 @@ unit UMetaCanvas;
 interface
 
 uses
-  Classes, SysUtils, Graphics, Types, fgl;
+  Classes, SysUtils, Graphics, Types, Generics.Collections;
 
 type
   TArrayOfPoint = array of TPoint;
@@ -16,7 +16,7 @@ type
     procedure Move(Delta: TPoint); virtual;
   end;
 
-  TCanvasObjects = class(TFPGObjectList<TCanvasObject>)
+  TCanvasObjects = class(TObjectList<TCanvasObject>)
   end;
 
   { TCanvasText }
@@ -139,7 +139,7 @@ type
     procedure RoundRect(X1, Y1, X2, Y2: Integer; RX,RY: Integer); overload; override;
     procedure RoundRect(const Rect: TRect; RX,RY: Integer); overload;
     procedure TextOut(X,Y: Integer; const Text: String); override;
-    procedure Polygon(Points: PPoint; NumPts: Integer; Winding: boolean = False); override;
+    procedure Polygon(Points: PPoint; NumPts: Integer; Winding: Boolean = False); override;
     procedure Ellipse(x1, y1, x2, y2: Integer); override;
     procedure StretchDraw(const DestRect: TRect; SrcGraphic: TGraphic); override;
     function TextExtent(const Text: string): TSize; override;
@@ -499,12 +499,13 @@ begin
   Objects.Add(NewObj);
 end;
 
-procedure TMetaCanvas.Polygon(Points: PPoint; NumPts: Integer; Winding: boolean
+procedure TMetaCanvas.Polygon(Points: PPoint; NumPts: Integer; Winding: Boolean
   );
 var
   APoints: array of TPoint;
   I: Integer;
 begin
+  APoints := nil;
   SetLength(APoints, NumPts);
   for I := 0 to High(APoints) do
     APoints[I] := Points[I];

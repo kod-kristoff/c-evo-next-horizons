@@ -3,7 +3,8 @@ unit UNetworkServer;
 interface
 
 uses
-  Classes, SysUtils{$IFDEF UNIX}, fgl, fpAsync, fpsock, fphttpclient{$ENDIF}, Protocol;
+  Classes, SysUtils{$IFDEF UNIX}, Generics.Collections, fpAsync, fpsock,
+  fphttpclient{$ENDIF}, Protocol;
 
 {$IFDEF UNIX}
 type
@@ -54,7 +55,7 @@ type
 
   { TNetworkServerPlayers }
 
-  TNetworkServerPlayers = class(TFPGObjectList<TNetworkServerPlayer>)
+  TNetworkServerPlayers = class(TObjectList<TNetworkServerPlayer>)
     function SearchById(Id: Integer): TNetworkServerPlayer;
   end;
 
@@ -63,7 +64,7 @@ type
   TNetworkServer = class
   private
     Players: TNetworkServerPlayers;
-    Connections: TFPGObjectList<TNetworkServerConnection>;
+    Connections: TObjectList<TNetworkServerConnection>;
     TCPServerThread: TTCPServerThread;
     ServerEventLoop: TEventLoop;
     procedure ConnectExecute(Sender: TConnectionBasedSocket; AStream: TSocketStream);
@@ -301,7 +302,7 @@ constructor TNetworkServer.Create;
 begin
   Players := TNetworkServerPlayers.Create;
   ServerEventLoop := TEventLoop.Create;
-  Connections := TFPGObjectList<TNetworkServerConnection>.Create;
+  Connections := TObjectList<TNetworkServerConnection>.Create;
   TCPServer := TTCPServer.Create(nil);
   with TCPServer do begin
     EventLoop := ServerEventLoop;

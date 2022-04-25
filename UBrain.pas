@@ -3,7 +3,8 @@ unit UBrain;
 interface
 
 uses
-  Classes, SysUtils, fgl, Graphics, Protocol, LazFileUtils, dynlibs, Types;
+  Classes, SysUtils, Generics.Collections, Graphics, Protocol, LazFileUtils,
+  dynlibs, Types;
 
 const
   // module flags
@@ -40,7 +41,7 @@ type
 
   { TBrains }
 
-  TBrains = class(TFPGObjectList<TBrain>)
+  TBrains = class(TObjectList<TBrain>)
     function AddNew: TBrain;
     function GetKindCount(Kind: TBrainType): Integer;
     procedure GetByKind(Kind: TBrainType; Brains: TBrains);

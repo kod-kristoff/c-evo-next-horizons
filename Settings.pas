@@ -4,8 +4,8 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  LCLProc, ScreenTools, Messg, ButtonA, Registry, fgl, Directories, DrawDlg,
-  ButtonC, UKeyBindings, ULanguages;
+  LCLProc, ScreenTools, Messg, ButtonA, Registry, Directories, DrawDlg, ButtonC,
+  UKeyBindings, ULanguages;
 
 type
   { TSettingsDlg }

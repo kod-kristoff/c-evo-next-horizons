@@ -3,8 +3,8 @@ unit UGraphicSet;
 interface
 
 uses
-  Classes, SysUtils, Graphics, fgl, LCLType, UPixelPointer, DOM, XMLRead,
-  XMLWrite, UXMLUtils;
+  Classes, SysUtils, Graphics, Generics.Collections, LCLType, UPixelPointer, DOM,
+  XMLRead, XMLWrite, UXMLUtils;
 
 type
   TGraphicSet = class;
@@ -30,7 +30,7 @@ type
 
   { TGraphicSetItems }
 
-  TGraphicSetItems = class(TFPGObjectList<TGraphicSetItem>)
+  TGraphicSetItems = class(TObjectList<TGraphicSetItem>)
     GraphicSet: TGraphicSet;
     function SearchByName(Name: string): TGraphicSetItem;
     function AddNew(Name: string): TGraphicSetItem;
@@ -58,7 +58,7 @@ type
 
   { TGraphicSets }
 
-  TGraphicSets = class(TFPGObjectList<TGraphicSet>)
+  TGraphicSets = class(TObjectList<TGraphicSet>)
     function SearchByName(Name: string): TGraphicSet;
     function AddNew(Name: string): TGraphicSet;
     procedure ResetPixUsed;
