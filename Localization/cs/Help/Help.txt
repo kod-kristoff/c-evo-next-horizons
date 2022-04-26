@@ -1,4 +1,4 @@
-#HELPTITLE_MAIN Manuál
+#HELPTITLE_MAIN Příručka
 #HELPTITLE_QUICKSTART Rychlý start
 #HELPTITLE_CONCEPTS Koncepce hry
 #HELPTITLE_TECHLIST Pokroky
@@ -167,14 +167,14 @@ zahrnutý do hry, jinými AI algoritmy - buď pro všechny nebo jednotlivé
 národy. C-evo umožňuje hrát až s 8 různými AI moduly v jedné
 hře. Nejjednodušším způsobem jak vyvinout vlastní AI je použít šablonu C#. Můžete ji najít ve složce s
 nainstalovanou hrou.\
-::E1 Manuál návrhu AI\\
+::E1 Příručka návrhu AI\\
 
 !Systémové požadavky\
 -16 bitová barevná hloubka nebo lepší\
 -doporučeno zapnuté vyhlazování písma\\
 
 !Parametry příkazové řádky\
---man ... zobrazí pouze manuál\\
+--man ... zobrazí pouze příručku\\
 
 !Odinstalace\
 Použijte zástupce "Přidat nebo ubrat programy" (resp. "Programy a funkce") v Ovládacích panelech.\\
@@ -187,7 +187,7 @@ objevíte. Předtím byste však měli\
 nám informace o chybách, které jsou zde již uvedeny.\
 -se podívat, zda nebyla uvolněna novější verze programu, než kterou máte. V ní totiž
 může být problém odstraněn, především jedná-li se o významnou chybu.\
--si prečíst příslušnou stránku manuálu. Možná se nejedná o chybu. (Tato hra není
+-si prečíst příslušnou stránku příručky. Možná se nejedná o chybu. (Tato hra není
 klon Civilization II!)\
 -se ujistit, že se nejedná o problém s instalací nebo s některým doplňkem hry vytvořeným
 třetí stranou jako je např. alternativní AI. Nejste-li si jisti, odinstalujte hru pomocí
@@ -241,7 +241,7 @@ $Rychlý start\
 
 !!Rychlý start\
 
-Základní tipy pro zahájení hraní bez čtení manuálu:\\
+Základní tipy pro zahájení hraní bez čtení příručky:\\
 
 -Toto je tahová hra. Zatímco jeden národ vykonává činnosti v rámci svého tahu, všechny ostatní
 národy nejsou aktivní (kromě případů, kdy jsou kontaktovány za účelem diplomatických jednání).\

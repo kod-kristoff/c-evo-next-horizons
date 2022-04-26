@@ -142,6 +142,7 @@
 #TITLE_NATION #N
 #TITLE_SPYMISSION Шпионская операция
 #TITLE_SUICIDE Миссия самоубийства
+#TITLE_MESSAGE Message
 #FRMILREP Военное сообщение
 
 'Тексты сообщений

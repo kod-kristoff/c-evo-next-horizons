@@ -75,6 +75,7 @@ end;
 
 procedure TWondersDlg.FormShow(Sender: TObject);
 begin
+  Caption := Phrases.Lookup('TITLE_WONDERS');
   Selection := -1;
   OffscreenPaint;
 end;

@@ -28,7 +28,7 @@
 'Start Dialog
 #ACTIONHEADER_CONFIG Konfigurátor
 #ACTION_CONFIG Změna jazyka, přidání map a AI
-#ACTIONHEADER_MANUAL Manuál
+#ACTIONHEADER_MANUAL Příručka
 #ACTION_MANUAL Popis pravidel a uživatelského rozhraní
 #ACTIONHEADER_CREDITS Autoři
 #ACTION_CREDITS Kdo se podílel na této hře

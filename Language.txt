@@ -139,6 +139,7 @@
 #TITLE_NATION #N
 #TITLE_SPYMISSION Covert Operation
 #TITLE_SUICIDE Suicide Mission
+#TITLE_MESSAGE Message
 #FRMILREP Military Report
 
 'Message Text

@@ -142,6 +142,7 @@
 #TITLE_NATION #N
 #TITLE_SPYMISSION 秘密行動
 #TITLE_SUICIDE 自殺行動
+#TITLE_MESSAGE Message
 #FRMILREP 軍事報告
 
 'Message Text

@@ -131,6 +131,7 @@ var
   NewWidth: Integer;
   NewHeight: Integer;
 begin
+  Caption := Phrases2.Lookup('MENU_ADVTREE');
   if Image = nil then begin
     Image := TBitmap.Create;
     Image.PixelFormat := pf24bit;

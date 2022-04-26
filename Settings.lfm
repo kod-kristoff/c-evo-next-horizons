@@ -4,7 +4,7 @@ object SettingsDlg: TSettingsDlg
   Top = 240
   Width = 483
   BorderStyle = bsNone
-  Caption = 'LocaleDlg'
+  Caption = 'Settings'
   ClientHeight = 448
   ClientWidth = 483
   DesignTimePPI = 144

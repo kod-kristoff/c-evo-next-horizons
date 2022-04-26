@@ -16,7 +16,7 @@ object DirectDlg: TDirectDlg
   OnCreate = FormCreate
   OnPaint = FormPaint
   OnShow = FormShow
-  LCLVersion = '1.8.0.6'
+  ShowInTaskBar = stNever
   PixelsPerInch = 96
   Scaled = False
 end

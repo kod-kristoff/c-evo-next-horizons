@@ -191,6 +191,7 @@ var
   Ticks0: TDateTime;
   Ticks: TDateTime;
 begin
+  Caption := Phrases.Lookup('TITLE_MESSAGE');
   if GameMode = cMovie then
   begin
     if not((GameMode = cMovie) and (MovieSpeed = 4)) then
@@ -546,8 +547,5 @@ begin
   Play(OpenSound);
   OpenSound := '';
 end;
-
-
-initialization
 
 end.

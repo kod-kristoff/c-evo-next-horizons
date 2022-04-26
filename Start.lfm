@@ -25,6 +25,7 @@ object StartDlg: TStartDlg
   OnPaint = FormPaint
   OnShow = FormShow
   LCLVersion = '2.0.12.0'
+  ShowInTaskBar = stNever
   Scaled = False
   object StartBtn: TButtonA
     Tag = 15104

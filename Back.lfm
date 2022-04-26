@@ -16,6 +16,7 @@ object Background: TBackground
   OnDestroy = FormDestroy
   OnPaint = FormPaint
   OnShow = FormShow
+  ShowInTaskBar = stNever
   LCLVersion = '2.2.0.4'
   Scaled = False
   WindowState = wsFullScreen

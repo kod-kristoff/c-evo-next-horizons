@@ -4,7 +4,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  LCLProc, ScreenTools, Messg, ButtonA, Registry, Directories, DrawDlg, ButtonC,
+  LCLProc, ScreenTools, Messg, ButtonA, Directories, DrawDlg, ButtonC,
   UKeyBindings, ULanguages;
 
 type
@@ -192,6 +192,7 @@ end;
 
 procedure TSettingsDlg.FormShow(Sender: TObject);
 begin
+  Caption := Phrases2.Lookup('ACTIONHEADER_CONFIG');
   ReloadLanguages;
   StartDlg.Translator.LanguageListToStrings(ListLanguages.Items);
   ListLanguages.Font.Color := MainTexture.ColorMark;

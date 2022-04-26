@@ -139,6 +139,7 @@
 #TITLE_NATION #f
 #TITLE_SPYMISSION Špionážní operace
 #TITLE_SUICIDE Sebevražedná mise
+#TITLE_MESSAGE Sdělení
 #FRMILREP Vojenské hlášení
 
 'Message Text
@@ -454,7 +455,7 @@ Ekonomika a daně
 Vliv Velké zdi
 Pouze terén
 Divy světa
-Manuál
+Příručka
 Test
 Vojenské hlášení
 Zobrazit log

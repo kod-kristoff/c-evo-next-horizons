@@ -143,6 +143,7 @@
 #TITLE_NATION #N
 #TITLE_SPYMISSION Verdeckte Operation
 #TITLE_SUICIDE Himmelfahrtskommando
+#TITLE_MESSAGE Message
 
 'Message Text
 #NOALTAI Es sind keine weiteren AIs installiert.\Alternative AI-Module können von der C-evo Webseite heruntergeladen oder selbst entwickelt werden.

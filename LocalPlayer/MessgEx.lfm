@@ -5,7 +5,7 @@ object MessgExDlg: TMessgExDlg
   Width = 418
   BorderIcons = []
   BorderStyle = bsNone
-  Caption = 'C-evo'
+  Caption = 'Message'
   ClientHeight = 134
   ClientWidth = 418
   Color = clBtnFace

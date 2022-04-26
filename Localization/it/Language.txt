@@ -139,6 +139,7 @@
 #TITLE_NATION #N
 #TITLE_SPYMISSION Servizi segreti
 #TITLE_SUICIDE Missione suicida
+#TITLE_MESSAGE Message
 #FRMILREP Rapporto militare
 
 'Message Text

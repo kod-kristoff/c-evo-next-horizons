@@ -163,6 +163,7 @@ end;
 
 procedure TRatesDlg.FormShow(Sender: TObject);
 begin
+  Caption := Phrases.Lookup('TITLE_RATES');
   if MyRO.Wonder[woLiberty].EffectiveOwner = me then
   begin
     ScienceBtn.Visible := false;

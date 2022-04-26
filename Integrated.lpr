@@ -25,7 +25,8 @@ begin
 
   DotNetClient := nil;
   Application.Initialize;
-  Application.Title := 'c-evo';
+  Application.Title := 'C-evo';
+  Application.TaskBarBehavior := tbMultiButton;
   Directories.UnitInit;
   ScreenTools.UnitInit;
   Application.CreateForm(TDirectDlg, DirectDlg);

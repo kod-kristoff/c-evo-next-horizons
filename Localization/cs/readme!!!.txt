@@ -22,7 +22,7 @@ http://c-evo.org
 
 3. Obsah tohoto balíku
 ----------------------
-Všechny texty jsou přeloženy do češtiny. Včetně dvou obrázků v manuálu.
+Všechny texty jsou přeloženy do češtiny. Včetně dvou obrázků v příručce.
 Dále byla přeložena jména a jednotky národů, které jsou standardně dodávány se hrou.
 Jako bonus byl přidán nový národ Čechů (o něm více na konci tohoto souboru).
 
@@ -87,7 +87,7 @@ Nezapomeňte jméno národa správně skloňovat. Po rozehrání hry bude již v
 
 8. Autoři
 ---------
-Autor lokalizace textů a manuálu:
+Autor lokalizace textů a příručky:
  "tyllanthor" <tyl.lanthor@gmail.com> (dříve používající přezdívku "LFK")
 
 Autor lokalizace národů:
