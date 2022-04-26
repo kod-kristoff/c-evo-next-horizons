@@ -13,6 +13,8 @@ type
     mikPureIcon, mikMyArmy, mikEnemyArmy, mikFullControl, mikShip, mikBigIcon,
     mikEnemyShipComplete);
 
+  { TMessgExDlg }
+
   TMessgExDlg = class(TBaseMessgDlg)
     Button1: TButtonA;
     Button2: TButtonA;
@@ -55,6 +57,7 @@ function SimpleQuery(QueryKind: TMessageKind; SimpleText, SoundItem: string)
   : integer;
 procedure ContextMessage(SimpleText, SoundItem: string;
   ContextKind, ContextNo: integer);
+
 
 implementation
 
@@ -219,11 +222,13 @@ const
   yScrewed = 10;
   wScrewed = 43;
   hScrewed = 27;
+type
+  TScrewed = array [0 .. wScrewed - 1, 0 .. hScrewed - 1, 0 .. 3] of Single;
 var
   ix, iy, xDst, yDst, dx, dy, xIcon, yIcon: integer;
   BookRect: TRect;
   x1, xR, yR, share: single;
-  Screwed: array [0 .. wScrewed - 1, 0 .. hScrewed - 1, 0 .. 3] of single;
+  Screwed: TScrewed;
   SrcPtr: TPixelPointer;
   Width: Integer;
   Height: Integer;
@@ -234,7 +239,7 @@ begin
     xIcon := IconIndex mod 7 * xSizeBig;
     yIcon := (IconIndex + SystemIconLines * 7) div 7 * ySizeBig;
     // prepare screwed icon
-    FillChar(Screwed, sizeof(Screwed), 0);
+    Screwed := Default(TScrewed);
     BigImp.BeginUpdate;
     SrcPtr := PixelPointer(BigImp, ScaleToNative(xIcon), ScaleToNative(yIcon));
     for iy := 0 to ScaleToNative(Height) - 1 do begin

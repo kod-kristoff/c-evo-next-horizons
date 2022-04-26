@@ -33,24 +33,34 @@ procedure GetCityTileAdvice(p, cix: integer; var Advice: TCityTileAdviceData);
 procedure InitGame;
 procedure ReleaseGame;
 
+
 implementation
 
 type
   TTradeProcessing = record
-    TaxBonus, LuxBonus, ScienceBonus, FutResBonus, ScienceDoubling,
-      HappyBase: integer;
-    RelCorr: single;
-    FlexibleLuxury: boolean;
+    TaxBonus: Integer;
+    LuxBonus: Integer;
+    ScienceBonus: Integer;
+    FutResBonus: Integer;
+    ScienceDoubling: Integer;
+    HappyBase: Integer;
+    RelCorr: Single;
+    FlexibleLuxury: Boolean;
   end;
 
   TProdProcessing = record
-    ProdBonus, PollBonus, FutProdBonus, PollThreshold: integer;
+    ProdBonus: Integer;
+    PollBonus: Integer;
+    FutProdBonus: Integer;
+    PollThreshold: Integer;
   end;
 
   PCityReportEx = ^TCityReportEx;
 
   TCityReportEx = record
-    BaseHappiness, BaseControl, Material: integer;
+    BaseHappiness: Integer;
+    BaseControl: Integer;
+    Material: Integer;
     ProdProcessing: TProdProcessing;
     TradeProcessing: TTradeProcessing;
   end;
@@ -58,10 +68,10 @@ type
 var
   MaxDist: integer;
 
-  {
-    Reporting
-    ____________________________________________________________________
-  }
+{
+  Reporting
+  ____________________________________________________________________
+}
 procedure GetCityAreaInfo(p, Loc: integer; var CityAreaInfo: TCityAreaInfo);
 var
   V21, Loc1, p1: integer;
@@ -87,10 +97,10 @@ begin
         else if (UsedByCity[Loc1] <> -1) and (UsedByCity[Loc1] <> Loc) then
           Available[V21] := faNotAvailable
         else
-          Available[V21] := faAvailable
-      end
+          Available[V21] := faAvailable;
+      end;
     end;
-  end
+  end;
 end;
 
 function CanCityGrow(p, cix: integer): boolean;
@@ -223,7 +233,7 @@ begin
     else
       RelCorr := 1.0;
     HappyBase := Size + HappinessBeforeLux;
-  end
+  end;
 end;
 
 procedure SplitTrade(Trade, TaxRate, LuxRate, Working: integer;
@@ -279,14 +289,14 @@ begin
         i := RW[p].Model[Project and cpIndex].MCost;
         result := result - 3 * i;
         if result <= 0 then
-          result := i
+          result := i;
       end
       else if RW[p].Model[Project and cpIndex].Cap[mcLine] > 0 then
         if Project0 and (not cpAuto or cpRepeat) = Project and not cpAuto or cpRepeat
         then
           result := result shr 1
         else
-          result := result * 2
+          result := result * 2;
     end
     else
     begin { improvement project }
@@ -296,7 +306,7 @@ begin
         result := result * ColossusEffect div 100;
     end;
     result := result * BuildCostMod[Difficulty[p]] div 12;
-  end
+  end;
 end;
 
 function GetSmallCityReport(p, cix: integer; var CityReport: TCityReport;
@@ -329,12 +339,12 @@ begin
       if RW[p].Government = gFundamentalism then
       begin
         Happy := Size;
-        Control := Size
+        Control := Size;
       end // !!! old bug, kept for compatibility
       else
       begin
         Happy := 0;
-        Control := 0
+        Control := 0;
       end;
 
       BaseHappiness := BasicHappy * 2;
@@ -373,12 +383,12 @@ begin
         if Built[i] = 1 then
         begin
           inc(Happy);
-          inc(BaseHappiness, 2)
+          inc(BaseHappiness, 2);
         end;
       if Built[imTemple] = 1 then
       begin
         inc(Happy);
-        inc(BaseHappiness, 2)
+        inc(BaseHappiness, 2);
       end;
       if Built[imCathedral] = 1 then
       begin
@@ -387,13 +397,13 @@ begin
         if GWonder[woBach].EffectiveOwner = p then
         begin
           inc(Happy);
-          inc(BaseHappiness, 2)
+          inc(BaseHappiness, 2);
         end;
       end;
       if Built[imTheater] > 0 then
       begin
         inc(Happy, 2);
-        inc(BaseHappiness, 4)
+        inc(BaseHappiness, 4);
       end;
 
       // calculate unit support
@@ -432,13 +442,13 @@ begin
               (RW[p].Model[RW[p].Un[uix].mix].Kind = mkSpecial_TownGuard) then
             begin
               inc(Happy);
-              inc(Control, 2)
+              inc(Control, 2);
             end;
         gFundamentalism:
           begin
             BaseHappiness := 0; // done by control
             Happy := Size;
-            Control := Size
+            Control := Size;
           end;
       end;
 
@@ -462,7 +472,7 @@ begin
           // HypoTiles go beyond map border!
           begin
             result := eInvalid;
-            exit
+            exit;
           end;
           GetTileInfo(p, cix, Loc1, TileInfo);
           inc(FoodRep, TileInfo.Food);
@@ -471,7 +481,7 @@ begin
           if (RealMap[Loc1] and fModern <> 0) and
             (RW[p].Tech[adMassProduction] >= tsApplicable) then
             inc(RareOK[RealMap[Loc1] shr 25 and 3]);
-          inc(Working)
+          inc(Working);
         end;
       if Built[imAlgae] = 1 then
         inc(FoodRep, 12);
@@ -500,7 +510,7 @@ begin
     end;
   end;
   result := eOk;
-end; { GetSmallCityReport }
+end;
 
 function GetCityReport(p, cix: integer; var CityReport: TCityReport): integer;
 begin
@@ -581,10 +591,10 @@ begin
           begin
             SelectedLoc := Loc1;
             SelectedV21 := V21;
-            Most := Resources
-          end
-        end
-      end
+            Most := Resources;
+          end;
+        end;
+      end;
     end;
   end;
 end;
@@ -616,11 +626,11 @@ begin
           begin
             SelectedLoc := Loc1;
             SelectedV21 := V21;
-            Least := Resources
-          end
+            Least := Resources;
+          end;
         end;
-      end
-  end
+      end;
+  end;
 end;
 
 function NextPoll(p, cix: integer): integer;
@@ -679,8 +689,8 @@ begin
     begin
       assert(1 shl V21 and Tiles = 0);
       Tiles := Tiles or (1 shl V21);
-      UsedByCity[TileLoc] := Loc
-    end
+      UsedByCity[TileLoc] := Loc;
+    end;
 end;
 
 procedure CityGrowth(p, cix: integer);
@@ -703,10 +713,10 @@ begin
       begin { no disorder -- exploit tile }
         assert(1 shl V21 and Tiles = 0);
         Tiles := Tiles or (1 shl V21);
-        UsedByCity[TileLoc] := Loc
-      end
+        UsedByCity[TileLoc] := Loc;
+      end;
     end;
-  end
+  end;
 end;
 
 procedure CityShrink(p, cix: integer);
@@ -728,7 +738,7 @@ begin
     begin { all citizens were working -- worst tile no longer exploited }
       assert(1 shl V21 and Tiles <> 0);
       Tiles := Tiles and not(1 shl V21);
-      UsedByCity[TileLoc] := -1
+      UsedByCity[TileLoc] := -1;
     end
     else { test whether exploitation of tile would lead to disorder }
     begin
@@ -741,10 +751,10 @@ begin
       begin { disorder -- don't exploit tile }
         assert(1 shl V21 and Tiles <> 0);
         Tiles := Tiles and not(1 shl V21);
-        UsedByCity[TileLoc] := -1
-      end
+        UsedByCity[TileLoc] := -1;
+      end;
     end;
-  end
+  end;
 end;
 
 procedure Pollute(p, cix: integer);
@@ -759,7 +769,7 @@ begin
     begin
       inc(Flags, chPollution);
       RealMap[PollutionLoc] := RealMap[PollutionLoc] or fPoll;
-    end
+    end;
   end;
 end;
 
@@ -789,8 +799,8 @@ begin
             if i = imGrWall then
               GrWallContinent[p] := -1;
           end;
-          inc(Flags, chImprovementLost)
-        end
+          inc(Flags, chImprovementLost);
+        end;
       end;
 end;
 
@@ -845,7 +855,7 @@ begin
       if Prod > CityProjectCost then
       begin
         inc(Money, Prod - CityProjectCost);
-        Prod := CityProjectCost
+        Prod := CityProjectCost;
       end;
       if Production < 0 then
         Flags := Flags or chUnitLost
@@ -887,7 +897,7 @@ begin
     if CheckGrow and (GTestFlags and tfImmGrow <> 0) then { fast growth }
     begin
       if CanCityGrow(p, cix) then
-        inc(SizeMod)
+        inc(SizeMod);
     end
     else if CheckGrow and (Food >= CityStorage) then { normal growth }
     begin
@@ -897,8 +907,8 @@ begin
           dec(Food, CityStorage shr 1)
         else
           dec(Food, CityStorage);
-        inc(SizeMod)
-      end
+        inc(SizeMod);
+      end;
     end
     else if Food < 0 then { famine }
     begin
@@ -923,7 +933,7 @@ begin
       else
       begin
         dec(SizeMod);
-        inc(Flags, chPopDecrease)
+        inc(Flags, chPopDecrease);
       end
     end;
     if Food > CityStorage then
@@ -953,15 +963,15 @@ begin
               if TestDet < Det then
               begin
                 uix := i;
-                Det := TestDet
+                Det := TestDet;
               end;
             end;
         if uix >= 0 then
         begin
           RemoveUnit_UpdateMap(p, uix);
           inc(Flags, chUnitLost);
-        end
-      end
+        end;
+      end;
     end;
 
     if GTestFlags and tfImmImprove <> 0 then
@@ -1007,7 +1017,7 @@ begin
               (Model[mix].Domain = dAir) and (Built[imAirport] = 1) then
               Exp := ExpCost * 2; { vet }
             if Project and cpConscripts <> 0 then
-              Flags := Flags or unConscripts
+              Flags := Flags or unConscripts;
           end;
           PlaceUnit(p, nUn - 1);
           UpdateUnitMap(Loc);
@@ -1064,7 +1074,7 @@ begin
                     for cix2 := 0 to nCity - 1 do
                       if (City[cix2].Loc >= 0) and (City[cix2].Built[i] = 1)
                       then
-                        GWonder[i].EffectiveOwner := p
+                        GWonder[i].EffectiveOwner := p;
               end;
             woLighthouse:
               CheckSpecialModels(p, preLighthouse);
@@ -1084,9 +1094,9 @@ begin
                     if RW[p].Treaty[p1] = trNoContact then
                       IntroduceEnemy(p, p1);
                     GiveCivilReport(p, p1);
-                    GiveMilReport(p, p1)
+                    GiveMilReport(p, p1);
                   end;
-              end
+              end;
           end;
         end;
 
@@ -1112,7 +1122,7 @@ begin
         Built[NewImp] := 1;
       end;
       Prod0 := Prod;
-      inc(Flags, chProduction)
+      inc(Flags, chProduction);
     end
     else
     begin
@@ -1132,10 +1142,10 @@ begin
       while SizeMod < 0 do
       begin
         CityShrink(p, cix);
-        inc(SizeMod)
+        inc(SizeMod);
       end;
-  end
-end; // CityTurn
+  end;
+end;
 
 {
   Tile Access
@@ -1178,7 +1188,7 @@ begin
             if CityAreaInfo.Available[V21] <> faAvailable then
             begin
               result := eTileNotAvailable;
-              exit
+              exit;
             end;
         // not more tiles than inhabitants
         Working := 0;
@@ -1188,7 +1198,7 @@ begin
         if Working > Size then
         begin
           result := eNoWorkerAvailable;
-          exit
+          exit;
         end;
       end;
     end;
@@ -1207,10 +1217,10 @@ begin
             assert(Mode < moPlaying)
             // should only happen during loading, because of wrong sSetCityTiles command order
           else
-            UsedByCity[Loc1] := -1 // unemploy tile
+            UsedByCity[Loc1] := -1; // unemploy tile
         end;
-      Tiles := NewTiles
-    end
+      Tiles := NewTiles;
+    end;
   end;
 end;
 
@@ -1222,7 +1232,11 @@ const
   oScience = 3;
 type
   TTileData = record
-    Food, Prod, Trade, SubValue, V21: integer;
+    Food: Integer;
+    Prod: Integer;
+    Trade: Integer;
+    SubValue: Integer;
+    V21: Integer;
   end;
 var
   i, V21, Loc1, nHierarchy, iH, iT, iH_Switch, MinWorking, MaxWorking,
@@ -1363,7 +1377,7 @@ begin
         if (Loc1 >= 0) and (Loc1 < MapSize) and
           (RealMap[Loc1] and fModern = cardinal(NeedRare)) then
           RareTiles := RareTiles or (1 shl V21);
-      end
+      end;
     end;
 
     // step 1: sort tiles to hierarchies
@@ -1653,10 +1667,10 @@ begin
                   (CityReportEx.TradeProcessing.HappyBase - Size) div 2 +
                   TestReport.Lux shr 1;
                 Advice.CityReport := TestReport;
-              end
-            end // if (SuperPlus>0) or (ValuePlus>=0.0)
-          end // if SuperPlus>=0
-        end
+              end;
+            end; // if (SuperPlus>0) or (ValuePlus>=0.0)
+          end; // if SuperPlus>=0
+        end;
       end;
 
       // calculate next combination
@@ -1690,7 +1704,7 @@ begin
   assert(BestSuperValue > 0); // advice should always be possible
   Advice.Tiles := BestTiles;
   Advice.CityReport.HypoTiles := BestTiles;
-end; // GetCityTileAdvice
+end;
 
 {
   Start/End Game

@@ -814,7 +814,7 @@ begin
         else
         begin
           Data := nil;
-          SavedData[p] := nil
+          SavedData[p] := nil;
         end;
         nBattleHistory := 0;
         BattleHistory := nil;
@@ -835,7 +835,7 @@ begin
         else
           RW[p].DefaultDebugMap := nil;
 
-        { !!!for i:=0 to nShipPart-1 do GShip[p].Parts[i]:=Delphirandom((3-i)*2);{ }
+        { !!!for i:=0 to nShipPart-1 do GShip[p].Parts[i]:=Delphirandom((3-i)*2); }
       end;
 
   if LandMass > 0 then

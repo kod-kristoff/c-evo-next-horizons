@@ -382,7 +382,8 @@ type
     procedure SetFullScreen(Active: Boolean);
     procedure PaintZoomedTile(dst: TBitmap; x, y, Loc: integer);
   public
-    UsedOffscreenWidth, UsedOffscreenHeight: integer;
+    UsedOffscreenWidth: Integer;
+    UsedOffscreenHeight: Integer;
     Offscreen: TBitmap;
     OffscreenUser: TForm;
     procedure Client(Command, NewPlayer: integer; var Data);
@@ -2842,8 +2843,8 @@ begin
               BitBltCanvas(Canvas, (xRightPanel + 10) - (16 + 64),
                 ClientHeight - PanelHeight, 64, 64, AILogo[pLogo].Canvas,
                 0, 0);
-          end
-        end
+          end;
+        end;
       end;
 
     cTurn, cResume, cContinue:
@@ -7700,7 +7701,7 @@ end;
 
 procedure TMainScreen.Toggle(Sender: TObject);
 begin
-  TMenuItem(Sender).Checked := not TMenuItem(Sender).Checked
+  TMenuItem(Sender).Checked := not TMenuItem(Sender).Checked;
 end;
 
 procedure TMainScreen.PanelBoxMouseMove(Sender: TObject; Shift: TShiftState;
