@@ -2334,7 +2334,7 @@ begin
               else { if mRepList.Checked then }
               begin
                 if Flags and CityRepMask <> 0 then
-                  ShowCityList := true
+                  ShowCityList := true;
               end;
             end;
           end; { city loop }
@@ -6204,7 +6204,7 @@ begin
         end;
       end;
       Update; // remove message box from screen
-    end
+    end;
   end;
 
   if (result >= rExecuted) and (MyModel[MyUn[UnFocus].mix].Domain = dAir) and
@@ -6241,7 +6241,7 @@ begin
       end;
       Update; // remove message box from screen
       MyUn[UnFocus].Status := MyUn[UnFocus].Status or usToldNoReturn;
-    end
+    end;
   end;
 
   if result = eMissionDone then
@@ -6279,17 +6279,17 @@ begin
         eHiddenUnit:
           begin
             Play('NOMOVE_SUBMARINE');
-            PaintLoc(ToLoc)
+            PaintLoc(ToLoc);
           end;
         eStealthUnit:
           begin
             Play('NOMOVE_STEALTH');
-            PaintLoc(ToLoc)
+            PaintLoc(ToLoc);
           end;
         eZOC_EnemySpotted:
           begin
             Play('NOMOVE_ZOC');
-            PaintLoc(ToLoc, 1)
+            PaintLoc(ToLoc, 1);
           end;
         rExecuted .. maxint:
           begin
@@ -6407,7 +6407,7 @@ begin
       for i := 0 to MyRO.nEnemyModel - 1 do
       begin
         LostArmy[i] := MyRO.EnemyModel[i].Lost - LostArmy[i];
-        inc(nLostArmy, LostArmy[i])
+        inc(nLostArmy, LostArmy[i]);
       end;
       if result and rUnitRemoved <> 0 then
       begin
@@ -6442,8 +6442,8 @@ begin
           MessgText := Tribe[Defender].TString(Phrases.Lookup('ARMYLOST',
             MyRO.EnemyModel[MyRO.EnemyUn[euix].emix].Domain));
           ShowModal;
-        end
-      end
+        end;
+      end;
     end;
     if result and rUnitRemoved <> 0 then
     begin
@@ -6454,8 +6454,8 @@ begin
     if NeedEcoUpdate then
     begin
       UpdateViews(true);
-      Update
-    end
+      Update;
+    end;
   end;
 
   if result = eMissionDone then
@@ -6581,13 +6581,13 @@ begin
     begin
       assert(result <> eMissionDone);
       CheckTerrainBtnVisible;
-      FocusOnLoc(ToLoc, flRepaintPanel or flImmUpdate)
+      FocusOnLoc(ToLoc, flRepaintPanel or flImmUpdate);
     end;
 
   if (result >= rExecuted) and CityCaptured and (MyMap[ToLoc] and fCity <> 0)
   then
     ZoomToCity(ToLoc, UnFocus < 0, chCaptured); // show captured city
-end; // moveunit
+end;
 
 procedure TMainScreen.MoveOnScreen(ShowMove: TShowMove;
   Step0, Step1, nStep: integer; Restore: boolean = true);
@@ -6633,17 +6633,17 @@ begin
       yFrom := (yFromLoc - yw) * yyt + (yyt - yyu_anchor);
       if xFrom < xTo then begin
         xMin := xFrom;
-        xRange := xTo - xFrom
+        xRange := xTo - xFrom;
       end else begin
         xMin := xTo;
-        xRange := xFrom - xTo
+        xRange := xFrom - xTo;
       end;
       if yFrom < yTo then begin
         yMin := yFrom;
-        yRange := yTo - yFrom
+        yRange := yTo - yFrom;
       end else begin
         yMin := yTo;
-        yRange := yFrom - yTo
+        yRange := yFrom - yTo;
       end;
       inc(xRange, xxt * 2);
       inc(yRange, yyt * 3);
@@ -6691,7 +6691,7 @@ begin
         end;
         Ticks := NowPrecise;
       until (((Ticks - Ticks0) * 12) / OneMillisecond) >= MoveTime;
-      Ticks0 := Ticks
+      Ticks0 := Ticks;
     end;
   end;
   if Restore then
