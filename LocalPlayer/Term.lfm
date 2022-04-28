@@ -250,8 +250,6 @@ object MainScreen: TMainScreen
       GroupIndex = 1
       object mOwnMovement: TMenuItem
         Tag = 30
-        GroupIndex = 1
-        RadioItem = True
         object mSlowMoves: TMenuItem
           Tag = 75
           RadioItem = True
@@ -277,8 +275,6 @@ object MainScreen: TMainScreen
       end
       object mAllyMovement: TMenuItem
         Tag = 90
-        GroupIndex = 1
-        RadioItem = True
         object mAlSlowMoves: TMenuItem
           Tag = 91
           RadioItem = True
@@ -304,8 +300,6 @@ object MainScreen: TMainScreen
       end
       object mEnemyMovement: TMenuItem
         Tag = 74
-        GroupIndex = 1
-        RadioItem = True
         object mEnMoves: TMenuItem
           Tag = 78
           RadioItem = True
@@ -348,7 +342,6 @@ object MainScreen: TMainScreen
       end
       object mRep: TMenuItem
         Tag = 34
-        GroupIndex = 1
         object mRep0: TMenuItem
           OnClick = mRepClicked
         end
@@ -416,15 +409,14 @@ object MainScreen: TMainScreen
       object N10: TMenuItem
         Caption = '-'
         GroupIndex = 1
+        RadioItem = True
       end
       object mWaitTurn: TMenuItem
         Tag = 32
-        GroupIndex = 1
         OnClick = Toggle
       end
       object mScrolling: TMenuItem
         Tag = 84
-        GroupIndex = 1
         object mScrollSlow: TMenuItem
           Tag = 85
           RadioItem = True
@@ -443,7 +435,6 @@ object MainScreen: TMainScreen
       end
       object mTileSize: TMenuItem
         Tag = 96
-        GroupIndex = 1
         object mSmallTiles: TMenuItem
           Tag = 97
           RadioItem = True
@@ -462,7 +453,6 @@ object MainScreen: TMainScreen
       end
       object mSound: TMenuItem
         Tag = 80
-        GroupIndex = 1
         object mSoundOn: TMenuItem
           Tag = 82
           RadioItem = True
@@ -483,10 +473,10 @@ object MainScreen: TMainScreen
       object N6: TMenuItem
         Caption = '-'
         GroupIndex = 1
+        RadioItem = True
       end
       object mTest: TMenuItem
         Tag = 8
-        GroupIndex = 1
         object mJump: TMenuItem
           Tag = 54
           ShortCut = 16458
