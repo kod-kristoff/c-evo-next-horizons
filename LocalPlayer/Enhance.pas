@@ -383,7 +383,7 @@ var
 begin
   ShortCut := KeyToShortCut(Key, Shift);
   if BHelp.Test(ShortCut) then
-    HelpDlg.ShowNewContent(WindowModePersistent(FWindowMode), hkText,
+    HelpDlg.ShowNewContent(WindowModeMakePersistent(FWindowMode), hkText,
       HelpDlg.TextIndex('MACRO'))
 end;
 

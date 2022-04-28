@@ -531,7 +531,7 @@ begin
     begin
       i := (y - yFeature) div LinePitch;
       if (x >= xFeature - 21) and (x < ClientWidth) and (ssShift in Shift) then
-        HelpDlg.ShowNewContent(WindowModePersistent(FWindowMode), hkFeature, code[i])
+        HelpDlg.ShowNewContent(WindowModeMakePersistent(FWindowMode), hkFeature, code[i])
       else if not(code[i] in AutoFeature) then
       begin
         if (code[i] < mcFirstNonCap) and (x >= xFeature - 21) and

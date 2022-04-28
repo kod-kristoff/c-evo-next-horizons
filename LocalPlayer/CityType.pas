@@ -245,7 +245,7 @@ begin
     (y < yList + 6 + 20 + i div nListCol * 32) then
   begin
     if ssShift in Shift then
-      HelpDlg.ShowNewContent(WindowModePersistent(FWindowMode), hkImp,
+      HelpDlg.ShowNewContent(WindowModeMakePersistent(FWindowMode), hkImp,
         MyData.ImpOrder[ctype, i])
     else
     begin
@@ -262,7 +262,7 @@ begin
     (y < yPool + 6 + 20 + i div nPoolCol * 32) then
   begin
     if ssShift in Shift then
-      HelpDlg.ShowNewContent(WindowModePersistent(FWindowMode), hkImp, Pooliix[i])
+      HelpDlg.ShowNewContent(WindowModeMakePersistent(FWindowMode), hkImp, Pooliix[i])
     else
     begin
       dragiix := Pooliix[i];

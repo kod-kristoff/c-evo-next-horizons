@@ -70,7 +70,7 @@ const
   SideFrame = 9;
 
 procedure CreateOffscreen(var Offscreen: TBitmap);
-function WindowModePersistent(Mode: TWindowMode): TWindowMode;
+function WindowModeMakePersistent(Mode: TWindowMode): TWindowMode;
 procedure Register;
 
 
@@ -143,7 +143,7 @@ begin
   end else
   if Key = VK_F1 then begin
     if Assigned(ShowNewContentProc) then
-      ShowNewContentProc(WindowModePersistent(FWindowMode), HelpContext);
+      ShowNewContentProc(WindowModeMakePersistent(FWindowMode), HelpContext);
   end else
   if FWindowMode = wmPersistent then begin
     if Assigned(MainFormKeyDown) then

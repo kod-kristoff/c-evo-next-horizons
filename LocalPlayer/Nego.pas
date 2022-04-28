@@ -647,10 +647,10 @@ procedure TNegoDlg.FormMouseDown(Sender: TObject; Button: TMouseButton;
 begin
   if (X >= xNationPicture0) and (X < xNationPicture0 + 64) and
     (Y >= yNationPicture) and (Y < yNationPicture + 48) then
-    NatStatDlg.ShowNewContent(WindowModePersistent(FWindowMode), DipMem[me].pContact)
+    NatStatDlg.ShowNewContent(WindowModeMakePersistent(FWindowMode), DipMem[me].pContact)
   else if (X >= xNationPicture1) and (X < xNationPicture1 + 64) and
     (Y >= yNationPicture) and (Y < yNationPicture + 48) then
-    NatStatDlg.ShowNewContent(WindowModePersistent(FWindowMode), me)
+    NatStatDlg.ShowNewContent(WindowModeMakePersistent(FWindowMode), me)
 end;
 
 procedure TNegoDlg.BwdBtnClick(Sender: TObject);

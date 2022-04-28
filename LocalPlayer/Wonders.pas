@@ -350,7 +350,7 @@ procedure TWondersDlg.FormMouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
   if Selection >= 0 then
-    HelpDlg.ShowNewContent(WindowModePersistent(FWindowMode), hkImp, Selection);
+    HelpDlg.ShowNewContent(WindowModeMakePersistent(FWindowMode), hkImp, Selection);
 end;
 
 end.

@@ -1203,7 +1203,7 @@ begin
         iix := imix[i];
         if iix >= 0 then
           if ssShift in Shift then
-            HelpDlg.ShowNewContent(WindowModePersistent(FWindowMode), hkImp, iix)
+            HelpDlg.ShowNewContent(WindowModeMakePersistent(FWindowMode), hkImp, iix)
           else if (ClientMode < scContact) then
             with MessgExDlg do
             begin
@@ -1334,7 +1334,7 @@ begin
         begin // terrain help
           Loc1 := dLoc(cLoc, dx, dy);
           if (Loc1 >= 0) and (Loc1 < G.lx * G.ly) then
-            HelpOnTerrain(Loc1, WindowModePersistent(FWindowMode))
+            HelpOnTerrain(Loc1, WindowModeMakePersistent(FWindowMode))
         end
         else if (ClientMode < scContact) and (cGov <> gAnarchy) and
           (c.Flags and chCaptured = 0) then
