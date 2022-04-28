@@ -210,6 +210,7 @@ begin
   end
   else
     result := inherited;
+  Gtk2Fix;
 end;
 
 procedure TMessgExDlg.CancelMovie;

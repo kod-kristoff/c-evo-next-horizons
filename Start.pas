@@ -911,6 +911,9 @@ end;
 
 procedure TStartDlg.FormShow(Sender: TObject);
 begin
+  {$IFDEF UNIX}
+  ShowInTaskBar := stAlways;
+  {$ENDIF}
   MainTexture.Age := -1;
   List.Font.Color := MainTexture.ColorMark;
 
