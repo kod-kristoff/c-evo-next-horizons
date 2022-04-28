@@ -95,7 +95,7 @@ type
     RestoreUnFocus: Integer;
     CloseAction: TCityCloseAction;
     procedure OffscreenPaint; override;
-    procedure ShowNewContent(NewMode, Loc: integer; ShowEvent: cardinal);
+    procedure ShowNewContent(NewMode: TWindowMode; Loc: integer; ShowEvent: cardinal);
     procedure Reset;
     procedure CheckAge;
   end;
@@ -1108,7 +1108,7 @@ begin
   Timer1.Enabled := True;
 end;
 
-procedure TCityDlg.ShowNewContent(NewMode, Loc: integer; ShowEvent: cardinal);
+procedure TCityDlg.ShowNewContent(NewMode: TWindowMode; Loc: integer; ShowEvent: cardinal);
 begin
   if MyMap[Loc] and fOwned <> 0 then
   begin // own city
@@ -1203,7 +1203,7 @@ begin
         iix := imix[i];
         if iix >= 0 then
           if ssShift in Shift then
-            HelpDlg.ShowNewContent(FWindowMode or wmPersistent, hkImp, iix)
+            HelpDlg.ShowNewContent(WindowModePersistent(FWindowMode), hkImp, iix)
           else if (ClientMode < scContact) then
             with MessgExDlg do
             begin
@@ -1334,7 +1334,7 @@ begin
         begin // terrain help
           Loc1 := dLoc(cLoc, dx, dy);
           if (Loc1 >= 0) and (Loc1 < G.lx * G.ly) then
-            HelpOnTerrain(Loc1, FWindowMode or wmPersistent)
+            HelpOnTerrain(Loc1, WindowModePersistent(FWindowMode))
         end
         else if (ClientMode < scContact) and (cGov <> gAnarchy) and
           (c.Flags and chCaptured = 0) then

@@ -27,7 +27,7 @@ type
     procedure PaintBox1MouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; x, y: integer);
   public
-    procedure ShowNewContent(NewMode: integer);
+    procedure ShowNewContent(NewMode: TWindowMode);
   protected
     procedure OffscreenPaint; override;
   private
@@ -501,7 +501,7 @@ begin
   DecCap := -1;
 end;
 
-procedure TDraftDlg.ShowNewContent(NewMode: integer);
+procedure TDraftDlg.ShowNewContent(NewMode: TWindowMode);
 begin
   inherited ShowNewContent(NewMode);
 end;
@@ -531,7 +531,7 @@ begin
     begin
       i := (y - yFeature) div LinePitch;
       if (x >= xFeature - 21) and (x < ClientWidth) and (ssShift in Shift) then
-        HelpDlg.ShowNewContent(FWindowMode or wmPersistent, hkFeature, code[i])
+        HelpDlg.ShowNewContent(WindowModePersistent(FWindowMode), hkFeature, code[i])
       else if not(code[i] in AutoFeature) then
       begin
         if (code[i] < mcFirstNonCap) and (x >= xFeature - 21) and

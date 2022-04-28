@@ -27,12 +27,12 @@ type
     NoMap: TIsoMap;
   public
     procedure CheckAge;
-    procedure ShowNewContent_OwnModel(NewMode, mix: integer);
-    procedure ShowNewContent_OwnUnit(NewMode, uix: integer);
-    procedure ShowNewContent_EnemyUnit(NewMode, euix: integer);
-    procedure ShowNewContent_EnemyLoc(NewMode, Loc: integer);
-    procedure ShowNewContent_EnemyModel(NewMode, emix: integer);
-    procedure ShowNewContent_EnemyCity(NewMode, Loc: integer);
+    procedure ShowNewContent_OwnModel(NewMode: TWindowMode; mix: integer);
+    procedure ShowNewContent_OwnUnit(NewMode: TWindowMode; uix: integer);
+    procedure ShowNewContent_EnemyUnit(NewMode: TWindowMode; euix: integer);
+    procedure ShowNewContent_EnemyLoc(NewMode: TWindowMode; Loc: integer);
+    procedure ShowNewContent_EnemyModel(NewMode: TWindowMode; emix: integer);
+    procedure ShowNewContent_EnemyCity(NewMode: TWindowMode; Loc: integer);
 
   protected
     mixShow, // for dkOwnModel
@@ -217,21 +217,21 @@ begin
   OffscreenPaint;
 end;
 
-procedure TUnitStatDlg.ShowNewContent_OwnModel(NewMode, mix: integer);
+procedure TUnitStatDlg.ShowNewContent_OwnModel(NewMode: TWindowMode; mix: integer);
 begin
   Kind := dkOwnModel;
   mixShow := mix;
   inherited ShowNewContent(NewMode);
 end;
 
-procedure TUnitStatDlg.ShowNewContent_OwnUnit(NewMode, uix: integer);
+procedure TUnitStatDlg.ShowNewContent_OwnUnit(NewMode: TWindowMode; uix: integer);
 begin
   Kind := dkOwnUnit;
   uixShow := uix;
   inherited ShowNewContent(NewMode);
 end;
 
-procedure TUnitStatDlg.ShowNewContent_EnemyUnit(NewMode, euix: integer);
+procedure TUnitStatDlg.ShowNewContent_EnemyUnit(NewMode: TWindowMode; euix: integer);
 begin
   Kind := dkEnemyUnit;
   euixShow := euix;
@@ -239,7 +239,7 @@ begin
   inherited ShowNewContent(NewMode);
 end;
 
-procedure TUnitStatDlg.ShowNewContent_EnemyLoc(NewMode, Loc: integer);
+procedure TUnitStatDlg.ShowNewContent_EnemyLoc(NewMode: TWindowMode; Loc: integer);
 begin
   Kind := dkEnemyUnit;
   UnitLoc := Loc;
@@ -247,14 +247,14 @@ begin
   inherited ShowNewContent(NewMode);
 end;
 
-procedure TUnitStatDlg.ShowNewContent_EnemyModel(NewMode, emix: integer);
+procedure TUnitStatDlg.ShowNewContent_EnemyModel(NewMode: TWindowMode; emix: integer);
 begin
   Kind := dkEnemyModel;
   mox := @MyRO.EnemyModel[emix];
   inherited ShowNewContent(NewMode);
 end;
 
-procedure TUnitStatDlg.ShowNewContent_EnemyCity(NewMode, Loc: integer);
+procedure TUnitStatDlg.ShowNewContent_EnemyCity(NewMode: TWindowMode; Loc: integer);
 begin
   if MyMap[Loc] and fUnit <> 0 then
     Kind := dkEnemyCityDefense

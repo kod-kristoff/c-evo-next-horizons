@@ -22,7 +22,7 @@ type
     procedure TaxLuxBtnClick(Sender: TObject);
   public
     procedure OffscreenPaint; override;
-    procedure ShowNewContent(NewMode: integer);
+    procedure ShowNewContent(NewMode: TWindowMode);
   end;
 
 var
@@ -156,7 +156,7 @@ begin
   MarkUsedOffscreen(ClientWidth, ClientHeight);
 end;
 
-procedure TRatesDlg.ShowNewContent(NewMode: integer);
+procedure TRatesDlg.ShowNewContent(NewMode: TWindowMode);
 begin
   inherited ShowNewContent(NewMode);
 end;

@@ -74,7 +74,7 @@ type
     procedure Respond; // first turn of negotiation, respond
     procedure Start; // next turn of negotiation
     procedure OffscreenPaint; override;
-    procedure ShowNewContent(NewMode: integer);
+    procedure ShowNewContent(NewMode: TWindowMode);
 
   private
     Page, DipCommand: integer;
@@ -191,7 +191,7 @@ begin
     Delivers[i] := $FFFFFFFF;
 end;
 
-procedure TNegoDlg.ShowNewContent(NewMode: integer);
+procedure TNegoDlg.ShowNewContent(NewMode: TWindowMode);
 begin
   inherited ShowNewContent(NewMode);
   SetButtonStates;
@@ -647,10 +647,10 @@ procedure TNegoDlg.FormMouseDown(Sender: TObject; Button: TMouseButton;
 begin
   if (X >= xNationPicture0) and (X < xNationPicture0 + 64) and
     (Y >= yNationPicture) and (Y < yNationPicture + 48) then
-    NatStatDlg.ShowNewContent(FWindowMode or wmPersistent, DipMem[me].pContact)
+    NatStatDlg.ShowNewContent(WindowModePersistent(FWindowMode), DipMem[me].pContact)
   else if (X >= xNationPicture1) and (X < xNationPicture1 + 64) and
     (Y >= yNationPicture) and (Y < yNationPicture + 48) then
-    NatStatDlg.ShowNewContent(FWindowMode or wmPersistent, me)
+    NatStatDlg.ShowNewContent(WindowModePersistent(FWindowMode), me)
 end;
 
 procedure TNegoDlg.BwdBtnClick(Sender: TObject);

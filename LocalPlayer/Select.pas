@@ -73,9 +73,9 @@ type
     function OnlyChoice(TestKind: TListKind): integer;
     // -2=empty, -1=ambiguous, other=only choice
     procedure OffscreenPaint; override;
-    procedure ShowNewContent(NewMode: integer; ListKind: TListKind);
-    procedure ShowNewContent_CityProject(NewMode, cix: integer);
-    procedure ShowNewContent_MilReport(NewMode, p: integer);
+    procedure ShowNewContent(NewMode: TWindowMode; ListKind: TListKind);
+    procedure ShowNewContent_CityProject(NewMode: TWindowMode; cix: integer);
+    procedure ShowNewContent_MilReport(NewMode: TWindowMode; p: integer);
     procedure EcoChange;
     procedure TechChange;
     procedure AddCity;
@@ -927,33 +927,31 @@ begin
             CityRepMask);
         kModels, kChooseModel:
           if lix <> mixAll then
-            UnitStatDlg.ShowNewContent_OwnModel(FWindowMode or
-              wmPersistent, lix);
+            UnitStatDlg.ShowNewContent_OwnModel(wmPersistent, lix);
         kEModels:
-          UnitStatDlg.ShowNewContent_EnemyModel(FWindowMode or wmPersistent,
+          UnitStatDlg.ShowNewContent_EnemyModel(wmPersistent,
             code[1, sb.Position + Sel]);
         kAllEModels, kChooseEModel:
           if lix <> mixAll then
-            UnitStatDlg.ShowNewContent_EnemyModel(FWindowMode or
-              wmPersistent, lix);
+            UnitStatDlg.ShowNewContent_EnemyModel(wmPersistent, lix);
         kAdvance, kFarAdvance, kScience, kChooseTech, kChooseETech, kStealTech:
           if lix = adMilitary then
-            HelpDlg.ShowNewContent(FWindowMode or wmPersistent, hkText,
+            HelpDlg.ShowNewContent(wmPersistent, hkText,
               HelpDlg.TextIndex('MILRES'))
           else if lix < adMilitary then
-            HelpDlg.ShowNewContent(FWindowMode or wmPersistent, hkAdv, lix);
+            HelpDlg.ShowNewContent(wmPersistent, hkAdv, lix);
         kProject:
           if lix = cpImp + imTrGoods then
-            HelpDlg.ShowNewContent(FWindowMode or wmPersistent, hkText,
+            HelpDlg.ShowNewContent(wmPersistent, hkText,
               HelpDlg.TextIndex('TRADINGGOODS'))
           else if lix and (cpImp + cpType) = 0 then
-            UnitStatDlg.ShowNewContent_OwnModel(FWindowMode or wmPersistent,
+            UnitStatDlg.ShowNewContent_OwnModel(wmPersistent,
               lix and cpIndex)
           else if (lix and cpType = 0) and (lix <> cpImp + imTrGoods) then
-            HelpDlg.ShowNewContent(FWindowMode or wmPersistent, hkImp,
+            HelpDlg.ShowNewContent(wmPersistent, hkImp,
               lix and cpIndex);
         kGov:
-          HelpDlg.ShowNewContent(FWindowMode or wmPersistent, hkMisc,
+          HelpDlg.ShowNewContent(wmPersistent, hkMisc,
             miscGovList);
         kShipPart, kEShipPart:
           ;
@@ -1654,7 +1652,7 @@ begin
   OffscreenPaint;
 end;
 
-procedure TListDlg.ShowNewContent(NewMode: integer; ListKind: TListKind);
+procedure TListDlg.ShowNewContent(NewMode: TWindowMode; ListKind: TListKind);
 var
   i: integer;
   ShowFocus, forceclose: boolean;
@@ -1739,13 +1737,13 @@ begin
   inherited ShowNewContent(NewMode, forceclose);
 end; // ShowNewContent
 
-procedure TListDlg.ShowNewContent_CityProject(NewMode, cix: integer);
+procedure TListDlg.ShowNewContent_CityProject(NewMode: TWindowMode; cix: integer);
 begin
   cixProject := cix;
   ShowNewContent(NewMode, kProject);
 end;
 
-procedure TListDlg.ShowNewContent_MilReport(NewMode, p: integer);
+procedure TListDlg.ShowNewContent_MilReport(NewMode: TWindowMode; p: integer);
 begin
   pView := p;
   if p = me then

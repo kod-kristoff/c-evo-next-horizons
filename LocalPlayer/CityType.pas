@@ -23,7 +23,7 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure DeleteBtnClick(Sender: TObject);
   public
-    procedure ShowNewContent(NewMode: integer);
+    procedure ShowNewContent(NewMode: TWindowMode);
   protected
     procedure OffscreenPaint; override;
   private
@@ -225,7 +225,7 @@ begin
   OffscreenPaint;
 end;
 
-procedure TCityTypeDlg.ShowNewContent(NewMode: integer);
+procedure TCityTypeDlg.ShowNewContent(NewMode: TWindowMode);
 begin
   inherited ShowNewContent(NewMode);
 end;
@@ -245,7 +245,7 @@ begin
     (y < yList + 6 + 20 + i div nListCol * 32) then
   begin
     if ssShift in Shift then
-      HelpDlg.ShowNewContent(FWindowMode or wmPersistent, hkImp,
+      HelpDlg.ShowNewContent(WindowModePersistent(FWindowMode), hkImp,
         MyData.ImpOrder[ctype, i])
     else
     begin
@@ -262,7 +262,7 @@ begin
     (y < yPool + 6 + 20 + i div nPoolCol * 32) then
   begin
     if ssShift in Shift then
-      HelpDlg.ShowNewContent(FWindowMode or wmPersistent, hkImp, Pooliix[i])
+      HelpDlg.ShowNewContent(WindowModePersistent(FWindowMode), hkImp, Pooliix[i])
     else
     begin
       dragiix := Pooliix[i];

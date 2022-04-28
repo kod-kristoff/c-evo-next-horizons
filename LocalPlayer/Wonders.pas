@@ -27,7 +27,7 @@ type
     procedure PaintBackgroundShape;
   public
     procedure OffscreenPaint; override;
-    procedure ShowNewContent(NewMode: Integer);
+    procedure ShowNewContent(NewMode: TWindowMode);
   end;
 
 var
@@ -80,7 +80,7 @@ begin
   OffscreenPaint;
 end;
 
-procedure TWondersDlg.ShowNewContent(NewMode: Integer);
+procedure TWondersDlg.ShowNewContent(NewMode: TWindowMode);
 begin
   inherited ShowNewContent(NewMode);
 end;
@@ -350,7 +350,7 @@ procedure TWondersDlg.FormMouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
   if Selection >= 0 then
-    HelpDlg.ShowNewContent(FWindowMode or wmPersistent, hkImp, Selection);
+    HelpDlg.ShowNewContent(WindowModePersistent(FWindowMode), hkImp, Selection);
 end;
 
 end.

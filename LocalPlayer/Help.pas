@@ -107,7 +107,7 @@ type
     procedure ScrollBarUpdate(Sender: TObject);
     procedure Line(ca: TCanvas; i: Integer; lit: Boolean);
     procedure Prepare(sbPos: Integer = 0);
-    procedure ShowNewContentProcExecute(NewMode: Integer; HelpContext: string);
+    procedure ShowNewContentProcExecute(NewMode: TWindowMode; HelpContext: string);
     procedure WaterSign(x0, y0, iix: Integer);
     procedure Search(SearchString: string);
     procedure OnScroll(var Msg: TMessage); message WM_VSCROLL;
@@ -116,7 +116,7 @@ type
     HistItems: THistItems;
     Difficulty: Integer;
     procedure ClearHistory;
-    procedure ShowNewContent(NewMode, Category, Index: Integer);
+    procedure ShowNewContent(NewMode: TWindowMode; Category, Index: Integer);
     function TextIndex(Item: string): Integer;
   end;
 
@@ -315,7 +315,7 @@ begin
   ShowNewContentProc := ShowNewContentProcExecute;
 end;
 
-procedure THelpDlg.ShowNewContentProcExecute(NewMode: Integer;
+procedure THelpDlg.ShowNewContentProcExecute(NewMode: TWindowMode;
   HelpContext: string);
 begin
   HelpDlg.ShowNewContent(NewMode, hkText,
@@ -1930,7 +1930,7 @@ begin { Prepare }
   end; // with MainText
 end;
 
-procedure THelpDlg.ShowNewContent(NewMode, Category, Index: Integer);
+procedure THelpDlg.ShowNewContent(NewMode: TWindowMode; Category, Index: Integer);
 begin
   if (Category <> Kind) or (Index <> no) or (Category = hkMisc) and
     (Index = miscSearchResult) then begin

@@ -7,7 +7,8 @@ uses
   DrawDlg;
 
 type
-  TShowNewContent = procedure (NewMode: Integer; HelpContext: string) of object;
+  TWindowMode = (wmNone, wmModal, wmPersistent, wmSubmodal);
+  TShowNewContent = procedure (NewMode: TWindowMode; HelpContext: string) of object;
 
   { TBufferedDrawDlg }
 
@@ -24,10 +25,10 @@ type
     procedure SmartUpdateContent(ImmUpdate: Boolean = false);
     procedure StayOnTop_Workaround;
   protected
-    FWindowMode: Integer;
+    FWindowMode: TWindowMode;
     ModalFrameIndent: Integer;
     HelpContext: string;
-    procedure ShowNewContent(NewMode: Integer; ForceClose: Boolean = False);
+    procedure ShowNewContent(NewMode: TWindowMode; ForceClose: Boolean = False);
     procedure MarkUsedOffscreen(xMax, yMax: Integer);
     procedure OffscreenPaint; virtual;
     procedure VPaint; virtual;
@@ -36,7 +37,7 @@ type
     UsedOffscreenHeight: Integer;
     Offscreen: TBitmap;
     OffscreenUser: TForm;
-    property WindowMode: integer read FWindowMode;
+    property WindowMode: TWindowMode read FWindowMode;
   end;
 
   TFramedDlg = class(TBufferedDrawDlg)
@@ -63,18 +64,13 @@ var
   MainFormKeyDown: TKeyEvent;
 
 const
-  // window modes
-  wmNone = 0;
-  wmModal = $1;
-  wmPersistent = $2;
-  wmSubmodal = $3;
-
   yUnused = 161;
   NarrowFrame = 11;
   WideFrame = 36;
   SideFrame = 9;
 
 procedure CreateOffscreen(var Offscreen: TBitmap);
+function WindowModePersistent(Mode: TWindowMode): TWindowMode;
 procedure Register;
 
 
@@ -82,6 +78,12 @@ implementation
 
 uses
   ButtonBase, Area;
+
+function WindowModeMakePersistent(Mode: TWindowMode): TWindowMode;
+begin
+  if Mode = wmModal then Result := wmSubmodal
+    else Result := wmPersistent;
+end;
 
 procedure Register;
 begin
@@ -141,7 +143,7 @@ begin
   end else
   if Key = VK_F1 then begin
     if Assigned(ShowNewContentProc) then
-      ShowNewContentProc(FWindowMode or wmPersistent, HelpContext);
+      ShowNewContentProc(WindowModePersistent(FWindowMode), HelpContext);
   end else
   if FWindowMode = wmPersistent then begin
     if Assigned(MainFormKeyDown) then
@@ -167,7 +169,7 @@ begin
   BitBltCanvas(Canvas, 0, 0, ClientWidth, ClientHeight, Offscreen.Canvas, 0, 0);
 end;
 
-procedure TBufferedDrawDlg.ShowNewContent(NewMode: Integer;
+procedure TBufferedDrawDlg.ShowNewContent(NewMode: TWindowMode;
   ForceClose: Boolean);
 begin
   if Visible then begin

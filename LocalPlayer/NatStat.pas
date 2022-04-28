@@ -31,7 +31,7 @@ type
     procedure TellAIBtnClick(Sender: TObject);
   public
     procedure CheckAge;
-    procedure ShowNewContent(NewMode: integer; p: integer = -1);
+    procedure ShowNewContent(NewMode: TWindowMode; p: integer = -1);
     procedure EcoChange;
   protected
     procedure OffscreenPaint; override;
@@ -144,7 +144,7 @@ begin
   OffscreenPaint;
 end;
 
-procedure TNatStatDlg.ShowNewContent(NewMode, p: integer);
+procedure TNatStatDlg.ShowNewContent(NewMode: TWindowMode; p: integer);
 begin
   if p < 0 then
     if ClientMode >= scContact then

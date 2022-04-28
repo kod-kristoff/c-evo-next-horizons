@@ -53,7 +53,7 @@ begin
         12 - TextSize.Height div 2, FCaption);
     end else begin
       Brush.Color := $0000FF;
-      FrameRect(Rect(0, 0, 100, 25))
+      FrameRect(Rect(0, 0, 100, 25));
     end;
 end;
 

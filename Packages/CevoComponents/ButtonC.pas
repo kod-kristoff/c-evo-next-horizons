@@ -45,7 +45,7 @@ begin
     else
     begin
       Brush.Color := $0000FF;
-      FrameRect(Rect(0, 0, 12, 12))
+      FrameRect(Rect(0, 0, 12, 12));
     end;
 end;
 

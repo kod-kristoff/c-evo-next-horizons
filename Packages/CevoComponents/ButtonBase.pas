@@ -8,7 +8,8 @@ uses
 type
   TButtonBase = class(TGraphicControl)
   protected
-    FDown, FPermanent: boolean;
+    FDown: Boolean;
+    FPermanent: Boolean;
     FGraphic: TBitmap;
     // FDownSound, FUpSound: string;
     ClickProc: TNotifyEvent;
@@ -58,7 +59,7 @@ procedure TButtonBase.MouseDown(Button: TMouseButton; Shift: TShiftState;
   x, y: integer);
 begin
   Active := true;
-  MouseMove(Shift, x, y)
+  MouseMove(Shift, x, y);
 end;
 
 procedure TButtonBase.MouseUp(Button: TMouseButton; Shift: TShiftState;
@@ -92,7 +93,7 @@ begin
       if @DownChangedProc <> nil then
         DownChangedProc(self);
     end;
-  end
+  end;
 end;
 
 procedure TButtonBase.MouseMove(Shift: TShiftState; x, y: integer);

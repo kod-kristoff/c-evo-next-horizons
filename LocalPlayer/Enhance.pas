@@ -38,7 +38,7 @@ type
   private
     NoMap: TIsoMap;
   public
-    procedure ShowNewContent(NewMode: integer; TerrType: integer = -1);
+    procedure ShowNewContent(NewMode: TWindowMode; TerrType: integer = -1);
   protected
     Page: integer;
     procedure OffscreenPaint; override;
@@ -116,7 +116,7 @@ begin
   OffscreenPaint;
 end;
 
-procedure TEnhanceDlg.ShowNewContent(NewMode, TerrType: integer);
+procedure TEnhanceDlg.ShowNewContent(NewMode: TWindowMode; TerrType: integer);
 begin
   if (TerrType < fGrass) or (TerrType > fMountains) then
     Page := fGrass
@@ -383,7 +383,7 @@ var
 begin
   ShortCut := KeyToShortCut(Key, Shift);
   if BHelp.Test(ShortCut) then
-    HelpDlg.ShowNewContent(FWindowMode or wmPersistent, hkText,
+    HelpDlg.ShowNewContent(WindowModePersistent(FWindowMode), hkText,
       HelpDlg.TextIndex('MACRO'))
 end;
 

@@ -572,7 +572,7 @@ procedure InitMyModel(mix: integer; final: boolean);
 
 procedure ImpImage(ca: TCanvas; x, y, iix: integer; Government: integer = -1;
   IsControl: boolean = false);
-procedure HelpOnTerrain(Loc, NewMode: integer);
+procedure HelpOnTerrain(Loc: Integer; NewMode: TWindowMode);
 
 
 implementation
@@ -747,7 +747,7 @@ begin
     mod 7 * xSizeBig, (iix + SystemIconLines * 7) div 7 * ySizeBig, IsControl);
 end;
 
-procedure HelpOnTerrain(Loc, NewMode: integer);
+procedure HelpOnTerrain(Loc: Integer; NewMode: TWindowMode);
 begin
   if MyMap[Loc] and fDeadLands <> 0 then
     HelpDlg.ShowNewContent(NewMode, hkTer, 3 * 12)

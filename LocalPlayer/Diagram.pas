@@ -22,8 +22,8 @@ type
 
   public
     procedure OffscreenPaint; override;
-    procedure ShowNewContent_Charts(NewMode: integer);
-    procedure ShowNewContent_Ship(NewMode: integer; p: integer = -1);
+    procedure ShowNewContent_Charts(NewMode: TWindowMode);
+    procedure ShowNewContent_Ship(NewMode: TWindowMode; p: integer = -1);
 
   private
     Kind: (dkChart, dkShip);
@@ -298,7 +298,7 @@ begin
   OffscreenPaint;
 end;
 
-procedure TDiaDlg.ShowNewContent_Charts(NewMode: integer);
+procedure TDiaDlg.ShowNewContent_Charts(NewMode: TWindowMode);
 begin
   Kind := dkChart;
   Mode := stPop;
@@ -308,7 +308,7 @@ begin
   inherited ShowNewContent(NewMode);
 end;
 
-procedure TDiaDlg.ShowNewContent_Ship(NewMode, p: integer);
+procedure TDiaDlg.ShowNewContent_Ship(NewMode: TWindowMode; p: integer);
 begin
   Kind := dkShip;
   if p < 0 then
