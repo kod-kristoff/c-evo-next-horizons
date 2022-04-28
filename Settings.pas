@@ -77,6 +77,7 @@ end;
 
 procedure TSettingsDlg.FormCreate(Sender: TObject);
 begin
+  Color := clBlack;
   LocalKeyBindings := TKeyBindings.Create;
 
   Canvas.Font.Assign(UniFont[ftNormal]);

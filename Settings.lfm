@@ -7,7 +7,7 @@ object SettingsDlg: TSettingsDlg
   Caption = 'Settings'
   ClientHeight = 448
   ClientWidth = 483
-  Color = clBlack
+  Color = clBtnFace
   DesignTimePPI = 144
   FormStyle = fsStayOnTop
   OnClose = FormClose
@@ -37,6 +37,7 @@ object SettingsDlg: TSettingsDlg
     ScrollWidth = 144
     TabOrder = 1
     TabStop = False
+    TopIndex = -1
   end
   object ButtonOk: TButtonA
     Left = 364
@@ -91,7 +92,7 @@ object SettingsDlg: TSettingsDlg
   object ListKeyBindings: TListBox
     Tag = 15360
     Left = 176
-    Height = 272
+    Height = 264
     Top = 32
     Width = 288
     BorderStyle = bsNone
@@ -108,11 +109,12 @@ object SettingsDlg: TSettingsDlg
     ScrollWidth = 288
     TabOrder = 0
     TabStop = False
+    TopIndex = -1
   end
   object EditShortCutPrimary: TEdit
     Left = 176
-    Height = 17
-    Top = 334
+    Height = 27
+    Top = 325
     Width = 136
     BorderStyle = bsNone
     Color = clBlack
@@ -127,8 +129,8 @@ object SettingsDlg: TSettingsDlg
   end
   object EditShortCutSecondary: TEdit
     Left = 328
-    Height = 17
-    Top = 335
+    Height = 27
+    Top = 325
     Width = 136
     BorderStyle = bsNone
     Color = clBlack
