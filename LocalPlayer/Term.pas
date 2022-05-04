@@ -771,7 +771,7 @@ begin
     90 .. 99:
       result := 2;
     100:
-      result := 3
+      result := 3;
   end;
 end;
 
@@ -811,11 +811,9 @@ begin
     if not TribeOriginal[p] then
       Tribe[p].SetModelPicture(Picture, IsNew)
     else if IsNew then
-      Server(cSetNewModelPicture + (Length(Picture.GrName) + 1 + 16 + 3) div 4,
-        0, 0, Picture)
+      Server(cSetNewModelPicture, 0, 0, Picture)
     else
-      Server(cSetModelPicture + (Length(Picture.GrName) + 1 + 16 + 3) div 4, 0,
-        0, Picture)
+      Server(cSetModelPicture, 0, 0, Picture)
   else
     with Tribe[p].ModelPicture[mix] do
     begin
@@ -829,7 +827,7 @@ begin
   if GameMode = cMovie then
   begin
     result := false;
-    exit
+    exit;
   end;
   with MyRO.EnemyModel[emix] do
     ChooseModelPicture(Owner, mix, ModelCode(MyRO.EnemyModel[emix]),
@@ -913,7 +911,7 @@ begin
       begin
         TribeMessage(p1, Tribe[p1].TPhrase('FRNEWNATION'), '');
         MyData.ToldContact := MyData.ToldContact or (1 shl p1);
-      end
+      end;
 end;
 
 procedure TellNewModels;
@@ -962,8 +960,7 @@ begin
         begin // user renamed model
           ModelNameInfo.mix := MyData.ToldModels;
           ModelNameInfo.NewName := EInput.Text;
-          Server(cSetModelName + (Length(ModelNameInfo.NewName) + 1 + 4 + 3)
-            div 4, me, 0, ModelNameInfo);
+          Server(cSetModelName, me, 0, ModelNameInfo);
         end;
       end;
       if MyModel[MyData.ToldModels].Kind = mkSettler then
@@ -1856,7 +1853,7 @@ begin
           Hash := 0;
           GrName := 'StdUnits.png';
           Tribe[p1].SetModelPicture(Picture, true);
-        end
+        end;
   end;
 
   if not supervising and (ClientMode = cTurn) then
@@ -2138,13 +2135,13 @@ begin
               if i = woManhattan then
               begin
                 OpenSound := 'MSG_COLDWAR';
-                s := Tribe[MyRO.Wonder[i].EffectiveOwner].TPhrase('COLDWAR')
+                s := Tribe[MyRO.Wonder[i].EffectiveOwner].TPhrase('COLDWAR');
               end
               else if MyRO.Wonder[i].EffectiveOwner >= 0 then
               begin
                 OpenSound := 'WONDER_BUILT';
                 s := Tribe[MyRO.Wonder[i].EffectiveOwner]
-                  .TPhrase('WONDERBUILT')
+                  .TPhrase('WONDERBUILT');
               end
               else
               begin
@@ -2160,8 +2157,8 @@ begin
               IconKind := mikImp;
               IconIndex := i;
               ShowModal;
-            end
-        end
+            end;
+        end;
       end
       else if (MyRO.Wonder[i].EffectiveOwner <> MyData.ToldWonders[i]
         .EffectiveOwner) and (MyRO.Wonder[i].CityID > WonderDestroyed) then
@@ -2180,7 +2177,7 @@ begin
               IconKind := mikImp;
               IconIndex := i;
               ShowModal;
-            end
+            end;
         end
         else if (MyData.ToldWonders[i].EffectiveOwner >= 0) and not OwnWonder
         then
@@ -2202,7 +2199,7 @@ begin
     if MyRO.Turn = MyData.ColdWarStart + ColdWarTurns then
     begin
       SoundMessageEx(Phrases.Lookup('COLDWAREND'), 'MSG_DEFAULT');
-      MyData.ColdWarStart := -ColdWarTurns - 1
+      MyData.ColdWarStart := -ColdWarTurns - 1;
     end;
 
     TellNewModels;
@@ -2733,8 +2730,7 @@ begin
               if GameMode = cLoadGame then
                 CreateTribe(TribeInfo.trix, TribeInfo.FileName, false)
               else
-                Server(cSetTribe + (Length(TribeInfo.FileName) + 1 + 7) div 4,
-                  0, 0, TribeInfo);
+                Server(cSetTribe, 0, 0, TribeInfo);
             end;
 
           for p1 := 0 to nPl - 1 do
@@ -2748,8 +2744,7 @@ begin
               if GameMode = cLoadGame then
                 CreateTribe(TribeInfo.trix, TribeInfo.FileName, false)
               else
-                Server(cSetTribe + (Length(TribeInfo.FileName) + 1 + 7) div 4,
-                  0, 0, TribeInfo);
+                Server(cSetTribe, 0, 0, TribeInfo);
             end;
         end;
         if not mNames.Checked then
@@ -3444,16 +3439,14 @@ begin
           MapValid := false;
           MainOffscreenPaint;
           Update;
-        end
+        end;
       end;
 
   else
     if Command >= cClientEx then
-      case Command and $FFF0 of
-
+      case Command  of
         cSetTribe:
-          with TTribeInfo(Data) do
-          begin
+          with TTribeInfo(Data) do begin
             i := UnusedTribeFiles.Count - 1;
             while (i >= 0) and
               (AnsiCompareFileName(UnusedTribeFiles[i], FileName) <> 0) do
@@ -3462,21 +3455,20 @@ begin
               UnusedTribeFiles.Delete(i);
             CreateTribe(trix, FileName, true);
           end;
-
-        cSetNewModelPicture, cSetModelPicture:
+        cSetNewModelPicture:
           if TribeOriginal[TModelPictureInfo(Data).trix] then
             Tribe[TModelPictureInfo(Data).trix].SetModelPicture
-              (TModelPictureInfo(Data), Command and
-              $FFF0 = cSetNewModelPicture);
-
-        cSetSlaveIndex and $FFF0:
+              (TModelPictureInfo(Data), True);
+        cSetModelPicture:
+          if TribeOriginal[TModelPictureInfo(Data).trix] then
+            Tribe[TModelPictureInfo(Data).trix].SetModelPicture
+              (TModelPictureInfo(Data), False);
+        cSetSlaveIndex:
           Tribe[integer(Data) shr 16].mixSlaves := integer(Data) and $FFFF;
-
         cSetCityName:
           with TCityNameInfo(Data) do
             if TribeOriginal[ID shr 12] then
               Tribe[ID shr 12].SetCityName(ID and $FFF, NewName);
-
         cSetModelName:
           with TModelNameInfo(Data) do
             if TribeOriginal[NewPlayer] then
@@ -5137,8 +5129,8 @@ begin
     begin
       Brush.Style := bsClear;
       if UnFocus >= 0 then
-        with MyUn[UnFocus] do
-        with MyModel[mix] do
+        with MyUn^[UnFocus] do
+        with MyModel^[mix] do
         begin { display info about selected unit }
           if Job = jCity then
             mixShow := -1 // building site

@@ -154,7 +154,7 @@ begin
       Notify(ntException + bix[p]);
     end;
 {$ENDIF}
-  end
+  end;
 end;
 
 procedure CallAllPlayers(Command: Integer; var Data);

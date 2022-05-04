@@ -26,6 +26,7 @@ type
     Layer0Btn: TButtonB;
     ToggleBtn: TButtonB;
     Popup: TPopupMenu;
+    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormMouseWheel(Sender: TObject; Shift: TShiftState;
       WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
     procedure PaintBox1MouseMove(Sender: TObject; Shift: TShiftState;
@@ -290,7 +291,7 @@ begin
           if (Flags and CityRepMask and CityEventPriority[j] <> 0) then
           begin
             first := j;
-            Break
+            Break;
           end;
         if first >= 0 then
         begin
@@ -299,7 +300,7 @@ begin
           while test < CityEventPriority[first] do
           begin
             inc(i);
-            inc(test, test)
+            inc(test, test);
           end;
           s := CityEventName(i);
           { if CityEventPriority[first]=chNoGrowthWarning then
@@ -320,17 +321,17 @@ begin
                 while test < CityEventPriority[j] do
                 begin
                   inc(i);
-                  inc(test, test)
+                  inc(test, test);
                 end;
                 if (CityEventPriority[j] = chNoGrowthWarning) and
                   (Built[imAqueduct] > 0) then
                   i := 17;
                 Sprite(offscreen, HGrSystem, x, y0 + 1, 18, 18,
                   1 + i mod 3 * 19, 1 + i div 3 * 19);
-                dec(x, 20)
-              end
-          end
-        end
+                dec(x, 20);
+              end;
+          end;
+        end;
       end
       else
       begin
@@ -365,7 +366,7 @@ begin
             RisedTextout(offscreen.Canvas, 103 + CityNameSpace + 4 + 31,
               y0 + 1, s);
             ca.Font.Assign(UniFont[ftNormal]);
-          end
+          end;
         end
         else
         begin
@@ -384,7 +385,7 @@ begin
               y + 6, 10, 10, 77, 126);
             Sprite(offscreen, HGrSystem, x + CityNameSpace + 4 + 132 + 1, y + 6,
               10, 10, 88, 115);
-          end
+          end;
         end;
         s := inttostr(CityTaxBalance(lix, CityReport));
         ReplaceText(x + CityNameSpace + 4 + 370 - BiColorTextWidth(ca, s), y,
@@ -420,7 +421,7 @@ begin
               x + CityNameSpace + 4 + 304 - 60 + 9, y + 7, 68, TrueProd, growth,
               CityReport.ProjectCost, true, MainTexture);
           end;
-        end
+        end;
       end;
     end
   else if Kind in [kModels, kEModels] then
@@ -430,7 +431,7 @@ begin
     if ca = Canvas then
     begin
       x := x + SideFrame;
-      y := y + TitleHeight
+      y := y + TitleHeight;
     end;
     if lit then
       TextColor := MainTexture.ColorLitText
@@ -630,7 +631,7 @@ begin
                   begin
                     icon := 4 + ResearchDone div 25;
                     if icon > 4 + 3 then
-                      icon := 4 + 3
+                      icon := 4 + 3;
                   end
                   else if lix = adMilitary then
                     icon := -1
@@ -653,8 +654,8 @@ begin
                 number := inttostr(FutureCount);
                 RisedTextout(ca, 104 - 33 + 15 + 10 + TechNameSpace + 24 * j -
                   BiColorTextWidth(ca, number) div 2, y0, number);
-              end
-            end
+              end;
+            end;
           end;
         end; // kAdvance, kScience
       kTribe:
@@ -684,7 +685,7 @@ begin
             BitBltCanvas(offscreen.Canvas, 8 + 16, y0 - 15 + (16 - 1),
               xSizeSmall, ySizeSmall, SmallImp.Canvas,
               (lix - 1) * xSizeSmall, ySizeSmall);
-          end
+          end;
         end;
       kMission:
         s := Phrases.Lookup('SPYMISSION', lix);
@@ -708,7 +709,7 @@ begin
     if ca = Canvas then
     begin
       x := x + SideFrame;
-      y := y + TitleHeight
+      y := y + TitleHeight;
     end;
     if lit then
       TextColor := MainTexture.ColorLitText
@@ -717,7 +718,7 @@ begin
     { if Kind=kTribe then ReplaceText_Tribe(x,y,TextColor,
       integer(TribeNames.Objects[lix]),s)
       else } ReplaceText(x, y, TextColor, s);
-  end
+  end;
 end;
 
 procedure TListDlg.OffscreenPaint;
@@ -759,13 +760,13 @@ begin
           begin
             MoveTo(104 - 33 + 15 + TechNameSpace + 24 * i + j * 2, 0);
             LineTo(104 - 33 + 15 + TechNameSpace + 24 * i + j * 2, InnerHeight);
-          end
+          end;
         end;
       end;
 
     for i := -1 to DispLines do
       if (i + sb.Position >= 0) and (i + sb.Position < Lines[Layer]) then
-        Self.line(offscreen.Canvas, i, true, false)
+        Self.line(offscreen.Canvas, i, true, false);
   end;
   MarkUsedOffscreen(InnerWidth, 8 + 48 + DispLines * LineDistance);
 end;
@@ -793,7 +794,7 @@ begin
     if Sel0 <> -2 then
       line(Canvas, Sel0, false, false);
     if Sel <> -2 then
-      line(Canvas, Sel, false, true)
+      line(Canvas, Sel, false, true);
   end;
 
   if Kind = kScience then
@@ -845,6 +846,11 @@ begin
   end;
 end;
 
+procedure TListDlg.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+begin
+  Gtk2Fix;
+end;
+
 function TListDlg.RenameCity(cix: integer): boolean;
 var
   CityNameInfo: TCityNameInfo;
@@ -858,8 +864,7 @@ begin
   begin
     CityNameInfo.ID := MyCity[cix].ID;
     CityNameInfo.NewName := InputDlg.EInput.Text;
-    Server(cSetCityName + (length(CityNameInfo.NewName) + 8) div 4, me, 0,
-      CityNameInfo);
+    Server(cSetCityName, me, 0, CityNameInfo);
     if CityDlg.Visible then
     begin
       CityDlg.FormShow(nil);
@@ -884,8 +889,7 @@ begin
   begin
     ModelNameInfo.mix := mix;
     ModelNameInfo.NewName := InputDlg.EInput.Text;
-    Server(cSetModelName + (length(ModelNameInfo.NewName) + 1 + 4 + 3) div 4,
-      me, 0, ModelNameInfo);
+    Server(cSetModelName, me, 0, ModelNameInfo);
     if UnitStatDlg.Visible then
     begin
       UnitStatDlg.FormShow(nil);
@@ -1735,7 +1739,7 @@ begin
   CloseBtn.Visible := not(Kind in MustChooseKind);
 
   inherited ShowNewContent(NewMode, forceclose);
-end; // ShowNewContent
+end;
 
 procedure TListDlg.ShowNewContent_CityProject(NewMode: TWindowMode; cix: integer);
 begin
