@@ -64,7 +64,7 @@
 #MOVEHEAVY Pohyb: Obtížný terén
 #DEFBONUS Bonus k obraně: %d%%
 #JOBCOST -Cena konstrukce: %s MP
-#JOBCOSTVAR -Cena konstrukce: proměnná (viz okno Vylepšení terénu v Makro managementu)
+#JOBCOSTVAR -Cena konstrukce: proměnná (viz okno Vylepšení terénu v Makro správy)
 #TERIMPEXCLUDE Zavlažování, důl, pevnost a vojenská základna se navzájem vylučují.
 Například pokud postavíte vojenskou základnu na čtverci s pevností,
 pevnost bude nahrazena vojenskou základnou.
@@ -132,7 +132,7 @@ $Koncepce hry\
 ;SUPPORT Podpora jednotek\\
 
 !Pokročilé\
-;MACRO Makro Management\
+;MACRO Makro správa\
 ;MAPEDIT Editor map\
 ;AIT Turnaj AI
 
@@ -261,7 +261,7 @@ které lze provádět se zvolenou jednotkou.\
 -Klikněte na jedno ze svých měst pro zobrazení informací o něm. To nejdůležitější, co je potřeba vědět,
 je stavba městských projektů. Klikněte na obrázek projektu uprostřed okna
 a vyberte nový projekt, např. začněte vyrábět nové Osadníky pro založení nových měst.\
--Na vašem managementu závisí, jak rychle města produkují, jak rychle rostou a kolik daní odvádějí
+-Na vaší správě závisí, jak rychle města produkují, jak rychle rostou a kolik daní odvádějí
 do vaší pokladnice, jak rychle probíhá vědecký výzkum.\
 -Kliknutím na položku se zmáčknutou klávesou Shift zobrazíte nápovědu o dané položce.\\
 
@@ -874,7 +874,7 @@ také. Pokud se území vašeho města překrývá s územím nepřátelského m
 zabránit nepřátelskému městu získávání surovin ze čtverců, které může vaše město začít využívat
 v dalším tahu.\\
 
-!Automatický management populace\
+!Automatická správa populace\
 Přidělování skupin městského obyvatelstva ke čtvercům na městském území a
 do civilní služby se děje automaticky a optimálně. Hráč potřebuje pouze nastavit 
 priority pomocí primárního přepínače (9). K dispozici je 5
@@ -909,7 +909,7 @@ kritéria, která nelze změnit:\
 -3. priorita: Je zajištěna zásoba jídla na podporu populace a podporovaných jednotek.\\
 
 !Plná kontrola\
-Pokud z nějakých důvodů nechcete používat automatický management populace,
+Pokud z nějakých důvodů nechcete používat automatickou správu populace,
 můžete jej vypnout kliknutím na primární přepínač ve spodní části nebo
 kliknutím na území města. Tím je vám umožněno ručně vybrat čtverce, které se budou
 využívat. Kliknutím na využívaný čtverec zařadíte skupinu obyvatel na čtverci
@@ -918,7 +918,7 @@ která je momentálně v civilní službě. (Samozřejmě jen za předpokladu, �
 taková skupina.) Tímto způsobem můžete přesunout skupinu z jednoho čtverce na druhý ve dvou
 krocích.\\
 
-Pokud je automatický management vypnutý, musíte se starat o vše
+Pokud je automatická správa vypnutá, musíte se starat o vše
 sami: zásobu jídla, podporu jednotek, civilní nepokoje. Můžete narazit na
 problémy, které jste předtím neměli.\\
 
@@ -929,12 +929,12 @@ výzkum a výběr daní. V dalším tahu přetrvávajících nepokojů
 město dále zastaví podporu jednotek, takže začne v každém tahu ztrácet jednu jednotku vyžadující
 podporu, dokud není ve městě nastolen pořádek.\\
 
-Automatický management populace obvykle zabraňuje civilním nepořádkům. Nedokáže
+Automatická správa populace obvykle zabraňuje civilním nepořádkům. Nedokáže
 ale zvládnout situaci, kdy je ve městě už příliš mnoho nespokojenosti. Pokud
 zaznamenáte nepokoje v automaticky spravovaném městě, zmenšete nespokojenost přesunem jednotek
 způsobujících nepokoje do oblasti, kde tento jev zmizí, nebo tyto jednotky rozpusťte.\\
 
-Pokud vypnete automatický management, je pouze na vás, jak udržíte dostatečnou míru spokojenosti
+Pokud vypnete automatickou správu, je pouze na vás, jak udržíte dostatečnou míru spokojenosti
 ve městě. Nejčastější reakcí na potlačení nepokojů je
 posílení policejních sil.
 
@@ -961,7 +961,7 @@ $Vzorce pro optimalizaci správy města\
 
 !Vzorce pro optimalizaci správy města\
 
-Pět primárních nastavení automatického managementu populace
+Pět základních nastavení automatické správy populace
 se z matematického hlediska odlišuje pouze v hodnotě m, která je
 maximalizována. Výpočet hodnoty m bere v úvahu jídlo (f), produkci (p),
 daně (t) a výzkum (r) po aplikování všech bonusů:\
@@ -1052,7 +1052,7 @@ Většina městských a národních vylepšení vyžaduje náklady na údržbu, 
 brány z národních zásob zlata. Jsou-li zásoby příliš nízké, je
 náhodná budova prodána.\\
 
-V obrazovce managementu města klikněte na tlačítko "Zobrazit vylepšení" a zobrazí se vám seznam vylepšení
+V obrazovce správy města klikněte na tlačítko "Zobrazit vylepšení" a zobrazí se vám seznam vylepšení
 vybudovaných ve městě. Přejete-li si prodat nebo přestavět některé z nich, klikněte na jeho
 obrázek. Zisk z prodeje stavby je totožný s produkčními náklady
 a je přidán k zásobám zlata.
@@ -1067,7 +1067,7 @@ Každá jednotka vyžaduje podporu ze svého domovského města v podobě jednoh
 tahu. Lodě o hmotnosti 6%w nebo více vyžadují dvojitou podporu.
 Zpočátku je domovským městem jednotky to město, v němž byla vyrobena. Chcete-li
 změnit domovské město, přesuňte jednotku do daného města a zvolte příkaz
-"Podpora odtud". V obrazovce managementu města klikněte na tlačítko "Zobrazit podporu" a
+"Podpora odtud". V obrazovce správy města klikněte na tlačítko "Zobrazit podporu" a
 zobrazí se seznam jednotek podporovaných daným městem.\\
 
 Malý počet volných jednotek nepotřebuje podporu, což je vyznačeno šedým (%n) místo
@@ -1080,15 +1080,15 @@ Pokud existují jednotky vyžadující podporu z daného města, v každém tahu
 
 
 #MACRO
-$Makro management\
+$Makro správa\
 
-!!Makro Management\
+!!Makro správa\
 
-Hraní této hry by měla být zábava, ne dřina. Makro management vám pomůže zbavit se
+Hraní této hry by měla být zábava, ne dřina. Makro správa vám pomůže zbavit se
 opakujících se činností, takže se můžete koncentrovat na strategii. Makro
-management neumožňuje dělat zcela všechny věci, ale
+správa neumožňuje dělat zcela všechny věci, ale
 umožňuje hrát mnohem efektivněji. Není však doporučováno
-používat makro management dříve, než porozumíte základům toho, co
+používat makro správu dříve, než porozumíte základům toho, co
 chcete manažovat.\\
 
 !Vylepšení terénu\

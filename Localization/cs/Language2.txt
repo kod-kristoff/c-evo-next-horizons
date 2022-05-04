@@ -7,8 +7,8 @@
 #MENU_VIEWPOINT Pohled
 #MENU_DEBUGMAPOFF Vypnuto
 #MENU_TELLAI Jaká AI?
-#BTN_MENU Hlavní menu
-#BTN_MANAGE Management říše
+#BTN_MENU Hlavní nabídka
+#BTN_MANAGE Správa říše
 
 'Tooltips
 #TIP_WORKING Pracující občané

@@ -37,7 +37,7 @@
 #UNITOWNER #A
 #UNITSPEED Rychlost
 #UNITSTRENGTH Síla
-#UNITTRANSPORT Transport
+#UNITTRANSPORT Doprava
 #UNITCOST Cena
 #UNITBUILT Vytvořeno
 #UNITINTRO Navrženo
@@ -100,7 +100,7 @@
 #SEARCH Hledání
 #RANMAP Náhodná mapa
 #TWOTERRAINS %s / %s
-#MPMAP Multi Player
+#MPMAP Více Hráčů
 #NOGAMES Žádné knihy
 #AIT_ROUND Kolo %d,
 
@@ -186,13 +186,13 @@ technologie potřebné pro zahájení kolonizace vzdálených hvězdných systé
 #NOBOMBARDER Bombardování měst vyžaduje sílu útoku.
 #ZOC Tento typ jednotky se nemůže pohybovat v zónách pod cizí kontrolou.
 #FASTATTACK Chcete útočit se silou pouze %d%%?
-#NOTIMELOADGROUND Tento typ jednotky potřebuje %s MP bodů, aby mohl být naložen nebo vyložen z transportu.
+#NOTIMELOADGROUND Tento typ jednotky potřebuje %s MP bodů, aby mohl být naložen nebo vyložen z přepravy.
 #NOTIMELOADAIR Letadlo potřebuje 100 MP bodů, aby je bylo možné naložit nebo vyložit z nosiče.
 #NOTIMEBOMBARD Bombardování města vyžaduje 100 MP bodů.
 #NOTIMEEXPEL Pro vyhnání jednotky je potřeba 100 MP bodů.
 #NOROAD Tato jednotka se může pohybovat jen po cestách nebo železnici.
 #NONAV Tato loď nemá schopnost navigace.
-#NOTRANSPORT tato loď nemá transportní schopnost.
+#NOTRANSPORT tato loď nemá přepravní schopnost.
 #FULLTRANSPORT Tento transport je plně naložen.
 #LOWFUEL Toto letadlo má nyní nedostatek paliva. Pokud se pohne dále, nebude se moci vrátit do města nebo vojenské základny. Pokračovat?
 #LOWFUEL_GLIDER Tato jednotka musí být na konci tahu umístěna na zemi. Pokud se pohne dál, bude ztracena. Pokračovat?
@@ -264,7 +264,7 @@ technologie potřebné pro zahájení kolonizace vzdálených hvězdných systé
 #AIERROR AI modul %s nenalezen.
 #MISSDEACT Hráč %d ukončen bez správné deaktivace.
 #CLIENTERROR Nemohu najít klienta %s.
-#LOADERROR Tato kniha obsahuje interní chybu a nelze pokračovat v jejím hraní.\\Pro posouzení chyby můžete zaslat soubor s knihou autorovi hry.\Chcete otevřít webovou stránku pro hlášení chyb?
+#LOADERROR Tato kniha obsahuje vnitřní chybu a nelze pokračovat v jejím hraní.\\Pro posouzení chyby můžete zaslat soubor s knihou autorovi hry.\Chcete otevřít webovou stránku pro hlášení chyb?
 #NOSTARTPOS Tato mapa nemá definovány žádné startovní pozice. Není možné ji hrát.
 #TOOFEWTRIBES Počet účastníků nemůže převýšit počet nasazených národů ve hře.
 #DELETEQUERY Kniha bude odstraněna.
@@ -305,7 +305,7 @@ který není ochoten spolupracovat. Nedáváte nám jinou možnost než ukončit
 #FRNOTICE Nemyslete si, že budeme dále tolerovat vaše požadavky.
 #FRBREAK Toto jednání je ztrátou času. Přijděte jindy, až přehodnotíte svůj postoj.
 #FROFFER Nabízíme\-%s\výměnou za\-%s
-#FRPRESENT Nabízíme vám tento dárek:\-%s
+#FRPRESENT Nabízíme vám tento dar:\-%s
 #FRDEMAND_STRONG Dejte nám\-%s\nebo ponesete následky!
 #FRDONE Chcete mluvit o něčem dalším?
 #FRPEACE Připravili jsme stálou mírovou smlouvu, abychom ukončili nepřátelství mezi našimi lidmi a abychom stanovili naše vzájemné hranice. Podepíšete ji?
@@ -317,7 +317,7 @@ který není ochoten spolupracovat. Nedáváte nám jinou možnost než ukončit
 #FRACCEPTPRESENT #F s potěšením přijímají tento dar.
 #FRACCEPTDEMAND_STRONG Pro zachování našich dobrých vztahů jsme se rozhodli vyhovět vašim přáním.
 #FRNOTACCEPTOFFER Tato nabídka nám nepřipadá výhodná.
-#FRNOTACCEPTPRESENT #F nepotřebují takovéto dárky.
+#FRNOTACCEPTPRESENT #F nepotřebují takovéto dary.
 #FRNOTACCEPTDEMAND_STRONG Požadujete příliš mnoho.
 #FRDELCHOICE Zajímá nás\-%s\Co můžeme na oplátku nabídnout?
 #FRCOSTCHOICE Máte něco, co byste nám mohli nabídnout výměnou za\-%s?
@@ -490,14 +490,14 @@ Hlášení výzkumu
 Vylepšit
 Vylepšení terénu
 Kolonizační lodě
-Makro management
+Makro správa
 Postavit zavlažování
 Postavit farmu
 Zalesnit
 Postavit důl
 Vytvořit jednotku
 Mřížka
-AI Debug Mapa
+AI Ladící Mapa
 Třídy cizích jednotek
 Politická mapa
 Pouze útoky a obsazení
@@ -532,7 +532,7 @@ Zvuk
 Vypnutý
 Zapnutý (Výchozí implementace)
 Zapnutý (Alternativní implementace)
-Scrolling
+Rolování
 Pomalý
 Rychlý
 Vypnutý
