@@ -42,9 +42,11 @@ type
 var
   DraftDlg: TDraftDlg;
 
+
 implementation
 
-uses Help, Tribes, Directories;
+uses
+  Help, Tribes, Directories;
 
 {$R *.lfm}
 
@@ -174,7 +176,7 @@ procedure TDraftDlg.OffscreenPaint;
                 Textout(xTotal2 - 3 - dx + 1, y, s);
               end;
             end;
-          end
+          end;
       end;
 
       // speed bar
@@ -402,7 +404,7 @@ begin
       pix div 10 * 49 + 1);
   end;
   MarkUsedOffscreen(ClientWidth, ClientHeight);
-end; { MainPaint }
+end;
 
 procedure TDraftDlg.SetDomain(d: integer);
 
@@ -433,7 +435,7 @@ begin
     if IsFeatureInList(Domain, i) then
     begin
       code[Lines] := i;
-      inc(Lines)
+      inc(Lines);
     end;
   yFeature := yFeature0 + (MaxLines - Lines) * LinePitch div 2;
 
@@ -444,7 +446,7 @@ begin
       begin // exchange
         x := code[i];
         code[i] := code[j];
-        code[j] := x
+        code[j] := x;
       end;
 end;
 
@@ -553,9 +555,9 @@ begin
               i, 12, 12, 182, 185 + 13 * MyRO.DevModel.Cap[code[i]]);
           SmartInvalidate;
         end;
-      end
-    end
-  end
+      end;
+    end;
+  end;
 end;
 
 procedure TDraftDlg.PaintBox1MouseUp(Sender: TObject; Button: TMouseButton;

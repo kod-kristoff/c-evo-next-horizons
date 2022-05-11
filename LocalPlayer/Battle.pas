@@ -37,6 +37,7 @@ type
 var
   BattleDlg: TBattleDlg;
 
+
 implementation
 
 uses
@@ -148,7 +149,7 @@ begin
   if TextSize.cx div 2 + 2 > LDDamage div 2 then
   begin
     if Forecast.EndHealthDef > 0 then
-      RisedTextOut(ca, xm + 10, ym - (TextSize.cy + 1) div 2, LabelText)
+      RisedTextOut(ca, xm + 10, ym - (TextSize.cy + 1) div 2, LabelText);
   end
   else
     RisedTextOut(ca, xm + 8 + (LDDamage - TextSize.cx) div 2,
@@ -170,7 +171,7 @@ begin
   begin
     if Forecast.EndHealthAtt > 0 then
       RisedTextOut(ca, xm - (TextSize.cx + 1) div 2, ym + 8 + LAAvoidedDamage,
-        LabelText)
+        LabelText);
   end
   else
     RisedTextOut(ca, xm - (TextSize.cx + 1) div 2, ym + 8 + LAAvoidedDamage +
@@ -239,7 +240,7 @@ begin
     FillRect(Rect(0, 0, ClientWidth, ClientHeight));
     Brush.Style := bsClear;
     PaintBackground(self, 3 + Border, 3 + Border,
-      ClientWidth - (6 + 2 * Border), ClientHeight - (6 + 2 * Border))
+      ClientWidth - (6 + 2 * Border), ClientHeight - (6 + 2 * Border));
   end;
   Frame(Canvas, Border + 1, Border + 1, ClientWidth - (2 + Border),
     ClientHeight - (2 + Border), MainTexture.ColorBevelLight,
@@ -269,7 +270,7 @@ begin
       RisedTextOut(Canvas, (ClientWidth - BiColorTextWidth(Canvas, s1)) div 2,
         205 + (MessageLineSpacing - MessageLineSpacing div 2), s1);
     end;
-    ym := 110
+    ym := 110;
   end
   else
     ym := ClientHeight div 2;
@@ -296,7 +297,7 @@ end;
 procedure TBattleDlg.FormDeactivate(Sender: TObject);
 begin
   if not IsSuicideQuery then
-    Close
+    Close;
 end;
 
 procedure TBattleDlg.FormKeyDown(Sender: TObject; var Key: Word;
@@ -308,7 +309,7 @@ begin
     MainScreen.Update;
     if Key <> VK_ESCAPE then
       MainScreen.FormKeyDown(Sender, Key, Shift);
-  end
+  end;
 end;
 
 procedure TBattleDlg.OKBtnClick(Sender: TObject);
