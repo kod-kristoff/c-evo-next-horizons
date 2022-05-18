@@ -49,16 +49,17 @@ type
     MaxLines: Integer;
     cixProject: Integer;
     pView: Integer;
-    Sel: Integer;
+    Selected: Integer;
     DispLines: Integer;
     Layer: Integer;
     nColumn: Integer;
     TechNameSpace: Integer;
     ScienceNation: Integer;
-    sb: TPVScrollbar;
-    Lines, FirstShrinkedLine: array [0 .. MaxLayer - 1] of integer;
-    code: array [0 .. MaxLayer - 1, 0 .. 4095] of integer;
-    Column: array [0 .. nPl - 1] of integer;
+    ScrollBar: TPVScrollbar;
+    Lines: array [0 .. MaxLayer - 1] of Integer;
+    FirstShrinkedLine: array [0 .. MaxLayer - 1] of Integer;
+    code: array [0 .. MaxLayer - 1, 0 .. 4095] of Integer;
+    Column: array [0 .. nPl - 1] of Integer;
     Closable: Boolean;
     MultiPage: Boolean;
     ScienceNationDotBuffer: TBitmap;
@@ -111,9 +112,9 @@ procedure TListDlg.FormCreate(Sender: TObject);
 begin
   inherited;
   Canvas.Font.Assign(UniFont[ftNormal]);
-  sb := TPVScrollbar.Create(Self);
-  sb.SetBorderSpacing(36, 10, 36);
-  sb.OnUpdate := ScrollBarUpdate;
+  ScrollBar := TPVScrollbar.Create(Self);
+  ScrollBar.SetBorderSpacing(36, 10, 36);
+  ScrollBar.OnUpdate := ScrollBarUpdate;
   InitButtons;
   Kind := kMission;
   Layer0Btn.Hint := Phrases.Lookup('BTN_IMPRS');
@@ -127,7 +128,7 @@ end;
 
 procedure TListDlg.FormDestroy(Sender: TObject);
 begin
-  FreeAndNil(sb);
+  FreeAndNil(ScrollBar);
   FreeAndNil(ScienceNationDotBuffer);
 end;
 
@@ -145,8 +146,8 @@ end;
 procedure TListDlg.OnScroll(var Msg: TMessage);
 begin
   { TODO: Handled by MouseWheel event
-  if sb.Process(Msg) then  begin
-    Sel := -2;
+  if ScrollBar.Process(Msg) then  begin
+    Selected := -2;
     SmartUpdateContent(true);
   end;
   }
@@ -154,10 +155,10 @@ end;
 
 procedure TListDlg.OnMouseLeave(var Msg: TMessage);
 begin
-  if not Closable and (Sel <> -2) then
+  if not Closable and (Selected <> -2) then
   begin
-    line(Canvas, Sel, false, false);
-    Sel := -2;
+    line(Canvas, Selected, false, false);
+    Selected := -2;
   end;
 end;
 
@@ -167,8 +168,8 @@ var
 begin
   inherited;
   Canvas.Font.Assign(UniFont[ftNormal]);
-  if Sel <> -2 then
-    line(Canvas, Sel, false, true);
+  if Selected <> -2 then
+    line(Canvas, Selected, false, true);
   s := '';
   if (Kind = kAdvance) and (MyData.FarTech <> adNone) then
     s := Format(Phrases.Lookup('TECHFOCUS'),
@@ -245,10 +246,10 @@ var
   s, number: string;
   CanGrow: boolean;
 begin
-  lix := code[Layer, sb.Position + l];
+  lix := code[Layer, ScrollBar.Position + l];
   y0 := 2 + (l + 1) * LineDistance;
-  if sb.Position + l >= FirstShrinkedLine[Layer] then
-    ofs := (sb.Position + l - FirstShrinkedLine[Layer]) and 1 * 33
+  if ScrollBar.Position + l >= FirstShrinkedLine[Layer] then
+    ofs := (ScrollBar.Position + l - FirstShrinkedLine[Layer]) and 1 * 33
   else { if FirstShrinkedLine[Layer]<Lines[Layer] then }
     ofs := 33;
 
@@ -479,7 +480,7 @@ begin
           if MainScreen.mNames.Checked then
           begin
             s := Tribe[mox.Owner].ModelName[mox.mix];
-            if (Kind = kAllEModels) and (code[1, sb.Position + l] = 0) then
+            if (Kind = kAllEModels) and (code[1, ScrollBar.Position + l] = 0) then
               s := Format(Tribe[mox.Owner].TPhrase('OWNED'), [s]);
           end
           else
@@ -765,7 +766,7 @@ begin
       end;
 
     for i := -1 to DispLines do
-      if (i + sb.Position >= 0) and (i + sb.Position < Lines[Layer]) then
+      if (i + ScrollBar.Position >= 0) and (i + ScrollBar.Position < Lines[Layer]) then
         Self.line(offscreen.Canvas, i, true, false);
   end;
   MarkUsedOffscreen(InnerWidth, 8 + 48 + DispLines * LineDistance);
@@ -778,23 +779,23 @@ var
   s: string;
 begin
   y := y - TitleHeight;
-  i0 := sb.Position;
-  Sel0 := Sel;
+  i0 := ScrollBar.Position;
+  Sel0 := Selected;
   if (x >= SideFrame) and (x < SideFrame + InnerWidth) and (y >= 0) and
     (y < InnerHeight) and (y mod LineDistance >= 4) and (y mod LineDistance < 20)
   then
-    Sel := y div LineDistance - 1
+    Selected := y div LineDistance - 1
   else
-    Sel := -2;
-  if (Sel < -1) or (Sel > DispLines) or (Sel + i0 < 0) or
-    (Sel + i0 >= Lines[Layer]) then
-    Sel := -2;
-  if Sel <> Sel0 then
+    Selected := -2;
+  if (Selected < -1) or (Selected > DispLines) or (Selected + i0 < 0) or
+    (Selected + i0 >= Lines[Layer]) then
+    Selected := -2;
+  if Selected <> Sel0 then
   begin
     if Sel0 <> -2 then
       line(Canvas, Sel0, false, false);
-    if Sel <> -2 then
-      line(Canvas, Sel, false, true);
+    if Selected <> -2 then
+      line(Canvas, Selected, false, true);
   end;
 
   if Kind = kScience then
@@ -840,7 +841,7 @@ end;
 procedure TListDlg.FormMouseWheel(Sender: TObject; Shift: TShiftState;
   WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
 begin
-  if sb.ProcessMouseWheel(WheelDelta) then begin
+  if ScrollBar.ProcessMouseWheel(WheelDelta) then begin
     PaintBox1MouseMove(nil, [], MousePos.X - Left,
       MousePos.Y - Top);
   end;
@@ -914,14 +915,14 @@ procedure TListDlg.PaintBox1MouseDown(Sender: TObject; Button: TMouseButton;
 var
   lix: integer;
 begin
-  if sb.Position + Sel >= 0 then
-    lix := code[Layer, sb.Position + Sel];
+  if ScrollBar.Position + Selected >= 0 then
+    lix := code[Layer, ScrollBar.Position + Selected];
   if Kind in [kScience, kCities, kCityEvents, kModels, kEModels, kAllEModels]
   then
     include(Shift, ssShift); // don't close list window
   if (ssLeft in Shift) and not(ssShift in Shift) then
   begin
-    if Sel <> -2 then
+    if Selected <> -2 then
     begin
       result := lix;
       Closable := true;
@@ -930,7 +931,7 @@ begin
   end
   else if (ssLeft in Shift) and (ssShift in Shift) then
   begin // show help/info popup
-    if Sel <> -2 then
+    if Selected <> -2 then
       case Kind of
         kCities:
           MainScreen.ZoomToCity(MyCity[lix].Loc);
@@ -942,7 +943,7 @@ begin
             UnitStatDlg.ShowNewContent_OwnModel(wmPersistent, lix);
         kEModels:
           UnitStatDlg.ShowNewContent_EnemyModel(wmPersistent,
-            code[1, sb.Position + Sel]);
+            code[1, ScrollBar.Position + Selected]);
         kAllEModels, kChooseEModel:
           if lix <> mixAll then
             UnitStatDlg.ShowNewContent_EnemyModel(wmPersistent, lix);
@@ -971,7 +972,7 @@ begin
   end
   else if ssRight in Shift then
   begin
-    if Sel <> -2 then
+    if Selected <> -2 then
       case Kind of
         kCities, kCityEvents:
           if RenameCity(lix) then
@@ -1561,10 +1562,10 @@ begin
     (Kind in [kProject, kAdvance, kFarAdvance]);
   if (Kind = kAdvance) and (MyData.FarTech <> adNone) or (Kind = kModels) or
     (Kind = kEModels) then begin
-    sb.SetBorderSpacing(56, 10, 10);
+    ScrollBar.SetBorderSpacing(56, 10, 10);
     TitleHeight := WideFrame + 20;
   end else begin
-    sb.SetBorderSpacing(36, 10, 34);
+    ScrollBar.SetBorderSpacing(36, 10, 34);
     TitleHeight := WideFrame;
   end;
 
@@ -1624,7 +1625,7 @@ begin
   CaptionLeft := ToggleBtn.Left + ToggleBtn.Width;
   CaptionRight := CloseBtn.Left;
   { TODO:
-  SetWindowPos(sb.ScrollBar.Handle, 0, SideFrame + InnerWidth - GetSystemMetrics(SM_CXVSCROLL),
+  SetWindowPos(ScrollBar.ScrollBar.Handle, 0, SideFrame + InnerWidth - GetSystemMetrics(SM_CXVSCROLL),
     TitleHeight, GetSystemMetrics(SM_CXVSCROLL), LineDistance * DispLines + 48,
     SWP_NOZORDER or SWP_NOREDRAW);
   }
@@ -1657,9 +1658,9 @@ begin
   end;
 
   Layer := 0;
-  Sel := -2;
+  Selected := -2;
   ScienceNation := -1;
-  sb.Init(Lines[Layer] - 1, DispLines);
+  ScrollBar.Init(Lines[Layer] - 1, DispLines);
 
   OffscreenPaint;
 end;
@@ -1774,8 +1775,8 @@ begin
     pView := TComponent(Sender).Tag;
   end;
   InitLines;
-  Sel := -2;
-  sb.Init(Lines[Layer] - 1, DispLines);
+  Selected := -2;
+  ScrollBar.Init(Lines[Layer] - 1, DispLines);
   OffscreenPaint;
   Invalidate;
 end;
@@ -1787,8 +1788,8 @@ begin
   Layer2Btn.Down := Sender = Layer2Btn;
   Layer := TComponent(Sender).Tag;
 
-  Sel := -2;
-  sb.Init(Lines[Layer] - 1, DispLines);
+  Selected := -2;
+  ScrollBar.Init(Lines[Layer] - 1, DispLines);
   SmartUpdateContent;
 end;
 
@@ -1891,7 +1892,7 @@ end;
 
 procedure TListDlg.ScrollBarUpdate(Sender: TObject);
 begin
-  Sel := -2;
+  Selected := -2;
   SmartUpdateContent(true);
 end;
 
