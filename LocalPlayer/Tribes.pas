@@ -20,12 +20,15 @@ type
     yShield: Integer;
   end;
 
+  { TModelPictureInfo }
+
   TModelPictureInfo = record
     trix: Integer;
     mix: Integer;
     pix: Integer;
     Hash: Integer;
     GrName: ShortString;
+    function GetCommandDataSize: Byte;
   end;
 
   TTribe = class
@@ -280,6 +283,14 @@ begin
   end;
   CloseFile(TribeScript);
   Result := Found = 3;
+end;
+
+{ TModelPictureInfo }
+
+function TModelPictureInfo.GetCommandDataSize: Byte;
+begin
+  Result := SizeOf(trix) + SizeOf(mix) + SizeOf(pix) + SizeOf(Hash) + 1 +
+    Length(GrName);
 end;
 
 constructor TTribe.Create(FileName: string);

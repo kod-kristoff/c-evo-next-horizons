@@ -63,7 +63,7 @@ implementation
 
 uses
   ClientTools, BaseWin, Term, Help, UnitStat, Tribes, UPixelPointer,
-  IsoEngine, Diagram, Sound;
+  Diagram, Sound;
 
 {$R *.lfm}
 

@@ -4,7 +4,7 @@ unit Log;
 interface
 
 uses
-  LCLIntf, LCLType, LMessages, Messages, SysUtils, Classes, Graphics, Controls, Forms,
+  LCLIntf, LCLType, Messages, SysUtils, Classes, Graphics, Controls, Forms,
   StdCtrls, Menus;
 
 type

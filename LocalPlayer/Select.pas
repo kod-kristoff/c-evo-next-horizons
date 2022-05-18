@@ -4,7 +4,7 @@ unit Select;
 interface
 
 uses
-  Protocol, ClientTools, Term, ScreenTools, IsoEngine, PVSB, BaseWin,
+  Protocol, ClientTools, Term, ScreenTools, PVSB, BaseWin,
   LCLIntf, LCLType, Messages, SysUtils, Classes, Graphics, Controls, Forms,
   ExtCtrls, ButtonB, ButtonBase, Menus, Types;
 
@@ -98,7 +98,7 @@ var
 implementation
 
 uses
-  CityScreen, Help, UnitStat, Tribes, Inp;
+  CityScreen, Help, UnitStat, Tribes, Inp, CmdList;
 
 {$R *.lfm}
 
@@ -864,16 +864,20 @@ begin
   begin
     CityNameInfo.ID := MyCity[cix].ID;
     CityNameInfo.NewName := InputDlg.EInput.Text;
-    Server(cSetCityName, me, 0, CityNameInfo);
+    if CityNameInfo.GetCommandDataSize > CommandDataMaxSize then
+      Delete(CityNameInfo.NewName, Length(CityNameInfo.NewName) -
+        (CityNameInfo.GetCommandDataSize - 1 - CommandDataMaxSize), MaxInt);
+    Server(CommandWithData(cSetCityName, CityNameInfo.GetCommandDataSize),
+      me, 0, CityNameInfo);
     if CityDlg.Visible then
     begin
       CityDlg.FormShow(nil);
       CityDlg.Invalidate;
     end;
-    result := true;
+    Result := True;
   end
   else
-    result := false;
+    Result := False;
 end;
 
 function TListDlg.RenameModel(mix: integer): boolean;
@@ -889,7 +893,11 @@ begin
   begin
     ModelNameInfo.mix := mix;
     ModelNameInfo.NewName := InputDlg.EInput.Text;
-    Server(cSetModelName, me, 0, ModelNameInfo);
+    if ModelNameInfo.GetCommandDataSize > CommandDataMaxSize then
+      Delete(ModelNameInfo.NewName, Length(ModelNameInfo.NewName) -
+        (ModelNameInfo.GetCommandDataSize - 1 - CommandDataMaxSize), MaxInt);
+    Server(CommandWithData(cSetModelName, ModelNameInfo.GetCommandDataSize),
+      me, 0, ModelNameInfo);
     if UnitStatDlg.Visible then
     begin
       UnitStatDlg.FormShow(nil);

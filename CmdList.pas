@@ -4,10 +4,13 @@ unit CmdList;
 interface
 
 uses
-  Classes;
+  Classes, SysUtils, Math;
 
 const
   MaxDataSize = 1024;
+  CommandDataElementSize = 4;
+  CommandDataElementCountMask = $f;
+  CommandDataMaxSize = CommandDataElementSize * CommandDataElementCountMask;
 
 type
   TLogData = array [0 .. 999999999] of Byte;
@@ -43,6 +46,12 @@ type
     property State: TCmdListState read FState write FState;
   end;
 
+  function CommandWithData(Command: Integer; DataSize: Byte): Integer;
+
+resourcestring
+  SCommandDataSizeError = 'Command data size %d out of range (0-%d).';
+
+
 implementation
 
 uses
@@ -54,6 +63,16 @@ const
 type
   TData = array [0 .. MaxDataSize - 1] of Cardinal;
   PData = ^TData;
+
+function CommandWithData(Command: Integer; DataSize: Byte): Integer;
+var
+  DataElementCount: Byte;
+begin
+  if DataSize > CommandDataMaxSize then
+    raise Exception.Create(Format(SCommandDataSizeError, [DataSize, CommandDataMaxSize]));
+  DataElementCount := Ceil(DataSize / CommandDataElementSize);
+  Result := Command or (DataElementCount and CommandDataElementCountMask);
+end;
 
 constructor TCmdList.Create;
 begin
@@ -138,12 +157,12 @@ begin
       Exit;
     end;
 
-    if Command and $F = 0 then
+    if Command and CommandDataElementCountMask = 0 then
       Data := nil
     else
     begin
       Data := @LogData[FState.LoadPos];
-      inc(FState.LoadPos, Command and $F * 4);
+      inc(FState.LoadPos, Command and CommandDataElementCountMask * CommandDataElementSize);
     end;
   end;
 end;
@@ -231,8 +250,8 @@ begin
       PutData(@code, 4);
     end;
   end;
-  if Command and $F <> 0 then
-    PutData(Data, Command and $F * 4);
+  if Command and CommandDataElementCountMask <> 0 then
+    PutData(Data, Command and CommandDataElementCountMask * CommandDataElementSize);
 end;
 
 procedure TCmdList.PutDataChanges(Command, Player: integer;

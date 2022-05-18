@@ -402,19 +402,29 @@ var
   MainScreen: TMainScreen;
 
 type
+
+  { TTribeInfo }
+
   TTribeInfo = record
     trix: integer;
     FileName: ShortString;
+    function GetCommandDataSize: Byte;
   end;
+
+  { TCityNameInfo }
 
   TCityNameInfo = record
     ID: integer;
     NewName: ShortString;
+    function GetCommandDataSize: Byte;
   end;
+
+  { TModelNameInfo }
 
   TModelNameInfo = record
     mix: integer;
     NewName: ShortString;
+    function GetCommandDataSize: Byte;
   end;
 
   TPriceSet = set of $00 .. $FF;
@@ -573,6 +583,7 @@ procedure InitMyModel(mix: integer; final: boolean);
 procedure ImpImage(ca: TCanvas; x, y, iix: integer; Government: integer = -1;
   IsControl: boolean = false);
 procedure HelpOnTerrain(Loc: Integer; NewMode: TWindowMode);
+function AlignUp(Value, Alignment: Integer): Integer;
 
 
 implementation
@@ -580,7 +591,7 @@ implementation
 uses
   Directories, CityScreen, Draft, MessgEx, Select, CityType, Help,
   UnitStat, Log, Diagram, NatStat, Wonders, Enhance, Nego, UPixelPointer, Sound,
-  Battle, Rates, TechTree, Registry, Global, UKeyBindings;
+  Battle, Rates, TechTree, Registry, Global, UKeyBindings, CmdList;
 
 {$R *.lfm}
 
@@ -759,6 +770,11 @@ begin
       (MyMap[Loc] shr 5 and 3) * 12);
 end;
 
+function AlignUp(Value, Alignment: Integer): Integer;
+begin
+  Result := Value or (Alignment - 1);
+end;
+
 { *** tribe management procedures *** }
 
 function RoughCredibility(Credibility: integer): integer;
@@ -811,9 +827,11 @@ begin
     if not TribeOriginal[p] then
       Tribe[p].SetModelPicture(Picture, IsNew)
     else if IsNew then
-      Server(cSetNewModelPicture, 0, 0, Picture)
+      Server(CommandWithData(cSetNewModelPicture, Picture.GetCommandDataSize),
+        0, 0, Picture)
     else
-      Server(cSetModelPicture, 0, 0, Picture)
+      Server(CommandWithData(cSetModelPicture, Picture.GetCommandDataSize),
+        0, 0, Picture)
   else
     with Tribe[p].ModelPicture[mix] do
     begin
@@ -960,7 +978,11 @@ begin
         begin // user renamed model
           ModelNameInfo.mix := MyData.ToldModels;
           ModelNameInfo.NewName := EInput.Text;
-          Server(cSetModelName, me, 0, ModelNameInfo);
+          if ModelNameInfo.GetCommandDataSize > CommandDataMaxSize then
+            Delete(ModelNameInfo.NewName, Length(ModelNameInfo.NewName) -
+             (ModelNameInfo.GetCommandDataSize - 1 - CommandDataMaxSize), MaxInt);
+          Server(CommandWithData(cSetModelName, ModelNameInfo.GetCommandDataSize),
+            me, 0, ModelNameInfo);
         end;
       end;
       if MyModel[MyData.ToldModels].Kind = mkSettler then
@@ -971,6 +993,27 @@ begin
       end;
       inc(MyData.ToldModels);
     end;
+end;
+
+{ TTribeInfo }
+
+function TTribeInfo.GetCommandDataSize: Byte;
+begin
+  Result := SizeOf(trix) + 1 + Length(FileName)
+end;
+
+{ TModelNameInfo }
+
+function TModelNameInfo.GetCommandDataSize: Byte;
+begin
+  Result := SizeOf(mix) + 1 + Length(NewName);
+end;
+
+{ TCityNameInfo }
+
+function TCityNameInfo.GetCommandDataSize: Byte;
+begin
+  Result := SizeOf(ID) + 1 + Length(NewName);
 end;
 
 procedure TMainScreen.PaintZoomedTile(dst: TBitmap; x, y, Loc: integer);
@@ -2730,7 +2773,8 @@ begin
               if GameMode = cLoadGame then
                 CreateTribe(TribeInfo.trix, TribeInfo.FileName, false)
               else
-                Server(cSetTribe, 0, 0, TribeInfo);
+                Server(CommandWithData(cSetTribe, TribeInfo.GetCommandDataSize),
+                  0, 0, TribeInfo);
             end;
 
           for p1 := 0 to nPl - 1 do
@@ -2744,7 +2788,8 @@ begin
               if GameMode = cLoadGame then
                 CreateTribe(TribeInfo.trix, TribeInfo.FileName, false)
               else
-                Server(cSetTribe, 0, 0, TribeInfo);
+                Server(CommandWithData(cSetTribe, TribeInfo.GetCommandDataSize),
+                  0, 0, TribeInfo);
             end;
         end;
         if not mNames.Checked then
@@ -3444,7 +3489,7 @@ begin
 
   else
     if Command >= cClientEx then
-      case Command  of
+      case Command and (not Integer(CommandDataElementCountMask)) of
         cSetTribe:
           with TTribeInfo(Data) do begin
             i := UnusedTribeFiles.Count - 1;
