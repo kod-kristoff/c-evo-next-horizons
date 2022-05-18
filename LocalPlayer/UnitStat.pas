@@ -694,7 +694,7 @@ begin
   RisedTextout(offscreen.Canvas,
     (ClientWidth - BiColorTextWidth(offscreen.Canvas, Caption)) div 2,
     yCaption, Caption);
-end; { OffscreenPaint }
+end;
 
 procedure TUnitStatDlg.ModelBoxChange(Sender: TObject);
 begin

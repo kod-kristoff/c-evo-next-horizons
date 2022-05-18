@@ -2081,13 +2081,13 @@ begin
           begin
             s := Tribe[me].TPhrase('AGE0');
             MessgText :=
-              Format(s, [TurnToString(MyRO.Turn), CityName(MyCity[0].ID)])
+              Format(s, [TurnToString(MyRO.Turn), CityName(MyCity[0].ID)]);
           end
           else
           begin
             s := Tribe[me].TString(Phrases2.Lookup('AGE0'));
             MessgText := Format(s, [TurnToString(MyRO.Turn)]);
-          end
+          end;
         end
         else
         begin
@@ -8300,8 +8300,6 @@ begin
   PanelPaint;
   Update;
 end;
-
-initialization
 
 end.
 

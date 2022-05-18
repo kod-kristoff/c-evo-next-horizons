@@ -199,7 +199,7 @@ begin
   UnitInfo.Flags := UnitInfo.Flags and not unFortified;
   IsoMap.PaintUnit(1, 0, UnitInfo, 0);
   BitBltCanvas(ca, xm - 8 - 4 - 66, ym + 8 + 12, 66, 48, Buffer.Canvas, 0, 0);
-end; { PaintBattleOutcome }
+end;
 
 procedure TBattleDlg.FormCreate(Sender: TObject);
 begin

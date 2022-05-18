@@ -512,6 +512,4 @@ initialization
 ShowNewContentProc := nil;
 MainFormKeyDown := nil;
 
-finalization
-
 end.

@@ -203,6 +203,5 @@ begin
     with Items[I] do LoadPicture;
 end;
 
-
 end.
 

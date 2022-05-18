@@ -957,7 +957,7 @@ begin
 
   if Mode >= moMovie then
     Notify(ntEndInfo);
-end; { StartGame }
+end;
 
 procedure EndGame;
 var
@@ -1323,7 +1323,7 @@ begin
   Notify(ntBackOff);
   Inform(pTurn);
   ChangeClientWhenDone(cResume, 0, nil^, 0);
-end; // LoadGame
+end;
 
 procedure InsertTerritoryUpdateCommands;
 var
@@ -1907,7 +1907,7 @@ begin
     end;
   end;
   // CheckContact;
-end; { BeforeTurn }
+end;
 
 procedure AfterTurn;
 var
@@ -2034,7 +2034,7 @@ begin
         if 1 shl p1 and GAlive <> 0 then
           CheckWin(p1);
   end;
-end; // Afterturn
+end;
 
 procedure NextPlayer;
 begin
@@ -2288,7 +2288,7 @@ begin
               CallPlayer(cShowUnitChanged, p1, UpdateLoc[i]);
         end;
   end;
-end; // ExecuteMove
+end;
 
 function ExecuteAttack(p, uix, ToLoc: integer; var MoveInfo: TMoveInfo;
   ShowMove: TShowMove): integer;
@@ -2558,7 +2558,7 @@ begin
         end;
     end;
   end;
-end; // ExecuteAttack
+end;
 
 function MoveUnit(p, uix, dx, dy: integer; TestOnly: boolean): integer;
 var
@@ -4489,7 +4489,7 @@ begin
     and (result >= rExecuted) then
     LastEndClientCommand := Command;
 {$IFOPT O-}dec(nHandoverStack, 2); {$ENDIF}
-end; { <<<server }
+end;
 
 
 initialization

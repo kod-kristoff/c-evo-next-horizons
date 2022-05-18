@@ -188,7 +188,7 @@ begin
       ySwitch + 26, s);
   end;
   MarkUsedOffscreen(InnerWidth, InnerHeight);
-end; { MainPaint }
+end;
 
 procedure TCityTypeDlg.LoadType(NewType: integer);
 var

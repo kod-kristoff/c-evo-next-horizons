@@ -51,10 +51,11 @@ var
 
 procedure Client(Command, Player: integer; var Data); stdcall;
 
+
 implementation
 
 uses
-  GameServer, log;
+  GameServer, Log;
 
 {$R *.lfm}
 

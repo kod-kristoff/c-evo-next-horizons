@@ -170,6 +170,7 @@ function PayPrice(pSender, pTarget, Price: integer; execute: boolean): boolean;
 procedure CancelTreaty(p, pWith: integer; DecreaseCredibility: boolean = true);
 function DoSpyMission(p, pCity, cix, Mission: integer): Cardinal;
 
+
 implementation
 
 uses
@@ -246,10 +247,10 @@ begin
         for V21 := 1 to 26 do
           if Tiles and (1 shl V21) <> 0 then
             assert(UsedByCity[Radius[V21]] = Loc);
-      end
+      end;
 {$ENDIF}
   end;
-end; // CompactLists
+end;
 
 {
   Tech Related Functions
@@ -264,7 +265,7 @@ begin
   if c0 >= $10000000 then
     result := $10000000
   else
-    result := trunc(c0)
+    result := trunc(c0);
 end;
 
 function TechCost(p: integer): integer;
@@ -280,7 +281,7 @@ begin
           result := result * 2
         else
           result := result * 4;
-  end
+  end;
 end;
 
 procedure SetModelFlags(var m: TModel);
@@ -362,7 +363,7 @@ begin
             Speed := 350; // old longboat
         end;
         inc(RW[p].nModel);
-      end
+      end;
     end;
 end;
 
@@ -379,11 +380,11 @@ begin
         IntroTurn := GTurn;
         Built := 0;
         Lost := 0;
-        ID := p shl 12 + nModel
+        ID := p shl 12 + nModel;
       end;
       inc(nModel);
-      inc(Researched[p])
-    end
+      inc(Researched[p]);
+    end;
 end;
 
 procedure SeeTech(p, ad: integer);
@@ -391,7 +392,7 @@ begin
 {$IFDEF TEXTLOG}CmdInfo := CmdInfo + Format(' P%d:A%d', [p, ad]); {$ENDIF}
   RW[p].Tech[ad] := tsSeen;
   // inc(nTech[p]);
-  inc(Researched[p])
+  inc(Researched[p]);
 end;
 
 procedure FreeSlaves;
@@ -402,7 +403,7 @@ begin
     if (GAlive and (1 shl p1) <> 0) then
       for uix := 0 to RW[p1].nUn - 1 do
         if RW[p1].Model[RW[p1].Un[uix].mix].Kind = mkSlaves then
-          RW[p1].Un[uix].Job := jNone
+          RW[p1].Un[uix].Job := jNone;
 end;
 
 procedure DiscoverTech(p, ad: integer);
@@ -474,8 +475,8 @@ begin
       begin
         GWonder[Wonder].EffectiveOwner := -1;
         if Wonder = woPyramids then
-          FreeSlaves
-      end
+          FreeSlaves;
+      end;
 end;
 
 {
@@ -541,8 +542,8 @@ begin
       begin
         inc(VicinityLoc[2], lx0);
         inc(VicinityLoc[4], lx0);
-      end
-    end
+      end;
+    end;
   end
   else
   begin
@@ -551,7 +552,7 @@ begin
     begin
       dec(VicinityLoc[0], lx0);
       dec(VicinityLoc[6], lx0);
-    end
+    end;
   end;
 end;
 
@@ -611,7 +612,7 @@ begin
   begin
     if (MapSize + 1) mod i = 0 then
       primitive := 0;
-    inc(i)
+    inc(i);
   end;
 
   if primitive > 0 then
@@ -621,14 +622,14 @@ begin
       j := 0;
       repeat
         inc(j);
-        i := i * primitive mod (MapSize + 1)
+        i := i * primitive mod (MapSize + 1);
       until (i = 1) or (j = MapSize + 1);
     until j = MapSize;
 end;
 
 function MapGeneratorAvailable: boolean;
 begin
-  result := (primitive > 0) and (lx >= 20) and (ly >= 40)
+  result := (primitive > 0) and (lx >= 20) and (ly >= 40);
 end;
 
 procedure CreateElevation;
@@ -665,7 +666,7 @@ begin
     sa[x] := sin(v) / lx;
     ca[x] := cos(v) / ly;
     f1[x] := 2 * pi * exp(Detail * (x - 1));
-    f2[x] := exp(-x * Smooth)
+    f2[x] := exp(-x * Smooth);
   end;
 
   imerge := 2 * lx div Merge;
@@ -687,7 +688,7 @@ begin
         Elevation[x + lx * y] := 255
       else
         Elevation[x + lx * y] := Round((v + 4) * 20);
-      inc(ElCount[Elevation[x + lx * y]])
+      inc(ElCount[Elevation[x + lx * y]]);
     end;
 end;
 
@@ -708,7 +709,7 @@ procedure FindContinents;
     if a > b then
       for i := a to Stop do
         if Continent[i] = a then
-          Continent[i] := b
+          Continent[i] := b;
   end;
 
 var
@@ -735,8 +736,8 @@ begin
           else
             ReplaceCont(Continent[Loc - 1], Continent[Loc], Loc);
         if Continent[Loc] = -1 then
-          Continent[Loc] := Loc
-      end
+          Continent[Loc] := Loc;
+      end;
     end;
 
   { connect continents due to round earth }
@@ -753,7 +754,7 @@ begin
         (RealMap[lx - 1 + lx * (y + 1)] and fTerrain >= fGrass) then
         Wrong := Continent[lx - 1 + lx * (y + 1)];
       if Wrong >= 0 then
-        ReplaceCont(Wrong, Continent[lx * y], MapSize - 1)
+        ReplaceCont(Wrong, Continent[lx * y], MapSize - 1);
     end;
 end;
 
@@ -796,11 +797,11 @@ begin
               begin
                 inc(AreaCount[xBlock, yBlock]);
                 if DelphiRandom(AreaCount[xBlock, yBlock]) = 0 then
-                  RareByArea[xBlock, yBlock] := Loc0
-              end
+                  RareByArea[xBlock, yBlock] := Loc0;
+              end;
             end;
           end;
-        end
+        end;
     end;
     totalrare := 0;
     for x := 0 to 7 do
@@ -847,7 +848,7 @@ begin
               inc(RareAdjacent[x, y]);
               inc(RareAdjacent[(x + 7) mod 8, y + 1]);
             end;
-          end
+          end;
         end;
     xworst := 0;
     yworst := 0;
@@ -861,7 +862,7 @@ begin
           begin
             xworst := x;
             yworst := y;
-            Cnt := 1
+            Cnt := 1;
           end
           else if (RareAdjacent[x, y] = RareAdjacent[xworst, yworst]) then
           begin
@@ -870,11 +871,11 @@ begin
             begin
               xworst := x;
               yworst := y;
-            end
+            end;
           end;
         end;
     AreaCount[xworst, yworst] := 0;
-    dec(totalrare)
+    dec(totalrare);
   end;
 
   Cnt := 0;
@@ -883,7 +884,7 @@ begin
       if AreaCount[x, y] > 0 then
       begin
         RareLoc[Cnt] := RareByArea[x, y];
-        inc(Cnt)
+        inc(Cnt);
       end;
   for i := 0 to 11 do
   begin
@@ -896,7 +897,7 @@ begin
           Loc1 := dLoc(RareLoc[i], dx, dy);
           if (Loc1 >= 0) and (RealMap[Loc1] and fTerrain = fMountains) then
             RealMap[Loc1] := RealMap[Loc1] and not fTerrain or fHills;
-        end
+        end;
   end;
   for i := 0 to 11 do
     for j := 0 to 11 do
@@ -920,9 +921,9 @@ begin
                 if DelphiRandom(Cnt) = 0 then
                 begin
                   iBest := i;
-                  jbest := j
-                end
-              end
+                  jbest := j;
+                end;
+              end;
             end
             else if (Cnt = 0) or (Dist[i, j] > Dist[iBest, jbest]) then
             begin
@@ -937,7 +938,7 @@ begin
     RareLoc[iBest] := -1;
     RareLoc[jbest] := -1;
   end;
-end; // RarePositions
+end;
 
 function CheckShore(Loc: integer): boolean;
 var
@@ -1096,7 +1097,7 @@ begin
   while plus < MapSize * LandMass * ShMountains div 10000 do
   begin
     dec(bMountains);
-    inc(plus, ElCount[bMountains])
+    inc(plus, ElCount[bMountains]);
   end;
   Count := plus;
   plus := 0;
@@ -1104,14 +1105,14 @@ begin
   while plus < MapSize * LandMass * ShHiHills div 10000 do
   begin
     dec(bHills);
-    inc(plus, ElCount[bHills])
+    inc(plus, ElCount[bHills]);
   end;
   inc(Count, plus);
   bLand := bHills;
   while Count < MapSize * LandMass div 100 do
   begin
     dec(bLand);
-    inc(Count, ElCount[bLand])
+    inc(Count, ElCount[bLand]);
   end;
 
   for Loc0 := lx to lx * (ly - 1) - 1 do
@@ -1137,7 +1138,7 @@ begin
           inc(Count); // count adjacent water
       end;
       if Count = 8 then
-        RealMap[Loc0] := fOcean
+        RealMap[Loc0] := fOcean;
     end;
 
   if not preview then
@@ -1201,7 +1202,7 @@ begin
       while CopyFrom[Loc1] <> Loc1 do
         Loc1 := CopyFrom[Loc1];
       RealMap[Loc0] := RealMap[Loc0] and not fTerrain or
-        RealMap[Loc1] and fTerrain
+        RealMap[Loc1] and fTerrain;
     end;
 
   for Loc0 := 0 to MapSize - 1 do
@@ -1224,11 +1225,11 @@ begin
           Loc1 := dLoc(Loc0, Dir and 1 * 2 - 1, Dir shr 1 * 2 - 1);
           if Loc1 >= 0 then
             if RealMap[Loc1] and fTerrain < fGrass then
-              inc(Count, 2)
+              inc(Count, 2);
         end;
       end;
       if Count >= 4 then
-        RealMap[Loc0] := RealMap[Loc0] and not fTerrain or fPrairie
+        RealMap[Loc0] := RealMap[Loc0] and not fTerrain or fPrairie;
     end;
 
   for Loc0 := 0 to MapSize - 1 do // change desert to prairie 2
@@ -1240,10 +1241,10 @@ begin
         Loc1 := dLoc(Loc0, Dir and 1 * 2 - 1, Dir shr 1 * 2 - 1);
         if Loc1 >= 0 then
           if RealMap[Loc1] and fTerrain <> fDesert then
-            inc(Count)
+            inc(Count);
       end;
       if Count >= 4 then
-        RealMap[Loc0] := RealMap[Loc0] and not fTerrain or fPrairie
+        RealMap[Loc0] := RealMap[Loc0] and not fTerrain or fPrairie;
     end;
 
   for Loc0 := 0 to MapSize - 1 do
@@ -1256,7 +1257,7 @@ begin
     if RealMap[x + lx * (ly - 2)] >= fGrass then
       RealMap[x + lx * (ly - 2)] := RealMap[x + lx * (ly - 2)] and
         not fTerrain or fTundra;
-    RealMap[x + lx * (ly - 1)] := fArctic
+    RealMap[x + lx * (ly - 1)] := fArctic;
   end;
 
   for Loc0 := 0 to MapSize - 1 do // define special terrain tiles
@@ -1354,7 +1355,7 @@ begin
       begin
         if p1 < nAlive + 1 then
           sc[p1] := sc[p1 - 1];
-        dec(p1)
+        dec(p1);
       end;
       if p1 < nAlive + 1 then
         sc[p1] := Loc;
@@ -1369,7 +1370,7 @@ begin
     if ccount[sc[nsc]] * (2 * sccount[c] + 1) > ccount[sc[c]] then
       Break; // even least crowded continent is more crowded than smallest
     inc(sccount[c]);
-    dec(nsc)
+    dec(nsc);
   until sccount[nsc] > 1;
 
   MinGood := 7;
@@ -1379,7 +1380,7 @@ begin
     if (MinGood = 3) and (CountGood < cgLand) then // too demanding!
     begin
       inc(CountGood);
-      MinGood := 6
+      MinGood := 6;
     end;
     FillChar(nCityLoc, SizeOf(nCityLoc), 0);
     Loc := DelphiRandom(MapSize);
@@ -1400,12 +1401,12 @@ begin
             begin
               Loc1 := Radius[V21];
               if (Loc1 >= 0) and (Loc1 < MapSize) and IsGoodTile(Loc1) then
-                inc(CntGood)
+                inc(CntGood);
             end;
           if CntGood >= MinGood then
           begin
             CityLoc[c, nCityLoc[c]] := Loc;
-            inc(nCityLoc[c])
+            inc(nCityLoc[c]);
           end;
         end;
       end;
@@ -1448,7 +1449,7 @@ begin
           begin
             TestDist := Distance(TestStartLoc[i], TestStartLoc[j]);
             if TestDist < MinDist then
-              MinDist := TestDist
+              MinDist := TestDist;
           end;
           if i = sccount[c] - 1 then
           begin
@@ -1594,7 +1595,7 @@ begin
         end;
       end;
     end;
-end; { StartPositions }
+end;
 
 procedure PredefinedStartPositions(Human: integer);
 // use predefined nation start positions
@@ -1653,7 +1654,7 @@ begin
         StartLoc0[imax] := StartLoc0[nStartLoc0];
       end;
   SaveMapCenterLoc := StartLoc[0];
-end; { PredefinedStartPositions }
+end;
 
 procedure InitGame;
 var
@@ -1767,7 +1768,7 @@ begin
             Model[nModel].Lost := 0;
             Model[nModel].ID := p shl 12 + nModel;
             SetModelFlags(Model[nModel]);
-            inc(nModel)
+            inc(nModel);
           end;
         nUn := 0;
         UnBuilt[p] := 0;
@@ -1789,7 +1790,7 @@ begin
 
   TerritoryCount[nPl] := MapSize;
   // fillchar(NewContact, sizeof(NewContact), false);
-end; // InitGame
+end;
 
 procedure InitRandomGame;
 begin
@@ -1896,7 +1897,7 @@ begin
     NewTile := NewTile and not(fPrefStartPos or fStartPos);
     if (NewTile and fTerImp = tiIrrigation) or (NewTile and fTerImp = tiFarm)
     then
-      NewTile := NewTile and not fTerImp
+      NewTile := NewTile and not fTerImp;
   end;
   if (Terrain[NewTile and fTerrain].MineEff = 0) and
     (NewTile and fTerImp = tiMine) then
@@ -1920,7 +1921,7 @@ begin
           ActualSpecialTile(Loc1) shl 5;
       RealMap[Loc1] := RealMap[Loc1] or ($F shl 27);
       RW[0].Map[Loc1] := RealMap[Loc1] and $07FFFFFF or fObserved;
-    end
+    end;
   end;
   // RealMap[Loc]:=RealMap[Loc] and not fSpecial;
   // RW[0].Map[Loc]:=RealMap[Loc] or fObserved;
@@ -2052,7 +2053,7 @@ begin
         Trade := 3;
   end;
   result := eOK;
-end; { GetTileInfo }
+end;
 
 procedure Strongest(Loc: integer; var uix, Strength, Bonus, Cnt: integer);
 { find strongest defender at Loc }
@@ -2135,8 +2136,8 @@ begin
         inc(result, 200);
       if Health < 100 then
         result := ((result - 250) * Health div 5000) * 50 + 250;
-    end
-  end
+    end;
+  end;
 end;
 
 procedure GetUnitReport(p, uix: integer; var UnitReport: TUnitReport);
@@ -2313,7 +2314,7 @@ begin
           if 1 shl TerrOwnerTreaty and
             (1 shl trPeace or 1 shl TrFriendlyContact) <> 0 then
             AddFlags := AddFlags or fPeace;
-        end
+        end;
       end;
 
       if Occupant[Loc] >= 0 then
@@ -2362,7 +2363,7 @@ begin
                 Loc1 := Adjacent[V8];
                 if (Loc1 >= 0) and (Loc1 < MapSize) then
                   Map[Loc1] := Map[Loc1] or fInEnemyZoC
-              end
+              end;
             end;
             if EnableContact and (mox.Domain = dGround) then
               SetContact(pTell, Occupant[Loc]);
@@ -2436,7 +2437,7 @@ begin
     ObserveLevel[Loc] := ObserveLevel[Loc] and not(3 shl (2 * pTell)) or
       Cardinal(Level) shl (2 * pTell);
   end;
-end; // DiscoverTile
+end;
 
 function Discover9(Loc, p, Level: integer;
   TellAllied, EnableContact: boolean): boolean;
@@ -2573,7 +2574,7 @@ begin // discover unit and city view areas
           else
           begin
             RW[pTell].EnemyCity[ecix].Loc := -1;
-            RW[pTell].Map[Loc] := RW[pTell].Map[Loc] and not fCity
+            RW[pTell].Map[Loc] := RW[pTell].Map[Loc] and not fCity;
           end;
         end;
       end;
@@ -2694,7 +2695,7 @@ begin
           if (p1 <> p) and (RW[p].Treaty[p1] < trAlliance) then
           begin
             Tile1^ := Tile1^ or fInEnemyZoC;
-            Break
+            Break;
           end;
         end;
       end;
@@ -2724,7 +2725,7 @@ begin
         begin
           Loc1 := Adjacent[V8];
           if (Loc1 >= 0) and (Loc1 < MapSize) then
-            RW[p].Map[Loc1] := RW[p].Map[Loc1] or fInEnemyZoC
+            RW[p].Map[Loc1] := RW[p].Map[Loc1] or fInEnemyZoC;
         end;
       end;
     end;
@@ -2943,7 +2944,7 @@ begin
 
 {$IFOPT O-} if OriginLoc <> -2 then
     CheckBorders(-2); {$ENDIF} // check: single pass should do!
-end; // CheckBorders
+end;
 
 procedure LogCheckBorders(p, cix, PlayerLosingCity: integer);
 begin
@@ -2975,7 +2976,7 @@ begin
       if Model[mix].Domain = dAir then
       begin
         Fuel := Model[mix].Cap[mcFuel];
-        Flags := Flags or unBombsLoaded
+        Flags := Flags or unBombsLoaded;
       end;
       Job := jNone;
       exp := ExpCost shr 1;
@@ -2998,7 +2999,7 @@ begin
   begin
     Job := jNone;
     Flags := Flags and not(unFortified or unMountainDelay);
-    Loc0 := Loc
+    Loc0 := Loc;
   end;
   if Occupant[Loc0] >= 0 then
   begin
@@ -3013,8 +3014,8 @@ begin
           if RW[p].Model[mix].Flags and mdZOC <> 0 then
           begin
             ZoC := true;
-            Break
-          end
+            Break;
+          end;
         end;
     if not Occ then
       Occupant[Loc0] := -1;
@@ -3090,7 +3091,7 @@ begin
     begin
       if Enemy >= 0 then
         CountLost(p, RW[p].Un[uix].mix, Enemy);
-      RW[p].Un[uix].Loc := -1
+      RW[p].Un[uix].Loc := -1;
     end;
   Occupant[Loc] := -1;
   ZoCMap[Loc] := 0;
@@ -3140,7 +3141,7 @@ begin
     RealMap[FoundLoc] := RealMap[FoundLoc] and
       (fTerrain or fSpecial or fRiver or nPl shl 27) or fCity;
 
-    ChangeTerritory(Loc, p)
+    ChangeTerritory(Loc, p);
   end;
 end;
 
@@ -3178,7 +3179,7 @@ begin
               ((nearest < 0) or (Distance(RW[p].City[cix1].Loc, Loc) <
               Distance(RW[p].City[nearest].Loc, Loc))) then
               nearest := cix1;
-          Home := nearest
+          Home := nearest;
         end
         else
           RemoveUnit(p, uix1); // destroy supported units
@@ -3373,7 +3374,7 @@ begin
           not(fTerrain or fSpecial or fTerImp or fRoad or fRR or fCanal or
           fPoll) or RealMap[Loc] and (fTerrain or fSpecial or fTerImp or
           fRoad or fRR or fCanal or fPoll);
-end; // CompleteJob
+end;
 
 {
   Diplomacy
@@ -3594,7 +3595,7 @@ begin
         else if pSender = pSubject then
         begin
           if execute then
-            GiveCivilReport(pTarget, pSender)
+            GiveCivilReport(pTarget, pSender);
         end
         else if RW[pSender].EnemyReport[pSubject].TurnOfCivilReport < 0 then
           result := false
@@ -3609,12 +3610,12 @@ begin
         else if pSender = pSubject then
         begin
           if execute then
-            GiveMilReport(pTarget, pSender)
+            GiveMilReport(pTarget, pSender);
         end
         else if RW[pSender].EnemyReport[pSubject].TurnOfMilReport < 0 then
           result := false
         else if execute then
-          CopyMilReport(pSender, pTarget, pSubject)
+          CopyMilReport(pSender, pTarget, pSubject);
       end;
     opMap:
       if execute then
@@ -3627,7 +3628,7 @@ begin
         if Price - opTreaty = RW[pSender].Treaty[pTarget] - 1 then
         begin // agreed treaty end
           if execute then
-            CancelTreaty(pSender, pTarget, false)
+            CancelTreaty(pSender, pTarget, false);
         end
         else
         begin
@@ -3731,7 +3732,7 @@ begin
       if Price - opModel < RW[pSender].nModel then
       begin
         if execute then
-          CopyModel(pSender, pTarget, Price - opModel)
+          CopyModel(pSender, pTarget, Price - opModel);
       end
       else
         result := false;
@@ -3746,7 +3747,7 @@ begin
       begin
       result:=false
       end; }
-  end
+  end;
 end;
 
 procedure CancelTreaty(p, pWith: integer; DecreaseCredibility: boolean);
@@ -3894,7 +3895,7 @@ begin
           if 1 shl p2 and GAlive <> 0 then
           begin // make p1 and p2 know each other
             if RW[p1].Treaty[p2] = trNoContact then
-              IntroduceEnemy(p1, p2)
+              IntroduceEnemy(p1, p2);
           end;
 
   if MoreFlags and tfAllTechs <> 0 then
@@ -3940,7 +3941,6 @@ end;
 procedure IntServer(Command, Player, Subject: integer; var Data);
 var
   i, p1: integer;
-
 begin
   if Mode = moPlaying then
     CL.Put(Command, Player, Subject, @Data);
@@ -4031,13 +4031,13 @@ begin
           begin // add view area of allied player
             DiscoverViewAreas(Player);
             DiscoverViewAreas(Subject);
-            Break
-          end
+            Break;
+          end;
       end;
 
     sIntSetDevModel:
       if Mode < moPlaying then
-        move(Data, RW[Player].DevModel.Kind, sIntSetDevModel and $F * 4);
+        Move(Data, RW[Player].DevModel.Kind, sIntSetDevModel and $F * 4);
 
     sIntSetModelStatus:
       if ProcessClientData[Player] then
@@ -4070,8 +4070,7 @@ begin
         {$ENDIF}
         RW[Player].EnemyCity[Subject].Status := integer(Data);
       end;
-
-  end; { case command }
-end; { IntServer }
+  end;
+end;
 
 end.

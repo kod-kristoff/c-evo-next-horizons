@@ -1643,8 +1643,10 @@ begin
 end;
 
 procedure Gtk2Fix;
+{$IFDEF UNIX}
 var
   I: Integer;
+{$ENDIF}
 begin
   {$IFDEF UNIX}
   // Wait and process messages little bit to avoid crash or force repaint under Gtk2

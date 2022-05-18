@@ -315,7 +315,7 @@ begin
       Dec(uix);
     UnitInfo := MyRO.EnemyUn[uix];
   end;
-end; { GetUnitInfo }
+end;
 
 procedure GetCityInfo(Loc: integer; var cix: integer; var CityInfo: TCityInfo);
 begin
@@ -755,7 +755,7 @@ end;
 
 initialization
 
-  Assert(nImp < 128);
-  CalculateAdvValues;
+Assert(nImp < 128);
+CalculateAdvValues;
 
 end.

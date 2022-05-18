@@ -4,9 +4,7 @@ unit PVSB;
 interface
 
 uses
-  {$IFDEF WINDOWS}
-  Windows,
-  {$ENDIF}
+  {$IFDEF WINDOWS}Windows,{$ENDIF}
   Classes, Controls, Forms, LCLIntf, LCLType, LMessages, Messages, SysUtils,
   StdCtrls, Math;
 

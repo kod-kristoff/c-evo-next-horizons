@@ -105,7 +105,6 @@ type
     function CurrentMStrength(Domain: integer): integer;
   end;
 
-
 const
   // no-formations
   nfUndiscovered = -1;
@@ -131,7 +130,6 @@ const
   // Unit_MoveEx
   mxAdjacent = $00000001;
 
-
 var
   nContinent, nOcean, nDistrict: integer;
   Formation: array[0..lxmax * lymax - 1] of integer;
@@ -143,7 +141,6 @@ var
 
   Advancedness: array[0..nAdv - 1] of integer;
 // total number of prerequisites for each advance
-
 
 implementation
 
@@ -165,7 +162,6 @@ var
   uixTransportLoad, TransportAvailable: array[0..nUmax - 1] of integer;
   TurnsAfterLoad: array[0..lxmax * lymax - 1] of shortint;
 
-
 procedure ReplaceD(Start, Stop: pinteger; Raider, Twix: integer);
 begin
   while Start <> Stop do
@@ -182,7 +178,6 @@ begin
     Inc(Start);
   Result := Start;
 end;
-
 
 function TToolAI.CenterOfEmpire: integer;
 var
@@ -262,7 +257,6 @@ begin
     end;
 end;
 
-
 //------------------------------------------------------------------------------
 // City Tiles Processing
 
@@ -310,7 +304,6 @@ begin
         CityResult[cix] := Advice.CityReport.Trade;
       end;
 end;
-
 
 //------------------------------------------------------------------------------
 // JobAssignment
@@ -468,8 +461,7 @@ begin
         if (Loc = JobLocOfSettler[uix]) and (Movement >= 100) then
           Unit_StartJob(uix, TileJob[JobLocOfSettler[uix]]);
       end;
-end; // JobAssignment_Go
-
+end;
 
 //------------------------------------------------------------------------------
 // Map Analysis
@@ -593,7 +585,6 @@ begin
     end;
   end;
 end;
-
 
 //------------------------------------------------------------------------------
 // Path Finding
@@ -897,7 +888,7 @@ begin
     else
       Result := csForbiddenTile;
   end;
-end; // CheckStep
+end;
 
 (*
 -------- Pathfinding Reference Implementation --------
@@ -1019,7 +1010,6 @@ begin
     Result := eNoWay;
 end;
 
-
 //------------------------------------------------------------------------------
 // Oversea Transport
 
@@ -1107,7 +1097,6 @@ begin
   end;
   Pile.Free;
 end;
-
 
 function TToolAI.SeaTransport_MakeGroupPlan(
   var TransportPlan: TGroupTransportPlan): boolean;
@@ -1471,7 +1460,6 @@ begin
   Result := False;
 end;
 
-
 //------------------------------------------------------------------------------
 // Misc
 
@@ -1492,7 +1480,6 @@ begin
           Inc(Result, Strength);
       end;
 end;
-
 
 //------------------------------------------------------------------------------
 

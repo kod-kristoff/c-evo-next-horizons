@@ -95,6 +95,7 @@ type
 var
   NegoDlg: TNegoDlg;
 
+
 implementation
 
 uses
@@ -475,7 +476,7 @@ begin
               Possible := IsActionPage and
                 (ButtonPrice[Tag and $FF] shr 24 in MyAllowed);
               Lit := Delivers[Tag and $FF] <> $FFFFFFFF;
-            end
+            end;
         end;
 end;
 
@@ -629,7 +630,7 @@ begin
     (BiColorTextWidth(Offscreen.Canvas, s) + 1) div 2, yCred1, s);
 
   MarkUsedOffscreen(ClientWidth, ClientHeight);
-end; { OffscreenPaint }
+end;
 
 procedure TNegoDlg.Initiate;
 begin
@@ -783,7 +784,7 @@ begin
             a := max;
           if a > MaxShipPartPrice then
             a := MaxShipPartPrice;
-          inc(Price, a)
+          inc(Price, a);
         end;
       opAllTech:
         begin // choose technology
@@ -842,7 +843,7 @@ begin
     if CurrentOffer.nDeliver >= 2 then
     begin
       SimpleMessage(Phrases.Lookup('MAX2OFFERS'));
-      exit
+      exit;
     end;
     Price := ButtonPrice[TButtonN(Sender).Tag and $FF];
     if not(Price shr 24 in MyAllowed) then
@@ -885,7 +886,7 @@ begin
             a := max;
           if a > MaxShipPartPrice then
             a := MaxShipPartPrice;
-          inc(Price, a)
+          inc(Price, a);
         end;
       opAllTech:
         begin // choose technology
@@ -905,7 +906,7 @@ begin
           if ModalSelectDlg.result = mixAll then
             Price := opAllModel
           else
-            Price := OpModel + ModalSelectDlg.result
+            Price := OpModel + ModalSelectDlg.result;
         end;
       opTreaty:
         begin

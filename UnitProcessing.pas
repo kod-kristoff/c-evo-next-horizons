@@ -43,6 +43,7 @@ function GetJobProgress(p, Loc: integer;
 procedure InitGame;
 procedure ReleaseGame;
 
+
 implementation
 
 uses
@@ -131,12 +132,12 @@ begin
         if ObserveLevel[Loc1] and (3 shl (p * 2)) > 0 then
         begin // p observes tile
           result := coKnown or coTrue;
-          exit
+          exit;
         end
         else
           result := coTrue; // p does not observe tile
     end;
-  end
+  end;
 end;
 
 function GetMoveCost(p, mix, FromLoc, ToLoc, MoveLength: integer;
@@ -186,7 +187,7 @@ begin
                 begin
                   MoveCost := Speed;
                   result := eMountains;
-                  exit
+                  exit;
                 end;
             end;
           MoveCost := MoveCost * MoveLength;
@@ -206,8 +207,8 @@ begin
 
       dAir:
         MoveCost := 50 * MoveLength; { always valid move }
-    end
-  end
+    end;
+  end;
 end;
 
 function CalculateMove(p, uix, ToLoc, MoveLength: integer; TestOnly: boolean;
@@ -265,7 +266,7 @@ begin
           (RealMap[ToLoc] and fCity <> 0) and (Treaty[p1] >= trPeace)) then
         begin
           result := eTreaty;
-          exit
+          exit;
         end; // keep peace treaty!
       end;
       if (RealMap[ToLoc] and fCity <> 0) and
@@ -279,7 +280,7 @@ begin
           if PModel.Flags and mdCivil <> 0 then
           begin
             result := eNoCapturer;
-            exit
+            exit;
           end;
           MoveInfo.MoveType := mtCapture;
         end
@@ -288,23 +289,23 @@ begin
           if (PModel.Domain = dSea) and (PModel.Cap[mcArtillery] = 0) then
           begin
             result := eDomainMismatch;
-            exit
+            exit;
           end
           else if (PModel.Attack = 0) and
             not((PModel.Cap[mcBombs] > 0) and (Flags and unBombsLoaded <> 0))
           then
           begin
             result := eNoBombarder;
-            exit
+            exit;
           end
           else if Movement < 100 then
           begin
             result := eNoTime_Bombard;
-            exit
+            exit;
           end;
           MoveInfo.MoveType := mtBombard;
           result := eBombarded;
-        end
+        end;
     end;
 
     MoveInfo.MountainDelay := false;
@@ -327,7 +328,7 @@ begin
       begin
         MoveInfo.EndHealth := BattleForecast.EndHealthAtt;
         MoveInfo.EndHealthDef := BattleForecast.EndHealthDef;
-      end
+      end;
     end
     else // if MoveInfo.MoveType in [mtMove,mtCapture,mtSpyMission] then
     begin
@@ -381,7 +382,7 @@ begin
               if (uixSelectedTransport >= 0) and (uix1 = uixSelectedTransport)
               then
                 Break;
-            end
+            end;
       end;
       if result < rExecuted then
         exit;
@@ -400,25 +401,25 @@ begin
         if DestControlled >= coTrue + coKnown then
         begin
           result := eZOC;
-          exit
+          exit;
         end
         else if not TestOnly and (DestControlled >= coTrue) then
         begin
           result := eZOC_EnemySpotted;
-          exit
-        end
+          exit;
+        end;
       end;
       if (Movement = 0) and (ServerVersion[p] >= $0100F1) or
         (MoveInfo.Cost > Movement) then
         if (Master >= 0) or (MoveInfo.ToMaster >= 0) then
         begin
           result := eNoTime_Load;
-          exit
+          exit;
         end
         else
         begin
           result := eNoTime_Move;
-          exit
+          exit;
         end;
       if (MoveInfo.EndHealth <= 0) or (MoveInfo.MoveType = mtSpyMission) then
         result := result or rUnitRemoved;
@@ -432,9 +433,9 @@ begin
     begin // MoveInfo.Dcix not set yet
       MoveInfo.Defender := RealMap[ToLoc] shr 27;
       SearchCity(ToLoc, MoveInfo.Defender, MoveInfo.Dcix);
-    end
-  end
-end; // CalculateMove
+    end;
+  end;
+end;
 
 function GetBattleForecast(Loc: integer; var BattleForecast: TBattleForecast;
   var Duix, Dcix, AStr, DStr, ABaseDamage, DBaseDamage: integer): integer;
@@ -448,7 +449,7 @@ begin
     if (Defender < 0) or (Defender = pAtt) then
     begin
       result := eOK;
-      exit
+      exit;
     end; // no attack, simple move
 
     PModel := @RW[pAtt].Model[mixAtt];
@@ -458,7 +459,7 @@ begin
       EndHealthAtt := HealthAtt;
       EndHealthDef := RW[Defender].Un[Duix].Health;
       result := eOK;
-      exit
+      exit;
     end;
 
     DModel := @RW[Defender].Model[RW[Defender].Un[Duix].mix];
@@ -481,7 +482,7 @@ begin
         (PModel.Domain <> dAir) then
       begin
         result := eDomainMismatch;
-        exit
+        exit;
       end; // can't attack plane
     end;
     if ((PModel.Cap[mcArtillery] = 0) or ((ServerVersion[pAtt] >= $010200) and
@@ -491,19 +492,19 @@ begin
       (PModel.Domain = dSea) and (RealMap[Loc] and fTerrain >= fGrass)) then
     begin
       result := eDomainMismatch;
-      exit
+      exit;
     end;
     if (PModel.Attack = 0) and not((PModel.Cap[mcBombs] > 0) and
       (FlagsAtt and unBombsLoaded <> 0) and (DModel.Domain < dAir)) then
     begin
       result := eInvalid;
-      exit
+      exit;
     end;
 
     if Movement = 0 then
     begin
       result := eNoTime_Attack;
-      exit
+      exit;
     end;
 
 {$IFOPT O-}assert(InvalidTreatyMap = 0); {$ENDIF}
@@ -576,7 +577,7 @@ begin
       if DBaseDamage = 0 then
         DBaseDamage := 1;
       if DBaseDamage > RW[Defender].Un[Duix].Health then
-        DBaseDamage := RW[Defender].Un[Duix].Health
+        DBaseDamage := RW[Defender].Un[Duix].Health;
     end;
 
     // calculate base damage for attacker
@@ -588,7 +589,7 @@ begin
       if ABaseDamage = 0 then
         ABaseDamage := 1;
       if ABaseDamage > HealthAtt then
-        ABaseDamage := HealthAtt
+        ABaseDamage := HealthAtt;
     end;
 
     // calculate final damage for defender
@@ -624,9 +625,9 @@ begin
     else if EndHealthAtt > 0 then
       result := eWon
     else
-      result := eBloody
-  end
-end; // GetBattleForecast
+      result := eBloody;
+  end;
+end;
 
 function LoadUnit(p, uix: integer; TestOnly: boolean): integer;
 var
@@ -653,7 +654,7 @@ begin
               then
               begin
                 ToMaster := uix1;
-                Break
+                Break;
               end
               else if ToMaster < 0 then
                 ToMaster := uix1;
@@ -678,10 +679,10 @@ begin
             inc(RW[p].Un[ToMaster].TroopLoad);
           Master := ToMaster;
           UpdateUnitMap(Loc);
-        end
-      end
-    end
-  end
+        end;
+      end;
+    end;
+  end;
 end;
 
 function UnloadUnit(p, uix: integer; TestOnly: boolean): integer;
@@ -720,7 +721,7 @@ begin
         PlaceUnit(p, uix);
         UpdateUnitMap(Loc);
       end;
-    end
+    end;
 end;
 
 procedure Recover(p, uix: integer);
@@ -801,12 +802,12 @@ begin
   if (a.ToLoc <> maNextCity) and ((a.ToLoc < 0) or (a.ToLoc >= MapSize)) then
   begin
     result := eInvalid;
-    exit
+    exit;
   end;
   if (a.ToLoc <> maNextCity) and (Map[a.ToLoc] and fTerrain = fUNKNOWN) then
   begin
     result := eNoWay;
-    exit
+    exit;
   end;
 
   with RW[p].Model[RW[p].Un[uix].mix] do
@@ -815,7 +816,7 @@ begin
         if (a.ToLoc <> maNextCity) and (Map[a.ToLoc] and fTerrain = fOcean) then
         begin
           result := eDomainMismatch;
-          exit
+          exit;
         end
         else
         begin
@@ -842,7 +843,7 @@ begin
           (Map[a.ToLoc] and (fCity or fUnit or fCanal) = 0) then
         begin
           result := eDomainMismatch;
-          exit
+          exit;
         end
         else
         begin
@@ -858,7 +859,7 @@ begin
           MoveInfo := gmaAir;
           maxmov := Speed;
           initmov := 0;
-        end
+        end;
     end;
 
   FromLoc := RW[p].Un[uix].Loc;
@@ -872,7 +873,7 @@ begin
     if T >= (a.MoreTurns + 1) shl 20 then
     begin
       Loc := -1;
-      Break
+      Break;
     end;
     FromTile := Map[Loc];
     if (Loc = a.ToLoc) or (a.ToLoc = maNextCity) and (FromTile and fCity <> 0)
@@ -1028,11 +1029,11 @@ begin
               begin
                 From[Loc1] := Loc;
                 Damage[Loc1] := Damage[Loc] + AddDamage;
-              end
-          end
-        end
-      end
-    end
+              end;
+          end;
+        end;
+      end;
+    end;
   end;
   FreeAndNil(Q);
   if (Loc = a.ToLoc) or (a.ToLoc = maNextCity) and (Loc >= 0) and
@@ -1073,7 +1074,7 @@ begin
     result := eNoWay;
 
   // QueryPerformanceCounter(tt);{time in s is: (tt-tt0)/PerfFreq}
-end; // GetMoveAdvice
+end;
 
 function CanPlaneReturn(p, uix: integer;
   PlaneReturnData: TPlaneReturnData): boolean;
@@ -1128,12 +1129,12 @@ begin
     if T >= (PlaneReturnData.Fuel + 1) shl 20 then
     begin
       result := false;
-      Break
+      Break;
     end;
     if MapFlags[Loc] and mfEnd <> 0 then
     begin
       result := true;
-      Break
+      Break;
     end;
     FromTile := Map[Loc];
     V8_to_Loc(Loc, Adjacent);
@@ -1160,12 +1161,12 @@ begin
           else
             T1 := T + MoveCost shl 8;
           Q.Put(Loc1, T1);
-        end
-      end
-    end
+        end;
+      end;
+    end;
   end;
   FreeAndNil(Q);
-end; // CanPlaneReturn
+end;
 
 {
   Terrain Improvement
@@ -1194,7 +1195,7 @@ begin
             if RW[p].Tech[adBridgeBuilding] >= tsApplicable then
               inc(JobWork, RoadBridgeWork) { across river }
             else
-              result := eNoBridgeBuilding
+              result := eNoBridgeBuilding;
         end
         else
           result := eInvalid;
@@ -1222,7 +1223,7 @@ begin
           JobWork := IrrClearWork;
           if (IrrEff = 0) or (RealMap[Loc] and fTerImp = tiIrrigation) or
             (RealMap[Loc] and fTerImp = tiFarm) then
-            result := eInvalid
+            result := eInvalid;
         end;
       jFarm:
         if RealMap[Loc] and fTerImp <> tiIrrigation then
@@ -1231,7 +1232,7 @@ begin
         begin
           JobWork := IrrClearWork * FarmWork;
           if (JobWork <= 0) or (RealMap[Loc] and fTerImp = tiFarm) then
-            result := eInvalid
+            result := eInvalid;
         end;
       jAfforest:
         if AfforestTerrain >= 0 then
@@ -1242,7 +1243,7 @@ begin
         begin
           JobWork := MineAfforestWork;
           if (MineEff = 0) or (RealMap[Loc] and fTerImp = tiMine) then
-            result := eInvalid
+            result := eInvalid;
         end;
       jFort:
         if RealMap[Loc] and fTerImp <> tiFort then
@@ -1259,7 +1260,7 @@ begin
         begin
           JobWork := TransWork;
           if JobWork <= 0 then
-            result := eInvalid
+            result := eInvalid;
         end;
       jPoll:
         if RealMap[Loc] and fPoll <> 0 then
@@ -1277,7 +1278,7 @@ begin
         else
           result := eInvalid;
     end;
-end; // CalculateJobWork
+end;
 
 function StartJob(p, uix, NewJob: integer; TestOnly: boolean): integer;
 var
@@ -1290,20 +1291,20 @@ begin
     if NewJob = Job then
     begin
       result := eNotChanged;
-      exit
+      exit;
     end;
     if NewJob = jNone then
     begin
       if not TestOnly then
         Job := jNone;
-      exit
+      exit;
     end;
     Loc0 := Loc;
     if (RealMap[Loc0] and fDeadLands <> 0) and (NewJob <> jRoad) and
       (NewJob <> jRR) then
     begin
       result := eDeadLands;
-      exit
+      exit;
     end;
     TerrType := RealMap[Loc0] and fTerrain;
     if (RealMap[Loc0] and fCity <> 0) or (TerrType < fGrass) or (Master >= 0) or
@@ -1313,13 +1314,13 @@ begin
       >= 0)) then
     begin
       result := eInvalid;
-      exit
+      exit;
     end;
     if (JobPreq[NewJob] <> preNone) and
       (RW[p].Tech[JobPreq[NewJob]] < tsApplicable) then
     begin
       result := eNoPreq;
-      exit
+      exit;
     end;
 
     result := CalculateJobWork(p, Loc0, NewJob, JobWork);
@@ -1346,7 +1347,7 @@ begin
     if (NewJob = jCity) and (result = eJobDone) then
     begin
       RemoveUnit_UpdateMap(p, uix);
-      result := eCity
+      result := eCity;
     end
     else if Health <= 0 then
     begin // victim of HostileDamage
@@ -1360,10 +1361,10 @@ begin
         ObserveLevel[Loc0] := ObserveLevel[Loc0] and not(3 shl (2 * p));
         Discover21(Loc0, p, lObserveUnhidden, true, true);
         // CheckContact;
-      end
-    end
-  end; // with
-end; // StartJob
+      end;
+    end;
+  end;
+end;
 
 function Work(p, uix: integer): boolean;
 var
@@ -1421,7 +1422,7 @@ begin
           Movement := 0;
         end
     end
-end; // work
+end;
 
 function GetJobProgress(p, Loc: integer;
   var JobProgressData: TJobProgressData): integer;
@@ -1437,7 +1438,7 @@ begin
         JobProgressData[Job].Done := 0
       else
         JobProgressData[Job].Done := JobProgressData[Job].Required -
-          ToWork[Loc, Job]
+          ToWork[Loc, Job];
     end
     else
     begin

@@ -1518,7 +1518,7 @@ begin
       end;
       Lines[2] := 0;
     end;
-end; // InitLines
+end;
 
 function TListDlg.OnlyChoice(TestKind: TListKind): integer;
 begin

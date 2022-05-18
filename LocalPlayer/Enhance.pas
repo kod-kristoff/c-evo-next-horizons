@@ -4,10 +4,8 @@ unit Enhance;
 interface
 
 uses
-  ScreenTools, BaseWin, Protocol, ClientTools, Term, LCLIntf, LCLType,
-
-  SysUtils, Classes, Graphics, Controls, Forms, IsoEngine,
-  ButtonB, ButtonC, Menus;
+  ScreenTools, BaseWin, Protocol, ClientTools, Term, LCLIntf, LCLType, SysUtils,
+  Classes, Graphics, Controls, Forms, IsoEngine, ButtonB, ButtonC, Menus;
 
 type
 
@@ -298,7 +296,7 @@ begin
     (LastJob = jTrans);
 
   MarkUsedOffscreen(InnerWidth, InnerHeight);
-end; { OffscreenPaint }
+end;
 
 procedure TEnhanceDlg.CloseBtnClick(Sender: TObject);
 begin

@@ -4,9 +4,9 @@ unit MessgEx;
 interface
 
 uses
-  Messg, Protocol, ScreenTools, Platform, DateUtils,
-  LCLIntf, LCLType, Messages, SysUtils, Classes, Graphics, Controls, Forms, ButtonA,
-  ButtonB, StdCtrls, DrawDlg;
+  Messg, Protocol, ScreenTools, Platform, DateUtils, LCLIntf, LCLType, Messages,
+  SysUtils, Classes, Graphics, Controls, Forms, ButtonA, ButtonB, StdCtrls,
+  DrawDlg;
 
 type
   TMessageIconKind = (mikNone, mikImp, mikModel, mikTribe, mikBook, mikAge,

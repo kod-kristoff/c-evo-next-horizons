@@ -4,10 +4,8 @@ unit Rates;
 interface
 
 uses
-  Protocol, ScreenTools, BaseWin, LCLIntf, LCLType,
-
-  SysUtils, Classes, Graphics, Controls, Forms,
-  ButtonB, ButtonC;
+  Protocol, ScreenTools, BaseWin, LCLIntf, LCLType, SysUtils, Classes, Graphics,
+  Controls, Forms, ButtonB, ButtonC;
 
 type
   TRatesDlg = class(TBufferedDrawDlg)
@@ -27,6 +25,7 @@ type
 
 var
   RatesDlg: TRatesDlg;
+
 
 implementation
 

@@ -832,7 +832,7 @@ begin
     end; // while not done
   if Result then
     Moved[uix] := True;
-end; // ProcessMove
+end;
 
 procedure TBarbarina.AttackAndPatrol;
 
@@ -1204,7 +1204,7 @@ begin
               break;
             end
   until not BackToStart;
-end; // AttackAndPatrol
+end;
 
 procedure TBarbarina.Barbarina_SetCityProduction;
 

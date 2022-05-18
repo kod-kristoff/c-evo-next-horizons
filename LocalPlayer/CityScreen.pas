@@ -1026,7 +1026,7 @@ begin
     BuyBtn.Visible := false;
 
   MarkUsedOffscreen(ClientWidth, ClientHeight);
-end; { OffscreenPaint }
+end;
 
 procedure TCityDlg.FormShow(Sender: TObject);
 var
@@ -1407,7 +1407,7 @@ begin
         end;
       end;
     end;
-end; { FormMouseDown }
+end;
 
 procedure TCityDlg.ChooseProject;
 type

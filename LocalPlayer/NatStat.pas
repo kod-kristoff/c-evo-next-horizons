@@ -47,6 +47,7 @@ type
 var
   NatStatDlg: TNatStatDlg;
 
+
 implementation
 
 {$R *.lfm}
@@ -393,7 +394,7 @@ begin
   ContactBtn.SetBack(offscreen.Canvas, ContactBtn.Left, ContactBtn.Top);
 
   MarkUsedOffscreen(ClientWidth, ClientHeight);
-end; { OffscreenPaint }
+end;
 
 procedure TNatStatDlg.CloseBtnClick(Sender: TObject);
 begin

@@ -9,6 +9,7 @@ uses
 
 function NowPrecise: TDateTime;
 
+
 implementation
 
 {$IFDEF WINDOWS}

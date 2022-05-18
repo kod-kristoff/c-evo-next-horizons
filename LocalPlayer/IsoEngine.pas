@@ -4,8 +4,8 @@ unit IsoEngine;
 interface
 
 uses
-  Protocol, ClientTools, ScreenTools, Tribes,
-  LCLIntf, LCLType, SysUtils, Classes, Graphics, UPixelPointer, UGraphicSet;
+  Protocol, ClientTools, ScreenTools, Tribes, LCLIntf, LCLType, SysUtils,
+  Classes, Graphics, UPixelPointer, UGraphicSet;
 
 const
   TerrainIconLines = 21;
@@ -718,7 +718,7 @@ begin
         Sprite(HGrStdUnits, x, y, xxu * 2, yyu * 2, 1 + 6 * (xxu * 2 + 1), 1);
       end;
     end;
-end; { PaintUnit }
+end;
 
 procedure TIsoMap.PaintCity(x, y: integer; const CityInfo: TCityInfo;
   accessory: boolean);
@@ -803,7 +803,7 @@ begin
     end;
     Textout(xShield + 2, yShield - 1, LabelTextColor, s);
   end;
-end; { PaintCity }
+end;
 
 function PoleTile(Loc: integer): integer;
 begin { virtual pole tile }
@@ -1299,7 +1299,7 @@ begin
       (Loc < G.lx * G.ly) and (DebugMap[Loc] <> 0) then
       Textout(x + xxt - 16, y + yyt - 9, $00E0FF,
         IntToStr(integer(DebugMap[Loc])))
-end; { PaintTileObjects }
+end;
 
 procedure TIsoMap.PaintGrid(x, y, nx, ny: integer);
 
@@ -1686,7 +1686,7 @@ begin
   end;
 
   // frame(FOutput.Canvas,x+1,y+1,x+nx*33+33-2,y+ny*16+32-2,$FFFF,$FFFF);
-end; { Paint }
+end;
 
 procedure TIsoMap.AttackBegin(const ShowMove: TShowMove);
 begin

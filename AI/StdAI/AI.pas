@@ -175,7 +175,6 @@ const
 var
   LeaveOutValue: array[0..nAdv - 1] of integer;
 
-
 constructor TAI.Create(Nation: integer);
 begin
   inherited;
@@ -208,7 +207,6 @@ begin
   Data.RejectTurn[suContact, Opponent] := RO.Turn;
   Result := Data.BehaviorFlags and bBarbarina <> 0;
 end;
-
 
 //-------------------------------
 //            RESEARCH
@@ -652,7 +650,6 @@ begin
       ((Result < 0) or (Advancedness[ad] > Advancedness[Result])) then
       Result := ad;
 end;
-
 
 //-------------------------------
 //         TERRAFORMING
@@ -1144,8 +1141,7 @@ begin
             end;
         end;
       end;
-end; // ProcessSettlers
-
+end;
 
 //-------------------------------
 //            MY TURN
@@ -1349,7 +1345,6 @@ begin
   AdvanceValuesSet := False;
   SetAdvanceValues;
 
-
 {$IFDEF DEBUG}
 (*for p1:=0 to nPl-1 do
   if (p1<>me) and (1 shl p1 and RO.Alive<>0) and (RO.Treaty[p1]>=trPeace)
@@ -1379,9 +1374,7 @@ begin
         Advancedness[ad], AdvanceValue[ad]]));
     end;
 end;
-
 {$ENDIF}
-
 
 procedure TAI.CheckGender;
 var
@@ -1415,7 +1408,6 @@ begin
     DebugMessage(1, 'Gender:=' + char(48 + NewGender));
   end;
 end;
-
 
 procedure TAI.SetAdvanceValues;
 
@@ -1784,7 +1776,6 @@ begin
         end;
 end;
 
-
 procedure TAI.MoveUnitsHome;
 const
   PatrolDestination = lxmax * lymax;
@@ -2054,8 +2045,7 @@ begin
           mctGroundDefender, mctGroundAttacker:
             Dec(UnitLack[District[Loc], ModelCat[mix]])
         end;
-end; // MoveUnitsHome
-
+end;
 
 procedure TAI.CheckAttack(uix: integer);
 var
@@ -2175,8 +2165,7 @@ begin
         Exhausted := True;
     until Exhausted;
   end;
-end; // CheckAttack
-
+end;
 
 procedure TAI.Patrol(uix: integer);
 const
@@ -2281,7 +2270,7 @@ begin
         Exhausted := True;
     until Exhausted;
   end;
-end; // Patrol
+end;
 
 procedure TAI.AttackAndPatrol;
 const
@@ -2341,8 +2330,7 @@ begin
         if IsPatrolUnit then
           Patrol(uix);
       end;
-end; // AttackAndPatrol
-
+end;
 
 function TAI.HavePort: boolean;
 var
@@ -2368,7 +2356,6 @@ begin
         end;
       end;
 end;
-
 
 procedure TAI.SetCityProduction;
 var
@@ -2835,8 +2822,7 @@ begin
       end;
 
   ChangeHomeCities;
-end; // SetCityProduction
-
+end;
 
 function TAI.ChooseGovernment: integer;
 begin
@@ -2854,7 +2840,6 @@ begin
   else
     Result := gDespotism;
 end;
-
 
 //-------------------------------
 //           DIPLOMACY
@@ -2926,7 +2911,6 @@ begin
       end;
     end;
 end;
-
 
 function TAI.WantNegotiation(Nation: integer; NegoTime: TNegoTime): boolean;
 var
@@ -3152,8 +3136,7 @@ begin
       end;
     end;
   end;
-end; // Negotiation
-
+end;
 
 procedure SetLeaveOutValue;
 

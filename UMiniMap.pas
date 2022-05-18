@@ -327,6 +327,5 @@ begin
   Bitmap.EndUpdate;
 end;
 
-
 end.
 

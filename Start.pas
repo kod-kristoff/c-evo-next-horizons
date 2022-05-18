@@ -1927,5 +1927,4 @@ begin
   SlotAvailable := -1;
 end;
 
-
 end.

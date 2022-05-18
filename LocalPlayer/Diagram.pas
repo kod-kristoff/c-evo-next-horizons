@@ -272,7 +272,7 @@ begin
         Phrases.Lookup('SHIPCOMP'), MyRO.Ship[Player].Parts[spComp], 6);
     end;
   MarkUsedOffscreen(InnerWidth, InnerHeight);
-end; // OffscreenPaint
+end;
 
 procedure TDiaDlg.FormPaint(Sender: TObject);
 var

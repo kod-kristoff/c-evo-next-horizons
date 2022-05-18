@@ -109,7 +109,7 @@ begin
         end;
         s := s + Tribe[SlotNo[Y, X]].TPhrase('SHORTNAME') + ' | ';
       end;
-    List.Lines.Add(s)
+    List.Lines.Add(s);
   end;
   PostMessage(List.Handle, WM_VSCROLL, SB_BOTTOM, 0);
 end;

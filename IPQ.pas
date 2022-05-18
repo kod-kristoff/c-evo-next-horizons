@@ -7,7 +7,6 @@ unit IPQ;
 interface
 
 type
-
   TIntegerArray = array [0 .. $40000000 div sizeof(integer)] of integer;
   PIntegerArray = ^TIntegerArray;
 
@@ -157,7 +156,7 @@ begin
     lbh[i] := last;
     Ix[last.Item] := i;
   end;
-  result := True
+  result := True;
 end;
 
 end.

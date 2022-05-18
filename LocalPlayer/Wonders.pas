@@ -280,7 +280,7 @@ begin
   end;
 
   MarkUsedOffscreen(ClientWidth, ClientHeight);
-end; { OffscreenPaint }
+end;
 
 procedure TWondersDlg.CloseBtnClick(Sender: TObject);
 begin

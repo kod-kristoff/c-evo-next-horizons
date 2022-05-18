@@ -26,6 +26,7 @@ type
 var
   InputDlg: TInputDlg;
 
+
 implementation
 
 {$R *.lfm}
