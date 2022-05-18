@@ -1167,7 +1167,7 @@ begin
       begin
         DraftDlg.ShowNewContent(wmModal);
         if DraftDlg.ModalResult <> mrOK then
-          Tribe[me].ModelPicture[MyRO.nModel].HGr := nil
+          Tribe[me].ModelPicture[MyRO.nModel].HGr := nil;
       end;
     until (ChosenResearch <> adMilitary) or (DraftDlg.ModalResult = mrOK);
 

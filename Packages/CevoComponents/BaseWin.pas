@@ -205,8 +205,10 @@ begin
     FWindowMode := NewMode;
     Left := UserLeft;
     Top := UserTop;
-    if FWindowMode = wmModal then
-      ShowModal
+    if FWindowMode = wmModal then begin
+      Gtk2Fix;
+      ShowModal;
+    end
     else
       Show;
   end;
