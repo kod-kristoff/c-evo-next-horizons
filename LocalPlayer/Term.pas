@@ -2100,6 +2100,7 @@ begin
         { else begin Kind:=mkOkHelp; HelpKind:=hkAdv; HelpNo:=AgePreq[age]; end };
         CenterTo := NewAgeCenterTo;
         OpenSound := 'AGE_' + char(48 + Age);
+        Application.ProcessMessages;
         ShowModal;
         MyData.ToldAge := Age;
         if Age > 0 then
