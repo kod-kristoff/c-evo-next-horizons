@@ -1,0 +1,32 @@
+Version 1.3.1 (2022-05-18)
+==========================
+
+* Modified: Build with Lazarus 2.2.0.
+* Modified: Also automatically detect new localizations in Localization directory.
+* Modified: Sort key bindings alphabetically in the settings dialog.
+* Modified: Improved Settings dialog controls alignment to better use available space.
+* Modified: Improved Czech translation.
+* Fixed: Possible exception during cities or units rename with right mouse click if new name is too long.
+* Fixed: Show correctly buttons on task bar with localized captions in windowed mode on both Windows and Linux.
+* Fixed: Incorrectly displayed radio items in Options menu under Linux Gtk2.
+* Fixed: Use localization files with first capital letter to work correctly on Linux.
+* Fixed: Use correct text color and background in settings form key bindings edit boxes.
+* Fixed: Always use initial back background for windows so they less flicker during first draw. This was more visible on Linux systems with white system theme.
+* Fixed: Contact page link.
+* Fixed: Styling of settings edit boxes under Windows.
+
+Version 1.3.0 (2021-11-02)
+==========================
+
+* All from original game C-evo 1.2.0
+* Supported platforms: Windows and Linux
+* Supported architectures: 32-bit and 64-bit x86
+* Localizations included: Czech, German, Italian, Russian, Chinese Simplified and Traditional
+* Graphics files converted from BMP to PNG
+* Game text files .txt converted to UTF-8 encoding
+* Removed external Configurator application written in C#/.NET. Used in-game configuration interface.
+* Used latest available Delphi StdAI.
+* Added installer scripts for Windows, Ubuntu/Debian and Fedora/RHEL/Centos Linux.
+* Design time components converted to Lazarus package (cevocomponents.lpk)
+* User configurable key bindings
+* Zoom-able map in three levels by mouse wheel
