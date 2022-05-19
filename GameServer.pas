@@ -48,7 +48,7 @@ type
 var
   // PARAMETERS
   PlayersBrain: TBrains; { brain of the players view }
-  Difficulty: array [0 .. nPl - 1] of integer absolute Database.Difficulty;
+  Difficulty: array [0 .. nPl - 1] of Integer absolute Database.Difficulty;
   { difficulty }
 
   // READ ONLY
@@ -69,15 +69,15 @@ procedure Init(NotifyFunction: TNotifyFunction);
 procedure Done;
 
 procedure StartNewGame(const Path, FileName, Map: string;
-  Newlx, Newly, NewLandMass, NewMaxTurn: integer);
-function LoadGame(const Path, FileName: string; Turn: integer;
-  MovieMode: boolean): boolean;
-procedure EditMap(const Map: string; Newlx, Newly, NewLandMass: integer);
-procedure DirectHelp(Command: integer);
+  Newlx, Newly, NewLandMass, NewMaxTurn: Integer);
+function LoadGame(const Path, FileName: string; Turn: Integer;
+  MovieMode: Boolean): Boolean;
+procedure EditMap(const Map: string; Newlx, Newly, NewLandMass: Integer);
+procedure DirectHelp(Command: Integer);
 
 procedure ChangeClient;
 procedure NextPlayer;
-function PreviewMap(lm: integer): pointer;
+function PreviewMap(lm: Integer): Pointer;
 
 
 implementation
@@ -111,12 +111,12 @@ var
   AutoSaveState: TCmdListState;
   MapField: ^Cardinal; // predefined map
   LastOffer: TOffer;
-  CCData: array [0 .. 14] of integer;
+  CCData: array [0 .. 14] of Integer;
   bix: TBrains; { brain of the players }
   DevModelTurn: array [0 .. nPl - 1] of Integer; { turn of last call to sResetModel }
   OriginalDataVersion: array [0 .. nPl - 1] of Integer;
   SavedTiles { , SavedResourceWeights } : array [0 .. ncmax - 1] of Cardinal;
-  SavedData: array [0 .. nPl - 1] of pointer;
+  SavedData: array [0 .. nPl - 1] of Pointer;
   LogFileName: string;
   SavePath: string; { name of file for saving the current game }
   MapFileName: string; // name of map to use, empty for random
@@ -134,24 +134,24 @@ var
 const
   PreviewRND = 41601260; { randseed for preview map }
 
-function Server(Command, Player, Subject: integer; var Data): integer;
+function Server(Command, Player, Subject: Integer; var Data): Integer;
   stdcall; forward;
 
-procedure CallPlayer(Command, p: integer; var Data);
+procedure CallPlayer(Command, P: Integer; var Data);
 begin
-  if ((Mode <> moMovie) or (p = 0)) then
+  if ((Mode <> moMovie) or (P = 0)) then
   begin
 {$IFOPT O-}
-    HandoverStack[nHandoverStack] := p;
+    HandoverStack[nHandoverStack] := P;
     HandoverStack[nHandoverStack + 1] := Command;
-    inc(nHandoverStack, 2);
-    bix[p].Client(Command, p, Data);
-    dec(nHandoverStack, 2);
+    Inc(nHandoverStack, 2);
+    bix[P].Client(Command, P, Data);
+    Dec(nHandoverStack, 2);
 {$ELSE}
     try
-      bix[p].Client(Command, p, Data);
+      bix[P].Client(Command, P, Data);
     except
-      Notify(ntException + bix[p]);
+      Notify(ntException + bix[P]);
     end;
 {$ENDIF}
   end;
@@ -166,16 +166,16 @@ begin
       CallPlayer(Command, I, Data);
 end;
 
-procedure CallClient(bix, Command: integer; var Data);
+procedure CallClient(bix, Command: Integer; var Data);
 begin
   if ((Mode <> moMovie) or (bix = Brains.IndexOf(GameServer.bix[0]))) then
   begin
 {$IFOPT O-}
     HandoverStack[nHandoverStack] := bix;
     HandoverStack[nHandoverStack + 1] := Command;
-    inc(nHandoverStack, 2);
+    Inc(nHandoverStack, 2);
     Brains[bix].Client(Command, -1, Data);
-    dec(nHandoverStack, 2);
+    Dec(nHandoverStack, 2);
 {$ELSE}
     try
       Brain[bix].Client(Command, -1, Data);
@@ -188,13 +188,13 @@ end;
 
 procedure Init(NotifyFunction: TNotifyFunction);
 var
-  f: TSearchRec;
+  F: TSearchRec;
   BasePath: string;
   NewBrain: TBrain;
   I: Integer;
 begin
   Notify := NotifyFunction;
-  PreviewElevation := false;
+  PreviewElevation := False;
   PlayersBrain := TBrains.Create(False);
   PlayersBrain.Count := nPl;
   for I := 0 to nPl - 1 do
@@ -245,10 +245,10 @@ begin
     BrainNetworkServer.Kind := btNetworkServer;
   end;
 
-  if FindFirst(GetAiDir + DirectorySeparator + '*', faDirectory or faArchive or faReadOnly, f) = 0 then
+  if FindFirst(GetAiDir + DirectorySeparator + '*', faDirectory or faArchive or faReadOnly, F) = 0 then
   repeat
-    BasePath := GetAiDir + DirectorySeparator + f.Name;
-    if (f.Name <> '.') and (f.Name <> '..') and DirectoryExists(BasePath) then begin
+    BasePath := GetAiDir + DirectorySeparator + F.Name;
+    if (F.Name <> '.') and (F.Name <> '..') and DirectoryExists(BasePath) then begin
       NewBrain := Brains.AddNew;
       NewBrain.Kind := btAI;
       NewBrain.LoadFromFile(BasePath + DirectorySeparator + F.Name + '.ai.txt');
@@ -257,7 +257,7 @@ begin
         ((NewBrain.Flags and fDotNet = 0) or (@DotNetClient <> nil)) then begin
         end else Brains.Delete(Brains.Count - 1);
     end;
-  until FindNext(f) <> 0;
+  until FindNext(F) <> 0;
   FindClose(F);
 
   if Brains.GetKindCount(btAI) = 0 then
@@ -280,7 +280,7 @@ begin
   FreeAndNil(Brains);
 end;
 
-function PreviewMap(lm: integer): pointer;
+function PreviewMap(lm: Integer): Pointer;
 begin
   lx := lxmax;
   ly := lymax;
@@ -290,25 +290,25 @@ begin
   if not PreviewElevation then
   begin
     CreateElevation;
-    PreviewElevation := true;
+    PreviewElevation := True;
   end;
-  CreateMap(true);
+  CreateMap(True);
   Result := @RealMap;
 end;
 
-procedure ChangeClientWhenDone(Command, Player: integer; var Data;
-  DataSize: integer);
+procedure ChangeClientWhenDone(Command, Player: Integer; var Data;
+  DataSize: Integer);
 begin
   CCCommand := Command;
   CCPlayer := Player;
   if DataSize > 0 then
-    move(Data, CCData, DataSize);
+    Move(Data, CCData, DataSize);
   Notify(ntChangeClient);
 end;
 
-procedure PutMessage(Level: integer; Text: string);
+procedure PutMessage(Level: Integer; Text: string);
 begin
-  bix[0].Client(cDebugMessage, Level, pchar(Text)^);
+  bix[0].Client(cDebugMessage, Level, PChar(Text)^);
 end;
 
 procedure ForceClientDeactivation;
@@ -335,7 +335,7 @@ end;
 procedure ChangeClient;
 // hand over control to other client (as specified by CC...)
 var
-  p: integer;
+  P: Integer;
   T: TDateTime;
 begin
   T := NowPrecise;
@@ -345,151 +345,151 @@ begin
   PutMessage(1 shl 16 + 2, Format('CLIENT: calling %d (%s)',
     [CCPlayer, bix[CCPlayer].Name]));
   if CCCommand = cTurn then
-    for p := 0 to nPl - 1 do
-      if (p <> CCPlayer) and (1 shl p and GWatching <> 0) then
-        CallPlayer(cShowTurnChange, p, CCPlayer);
+    for P := 0 to nPl - 1 do
+      if (P <> CCPlayer) and (1 shl P and GWatching <> 0) then
+        CallPlayer(cShowTurnChange, P, CCPlayer);
 
-  p := CCPlayer;
+  P := CCPlayer;
   CCPlayer := -1;
-  CallPlayer(CCCommand, p, CCData);
-  if (Mode = moPlaying) and (bix[p].Flags and aiThreaded = 0) and
+  CallPlayer(CCCommand, P, CCData);
+  if (Mode = moPlaying) and (bix[P].Flags and aiThreaded = 0) and
     (CCPlayer < 0) then
   begin
-    Notify(ntDeactivationMissing, p);
+    Notify(ntDeactivationMissing, P);
     ForceClientDeactivation;
   end;
 end;
 
-procedure Inform(p: integer);
+procedure Inform(P: Integer);
 var
-  i, p1: integer;
+  I, p1: Integer;
 begin
-  RW[p].Turn := GTurn;
-  if (GTurn = MaxTurn) and (p = pTurn) and (p = 0) then
-    RW[p].Happened := RW[p].Happened or phTimeUp;
-  if (GWinner > 0) and (p = pTurn) and (p = 0) then
-    RW[p].Happened := RW[p].Happened or phShipComplete;
-  RW[p].Alive := GAlive;
-  move(GWonder, RW[p].Wonder, SizeOf(GWonder));
-  move(GShip, RW[p].Ship, SizeOf(GShip));
+  RW[P].Turn := GTurn;
+  if (GTurn = MaxTurn) and (P = pTurn) and (P = 0) then
+    RW[P].Happened := RW[P].Happened or phTimeUp;
+  if (GWinner > 0) and (P = pTurn) and (P = 0) then
+    RW[P].Happened := RW[P].Happened or phShipComplete;
+  RW[P].Alive := GAlive;
+  Move(GWonder, RW[P].Wonder, SizeOf(GWonder));
+  Move(GShip, RW[P].Ship, SizeOf(GShip));
   for p1 := 0 to nPl - 1 do
-    if (p1 <> p) and Assigned(bix[p1]) and (Difficulty[p1] > 0) then
-      RW[p].EnemyReport[p1].Credibility := RW[p1].Credibility;
+    if (p1 <> P) and Assigned(bix[p1]) and (Difficulty[p1] > 0) then
+      RW[P].EnemyReport[p1].Credibility := RW[p1].Credibility;
   for p1 := 0 to nPl - 1 do
-    if (p1 <> p) and (1 shl p1 and GAlive <> 0) then
+    if (p1 <> P) and (1 shl p1 and GAlive <> 0) then
     begin
-      if (GTestFlags and tfUncover <> 0) or (Difficulty[p] = 0) or
-        (RW[p].Treaty[p1] >= trFriendlyContact) then
-        GiveCivilReport(p, p1);
-      if (GTestFlags and tfUncover <> 0) or (Difficulty[p] = 0) or
-        (RW[p].Treaty[p1] = trAlliance) then
-        GiveMilReport(p, p1)
+      if (GTestFlags and tfUncover <> 0) or (Difficulty[P] = 0) or
+        (RW[P].Treaty[p1] >= trFriendlyContact) then
+        GiveCivilReport(P, p1);
+      if (GTestFlags and tfUncover <> 0) or (Difficulty[P] = 0) or
+        (RW[P].Treaty[p1] = trAlliance) then
+        GiveMilReport(P, p1)
     end;
-  for i := 0 to RW[p].nEnemyModel - 1 do
-    with RW[p].EnemyModel[i] do
-      Lost := Destroyed[p, Owner, mix];
+  for I := 0 to RW[P].nEnemyModel - 1 do
+    with RW[P].EnemyModel[I] do
+      Lost := Destroyed[P, Owner, mix];
 end;
 
 procedure LogChanges;
 var
-  p, ix: integer;
+  P, ix: Integer;
 begin
-  for p := 0 to nPl - 1 do
-    if (1 shl p and GWatching <> 0) and ProcessClientData[p] then
+  for P := 0 to nPl - 1 do
+    if (1 shl P and GWatching <> 0) and ProcessClientData[P] then
     begin
       // log unit status changes
-      for ix := 0 to RW[p].nUn - 1 do
-        with RW[p].Un[ix] do
+      for ix := 0 to RW[P].nUn - 1 do
+        with RW[P].Un[ix] do
           if (Loc >= 0) and (SavedStatus <> Status) then
           begin
-            CL.Put(sIntSetUnitStatus, p, ix, @Status);
+            CL.Put(sIntSetUnitStatus, P, ix, @Status);
             SavedStatus := Status;
           end;
       // log city status changes
-      for ix := 0 to RW[p].nCity - 1 do
-        with RW[p].City[ix] do
+      for ix := 0 to RW[P].nCity - 1 do
+        with RW[P].City[ix] do
           if (Loc >= 0) and (SavedStatus <> Status) then
           begin
-            CL.Put(sIntSetCityStatus, p, ix, @Status);
+            CL.Put(sIntSetCityStatus, P, ix, @Status);
             SavedStatus := Status;
           end;
       // log model status changes
-      for ix := 0 to RW[p].nModel - 1 do
-        with RW[p].Model[ix] do
+      for ix := 0 to RW[P].nModel - 1 do
+        with RW[P].Model[ix] do
           if SavedStatus <> Status then
           begin
-            CL.Put(sIntSetModelStatus, p, ix, @Status);
+            CL.Put(sIntSetModelStatus, P, ix, @Status);
             SavedStatus := Status;
           end;
       // log enemy city status changes
-      for ix := 0 to RW[p].nEnemyCity - 1 do
-        with RW[p].EnemyCity[ix] do
+      for ix := 0 to RW[P].nEnemyCity - 1 do
+        with RW[P].EnemyCity[ix] do
           if (Loc >= 0) and (SavedStatus <> Status) then
           begin
-            CL.Put(sIntSetECityStatus, p, ix, @Status);
+            CL.Put(sIntSetECityStatus, P, ix, @Status);
             SavedStatus := Status;
           end;
       // log data changes
-      if bix[p].DataSize > 0 then
+      if bix[P].DataSize > 0 then
       begin
-        CL.PutDataChanges(sIntDataChange, p, SavedData[p], RW[p].Data,
-          bix[p].DataSize);
-        Move(RW[p].Data^, SavedData[p]^, bix[p].DataSize * 4);
+        CL.PutDataChanges(sIntDataChange, P, SavedData[P], RW[P].Data,
+          bix[P].DataSize);
+        Move(RW[P].Data^, SavedData[P]^, bix[P].DataSize * 4);
       end;
     end;
 end;
 
 procedure NoLogChanges;
 var
-  p, ix: integer;
+  P, ix: Integer;
 begin
-  for p := 0 to nPl - 1 do
-    if (1 shl p and GWatching <> 0) and ProcessClientData[p] then
+  for P := 0 to nPl - 1 do
+    if (1 shl P and GWatching <> 0) and ProcessClientData[P] then
     begin
-      for ix := 0 to RW[p].nUn - 1 do
-        with RW[p].Un[ix] do
+      for ix := 0 to RW[P].nUn - 1 do
+        with RW[P].Un[ix] do
           SavedStatus := Status;
-      for ix := 0 to RW[p].nCity - 1 do
-        with RW[p].City[ix] do
+      for ix := 0 to RW[P].nCity - 1 do
+        with RW[P].City[ix] do
           SavedStatus := Status;
-      for ix := 0 to RW[p].nModel - 1 do
-        with RW[p].Model[ix] do
+      for ix := 0 to RW[P].nModel - 1 do
+        with RW[P].Model[ix] do
           SavedStatus := Status;
-      for ix := 0 to RW[p].nEnemyCity - 1 do
-        with RW[p].EnemyCity[ix] do
+      for ix := 0 to RW[P].nEnemyCity - 1 do
+        with RW[P].EnemyCity[ix] do
           SavedStatus := Status;
-      if bix[p].DataSize > 0 then
-        Move(RW[p].Data^, SavedData[p]^, bix[p].DataSize * 4);
+      if bix[P].DataSize > 0 then
+        Move(RW[P].Data^, SavedData[P]^, bix[P].DataSize * 4);
     end;
 end;
 
-function HasChanges(p: integer): boolean;
+function HasChanges(P: Integer): Boolean;
 type
   TDWordList = array [0 .. INFIN] of Cardinal;
   PDWortList = ^TDWordList;
 var
-  ix: integer;
+  ix: Integer;
 begin
   Result := False;
-  for ix := 0 to RW[p].nUn - 1 do
-    with RW[p].Un[ix] do
+  for ix := 0 to RW[P].nUn - 1 do
+    with RW[P].Un[ix] do
       if (Loc >= 0) and (SavedStatus <> Status) then
         Result := True;
-  for ix := 0 to RW[p].nCity - 1 do
-    with RW[p].City[ix] do
+  for ix := 0 to RW[P].nCity - 1 do
+    with RW[P].City[ix] do
       if (Loc >= 0) and (SavedStatus <> Status) then
         Result := True;
-  for ix := 0 to RW[p].nModel - 1 do
-    with RW[p].Model[ix] do
+  for ix := 0 to RW[P].nModel - 1 do
+    with RW[P].Model[ix] do
       if SavedStatus <> Status then
         Result := True;
-  for ix := 0 to RW[p].nEnemyCity - 1 do
-    with RW[p].EnemyCity[ix] do
+  for ix := 0 to RW[P].nEnemyCity - 1 do
+    with RW[P].EnemyCity[ix] do
       if (Loc >= 0) and (SavedStatus <> Status) then
         Result := True;
-  if RW[p].Data <> nil then
-    for ix := 0 to bix[p].DataSize - 1 do
-      if PDWortList(SavedData[p])[ix] <> PDWortList(RW[p].Data)[ix] then
+  if RW[P].Data <> nil then
+    for ix := 0 to bix[P].DataSize - 1 do
+      if PDWortList(SavedData[P])[ix] <> PDWortList(RW[P].Data)[ix] then
         Result := True;
 end;
 
@@ -497,10 +497,10 @@ procedure InitBrain(bix: TBrain);
 var
   InitModuleData: TInitModuleData;
 begin
-  assert(bix.Kind <> btSuperVirtual);
+  Assert(bix.Kind <> btSuperVirtual);
   with bix do begin
     if Initialized then
-      exit;
+      Exit;
     if Kind = btAI then
     begin { get client function }
       Notify(ntInitModule, Brains.IndexOf(bix));
@@ -508,7 +508,7 @@ begin
         Client := DotNetClient
       else
       begin
-        hm := LoadLibrary(pchar(DLLName));
+        hm := LoadLibrary(PChar(DLLName));
         if hm = 0 then
         begin
           Client := nil;
@@ -524,7 +524,7 @@ begin
     end;
     if @Client <> nil then
     begin
-      Initialized := true;
+      Initialized := True;
       InitModuleData.Server := @Server;
       InitModuleData.DataVersion := 0;
       InitModuleData.DataSize := 0;
@@ -541,18 +541,18 @@ end;
 
 procedure SaveMap(FileName: string);
 var
-  i: integer;
+  I: Integer;
   MapFile: TFileStream;
-  s: string[255];
+  S: string[255];
 begin
   MapFile := TFileStream.Create(GetMapsDir + DirectorySeparator + FileName,
     fmCreate or fmShareExclusive);
   try
     MapFile.Position := 0;
-    s := 'cEvoMap'#0;
-    MapFile.write(s[1], 8); { file id }
-    i := 0;
-    MapFile.write(i, 4); { format id }
+    S := 'cEvoMap'#0;
+    MapFile.write(S[1], 8); { file id }
+    I := 0;
+    MapFile.write(I, 4); { format id }
     MapFile.write(MaxTurn, 4);
     MapFile.write(lx, 4);
     MapFile.write(ly, 4);
@@ -562,22 +562,22 @@ begin
   end;
 end;
 
-function LoadMap(FileName: string): boolean;
+function LoadMap(FileName: string): Boolean;
 var
-  i, Loc1: integer;
+  I, Loc1: Integer;
   MapFile: TFileStream;
-  s: string[255];
+  S: string[255];
 begin
-  result := false;
+  Result := False;
   MapFile := nil;
   try
     MapFile := TFileStream.Create(FileName, fmOpenRead or fmShareExclusive);
     MapFile.Position := 0;
-    MapFile.read(s[1], 8); { file id }
-    MapFile.read(i, 4); { format id }
-    if i = 0 then
+    MapFile.read(S[1], 8); { file id }
+    MapFile.read(I, 4); { format id }
+    if I = 0 then
     begin
-      MapFile.read(i, 4); // MaxTurn
+      MapFile.read(I, 4); // MaxTurn
       MapFile.read(lx, 4);
       MapFile.read(ly, 4);
       ly := ly and not 1;
@@ -599,7 +599,7 @@ begin
           RealMap[Loc1] := RealMap[Loc1] and not(fTerrain or fSpecial)
             or fDesert;
       end;
-      result := true;
+      Result := True;
     end;
     FreeAndNil(MapFile);
   except
@@ -608,25 +608,25 @@ begin
   end;
 end;
 
-procedure SaveGame(FileName: string; auto: boolean);
+procedure SaveGame(FileName: string; auto: Boolean);
 var
-  x, y, i, zero, Tile, nLocal: integer;
+  X, Y, I, zero, Tile, nLocal: Integer;
   LogFile: TFileStream;
-  s: string[255];
+  S: string[255];
   SaveMap: array [0 .. lxmax * lymax - 1] of Byte;
 begin
   nLocal := 0;
-  for i := 0 to nPl - 1 do
-    if Assigned(bix[i]) and (bix[i].Kind = btTerm) then
-      inc(nLocal);
+  for I := 0 to nPl - 1 do
+    if Assigned(bix[I]) and (bix[I].Kind = btTerm) then
+      Inc(nLocal);
   if Difficulty[0] = 0 then
     nLocal := 0;
   if nLocal <= 1 then
-    for y := 0 to ly - 1 do
-      for x := 0 to lx - 1 do
+    for Y := 0 to ly - 1 do
+      for X := 0 to lx - 1 do
       begin
-        Tile := RW[0].Map[(x + SaveMapCenterLoc + lx shr 1) mod lx + lx * y];
-        SaveMap[x + lx * y] := Tile and fTerrain + Tile and
+        Tile := RW[0].Map[(X + SaveMapCenterLoc + lx shr 1) mod lx + lx * Y];
+        SaveMap[X + lx * Y] := Tile and fTerrain + Tile and
           (fCity or fUnit or fOwned) shr 16;
       end;
 
@@ -639,10 +639,10 @@ begin
 
   zero := 0;
   LogFile.Position := 0;
-  s := 'cEvoBook';
-  LogFile.write(s[1], 8); { file id }
-  i := CevoVersion;
-  LogFile.write(i, 4); { c-evo version }
+  S := 'cEvoBook';
+  LogFile.write(S[1], 8); { file id }
+  I := CevoVersion;
+  LogFile.write(I, 4); { c-evo version }
   LogFile.write(ExeInfo.Time, 4);
   LogFile.write(lx, 4);
   LogFile.write(ly, 4);
@@ -655,27 +655,27 @@ begin
   LogFile.write(GTurn, 4);
   if nLocal > 1 then // multiplayer game -- no quick view
   begin
-    i := $80;
-    LogFile.write(i, 4);
+    I := $80;
+    LogFile.write(I, 4);
   end
   else
     LogFile.write(SaveMap, ((MapSize - 1) div 4 + 1) * 4);
-  for i := 0 to nPl - 1 do
-    if not Assigned(bix[i]) then
+  for I := 0 to nPl - 1 do
+    if not Assigned(bix[I]) then
       LogFile.write(zero, 4)
     else
     begin
-      if PlayersBrain[i].Kind in [btRandom, btAI] then
-        s := bix[i].FileName
+      if PlayersBrain[I].Kind in [btRandom, btAI] then
+        S := bix[I].FileName
       else
-        s := PlayersBrain[i].FileName;
-      move(zero, s[Length(s) + 1], 4);
-      LogFile.write(s, (Length(s) div 4 + 1) * 4);
-      LogFile.write(OriginalDataVersion[i], 4);
-      s := ''; { behavior }
-      move(zero, s[Length(s) + 1], 4);
-      LogFile.write(s, (Length(s) div 4 + 1) * 4);
-      LogFile.write(Difficulty[i], 4);
+        S := PlayersBrain[I].FileName;
+      Move(zero, S[Length(S) + 1], 4);
+      LogFile.write(S, (Length(S) div 4 + 1) * 4);
+      LogFile.write(OriginalDataVersion[I], 4);
+      S := ''; { behavior }
+      Move(zero, S[Length(S) + 1], 4);
+      LogFile.write(S, (Length(S) div 4 + 1) * 4);
+      LogFile.write(Difficulty[I], 4);
     end;
 
   if auto and AutoSaveExists then
@@ -686,13 +686,13 @@ begin
   if auto then
   begin
     AutoSaveState := CL.State;
-    AutoSaveExists := true;
+    AutoSaveExists := True;
   end
 end;
 
 procedure StartGame;
 var
-  i, p, p1, Human, nAlive, bixUni: integer;
+  I, P, p1, Human, nAlive, bixUni: Integer;
   Game: TNewGameData;
   // GameEx: TNewGameExData;
   Path: shortstring;
@@ -721,30 +721,30 @@ begin
     Notify(ntInitLocalHuman);
 
   BrainUsed := [];
-  for p := 0 to nPl - 1 do
-    if Assigned(bix[p]) and ((Mode <> moMovie) or (p = 0)) then
+  for P := 0 to nPl - 1 do
+    if Assigned(bix[P]) and ((Mode <> moMovie) or (P = 0)) then
     begin { initiate selected control module }
-      AIInfo[p] := bix[p].Name + #0;
-      InitBrain(bix[p]);
+      AIInfo[P] := bix[P].Name + #0;
+      InitBrain(bix[P]);
       if Mode = moPlaying then
       begin // new game, this data version is original
-        OriginalDataVersion[p] := bix[p].DataVersion;
-        ProcessClientData[p] := true;
+        OriginalDataVersion[P] := bix[P].DataVersion;
+        ProcessClientData[P] := True;
       end
       else // loading game, compare with data version read from file
-        ProcessClientData[p] := ProcessClientData[p] and
-          (OriginalDataVersion[p] = bix[p].DataVersion);
-      if @bix[p].Client = nil then // client function not found
+        ProcessClientData[P] := ProcessClientData[P] and
+          (OriginalDataVersion[P] = bix[P].DataVersion);
+      if @bix[P].Client = nil then // client function not found
         if bix[0].Kind = btNoTerm then
-          bix[p] := nil
+          bix[P] := nil
         else
         begin
-          bix[p] := BrainTerm;
-          OriginalDataVersion[p] := -1;
-          ProcessClientData[p] := false;
+          bix[P] := BrainTerm;
+          OriginalDataVersion[P] := -1;
+          ProcessClientData[P] := False;
         end;
-      if Assigned(bix[p]) then
-        include(BrainUsed, Brains.IndexOf(bix[p]));
+      if Assigned(bix[P]) then
+        Include(BrainUsed, Brains.IndexOf(bix[P]));
     end;
 
   Notify(ntCreateWorld);
@@ -759,13 +759,13 @@ begin
     if Assigned(bix[p1]) then
     begin
       if Mode <> moMovie then
-        inc(GWatching, 1 shl p1);
+        Inc(GWatching, 1 shl p1);
       if bix[p1].Kind = btAI then
-        inc(GAI, 1 shl p1);
+        Inc(GAI, 1 shl p1);
       if Difficulty[p1] > 0 then
       begin
-        inc(GAlive, 1 shl p1);
-        inc(nAlive);
+        Inc(GAlive, 1 shl p1);
+        Inc(nAlive);
       end;
       ServerVersion[p1] := bix[p1].ServerVersion;
     end;
@@ -778,17 +778,17 @@ begin
     DebugMap[p1] := nil;
 
   GTurn := 0;
-  for i := 0 to nWonder - 1 do
-    with GWonder[i] do
+  for I := 0 to nWonder - 1 do
+    with GWonder[I] do
     begin
       CityID := -1;
       EffectiveOwner := -1
     end;
   FillChar(GShip, SizeOf(GShip), 0);
 
-  for p := 0 to nPl - 1 do
-    if 1 shl p and (GAlive or GWatching) <> 0 then
-      with RW[p] do
+  for P := 0 to nPl - 1 do
+    if 1 shl P and (GAlive or GWatching) <> 0 then
+      with RW[P] do
       begin
         Government := gDespotism;
         Money := StartMoney;
@@ -798,23 +798,23 @@ begin
         ResearchTech := -2;
         AnarchyStart := -AnarchyTurns - 1;
         Happened := 0;
-        LastValidStat[p] := -1;
-        Worked[p] := 0;
-        Founded[p] := 0;
-        DevModelTurn[p] := -1;
+        LastValidStat[P] := -1;
+        Worked[P] := 0;
+        Founded[P] := 0;
+        DevModelTurn[P] := -1;
         OracleIncome := 0;
 
-        if bix[p].DataSize > 0 then
+        if bix[P].DataSize > 0 then
         begin
-          GetMem(SavedData[p], bix[p].DataSize * 4);
-          GetMem(Data, bix[p].DataSize * 4);
-          FillChar(SavedData[p]^, bix[p].DataSize * 4, 0);
-          FillChar(Data^, bix[p].DataSize * 4, 0);
+          GetMem(SavedData[P], bix[P].DataSize * 4);
+          GetMem(Data, bix[P].DataSize * 4);
+          FillChar(SavedData[P]^, bix[P].DataSize * 4, 0);
+          FillChar(Data^, bix[P].DataSize * 4, 0);
         end
         else
         begin
           Data := nil;
-          SavedData[p] := nil;
+          SavedData[P] := nil;
         end;
         nBattleHistory := 0;
         BattleHistory := nil;
@@ -824,16 +824,16 @@ begin
           FillChar(BorderHelper^,MapSize,0);
           end
           else } BorderHelper := nil;
-        for i := 0 to nStat - 1 do
-          GetMem(Stat[i, p], 4 * (MaxTurn + 1));
-        if bix[p].Flags and fDotNet <> 0 then
+        for I := 0 to nStat - 1 do
+          GetMem(Stat[I, P], 4 * (MaxTurn + 1));
+        if bix[P].Flags and fDotNet <> 0 then
         begin
-          GetMem(RW[p].DefaultDebugMap, MapSize * 4);
-          FillChar(RW[p].DefaultDebugMap^, MapSize * 4, 0);
-          DebugMap[p] := RW[p].DefaultDebugMap;
+          GetMem(RW[P].DefaultDebugMap, MapSize * 4);
+          FillChar(RW[P].DefaultDebugMap^, MapSize * 4, 0);
+          DebugMap[P] := RW[P].DefaultDebugMap;
         end
         else
-          RW[p].DefaultDebugMap := nil;
+          RW[P].DefaultDebugMap := nil;
 
         { !!!for i:=0 to nShipPart-1 do GShip[p].Parts[i]:=Delphirandom((3-i)*2); }
       end;
@@ -841,7 +841,7 @@ begin
   if LandMass > 0 then
   begin // random map
     InitRandomGame;
-    PreviewElevation := false;
+    PreviewElevation := False;
     MapField := nil;
   end
   else
@@ -849,18 +849,18 @@ begin
     if Mode = moPlaying then
       LoadMap(MapFileName); // new game -- load map from file
     GetMem(MapField, MapSize * 4);
-    move(RealMap, MapField^, MapSize * 4);
+    Move(RealMap, MapField^, MapSize * 4);
     Human := 0;
     for p1 := 0 to nPl - 1 do
       if Assigned(bix[p1]) and (bix[p1].Kind = btTerm) then
-        inc(Human, 1 shl p1);
+        Inc(Human, 1 shl p1);
     InitMapGame(Human);
   end;
   CityProcessing.InitGame;
   UnitProcessing.InitGame;
-  for p := 0 to nPl - 1 do
-    if 1 shl p and (GAlive or GWatching) <> 0 then
-      Inform(p);
+  for P := 0 to nPl - 1 do
+    if 1 shl P and (GAlive or GWatching) <> 0 then
+      Inform(P);
 
   pTurn := -1;
   if bix[0].Kind <> btNoTerm then
@@ -869,44 +869,44 @@ begin
   Game.ly := ly;
   Game.LandMass := LandMass;
   Game.MaxTurn := MaxTurn;
-  move(Difficulty, Game.Difficulty, SizeOf(Difficulty));
+  Move(Difficulty, Game.Difficulty, SizeOf(Difficulty));
   // GameEx.lx:=lx; GameEx.ly:=ly; GameEx.LandMass:=LandMass;
   // GameEx.MaxTurn:=MaxTurn; GameEx.RND:=RND;
   // move(Difficulty,GameEx.Difficulty,SizeOf(Difficulty));
   AICredits := '';
-  for i := 0 to Brains.Count - 1 do
+  for I := 0 to Brains.Count - 1 do
   with Brains[I] do begin
     if Initialized then
-      if i in BrainUsed then
+      if I in BrainUsed then
       begin
         if Kind = btAI then
           Notify(ntInitPlayers);
-        for p := 0 to nPl - 1 do
+        for P := 0 to nPl - 1 do
         begin
-          if Brains.IndexOf(bix[p]) = i then
-            Game.RO[p] := @RW[p]
+          if Brains.IndexOf(bix[P]) = I then
+            Game.RO[P] := @RW[P]
           else
-            Game.RO[p] := nil;
-          if (Kind = btTerm) and (Difficulty[0] = 0) and Assigned(bix[p]) then
-            Game.SuperVisorRO[p] := @RW[p]
+            Game.RO[P] := nil;
+          if (Kind = btTerm) and (Difficulty[0] = 0) and Assigned(bix[P]) then
+            Game.SuperVisorRO[P] := @RW[P]
           else
-            Game.SuperVisorRO[p] := nil;
+            Game.SuperVisorRO[P] := nil;
         end;
         if Flags and fDotNet > 0 then
         begin
           Path := DLLName;
-          move(Path[1], Game.AssemblyPath, Length(Path));
+          Move(Path[1], Game.AssemblyPath, Length(Path));
           Game.AssemblyPath[Length(Path)] := #0;
         end
         else
           Game.AssemblyPath[0] := #0;
         case Mode of
           moLoading, moLoading_Fast:
-            CallClient(i, cLoadGame, Game);
+            CallClient(I, cLoadGame, Game);
           moMovie:
-            CallClient(i, cMovie, Game);
+            CallClient(I, cMovie, Game);
           moPlaying:
-            CallClient(i, cNewGame, Game);
+            CallClient(I, cNewGame, Game);
         end;
         if (Kind = btAI) and (Credits <> '') then
           if AICredits = '' then
@@ -916,14 +916,14 @@ begin
       end
       else
       begin { module no longer used -- unload }
-        CallClient(i, cReleaseModule, nil^);
+        CallClient(I, cReleaseModule, nil^);
         if Kind = btAI then
         begin
           if Flags and fDotNet = 0 then
             FreeLibrary(hm);
           Client := nil;
         end;
-        Initialized := false;
+        Initialized := False;
       end;
   end;
   AICredits := AICredits + #0;
@@ -951,7 +951,7 @@ begin
 
   CheckBorders(-1);
 {$IFOPT O-}InvalidTreatyMap := 0; {$ENDIF}
-  AutoSaveExists := false;
+  AutoSaveExists := False;
   pDipActive := -1;
   pTurn := 0;
 
@@ -961,15 +961,15 @@ end;
 
 procedure EndGame;
 var
-  i, p1: integer;
+  I, p1: Integer;
 begin
   if LandMass = 0 then
     FreeMem(MapField);
   for p1 := 0 to nPl - 1 do
     if Assigned(bix[p1]) then
     begin
-      for i := 0 to nStat - 1 do
-        FreeMem(Stat[i, p1]);
+      for I := 0 to nStat - 1 do
+        FreeMem(Stat[I, p1]);
       if RW[p1].BattleHistory <> nil then
         FreeMem(RW[p1].BattleHistory);
       { if RW[p1].BorderHelper<>nil then FreeMem(RW[p1].BorderHelper); }
@@ -984,53 +984,53 @@ begin
   FreeAndNil(CL);
 end;
 
-procedure GenerateStat(p: integer);
+procedure GenerateStat(P: Integer);
 var
-  cix, uix: integer;
+  cix, uix: Integer;
 begin
-  if Difficulty[p] > 0 then
-    with RW[p] do
+  if Difficulty[P] > 0 then
+    with RW[P] do
     begin
-      Stat[stPop, p, GTurn] := 0;
+      Stat[stPop, P, GTurn] := 0;
       for cix := 0 to nCity - 1 do
         if City[cix].Loc >= 0 then
-          inc(Stat[stPop, p, GTurn], City[cix].Size);
-      Stat[stScience, p, GTurn] := Researched[p] * 50;
-      if (RW[p].ResearchTech >= 0) and (RW[p].ResearchTech <> adMilitary) then
-        inc(Stat[stScience, p, GTurn], Research * 100 div TechBaseCost(nTech[p],
-          Difficulty[p]));
-      Stat[stMil, p, GTurn] := 0;
+          Inc(Stat[stPop, P, GTurn], City[cix].Size);
+      Stat[stScience, P, GTurn] := Researched[P] * 50;
+      if (RW[P].ResearchTech >= 0) and (RW[P].ResearchTech <> adMilitary) then
+        Inc(Stat[stScience, P, GTurn], Research * 100 div TechBaseCost(nTech[P],
+          Difficulty[P]));
+      Stat[stMil, P, GTurn] := 0;
       for uix := 0 to nUn - 1 do
         if Un[uix].Loc >= 0 then
           with Model[Un[uix].mix] do
           begin
             if (Kind <= mkEnemyDeveloped) and (Un[uix].mix <> 1) then
-              inc(Stat[stMil, p, GTurn], Weight * MStrength *
+              Inc(Stat[stMil, P, GTurn], Weight * MStrength *
                 Un[uix].Health div 100)
             else if Domain = dGround then
-              inc(Stat[stMil, p, GTurn], (Attack + 2 * Defense) *
+              Inc(Stat[stMil, P, GTurn], (Attack + 2 * Defense) *
                 Un[uix].Health div 100)
             else
-              inc(Stat[stMil, p, GTurn], (Attack + Defense) *
+              Inc(Stat[stMil, P, GTurn], (Attack + Defense) *
                 Un[uix].Health div 100);
             case Kind of
               mkSlaves:
-                inc(Stat[stPop, p, GTurn]);
+                Inc(Stat[stPop, P, GTurn]);
               mkSettler:
-                inc(Stat[stPop, p, GTurn], 2);
+                Inc(Stat[stPop, P, GTurn], 2);
             end;
           end;
-      Stat[stMil, p, GTurn] := Stat[stMil, p, GTurn] div 16;
-      Stat[stExplore, p, GTurn] := Discovered[p];
-      Stat[stTerritory, p, GTurn] := TerritoryCount[p];
-      Stat[stWork, p, GTurn] := Worked[p];
-      LastValidStat[p] := GTurn;
+      Stat[stMil, P, GTurn] := Stat[stMil, P, GTurn] div 16;
+      Stat[stExplore, P, GTurn] := Discovered[P];
+      Stat[stTerritory, P, GTurn] := TerritoryCount[P];
+      Stat[stWork, P, GTurn] := Worked[P];
+      LastValidStat[P] := GTurn;
     end;
 end;
 
 procedure LogCityTileChanges;
 var
-  cix: integer;
+  cix: Integer;
 begin
   for cix := 0 to RW[pTurn].nCity - 1 do
     with RW[pTurn].City[cix] do
@@ -1051,7 +1051,7 @@ end;
 
 procedure NoLogCityTileChanges;
 var
-  cix: integer;
+  cix: Integer;
 begin
   for cix := 0 to RW[pTurn].nCity - 1 do
     with RW[pTurn].City[cix] do
@@ -1062,24 +1062,24 @@ begin
       end;
 end;
 
-function HasCityTileChanges: boolean;
+function HasCityTileChanges: Boolean;
 var
-  cix: integer;
+  cix: Integer;
 begin
-  result := false;
+  Result := False;
   for cix := 0 to RW[pTurn].nCity - 1 do
     with RW[pTurn].City[cix] do
       if Loc >= 0 then
       begin
         // if SavedResourceWeights[cix]<>ResourceWeights then result:=true;
         if SavedTiles[cix] <> Tiles then
-          result := true;
+          Result := True;
       end;
 end;
 
 procedure BeforeTurn0;
 var
-  p1, uix: integer;
+  p1, uix: Integer;
 begin
   for uix := 0 to RW[pTurn].nUn - 1 do { init movement points for first turn }
     with RW[pTurn].Un[uix] do
@@ -1100,19 +1100,19 @@ begin
   // CheckContact;
 end;
 
-function LoadGame(const Path, FileName: string; Turn: integer;
-  MovieMode: boolean): boolean;
+function LoadGame(const Path, FileName: string; Turn: Integer;
+  MovieMode: Boolean): Boolean;
 var
   J: TBrain;
-  i, ix, d, p1, Command, Subject: integer;
+  I, ix, D, p1, Command, Subject: Integer;
   K: Integer;
-{$IFDEF TEXTLOG}LoadPos0: integer; {$ENDIF}
-  Data: pointer;
+{$IFDEF TEXTLOG}LoadPos0: Integer; {$ENDIF}
+  Data: Pointer;
   LogFile: TFileStream;
   FormerCLState: TCmdListState;
-  s: string[255];
+  S: string[255];
   SaveMap: array [0 .. lxmax * lymax - 1] of Byte;
-  Started, StatRequest: boolean;
+  Started, StatRequest: Boolean;
 begin
   SavePath := Path;
   LogFileName := FileName;
@@ -1120,13 +1120,13 @@ begin
   LogFile := TFileStream.Create(SavePath + LogFileName, fmOpenRead or
     fmShareExclusive);
   LogFile.Position := 0;
-  LogFile.Read(s[1], 8); { file id }
-  LogFile.Read(i, 4); { c-evo version }
+  LogFile.Read(S[1], 8); { file id }
+  LogFile.Read(I, 4); { c-evo version }
   LogFile.Read(J, 4); { exe time }
 
-  if (i >= FirstBookCompatibleVersion) and (i <= CevoVersion) then
+  if (I >= FirstBookCompatibleVersion) and (I <= CevoVersion) then
   begin
-    result := true;
+    Result := True;
     LogFile.Read(lx, 4);
     LogFile.Read(ly, 4);
     MapSize := lx * ly;
@@ -1141,46 +1141,46 @@ begin
       LogFile.read(SaveMap[4], ((MapSize - 1) div 4 + 1) * 4 - 4);
     for p1 := 0 to nPl - 1 do
     begin
-      LogFile.Read(s[0], 4);
-      if s[0] = #0 then
+      LogFile.Read(S[0], 4);
+      if S[0] = #0 then
         PlayersBrain[p1] := nil
       else
       begin
-        LogFile.Read(s[4], Byte(s[0]) div 4 * 4);
+        LogFile.Read(S[4], Byte(S[0]) div 4 * 4);
         LogFile.Read(OriginalDataVersion[p1], 4);
-        LogFile.Read(d, 4); { behavior }
+        LogFile.Read(D, 4); { behavior }
         LogFile.Read(Difficulty[p1], 4);
         J := Brains.Last;
-        while Assigned(J) and (AnsiCompareFileName(J.FileName, s) <> 0) do begin
+        while Assigned(J) and (AnsiCompareFileName(J.FileName, S) <> 0) do begin
           K := Brains.IndexOf(J) - 1;
           if K >= 0 then J := Brains[K]
             else J := nil;
         end;
         if not Assigned(J) then
         begin // ai not found -- replace by local player
-          ProcessClientData[p1] := false;
-          NotifyMessage := s;
+          ProcessClientData[p1] := False;
+          NotifyMessage := S;
           Notify(ntAIError);
           J := BrainTerm;
         end
         else
-          ProcessClientData[p1] := true;
-        if j.Kind = btNoTerm then
-          j := BrainSuperVirtual;
+          ProcessClientData[p1] := True;
+        if J.Kind = btNoTerm then
+          J := BrainSuperVirtual;
         // crashed tournament -- load as supervisor
-        PlayersBrain[p1] := j;
+        PlayersBrain[p1] := J;
       end;
     end;
   end
   else
-    Result := false;
+    Result := False;
 
   if Result then begin
     CL := TCmdList.Create;
     CL.LoadFromFile(LogFile);
   end;
   FreeAndNil(LogFile);
-  if not result then
+  if not Result then
     Exit;
 
   Notify(ntStartDone);
@@ -1194,7 +1194,7 @@ begin
     Mode := moLoading_Fast;
 {$IFDEF TEXTLOG}AssignFile(TextLog, SavePath + LogFileName + '.txt');
   Rewrite(TextLog); {$ENDIF}
-  LoadOK := true;
+  LoadOK := True;
   StartGame;
   if MovieMode then
   begin
@@ -1204,9 +1204,9 @@ begin
   else
     Notify(ntLoadBegin);
 
-  started := false;
-  StatRequest := false;
-  MovieStopped := false;
+  started := False;
+  StatRequest := False;
+  MovieStopped := False;
 {$IFDEF LOADPERF}QueryPerformanceCounter(time_total0);
   time_a := 0;
   time_b := 0;
@@ -1221,7 +1221,7 @@ begin
       sExecute) then
     begin
       GenerateStat(pTurn);
-      StatRequest := false;
+      StatRequest := False;
     end;
     // complete all internal commands following an sTurn before generating statistics
     if (Command = sTurn) and not started then
@@ -1236,12 +1236,12 @@ begin
         Inform(pTurn);
         CallPlayer(cMovieTurn, 0, nil^);
       end;
-      StatRequest := true;
-      started := true;
+      StatRequest := True;
+      started := True;
     end
     else if (Command = sTurn) and (pTurn = 0) and (GTurn = LoadTurn) then
     begin
-      assert(CL.State.LoadPos = FormerCLState.LoadPos + 4); // size of sTurn
+      Assert(CL.State.LoadPos = FormerCLState.LoadPos + 4); // size of sTurn
       CL.State := FormerCLState;
       CL.Cut;
       Break;
@@ -1277,13 +1277,13 @@ begin
     bix[0].Client(cBreakGame, -1, nil^);
     EndGame;
     Notify(ntStartGo);
-    result := false;
-    exit;
+    Result := False;
+    Exit;
   end;
 
   if StatRequest then
     GenerateStat(pTurn);
-  assert(started);
+  Assert(started);
 {$IFDEF TEXTLOG}CloseFile(TextLog); {$ENDIF}
 {$IFDEF LOADPERF}QueryPerformanceCounter(time_total); { time in s is: (time_total-time_total0)/PerfFreq }{$ENDIF}
   NoLogChanges;
@@ -1327,8 +1327,8 @@ end;
 
 procedure InsertTerritoryUpdateCommands;
 var
-  p1, Command, Subject: integer;
-  Data: pointer;
+  p1, Command, Subject: Integer;
+  Data: Pointer;
   FormerCLState: TCmdListState;
 begin
   while CL.Progress < 1000 do
@@ -1350,7 +1350,7 @@ begin
 end;
 
 procedure StartNewGame(const Path, FileName, Map: string;
-  Newlx, Newly, NewLandMass, NewMaxTurn: integer);
+  Newlx, Newly, NewLandMass, NewMaxTurn: Integer);
 var
   I: Integer;
 begin
@@ -1394,16 +1394,16 @@ begin
   ChangeClientWhenDone(cTurn, 0, nil^, 0)
 end;
 
-procedure DirectHelp(Command: integer);
+procedure DirectHelp(Command: Integer);
 begin
   InitBrain(BrainTerm);
   BrainTerm.Client(Command, -1, nil^);
   AICredits := #0;
 end;
 
-procedure EditMap(const Map: string; Newlx, Newly, NewLandMass: integer);
+procedure EditMap(const Map: string; Newlx, Newly, NewLandMass: Integer);
 var
-  p1, Loc1: integer;
+  p1, Loc1: Integer;
   Game: TNewGameData;
 begin
   Notify(ntStartDone);
@@ -1445,19 +1445,19 @@ begin
   ChangeClientWhenDone(cEditMap, 0, nil^, 0);
 end;
 
-procedure DestroySpacePort_TellPlayers(p, pCapturer: integer);
+procedure DestroySpacePort_TellPlayers(P, pCapturer: Integer);
 var
-  cix, i, p1: integer;
+  cix, I, p1: Integer;
   ShowShipChange: TShowShipChange;
 begin
   // stop ship part production
-  for cix := 0 to RW[p].nCity - 1 do
-    with RW[p].City[cix] do
+  for cix := 0 to RW[P].nCity - 1 do
+    with RW[P].City[cix] do
       if (Loc >= 0) and (Project and cpImp <> 0) and
         ((Project and cpIndex = woMIR) or
         (Imp[Project and cpIndex].Kind = ikShipPart)) then
       begin
-        inc(RW[p].Money, Prod0);
+        Inc(RW[P].Money, Prod0);
         Prod := 0;
         Prod0 := 0;
         Project := cpImp + imTrGoods;
@@ -1465,18 +1465,18 @@ begin
       end;
 
   // destroy ship
-  with GShip[p] do
+  with GShip[P] do
     if Parts[0] + Parts[1] + Parts[2] > 0 then
     begin
-      for i := 0 to nShipPart - 1 do
+      for I := 0 to nShipPart - 1 do
       begin
-        ShowShipChange.Ship1Change[i] := -Parts[i];
+        ShowShipChange.Ship1Change[I] := -Parts[I];
         if pCapturer >= 0 then
         begin
-          ShowShipChange.Ship2Change[i] := Parts[i];
-          inc(GShip[pCapturer].Parts[i], Parts[i]);
+          ShowShipChange.Ship2Change[I] := Parts[I];
+          Inc(GShip[pCapturer].Parts[I], Parts[I]);
         end;
-        Parts[i] := 0;
+        Parts[I] := 0;
       end;
       if Mode >= moMovie then
       begin
@@ -1484,12 +1484,12 @@ begin
           ShowShipChange.Reason := scrCapture
         else
           ShowShipChange.Reason := scrDestruction;
-        ShowShipChange.Ship1Owner := p;
+        ShowShipChange.Ship1Owner := P;
         ShowShipChange.Ship2Owner := pCapturer;
         for p1 := 0 to nPl - 1 do
           if 1 shl p1 and (GAlive or GWatching) <> 0 then
           begin
-            move(GShip, RW[p1].Ship, SizeOf(GShip));
+            Move(GShip, RW[p1].Ship, SizeOf(GShip));
             if 1 shl p1 and GWatching <> 0 then
               CallPlayer(cShowShipChange, p1, ShowShipChange);
           end;
@@ -1497,14 +1497,14 @@ begin
     end;
 end;
 
-procedure DestroyCity_TellPlayers(p, cix: integer; SaveUnits: boolean);
+procedure DestroyCity_TellPlayers(P, cix: Integer; SaveUnits: Boolean);
 begin
-  if RW[p].City[cix].built[imSpacePort] > 0 then
-    DestroySpacePort_TellPlayers(p, -1);
-  DestroyCity(p, cix, SaveUnits);
+  if RW[P].City[cix].built[imSpacePort] > 0 then
+    DestroySpacePort_TellPlayers(P, -1);
+  DestroyCity(P, cix, SaveUnits);
 end;
 
-procedure ChangeCityOwner_TellPlayers(pOld, cixOld, pNew: integer);
+procedure ChangeCityOwner_TellPlayers(pOld, cixOld, pNew: Integer);
 begin
   if RW[pOld].City[cixOld].built[imSpacePort] > 0 then
     if RW[pNew].NatBuilt[imSpacePort] > 0 then
@@ -1514,39 +1514,39 @@ begin
   ChangeCityOwner(pOld, cixOld, pNew);
 end;
 
-procedure CheckWin(p: integer);
+procedure CheckWin(P: Integer);
 var
-  i: integer;
-  ShipComplete: boolean;
+  I: Integer;
+  ShipComplete: Boolean;
 begin
-  ShipComplete := true;
-  for i := 0 to nShipPart - 1 do
-    if GShip[p].Parts[i] < ShipNeed[i] then
-      ShipComplete := false;
+  ShipComplete := True;
+  for I := 0 to nShipPart - 1 do
+    if GShip[P].Parts[I] < ShipNeed[I] then
+      ShipComplete := False;
   if ShipComplete then
-    GWinner := GWinner or 1 shl p; // game won!
+    GWinner := GWinner or 1 shl P; // game won!
 end;
 
 procedure BeforeTurn;
 var
-  i, p1, uix, cix, V21, Loc1, Cost, Job0, nAlive, nAppliers, ad, OldLoc,
-    SiegedTiles, nUpdateLoc: integer;
-  UpdateLoc: array [0 .. numax - 1] of integer;
+  I, p1, uix, cix, V21, Loc1, Cost, Job0, nAlive, nAppliers, ad, OldLoc,
+    SiegedTiles, nUpdateLoc: Integer;
+  UpdateLoc: array [0 .. numax - 1] of Integer;
   Radius: TVicinity21Loc;
   ShowShipChange: TShowShipChange;
-  TribeExtinct, JobDone, MirBuilt: boolean;
+  TribeExtinct, JobDone, MirBuilt: Boolean;
 begin
-{$IFOPT O-}assert(1 shl pTurn and InvalidTreatyMap = 0); {$ENDIF}
-  assert(1 shl pTurn and (GAlive or GWatching) <> 0);
+{$IFOPT O-}Assert(1 shl pTurn and InvalidTreatyMap = 0); {$ENDIF}
+  Assert(1 shl pTurn and (GAlive or GWatching) <> 0);
   if (1 shl pTurn and GAlive = 0) and (Difficulty[pTurn] > 0) then
-    exit;
+    Exit;
 
   if (GWonder[woGrLibrary].EffectiveOwner = pTurn) and (GWinner = 0) then
   begin // check great library effect
     nAlive := 0;
     for p1 := 0 to nPl - 1 do
       if 1 shl p1 and GAlive <> 0 then
-        inc(nAlive);
+        Inc(nAlive);
     ad := 0;
     while ad <= (nAdv - 5) do begin
       if RW[pTurn].Tech[ad] < tsSeen then
@@ -1555,11 +1555,11 @@ begin
         for p1 := 0 to nPl - 1 do
           if (p1 <> pTurn) and (1 shl p1 and GAlive <> 0) and
             (RW[p1].Tech[ad] >= tsApplicable) then
-            inc(nAppliers);
+            Inc(nAppliers);
         if nAppliers * 2 > nAlive then
         begin
           SeeTech(pTurn, ad);
-          inc(nTech[pTurn]);
+          Inc(nTech[pTurn]);
           if Mode >= moMovie then
             CallPlayer(cShowGreatLibTech, pTurn, ad);
           // do not call CallPlayer(pTurn) while map is invalid
@@ -1576,7 +1576,7 @@ begin
       fInEnemyZoC)));
   RW[pTurn].nEnemyUn := 0;
 
-  MirBuilt := false;
+  MirBuilt := False;
   if (Difficulty[pTurn] > 0) and (GWinner = 0) then
     with RW[pTurn] do
     begin
@@ -1599,9 +1599,9 @@ begin
                   if Master >= 0 then
                   begin // transport unload
                     if Model[mix].Domain = dAir then
-                      dec(Un[Master].AirLoad)
+                      Dec(Un[Master].AirLoad)
                     else
-                      dec(Un[Master].TroopLoad);
+                      Dec(Un[Master].TroopLoad);
                     Master := -1;
                   end
                   else
@@ -1621,7 +1621,7 @@ begin
 
       if Mode >= moMovie then
         FillChar(ShowShipChange, SizeOf(ShowShipChange), 0);
-      TribeExtinct := true;
+      TribeExtinct := True;
       nUpdateLoc := 0;
       for cix := 0 to nCity - 1 do
         with City[cix] do
@@ -1637,7 +1637,7 @@ begin
               if Tiles and (1 shl V21) and not(1 shl CityOwnTile) <> 0 then
               begin
                 Loc1 := Radius[V21];
-                assert((Loc1 >= 0) and (Loc1 < MapSize) and
+                Assert((Loc1 >= 0) and (Loc1 < MapSize) and
                   (UsedByCity[Loc1] = Loc));
                 p1 := RealMap[Loc1] shr 27;
                 if (RealMap[Loc1] and fCity <> 0) or (p1 < nPl) and
@@ -1648,14 +1648,14 @@ begin
                   Tiles := Tiles and not(1 shl V21);
                   UsedByCity[Loc1] := -1;
                   Flags := Flags or chSiege;
-                  inc(SiegedTiles);
+                  Inc(SiegedTiles);
                 end;
               end;
             while SiegedTiles > 0 do // replace sieged tiles
             begin
               if not AddBestCityTile(pTurn, cix) then
                 Break;
-              dec(SiegedTiles);
+              Dec(SiegedTiles);
             end;
 
             if Flags and chFounded = 0 then
@@ -1663,27 +1663,27 @@ begin
               // CollectCityResources(pTurn,cix); // old style
 
               if CityTurn(pTurn, cix) then
-                TribeExtinct := false
+                TribeExtinct := False
               else
               begin // city is erased
                 RemoveDomainUnits(dSea, pTurn, Loc);
                 RemoveDomainUnits(dAir, pTurn, Loc);
                 Map[Loc] := Map[Loc] and not fCity; // !!! do this in inner core
                 UpdateLoc[nUpdateLoc] := Loc;
-                inc(nUpdateLoc);
-                DestroyCity_TellPlayers(pTurn, cix, true);
+                Inc(nUpdateLoc);
+                DestroyCity_TellPlayers(pTurn, cix, True);
               end;
 
               if (Flags and chProduction <> 0) and (Project0 and cpImp <> 0)
               then
               begin
                 if Project0 and cpIndex = woMIR then // MIR completed
-                  MirBuilt := true
+                  MirBuilt := True
                 else if Project0 and cpIndex = woManhattan then
                   GColdWarStart := GTurn
                 else if Imp[Project0 and cpIndex].Kind = ikShipPart
                 then { ship parts produced }
-                  inc(ShowShipChange.Ship1Change[Project0 and cpIndex -
+                  Inc(ShowShipChange.Ship1Change[Project0 and cpIndex -
                     imShipComp]);
               end;
             end;
@@ -1691,15 +1691,15 @@ begin
       if nUpdateLoc > 0 then
       begin
         CheckBorders(-1, pTurn);
-        for i := 0 to nUpdateLoc - 1 do
-          UpdateUnitMap(UpdateLoc[i], true);
+        for I := 0 to nUpdateLoc - 1 do
+          UpdateUnitMap(UpdateLoc[I], True);
         if Mode >= moMovie then
           for p1 := 0 to nPl - 1 do
             if (1 shl p1 and GWatching <> 0) and (p1 <> pTurn) then
-              for i := 0 to nUpdateLoc - 1 do
-                if ObserveLevel[UpdateLoc[i]] shr (2 * p1) and 3 >= lObserveUnhidden
+              for I := 0 to nUpdateLoc - 1 do
+                if ObserveLevel[UpdateLoc[I]] shr (2 * p1) and 3 >= lObserveUnhidden
                 then
-                  CallPlayer(cShowCityChanged, p1, UpdateLoc[i]);
+                  CallPlayer(cShowCityChanged, p1, UpdateLoc[I]);
       end;
 
       for uix := 0 to nUn - 1 do
@@ -1717,7 +1717,7 @@ begin
             else
               Movement := UnitSpeed(pTurn, mix, Health); { refresh movement }
 
-            assert(Loc >= 0);
+            Assert(Loc >= 0);
             if Model[mix].Kind <> mkDiplomat then
             begin // check treaty violation
               p1 := RealMap[Loc] shr 27;
@@ -1761,7 +1761,7 @@ begin
               if (Job0 = jCity) and JobDone then // new city
               begin
                 AddBestCityTile(pTurn, RW[pTurn].nCity - 1);
-                UpdateUnitMap(Loc1, true);
+                UpdateUnitMap(Loc1, True);
                 if Mode >= moMovie then // tell enemies
                   for p1 := 0 to nPl - 1 do
                     if (1 shl p1 and GWatching <> 0) and (p1 <> pTurn) and
@@ -1823,7 +1823,7 @@ begin
         else if ResearchTech >= 0 then
           DiscoverTech(pTurn, ResearchTech);
 
-        dec(Research, Cost);
+        Dec(Research, Cost);
         Happened := Happened or phTech;
         ResearchTech := -1;
       end
@@ -1838,7 +1838,7 @@ begin
           if (p1 <> pTurn) and (1 shl p1 and GAlive <> 0) and
             (Treaty[p1] >= trPeace) then
           begin
-            inc(Credibility);
+            Inc(Credibility);
             Break;
           end;
 
@@ -1855,7 +1855,7 @@ begin
         for p1 := 0 to nPl - 1 do
           if (p1 <> pTurn) and (1 shl p1 and (GAlive or GWatching) <> 0) then
           begin
-            move(GShip, RW[p1].Ship, SizeOf(GShip));
+            Move(GShip, RW[p1].Ship, SizeOf(GShip));
             if 1 shl p1 and GWatching <> 0 then
               CallPlayer(cShowShipChange, p1, ShowShipChange);
           end;
@@ -1870,7 +1870,7 @@ begin
         for p1 := 0 to nPl - 1 do
           if (p1 <> pTurn) and ((GAlive or GWatching) and (1 shl p1) <> 0) then
             RW[p1].EnemyReport[pTurn].Government := gDespotism;
-        inc(Happened, phChangeGov);
+        Inc(Happened, phChangeGov);
       end;
     end; // if Difficulty[pTurn]>0
 
@@ -1911,8 +1911,8 @@ end;
 
 procedure AfterTurn;
 var
-  cix, uix, p1, Loc1, Job0: integer;
-  JobDone: boolean;
+  cix, uix, p1, Loc1, Job0: Integer;
+  JobDone: Boolean;
 begin
   with RW[pTurn] do
   begin
@@ -1924,7 +1924,7 @@ begin
         CollectCityResources(pTurn, cix); // new style
       end;
 
-    inc(Money, OracleIncome);
+    Inc(Money, OracleIncome);
     OracleIncome := 0;
     if GWonder[woOracle].EffectiveOwner = pTurn then
     begin
@@ -1934,7 +1934,7 @@ begin
           for cix := 0 to RW[p1].nCity - 1 do
             if (RW[p1].City[cix].Loc >= 0) and
               (RW[p1].City[cix].built[imTemple] > 0) then
-              inc(OracleIncome);
+              Inc(OracleIncome);
     end;
 
     if (GTestFlags and tfImmImprove = 0) and (Government <> gAnarchy) then
@@ -1961,7 +1961,7 @@ begin
             if (Job0 = jCity) and JobDone then // new city
             begin
               AddBestCityTile(pTurn, RW[pTurn].nCity - 1);
-              UpdateUnitMap(Loc1, true);
+              UpdateUnitMap(Loc1, True);
               if Mode >= moMovie then // tell enemies
                 for p1 := 0 to nPl - 1 do
                   if (1 shl p1 and GWatching <> 0) and (p1 <> pTurn) and
@@ -1992,7 +1992,7 @@ begin
             end
             else
             begin
-              dec(Fuel);
+              Dec(Fuel);
               if Fuel < 0 then
               begin
                 RemoveUnit_UpdateMap(pTurn, uix); // unit lost
@@ -2012,7 +2012,7 @@ begin
       begin
         Flags := Flags and not unWithdrawn;
         if (Loc >= 0) and (Model[mix].Domain = dGround) and (Master < 0) and
-          ((integer(Movement) = Model[mix].Speed) or
+          ((Integer(Movement) = Model[mix].Speed) or
           (Model[mix].Cap[mcAcademy] > 0) and (Movement * 2 >= Model[mix].Speed))
         then
           Flags := Flags or unFortified; // fortify unmoved units
@@ -2048,23 +2048,23 @@ begin
   ChangeClient;
 end;
 
-function ExecuteMove(p, uix, ToLoc: integer; var MoveInfo: TMoveInfo;
-  ShowMove: TShowMove): integer;
+function ExecuteMove(P, uix, ToLoc: Integer; var MoveInfo: TMoveInfo;
+  ShowMove: TShowMove): Integer;
 var
-  i, p1, FromLoc, uix1, nUpdateLoc: integer;
+  I, p1, FromLoc, uix1, nUpdateLoc: Integer;
   MinLevel, MissionResult: Cardinal;
   PModel: ^TModel;
-  UpdateLoc: array [0 .. numax - 1] of integer;
-  SeeFrom, SeeTo, ExtDiscover: boolean;
+  UpdateLoc: array [0 .. numax - 1] of Integer;
+  SeeFrom, SeeTo, ExtDiscover: Boolean;
 begin
-  result := 0;
-  with RW[p], Un[uix] do
+  Result := 0;
+  with RW[P], Un[uix] do
   begin
     PModel := @Model[mix];
     FromLoc := Loc;
 
     if Master < 0 then
-      FreeUnit(p, uix);
+      FreeUnit(P, uix);
     if (MoveInfo.MoveType in [mtMove, mtCapture]) and MoveInfo.MountainDelay
     then
     begin
@@ -2072,9 +2072,9 @@ begin
     end;
     Loc := -2;
     if TroopLoad + AirLoad > 0 then
-      for i := 0 to nUn - 1 do
-        if (Un[i].Loc >= 0) and (Un[i].Master = uix) then
-          Un[i].Loc := -2;
+      for I := 0 to nUn - 1 do
+        if (Un[I].Loc >= 0) and (Un[I].Master = uix) then
+          Un[I].Loc := -2;
     UpdateUnitMap(FromLoc);
 
     if Mode >= moMovie then { show move in interface modules }
@@ -2092,7 +2092,7 @@ begin
         else
           ShowMove.Flags := ShowMove.Flags or umShipLoading;
       for p1 := 0 to nPl - 1 do
-        if (1 shl p1 and GWatching <> 0) and ((p1 <> p) or (bix[p1].Kind = btTerm))
+        if (1 shl p1 and GWatching <> 0) and ((p1 <> P) or (bix[p1].Kind = btTerm))
         then
         begin
           if PModel.Cap[mcStealth] > 0 then
@@ -2101,17 +2101,17 @@ begin
             MinLevel := lObserveAll
           else
             MinLevel := lObserveUnhidden;
-          SeeFrom := (p1 = p) or (ObserveLevel[FromLoc] shr (2 * p1) and
+          SeeFrom := (p1 = P) or (ObserveLevel[FromLoc] shr (2 * p1) and
             3 >= MinLevel);
-          SeeTo := (p1 = p) or (ObserveLevel[ToLoc] shr (2 * p1) and
+          SeeTo := (p1 = P) or (ObserveLevel[ToLoc] shr (2 * p1) and
             3 >= MinLevel);
           if SeeFrom and SeeTo then
           begin
-            TellAboutModel(p1, p, mix);
-            if p1 = p then
+            TellAboutModel(p1, P, mix);
+            if p1 = P then
               ShowMove.emix := -1
             else
-              ShowMove.emix := emixSafe(p1, p, mix);
+              ShowMove.emix := emixSafe(p1, P, mix);
             if MoveInfo.MoveType = mtCapture then
               CallPlayer(cShowCapturing, p1, ShowMove)
             else
@@ -2125,45 +2125,45 @@ begin
     if MoveInfo.MoveType <> mtSpyMission then
       Loc := ToLoc;
     if TroopLoad + AirLoad > 0 then
-      for i := 0 to nUn - 1 do
-        if Un[i].Loc = -2 then
-          Un[i].Loc := ToLoc;
+      for I := 0 to nUn - 1 do
+        if Un[I].Loc = -2 then
+          Un[I].Loc := ToLoc;
 
-    ExtDiscover := false;
+    ExtDiscover := False;
     nUpdateLoc := 0;
     if MoveInfo.MoveType = mtCapture then
     begin
-      assert(Occupant[ToLoc] < 0);
+      Assert(Occupant[ToLoc] < 0);
       for uix1 := 0 to RW[MoveInfo.Defender].nUn - 1 do
         with RW[MoveInfo.Defender].Un[uix1] do
           if (Loc >= 0) and (Home = MoveInfo.Dcix) then
           begin
             UpdateLoc[nUpdateLoc] := Loc;
-            inc(nUpdateLoc);
+            Inc(nUpdateLoc);
           end;
       // unit will be removed -- remember position and update for all players
 
       if (RW[MoveInfo.Defender].City[MoveInfo.Dcix].Size > 2) and (nCity < ncmax)
       then
       begin // city captured
-        ChangeCityOwner_TellPlayers(MoveInfo.Defender, MoveInfo.Dcix, p);
+        ChangeCityOwner_TellPlayers(MoveInfo.Defender, MoveInfo.Dcix, P);
         City[nCity - 1].Flags := CaptureTurns shl 16;
-        CityShrink(p, nCity - 1);
+        CityShrink(P, nCity - 1);
         if Mode = moPlaying then
-          with RW[p].City[nCity - 1] do
+          with RW[P].City[nCity - 1] do
           begin
             // SavedResourceWeights[nCity-1]:=ResourceWeights;
             SavedTiles[nCity - 1] := Tiles;
           end;
-        ExtDiscover := true;
+        ExtDiscover := True;
 
         // Temple of Zeus effect
-        if GWonder[woZeus].EffectiveOwner = p then
+        if GWonder[woZeus].EffectiveOwner = P then
         begin
-          GiveCivilReport(p, MoveInfo.Defender);
-          for i := 0 to nAdv - 1 do
-            if not(i in FutureTech) and (RW[p].Tech[i] < tsSeen) and
-              (RW[MoveInfo.Defender].Tech[i] >= tsApplicable) then
+          GiveCivilReport(P, MoveInfo.Defender);
+          for I := 0 to nAdv - 1 do
+            if not(I in FutureTech) and (RW[P].Tech[I] < tsSeen) and
+              (RW[MoveInfo.Defender].Tech[I] >= tsApplicable) then
             begin
               Happened := Happened or phStealTech;
               GStealFrom := MoveInfo.Defender;
@@ -2171,67 +2171,67 @@ begin
             end;
         end;
         if Mode = moPlaying then
-          LogCheckBorders(p, nCity - 1, MoveInfo.Defender);
+          LogCheckBorders(P, nCity - 1, MoveInfo.Defender);
 {$IFOPT O-} if Mode < moPlaying then
-          InvalidTreatyMap := not(1 shl p); {$ENDIF}
+          InvalidTreatyMap := not(1 shl P); {$ENDIF}
         // territory should not be considered for the rest of the command
         // execution, because during loading a game it's incorrect before
         // subsequent sIntExpandTerritory is processed
       end
       else // city destroyed
       begin
-        DestroyCity_TellPlayers(MoveInfo.Defender, MoveInfo.Dcix, false);
+        DestroyCity_TellPlayers(MoveInfo.Defender, MoveInfo.Dcix, False);
         CheckBorders(ToLoc, MoveInfo.Defender);
       end;
-      RecalcPeaceMap(p);
+      RecalcPeaceMap(P);
       if Mode >= moMovie then
-        move(GWonder, Wonder, SizeOf(GWonder));
+        Move(GWonder, Wonder, SizeOf(GWonder));
     end; { if MoveInfo.MoveType=mtCapture }
 
     if MoveInfo.MoveType = mtSpyMission then
     begin
-      MissionResult := DoSpyMission(p, MoveInfo.Defender, MoveInfo.Dcix,
+      MissionResult := DoSpyMission(P, MoveInfo.Defender, MoveInfo.Dcix,
         SpyMission);
       if (Mode = moPlaying) and (SpyMission = smStealForeignReports) then
-        CallPlayer(cShowMissionResult, p, MissionResult);
+        CallPlayer(cShowMissionResult, P, MissionResult);
     end;
 
     Health := MoveInfo.EndHealth;
-    dec(Movement, MoveInfo.Cost);
+    Dec(Movement, MoveInfo.Cost);
     // transport unload
     if Master >= 0 then
     begin
       if PModel.Domain = dAir then
-        dec(Un[Master].AirLoad)
+        Dec(Un[Master].AirLoad)
       else
       begin
-        dec(Un[Master].TroopLoad);
-        assert(Movement <= 0);
+        Dec(Un[Master].TroopLoad);
+        Assert(Movement <= 0);
       end;
       Master := -1;
     end;
 
     if (Health <= 0) or (MoveInfo.MoveType = mtSpyMission) then
-      RemoveUnit(p, uix) // spy mission or victim of HostileDamage
+      RemoveUnit(P, uix) // spy mission or victim of HostileDamage
     else
     begin // transport load
       Master := MoveInfo.ToMaster;
       if MoveInfo.ToMaster >= 0 then
       begin
         if PModel.Domain = dAir then
-          inc(Un[MoveInfo.ToMaster].AirLoad)
+          Inc(Un[MoveInfo.ToMaster].AirLoad)
         else
-          inc(Un[MoveInfo.ToMaster].TroopLoad);
+          Inc(Un[MoveInfo.ToMaster].TroopLoad);
       end
       else
-        PlaceUnit(p, uix);
+        PlaceUnit(P, uix);
     end;
 
     if (MoveInfo.MoveType = mtCapture) and (nUpdateLoc > 0) then
-      RecalcMapZoC(p);
+      RecalcMapZoC(P);
     UpdateUnitMap(ToLoc, MoveInfo.MoveType = mtCapture);
-    for i := 0 to nUpdateLoc - 1 do
-      UpdateUnitMap(UpdateLoc[i]);
+    for I := 0 to nUpdateLoc - 1 do
+      UpdateUnitMap(UpdateLoc[I]);
     // tell about lost units of defender
 
     if (MoveInfo.MoveType <> mtSpyMission) and (Master < 0) then
@@ -2241,29 +2241,29 @@ begin
         0) or (RealMap[ToLoc] and fTerrain = fMountains) or
         (RealMap[ToLoc] and fTerImp = tiFort) or
         (RealMap[ToLoc] and fTerImp = tiBase) then
-        ExtDiscover := true;
+        ExtDiscover := True;
       if (PModel.Kind = mkDiplomat) or (PModel.Cap[mcSpy] > 0) then
-        i := lObserveSuper
+        I := lObserveSuper
       else if (PModel.Domain = dAir) or
         (PModel.Cap[mcRadar] + PModel.Cap[mcCarrier] > 0) then
-        i := lObserveAll
+        I := lObserveAll
       else
-        i := lObserveUnhidden;
+        I := lObserveUnhidden;
       if ExtDiscover then
       begin
-        if Discover21(ToLoc, p, i, true, PModel.Domain = dGround) then
-          result := result or rEnemySpotted;
+        if Discover21(ToLoc, P, I, True, PModel.Domain = dGround) then
+          Result := Result or rEnemySpotted;
       end
       else
       begin
-        if Discover9(ToLoc, p, i, true, PModel.Domain = dGround) then
-          result := result or rEnemySpotted;
+        if Discover9(ToLoc, P, I, True, PModel.Domain = dGround) then
+          Result := Result or rEnemySpotted;
       end;
     end;
 
     if Mode >= moMovie then { show after-move in interface modules }
       for p1 := 0 to nPl - 1 do
-        if (1 shl p1 and GWatching <> 0) and ((p1 <> p) or (bix[p1].Kind = btTerm))
+        if (1 shl p1 and GWatching <> 0) and ((p1 <> P) or (bix[p1].Kind = btTerm))
         then
         begin
           if PModel.Cap[mcStealth] > 0 then
@@ -2272,9 +2272,9 @@ begin
             MinLevel := lObserveAll
           else
             MinLevel := lObserveUnhidden;
-          SeeFrom := (p1 = p) or (ObserveLevel[FromLoc] shr (2 * p1) and
+          SeeFrom := (p1 = P) or (ObserveLevel[FromLoc] shr (2 * p1) and
             3 >= MinLevel);
-          SeeTo := (p1 = p) or (ObserveLevel[ToLoc] shr (2 * p1) and
+          SeeTo := (p1 = P) or (ObserveLevel[ToLoc] shr (2 * p1) and
             3 >= MinLevel);
           if SeeTo and (MoveInfo.MoveType = mtCapture) then
             CallPlayer(cShowCityChanged, p1, ToLoc);
@@ -2282,19 +2282,19 @@ begin
             CallPlayer(cShowAfterMove, p1, ToLoc)
           else if (MoveInfo.MoveType <> mtSpyMission) and SeeTo then
             CallPlayer(cShowUnitChanged, p1, ToLoc);
-          for i := 0 to nUpdateLoc - 1 do
-            if ObserveLevel[UpdateLoc[i]] shr (2 * p1) and 3 >= lObserveUnhidden
+          for I := 0 to nUpdateLoc - 1 do
+            if ObserveLevel[UpdateLoc[I]] shr (2 * p1) and 3 >= lObserveUnhidden
             then
-              CallPlayer(cShowUnitChanged, p1, UpdateLoc[i]);
+              CallPlayer(cShowUnitChanged, p1, UpdateLoc[I]);
         end;
   end;
 end;
 
-function ExecuteAttack(p, uix, ToLoc: integer; var MoveInfo: TMoveInfo;
-  ShowMove: TShowMove): integer;
+function ExecuteAttack(P, uix, ToLoc: Integer; var MoveInfo: TMoveInfo;
+  ShowMove: TShowMove): Integer;
 
   procedure WriteBattleHistory(ToLoc, FromLoc, Attacker, Defender, mixAttacker,
-    mixDefender: integer; AttackerLost, DefenderLost: boolean);
+    mixDefender: Integer; AttackerLost, DefenderLost: Boolean);
   var
     AttackerBattle, DefenderBattle: ^TBattle;
   begin
@@ -2306,7 +2306,7 @@ function ExecuteAttack(p, uix, ToLoc: integer; var MoveInfo: TMoveInfo;
         (nBattleHistory and (nBattleHistory - 1) = 0) then
         ReallocMem(BattleHistory, nBattleHistory * (2 * SizeOf(TBattle)));
       AttackerBattle := @BattleHistory[nBattleHistory];
-      inc(nBattleHistory);
+      Inc(nBattleHistory);
     end;
     with RW[Defender] do
     begin
@@ -2316,7 +2316,7 @@ function ExecuteAttack(p, uix, ToLoc: integer; var MoveInfo: TMoveInfo;
         (nBattleHistory and (nBattleHistory - 1) = 0) then
         ReallocMem(BattleHistory, nBattleHistory * (2 * SizeOf(TBattle)));
       DefenderBattle := @BattleHistory[nBattleHistory];
-      inc(nBattleHistory);
+      Inc(nBattleHistory);
     end;
     AttackerBattle.Enemy := Defender;
     AttackerBattle.Flags := 0;
@@ -2345,33 +2345,33 @@ function ExecuteAttack(p, uix, ToLoc: integer; var MoveInfo: TMoveInfo;
   end;
 
 var
-  i, p1, FromLoc, uix1, nUpdateLoc, ExpGain, ExpelToLoc, cix1: integer;
+  I, p1, FromLoc, uix1, nUpdateLoc, ExpGain, ExpelToLoc, cix1: Integer;
   PModel: ^TModel;
-  UpdateLoc: array [0 .. numax - 1] of integer;
-  LoseCityPop, CityDestroyed, SeeFrom, SeeTo, ZoCDefenderDestroyed: boolean;
+  UpdateLoc: array [0 .. numax - 1] of Integer;
+  LoseCityPop, CityDestroyed, SeeFrom, SeeTo, ZoCDefenderDestroyed: Boolean;
 begin
-  result := 0;
-  with RW[p].Un[uix] do
+  Result := 0;
+  with RW[P].Un[uix] do
   begin
-    PModel := @RW[p].Model[mix];
+    PModel := @RW[P].Model[mix];
     FromLoc := Loc;
 
     ShowMove.EndHealth := MoveInfo.EndHealth;
     ShowMove.EndHealthDef := MoveInfo.EndHealthDef;
     if MoveInfo.MoveType = mtAttack then
-      WriteBattleHistory(ToLoc, FromLoc, p, MoveInfo.Defender, mix,
+      WriteBattleHistory(ToLoc, FromLoc, P, MoveInfo.Defender, mix,
         RW[MoveInfo.Defender].Un[MoveInfo.Duix].mix, MoveInfo.EndHealth <= 0,
         MoveInfo.EndHealthDef <= 0);
 
     { if RW[p].Treaty[MoveInfo.Defender]=trCeaseFire then
       begin
       if Mode>=moMovie then
-      CallPlayer(cShowCancelTreaty,MoveInfo.Defender,p);
-      CancelTreaty(p,MoveInfo.Defender)
+      CallPlayer(cShowCancelTreaty,MoveInfo.Defender,P);
+      CancelTreaty(P,MoveInfo.Defender)
       end; }
     if Mode >= moMovie then { show attack in interface modules }
       for p1 := 0 to nPl - 1 do
-        if (1 shl p1 and GWatching <> 0) and ((p1 <> p) or (bix[p1].Kind = btTerm))
+        if (1 shl p1 and GWatching <> 0) and ((p1 <> P) or (bix[p1].Kind = btTerm))
         then
         begin
           SeeFrom := ObserveLevel[FromLoc] shr (2 * p1) and
@@ -2379,16 +2379,16 @@ begin
           SeeTo := ObserveLevel[ToLoc] shr (2 * p1) and 3 >= lObserveUnhidden;
           if SeeFrom and SeeTo then
           begin
-            TellAboutModel(p1, p, mix);
-            if p1 = p then
+            TellAboutModel(p1, P, mix);
+            if p1 = P then
               ShowMove.emix := -1
             else
-              ShowMove.emix := emixSafe(p1, p, mix);
+              ShowMove.emix := emixSafe(p1, P, mix);
             CallPlayer(cShowAttacking, p1, ShowMove);
           end;
         end;
 
-    LoseCityPop := false;
+    LoseCityPop := False;
     if (RealMap[ToLoc] and fCity <> 0) and
       ((MoveInfo.MoveType = mtAttack) and (MoveInfo.EndHealthDef <= 0) or
       (MoveInfo.MoveType = mtBombard) and (BombardmentDestroysCity or
@@ -2410,30 +2410,30 @@ begin
 
     if MoveInfo.MoveType = mtBombard then
     begin
-      assert(Movement >= 100);
+      Assert(Movement >= 100);
       if PModel.Attack = 0 then
         Flags := Flags and not unBombsLoaded;
-      dec(Movement, 100);
+      Dec(Movement, 100);
     end
     else if MoveInfo.MoveType = mtExpel then
     begin
-      assert(Movement >= 100);
+      Assert(Movement >= 100);
       Job := jNone;
       Flags := Flags and not unFortified;
-      dec(Movement, 100);
+      Dec(Movement, 100);
     end
     else
     begin
-      assert(MoveInfo.MoveType = mtAttack);
+      Assert(MoveInfo.MoveType = mtAttack);
       if MoveInfo.EndHealth = 0 then
-        RemoveUnit(p, uix, MoveInfo.Defender) // destroy attacker
+        RemoveUnit(P, uix, MoveInfo.Defender) // destroy attacker
       else
       begin // update attacker
         ExpGain := (Health - MoveInfo.EndHealth + 1) shr 1;
         if Exp + ExpGain > (nExp - 1) * ExpCost then
           Exp := (nExp - 1) * ExpCost
         else
-          inc(Exp, ExpGain);
+          Inc(Exp, ExpGain);
         Health := MoveInfo.EndHealth;
         Job := jNone;
         if RW[MoveInfo.Defender].Model[RW[MoveInfo.Defender].Un[MoveInfo.Duix]
@@ -2441,13 +2441,13 @@ begin
           Flags := Flags and not unBombsLoaded;
         Flags := Flags and not unFortified;
         if Movement > 100 then
-          dec(Movement, 100)
+          Dec(Movement, 100)
         else
           Movement := 0;
       end;
     end;
 
-    ZoCDefenderDestroyed := false;
+    ZoCDefenderDestroyed := False;
     nUpdateLoc := 0;
     if MoveInfo.MoveType = mtExpel then
       with RW[MoveInfo.Defender], Un[MoveInfo.Duix] do
@@ -2468,7 +2468,7 @@ begin
           Loc := ExpelToLoc;
           PlaceUnit(MoveInfo.Defender, MoveInfo.Duix);
           UpdateLoc[nUpdateLoc] := Loc;
-          inc(nUpdateLoc);
+          Inc(nUpdateLoc);
           Flags := Flags or unWithdrawn;
         end;
       end
@@ -2479,7 +2479,7 @@ begin
         if Exp + ExpGain > (nExp - 1) * ExpCost then
           Exp := (nExp - 1) * ExpCost
         else
-          inc(Exp, ExpGain);
+          Inc(Exp, ExpGain);
         Health := MoveInfo.EndHealthDef;
       end
     else
@@ -2492,10 +2492,10 @@ begin
           (RealMap[ToLoc] and fTerImp <> tiBase) and
           (RealMap[ToLoc] and fTerImp <> tiFort)) or LoseCityPop and
           (RW[MoveInfo.Defender].City[MoveInfo.Dcix].Size = 2) then
-          RemoveAllUnits(MoveInfo.Defender, ToLoc, p)
+          RemoveAllUnits(MoveInfo.Defender, ToLoc, P)
           { no city, base or fortress }
         else
-          RemoveUnit(MoveInfo.Defender, MoveInfo.Duix, p);
+          RemoveUnit(MoveInfo.Defender, MoveInfo.Duix, P);
       end;
 
       if LoseCityPop then // city defender defeated -- shrink city
@@ -2508,32 +2508,32 @@ begin
               if (Loc >= 0) and (Home = MoveInfo.Dcix) then
               begin
                 UpdateLoc[nUpdateLoc] := Loc;
-                inc(nUpdateLoc);
+                Inc(nUpdateLoc);
               end;
           // unit will be removed -- remember position and update for all players
-          DestroyCity_TellPlayers(MoveInfo.Defender, MoveInfo.Dcix, false);
+          DestroyCity_TellPlayers(MoveInfo.Defender, MoveInfo.Dcix, False);
           CheckBorders(ToLoc, MoveInfo.Defender);
-          RecalcPeaceMap(p);
+          RecalcPeaceMap(P);
         end;
     end;
 
     if CityDestroyed and (nUpdateLoc > 0) then
-      RecalcMapZoC(p)
+      RecalcMapZoC(P)
     else if ZoCDefenderDestroyed then
-      RecalcV8ZoC(p, ToLoc);
+      RecalcV8ZoC(P, ToLoc);
     UpdateUnitMap(FromLoc);
     UpdateUnitMap(ToLoc, LoseCityPop);
-    for i := 0 to nUpdateLoc - 1 do
-      UpdateUnitMap(UpdateLoc[i]);
+    for I := 0 to nUpdateLoc - 1 do
+      UpdateUnitMap(UpdateLoc[I]);
     // tell about lost units of defender
 
     if Mode >= moMovie then
     begin
-      for i := 0 to RW[p].nEnemyModel - 1 do
-        with RW[p].EnemyModel[i] do
-          Lost := Destroyed[p, Owner, mix];
+      for I := 0 to RW[P].nEnemyModel - 1 do
+        with RW[P].EnemyModel[I] do
+          Lost := Destroyed[P, Owner, mix];
       for p1 := 0 to nPl - 1 do { show after-attack in interface modules }
-        if (1 shl p1 and GWatching <> 0) and ((p1 <> p) or (bix[p1].Kind = btTerm))
+        if (1 shl p1 and GWatching <> 0) and ((p1 <> P) or (bix[p1].Kind = btTerm))
         then
         begin
           SeeFrom := ObserveLevel[FromLoc] shr (2 * p1) and
@@ -2560,25 +2560,25 @@ begin
   end;
 end;
 
-function MoveUnit(p, uix, dx, dy: integer; TestOnly: boolean): integer;
+function MoveUnit(P, uix, dx, dy: Integer; TestOnly: Boolean): Integer;
 var
-  ToLoc: integer;
+  ToLoc: Integer;
   MoveInfo: TMoveInfo;
   ShowMove: TShowMove;
 begin
-{$IFOPT O-}assert(1 shl p and InvalidTreatyMap = 0); {$ENDIF}
-  with RW[p].Un[uix] do
+{$IFOPT O-}Assert(1 shl P and InvalidTreatyMap = 0); {$ENDIF}
+  with RW[P].Un[uix] do
   begin
     ToLoc := dLoc(Loc, dx, dy);
     if (ToLoc < 0) or (ToLoc >= MapSize) then
     begin
-      result := eInvalid;
-      exit;
+      Result := eInvalid;
+      Exit;
     end;
-    result := CalculateMove(p, uix, ToLoc, 3 - dy and 1, TestOnly, MoveInfo);
-    if result = eZOC_EnemySpotted then
+    Result := CalculateMove(P, uix, ToLoc, 3 - dy and 1, TestOnly, MoveInfo);
+    if Result = eZOC_EnemySpotted then
       ZOCTile := ToLoc;
-    if (result >= rExecuted) and not TestOnly then
+    if (Result >= rExecuted) and not TestOnly then
     begin
       ShowMove.dx := dx;
       ShowMove.dy := dy;
@@ -2588,7 +2588,7 @@ begin
       ShowMove.Fuel := Fuel;
       ShowMove.Exp := Exp;
       ShowMove.Load := TroopLoad + AirLoad;
-      ShowMove.Owner := p;
+      ShowMove.Owner := P;
       if (TroopLoad > 0) or (AirLoad > 0) then
         ShowMove.Flags := unMulti
       else
@@ -2605,39 +2605,39 @@ begin
       end;
       case MoveInfo.MoveType of
         mtMove, mtCapture, mtSpyMission:
-          result := ExecuteMove(p, uix, ToLoc, MoveInfo, ShowMove) or result;
+          Result := ExecuteMove(P, uix, ToLoc, MoveInfo, ShowMove) or Result;
         mtAttack, mtBombard, mtExpel:
-          result := ExecuteAttack(p, uix, ToLoc, MoveInfo, ShowMove) or result;
+          Result := ExecuteAttack(P, uix, ToLoc, MoveInfo, ShowMove) or Result;
       end;
     end;
   end;
 end;
 
-function Server(Command, Player, Subject: integer; var Data): integer; stdcall;
+function Server(Command, Player, Subject: Integer; var Data): Integer; stdcall;
 
-  function CountPrice(const Offer: TOffer; PriceType: integer): integer;
+  function CountPrice(const Offer: TOffer; PriceType: Integer): Integer;
   var
-    i: integer;
+    I: Integer;
   begin
-    result := 0;
-    for i := 0 to Offer.nDeliver + Offer.nCost - 1 do
-      if Offer.Price[i] and $FFFF0000 = Cardinal(PriceType) then
-        inc(result);
+    Result := 0;
+    for I := 0 to Offer.nDeliver + Offer.nCost - 1 do
+      if Offer.Price[I] and $FFFF0000 = Cardinal(PriceType) then
+        Inc(Result);
   end;
 
 { procedure UpdateBorderHelper;
   var
-  x, y, Loc, Loc1, dx, dy, ObserveMask: integer;
+  X, Y, Loc, Loc1, dx, dy, ObserveMask: Integer;
   begin
   ObserveMask:=3 shl (2*pTurn);
-  for x:=0 to lx-1 do for y:=0 to ly shr 1-1 do
+  for X:=0 to lx-1 do for Y:=0 to ly shr 1-1 do
   begin
-  Loc:=lx*(y*2)+x;
+  Loc:=lx*(Y*2)+X;
   if ObserveLevel[Loc] and ObserveMask<>0 then
   begin
   for dy:=0 to 1 do for dx:=0 to 1 do
   begin
-  Loc1:=(Loc+dx-1+lx) mod lx +lx*((y+dy)*2-1);
+  Loc1:=(Loc+dx-1+lx) mod lx +lx*((Y+dy)*2-1);
   if (Loc1>=0) and (Loc1<MapSize)
   and (ObserveLevel[Loc1] and ObserveMask<>0) then
   if RealMap[Loc1] and $78000000=RealMap[Loc] and $78000000 then
@@ -2665,32 +2665,32 @@ const
   ptShip = 7;
   ptInvalid = 8;
 
-  function ProjectType(Project: integer): integer;
+  function ProjectType(Project: Integer): Integer;
   begin
     if Project and cpCompleted <> 0 then
-      result := ptSelect
+      Result := ptSelect
     else if Project and (cpImp + cpIndex) = cpImp + imTrGoods then
-      result := ptTrGoods
+      Result := ptTrGoods
     else if Project and cpImp = 0 then
       if RW[Player].Model[Project and cpIndex].Kind = mkCaravan then
-        result := ptCaravan
+        Result := ptCaravan
       else
-        result := ptUn
+        Result := ptUn
     else if Project and cpIndex >= nImp then
-      result := ptInvalid
+      Result := ptInvalid
     else if Imp[Project and cpIndex].Kind = ikWonder then
-      result := ptWonder
+      Result := ptWonder
     else if Imp[Project and cpIndex].Kind = ikShipPart then
-      result := ptShip
+      Result := ptShip
     else
-      result := ptImp;
+      Result := ptImp;
   end;
 
 var
-  d, i, j, p1, p2, pt0, pt1, uix1, cix1, Loc0, Loc1, dx, dy, NewCap, MinCap,
+  D, I, J, p1, p2, pt0, pt1, uix1, cix1, Loc0, Loc1, dx, dy, NewCap, MinCap,
     MaxCap, CapWeight, Cost, NextProd, Preq, TotalFood, TotalProd, CheckSum,
     StopTurn, FutureMCost, NewProject, OldImp, mix, V8, V21, AStr, DStr,
-    ABaseDamage, DBaseDamage: integer;
+    ABaseDamage, DBaseDamage: Integer;
   CityReport: TCityReport;
   FormerCLState: TCmdListState;
   Adjacent: TVicinity8Loc;
@@ -2707,21 +2707,21 @@ begin
         CallPlayer(cShowTurnChange, p1, p2);
   end;
 
-  assert(MapSize = lx * ly);
-  assert(Command and (sctMask or sExecute) <> sctInternal or sExecute);
+  Assert(MapSize = lx * ly);
+  Assert(Command and (sctMask or sExecute) <> sctInternal or sExecute);
   // not for internal commands
   if (Command < 0) or (Command >= $10000) then
   begin
-    result := eUnknown;
-    exit;
+    Result := eUnknown;
+    Exit;
   end;
 
   if (Player < 0) or (Player >= nPl) or
     ((Command and (sctMask or sExecute) <> sctInfo) and
     ((Subject < 0) or (Subject >= $1000))) then
   begin
-    result := eInvalid;
-    exit;
+    Result := eInvalid;
+    Exit;
   end;
 
   if (1 shl Player and (GAlive or GWatching) = 0) and
@@ -2730,11 +2730,11 @@ begin
     (Command = sGetVersion) or (Command and $FF0F = sGetChart)) then
   begin
     PutMessage(1 shl 16 + 1, Format('NOT Alive: %d', [Player]));
-    result := eNoTurn;
-    exit;
+    Result := eNoTurn;
+    Exit;
   end;
 
-  result := eOK;
+  Result := eOK;
 
   // check if command allowed now
   if (Mode = moPlaying) and not((Command >= cClientEx) or (Command = sMessage)
@@ -2757,8 +2757,8 @@ begin
   begin
     PutMessage(1 shl 16 + 1, Format('No Turn: %d calls %x',
       [Player, Command shr 4]));
-    result := eNoTurn;
-    exit;
+    Result := eNoTurn;
+    Exit;
   end;
 
   // do not use EXIT hereafter!
@@ -2766,7 +2766,7 @@ begin
 {$IFOPT O-}
   HandoverStack[nHandoverStack] := Player + $1000;
   HandoverStack[nHandoverStack + 1] := Command;
-  inc(nHandoverStack, 2);
+  Inc(nHandoverStack, 2);
 
   InvalidTreatyMap := 0;
   // new command, sIntExpandTerritory of previous command was processed
@@ -2779,10 +2779,10 @@ begin
   begin { log command }
     FormerCLState := CL.State;
     CL.Put(Command, Player, Subject, @Data);
-    logged := true;
+    logged := True;
   end
   else
-    logged := false;
+    logged := False;
 
   case Command of
 
@@ -2797,15 +2797,15 @@ begin
       DebugMap[Player] := @Data;
 
     sGetDebugMap:
-      pointer(Data) := DebugMap[Subject];
+      Pointer(Data) := DebugMap[Subject];
 
     { sChangeSuperView:
       if Difficulty[Player]=0 then
       begin
-      for i:=0 to nBrain-1 do if Brain[i].Initialized then
-      CallClient(i, cShowSuperView, Subject)
+      for I:=0 to nBrain-1 do if Brain[I].Initialized then
+      CallClient(I, cShowSuperView, Subject)
       end
-      else result:=eInvalid; }
+      else Result:=eInvalid; }
 
     sRefreshDebugMap:
       bix[0].Client(cRefreshDebugMap, -1, Player);
@@ -2828,77 +2828,77 @@ begin
             StopTurn := RW[Player].EnemyReport[Subject].TurnOfMilReport + 1
           else
             StopTurn := RW[Player].EnemyReport[Subject].TurnOfCivilReport + 1;
-        move(Stat[Command shr 4 and $F, Subject]^, Data,
-          StopTurn * SizeOf(integer));
+        Move(Stat[Command shr 4 and $F, Subject]^, Data,
+          StopTurn * SizeOf(Integer));
         FillChar(TChart(Data)[StopTurn], (GTurn - StopTurn) *
-          SizeOf(integer), 0);
+          SizeOf(Integer), 0);
       end
       else
-        result := eInvalid;
+        Result := eInvalid;
 
     sGetTechCost:
-      integer(Data) := TechCost(Player);
+      Integer(Data) := TechCost(Player);
 
     sGetAIInfo:
       if AIInfo[Subject] = '' then
-        pchar(Data) := nil
+        PChar(Data) := nil
       else
-        pchar(Data) := @AIInfo[Subject][1];
+        PChar(Data) := @AIInfo[Subject][1];
 
     sGetAICredits:
       if AICredits = '' then
-        pchar(Data) := nil
+        PChar(Data) := nil
       else
-        pchar(Data) := @AICredits[1];
+        PChar(Data) := @AICredits[1];
 
     sGetVersion:
-      integer(Data) := CevoVersion;
+      Integer(Data) := CevoVersion;
 
     sGetGameChanged:
       if Player <> 0 then
-        result := eInvalid
+        Result := eInvalid
       else if (CL <> nil) and (CL.State.nLog = nLogOpened) and
         (CL.State.MoveCode = 0) and not HasCityTileChanges and
         not HasChanges(Player) then
-        result := eNotChanged;
+        Result := eNotChanged;
 
     sGetTileInfo:
       if (Subject >= 0) and (Subject < MapSize) then
-        result := GetTileInfo(Player, -2, Subject, TTileInfo(Data))
+        Result := GetTileInfo(Player, -2, Subject, TTileInfo(Data))
       else
-        result := eInvalid;
+        Result := eInvalid;
 
     sGetCityTileInfo:
       if (Subject >= 0) and (Subject < MapSize) then
-        result := GetTileInfo(Player, -1, Subject, TTileInfo(Data))
+        Result := GetTileInfo(Player, -1, Subject, TTileInfo(Data))
       else
-        result := eInvalid;
+        Result := eInvalid;
 
     sGetHypoCityTileInfo:
       if (Subject >= 0) and (Subject < MapSize) then
       begin
         if (TTileInfo(Data).ExplCity < 0) or
           (TTileInfo(Data).ExplCity >= RW[Player].nCity) then
-          result := eInvalid
+          Result := eInvalid
         else if ObserveLevel[Subject] shr (Player * 2) and 3 = 0 then
-          result := eNoPreq
+          Result := eNoPreq
         else
-          result := GetTileInfo(Player, TTileInfo(Data).ExplCity, Subject,
+          Result := GetTileInfo(Player, TTileInfo(Data).ExplCity, Subject,
             TTileInfo(Data));
       end
       else
-        result := eInvalid;
+        Result := eInvalid;
 
     sGetJobProgress:
       if (Subject >= 0) and (Subject < MapSize) then
       begin
         if ObserveLevel[Subject] shr (Player * 2) and 3 = 0 then
-          result := eNoPreq
+          Result := eNoPreq
         else
-          result := GetJobProgress(Player, Subject, TJobProgressData(Data));
+          Result := GetJobProgress(Player, Subject, TJobProgressData(Data));
       end
       else
-        result := eInvalid;
+        Result := eInvalid;
 
     sGetModels:
       if (GTestFlags and tfUncover <> 0) or (Difficulty[Player] = 0)
@@ -2910,21 +2910,21 @@ begin
               TellAboutModel(Player, p1, mix);
       end
       else
-        result := eInvalid;
+        Result := eInvalid;
 
     sGetUnits:
       if (Subject >= 0) and (Subject < MapSize) and
         (ObserveLevel[Subject] shr (Player * 2) and 3 = lObserveSuper) then
-        integer(Data) := GetUnitStack(Player, Subject)
+        Integer(Data) := GetUnitStack(Player, Subject)
       else
-        result := eNoPreq;
+        Result := eNoPreq;
 
     sGetDefender:
       if (Subject >= 0) and (Subject < MapSize) and (Occupant[Subject] = Player)
       then
-        Strongest(Subject, integer(Data), d, i, j)
+        Strongest(Subject, Integer(Data), D, I, J)
       else
-        result := eInvalid;
+        Result := eInvalid;
 
     sGetBattleForecast, sGetBattleForecastEx:
       if (Subject >= 0) and (Subject < MapSize) and
@@ -2934,7 +2934,7 @@ begin
             (mixAtt < RW[pAtt].nModel) and
             ((pAtt = Player) or (RWemix[Player, pAtt, mixAtt] >= 0)) then
           begin
-            result := GetBattleForecast(Subject, TBattleForecast(Data), uix1,
+            Result := GetBattleForecast(Subject, TBattleForecast(Data), uix1,
               cix1, AStr, DStr, ABaseDamage, DBaseDamage);
             if Command = sGetBattleForecastEx then
             begin
@@ -2943,39 +2943,39 @@ begin
               TBattleForecastEx(Data).ABaseDamage := ABaseDamage;
               TBattleForecastEx(Data).DBaseDamage := DBaseDamage;
             end;
-            if result = eOK then
-              result := eInvalid; // no enemy unit there!
+            if Result = eOK then
+              Result := eInvalid; // no enemy unit there!
           end
           else
-            result := eInvalid
+            Result := eInvalid
       else
-        result := eInvalid;
+        Result := eInvalid;
 
     sGetUnitReport:
       if (Subject < 0) or (Subject >= RW[Player].nUn) or
         (RW[Player].Un[Subject].Loc < 0) then
-        result := eInvalid
+        Result := eInvalid
       else
         GetUnitReport(Player, Subject, TUnitReport(Data));
 
     sGetMoveAdvice:
       if (Subject < 0) or (Subject >= RW[Player].nUn) or
         (RW[Player].Un[Subject].Loc < 0) then
-        result := eInvalid
+        Result := eInvalid
       else
-        result := GetMoveAdvice(Player, Subject, TMoveAdviceData(Data));
+        Result := GetMoveAdvice(Player, Subject, TMoveAdviceData(Data));
 
     sGetPlaneReturn:
       if (Subject < 0) or (Subject >= RW[Player].nUn) or
         (RW[Player].Un[Subject].Loc < 0) or
         (RW[Player].Model[RW[Player].Un[Subject].mix].Domain <> dAir) then
-        result := eInvalid
+        Result := eInvalid
       else
       begin
         if CanPlaneReturn(Player, Subject, TPlaneReturnData(Data)) then
-          result := eOK
+          Result := eOK
         else
-          result := eNoWay;
+          Result := eNoWay;
       end;
 
     sGetCity:
@@ -2986,31 +2986,31 @@ begin
         begin
           Owner := Player;
           SearchCity(Subject, Owner, cix1);
-          c := RW[Owner].City[cix1];
-          if (Owner <> Player) and (c.Project and cpImp = 0) then
-            TellAboutModel(Player, Owner, c.Project and cpIndex);
+          C := RW[Owner].City[cix1];
+          if (Owner <> Player) and (C.Project and cpImp = 0) then
+            TellAboutModel(Player, Owner, C.Project and cpIndex);
         end
       else
-        result := eInvalid;
+        Result := eInvalid;
 
     sGetCityReport:
       if (Subject < 0) or (Subject >= RW[Player].nCity) or
         (RW[Player].City[Subject].Loc < 0) then
-        result := eInvalid
+        Result := eInvalid
       else
-        result := GetCityReport(Player, Subject, TCityReport(Data));
+        Result := GetCityReport(Player, Subject, TCityReport(Data));
 
     sGetCityReportNew:
       if (Subject < 0) or (Subject >= RW[Player].nCity) or
         (RW[Player].City[Subject].Loc < 0) then
-        result := eInvalid
+        Result := eInvalid
       else
         GetCityReportNew(Player, Subject, TCityReportNew(Data));
 
     sGetCityAreaInfo:
       if (Subject < 0) or (Subject >= RW[Player].nCity) or
         (RW[Player].City[Subject].Loc < 0) then
-        result := eInvalid
+        Result := eInvalid
       else
         GetCityAreaInfo(Player, RW[Player].City[Subject].Loc,
           TCityAreaInfo(Data));
@@ -3030,7 +3030,7 @@ begin
         GetCityReport(p1, cix1, TCityReport(Data));
       end
       else
-        result := eInvalid;
+        Result := eInvalid;
 
     sGetEnemyCityReportNew:
       if (Subject >= 0) and (Subject < MapSize) and
@@ -3047,7 +3047,7 @@ begin
         GetCityReportNew(p1, cix1, TCityReportNew(Data));
       end
       else
-        result := eInvalid;
+        Result := eInvalid;
 
     sGetEnemyCityAreaInfo:
       if (Subject >= 0) and (Subject < MapSize) and
@@ -3061,12 +3061,12 @@ begin
         GetCityAreaInfo(p1, Subject, TCityAreaInfo(Data));
       end
       else
-        result := eInvalid;
+        Result := eInvalid;
 
     sGetCityTileAdvice:
       if (Subject < 0) or (Subject >= RW[Player].nCity) or
         (RW[Player].City[Subject].Loc < 0) then
-        result := eInvalid
+        Result := eInvalid
       else
         GetCityTileAdvice(Player, Subject, TCityTileAdviceData(Data));
 
@@ -3079,23 +3079,23 @@ begin
         with TEditTileData(Data) do
           EditTile(Loc, NewTile)
       else
-        result := eInvalid;
+        Result := eInvalid;
 
     sRandomMap:
       if (Player = 0) and MapGeneratorAvailable then
       begin
         CreateElevation;
-        PreviewElevation := false;
-        CreateMap(false);
+        PreviewElevation := False;
+        CreateMap(False);
         FillChar(ObserveLevel, MapSize * 4, 0);
         DiscoverAll(Player, lObserveSuper);
       end
       else
-        result := eInvalid;
+        Result := eInvalid;
 
     sMapGeneratorRequest:
       if not MapGeneratorAvailable then
-        result := eInvalid;
+        Result := eInvalid;
 
     {
       Client Deactivation Commands
@@ -3103,14 +3103,14 @@ begin
     }
     sTurn, sTurn - sExecute:
       begin
-        AllHumansDead := true;
+        AllHumansDead := True;
         for p1 := 0 to nPl - 1 do
           if (1 shl p1 and GAlive <> 0) and (bix[p1].Kind = btTerm) then
-            AllHumansDead := false;
+            AllHumansDead := False;
         if (pDipActive >= 0) // still in negotiation mode
           or (pTurn = 0) and ((GWinner > 0) or (GTurn = MaxTurn) or
           (Difficulty[0] > 0) and AllHumansDead) then // game end reached
-          result := eViolation
+          Result := eViolation
         else if Command >= sExecute then
         begin
           if Mode = moPlaying then
@@ -3121,7 +3121,7 @@ begin
             if pTurn = 0 then
             begin
               LogChanges;
-              SaveGame('~' + LogFileName, true);
+              SaveGame('~' + LogFileName, True);
             end;
 {$ENDIF}
           end
@@ -3136,11 +3136,11 @@ begin
             // calculate checksum
             TotalFood := 0;
             TotalProd := 0;
-            for i := 0 to RW[pTurn].nCity - 1 do
-              if RW[pTurn].City[i].Loc >= 0 then
+            for I := 0 to RW[pTurn].nCity - 1 do
+              if RW[pTurn].City[I].Loc >= 0 then
               begin
-                inc(TotalFood, RW[pTurn].City[i].Food);
-                inc(TotalProd, RW[pTurn].City[i].Prod);
+                Inc(TotalFood, RW[pTurn].City[I].Food);
+                Inc(TotalProd, RW[pTurn].City[I].Prod);
               end;
             CheckSum := TotalFood and 7 + TotalProd and 7 shl 3 +
               RW[pTurn].Money and 7 shl 6 + Worked[pTurn] div 100 and 7 shl 9;
@@ -3151,7 +3151,7 @@ begin
           if Mode < moPlaying then // check checksum
           begin
             if CheckSum <> Subject then
-              LoadOK := false;
+              LoadOK := False;
           end
           else // save checksum
             CL.Put(Command, Player, CheckSum, @Data);
@@ -3178,7 +3178,7 @@ begin
           repeat
             pTurn := (pTurn + 1) mod nPl;
             if pTurn = 0 then
-              inc(GTurn);
+              Inc(GTurn);
             if Assigned(bix[pTurn]) and ((1 shl pTurn) and GAlive = 0) then
             begin // already made extinct -- continue statistics
               Stat[stExplore, pTurn, GTurn] := 0;
@@ -3217,16 +3217,16 @@ begin
 
     sBreak, sResign, sNextRound, sReload:
       if Mode = moMovie then
-        MovieStopped := true
+        MovieStopped := True
       else
       begin
         if Command = sReload then
         begin
           ok := (Difficulty[0] = 0) and (bix[0].Kind <> btNoTerm) and
-            (integer(Data) >= 0) and (integer(Data) < GTurn);
+            (Integer(Data) >= 0) and (Integer(Data) < GTurn);
           for p1 := 1 to nPl - 1 do
             if bix[p1].Kind = btTerm then
-              ok := false;
+              ok := False;
           // allow reload in AI-only games only
         end
         else
@@ -3235,19 +3235,19 @@ begin
         begin
           if (Command = sBreak) or (Command = sResign) then
             Notify(ntBackOn);
-          for i := 0 to Brains.Count - 1 do
-            if Brains[i].Initialized then
+          for I := 0 to Brains.Count - 1 do
+            if Brains[I].Initialized then
             begin
-              if Brains[i].Kind = btAI then
-                Notify(ntDeinitModule, i);
-              CallClient(i, cBreakGame, nil^);
+              if Brains[I].Kind = btAI then
+                Notify(ntDeinitModule, I);
+              CallClient(I, cBreakGame, nil^);
             end;
           Notify(ntEndInfo);
           if (Command = sBreak) or (Command = sReload) then
           begin
             LogCityTileChanges;
             LogChanges;
-            SaveGame(LogFileName, false);
+            SaveGame(LogFileName, False);
           end;
           DeleteFile(SavePath + '~' + LogFileName);
           EndGame;
@@ -3260,11 +3260,11 @@ begin
               StartNewGame(SavePath, LogFileName, MapFileName, lx, ly,
                 LandMass, MaxTurn);
             sReload:
-              LoadGame(SavePath, LogFileName, integer(Data), false);
+              LoadGame(SavePath, LogFileName, Integer(Data), False);
           end;
         end
         else
-          result := eInvalid;
+          Result := eInvalid;
       end;
 
     sAbandonMap, sSaveMap:
@@ -3281,23 +3281,23 @@ begin
           Notify(ntStartGo);
       end
       else
-        result := eInvalid;
+        Result := eInvalid;
 
     scContact .. scContact + (nPl - 1) shl 4, scContact - sExecute .. scContact
       - sExecute + (nPl - 1) shl 4:
       if (pDipActive >= 0) or (1 shl (Command shr 4 and $F) and GAlive = 0) then
-        result := eInvalid
+        Result := eInvalid
       else if GWinner > 0 then
-        result := eViolation // game end reached
+        Result := eViolation // game end reached
       else if RW[Player].Treaty[Command shr 4 and $F] = trNoContact then
-        result := eNoPreq
+        Result := eNoPreq
       else if GTurn < GColdWarStart + ColdWarTurns then
-        result := eColdWar
+        Result := eColdWar
       else if RW[Player].Government = gAnarchy then
-        result := eAnarchy
+        Result := eAnarchy
       else if RW[Command shr 4 and $F].Government = gAnarchy then
       begin
-        result := eAnarchy;
+        Result := eAnarchy;
         LastEndClientCommand := scReject; // enable cancel treaty
         pContacted := Command shr 4 and $F;
       end
@@ -3305,7 +3305,7 @@ begin
       begin // contact request
         pContacted := Command shr 4 and $F;
         pDipActive := pContacted;
-        assert(Mode = moPlaying);
+        Assert(Mode = moPlaying);
         Inform(pDipActive);
         ChangeClientWhenDone(scContact, pDipActive, pTurn, 4);
       end;
@@ -3316,12 +3316,12 @@ begin
         if Command >= sExecute then
         begin // contact requested and not accepted yet
           pDipActive := -1;
-          assert(Mode = moPlaying);
+          Assert(Mode = moPlaying);
           ChangeClientWhenDone(cContinue, pTurn, nil^, 0);
         end;
       end
       else
-        result := eInvalid;
+        Result := eInvalid;
 
     scDipStart, scDipStart - sExecute:
       if LastEndClientCommand and $FF0F = scContact then
@@ -3332,20 +3332,20 @@ begin
           RW[pContacted].EnemyReport[pTurn].Credibility :=
             RW[pTurn].Credibility;
           pDipActive := pTurn;
-          assert(Mode = moPlaying);
+          Assert(Mode = moPlaying);
           IntServer(sIntHaveContact, pTurn, pContacted, nil^);
           ChangeClientWhenDone(scDipStart, pDipActive, nil^, 0);
         end;
       end
       else
-        result := eInvalid;
+        Result := eInvalid;
 
     scDipNotice, scDipAccept, scDipCancelTreaty, scDipBreak,
       scDipNotice - sExecute, scDipAccept - sExecute,
       scDipCancelTreaty - sExecute, scDipBreak - sExecute:
       if pDipActive >= 0 then
       begin
-        assert(Mode = moPlaying);
+        Assert(Mode = moPlaying);
         if pDipActive = pTurn then
           p1 := pContacted
         else
@@ -3361,39 +3361,39 @@ begin
           begin
             // check if offer can be accepted
             if nDeliver + nCost = 0 then
-              result := eOfferNotAcceptable;
-            for i := 0 to nDeliver + nCost - 1 do
-              if Price[i] = opChoose then
-                result := eOfferNotAcceptable;
-            for i := 0 to nCost - 1 do
-              if not PayPrice(pDipActive, p1, Price[nDeliver + i], false) then
-                result := eOfferNotAcceptable;
-            if (Command >= sExecute) and (result >= rExecuted) then
+              Result := eOfferNotAcceptable;
+            for I := 0 to nDeliver + nCost - 1 do
+              if Price[I] = opChoose then
+                Result := eOfferNotAcceptable;
+            for I := 0 to nCost - 1 do
+              if not PayPrice(pDipActive, p1, Price[nDeliver + I], False) then
+                Result := eOfferNotAcceptable;
+            if (Command >= sExecute) and (Result >= rExecuted) then
             begin
               IntServer(sIntPayPrices + nDeliver + nCost, p1, pDipActive,
                 LastOffer);
               // CheckContact;
 
               // tell other players about ship part trades
-              HasShipChanged := false;
+              HasShipChanged := False;
               FillChar(ShowShipChange, SizeOf(ShowShipChange), 0);
-              for i := 0 to nDeliver + nCost - 1 do
-                if Price[i] and opMask = opShipParts then
+              for I := 0 to nDeliver + nCost - 1 do
+                if Price[I] and opMask = opShipParts then
                 begin
-                  HasShipChanged := true;
-                  if i >= nDeliver then
+                  HasShipChanged := True;
+                  if I >= nDeliver then
                   begin // p1 has demanded from pDipActive
-                    ShowShipChange.Ship1Change[Price[i] shr 16 and 3] :=
-                      +integer(Price[i] and $FFFF);
-                    ShowShipChange.Ship2Change[Price[i] shr 16 and 3] :=
-                      -integer(Price[i] and $FFFF);
+                    ShowShipChange.Ship1Change[Price[I] shr 16 and 3] :=
+                      +Integer(Price[I] and $FFFF);
+                    ShowShipChange.Ship2Change[Price[I] shr 16 and 3] :=
+                      -Integer(Price[I] and $FFFF);
                   end
                   else
                   begin // p1 has delivered to pDipActive
-                    ShowShipChange.Ship1Change[Price[i] shr 16 and 3] :=
-                      -integer(Price[i] and $FFFF);
-                    ShowShipChange.Ship2Change[Price[i] shr 16 and 3] :=
-                      +integer(Price[i] and $FFFF);
+                    ShowShipChange.Ship1Change[Price[I] shr 16 and 3] :=
+                      -Integer(Price[I] and $FFFF);
+                    ShowShipChange.Ship2Change[Price[I] shr 16 and 3] :=
+                      +Integer(Price[I] and $FFFF);
                   end;
                 end;
               if HasShipChanged then
@@ -3405,7 +3405,7 @@ begin
                   if (p2 <> p1) and (p2 <> pDipActive) and
                     (1 shl p2 and (GAlive or GWatching) <> 0) then
                   begin
-                    move(GShip, RW[p2].Ship, SizeOf(GShip));
+                    Move(GShip, RW[p2].Ship, SizeOf(GShip));
                     if 1 shl p2 and GWatching <> 0 then
                       CallPlayer(cShowShipChange, p2, ShowShipChange);
                   end;
@@ -3418,27 +3418,27 @@ begin
           if (ServerVersion[pDipActive] >= $010100) and
             (GTurn < RW[pDipActive].LastCancelTreaty[p1] + CancelTreatyTurns)
           then
-            result := eCancelTreatyRush
+            Result := eCancelTreatyRush
           else if Command >= sExecute then
           begin
             IntServer(sIntCancelTreaty, pDipActive, p1, nil^);
             for p2 := 0 to nPl - 1 do
               if (p2 <> p1) and (1 shl p2 and PeaceEnded <> 0) then
               begin
-                i := p1 shl 4 + pDipActive;
-                CallPlayer(cShowSupportAllianceAgainst, p2, i);
+                I := p1 shl 4 + pDipActive;
+                CallPlayer(cShowSupportAllianceAgainst, p2, I);
               end;
             for p2 := 0 to nPl - 1 do
               if (p2 <> p1) and (1 shl p2 and PeaceEnded <> 0) then
               begin
-                i := p2;
-                CallPlayer(cShowCancelTreatyByAlliance, pDipActive, i);
+                I := p2;
+                CallPlayer(cShowCancelTreatyByAlliance, pDipActive, I);
               end;
           end;
         end
         else
-          result := eInvalid;
-        if (Command >= sExecute) and (result >= rExecuted) then
+          Result := eInvalid;
+        if (Command >= sExecute) and (Result >= rExecuted) then
           if LastEndClientCommand = scDipBreak then
           begin // break negotiation
             pDipActive := -1;
@@ -3460,7 +3460,7 @@ begin
           end;
       end
       else
-        result := eInvalid;
+        Result := eInvalid;
 
     scDipOffer, scDipOffer - sExecute:
       if (pDipActive >= 0) and (LastEndClientCommand <> scDipCancelTreaty) and
@@ -3473,7 +3473,7 @@ begin
           begin // agreed discussion end
             pDipActive := -1;
             CallPlayer(cShowEndContact, pContacted, nil^);
-            assert(Mode = moPlaying);
+            Assert(Mode = moPlaying);
             ChangeClientWhenDone(cContinue, pTurn, nil^, 0);
           end;
         end
@@ -3486,54 +3486,54 @@ begin
             p1 := pTurn;
           if RW[pDipActive].Treaty[p1] < trPeace then
           begin // no tribute allowed!
-            for i := 0 to TOffer(Data).nDeliver + TOffer(Data).nCost - 1 do
-              if (TOffer(Data).Price[i] and opMask = opTribute) then
-                result := eInvalidOffer;
-            for i := 0 to TOffer(Data).nDeliver + TOffer(Data).nCost - 1 do
-              if (TOffer(Data).Price[i] = opTreaty + trPeace) then
-                result := eOK;
+            for I := 0 to TOffer(Data).nDeliver + TOffer(Data).nCost - 1 do
+              if (TOffer(Data).Price[I] and opMask = opTribute) then
+                Result := eInvalidOffer;
+            for I := 0 to TOffer(Data).nDeliver + TOffer(Data).nCost - 1 do
+              if (TOffer(Data).Price[I] = opTreaty + trPeace) then
+                Result := eOK;
           end;
-          for i := 0 to TOffer(Data).nDeliver - 1 do
-            if (TOffer(Data).Price[i] <> opChoose) and
-              not PayPrice(pDipActive, p1, TOffer(Data).Price[i], false) then
-              result := eInvalidOffer;
+          for I := 0 to TOffer(Data).nDeliver - 1 do
+            if (TOffer(Data).Price[I] <> opChoose) and
+              not PayPrice(pDipActive, p1, TOffer(Data).Price[I], False) then
+              Result := eInvalidOffer;
           if CountPrice(TOffer(Data), opTreaty) > 1 then
-            result := eInvalidOffer;
-          for i := 0 to nShipPart - 1 do
-            if CountPrice(TOffer(Data), opShipParts + i shl 16) > 1 then
-              result := eInvalidOffer;
+            Result := eInvalidOffer;
+          for I := 0 to nShipPart - 1 do
+            if CountPrice(TOffer(Data), opShipParts + I shl 16) > 1 then
+              Result := eInvalidOffer;
           if CountPrice(TOffer(Data), opMoney) > 1 then
-            result := eInvalidOffer;
+            Result := eInvalidOffer;
           if CountPrice(TOffer(Data), opTribute) > 1 then
-            result := eInvalidOffer;
+            Result := eInvalidOffer;
           case CountPrice(TOffer(Data), opChoose) of
             0:
               ;
             1:
               if (TOffer(Data).nCost = 0) or (TOffer(Data).nDeliver = 0) then
-                result := eInvalidOffer;
+                Result := eInvalidOffer;
           else
-            result := eInvalidOffer;
+            Result := eInvalidOffer;
           end;
 
           // !!! check here if cost can be demanded
 
-          if (Command >= sExecute) and (result >= rExecuted) then
+          if (Command >= sExecute) and (Result >= rExecuted) then
           begin
             OfferFullySupported := (TOffer(Data).nDeliver <= 2) and
               (TOffer(Data).nCost <= 2); // >2 no more allowed
-            for i := 0 to TOffer(Data).nDeliver + TOffer(Data).nCost - 1 do
+            for I := 0 to TOffer(Data).nDeliver + TOffer(Data).nCost - 1 do
             begin
-              if TOffer(Data).Price[i] and opMask = opTribute then
-                OfferFullySupported := false;
+              if TOffer(Data).Price[I] and opMask = opTribute then
+                OfferFullySupported := False;
               // tribute no more part of the game
-              if (TOffer(Data).Price[i] and opMask = opTreaty) and
-                (TOffer(Data).Price[i] - opTreaty <= RW[pDipActive].Treaty[p1])
+              if (TOffer(Data).Price[I] and opMask = opTreaty) and
+                (TOffer(Data).Price[I] - opTreaty <= RW[pDipActive].Treaty[p1])
               then
-                OfferFullySupported := false;
+                OfferFullySupported := False;
               // agreed treaty end no more part of the game
-              if TOffer(Data).Price[i] = opTreaty + trCeaseFire then
-                OfferFullySupported := false;
+              if TOffer(Data).Price[I] = opTreaty + trCeaseFire then
+                OfferFullySupported := False;
               // ceasefire no more part of the game
             end;
             if not OfferFullySupported then
@@ -3558,17 +3558,17 @@ begin
                 end;
               LastOffer := TOffer(Data);
               // show offered things to receiver
-              for i := 0 to LastOffer.nDeliver - 1 do
-                ShowPrice(pDipActive, p1, LastOffer.Price[i]);
+              for I := 0 to LastOffer.nDeliver - 1 do
+                ShowPrice(pDipActive, p1, LastOffer.Price[I]);
               pDipActive := p1;
-              assert(Mode = moPlaying);
+              Assert(Mode = moPlaying);
               ChangeClientWhenDone(scDipOffer, pDipActive, LastOffer,
                 SizeOf(LastOffer));
             end;
           end;
         end
       else
-        result := eInvalid;
+        Result := eInvalid;
 
     {
       General Commands
@@ -3581,7 +3581,7 @@ begin
         ClearTestFlags(Subject);
       end
       else
-        result := eInvalid;
+        Result := eInvalid;
 
     sSetTestFlag:
       if Player = 0 then
@@ -3591,20 +3591,20 @@ begin
         // CheckContact;
       end
       else
-        result := eInvalid;
+        Result := eInvalid;
 
     sSetGovernment, sSetGovernment - sExecute:
       begin
 {$IFDEF TEXTLOG}CmdInfo := Format('SetGovernment P%d: %d', [Player, Subject]); {$ENDIF}
         if RW[Player].Happened and phChangeGov = 0 then
-          result := eViolation
+          Result := eViolation
         else if RW[Player].Government = Subject then
-          result := eNotChanged
+          Result := eNotChanged
         else if (Subject >= nGov) then
-          result := eInvalid
+          Result := eInvalid
         else if (Subject >= gMonarchy) and
           (RW[Player].Tech[GovPreq[Subject]] < tsApplicable) then
-          result := eNoPreq
+          Result := eNoPreq
         else if Command >= sExecute then
         begin
           RW[Player].Government := Subject;
@@ -3619,10 +3619,10 @@ begin
       begin
 {$IFDEF TEXTLOG}CmdInfo := Format('SetRates P%d: %d/%d', [Player, Subject and $F * 10, Subject shr 4 * 10]); {$ENDIF}
         if Subject and $F + Subject shr 4 > 10 then
-          result := eInvalid
+          Result := eInvalid
         else if (RW[Player].TaxRate = Subject and $F * 10) and
           (RW[Player].LuxRate = Subject shr 4 * 10) then
-          result := eNotChanged
+          Result := eNotChanged
         else if Command >= sExecute then
         begin
           RW[Player].TaxRate := Subject and $F * 10;
@@ -3634,7 +3634,7 @@ begin
       begin
 {$IFDEF TEXTLOG}CmdInfo := Format('Revolution P%d', [Player]); {$ENDIF}
         if RW[Player].Government = gAnarchy then
-          result := eInvalid
+          Result := eInvalid
         else
         begin
           RW[Player].Government := gAnarchy;
@@ -3656,38 +3656,38 @@ begin
         begin
           if (Mode = moPlaying) and (Subject = adMilitary) and
             (DevModelTurn[Player] <> GTurn) then
-            result := eNoModel
+            Result := eNoModel
           else if Subject <> adMilitary then
           begin
             if Subject = futComputingTechnology then
             begin
               if Tech[Subject] >= MaxFutureTech_Computing then
-                result := eInvalid;
+                Result := eInvalid;
             end
             else if Subject in FutureTech then
             begin
               if Tech[Subject] >= MaxFutureTech then
-                result := eInvalid;
+                Result := eInvalid;
             end
             else if Tech[Subject] >= tsApplicable then
-              result := eInvalid; // already discovered
+              Result := eInvalid; // already discovered
             if Tech[Subject] <> tsSeen then // look if preqs met
               if AdvPreq[Subject, 2] <> preNone then
               begin // 2 of 3 required
-                i := 0;
-                for j := 0 to 2 do
-                  if Tech[AdvPreq[Subject, j]] >= tsApplicable then
-                    inc(i);
-                if i < 2 then
-                  result := eNoPreq;
+                I := 0;
+                for J := 0 to 2 do
+                  if Tech[AdvPreq[Subject, J]] >= tsApplicable then
+                    Inc(I);
+                if I < 2 then
+                  Result := eNoPreq;
               end
               else if (AdvPreq[Subject, 0] <> preNone) and
                 (Tech[AdvPreq[Subject, 0]] < tsApplicable) or
                 (AdvPreq[Subject, 1] <> preNone) and
                 (Tech[AdvPreq[Subject, 1]] < tsApplicable) then
-                result := eNoPreq;
+                Result := eNoPreq;
           end;
-          if (result = eOK) and (Command >= sExecute) then
+          if (Result = eOK) and (Command >= sExecute) then
           begin
             if (Mode = moPlaying) and (Subject = adMilitary) then
               IntServer(sIntSetDevModel, Player, 0, DevModel.Kind);
@@ -3696,7 +3696,7 @@ begin
           end;
         end
         else
-          result := eViolation;
+          Result := eViolation;
       end;
 
     sStealTech, sStealTech - sExecute:
@@ -3704,15 +3704,15 @@ begin
 {$IFDEF TEXTLOG}CmdInfo := Format('StealTech P%d: %d', [Player, Subject]);
         {$ENDIF}
         if RW[Player].Happened and phStealTech = 0 then
-          result := eInvalid
+          Result := eInvalid
         else if (Subject >= nAdv) or (Subject in FutureTech) or
           (RW[Player].Tech[Subject] >= tsSeen) or
           (RW[GStealFrom].Tech[Subject] < tsApplicable) then
-          result := eInvalid
+          Result := eInvalid
         else if Command >= sExecute then
         begin
           SeeTech(Player, Subject);
-          dec(RW[Player].Happened, phStealTech);
+          Dec(RW[Player].Happened, phStealTech);
         end;
       end;
 
@@ -3723,11 +3723,11 @@ begin
 {$IFDEF TEXTLOG}CmdInfo := Format('SetAttitude P%d to P%d: %d', [Player, p1, Subject]); {$ENDIF}
         if (Subject >= nAttitude) or (p1 >= nPl) or
           (RW[Player].EnemyReport[p1] = nil) then
-          result := eInvalid
+          Result := eInvalid
         else if RW[Player].Treaty[p1] = trNoContact then
-          result := eNoPreq
+          Result := eNoPreq
         else if RW[Player].Attitude[p1] = Subject then
-          result := eNotChanged
+          Result := eNotChanged
         else if Command >= sExecute then
         begin
           RW[Player].Attitude[p1] := Subject;
@@ -3738,11 +3738,11 @@ begin
     sCancelTreaty, sCancelTreaty - sExecute:
       if (LastEndClientCommand <> scReject) or
         (RW[Player].Treaty[pContacted] < trPeace) then
-        result := eInvalid
+        Result := eInvalid
       else if (ServerVersion[Player] >= $010100) and
         (GTurn < RW[Player].LastCancelTreaty[pContacted] + CancelTreatyTurns)
       then
-        result := eCancelTreatyRush
+        Result := eCancelTreatyRush
       else if Command >= sExecute then
       begin
         CallPlayer(cShowCancelTreaty, pContacted, Player);
@@ -3750,14 +3750,14 @@ begin
         for p2 := 0 to nPl - 1 do
           if (p2 <> pContacted) and (1 shl p2 and PeaceEnded <> 0) then
           begin
-            i := pContacted shl 4 + Player;
-            CallPlayer(cShowSupportAllianceAgainst, p2, i);
+            I := pContacted shl 4 + Player;
+            CallPlayer(cShowSupportAllianceAgainst, p2, I);
           end;
         for p2 := 0 to nPl - 1 do
           if (p2 <> pContacted) and (1 shl p2 and PeaceEnded <> 0) then
           begin
-            i := p2;
-            CallPlayer(cShowCancelTreatyByAlliance, Player, i);
+            I := p2;
+            CallPlayer(cShowCancelTreatyByAlliance, Player, I);
           end;
         LastEndClientCommand := sTurn;
       end;
@@ -3770,10 +3770,10 @@ begin
       begin
 {$IFDEF TEXTLOG}CmdInfo := Format('CreateDevModel P%d', [Player]); {$ENDIF}
         if Subject >= 4 then
-          result := eInvalid
+          Result := eInvalid
         else if (upgrade[Subject, 0].Preq <> preNone) and
           (RW[Player].Tech[upgrade[Subject, 0].Preq] < tsApplicable) then
-          result := eNoPreq
+          Result := eNoPreq
         else if Command >= sExecute then
         begin
           with RW[Player].DevModel do
@@ -3784,39 +3784,39 @@ begin
             MCost := 0;
             Upgrades := 0;
             FutureMCost := 0;
-            for i := 0 to nUpgrade - 1 do
-              with upgrade[Domain, i] do
+            for I := 0 to nUpgrade - 1 do
+              with upgrade[Domain, I] do
                 if (Preq = preNone) or (Preq >= 0) and
                   ((RW[Player].Tech[Preq] >= tsApplicable) or
                   (Preq in FutureTech) and (RW[Player].Tech[Preq] >= 0)) then
                 begin
                   if Preq in FutureTech then
                   begin
-                    j := RW[Player].Tech[Preq];
-                    inc(FutureMCost, j * Cost);
+                    J := RW[Player].Tech[Preq];
+                    Inc(FutureMCost, J * Cost);
                   end
                   else
                   begin
-                    j := 1;
+                    J := 1;
                     if Cost > MCost then
                       MCost := Cost;
                   end;
-                  inc(Upgrades, 1 shl i);
-                  inc(MStrength, j * Strength);
-                  inc(MTrans, j * Trans);
+                  Inc(Upgrades, 1 shl I);
+                  Inc(MStrength, J * Strength);
+                  Inc(MTrans, J * Trans);
                 end;
-            inc(MCost, FutureMCost);
+            Inc(MCost, FutureMCost);
             FillChar(Cap, SizeOf(Cap), 0);
             Cap[mcOffense] := 2;
             Cap[mcDefense] := 1;
-            for i := 0 to nFeature - 1 do
-              with Feature[i] do
+            for I := 0 to nFeature - 1 do
+              with Feature[I] do
                 if (1 shl Domain and Domains <> 0) and
                   ((Preq = preNone) or (Preq = preSun) and
                   (GWonder[woSun].EffectiveOwner = Player) or (Preq >= 0) and
-                  (RW[Player].Tech[Preq] >= tsApplicable)) and (i in AutoFeature)
+                  (RW[Player].Tech[Preq] >= tsApplicable)) and (I in AutoFeature)
                 then
-                  Cap[i] := 1;
+                  Cap[I] := 1;
             MaxWeight := 5;
             if (WeightPreq7[Domain] <> preNA) and
               (RW[Player].Tech[WeightPreq7[Domain]] >= tsApplicable) then
@@ -3838,19 +3838,19 @@ begin
       begin
 {$IFDEF TEXTLOG}CmdInfo := Format('SetDevModelCap P%d', [Player]); {$ENDIF}
         if Subject >= nFeature then
-          result := eInvalid
+          Result := eInvalid
         else if DevModelTurn[Player] = GTurn then
         begin
           NewCap := Command shr 4 and $3F; { new value }
           with RW[Player].DevModel do
             if 1 shl Domain and Feature[Subject].Domains = 0 then
-              result := eDomainMismatch
+              Result := eDomainMismatch
             else if not((Feature[Subject].Preq = preNone) or
               (Feature[Subject].Preq = preSun) and
               (GWonder[woSun].EffectiveOwner = Player) or
               (Feature[Subject].Preq >= 0) and
               (RW[Player].Tech[Feature[Subject].Preq] >= tsApplicable)) then
-              result := eNoPreq
+              Result := eNoPreq
             else
             begin
               if (Subject in AutoFeature) or (Subject = mcDefense) then
@@ -3866,7 +3866,7 @@ begin
                 else
                   MaxCap := 3;
                 if RW[Player].Tech[adSteel] >= tsApplicable then
-                  inc(MaxCap);
+                  Inc(MaxCap);
               end
               else
                 MaxCap := 8; { MaxCap - maximum use of this feature }
@@ -3876,7 +3876,7 @@ begin
                 CapWeight := Feature[Subject].Weight;
               if (NewCap < MinCap) or (NewCap > MaxCap) or
                 (Weight + (NewCap - Cap[Subject]) * CapWeight > MaxWeight) then
-                result := eViolation
+                Result := eViolation
               else if Command >= sExecute then
               begin
                 Cap[Subject] := NewCap;
@@ -3919,7 +3919,7 @@ begin
             end;
         end
         else
-          result := eNoModel;
+          Result := eNoModel;
       end;
 
     {
@@ -3930,10 +3930,10 @@ begin
       begin
 {$IFDEF TEXTLOG}CmdInfo := Format('RemoveUnit P%d Mod%d Loc%d', [Player, RW[Player].Un[Subject].mix, RW[Player].Un[Subject].Loc]); {$ENDIF}
         if (Subject >= RW[Player].nUn) or (RW[Player].Un[Subject].Loc < 0) then
-          result := eInvalid
+          Result := eInvalid
         else
         begin
-          result := eRemoved;
+          Result := eRemoved;
           Loc0 := RW[Player].Un[Subject].Loc;
           if RealMap[Loc0] and fCity <> 0 then { check utilize }
           begin
@@ -3945,23 +3945,23 @@ begin
                 (Imp[Project and cpIndex].Kind <> ikShipPart)) or
                 (Project and cpImp = 0) and
                 (RW[Player].Model[Project and cpIndex].Kind <> mkCaravan) then
-                result := eUtilized;
+                Result := eUtilized;
               if Command >= sExecute then
               begin
-                if result = eUtilized then
+                if Result = eUtilized then
                 begin
                   with RW[Player].Un[Subject] do
                   begin
-                    Cost := integer(RW[Player].Model[mix].Cost) * Health *
+                    Cost := Integer(RW[Player].Model[mix].Cost) * Health *
                       BuildCostMod[Difficulty[Player]] div 1200;
                     if RW[Player].Model[mix].Cap[mcLine] > 0 then
                       Cost := Cost div 2;
                   end;
                   if Project and (cpImp + cpIndex) = cpImp + imTrGoods then
-                    inc(RW[Player].Money, Cost)
+                    Inc(RW[Player].Money, Cost)
                   else
                   begin
-                    inc(Prod, Cost * 2 div 3);
+                    Inc(Prod, Cost * 2 div 3);
                     Project0 := Project0 and not cpCompleted;
                     if Project0 and not cpAuto <> Project and not cpAuto then
                       Project0 := Project;
@@ -3981,17 +3981,17 @@ begin
       begin
 {$IFDEF TEXTLOG}CmdInfo := Format('SetUnitHome P%d Mod%d Loc%d', [Player, RW[Player].Un[Subject].mix, RW[Player].Un[Subject].Loc]); {$ENDIF}
         if (Subject >= RW[Player].nUn) or (RW[Player].Un[Subject].Loc < 0) then
-          result := eInvalid
+          Result := eInvalid
         else
         begin
           Loc0 := RW[Player].Un[Subject].Loc;
           if RealMap[Loc0] and fCity = 0 then
-            result := eInvalid
+            Result := eInvalid
           else
           begin
             SearchCity(Loc0, Player, cix1);
             if RW[Player].City[cix1].Flags and chCaptured <> 0 then
-              result := eViolation
+              Result := eViolation
             else if Command >= sExecute then
               RW[Player].Un[Subject].Home := cix1;
           end;
@@ -4008,28 +4008,28 @@ begin
       begin
 {$IFDEF TEXTLOG}CmdInfo := Format('LoadUnit P%d Mod%d Loc%d', [Player, RW[Player].Un[Subject].mix, RW[Player].Un[Subject].Loc]); {$ENDIF}
         if (Subject >= RW[Player].nUn) or (RW[Player].Un[Subject].Loc < 0) then
-          result := eInvalid
+          Result := eInvalid
         else
-          result := LoadUnit(Player, Subject, Command < sExecute);
+          Result := LoadUnit(Player, Subject, Command < sExecute);
       end;
 
     sUnloadUnit, sUnloadUnit - sExecute:
       begin
 {$IFDEF TEXTLOG}CmdInfo := Format('UnloadUnit P%d Mod%d Loc%d', [Player, RW[Player].Un[Subject].mix, RW[Player].Un[Subject].Loc]); {$ENDIF}
         if (Subject >= RW[Player].nUn) or (RW[Player].Un[Subject].Loc < 0) then
-          result := eInvalid
+          Result := eInvalid
         else
-          result := UnloadUnit(Player, Subject, Command < sExecute);
+          Result := UnloadUnit(Player, Subject, Command < sExecute);
       end;
 
     sSelectTransport, sSelectTransport - sExecute:
       if (Subject >= RW[Player].nUn) or (RW[Player].Un[Subject].Loc < 0) then
-        result := eInvalid
+        Result := eInvalid
       else
         with RW[Player].Model[RW[Player].Un[Subject].mix] do
         begin
           if Cap[mcSeaTrans] + Cap[mcAirTrans] + Cap[mcCarrier] = 0 then
-            result := eInvalid
+            Result := eInvalid
           else if Command >= sExecute then
             uixSelectedTransport := Subject;
         end;
@@ -4040,24 +4040,24 @@ begin
       then { supervisor only command }
       begin
         p1 := Command shr 4 and $F;
-        Loc1 := integer(Data);
+        Loc1 := Integer(Data);
         if (Occupant[Loc1] >= 0) and (p1 <> Occupant[Loc1]) or
           (RealMap[Loc1] and fCity <> 0) and
           (RealMap[Loc1] shr 27 <> Cardinal(p1)) or
           (RW[p1].Model[Subject].Domain < dAir) and
-          ((RW[p1].Model[Subject].Domain = dSea) <> (RealMap[integer(Data)] and
+          ((RW[p1].Model[Subject].Domain = dSea) <> (RealMap[Integer(Data)] and
           fTerrain < fGrass)) then
-          result := eViolation
+          Result := eViolation
         else if Command >= sExecute then
         begin
           CreateUnit(p1, Subject);
-          RW[p1].Un[RW[p1].nUn - 1].Loc := integer(Data);
+          RW[p1].Un[RW[p1].nUn - 1].Loc := Integer(Data);
           PlaceUnit(p1, RW[p1].nUn - 1);
-          UpdateUnitMap(integer(Data));
+          UpdateUnitMap(Integer(Data));
         end;
       end
       else
-        result := eInvalid;
+        Result := eInvalid;
 
     sMoveUnit + (0 + 6 * 8) * 16, sMoveUnit + (1 + 7 * 8) * 16,
       sMoveUnit + (2 + 0 * 8) * 16, sMoveUnit + (1 + 1 * 8) * 16,
@@ -4074,9 +4074,9 @@ begin
         dy := (Command shr 7 + 4) and 7 - 4;
 {$IFDEF TEXTLOG}CmdInfo := Format('MoveUnit P%d I%d Mod%d Loc%d (%d,%d)', [Player, Subject, RW[Player].Un[Subject].mix, RW[Player].Un[Subject].Loc, dx, dy]); {$ENDIF}
         if (Subject >= RW[Player].nUn) or (RW[Player].Un[Subject].Loc < 0) then
-          result := eInvalid
+          Result := eInvalid
         else
-          result := MoveUnit(Player, Subject, dx, dy, Command < sExecute);
+          Result := MoveUnit(Player, Subject, dx, dy, Command < sExecute);
       end;
 
     {
@@ -4087,22 +4087,22 @@ begin
       begin
 {$IFDEF TEXTLOG}CmdInfo := Format('AddToCity P%d Mod%d Loc%d', [Player, RW[Player].Un[Subject].mix, RW[Player].Un[Subject].Loc]); {$ENDIF}
         if (Subject >= RW[Player].nUn) or (RW[Player].Un[Subject].Loc < 0) then
-          result := eInvalid
+          Result := eInvalid
         else if not(RW[Player].Model[RW[Player].Un[Subject].mix].Kind
           in [mkSettler, mkSlaves]) and
           (RW[Player].Un[Subject].Flags and unConscripts = 0) then
-          result := eViolation
+          Result := eViolation
         else
         begin
           Loc0 := RW[Player].Un[Subject].Loc;
           if RealMap[Loc0] and fCity = 0 then
-            result := eInvalid
+            Result := eInvalid
           else
           begin
             SearchCity(Loc0, Player, cix1);
             with RW[Player].City[cix1] do
               if not CanCityGrow(Player, cix1) then
-                result := eMaxSize
+                Result := eMaxSize
               else if Command >= sExecute then
               begin { add to city }
                 if Mode = moPlaying then
@@ -4122,16 +4122,16 @@ begin
       - sExecute:
       begin
         Loc0 := RW[Player].Un[Subject].Loc;
-        i := Command shr 4 and $3F; // new job
-{$IFDEF TEXTLOG}CmdInfo := Format('StartJob P%d Mod%d Loc%d: %d', [Player, RW[Player].Un[Subject].mix, Loc0, i]); {$ENDIF}
+        I := Command shr 4 and $3F; // new job
+{$IFDEF TEXTLOG}CmdInfo := Format('StartJob P%d Mod%d Loc%d: %d', [Player, RW[Player].Un[Subject].mix, Loc0, I]); {$ENDIF}
         if (Subject >= RW[Player].nUn) or (Loc0 < 0) then
-          result := eInvalid
-        else if i >= nJob then
-          result := eInvalid
+          Result := eInvalid
+        else if I >= nJob then
+          Result := eInvalid
         else
         begin
-          result := StartJob(Player, Subject, i, Command < sExecute);
-          if result = eCity then
+          Result := StartJob(Player, Subject, I, Command < sExecute);
+          if Result = eCity then
           begin // new city
             cix1 := RW[Player].nCity - 1;
             AddBestCityTile(Player, cix1);
@@ -4156,16 +4156,16 @@ begin
     }
     sSetCityProject, sSetCityProject - sExecute:
       begin
-        NewProject := integer(Data) and not cpAuto;
+        NewProject := Integer(Data) and not cpAuto;
 {$IFDEF TEXTLOG}CmdInfo := Format('SetCityProject P%d Loc%d: %d', [Player, RW[Player].City[Subject].Loc, NewProject]); {$ENDIF}
         if (Subject >= RW[Player].nCity) or (RW[Player].City[Subject].Loc < 0)
         then
-          result := eInvalid
+          Result := eInvalid
         else
           with RW[Player].City[Subject] do
           begin
             if NewProject = Project then
-              result := eNotChanged
+              Result := eNotChanged
             else
             begin
               pt0 := ProjectType(Project0);
@@ -4173,46 +4173,46 @@ begin
               if NewProject and cpImp = 0 then
               begin
                 if NewProject and cpIndex >= RW[Player].nModel then
-                  result := eInvalid
+                  Result := eInvalid
                 else if (NewProject and cpConscripts <> 0) and
                   not((RW[Player].Tech[adConscription] >= tsApplicable) and
                   (RW[Player].Model[NewProject and cpIndex].Domain = dGround)
                   and (RW[Player].Model[NewProject and cpIndex].Kind < mkScout))
                 then
-                  result := eViolation
+                  Result := eViolation
                   // else if (RW[Player].Model[NewProject and cpIndex].Kind=mkSlaves)
                   // and (GWonder[woPyramids].EffectiveOwner<>Player) then
                   // result:=eNoPreq
               end
               else if NewProject and cpIndex >= nImp then
-                result := eInvalid
+                Result := eInvalid
               else
               begin
                 Preq := Imp[NewProject and cpIndex].Preq;
-                for i := 0 to nImpReplacement - 1 do
-                  if (ImpReplacement[i].OldImp = NewProject and cpIndex) and
-                    (built[ImpReplacement[i].NewImp] > 0) then
-                    result := eObsolete;
-                if result = eObsolete then
+                for I := 0 to nImpReplacement - 1 do
+                  if (ImpReplacement[I].OldImp = NewProject and cpIndex) and
+                    (built[ImpReplacement[I].NewImp] > 0) then
+                    Result := eObsolete;
+                if Result = eObsolete then
                 else if Preq = preNA then
-                  result := eInvalid
+                  Result := eInvalid
                 else if (Preq >= 0) and (RW[Player].Tech[Preq] < tsApplicable)
                 then
-                  result := eNoPreq
+                  Result := eNoPreq
                 else if built[NewProject and cpIndex] > 0 then
-                  result := eInvalid
+                  Result := eInvalid
                 else if (NewProject and cpIndex < nWonder) and
                   (GWonder[NewProject and cpIndex].CityID <> WonderNotBuiltYet) then
-                  result := eViolation // wonder already exists
+                  Result := eViolation // wonder already exists
                 else if (NewProject and cpIndex = imSpacePort) and
                   (RW[Player].NatBuilt[imSpacePort] > 0) then
-                  result := eViolation // space port already exists
+                  Result := eViolation // space port already exists
                 else if (NewProject = cpImp + imBank) and (built[imMarket] = 0)
                   or (NewProject = cpImp + imUniversity) and
                   (built[imLibrary] = 0) or (NewProject = cpImp + imResLab) and
                   (built[imUniversity] = 0) or (NewProject = cpImp + imMfgPlant)
                   and (built[imFactory] = 0) then
-                  result := eNoPreq;
+                  Result := eNoPreq;
                 case NewProject - cpImp of
                   woLighthouse, woMagellan, imCoastalFort, imHarbor, imPlatform:
                     begin { city at ocean? }
@@ -4223,10 +4223,10 @@ begin
                         Loc1 := Adjacent[V8];
                         if (Loc1 >= 0) and (Loc1 < MapSize) and
                           (RealMap[Loc1] and fTerrain = fShore) then
-                          inc(Preq);
+                          Inc(Preq);
                       end;
                       if Preq = 0 then
-                        result := eNoPreq;
+                        Result := eNoPreq;
                     end;
                   woHoover, imHydro:
                     begin { city at river or mountains? }
@@ -4238,27 +4238,27 @@ begin
                         if (Loc1 >= 0) and (Loc1 < MapSize) and
                           ((RealMap[Loc1] and fTerrain = fMountains) or
                           (RealMap[Loc1] and fRiver <> 0)) then
-                          inc(Preq);
+                          Inc(Preq);
                       end;
                       if Preq = 0 then
-                        result := eNoPreq;
+                        Result := eNoPreq;
                     end;
                   woMIR, imShipComp, imShipPow, imShipHab:
                     if RW[Player].NatBuilt[imSpacePort] = 0 then
-                      result := eNoPreq;
+                      Result := eNoPreq;
                 end;
                 if (GTestFlags and tfNoRareNeed = 0) and
                   (Imp[NewProject and cpIndex].Kind = ikShipPart) then
                   if RW[Player].Tech[adMassProduction] < tsApplicable then
-                    result := eNoPreq
+                    Result := eNoPreq
                   else
                   begin // check for rare resources
                     if NewProject and cpIndex = imShipComp then
-                      j := 1
+                      J := 1
                     else if NewProject and cpIndex = imShipPow then
-                      j := 2
+                      J := 2
                     else { if NewProject and cpIndex=imShipHab then }
-                      j := 3;
+                      J := 3;
                     // j = rare resource required
                     Preq := 0;
                     V21_to_Loc(Loc, Radius);
@@ -4266,15 +4266,15 @@ begin
                     begin
                       Loc1 := Radius[V21];
                       if (Loc1 >= 0) and (Loc1 < MapSize) and
-                        (RealMap[Loc1] shr 25 and 3 = Cardinal(j)) then
-                        inc(Preq);
+                        (RealMap[Loc1] shr 25 and 3 = Cardinal(J)) then
+                        Inc(Preq);
                     end;
                     if Preq = 0 then
-                      result := eNoPreq;
+                      Result := eNoPreq;
                   end;
               end;
 
-              if (Command >= sExecute) and (result >= rExecuted) then
+              if (Command >= sExecute) and (Result >= rExecuted) then
               begin
                 if pt0 <> ptSelect then
                   if NewProject and (cpImp or cpIndex) = Project0 and
@@ -4283,14 +4283,14 @@ begin
                   else if (pt1 = ptTrGoods) or (pt1 = ptShip) or (pt1 <> pt0)
                     and (pt0 <> ptCaravan) then
                   begin
-                    inc(RW[Player].Money, Prod0);
+                    Inc(RW[Player].Money, Prod0);
                     Prod := 0;
                     Prod0 := 0;
                     Project0 := cpImp + imTrGoods;
                   end
                   else
                     Prod := Prod0 * 2 div 3;
-                Project := NewProject
+                Project := NewProject;
               end;
             end;
           end;
@@ -4301,16 +4301,16 @@ begin
 {$IFDEF TEXTLOG}CmdInfo := Format('BuyCityProject P%d Loc%d', [Player, RW[Player].City[Subject].Loc]); {$ENDIF}
         if (Subject >= RW[Player].nCity) or (RW[Player].City[Subject].Loc < 0)
         then
-          result := eInvalid
+          Result := eInvalid
         else
           with RW[Player].City[Subject] do
             if (RW[Player].Government = gAnarchy) or (Flags and chCaptured <> 0)
             then
-              result := eOutOfControl
+              Result := eOutOfControl
             else if (Project and cpImp <> 0) and
               ((Project and cpIndex = imTrGoods) or
               (Imp[Project and cpIndex].Kind = ikShipPart)) then
-              result := eInvalid // don't buy colony ship
+              Result := eInvalid // don't buy colony ship
             else
             begin
               CityReport.HypoTiles := -1;
@@ -4329,9 +4329,9 @@ begin
               else
                 Cost := Cost * 4;
               if Cost <= 0 then
-                result := eNotChanged
+                Result := eNotChanged
               else if Cost > RW[Player].Money then
-                result := eViolation
+                Result := eViolation
               else if Command >= sExecute then
                 IntServer(sIntBuyMaterial, Player, Subject, Cost);
               // need to save material/cost because city tiles are not correct
@@ -4344,11 +4344,11 @@ begin
 {$IFDEF TEXTLOG}CmdInfo := Format('SellCityProject P%d Loc%d', [Player, RW[Player].City[Subject].Loc]); {$ENDIF}
         if (Subject >= RW[Player].nCity) or (RW[Player].City[Subject].Loc < 0)
         then
-          result := eInvalid
+          Result := eInvalid
         else if Command >= sExecute then
           with RW[Player].City[Subject] do
           begin
-            inc(RW[Player].Money, Prod0);
+            Inc(RW[Player].Money, Prod0);
             Prod := 0;
             Prod0 := 0;
           end;
@@ -4356,64 +4356,64 @@ begin
 
     sSellCityImprovement, sSellCityImprovement - sExecute:
       begin
-{$IFDEF TEXTLOG}CmdInfo := Format('SellCityImprovement P%d Loc%d: %d', [Player, RW[Player].City[Subject].Loc, integer(Data)]); {$ENDIF}
+{$IFDEF TEXTLOG}CmdInfo := Format('SellCityImprovement P%d Loc%d: %d', [Player, RW[Player].City[Subject].Loc, Integer(Data)]); {$ENDIF}
         if (Subject >= RW[Player].nCity) or (RW[Player].City[Subject].Loc < 0)
         then
-          result := eInvalid
+          Result := eInvalid
         else
           with RW[Player].City[Subject] do
-            if built[integer(Data)] = 0 then
-              result := eInvalid
+            if built[Integer(Data)] = 0 then
+              Result := eInvalid
             else if (RW[Player].Government = gAnarchy) or
               (Flags and chCaptured <> 0) then
-              result := eOutOfControl
+              Result := eOutOfControl
             else if Flags and chImprovementSold <> 0 then
-              result := eOnlyOnce
+              Result := eOnlyOnce
             else if Command >= sExecute then
             begin
-              inc(RW[Player].Money, Imp[integer(Data)].Cost * BuildCostMod
+              Inc(RW[Player].Money, Imp[Integer(Data)].Cost * BuildCostMod
                 [Difficulty[Player]] div 12);
-              built[integer(Data)] := 0;
-              if Imp[integer(Data)].Kind in [ikNatLocal, ikNatGlobal] then
+              built[Integer(Data)] := 0;
+              if Imp[Integer(Data)].Kind in [ikNatLocal, ikNatGlobal] then
               begin
-                RW[Player].NatBuilt[integer(Data)] := 0;
-                case integer(Data) of
+                RW[Player].NatBuilt[Integer(Data)] := 0;
+                case Integer(Data) of
                   imGrWall:
                     GrWallContinent[Player] := -1;
                   imSpacePort:
                     DestroySpacePort_TellPlayers(Player, -1);
                 end;
               end;
-              inc(Flags, chImprovementSold);
+              Inc(Flags, chImprovementSold);
             end;
       end;
 
     sRebuildCityImprovement, sRebuildCityImprovement - sExecute:
       begin
-        OldImp := integer(Data);
+        OldImp := Integer(Data);
 {$IFDEF TEXTLOG}CmdInfo := Format('RebuildCityImprovement P%d Loc%d: %d', [Player, RW[Player].City[Subject].Loc, OldImp]); {$ENDIF}
         if (Subject >= RW[Player].nCity) or (RW[Player].City[Subject].Loc < 0)
         then
-          result := eInvalid
+          Result := eInvalid
         else
         begin
           if (OldImp < 0) or (OldImp >= nImp) or
             not(Imp[OldImp].Kind in [ikCommon, ikNatLocal, ikNatGlobal]) then
-            result := eInvalid
+            Result := eInvalid
           else
             with RW[Player].City[Subject] do
               if (built[OldImp] = 0) or (Project and cpImp = 0) or
                 not(Imp[Project and cpIndex].Kind in [ikCommon, ikNatLocal,
                 ikNatGlobal]) then
-                result := eInvalid
+                Result := eInvalid
               else if (RW[Player].Government = gAnarchy) or
                 (Flags and chCaptured <> 0) then
-                result := eOutOfControl
+                Result := eOutOfControl
               else if Flags and chImprovementSold <> 0 then
-                result := eOnlyOnce
+                Result := eOnlyOnce
               else if Command >= sExecute then
               begin
-                inc(Prod, Imp[OldImp].Cost * BuildCostMod[Difficulty[Player]]
+                Inc(Prod, Imp[OldImp].Cost * BuildCostMod[Difficulty[Player]]
                   div 12 * 2 div 3);
                 Project0 := Project0 and not cpCompleted;
                 if Project0 and not cpAuto <> Project and not cpAuto then
@@ -4430,19 +4430,19 @@ begin
                       DestroySpacePort_TellPlayers(Player, -1);
                   end;
                 end;
-                inc(Flags, chImprovementSold);
+                Inc(Flags, chImprovementSold);
               end;
         end;
       end;
 
     sSetCityTiles, sSetCityTiles - sExecute:
       begin
-{$IFDEF TEXTLOG}CmdInfo := Format('SetCityTiles P%d Loc%d: %x', [Player, RW[Player].City[Subject].Loc, integer(Data)]); {$ENDIF}
+{$IFDEF TEXTLOG}CmdInfo := Format('SetCityTiles P%d Loc%d: %x', [Player, RW[Player].City[Subject].Loc, Integer(Data)]); {$ENDIF}
         if (Subject >= RW[Player].nCity) or (RW[Player].City[Subject].Loc < 0)
         then
-          result := eInvalid
+          Result := eInvalid
         else
-          result := SetCityTiles(Player, Subject, integer(Data),
+          Result := SetCityTiles(Player, Subject, Integer(Data),
             Command < sExecute);
       end;
 
@@ -4459,36 +4459,36 @@ begin
         CallPlayer(Command, Player, Data)
     end
     else
-      result := eUnknown;
+      Result := eUnknown;
   end; { case command }
 
   // do not log invalid and non-relevant commands
-  if result = eZOC_EnemySpotted then
+  if Result = eZOC_EnemySpotted then
   begin
-    assert(Mode = moPlaying);
+    Assert(Mode = moPlaying);
     CL.State := FormerCLState;
     IntServer(sIntDiscoverZOC, Player, 0, ZOCTile);
   end
-  else if result and rEffective = 0 then
+  else if Result and rEffective = 0 then
     if Mode < moPlaying then
     begin
-{$IFDEF TEXTLOG}CmdInfo := Format('***ERROR (%x) ', [result]) + CmdInfo;
+{$IFDEF TEXTLOG}CmdInfo := Format('***ERROR (%x) ', [Result]) + CmdInfo;
       {$ENDIF}
-      LoadOK := false;
+      LoadOK := False;
     end
     else
     begin
       if logged then
         CL.State := FormerCLState;
-      if (result < rExecuted) and (Command >= sExecute) then
+      if (Result < rExecuted) and (Command >= sExecute) then
         PutMessage(1 shl 16 + 1, Format('INVALID: %d calls %x (%d)',
           [Player, Command, Subject]));
     end;
 
   if (Command and (cClientEx or sExecute or sctMask) = sExecute or sctEndClient)
-    and (result >= rExecuted) then
+    and (Result >= rExecuted) then
     LastEndClientCommand := Command;
-{$IFOPT O-}dec(nHandoverStack, 2); {$ENDIF}
+{$IFOPT O-}Dec(nHandoverStack, 2); {$ENDIF}
 end;
 
 

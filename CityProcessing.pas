@@ -7,27 +7,27 @@ uses
   Protocol, Database;
 
 // Reporting
-procedure GetCityAreaInfo(p, Loc: integer; var CityAreaInfo: TCityAreaInfo);
-function CanCityGrow(p, cix: integer): boolean;
-function GetCityReport(p, cix: integer; var CityReport: TCityReport): integer;
-function GetCityReportNew(p, cix: integer;
-  var CityReportNew: TCityReportNew): integer;
+procedure GetCityAreaInfo(P, Loc: Integer; var CityAreaInfo: TCityAreaInfo);
+function CanCityGrow(P, cix: Integer): Boolean;
+function GetCityReport(P, cix: Integer; var CityReport: TCityReport): Integer;
+function GetCityReportNew(P, cix: Integer;
+  var CityReportNew: TCityReportNew): Integer;
 
 // Internal Tile Picking
-function AddBestCityTile(p, cix: integer): boolean;
-procedure CityGrowth(p, cix: integer);
-procedure CityShrink(p, cix: integer);
-procedure Pollute(p, cix: integer);
+function AddBestCityTile(P, cix: Integer): Boolean;
+procedure CityGrowth(P, cix: Integer);
+procedure CityShrink(P, cix: Integer);
+procedure Pollute(P, cix: Integer);
 
 // Turn Processing
-procedure PayCityMaintenance(p, cix: integer);
-procedure CollectCityResources(p, cix: integer);
-function CityTurn(p, cix: integer): boolean;
+procedure PayCityMaintenance(P, cix: Integer);
+procedure CollectCityResources(P, cix: Integer);
+function CityTurn(P, cix: Integer): Boolean;
 
 // Tile Access
-function SetCityTiles(p, cix, NewTiles: integer;
-  TestOnly: boolean = false): integer;
-procedure GetCityTileAdvice(p, cix: integer; var Advice: TCityTileAdviceData);
+function SetCityTiles(P, cix, NewTiles: Integer;
+  TestOnly: Boolean = False): Integer;
+procedure GetCityTileAdvice(P, cix: Integer; var Advice: TCityTileAdviceData);
 
 // Start/End Game
 procedure InitGame;
@@ -66,18 +66,18 @@ type
   end;
 
 var
-  MaxDist: integer;
+  MaxDist: Integer;
 
 {
   Reporting
   ____________________________________________________________________
 }
-procedure GetCityAreaInfo(p, Loc: integer; var CityAreaInfo: TCityAreaInfo);
+procedure GetCityAreaInfo(P, Loc: Integer; var CityAreaInfo: TCityAreaInfo);
 var
-  V21, Loc1, p1: integer;
+  V21, Loc1, p1: Integer;
   Radius: TVicinity21Loc;
 begin
-{$IFOPT O-}assert(1 shl p and InvalidTreatyMap = 0); {$ENDIF}
+{$IFOPT O-}Assert(1 shl P and InvalidTreatyMap = 0); {$ENDIF}
   with CityAreaInfo do
   begin
     V21_to_Loc(Loc, Radius);
@@ -89,10 +89,10 @@ begin
       else
       begin
         p1 := RealMap[Loc1] shr 27;
-        if (p1 < nPl) and (p1 <> p) and (RW[p].Treaty[p1] >= trPeace) then
+        if (p1 < nPl) and (p1 <> P) and (RW[P].Treaty[p1] >= trPeace) then
           Available[V21] := faTreaty
-        else if (ZoCMap[Loc1] > 0) and (Occupant[Loc1] <> p) and
-          (RW[p].Treaty[Occupant[Loc1]] < trAlliance) then
+        else if (ZoCMap[Loc1] > 0) and (Occupant[Loc1] <> P) and
+          (RW[P].Treaty[Occupant[Loc1]] < trAlliance) then
           Available[V21] := faSiege
         else if (UsedByCity[Loc1] <> -1) and (UsedByCity[Loc1] <> Loc) then
           Available[V21] := faNotAvailable
@@ -103,61 +103,61 @@ begin
   end;
 end;
 
-function CanCityGrow(p, cix: integer): boolean;
+function CanCityGrow(P, cix: Integer): Boolean;
 begin
-  with RW[p].City[cix] do
-    result := (Size < MaxCitySize) and
+  with RW[P].City[cix] do
+    Result := (Size < MaxCitySize) and
       ((Size < NeedAqueductSize) or (Built[imAqueduct] = 1) and
       (Size < NeedSewerSize) or (Built[imSewer] = 1));
 end;
 
-procedure DetermineCityProdProcessing(p, cix: integer;
+procedure DetermineCityProdProcessing(P, cix: Integer;
   var ProdProcessing: TProdProcessing);
 begin
-  with RW[p].City[cix], ProdProcessing do
+  with RW[P].City[cix], ProdProcessing do
   begin
     ProdBonus := 0;
     PollBonus := 0;
     if Built[imFactory] = 1 then
-      inc(ProdBonus);
+      Inc(ProdBonus);
     if Built[imMfgPlant] = 1 then
-      inc(ProdBonus);
+      Inc(ProdBonus);
     if (Built[imPower] = 1) or (Built[imHydro] = 1) or (Built[imNuclear] = 1) or
-      (GWonder[woHoover].EffectiveOwner = p) then
+      (GWonder[woHoover].EffectiveOwner = P) then
       ProdBonus := ProdBonus * 2;
     if Built[imFactory] = 1 then
-      inc(PollBonus);
+      Inc(PollBonus);
     if Built[imMfgPlant] = 1 then
-      inc(PollBonus);
+      Inc(PollBonus);
     if (Built[imFactory] + Built[imMfgPlant] > 0) then
-      if (Built[imHydro] > 0) or (GWonder[woHoover].EffectiveOwner = p) then
-        dec(PollBonus)
+      if (Built[imHydro] > 0) or (GWonder[woHoover].EffectiveOwner = P) then
+        Dec(PollBonus)
       else if (Built[imNuclear] = 0) and (Built[imPower] = 1) then
-        inc(PollBonus);
-    if (RW[p].Government <= gDespotism) or (Built[imRecycling] = 1) then
+        Inc(PollBonus);
+    if (RW[P].Government <= gDespotism) or (Built[imRecycling] = 1) then
       PollBonus := -2; // no pollution
     PollThreshold := Size;
     FutProdBonus := 0;
-    if RW[p].Tech[futProductionTechnology] > 0 then
+    if RW[P].Tech[futProductionTechnology] > 0 then
     begin // future tech benefits
       if Built[imFactory] = 1 then
-        inc(FutProdBonus, FactoryFutureBonus * RW[p].Tech
+        Inc(FutProdBonus, FactoryFutureBonus * RW[P].Tech
           [futProductionTechnology]);
       if Built[imMfgPlant] = 1 then
-        inc(FutProdBonus, MfgPlantFutureBonus * RW[p].Tech
+        Inc(FutProdBonus, MfgPlantFutureBonus * RW[P].Tech
           [futProductionTechnology]);
     end;
   end;
 end;
 
-procedure BoostProd(BaseProd: integer; ProdProcessing: TProdProcessing;
-  var Prod, Poll: integer);
+procedure BoostProd(BaseProd: Integer; ProdProcessing: TProdProcessing;
+  var Prod, Poll: Integer);
 begin
   Poll := BaseProd * (2 + ProdProcessing.PollBonus) shr 1;
   if Poll <= ProdProcessing.PollThreshold then
     Poll := 0
   else
-    dec(Poll, ProdProcessing.PollThreshold);
+    Dec(Poll, ProdProcessing.PollThreshold);
   if ProdProcessing.FutProdBonus > 0 then
     Prod := BaseProd * (100 + ProdProcessing.ProdBonus * 50 +
       ProdProcessing.FutProdBonus) div 100
@@ -165,64 +165,64 @@ begin
     Prod := BaseProd * (2 + ProdProcessing.ProdBonus) shr 1;
 end;
 
-procedure DetermineCityTradeProcessing(p, cix, HappinessBeforeLux: integer;
+procedure DetermineCityTradeProcessing(P, cix, HappinessBeforeLux: Integer;
   var TradeProcessing: TTradeProcessing);
 var
-  i, Dist: integer;
+  I, Dist: Integer;
 begin
-  with RW[p].City[cix], TradeProcessing do
+  with RW[P].City[cix], TradeProcessing do
   begin
     TaxBonus := 0;
     ScienceBonus := 0;
     if Built[imMarket] = 1 then
-      inc(TaxBonus, 2);
+      Inc(TaxBonus, 2);
     if Built[imBank] = 1 then
     begin
-      inc(TaxBonus, 3);
-      if RW[p].NatBuilt[imStockEx] = 1 then
-        inc(TaxBonus, 3);
+      Inc(TaxBonus, 3);
+      if RW[P].NatBuilt[imStockEx] = 1 then
+        Inc(TaxBonus, 3);
     end;
     LuxBonus := TaxBonus;
     if Built[imLibrary] = 1 then
-      inc(ScienceBonus, 2);
+      Inc(ScienceBonus, 2);
     if Built[imUniversity] = 1 then
-      inc(ScienceBonus, 3);
+      Inc(ScienceBonus, 3);
     if Built[imResLab] = 1 then
-      inc(ScienceBonus, 3);
+      Inc(ScienceBonus, 3);
     ScienceDoubling := 0;
     if Built[imNatObs] > 0 then
-      inc(ScienceDoubling);
-    if RW[p].Government = gFundamentalism then
-      dec(ScienceDoubling)
-    else if (GWonder[woNewton].EffectiveOwner = p) and
-      (RW[p].Government = gMonarchy) then
-      inc(ScienceDoubling);
-    FlexibleLuxury := ((ServerVersion[p] >= $0100F1) and
-      (GWonder[woLiberty].EffectiveOwner = p) or (ServerVersion[p] < $0100F1)
-      and (GWonder[woMich].EffectiveOwner = p)) and
-      (RW[p].Government <> gAnarchy);
+      Inc(ScienceDoubling);
+    if RW[P].Government = gFundamentalism then
+      Dec(ScienceDoubling)
+    else if (GWonder[woNewton].EffectiveOwner = P) and
+      (RW[P].Government = gMonarchy) then
+      Inc(ScienceDoubling);
+    FlexibleLuxury := ((ServerVersion[P] >= $0100F1) and
+      (GWonder[woLiberty].EffectiveOwner = P) or (ServerVersion[P] < $0100F1)
+      and (GWonder[woMich].EffectiveOwner = P)) and
+      (RW[P].Government <> gAnarchy);
     FutResBonus := 0;
-    if RW[p].Tech[futResearchTechnology] > 0 then
+    if RW[P].Tech[futResearchTechnology] > 0 then
     begin // future tech benefits
       if Built[imUniversity] = 1 then
-        inc(FutResBonus, UniversityFutureBonus * RW[p].Tech
+        Inc(FutResBonus, UniversityFutureBonus * RW[P].Tech
           [futResearchTechnology]);
       if Built[imResLab] = 1 then
-        inc(FutResBonus, ResLabFutureBonus * RW[p].Tech[futResearchTechnology]);
+        Inc(FutResBonus, ResLabFutureBonus * RW[P].Tech[futResearchTechnology]);
     end;
-    if (RW[p].NatBuilt[imPalace] > 0) or (ServerVersion[p] < $010000) then
+    if (RW[P].NatBuilt[imPalace] > 0) or (ServerVersion[P] < $010000) then
     begin // calculate corruption
       Dist := MaxDist;
-      for i := 0 to RW[p].nCity - 1 do
-        if (RW[p].City[i].Loc >= 0) and (RW[p].City[i].Built[imPalace] = 1) then
-          Dist := Distance(Loc, RW[p].City[i].Loc);
-      if (Dist = 0) or (CorrLevel[RW[p].Government] = 0) then
+      for I := 0 to RW[P].nCity - 1 do
+        if (RW[P].City[I].Loc >= 0) and (RW[P].City[I].Built[imPalace] = 1) then
+          Dist := Distance(Loc, RW[P].City[I].Loc);
+      if (Dist = 0) or (CorrLevel[RW[P].Government] = 0) then
         RelCorr := 0.0
       else
       begin
         RelCorr := Dist / MaxDist;
-        if CorrLevel[RW[p].Government] > 1 then
-          RelCorr := Exp(ln(RelCorr) / CorrLevel[RW[p].Government]);
+        if CorrLevel[RW[P].Government] > 1 then
+          RelCorr := Exp(ln(RelCorr) / CorrLevel[RW[P].Government]);
         if Built[imCourt] = 1 then
           RelCorr := RelCorr / 2;
         // !!! floating point calculation always deterministic???
@@ -236,11 +236,11 @@ begin
   end;
 end;
 
-procedure SplitTrade(Trade, TaxRate, LuxRate, Working: integer;
+procedure SplitTrade(Trade, TaxRate, LuxRate, Working: Integer;
   TradeProcessing: TTradeProcessing; var Corruption, Tax, Lux,
-  Science: integer);
+  Science: Integer);
 var
-  plus: integer;
+  plus: Integer;
 begin
   Corruption := Trunc(Trade * TradeProcessing.RelCorr);
   Tax := (TaxRate * (Trade - Corruption) + 50) div 100;
@@ -275,68 +275,68 @@ begin
   Science := Science shl 2 shr (2 - TradeProcessing.ScienceDoubling);
 end;
 
-function GetProjectCost(p, cix: integer): integer;
+function GetProjectCost(P, cix: Integer): Integer;
 var
-  i: integer;
+  I: Integer;
 begin
-  with RW[p].City[cix] do
+  with RW[P].City[cix] do
   begin
     if Project and cpImp = 0 then
     begin
-      result := RW[p].Model[Project and cpIndex].Cost; { unit project }
+      Result := RW[P].Model[Project and cpIndex].Cost; { unit project }
       if Project and cpConscripts <> 0 then
       begin
-        i := RW[p].Model[Project and cpIndex].MCost;
-        result := result - 3 * i;
-        if result <= 0 then
-          result := i;
+        I := RW[P].Model[Project and cpIndex].MCost;
+        Result := Result - 3 * I;
+        if Result <= 0 then
+          Result := I;
       end
-      else if RW[p].Model[Project and cpIndex].Cap[mcLine] > 0 then
+      else if RW[P].Model[Project and cpIndex].Cap[mcLine] > 0 then
         if Project0 and (not cpAuto or cpRepeat) = Project and not cpAuto or cpRepeat
         then
-          result := result shr 1
+          Result := Result shr 1
         else
-          result := result * 2;
+          Result := Result * 2;
     end
     else
     begin { improvement project }
-      result := Imp[Project and cpIndex].Cost;
-      if (Project and cpIndex < nWonder) and (GWonder[woColossus].EffectiveOwner = p)
+      Result := Imp[Project and cpIndex].Cost;
+      if (Project and cpIndex < nWonder) and (GWonder[woColossus].EffectiveOwner = P)
       then
-        result := result * ColossusEffect div 100;
+        Result := Result * ColossusEffect div 100;
     end;
-    result := result * BuildCostMod[Difficulty[p]] div 12;
+    Result := Result * BuildCostMod[Difficulty[P]] div 12;
   end;
 end;
 
-function GetSmallCityReport(p, cix: integer; var CityReport: TCityReport;
-  PCityReportEx: PCityReportEx = nil): integer;
+function GetSmallCityReport(P, cix: Integer; var CityReport: TCityReport;
+  PCityReportEx: PCityReportEx = nil): Integer;
 var
-  i, uix, V21, Loc1, ForcedSupport, BaseHappiness, Control: integer;
+  I, uix, V21, Loc1, ForcedSupport, BaseHappiness, Control: Integer;
   ProdProcessing: TProdProcessing;
   TradeProcessing: TTradeProcessing;
   Radius: TVicinity21Loc;
   UnitReport: TUnitReport;
-  RareOK: array [0 .. 3] of integer;
+  RareOK: array [0 .. 3] of Integer;
   TileInfo: TTileInfo;
 begin
-  with RW[p].City[cix], CityReport do
+  with RW[P].City[cix], CityReport do
   begin
     if HypoTiles <= 0 then
       HypoTiles := Tiles;
     if HypoTax < 0 then
-      HypoTax := RW[p].TaxRate;
+      HypoTax := RW[P].TaxRate;
     if HypoLux < 0 then
-      HypoLux := RW[p].LuxRate;
+      HypoLux := RW[P].LuxRate;
 
-    if (Flags and chCaptured <> 0) or (RW[p].Government = gAnarchy) then
+    if (Flags and chCaptured <> 0) or (RW[P].Government = gAnarchy) then
     begin
       Working := 0;
       for V21 := 1 to 26 do
         if HypoTiles and (1 shl V21) <> 0 then
-          inc(Working); // for backward compatibility
+          Inc(Working); // for backward compatibility
 
-      if RW[p].Government = gFundamentalism then
+      if RW[P].Government = gFundamentalism then
       begin
         Happy := Size;
         Control := Size;
@@ -379,70 +379,70 @@ begin
         if Size > 4 then
           BaseHappiness := Size;
       end;
-      for i := 0 to nWonder - 1 do
-        if Built[i] = 1 then
+      for I := 0 to nWonder - 1 do
+        if Built[I] = 1 then
         begin
-          inc(Happy);
-          inc(BaseHappiness, 2);
+          Inc(Happy);
+          Inc(BaseHappiness, 2);
         end;
       if Built[imTemple] = 1 then
       begin
-        inc(Happy);
-        inc(BaseHappiness, 2);
+        Inc(Happy);
+        Inc(BaseHappiness, 2);
       end;
       if Built[imCathedral] = 1 then
       begin
-        inc(Happy, 2);
-        inc(BaseHappiness, 4);
-        if GWonder[woBach].EffectiveOwner = p then
+        Inc(Happy, 2);
+        Inc(BaseHappiness, 4);
+        if GWonder[woBach].EffectiveOwner = P then
         begin
-          inc(Happy);
-          inc(BaseHappiness, 2);
+          Inc(Happy);
+          Inc(BaseHappiness, 2);
         end;
       end;
       if Built[imTheater] > 0 then
       begin
-        inc(Happy, 2);
-        inc(BaseHappiness, 4);
+        Inc(Happy, 2);
+        Inc(BaseHappiness, 4);
       end;
 
       // calculate unit support
-{$IFOPT O-}assert(InvalidTreatyMap = 0); {$ENDIF}
+{$IFOPT O-}Assert(InvalidTreatyMap = 0); {$ENDIF}
       Support := 0;
       ForcedSupport := 0;
       Eaten := Size * 2;
       Deployed := 0;
-      for uix := 0 to RW[p].nUn - 1 do
-        with RW[p].Un[uix] do
+      for uix := 0 to RW[P].nUn - 1 do
+        with RW[P].Un[uix] do
           if (Loc >= 0) and (Home = cix) then
           begin
-            GetUnitReport(p, uix, UnitReport);
-            inc(Eaten, UnitReport.FoodSupport);
+            GetUnitReport(P, uix, UnitReport);
+            Inc(Eaten, UnitReport.FoodSupport);
             if UnitReport.ReportFlags and urfAlwaysSupport <> 0 then
-              inc(ForcedSupport, UnitReport.ProdSupport)
+              Inc(ForcedSupport, UnitReport.ProdSupport)
             else
-              inc(Support, UnitReport.ProdSupport);
+              Inc(Support, UnitReport.ProdSupport);
             if UnitReport.ReportFlags and urfDeployed <> 0 then
-              inc(Deployed);
+              Inc(Deployed);
           end;
       if Deployed >= Happy then
         Happy := 0
       else
-        dec(Happy, Deployed);
-      dec(Support, Size * SupportFree[RW[p].Government] shr 1);
+        Dec(Happy, Deployed);
+      Dec(Support, Size * SupportFree[RW[P].Government] shr 1);
       if Support < 0 then
         Support := 0;
-      inc(Support, ForcedSupport);
+      Inc(Support, ForcedSupport);
 
       { control }
-      case RW[p].Government of
+      case RW[P].Government of
         gDespotism:
-          for uix := 0 to RW[p].nUn - 1 do
-            if (RW[p].Un[uix].Loc = Loc) and
-              (RW[p].Model[RW[p].Un[uix].mix].Kind = mkSpecial_TownGuard) then
+          for uix := 0 to RW[P].nUn - 1 do
+            if (RW[P].Un[uix].Loc = Loc) and
+              (RW[P].Model[RW[P].Un[uix].mix].Kind = mkSpecial_TownGuard) then
             begin
-              inc(Happy);
-              inc(Control, 2);
+              Inc(Happy);
+              Inc(Control, 2);
             end;
         gFundamentalism:
           begin
@@ -453,8 +453,8 @@ begin
       end;
 
       // collect processing parameters
-      DetermineCityProdProcessing(p, cix, ProdProcessing);
-      DetermineCityTradeProcessing(p, cix, BaseHappiness + Control - 2 *
+      DetermineCityProdProcessing(P, cix, ProdProcessing);
+      DetermineCityTradeProcessing(P, cix, BaseHappiness + Control - 2 *
         Deployed, TradeProcessing);
 
       // collect resources
@@ -471,20 +471,20 @@ begin
           if (Loc1 < 0) or (Loc1 >= MapSize) then
           // HypoTiles go beyond map border!
           begin
-            result := eInvalid;
-            exit;
+            Result := eInvalid;
+            Exit;
           end;
-          GetTileInfo(p, cix, Loc1, TileInfo);
-          inc(FoodRep, TileInfo.Food);
-          inc(ProdRep, TileInfo.Prod);
-          inc(Trade, TileInfo.Trade);
+          GetTileInfo(P, cix, Loc1, TileInfo);
+          Inc(FoodRep, TileInfo.Food);
+          Inc(ProdRep, TileInfo.Prod);
+          Inc(Trade, TileInfo.Trade);
           if (RealMap[Loc1] and fModern <> 0) and
-            (RW[p].Tech[adMassProduction] >= tsApplicable) then
-            inc(RareOK[RealMap[Loc1] shr 25 and 3]);
-          inc(Working);
+            (RW[P].Tech[adMassProduction] >= tsApplicable) then
+            Inc(RareOK[RealMap[Loc1] shr 25 and 3]);
+          Inc(Working);
         end;
       if Built[imAlgae] = 1 then
-        inc(FoodRep, 12);
+        Inc(FoodRep, 12);
 
       if PCityReportEx <> nil then
       begin
@@ -509,18 +509,18 @@ begin
         ProdRep := Support;
     end;
   end;
-  result := eOk;
+  Result := eOk;
 end;
 
-function GetCityReport(p, cix: integer; var CityReport: TCityReport): integer;
+function GetCityReport(P, cix: Integer; var CityReport: TCityReport): Integer;
 begin
-  result := GetSmallCityReport(p, cix, CityReport);
-  CityReport.Storage := StorageSize[Difficulty[p]];
-  CityReport.ProdCost := GetProjectCost(p, cix);
+  Result := GetSmallCityReport(P, cix, CityReport);
+  CityReport.Storage := StorageSize[Difficulty[P]];
+  CityReport.ProdCost := GetProjectCost(P, cix);
 end;
 
-function GetCityReportNew(p, cix: integer;
-  var CityReportNew: TCityReportNew): integer;
+function GetCityReportNew(P, cix: Integer;
+  var CityReportNew: TCityReportNew): Integer;
 var
   CityReport: TCityReport;
   CityReportEx: TCityReportEx;
@@ -530,15 +530,15 @@ begin
     CityReport.HypoTiles := HypoTiles;
     CityReport.HypoTax := HypoTaxRate;
     CityReport.HypoLux := HypoLuxuryRate;
-    result := GetSmallCityReport(p, cix, CityReport, @CityReportEx);
-    FoodSupport := CityReport.Eaten - 2 * RW[p].City[cix].Size;
+    Result := GetSmallCityReport(P, cix, CityReport, @CityReportEx);
+    FoodSupport := CityReport.Eaten - 2 * RW[P].City[cix].Size;
     MaterialSupport := CityReport.Support;
-    ProjectCost := GetProjectCost(p, cix);
-    Storage := StorageSize[Difficulty[p]];
+    ProjectCost := GetProjectCost(P, cix);
+    Storage := StorageSize[Difficulty[P]];
     Deployed := CityReport.Deployed;
     Morale := CityReportEx.BaseHappiness;
     CollectedControl := CityReportEx.BaseControl +
-      (RW[p].City[cix].Size - CityReport.Working) * 2;
+      (RW[P].City[cix].Size - CityReport.Working) * 2;
     CollectedFood := CityReport.FoodRep;
     CollectedMaterial := CityReportEx.Material;
     CollectedTrade := CityReport.Trade;
@@ -550,7 +550,7 @@ begin
     Science := CityReport.Science;
     Luxury := CityReport.Lux;
     FoodSurplus := CityReport.FoodRep - CityReport.Eaten;
-    HappinessBalance := Morale + Luxury + CollectedControl - RW[p].City[cix]
+    HappinessBalance := Morale + Luxury + CollectedControl - RW[P].City[cix]
       .Size - 2 * Deployed;
   end;
 end;
@@ -559,18 +559,18 @@ end;
   Internal Tile Picking
   ____________________________________________________________________
 }
-procedure NextBest(p, cix: integer; var SelectedLoc, SelectedV21: integer);
+procedure NextBest(P, cix: Integer; var SelectedLoc, SelectedV21: Integer);
 { best tile unused but available by city cix }
 var
-  Resources, Most, Loc1, p1, V21: integer;
+  Resources, Most, Loc1, p1, V21: Integer;
   TileInfo: TTileInfo;
   Radius: TVicinity21Loc;
 begin
-{$IFOPT O-}assert(1 shl p and InvalidTreatyMap = 0); {$ENDIF}
+{$IFOPT O-}Assert(1 shl P and InvalidTreatyMap = 0); {$ENDIF}
   Most := 0;
   SelectedLoc := -1;
   SelectedV21 := -1;
-  with RW[p].City[cix] do
+  with RW[P].City[cix] do
   begin
     V21_to_Loc(Loc, Radius);
     for V21 := 1 to 26 do
@@ -579,11 +579,11 @@ begin
       if (Loc1 >= 0) and (Loc1 < MapSize) and (UsedByCity[Loc1] = -1) then
       begin
         p1 := RealMap[Loc1] shr 27;
-        if ((p1 = nPl) or (p1 = p) or (RW[p].Treaty[p1] < trPeace)) and
-          ((ZoCMap[Loc1] = 0) or (Occupant[Loc1] = p) or
-          (RW[p].Treaty[Occupant[Loc1]] = trAlliance)) then
+        if ((p1 = nPl) or (p1 = P) or (RW[P].Treaty[p1] < trPeace)) and
+          ((ZoCMap[Loc1] = 0) or (Occupant[Loc1] = P) or
+          (RW[P].Treaty[Occupant[Loc1]] = trAlliance)) then
         begin
-          GetTileInfo(p, cix, Loc1, TileInfo);
+          GetTileInfo(P, cix, Loc1, TileInfo);
           Resources := TileInfo.Food shl 16 + TileInfo.Prod shl 8 +
             TileInfo.Trade;
           { priority: 1.food - 2.prod - 3.trade }
@@ -599,17 +599,17 @@ begin
   end;
 end;
 
-procedure NextWorst(p, cix: integer; var SelectedLoc, SelectedV21: integer);
+procedure NextWorst(P, cix: Integer; var SelectedLoc, SelectedV21: Integer);
 { worst tile used by city cix }
 var
-  Resources, Least, Loc1, V21: integer;
+  Resources, Least, Loc1, V21: Integer;
   Radius: TVicinity21Loc;
   TileInfo: TTileInfo;
 begin
   Least := MaxInt;
   SelectedLoc := -1;
   SelectedV21 := -1;
-  with RW[p].City[cix] do
+  with RW[P].City[cix] do
   begin
     V21_to_Loc(Loc, Radius);
     for V21 := 1 to 26 do
@@ -618,7 +618,7 @@ begin
         Loc1 := Radius[V21];
         if (Loc1 >= 0) and (Loc1 < MapSize) and (1 shl V21 and Tiles <> 0) then
         begin
-          GetTileInfo(p, cix, Loc1, TileInfo);
+          GetTileInfo(P, cix, Loc1, TileInfo);
           Resources := TileInfo.Food shl 16 + TileInfo.Prod shl 8 +
             TileInfo.Trade;
           { priority: 1.food - 2.prod - 3.trade }
@@ -633,17 +633,17 @@ begin
   end;
 end;
 
-function NextPoll(p, cix: integer): integer;
+function NextPoll(P, cix: Integer): Integer;
 var
-  Resources, Best, dx, dy, Loc1, Dist, BestDist, V21, pTerr: integer;
+  Resources, Best, dx, dy, Loc1, Dist, BestDist, V21, pTerr: Integer;
   Radius: TVicinity21Loc;
   TileInfo: TTileInfo;
 begin
   BestDist := MaxInt;
-{$IFOPT O-}assert(1 shl p and InvalidTreatyMap = 0); {$ENDIF}
+{$IFOPT O-}Assert(1 shl P and InvalidTreatyMap = 0); {$ENDIF}
   Best := 0;
-  result := -1;
-  with RW[p].City[cix] do
+  Result := -1;
+  with RW[P].City[cix] do
   begin
     V21_to_Loc(Loc, Radius);
     for V21 := 1 to 26 do
@@ -655,10 +655,10 @@ begin
           (RealMap[Loc1] and (fPoll or fDeadLands or fCity) = 0) then
         begin
           pTerr := RealMap[Loc1] shr 27;
-          if (pTerr = nPl) or (pTerr = p) or (RW[p].Treaty[pTerr] < trPeace)
+          if (pTerr = nPl) or (pTerr = P) or (RW[P].Treaty[pTerr] < trPeace)
           then
           begin
-            GetTileInfo(p, cix, Loc1, TileInfo);
+            GetTileInfo(P, cix, Loc1, TileInfo);
             Resources := TileInfo.Prod shl 16 + TileInfo.Trade shl 8 +
               TileInfo.Food;
             { priority: 1.prod - 2.trade - 3.food }
@@ -668,7 +668,7 @@ begin
             if (Resources > Best) or (Resources = Best) and (Dist < BestDist)
             then
             begin
-              result := Loc1;
+              Result := Loc1;
               Best := Resources;
               BestDist := Dist;
             end;
@@ -678,40 +678,40 @@ begin
   end;
 end;
 
-function AddBestCityTile(p, cix: integer): boolean;
+function AddBestCityTile(P, cix: Integer): Boolean;
 var
-  TileLoc, V21: integer;
+  TileLoc, V21: Integer;
 begin
-  NextBest(p, cix, TileLoc, V21);
-  result := TileLoc >= 0;
-  if result then
-    with RW[p].City[cix] do
+  NextBest(P, cix, TileLoc, V21);
+  Result := TileLoc >= 0;
+  if Result then
+    with RW[P].City[cix] do
     begin
-      assert(1 shl V21 and Tiles = 0);
+      Assert(1 shl V21 and Tiles = 0);
       Tiles := Tiles or (1 shl V21);
       UsedByCity[TileLoc] := Loc;
     end;
 end;
 
-procedure CityGrowth(p, cix: integer);
+procedure CityGrowth(P, cix: Integer);
 var
-  TileLoc, V21: integer;
+  TileLoc, V21: Integer;
   AltCityReport: TCityReport;
 begin
-  with RW[p].City[cix] do
+  with RW[P].City[cix] do
   begin
-    inc(Size);
-    NextBest(p, cix, TileLoc, V21);
+    Inc(Size);
+    NextBest(P, cix, TileLoc, V21);
     if TileLoc >= 0 then
     begin { test whether exploitation of tile would lead to disorder }
       AltCityReport.HypoTiles := Tiles + 1 shl V21;
       AltCityReport.HypoTax := -1;
       AltCityReport.HypoLux := -1;
-      GetSmallCityReport(p, cix, AltCityReport);
+      GetSmallCityReport(P, cix, AltCityReport);
       if AltCityReport.Working - AltCityReport.Happy <= Size shr 1 then
       // !!! change to new style disorder
       begin { no disorder -- exploit tile }
-        assert(1 shl V21 and Tiles = 0);
+        Assert(1 shl V21 and Tiles = 0);
         Tiles := Tiles or (1 shl V21);
         UsedByCity[TileLoc] := Loc;
       end;
@@ -719,24 +719,24 @@ begin
   end;
 end;
 
-procedure CityShrink(p, cix: integer);
+procedure CityShrink(P, cix: Integer);
 var
-  TileLoc, V21, Working: integer;
+  TileLoc, V21, Working: Integer;
   AltCityReport: TCityReport;
 begin
-  with RW[p].City[cix] do
+  with RW[P].City[cix] do
   begin
     Working := 0;
     for V21 := 1 to 26 do
       if Tiles and (1 shl V21) <> 0 then
-        inc(Working);
-    dec(Size);
-    if Food > StorageSize[Difficulty[p]] then
-      Food := StorageSize[Difficulty[p]];
-    NextWorst(p, cix, TileLoc, V21);
+        Inc(Working);
+    Dec(Size);
+    if Food > StorageSize[Difficulty[P]] then
+      Food := StorageSize[Difficulty[P]];
+    NextWorst(P, cix, TileLoc, V21);
     if Working > Size then
     begin { all citizens were working -- worst tile no longer exploited }
-      assert(1 shl V21 and Tiles <> 0);
+      Assert(1 shl V21 and Tiles <> 0);
       Tiles := Tiles and not(1 shl V21);
       UsedByCity[TileLoc] := -1;
     end
@@ -745,11 +745,11 @@ begin
       AltCityReport.HypoTiles := -1;
       AltCityReport.HypoTax := -1;
       AltCityReport.HypoLux := -1;
-      GetSmallCityReport(p, cix, AltCityReport);
+      GetSmallCityReport(P, cix, AltCityReport);
       if AltCityReport.Working - AltCityReport.Happy > Size shr 1 then
       // !!! change to new style disorder
       begin { disorder -- don't exploit tile }
-        assert(1 shl V21 and Tiles <> 0);
+        Assert(1 shl V21 and Tiles <> 0);
         Tiles := Tiles and not(1 shl V21);
         UsedByCity[TileLoc] := -1;
       end;
@@ -757,17 +757,17 @@ begin
   end;
 end;
 
-procedure Pollute(p, cix: integer);
+procedure Pollute(P, cix: Integer);
 var
-  PollutionLoc: integer;
+  PollutionLoc: Integer;
 begin
-  with RW[p].City[cix] do
+  with RW[P].City[cix] do
   begin
     Pollution := Pollution - MaxPollution;
-    PollutionLoc := NextPoll(p, cix);
+    PollutionLoc := NextPoll(P, cix);
     if PollutionLoc >= 0 then
     begin
-      inc(Flags, chPollution);
+      Inc(Flags, chPollution);
       RealMap[PollutionLoc] := RealMap[PollutionLoc] or fPoll;
     end;
   end;
@@ -777,44 +777,44 @@ end;
   Turn Processing
   ____________________________________________________________________
 }
-procedure PayCityMaintenance(p, cix: integer);
+procedure PayCityMaintenance(P, cix: Integer);
 var
-  i: integer;
+  I: Integer;
 begin
-  with RW[p], City[cix] do
-    for i := nWonder to nImp - 1 do
-      if (Built[i] > 0) and (Project0 and (cpImp or cpIndex) <> (cpImp or i))
+  with RW[P], City[cix] do
+    for I := nWonder to nImp - 1 do
+      if (Built[I] > 0) and (Project0 and (cpImp or cpIndex) <> (cpImp or I))
       then // don't pay maintenance when just completed
       begin
-        dec(Money, Imp[i].Maint);
+        Dec(Money, Imp[I].Maint);
         if Money < 0 then
         begin { out of money - sell improvement }
-          inc(Money, Imp[i].Cost * BuildCostMod[Difficulty[p]] div 12);
-          Built[i] := 0;
-          if Imp[i].Kind <> ikCommon then
+          Inc(Money, Imp[I].Cost * BuildCostMod[Difficulty[P]] div 12);
+          Built[I] := 0;
+          if Imp[I].Kind <> ikCommon then
           begin
-            assert(i <> imSpacePort);
+            Assert(I <> imSpacePort);
             // never sell automatically! (solution: no maintenance)
-            NatBuilt[i] := 0;
-            if i = imGrWall then
-              GrWallContinent[p] := -1;
+            NatBuilt[I] := 0;
+            if I = imGrWall then
+              GrWallContinent[P] := -1;
           end;
-          inc(Flags, chImprovementLost);
+          Inc(Flags, chImprovementLost);
         end;
       end;
 end;
 
-procedure CollectCityResources(p, cix: integer);
+procedure CollectCityResources(P, cix: Integer);
 var
-  CityStorage, CityProjectCost: integer;
+  CityStorage, CityProjectCost: Integer;
   CityReport: TCityReportNew;
-  Disorder: boolean;
+  Disorder: Boolean;
 begin
-  with RW[p], City[cix], CityReport do
+  with RW[P], City[cix], CityReport do
     if Flags and chCaptured <> 0 then
     begin
       Flags := Flags and not chDisorder;
-      dec(Flags, $10000);
+      Dec(Flags, $10000);
       if Flags and chCaptured = 0 then
         Flags := Flags or chAfterCapture;
     end
@@ -825,9 +825,9 @@ begin
       HypoTiles := -1;
       HypoTaxRate := -1;
       HypoLuxuryRate := -1;
-      GetCityReportNew(p, cix, CityReport);
-      CityStorage := StorageSize[Difficulty[p]];
-      CityProjectCost := GetProjectCost(p, cix);
+      GetCityReportNew(P, cix, CityReport);
+      CityStorage := StorageSize[Difficulty[P]];
+      CityProjectCost := GetProjectCost(P, cix);
 
       Disorder := (HappinessBalance < 0);
       if Disorder and (Flags and chDisorder <> 0) then
@@ -839,7 +839,7 @@ begin
 
       if not Disorder and ((Government = gFuture) or (Size >= NeedAqueductSize)
         and (FoodSurplus < 2)) and (FoodSurplus > 0) then
-        inc(Money, FoodSurplus)
+        Inc(Money, FoodSurplus)
       else if not(Disorder and (FoodSurplus > 0)) then
       begin { calculate new food storage }
         Food := Food + FoodSurplus;
@@ -848,45 +848,45 @@ begin
           and (Size < MaxCitySize) and
           (Project and (cpImp + cpIndex) <> cpImp + imAqueduct) and
           (Project and (cpImp + cpIndex) <> cpImp + imSewer) and
-          not CanCityGrow(p, cix) then
-          inc(Flags, chNoGrowthWarning);
+          not CanCityGrow(P, cix) then
+          Inc(Flags, chNoGrowthWarning);
       end;
 
       if Prod > CityProjectCost then
       begin
-        inc(Money, Prod - CityProjectCost);
+        Inc(Money, Prod - CityProjectCost);
         Prod := CityProjectCost;
       end;
       if Production < 0 then
         Flags := Flags or chUnitLost
       else if not Disorder and (Flags and chProductionSabotaged = 0) then
         if Project and (cpImp + cpIndex) = cpImp + imTrGoods then
-          inc(Money, Production)
+          Inc(Money, Production)
         else
-          inc(Prod, Production);
+          Inc(Prod, Production);
 
       if not Disorder then
       begin
         { sum research points and taxes }
-        inc(Research, Science);
-        inc(Money, Tax);
+        Inc(Research, Science);
+        Inc(Money, Tax);
         Pollution := Pollution + AddPollution;
       end;
     end;
 end;
 
-function CityTurn(p, cix: integer): boolean;
+function CityTurn(P, cix: Integer): Boolean;
 // return value: whether city keeps existing
 var
-  i, uix, cix2, p1, SizeMod, CityStorage, CityProjectCost, NewImp, Det,
-    TestDet: integer;
-  LackOfMaterial, CheckGrow, DoProd, IsActive: boolean;
+  I, uix, cix2, p1, SizeMod, CityStorage, CityProjectCost, NewImp, Det,
+    TestDet: Integer;
+  LackOfMaterial, CheckGrow, DoProd, IsActive: Boolean;
 begin
-  with RW[p], City[cix] do
+  with RW[P], City[cix] do
   begin
     SizeMod := 0;
-    CityStorage := StorageSize[Difficulty[p]];
-    CityProjectCost := GetProjectCost(p, cix);
+    CityStorage := StorageSize[Difficulty[P]];
+    CityProjectCost := GetProjectCost(P, cix);
 
     LackOfMaterial := Flags and chUnitLost <> 0;
     Flags := Flags and not chUnitLost;
@@ -896,18 +896,18 @@ begin
       (Government <> gFuture);
     if CheckGrow and (GTestFlags and tfImmGrow <> 0) then { fast growth }
     begin
-      if CanCityGrow(p, cix) then
-        inc(SizeMod);
+      if CanCityGrow(P, cix) then
+        Inc(SizeMod);
     end
     else if CheckGrow and (Food >= CityStorage) then { normal growth }
     begin
-      if CanCityGrow(p, cix) then
+      if CanCityGrow(P, cix) then
       begin
         if Built[imGranary] = 1 then
-          dec(Food, CityStorage shr 1)
+          Dec(Food, CityStorage shr 1)
         else
-          dec(Food, CityStorage);
-        inc(SizeMod);
+          Dec(Food, CityStorage);
+        Inc(SizeMod);
       end;
     end
     else if Food < 0 then { famine }
@@ -915,25 +915,25 @@ begin
       Food := 0;
       // check if settlers or conscripts there to disband
       uix := -1;
-      for i := 0 to nUn - 1 do
-        if (Un[i].Loc >= 0) and (Un[i].Home = cix) and
-          ((Model[Un[i].mix].Kind = mkSettler)
+      for I := 0 to nUn - 1 do
+        if (Un[I].Loc >= 0) and (Un[I].Home = cix) and
+          ((Model[Un[I].mix].Kind = mkSettler)
           { and (GWonder[woFreeSettlers].EffectiveOwner<>p) }
-          or (Un[i].Flags and unConscripts <> 0)) and
-          ((uix = -1) or (Model[Un[i].mix].Cost < Model[Un[uix].mix].Cost) or
-          (Model[Un[i].mix].Cost = Model[Un[uix].mix].Cost) and
-          (Un[i].Exp < Un[uix].Exp)) then
-          uix := i;
+          or (Un[I].Flags and unConscripts <> 0)) and
+          ((uix = -1) or (Model[Un[I].mix].Cost < Model[Un[uix].mix].Cost) or
+          (Model[Un[I].mix].Cost = Model[Un[uix].mix].Cost) and
+          (Un[I].Exp < Un[uix].Exp)) then
+          uix := I;
 
       if uix >= 0 then
       begin
-        RemoveUnit_UpdateMap(p, uix);
-        inc(Flags, chUnitLost);
+        RemoveUnit_UpdateMap(P, uix);
+        Inc(Flags, chUnitLost);
       end
       else
       begin
-        dec(SizeMod);
-        inc(Flags, chPopDecrease);
+        Dec(SizeMod);
+        Inc(Flags, chPopDecrease);
       end
     end;
     if Food > CityStorage then
@@ -945,16 +945,16 @@ begin
       begin { one unit lost }
         uix := -1;
         Det := MaxInt;
-        for i := 0 to nUn - 1 do
-          if (Un[i].Loc >= 0) and (Un[i].Home = cix) then
-            with Model[Un[i].mix] do
+        for I := 0 to nUn - 1 do
+          if (Un[I].Loc >= 0) and (Un[I].Home = cix) then
+            with Model[Un[I].mix] do
             begin
               if Kind = mkSpecial_TownGuard then
-                TestDet := Un[i].Health + Un[i].Exp shl 8
+                TestDet := Un[I].Health + Un[I].Exp shl 8
                 // disband townguards first
               else
               begin
-                TestDet := Un[i].Health + Un[i].Exp shl 8 + Cost shl 16;
+                TestDet := Un[I].Health + Un[I].Exp shl 8 + Cost shl 16;
                 // value of unit
                 if Flags and mdDoubleSupport <> 0 then
                   TestDet := TestDet shr 1;
@@ -962,14 +962,14 @@ begin
               end;
               if TestDet < Det then
               begin
-                uix := i;
+                uix := I;
                 Det := TestDet;
               end;
             end;
         if uix >= 0 then
         begin
-          RemoveUnit_UpdateMap(p, uix);
-          inc(Flags, chUnitLost);
+          RemoveUnit_UpdateMap(P, uix);
+          Inc(Flags, chUnitLost);
         end;
       end;
     end;
@@ -983,8 +983,8 @@ begin
     if (Project and cpImp <> 0) and (Project and cpIndex < nWonder) and
       (GWonder[Project and cpIndex].CityID <> WonderNotBuiltYet) then
     begin
-      inc(Flags, chOldWonder);
-      DoProd := false;
+      Inc(Flags, chOldWonder);
+      DoProd := False;
     end;
 
     // check if producing settlers would disband city
@@ -994,18 +994,18 @@ begin
       and ((Model[Project and cpIndex].Kind = mkSlaves) or
       (Project and cpConscripts <> 0))) then
     begin
-      inc(Flags, chNoSettlerProd);
-      DoProd := false;
+      Inc(Flags, chNoSettlerProd);
+      DoProd := False;
     end;
 
     if DoProd then
     begin { project complete }
-      dec(Prod, CityProjectCost);
+      Dec(Prod, CityProjectCost);
       if Project and cpImp = 0 then { produce unit }
       begin
         if nUn < numax then
         begin
-          CreateUnit(p, Project and cpIndex);
+          CreateUnit(P, Project and cpIndex);
           Un[nUn - 1].Loc := Loc;
           with Un[nUn - 1] do
           begin
@@ -1019,110 +1019,110 @@ begin
             if Project and cpConscripts <> 0 then
               Flags := Flags or unConscripts;
           end;
-          PlaceUnit(p, nUn - 1);
+          PlaceUnit(P, nUn - 1);
           UpdateUnitMap(Loc);
           if Model[Project and cpIndex].Kind = mkSettler then
-            dec(SizeMod, 2) { settler produced - city shrink }
+            Dec(SizeMod, 2) { settler produced - city shrink }
           else if (Model[Project and cpIndex].Kind = mkSlaves) or
             (Project and cpConscripts <> 0) then
-            dec(SizeMod); { slaves/conscripts produced - city shrink }
+            Dec(SizeMod); { slaves/conscripts produced - city shrink }
         end;
         Project0 := Project or cpRepeat or cpCompleted;
       end
       else if Imp[Project and cpIndex].Kind = ikShipPart then
       begin { produce ship parts }
-        inc(GShip[p].Parts[Project and cpIndex - imShipComp]);
+        Inc(GShip[P].Parts[Project and cpIndex - imShipComp]);
         Project0 := Project or cpCompleted;
       end
       else { produce improvement }
       begin
         NewImp := Project and cpIndex;
-        inc(Money, Prod); { change rest to money }
+        Inc(Money, Prod); { change rest to money }
         Project0 := Project or cpCompleted;
         Project := cpImp + imTrGoods;
         Prod := 0;
 
         if Imp[NewImp].Kind in [ikNatLocal, ikNatGlobal] then
         begin // nat. project
-          for i := 0 to nCity - 1 do
-            if (City[i].Loc >= 0) and (City[i].Built[NewImp] = 1) then
+          for I := 0 to nCity - 1 do
+            if (City[I].Loc >= 0) and (City[I].Built[NewImp] = 1) then
             begin { allowed only once }
-              inc(Money, Imp[NewImp].Cost * BuildCostMod[Difficulty[p]] div 12);
-              City[i].Built[NewImp] := 0;
+              Inc(Money, Imp[NewImp].Cost * BuildCostMod[Difficulty[P]] div 12);
+              City[I].Built[NewImp] := 0;
             end;
           NatBuilt[NewImp] := 1;
 
           // immediate nat. project effects
           case NewImp of
             imGrWall:
-              GrWallContinent[p] := Continent[Loc];
+              GrWallContinent[P] := Continent[Loc];
           end;
         end;
 
         if NewImp < nWonder then
         begin // wonder
           GWonder[NewImp].CityID := ID;
-          GWonder[NewImp].EffectiveOwner := p;
+          GWonder[NewImp].EffectiveOwner := P;
           CheckExpiration(NewImp);
 
           // immediate wonder effects
           case NewImp of
             woEiffel:
               begin // reactivate wonders
-                for i := 0 to nWonder - 1 do
-                  if Imp[i].Expiration >= 0 then
+                for I := 0 to nWonder - 1 do
+                  if Imp[I].Expiration >= 0 then
                     for cix2 := 0 to nCity - 1 do
-                      if (City[cix2].Loc >= 0) and (City[cix2].Built[i] = 1)
+                      if (City[cix2].Loc >= 0) and (City[cix2].Built[I] = 1)
                       then
-                        GWonder[i].EffectiveOwner := p;
+                        GWonder[I].EffectiveOwner := P;
               end;
             woLighthouse:
-              CheckSpecialModels(p, preLighthouse);
+              CheckSpecialModels(P, preLighthouse);
             woLeo:
               begin
-                inc(Research, TechBaseCost(nTech[p], Difficulty[p]) +
-                  TechBaseCost(nTech[p] + 2, Difficulty[p]));
-                CheckSpecialModels(p, preLeo);
+                Inc(Research, TechBaseCost(nTech[P], Difficulty[P]) +
+                  TechBaseCost(nTech[P] + 2, Difficulty[P]));
+                CheckSpecialModels(P, preLeo);
               end;
             woPyramids:
-              CheckSpecialModels(p, preBuilder);
+              CheckSpecialModels(P, preBuilder);
             woMir:
               begin
                 for p1 := 0 to nPl - 1 do
-                  if (p1 <> p) and (1 shl p1 and GAlive <> 0) then
+                  if (p1 <> P) and (1 shl p1 and GAlive <> 0) then
                   begin
-                    if RW[p].Treaty[p1] = trNoContact then
-                      IntroduceEnemy(p, p1);
-                    GiveCivilReport(p, p1);
-                    GiveMilReport(p, p1);
+                    if RW[P].Treaty[p1] = trNoContact then
+                      IntroduceEnemy(P, p1);
+                    GiveCivilReport(P, p1);
+                    GiveMilReport(P, p1);
                   end;
               end;
           end;
         end;
 
-        for i := 0 to nImpReplacement - 1 do // sell obsolete buildings
-          if (ImpReplacement[i].NewImp = NewImp) and
-            (Built[ImpReplacement[i].OldImp] > 0) then
+        for I := 0 to nImpReplacement - 1 do // sell obsolete buildings
+          if (ImpReplacement[I].NewImp = NewImp) and
+            (Built[ImpReplacement[I].OldImp] > 0) then
           begin
-            inc(RW[p].Money, Imp[ImpReplacement[i].OldImp].Cost * BuildCostMod
-              [Difficulty[p]] div 12);
-            Built[ImpReplacement[i].OldImp] := 0;
+            Inc(RW[P].Money, Imp[ImpReplacement[I].OldImp].Cost * BuildCostMod
+              [Difficulty[P]] div 12);
+            Built[ImpReplacement[I].OldImp] := 0;
           end;
 
         if NewImp in [imPower, imHydro, imNuclear] then
-          for i := 0 to nImp - 1 do
-            if (i <> NewImp) and (i in [imPower, imHydro, imNuclear]) and
-              (Built[i] > 0) then
+          for I := 0 to nImp - 1 do
+            if (I <> NewImp) and (I in [imPower, imHydro, imNuclear]) and
+              (Built[I] > 0) then
             begin // sell obsolete power plant
-              inc(RW[p].Money, Imp[i].Cost * BuildCostMod[Difficulty[p]
+              Inc(RW[P].Money, Imp[I].Cost * BuildCostMod[Difficulty[P]
                 ] div 12);
-              Built[i] := 0;
+              Built[I] := 0;
             end;
 
         Built[NewImp] := 1;
       end;
       Prod0 := Prod;
-      inc(Flags, chProduction);
+      Inc(Flags, chProduction);
     end
     else
     begin
@@ -1134,15 +1134,15 @@ begin
 
     if SizeMod > 0 then
     begin
-      CityGrowth(p, cix);
-      inc(Flags, chPopIncrease);
+      CityGrowth(P, cix);
+      Inc(Flags, chPopIncrease);
     end;
-    result := Size + SizeMod >= 2;
-    if result then
+    Result := Size + SizeMod >= 2;
+    if Result then
       while SizeMod < 0 do
       begin
-        CityShrink(p, cix);
-        inc(SizeMod);
+        CityShrink(P, cix);
+        Inc(SizeMod);
       end;
   end;
 end;
@@ -1151,58 +1151,58 @@ end;
   Tile Access
   ____________________________________________________________________
 }
-function SetCityTiles(p, cix, NewTiles: integer;
-  TestOnly: boolean = false): integer;
+function SetCityTiles(P, cix, NewTiles: Integer;
+  TestOnly: Boolean = False): Integer;
 var
-  V21, Working, ChangeTiles, AddTiles, Loc1: integer;
+  V21, Working, ChangeTiles, AddTiles, Loc1: Integer;
   CityAreaInfo: TCityAreaInfo;
   Radius: TVicinity21Loc;
 begin
-  with RW[p].City[cix] do
+  with RW[P].City[cix] do
   begin
-    ChangeTiles := NewTiles xor integer(Tiles);
+    ChangeTiles := NewTiles xor Integer(Tiles);
     AddTiles := NewTiles and not Tiles;
     if Mode = moPlaying then
     begin // do all checks
       if NewTiles and not $67F7F76 <> 0 then
       begin
-        result := eInvalid;
-        exit
+        Result := eInvalid;
+        Exit
       end; // invalid tile index included
       if NewTiles and (1 shl 13) = 0 then
       begin
-        result := eViolation;
-        exit
+        Result := eViolation;
+        Exit
       end; // city tile must be exploited
       if ChangeTiles = 0 then
       begin
-        result := eNotChanged;
-        exit
+        Result := eNotChanged;
+        Exit
       end;
       if AddTiles <> 0 then
       begin
         // check if new tiles possible
-        GetCityAreaInfo(p, Loc, CityAreaInfo);
+        GetCityAreaInfo(P, Loc, CityAreaInfo);
         for V21 := 1 to 26 do
           if AddTiles and (1 shl V21) <> 0 then
             if CityAreaInfo.Available[V21] <> faAvailable then
             begin
-              result := eTileNotAvailable;
-              exit;
+              Result := eTileNotAvailable;
+              Exit;
             end;
         // not more tiles than inhabitants
         Working := 0;
         for V21 := 1 to 26 do
           if NewTiles and (1 shl V21) <> 0 then
-            inc(Working);
+            Inc(Working);
         if Working > Size then
         begin
-          result := eNoWorkerAvailable;
-          exit;
+          Result := eNoWorkerAvailable;
+          Exit;
         end;
       end;
     end;
-    result := eOk;
+    Result := eOk;
     if not TestOnly then
     begin
       V21_to_Loc(Loc, Radius);
@@ -1210,11 +1210,11 @@ begin
         if ChangeTiles and (1 shl V21) <> 0 then
         begin
           Loc1 := Radius[V21];
-          assert((Loc1 >= 0) and (Loc1 < MapSize));
+          Assert((Loc1 >= 0) and (Loc1 < MapSize));
           if NewTiles and (1 shl V21) <> 0 then
             UsedByCity[Loc1] := Loc // employ tile
           else if UsedByCity[Loc1] <> Loc then
-            assert(Mode < moPlaying)
+            Assert(Mode < moPlaying)
             // should only happen during loading, because of wrong sSetCityTiles command order
           else
             UsedByCity[Loc1] := -1; // unemploy tile
@@ -1224,7 +1224,7 @@ begin
   end;
 end;
 
-procedure GetCityTileAdvice(p, cix: integer; var Advice: TCityTileAdviceData);
+procedure GetCityTileAdvice(P, cix: Integer; var Advice: TCityTileAdviceData);
 const
   oFood = 0;
   oProd = 1;
@@ -1239,57 +1239,57 @@ type
     V21: Integer;
   end;
 var
-  i, V21, Loc1, nHierarchy, iH, iT, iH_Switch, MinWorking, MaxWorking,
+  I, V21, Loc1, nHierarchy, iH, iT, iH_Switch, MinWorking, MaxWorking,
     WantedProd, MinFood, MinProd, count, Take, MaxTake, AreaSize, FormulaCode,
     NeedRare, RareTiles, cix1, dx, dy, BestTiles, ProdBeforeBoost, TestTiles,
-    SubPlus, SuperPlus: integer;
-  SuperValue, BestSuperValue, SubValue, BestSubValue: integer;
-  Value, BestValue, ValuePlus: extended;
-  ValueFormula_Weight: array [oFood .. oScience] of extended;
-  ValueFormula_Multiply: array [oFood .. oScience] of boolean;
-  Output: array [oFood .. oScience] of integer;
+    SubPlus, SuperPlus: Integer;
+  SuperValue, BestSuperValue, SubValue, BestSubValue: Integer;
+  Value, BestValue, ValuePlus: Extended;
+  ValueFormula_Weight: array [oFood .. oScience] of Extended;
+  ValueFormula_Multiply: array [oFood .. oScience] of Boolean;
+  Output: array [oFood .. oScience] of Integer;
   TileInfo, BaseTileInfo: TTileInfo;
   Radius, Radius1: TVicinity21Loc;
   TestReport: TCityReport;
   CityReportEx: TCityReportEx;
   CityAreaInfo: TCityAreaInfo;
   Hierarchy: array [0 .. 20, 0 .. 31] of TTileData;
-  nTile, nSelection: array [0 .. 20] of integer;
-  SubCriterion: array [0 .. 27] of integer;
-  FoodWasted, FoodToTax, ProdToTax, RareOK, NeedStep2, IsBest: boolean;
+  nTile, nSelection: array [0 .. 20] of Integer;
+  SubCriterion: array [0 .. 27] of Integer;
+  FoodWasted, FoodToTax, ProdToTax, RareOK, NeedStep2, IsBest: Boolean;
 begin
-  if (RW[p].Government = gAnarchy) or (RW[p].City[cix].Flags and chCaptured <> 0)
+  if (RW[P].Government = gAnarchy) or (RW[P].City[cix].Flags and chCaptured <> 0)
   then
   begin
     FillChar(Advice.CityReport, SizeOf(Advice.CityReport), 0);
     Advice.Tiles := 1 shl CityOwnTile;
     Advice.CityReport.HypoTiles := 1 shl CityOwnTile;
-    exit;
+    Exit;
   end;
 
-  for i := oFood to oScience do
+  for I := oFood to oScience do
   begin // decode evaluation formula from weights parameter
-    FormulaCode := Advice.ResourceWeights shr (24 - 8 * i) and $FF;
-    ValueFormula_Multiply[i] := FormulaCode and $80 <> 0;
+    FormulaCode := Advice.ResourceWeights shr (24 - 8 * I) and $FF;
+    ValueFormula_Multiply[I] := FormulaCode and $80 <> 0;
     if FormulaCode and $40 <> 0 then
-      ValueFormula_Weight[i] := (FormulaCode and $0F) *
+      ValueFormula_Weight[I] := (FormulaCode and $0F) *
         (1 shl (FormulaCode and $30 shr 4)) / 16
     else
-      ValueFormula_Weight[i] := (FormulaCode and $0F) *
+      ValueFormula_Weight[I] := (FormulaCode and $0F) *
         (1 shl (FormulaCode and $30 shr 4));
   end;
 
   TestReport.HypoTiles := 1 shl CityOwnTile;
   TestReport.HypoTax := -1;
   TestReport.HypoLux := -1;
-  GetSmallCityReport(p, cix, TestReport, @CityReportEx);
-  with RW[p].City[cix] do
+  GetSmallCityReport(P, cix, TestReport, @CityReportEx);
+  with RW[P].City[cix] do
   begin
     V21_to_Loc(Loc, Radius);
-    FoodToTax := RW[p].Government = gFuture;
+    FoodToTax := RW[P].Government = gFuture;
     ProdToTax := Project and (cpImp + cpIndex) = cpImp + imTrGoods;
-    FoodWasted := not FoodToTax and (Food = StorageSize[Difficulty[p]]) and
-      not CanCityGrow(p, cix);
+    FoodWasted := not FoodToTax and (Food = StorageSize[Difficulty[P]]) and
+      not CanCityGrow(P, cix);
 
     // sub criteria
     for V21 := 1 to 26 do
@@ -1299,10 +1299,10 @@ begin
         SubCriterion[V21] := 3360 - (Distance(Loc, Loc1) - 1) * 32 -
           V21 xor $15;
     end;
-    for cix1 := 0 to RW[p].nCity - 1 do
+    for cix1 := 0 to RW[P].nCity - 1 do
       if cix1 <> cix then
       begin
-        Loc1 := RW[p].City[cix1].Loc;
+        Loc1 := RW[P].City[cix1].Loc;
         if Loc1 >= 0 then
         begin
           if Distance(Loc, Loc1) <= 10 then
@@ -1315,20 +1315,20 @@ begin
               then
               begin
                 dxdy(Loc, Loc1, dx, dy);
-                dec(SubCriterion[(dy + 3) shl 2 + (dx + 3) shr 1], 160);
+                Dec(SubCriterion[(dy + 3) shl 2 + (dx + 3) shr 1], 160);
               end;
             end;
           end;
         end;
       end;
 
-    GetCityAreaInfo(p, Loc, CityAreaInfo);
+    GetCityAreaInfo(P, Loc, CityAreaInfo);
     AreaSize := 0;
     for V21 := 1 to 26 do
       if CityAreaInfo.Available[V21] = faAvailable then
-        inc(AreaSize);
+        Inc(AreaSize);
 
-    if RW[p].Government = gFundamentalism then
+    if RW[P].Government = gFundamentalism then
     begin
       MinWorking := Size;
       MaxWorking := Size;
@@ -1338,7 +1338,7 @@ begin
       MinWorking := CityReportEx.TradeProcessing.HappyBase shr 1;
       if MinWorking > Size then
         MinWorking := Size;
-      if (RW[p].LuxRate = 0) and not CityReportEx.TradeProcessing.FlexibleLuxury
+      if (RW[P].LuxRate = 0) and not CityReportEx.TradeProcessing.FlexibleLuxury
       then
         MaxWorking := MinWorking
       else
@@ -1375,7 +1375,7 @@ begin
       begin
         Loc1 := Radius[V21];
         if (Loc1 >= 0) and (Loc1 < MapSize) and
-          (RealMap[Loc1] and fModern = cardinal(NeedRare)) then
+          (RealMap[Loc1] and fModern = Cardinal(NeedRare)) then
           RareTiles := RareTiles or (1 shl V21);
       end;
     end;
@@ -1387,8 +1387,8 @@ begin
         ((NeedRare = 0) or (1 shl V21 and RareTiles = 0)) then
       begin
         Loc1 := Radius[V21];
-        assert((Loc1 >= 0) and (Loc1 < MapSize));
-        GetTileInfo(p, cix, Loc1, TileInfo);
+        Assert((Loc1 >= 0) and (Loc1 < MapSize));
+        GetTileInfo(P, cix, Loc1, TileInfo);
         if V21 = CityOwnTile then
           BaseTileInfo := TileInfo
         else
@@ -1404,24 +1404,24 @@ begin
               (TileInfo.Prod = Hierarchy[iH, iT].Prod) and
               (TileInfo.Trade = Hierarchy[iH, iT].Trade) and
               (SubCriterion[V21] >= SubCriterion[Hierarchy[iH, iT].V21])) do
-              inc(iT);
+              Inc(iT);
             if (iT = nTile[iH]) // new worst tile in this hierarchy
               or ((TileInfo.Food >= Hierarchy[iH, iT].Food)
               // new middle tile in this hierarchy
               and (TileInfo.Prod >= Hierarchy[iH, iT].Prod) and
               (TileInfo.Trade >= Hierarchy[iH, iT].Trade)) then
-              break; // insert position found!
-            inc(iH);
+              Break; // insert position found!
+            Inc(iH);
           end;
           if iH = nHierarchy then
           begin // need to start new hierarchy
             nTile[iH] := 0;
-            inc(nHierarchy);
+            Inc(nHierarchy);
             iT := 0;
           end;
-          move(Hierarchy[iH, iT], Hierarchy[iH, iT + 1],
+          Move(Hierarchy[iH, iT], Hierarchy[iH, iT + 1],
             (nTile[iH] - iT) * SizeOf(TTileData));
-          inc(nTile[iH]);
+          Inc(nTile[iH]);
           Hierarchy[iH, iT].V21 := V21;
           Hierarchy[iH, iT].Food := TileInfo.Food;
           Hierarchy[iH, iT].Prod := TileInfo.Prod;
@@ -1437,17 +1437,17 @@ begin
           (1 shl V21 and RareTiles <> 0) then
         begin
           Loc1 := Radius[V21];
-          assert((V21 <> CityOwnTile) and (Loc1 >= 0) and (Loc1 < MapSize));
-          GetTileInfo(p, cix, Loc1, TileInfo);
+          Assert((V21 <> CityOwnTile) and (Loc1 >= 0) and (Loc1 < MapSize));
+          GetTileInfo(P, cix, Loc1, TileInfo);
           if iH = nHierarchy then
           begin // need to start new hierarchy
             nTile[iH] := 0;
-            inc(nHierarchy);
+            Inc(nHierarchy);
             iT := 0;
           end
           else
             iT := nTile[iH];
-          inc(nTile[iH]);
+          Inc(nTile[iH]);
           Hierarchy[iH, iT].V21 := V21;
           Hierarchy[iH, iT].Food := TileInfo.Food; // = 0
           Hierarchy[iH, iT].Prod := TileInfo.Prod; // = 1
@@ -1456,12 +1456,12 @@ begin
         end;
     end;
     if Built[imAlgae] > 0 then
-      inc(BaseTileInfo.Food, 12);
+      Inc(BaseTileInfo.Food, 12);
 
     // step 2: summarize resources
     for iH := 0 to nHierarchy - 1 do
     begin
-      move(Hierarchy[iH, 0], Hierarchy[iH, 1], nTile[iH] * SizeOf(TTileData));
+      Move(Hierarchy[iH, 0], Hierarchy[iH, 1], nTile[iH] * SizeOf(TTileData));
       Hierarchy[iH, 0].Food := 0;
       Hierarchy[iH, 0].Prod := 0;
       Hierarchy[iH, 0].Trade := 0;
@@ -1469,10 +1469,10 @@ begin
       Hierarchy[iH, 0].V21 := 0;
       for iT := 1 to nTile[iH] do
       begin
-        inc(Hierarchy[iH, iT].Food, Hierarchy[iH, iT - 1].Food);
-        inc(Hierarchy[iH, iT].Prod, Hierarchy[iH, iT - 1].Prod);
-        inc(Hierarchy[iH, iT].Trade, Hierarchy[iH, iT - 1].Trade);
-        inc(Hierarchy[iH, iT].SubValue, Hierarchy[iH, iT - 1].SubValue);
+        Inc(Hierarchy[iH, iT].Food, Hierarchy[iH, iT - 1].Food);
+        Inc(Hierarchy[iH, iT].Prod, Hierarchy[iH, iT - 1].Prod);
+        Inc(Hierarchy[iH, iT].Trade, Hierarchy[iH, iT - 1].Trade);
+        Inc(Hierarchy[iH, iT].SubValue, Hierarchy[iH, iT - 1].SubValue);
         Hierarchy[iH, iT].V21 := 1 shl Hierarchy[iH, iT].V21 +
           Hierarchy[iH, iT - 1].V21;
       end;
@@ -1500,7 +1500,7 @@ begin
         (TestReport.FoodRep < TestReport.Eaten) or
         (ProdBeforeBoost < WantedProd)) do
       begin
-        assert(nSelection[iH] = 0);
+        Assert(nSelection[iH] = 0);
         Take := MinWorking - TestReport.Working;
         if Take > nTile[iH] then
           Take := nTile[iH]
@@ -1513,27 +1513,27 @@ begin
             MaxTake := MaxWorking - TestReport.Working;
           while (Take < MaxTake) and
             (TestReport.FoodRep + Hierarchy[iH, Take].Food < MinFood) do
-            inc(Take);
+            Inc(Take);
           while (Take < MaxTake) and
             (ProdBeforeBoost + Hierarchy[iH, Take].Prod < MinProd) do
-            inc(Take);
+            Inc(Take);
         end;
         nSelection[iH] := Take;
-        inc(TestReport.Working, Take);
+        Inc(TestReport.Working, Take);
         with Hierarchy[iH, Take] do
         begin
-          inc(TestReport.FoodRep, Food);
-          inc(ProdBeforeBoost, Prod);
-          inc(TestReport.Trade, Trade);
+          Inc(TestReport.FoodRep, Food);
+          Inc(ProdBeforeBoost, Prod);
+          Inc(TestReport.Trade, Trade);
         end;
-        inc(iH);
+        Inc(iH);
       end;
 
-      assert((TestReport.Working >= MinWorking) and
+      Assert((TestReport.Working >= MinWorking) and
         (TestReport.Working <= MaxWorking));
       if (TestReport.FoodRep >= MinFood) and (ProdBeforeBoost >= MinProd) then
       begin
-        SplitTrade(TestReport.Trade, RW[p].TaxRate, RW[p].LuxRate,
+        SplitTrade(TestReport.Trade, RW[P].TaxRate, RW[P].LuxRate,
           TestReport.Working, CityReportEx.TradeProcessing,
           TestReport.Corruption, TestReport.Tax, TestReport.Lux,
           TestReport.Science);
@@ -1542,7 +1542,7 @@ begin
           TestReport.Lux + 2 * (Size - TestReport.Working) - 2 *
           TestReport.Deployed >= Size then
         begin // city is not in disorder -- evaluate combination
-          inc(count);
+          Inc(count);
           if (MinProd < WantedProd) and (ProdBeforeBoost > MinProd) then
           begin // no combination reached wanted prod yet
             MinProd := ProdBeforeBoost;
@@ -1590,7 +1590,7 @@ begin
               if FoodToTax or (Size >= NeedAqueductSize) and (Output[oFood] = 1)
               then
               begin
-                inc(Output[oTax], Output[oFood]);
+                Inc(Output[oTax], Output[oFood]);
                 Output[oFood] := 0;
               end;
             end;
@@ -1602,36 +1602,36 @@ begin
             begin
               if NeedRare > 0 then
               begin
-                RareOK := false;
+                RareOK := False;
                 for iH := 0 to nHierarchy - 1 do
                   if Hierarchy[iH, nSelection[iH]].V21 and RareTiles <> 0 then
-                    RareOK := true;
+                    RareOK := True;
                 if not RareOK then
                   TestReport.ProdRep := TestReport.Support;
               end;
               Output[oProd] := TestReport.ProdRep - TestReport.Support;
               if ProdToTax then
               begin
-                inc(Output[oTax], Output[oProd]);
+                Inc(Output[oTax], Output[oProd]);
                 Output[oProd] := 0;
               end;
             end;
 
-            NeedStep2 := false;
+            NeedStep2 := False;
             Value := 0;
-            for i := oFood to oScience do
-              if ValueFormula_Multiply[i] then
-                NeedStep2 := true
+            for I := oFood to oScience do
+              if ValueFormula_Multiply[I] then
+                NeedStep2 := True
               else
-                Value := Value + ValueFormula_Weight[i] * Output[i];
+                Value := Value + ValueFormula_Weight[I] * Output[I];
             if NeedStep2 then
             begin
               if Value > 0 then
                 Value := ln(Value) + 123;
-              for i := oFood to oScience do
-                if ValueFormula_Multiply[i] and (Output[i] > 0) then
-                  Value := Value + ValueFormula_Weight[i] *
-                    (ln(Output[i]) + 123);
+              for I := oFood to oScience do
+                if ValueFormula_Multiply[I] and (Output[I] > 0) then
+                  Value := Value + ValueFormula_Weight[I] *
+                    (ln(Output[I]) + 123);
             end;
 
             ValuePlus := Value - BestValue;
@@ -1642,18 +1642,18 @@ begin
               TestTiles := 1 shl CityOwnTile;
               for iH := 0 to nHierarchy - 1 do
               begin
-                inc(TestTiles, Hierarchy[iH, nSelection[iH]].V21);
-                inc(SubValue, Hierarchy[iH, nSelection[iH]].SubValue);
+                Inc(TestTiles, Hierarchy[iH, nSelection[iH]].V21);
+                Inc(SubValue, Hierarchy[iH, nSelection[iH]].SubValue);
               end;
-              IsBest := true;
+              IsBest := True;
               if (SuperPlus = 0) and (ValuePlus = 0.0) then
               begin
                 SubPlus := SubValue - BestSubValue;
                 if SubPlus < 0 then
-                  IsBest := false
+                  IsBest := False
                 else if SubPlus = 0 then
                 begin
-                  assert(TestTiles <> BestTiles);
+                  Assert(TestTiles <> BestTiles);
                   IsBest := TestTiles > BestTiles
                 end
               end;
@@ -1678,30 +1678,30 @@ begin
       repeat
         with Hierarchy[iH_Switch, nSelection[iH_Switch]] do
         begin
-          dec(TestReport.FoodRep, Food);
-          dec(ProdBeforeBoost, Prod);
-          dec(TestReport.Trade, Trade);
+          Dec(TestReport.FoodRep, Food);
+          Dec(ProdBeforeBoost, Prod);
+          Dec(TestReport.Trade, Trade);
         end;
-        inc(nSelection[iH_Switch]);
-        inc(TestReport.Working);
+        Inc(nSelection[iH_Switch]);
+        Inc(TestReport.Working);
         if (nSelection[iH_Switch] <= nTile[iH_Switch]) and
           (TestReport.Working <= MaxWorking) then
         begin
           with Hierarchy[iH_Switch, nSelection[iH_Switch]] do
           begin
-            inc(TestReport.FoodRep, Food);
-            inc(ProdBeforeBoost, Prod);
-            inc(TestReport.Trade, Trade);
+            Inc(TestReport.FoodRep, Food);
+            Inc(ProdBeforeBoost, Prod);
+            Inc(TestReport.Trade, Trade);
           end;
-          break;
+          Break;
         end;
-        dec(TestReport.Working, nSelection[iH_Switch]);
+        Dec(TestReport.Working, nSelection[iH_Switch]);
         nSelection[iH_Switch] := 0;
-        inc(iH_Switch);
+        Inc(iH_Switch);
       until iH_Switch = nHierarchy;
     until iH_Switch = nHierarchy; // everything tested -- done
   end;
-  assert(BestSuperValue > 0); // advice should always be possible
+  Assert(BestSuperValue > 0); // advice should always be possible
   Advice.Tiles := BestTiles;
   Advice.CityReport.HypoTiles := BestTiles;
 end;
@@ -1712,22 +1712,22 @@ end;
 }
 procedure InitGame;
 var
-  p, i, mixTownGuard: integer;
+  P, I, mixTownGuard: Integer;
 begin
   MaxDist := Distance(0, MapSize - lx shr 1);
-  for p := 0 to nPl - 1 do
-    if (1 shl p and GAlive <> 0) then
-      with RW[p] do
+  for P := 0 to nPl - 1 do
+    if (1 shl P and GAlive <> 0) then
+      with RW[P] do
       begin // initialize capital
         mixTownGuard := 0;
         while Model[mixTownGuard].Kind <> mkSpecial_TownGuard do
-          inc(mixTownGuard);
+          Inc(mixTownGuard);
         with City[0] do
         begin
           Built[imPalace] := 1;
           Size := 4;
-          for i := 2 to Size do
-            AddBestCityTile(p, 0);
+          for I := 2 to Size do
+            AddBestCityTile(P, 0);
           Project := mixTownGuard;
         end;
         NatBuilt[imPalace] := 1;

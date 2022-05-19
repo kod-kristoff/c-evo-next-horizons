@@ -220,7 +220,7 @@ begin
       Maxh := 0;
       for I := 0 to ListViewJobs.Items.Count - 1 do
       begin
-        ItemRect := ListViewJobs.Items[i].DisplayRect(drBounds);
+        ItemRect := ListViewJobs.Items[I].DisplayRect(drBounds);
         Maxh := Max(Maxh, ItemRect.Top + (ItemRect.Bottom - ItemRect.Top));
       end;
       PanelOperationsHeight := Scale96ToScreen(12) + Maxh;

@@ -41,7 +41,7 @@ const
   clLightGreen = TColor($80FF80);
   clLightRed = TColor($8080FF);
 
-function AddLeadingZeroes(const aNumber, Length : integer) : string;
+function AddLeadingZeroes(const aNumber, Length : Integer) : string;
 function BinToInt(BinStr: string): Int64;
 function BinToHexString(Source: AnsiString): string;
 //function DelTree(DirName : string): Boolean;
@@ -95,18 +95,18 @@ implementation
 
 function BinToInt(BinStr : string) : Int64;
 var
-  i : byte;
+  I : Byte;
   RetVar : Int64;
 begin
   BinStr := UpperCase(BinStr);
-  if BinStr[length(BinStr)] = 'B' then Delete(BinStr,length(BinStr),1);
+  if BinStr[Length(BinStr)] = 'B' then Delete(BinStr,Length(BinStr),1);
   RetVar := 0;
-  for i := 1 to length(BinStr) do begin
-    if not (BinStr[i] in ['0','1']) then begin
+  for I := 1 to Length(BinStr) do begin
+    if not (BinStr[I] in ['0','1']) then begin
       RetVar := 0;
       Break;
     end;
-    RetVar := (RetVar shl 1) + (byte(BinStr[i]) and 1) ;
+    RetVar := (RetVar shl 1) + (Byte(BinStr[I]) and 1) ;
   end;
 
   Result := RetVar;
@@ -434,7 +434,7 @@ begin
   Variable := (Variable and ((1 shl Index) xor High(Word))) or (Word(State) shl Index);
 end;
 
-function AddLeadingZeroes(const aNumber, Length : integer) : string;
+function AddLeadingZeroes(const aNumber, Length : Integer) : string;
 begin
   Result := SysUtils.Format('%.*d', [Length, aNumber]) ;
 end;
@@ -613,7 +613,7 @@ var
     J: Integer;
   begin
     for J := ReadFrom to Len do
-      if (S[j] = C) then
+      if (S[J] = C) then
       begin
         Result := J;
         Exit;
@@ -630,7 +630,7 @@ begin
   while (I <= Len) do begin
     Inc(I);
     APos := ReadUntil(I, '<');
-    Result := Result + Copy(S, I, APos - i);
+    Result := Result + Copy(S, I, APos - I);
     I := ReadUntil(APos + 1, '>');
   end;
 end;

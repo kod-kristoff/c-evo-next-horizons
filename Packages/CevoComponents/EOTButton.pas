@@ -18,17 +18,17 @@ type
   public
     constructor Create(aOwner: TComponent); override;
     destructor Destroy; override;
-    procedure SetButtonIndexFast(x: integer);
-    procedure SetBack(ca: TCanvas; x, y: integer);
+    procedure SetButtonIndexFast(X: Integer);
+    procedure SetBack(ca: TCanvas; X, Y: Integer);
   private
     FTemplate: TBitmap;
-    FIndex: integer;
-    procedure SetIndex(x: integer);
+    FIndex: Integer;
+    procedure SetIndex(X: Integer);
   public
     property Template: TBitmap read FTemplate write FTemplate;
   published
     property Visible;
-    property ButtonIndex: integer read FIndex write SetIndex;
+    property ButtonIndex: Integer read FIndex write SetIndex;
     property OnClick;
   protected
     Buffer, Back: TBitmap;
@@ -59,7 +59,7 @@ begin
   Back.PixelFormat := pf24bit;
   Back.SetSize(48, 48);
   Back.Canvas.FillRect(0, 0, Back.Width, Back.Height);
-  ShowHint := true;
+  ShowHint := True;
   SetBounds(0, 0, 48, 48);
 end;
 
@@ -88,18 +88,18 @@ begin
     end;
 end;
 
-procedure TEOTButton.SetIndex(x: integer);
+procedure TEOTButton.SetIndex(X: Integer);
 begin
-  if x <> FIndex then begin
-    FIndex := x;
+  if X <> FIndex then begin
+    FIndex := X;
     Invalidate;
   end;
 end;
 
-procedure TEOTButton.SetButtonIndexFast(x: integer);
+procedure TEOTButton.SetButtonIndexFast(X: Integer);
 begin
-  if Visible and (x <> FIndex) then begin
-    FIndex := x;
+  if Visible and (X <> FIndex) then begin
+    FIndex := X;
     try
       Paint;
     except
@@ -107,9 +107,9 @@ begin
   end;
 end;
 
-procedure TEOTButton.SetBack(ca: TCanvas; x, y: integer);
+procedure TEOTButton.SetBack(ca: TCanvas; X, Y: Integer);
 begin
-  BitBltCanvas(Back.Canvas, 0, 0, 48, 48, ca, x, y);
+  BitBltCanvas(Back.Canvas, 0, 0, 48, 48, ca, X, Y);
 end;
 
 end.

@@ -54,20 +54,20 @@ const
   yLegend = 79;
   yLegendPitch = 32;
 
-function min(a, b: Integer): Integer;
+function Min(A, B: Integer): Integer;
 begin
-  if a < b then
-    result := a
+  if A < B then
+    Result := A
   else
-    result := b;
+    Result := B;
 end;
 
-function max(a, b: Integer): Integer;
+function Max(A, B: Integer): Integer;
 begin
-  if a > b then
-    result := a
+  if A > B then
+    Result := A
   else
-    result := b;
+    Result := B;
 end;
 
 procedure TTechTreeDlg.FormCreate(Sender: TObject);
@@ -83,19 +83,19 @@ end;
 
 procedure TTechTreeDlg.FormPaint(Sender: TObject);
 var
-  X, w: Integer;
+  X, W: Integer;
 begin
   with Canvas do begin
     // black border
-    brush.color := $000000;
-    fillrect(rect(0, 0, BlackBorder, ClientHeight));
-    fillrect(rect(BlackBorder, 0, ClientWidth - BlackBorder, BlackBorder));
-    fillrect(rect(ClientWidth - BlackBorder, 0, ClientWidth, ClientHeight));
-    fillrect(rect(BlackBorder, ClientHeight - BlackBorder,
+    Brush.Color := $000000;
+    FillRect(rect(0, 0, BlackBorder, ClientHeight));
+    FillRect(rect(BlackBorder, 0, ClientWidth - BlackBorder, BlackBorder));
+    FillRect(rect(ClientWidth - BlackBorder, 0, ClientWidth, ClientHeight));
+    FillRect(rect(BlackBorder, ClientHeight - BlackBorder,
       ClientWidth - BlackBorder, ClientHeight));
 
     // texturize empty space
-    brush.color := $FFFFFF;
+    Brush.Color := $FFFFFF;
     if xOffset > 0 then
       FillRectSeamless(Canvas, BlackBorder, BlackBorder, BlackBorder + xOffset,
         ClientHeight - BlackBorder, -BlackBorder - xOffset,
@@ -104,30 +104,30 @@ begin
       FillRectSeamless(Canvas, BlackBorder + xOffset + Image.width, BlackBorder,
         ClientWidth - BlackBorder, ClientHeight - BlackBorder,
         -BlackBorder - xOffset, -BlackBorder - yOffset, Paper);
-    X := max(BlackBorder, BlackBorder + xOffset);
-    w := min(BlackBorder + xOffset + Image.width, ClientWidth - BlackBorder);
+    X := Max(BlackBorder, BlackBorder + xOffset);
+    W := Min(BlackBorder + xOffset + Image.width, ClientWidth - BlackBorder);
     if yOffset > 0 then
-      FillRectSeamless(Canvas, X, BlackBorder, w, BlackBorder + yOffset,
+      FillRectSeamless(Canvas, X, BlackBorder, W, BlackBorder + yOffset,
         -BlackBorder - xOffset, -BlackBorder - yOffset, Paper);
     if yOffset + Image.height < ClientHeight - 2 * BlackBorder then
-      FillRectSeamless(Canvas, X, BlackBorder + yOffset + Image.height, w,
+      FillRectSeamless(Canvas, X, BlackBorder + yOffset + Image.height, W,
         ClientHeight - BlackBorder, -BlackBorder - xOffset,
         -BlackBorder - yOffset, Paper);
   end;
-  BitBltCanvas(Canvas, max(BlackBorder, BlackBorder + xOffset),
-    max(BlackBorder, BlackBorder + yOffset),
-    min(Image.width, min(Image.width + xOffset,
-    min(ClientWidth - 2 * BlackBorder, ClientWidth - 2 * BlackBorder - xOffset))
-    ), min(Image.height, min(Image.height + yOffset,
-    min(ClientHeight - 2 * BlackBorder, ClientHeight - 2 * BlackBorder -
-    yOffset))), Image.Canvas, max(0, -xOffset),
-    max(0, -yOffset));
+  BitBltCanvas(Canvas, Max(BlackBorder, BlackBorder + xOffset),
+    Max(BlackBorder, BlackBorder + yOffset),
+    Min(Image.width, Min(Image.width + xOffset,
+    Min(ClientWidth - 2 * BlackBorder, ClientWidth - 2 * BlackBorder - xOffset))
+    ), Min(Image.height, Min(Image.height + yOffset,
+    Min(ClientHeight - 2 * BlackBorder, ClientHeight - 2 * BlackBorder -
+    yOffset))), Image.Canvas, Max(0, -xOffset),
+    Max(0, -yOffset));
 end;
 
 procedure TTechTreeDlg.FormShow(Sender: TObject);
 var
   X, Y, ad: Integer;
-  s: string;
+  S: string;
   NewWidth: Integer;
   NewHeight: Integer;
 begin
@@ -141,18 +141,18 @@ begin
     with Image.Canvas do begin
       // write advance names
       Font.Assign(UniFont[ftSmall]);
-      Font.color := clBlack;
-      brush.Style := bsClear;
+      Font.Color := clBlack;
+      Brush.Style := bsClear;
       for X := 0 to (Image.width - xStart) div xPitch do
         for Y := 0 to (Image.height - yStart) div yPitch do
         begin
           ad := Pixels[xStart + X * xPitch + 10, yStart + Y * yPitch - 1];
           if ad and $FFFF00 = 0 then
           begin
-            s := Phrases.Lookup('ADVANCES', ad);
-            while TextWidth(s) > 112 do
-              Delete(s, Length(s), 1);
-            TextOut(xStart + X * xPitch + 2, yStart + Y * yPitch, s);
+            S := Phrases.Lookup('ADVANCES', ad);
+            while TextWidth(S) > 112 do
+              Delete(S, Length(S), 1);
+            TextOut(xStart + X * xPitch + 2, yStart + Y * yPitch, S);
             Pixels[xStart + X * xPitch + 10, yStart + Y * yPitch - 1]
               := TransparentColor2;
           end
@@ -190,7 +190,7 @@ procedure TTechTreeDlg.FormMouseDown(Sender: TObject; Button: TMouseButton;
 begin
   if Button = mbLeft then
   begin
-    dragging := true;
+    dragging := True;
     xDown := X;
     yDown := Y;
   end;
@@ -199,7 +199,7 @@ end;
 procedure TTechTreeDlg.FormMouseUp(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
-  dragging := false;
+  dragging := False;
 end;
 
 procedure TTechTreeDlg.FormMouseMove(Sender: TObject; Shift: TShiftState;

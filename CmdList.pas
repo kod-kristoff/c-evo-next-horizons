@@ -9,7 +9,7 @@ uses
 const
   MaxDataSize = 1024;
   CommandDataElementSize = 4;
-  CommandDataElementCountMask = $f;
+  CommandDataElementCountMask = $F;
   CommandDataMaxSize = CommandDataElementSize * CommandDataElementCountMask;
 
 type
@@ -26,21 +26,21 @@ type
   TCmdList = class
     constructor Create;
     destructor Destroy; override;
-    procedure Get(var Command, Player, Subject: integer; var Data: pointer);
-    procedure GetDataChanges(Data: pointer; DataSize: integer);
-    procedure Put(Command, Player, Subject: integer; Data: pointer);
-    procedure PutDataChanges(Command, Player: integer;
-      OldData, NewData: pointer; DataSize: integer);
-    procedure LoadFromFile(const f: TFileStream);
-    procedure SaveToFile(const f: TFileStream);
-    procedure AppendToFile(const f: TFileStream; const OldState: TCmdListState);
+    procedure Get(var Command, Player, Subject: Integer; var Data: Pointer);
+    procedure GetDataChanges(Data: Pointer; DataSize: Integer);
+    procedure Put(Command, Player, Subject: Integer; Data: Pointer);
+    procedure PutDataChanges(Command, Player: Integer;
+      OldData, NewData: Pointer; DataSize: Integer);
+    procedure LoadFromFile(const F: TFileStream);
+    procedure SaveToFile(const F: TFileStream);
+    procedure AppendToFile(const F: TFileStream; const OldState: TCmdListState);
     procedure Cut;
-    function Progress: integer;
+    function Progress: Integer;
   private
-    LogAlloc: integer; { allocated size of LogData in bytes }
+    LogAlloc: Integer; { allocated size of LogData in bytes }
     LogData: ^TLogData;
     FState: TCmdListState;
-    procedure PutData(Data: pointer; Length: integer);
+    procedure PutData(Data: Pointer; Length: Integer);
     procedure CompleteMoveCode;
   public
     property State: TCmdListState read FState write FState;
@@ -91,7 +91,7 @@ begin
   inherited;
 end;
 
-procedure TCmdList.Get(var Command, Player, Subject: integer; var Data: pointer);
+procedure TCmdList.Get(var Command, Player, Subject: Integer; var Data: Pointer);
 var
   DirCode: Cardinal;
   Code: Cardinal;
@@ -126,32 +126,32 @@ begin
   end
   else
   begin
-    code := Cardinal((@LogData[FState.LoadPos])^);
-    if code and 3 = 0 then
+    Code := Cardinal((@LogData[FState.LoadPos])^);
+    if Code and 3 = 0 then
     begin // non-clientex command
-      Command := code shr 2 and $3FFF + sExecute;
-      Player := code shr 16 and $F;
-      Subject := code shr 20 and $FFF;
-      inc(FState.LoadPos, 4);
+      Command := Code shr 2 and $3FFF + sExecute;
+      Player := Code shr 16 and $F;
+      Subject := Code shr 20 and $FFF;
+      Inc(FState.LoadPos, 4);
     end
-    else if code and 7 = 2 then
+    else if Code and 7 = 2 then
     begin // clientex command
-      Command := code shr 3 and $FFFF;
-      Player := code shr 19 and $F;
+      Command := Code shr 3 and $FFFF;
+      Player := Code shr 19 and $F;
       Subject := 0;
-      inc(FState.LoadPos, 3);
+      Inc(FState.LoadPos, 3);
     end
     else
     begin // move command shortcut
-      if (code and 1 = 1) and (code and (7 shl 4) <> 6 shl 4) then
+      if (Code and 1 = 1) and (Code and (7 shl 4) <> 6 shl 4) then
       begin
-        FState.LoadMoveCode := code and $FF;
-        inc(FState.LoadPos);
+        FState.LoadMoveCode := Code and $FF;
+        Inc(FState.LoadPos);
       end
       else
       begin
-        FState.LoadMoveCode := code and $FFFFFF;
-        inc(FState.LoadPos, 3);
+        FState.LoadMoveCode := Code and $FFFFFF;
+        Inc(FState.LoadPos, 3);
       end;
       Get(Command, Player, Subject, Data);
       Exit;
@@ -162,38 +162,38 @@ begin
     else
     begin
       Data := @LogData[FState.LoadPos];
-      inc(FState.LoadPos, Command and CommandDataElementCountMask * CommandDataElementSize);
+      Inc(FState.LoadPos, Command and CommandDataElementCountMask * CommandDataElementSize);
     end;
   end;
 end;
 
-procedure TCmdList.GetDataChanges(Data: pointer; DataSize: integer);
+procedure TCmdList.GetDataChanges(Data: Pointer; DataSize: Integer);
 var
-  b0, b1: integer;
+  b0, b1: Integer;
   Map0, Map1: Cardinal;
 begin
   Map0 := Cardinal((@LogData[FState.LoadPos])^);
-  inc(FState.LoadPos, 4);
+  Inc(FState.LoadPos, 4);
   b0 := 0;
   while Map0 > 0 do begin
     if Map0 and 1 <> 0 then begin
       Map1 := Cardinal((@LogData[FState.LoadPos])^);
-      inc(FState.LoadPos, 4);
+      Inc(FState.LoadPos, 4);
       for b1 := 0 to 31 do
         if 1 shl b1 and Map1 <> 0 then begin
           if b0 * 32 + b1 < DataSize then
             PData(Data)[b0 * 32 + b1] := Cardinal((@LogData[FState.LoadPos])^);
-          inc(FState.LoadPos, 4);
+          Inc(FState.LoadPos, 4);
         end;
     end;
-    inc(b0);
+    Inc(b0);
     Map0 := Map0 shr 1;
   end;
 end;
 
-procedure TCmdList.Put(Command, Player, Subject: integer; Data: pointer);
+procedure TCmdList.Put(Command, Player, Subject: Integer; Data: Pointer);
 var
-  DirCode, code: Cardinal;
+  DirCode, Code: Cardinal;
 begin
   if Command and $FC00 = sMoveUnit then
   begin // move command shortcut
@@ -208,30 +208,30 @@ begin
       sMoveUnit + $300: DirCode := 7;
     end;
     if Subject = FState.LastMovingUnit then
-      code := 1 + DirCode shl 1
+      Code := 1 + DirCode shl 1
     else
-      code := 6 + DirCode shl 3 + Cardinal(Subject) shl 6;
+      Code := 6 + DirCode shl 3 + Cardinal(Subject) shl 6;
     if FState.MoveCode = 0 then
-      FState.MoveCode := code
+      FState.MoveCode := Code
     else if FState.MoveCode and 1 = 1 then
     begin // FM + this
-      FState.MoveCode := FState.MoveCode + code shl 4;
-      if code and 1 = 1 then
+      FState.MoveCode := FState.MoveCode + Code shl 4;
+      if Code and 1 = 1 then
         PutData(@FState.MoveCode, 1) // FM + FM
       else
         PutData(@FState.MoveCode, 3); // FM + M
       FState.MoveCode := 0;
     end
-    else if code and 1 = 1 then
+    else if Code and 1 = 1 then
     begin // M + FM
-      FState.MoveCode := FState.MoveCode + code shl 18;
+      FState.MoveCode := FState.MoveCode + Code shl 18;
       PutData(@FState.MoveCode, 3);
       FState.MoveCode := 0;
     end
     else // M + M
     begin
       PutData(@FState.MoveCode, 3);
-      FState.MoveCode := code;
+      FState.MoveCode := Code;
     end;
     FState.LastMovingUnit := Subject;
   end
@@ -240,28 +240,28 @@ begin
     CompleteMoveCode;
     if Command >= cClientEx then
     begin
-      code := 2 + Command shl 3 + Player shl 19;
-      PutData(@code, 3);
+      Code := 2 + Command shl 3 + Player shl 19;
+      PutData(@Code, 3);
     end
     else
     begin
-      code := Cardinal(Command - sExecute) shl 2 + Cardinal(Player) shl 16 +
+      Code := Cardinal(Command - sExecute) shl 2 + Cardinal(Player) shl 16 +
         Cardinal(Subject) shl 20;
-      PutData(@code, 4);
+      PutData(@Code, 4);
     end;
   end;
   if Command and CommandDataElementCountMask <> 0 then
     PutData(Data, Command and CommandDataElementCountMask * CommandDataElementSize);
 end;
 
-procedure TCmdList.PutDataChanges(Command, Player: integer;
-  OldData, NewData: pointer; DataSize: integer);
+procedure TCmdList.PutDataChanges(Command, Player: Integer;
+  OldData, NewData: Pointer; DataSize: Integer);
 var
-  MapPos, LogPos, b0, b1, RowEnd: integer;
-  Map0, Map1, code: Cardinal;
+  MapPos, LogPos, b0, b1, RowEnd: Integer;
+  Map0, Map1, Code: Cardinal;
 begin
   if DataSize <= 0 then
-    exit;
+    Exit;
   if DataSize > MaxDataSize then
     DataSize := MaxDataSize;
   CompleteMoveCode;
@@ -272,7 +272,7 @@ begin
   begin
     if LogPos + 4 * 32 > LogAlloc then
     begin
-      inc(LogAlloc, LogGrow);
+      Inc(LogAlloc, LogGrow);
       ReallocMem(LogData, LogAlloc);
     end;
     Map0 := Map0 shr 1;
@@ -286,8 +286,8 @@ begin
       if PData(NewData)[b1] <> PData(OldData)[b1] then
       begin
         Cardinal((@LogData[LogPos])^) := PData(NewData)[b1];
-        inc(LogPos, 4);
-        inc(Map1, $80000000);
+        Inc(LogPos, 4);
+        Inc(Map1, $80000000);
       end;
     end;
     if Map1 > 0 then
@@ -295,29 +295,29 @@ begin
       Map1 := Map1 shr (b0 * 32 + 31 - RowEnd);
       Cardinal((@LogData[MapPos])^) := Map1;
       MapPos := LogPos;
-      inc(LogPos, 4);
-      inc(Map0, $80000000);
+      Inc(LogPos, 4);
+      Inc(Map0, $80000000);
     end;
   end;
   if Map0 = 0 then
-    exit; // no changes
+    Exit; // no changes
 
   Map0 := Map0 shr (31 - (DataSize - 1) div 32);
   Cardinal((@LogData[FState.nLog + 4])^) := Map0;
-  code := Cardinal(Command - sExecute) shl 2 + Cardinal(Player) shl 16;
-  Cardinal((@LogData[FState.nLog])^) := code;
+  Code := Cardinal(Command - sExecute) shl 2 + Cardinal(Player) shl 16;
+  Cardinal((@LogData[FState.nLog])^) := Code;
   FState.nLog := MapPos;
 end;
 
-procedure TCmdList.PutData(Data: pointer; Length: integer);
+procedure TCmdList.PutData(Data: Pointer; Length: Integer);
 begin
   if FState.nLog + Length > LogAlloc then
   begin
-    inc(LogAlloc, LogGrow);
+    Inc(LogAlloc, LogGrow);
     ReallocMem(LogData, LogAlloc);
   end;
-  move(Data^, LogData[FState.nLog], Length);
-  inc(FState.nLog, Length);
+  Move(Data^, LogData[FState.nLog], Length);
+  Inc(FState.nLog, Length);
 end;
 
 procedure TCmdList.CompleteMoveCode;
@@ -332,30 +332,30 @@ begin
   end;
 end;
 
-procedure TCmdList.LoadFromFile(const f: TFileStream);
+procedure TCmdList.LoadFromFile(const F: TFileStream);
 begin
-  f.read(FState.nLog, 4);
+  F.read(FState.nLog, 4);
   LogData := nil;
   LogAlloc := ((FState.nLog + 2) div LogGrow + 1) * LogGrow;
   ReallocMem(LogData, LogAlloc);
-  f.read(LogData^, FState.nLog);
+  F.read(LogData^, FState.nLog);
   FState.LoadPos := 0;
 end;
 
-procedure TCmdList.SaveToFile(const f: TFileStream);
+procedure TCmdList.SaveToFile(const F: TFileStream);
 begin
   CompleteMoveCode;
-  f.write(FState.nLog, 4);
-  f.write(LogData^, FState.nLog);
+  F.write(FState.nLog, 4);
+  F.write(LogData^, FState.nLog);
 end;
 
-procedure TCmdList.AppendToFile(const f: TFileStream;
+procedure TCmdList.AppendToFile(const F: TFileStream;
   const OldState: TCmdListState);
 begin
   CompleteMoveCode;
-  f.write(FState.nLog, 4);
-  f.Position := f.Position + OldState.nLog;
-  f.write(LogData[OldState.nLog], FState.nLog - OldState.nLog);
+  F.write(FState.nLog, 4);
+  F.Position := F.Position + OldState.nLog;
+  F.write(LogData[OldState.nLog], FState.nLog - OldState.nLog);
 end;
 
 procedure TCmdList.Cut;
@@ -363,14 +363,14 @@ begin
   FState.nLog := FState.LoadPos;
 end;
 
-function TCmdList.Progress: integer;
+function TCmdList.Progress: Integer;
 begin
   if (FState.LoadPos = FState.nLog) and (FState.LoadMoveCode = 0) then
-    result := 1000 // loading complete
+    Result := 1000 // loading complete
   else if FState.nLog > 1 shl 20 then
-    result := (FState.LoadPos shr 8) * 999 div (FState.nLog shr 8)
+    Result := (FState.LoadPos shr 8) * 999 div (FState.nLog shr 8)
   else
-    result := FState.LoadPos * 999 div FState.nLog;
+    Result := FState.LoadPos * 999 div FState.nLog;
 end;
 
 { Format Specification:
@@ -378,37 +378,37 @@ end;
   Non-ClientEx-Command:
   Byte3    Byte2    Byte1    Byte0
   ssssssss sssspppp cccccccc cccccc00
-  (c = Command-sExecute, p = Player, s = Subject)
+  (C = Command-sExecute, P = Player, S = Subject)
 
   ClientEx-Command:
   Byte2    Byte1    Byte0
   0ppppccc cccccccc ccccc010
-  (c = Command, p = Player)
+  (C = Command, P = Player)
 
   Single Move:
   Byte2    Byte1    Byte0
   000000ss ssssssss ssaaa110
-  (a = Direction, s = Subject)
+  (A = Direction, S = Subject)
 
   Move + Follow Move:
   Byte2    Byte1    Byte0
   00bbb1ss ssssssss ssaaa110
-  (a = Direction 1, s = Subject 1, b = Direction 2)
+  (A = Direction 1, S = Subject 1, B = Direction 2)
 
   Follow Move + Move:
   Byte2    Byte1    Byte0
   00ssssss ssssssbb b110aaa1
-  (a = Direction 1, b = Direction 2, s = Subject 2)
+  (A = Direction 1, B = Direction 2, S = Subject 2)
 
   Single Follow Move:
   Byte0
   0000aaa1
-  (a = Direction)
+  (A = Direction)
 
   Double Follow Move:
   Byte0
   bbb1aaa1
-  (a = Direction 1, b = Direction 2)
+  (A = Direction 1, B = Direction 2)
 }
 
 end.

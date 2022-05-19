@@ -14,7 +14,7 @@ const
 
 type
   THistory = record
-    n: Integer;
+    N: Integer;
     Text: array[0 .. MaxHistory - 1] of ansistring;
   end;
 
@@ -58,7 +58,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormMouseDown(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: integer);
+      Shift: TShiftState; X, Y: Integer);
     procedure OkBtnClick(Sender: TObject);
     procedure BwdBtnClick(Sender: TObject);
     procedure FwdBtnClick(Sender: TObject);
@@ -77,18 +77,18 @@ type
     procedure ShowNewContent(NewMode: TWindowMode);
 
   private
-    Page, DipCommand: integer;
+    Page, DipCommand: Integer;
     CurrentOffer: TOffer;
     MyAllowed, OppoAllowed: TPriceSet;
     CommandAllowed: set of TCommandAllowedEnum;
     History: array [0 .. nPl - 1] of THistory;
     RomanFont: TFont;
-    Costs, Delivers: array [0 .. 11] of cardinal;
+    Costs, Delivers: array [0 .. 11] of Cardinal;
     procedure ResetCurrentOffer;
     procedure BuildCurrentOffer;
     procedure FindAllowed;
     procedure SplitText(Text: string; Bounds: TRect);
-    procedure PaintNationPicture(X, Y, p: integer);
+    procedure PaintNationPicture(X, Y, P: Integer);
     procedure SetButtonStates;
   end;
 
@@ -182,14 +182,14 @@ end;
 
 procedure TNegoDlg.ResetCurrentOffer;
 var
-  i: integer;
+  I: Integer;
 begin
   CurrentOffer.nDeliver := 0;
   CurrentOffer.nCost := 0;
-  for i := 0 to 11 do
-    Costs[i] := $FFFFFFFF;
-  for i := 0 to 11 do
-    Delivers[i] := $FFFFFFFF;
+  for I := 0 to 11 do
+    Costs[I] := $FFFFFFFF;
+  for I := 0 to 11 do
+    Delivers[I] := $FFFFFFFF;
 end;
 
 procedure TNegoDlg.ShowNewContent(NewMode: TWindowMode);
@@ -200,7 +200,7 @@ begin
     PassBtn.SmartHint := Phrases.Lookup('BTN_NOTICE')
   else
     PassBtn.SmartHint := Phrases.Lookup('BTN_PASS');
-  case MyRO.Treaty[DipMem[me].pContact] of
+  case MyRO.Treaty[DipMem[Me].pContact] of
     trNone:
       begin
         WantHiTreatyBtn.SmartHint := Phrases.Lookup('BTN_WANTPEACE');
@@ -236,21 +236,21 @@ end;
 procedure TNegoDlg.Start;
 begin
   if ClientMode <> scDipStart then
-    with History[me] do
+    with History[Me] do
     begin
-      if n = MaxHistory then
+      if N = MaxHistory then
       begin
-        move(Text[2], Text[0], (MaxHistory - 2) * sizeof(integer));
-        dec(n, 2);
+        Move(Text[2], Text[0], (MaxHistory - 2) * SizeOf(Integer));
+        Dec(N, 2);
       end;
-      Text[n] := copy(DipCommandToString(DipMem[me].pContact, me,
-        DipMem[me].FormerTreaty, DipMem[me].SentCommand, ClientMode,
-        DipMem[me].SentOffer, ReceivedOffer), 1, 255);
-      inc(n);
+      Text[N] := Copy(DipCommandToString(DipMem[Me].pContact, Me,
+        DipMem[Me].FormerTreaty, DipMem[Me].SentCommand, ClientMode,
+        DipMem[Me].SentOffer, ReceivedOffer), 1, 255);
+      Inc(N);
     end;
-  assert(History[me].n mod 2 = 1);
+  Assert(History[Me].N mod 2 = 1);
 
-  Page := History[me].n;
+  Page := History[Me].N;
   FindAllowed;
   ResetCurrentOffer;
 
@@ -282,40 +282,40 @@ end;
 
 procedure TNegoDlg.SplitText(Text: string; Bounds: TRect);
 var
-  nLines, Line, Start, Stop, OrdinaryStop, Indent, Y: integer;
-  s: string;
-  preview, Dot: boolean;
+  nLines, Line, Start, Stop, OrdinaryStop, Indent, Y: Integer;
+  S: string;
+  preview, Dot: Boolean;
 begin
   nLines := 0;
-  for preview := true downto false do
+  for preview := True downto False do
   begin
     Start := 1;
     Line := 0;
     Indent := 0;
     while Start < Length(Text) do
     begin
-      Dot := false;
+      Dot := False;
       if (Start = 1) or (Text[Start - 1] = '\') then
         if Text[Start] = '-' then
         begin
           Indent := ListIndent;
-          inc(Start);
+          Inc(Start);
           if Start = Length(Text) then
-            break;
-          Dot := true;
+            Break;
+          Dot := True;
         end
         else
           Indent := 0;
       Stop := Start;
       while (Stop < Length(Text)) and (Text[Stop] <> '\') do
       begin
-        inc(Stop);
+        Inc(Stop);
         if BiColorTextWidth(Offscreen.Canvas,
-          copy(Text, Start, Stop - Start + 1)) > Bounds.Right - Bounds.Left -
+          Copy(Text, Start, Stop - Start + 1)) > Bounds.Right - Bounds.Left -
           PaperBorder_Left - PaperBorder_Right - Indent then
         begin
-          dec(Stop);
-          break
+          Dec(Stop);
+          Break
         end;
       end;
       if Stop <> Length(Text) then
@@ -323,7 +323,7 @@ begin
         OrdinaryStop := Stop;
         while (Text[OrdinaryStop + 1] <> ' ') and
           (Text[OrdinaryStop + 1] <> '\') do
-          dec(OrdinaryStop);
+          Dec(OrdinaryStop);
         if (OrdinaryStop + 1 - Start) * 2 >= Stop - Start then
           Stop := OrdinaryStop
       end;
@@ -333,12 +333,12 @@ begin
         if Dot then
           Sprite(Offscreen, HGrSystem, Bounds.Left + PaperBorder_Left +
             (ListIndent - 14), Y + 7, 8, 8, 90, 16);
-        s := copy(Text, Start, Stop - Start + 1);
+        S := Copy(Text, Start, Stop - Start + 1);
         BiColorTextOut(Offscreen.Canvas, Colors.Canvas.Pixels[clkMisc,
           cliPaperText], $7F007F, Bounds.Left + PaperBorder_Left +
-          Indent, Y, s);
+          Indent, Y, S);
       end;
-      inc(Line);
+      Inc(Line);
       Start := Stop + 2;
     end;
     nLines := Line;
@@ -347,42 +347,42 @@ end;
 
 procedure TNegoDlg.FindAllowed;
 var
-  i: integer;
+  I: Integer;
 begin
   CommandAllowed := [scDipOffer - scDipStart];
   if ClientMode <> scDipBreak then
-    include(CommandAllowed, scDipBreak - scDipStart);
-  if MyRO.Treaty[DipMem[me].pContact] >= trPeace then
-    include(CommandAllowed, scDipCancelTreaty - scDipStart);
-  if (ClientMode = scDipOffer) and (Server(scDipAccept - sExecute, me, 0, nil^)
+    Include(CommandAllowed, scDipBreak - scDipStart);
+  if MyRO.Treaty[DipMem[Me].pContact] >= trPeace then
+    Include(CommandAllowed, scDipCancelTreaty - scDipStart);
+  if (ClientMode = scDipOffer) and (Server(scDipAccept - sExecute, Me, 0, nil^)
     >= rExecuted) then
-    include(CommandAllowed, scDipAccept - scDipStart);
+    Include(CommandAllowed, scDipAccept - scDipStart);
 
   MyAllowed := [opChoose shr 24, opMoney shr 24];
   OppoAllowed := [opChoose shr 24, opMoney shr 24];
-  if not IsCivilReportNew(DipMem[me].pContact) then
+  if not IsCivilReportNew(DipMem[Me].pContact) then
   begin // no up-to-date civil report
     MyAllowed := MyAllowed + [opCivilReport shr 24];
-    for i := 0 to nAdv - 1 do
-      if MyRO.Tech[i] >= tsApplicable then
+    for I := 0 to nAdv - 1 do
+      if MyRO.Tech[I] >= tsApplicable then
       begin
         MyAllowed := MyAllowed + [opAllTech shr 24];
-        break
+        Break
       end;
     OppoAllowed := OppoAllowed + [opCivilReport shr 24, opAllTech shr 24];
   end
   else
   begin // check techs
-    for i := 0 to nAdv - 1 do
-      if not(i in FutureTech) then
-        if (MyRO.Tech[i] < tsSeen) and
-          (MyRO.EnemyReport[DipMem[me].pContact].Tech[i] >= tsApplicable) then
+    for I := 0 to nAdv - 1 do
+      if not(I in FutureTech) then
+        if (MyRO.Tech[I] < tsSeen) and
+          (MyRO.EnemyReport[DipMem[Me].pContact].Tech[I] >= tsApplicable) then
           OppoAllowed := OppoAllowed + [opAllTech shr 24]
-        else if (MyRO.EnemyReport[DipMem[me].pContact].Tech[i] < tsSeen) and
-          (MyRO.Tech[i] >= tsApplicable) then
+        else if (MyRO.EnemyReport[DipMem[Me].pContact].Tech[I] < tsSeen) and
+          (MyRO.Tech[I] >= tsApplicable) then
           MyAllowed := MyAllowed + [opAllTech shr 24];
   end;
-  if not IsMilReportNew(DipMem[me].pContact) then
+  if not IsMilReportNew(DipMem[Me].pContact) then
   begin // no up-to-date military report
     MyAllowed := MyAllowed + [opMilReport shr 24];
     if MyRO.nModel > 3 then
@@ -396,7 +396,7 @@ begin
     if ModalSelectDlg.OnlyChoice(kChooseEModel) <> mixAll then
       OppoAllowed := OppoAllowed + [opAllModel shr 24];
   end;
-  if MyRO.Treaty[DipMem[me].pContact] < trAlliance then
+  if MyRO.Treaty[DipMem[Me].pContact] < trAlliance then
   begin
     MyAllowed := MyAllowed + [opTreaty shr 24, opMap shr 24];
     OppoAllowed := OppoAllowed + [opTreaty shr 24, opMap shr 24];
@@ -406,33 +406,33 @@ begin
     MyAllowed:=MyAllowed+[opLowTreaty shr 24];
     OppoAllowed:=OppoAllowed+[opLowTreaty shr 24];
     end; }
-  for i := 0 to nShipPart - 1 do
+  for I := 0 to nShipPart - 1 do
   begin
-    if MyRO.Ship[me].Parts[i] > 0 then
-      include(MyAllowed, opShipParts shr 24);
-    if MyRO.Ship[DipMem[me].pContact].Parts[i] > 0 then
-      include(OppoAllowed, opShipParts shr 24);
+    if MyRO.Ship[Me].Parts[I] > 0 then
+      Include(MyAllowed, opShipParts shr 24);
+    if MyRO.Ship[DipMem[Me].pContact].Parts[I] > 0 then
+      Include(OppoAllowed, opShipParts shr 24);
   end;
-  MyAllowed := MyAllowed - DipMem[me].DeliveredPrices *
+  MyAllowed := MyAllowed - DipMem[Me].DeliveredPrices *
     [opAllTech shr 24, opAllModel shr 24, opCivilReport shr 24,
     opMilReport shr 24, opMap shr 24];
-  OppoAllowed := OppoAllowed - DipMem[me].ReceivedPrices *
+  OppoAllowed := OppoAllowed - DipMem[Me].ReceivedPrices *
     [opAllTech shr 24, opAllModel shr 24, opCivilReport shr 24,
     opMilReport shr 24, opMap shr 24];
 end;
 
-procedure TNegoDlg.PaintNationPicture(X, Y, p: integer);
+procedure TNegoDlg.PaintNationPicture(X, Y, P: Integer);
 begin
   with Offscreen.Canvas do
   begin
     Pen.Color := $000000;
-    Brush.Color := Tribe[p].Color;
+    Brush.Color := Tribe[P].Color;
     Rectangle(X - 6, Y - 1, X + 70, Y + 49);
     Brush.Color := $000000;
-    Tribe[p].InitAge(GetAge(p));
-    if Assigned(Tribe[p].faceHGr) then
-      Dump(Offscreen, Tribe[p].faceHGr, X, Y, 64, 48,
-        1 + Tribe[p].facepix mod 10 * 65, 1 + Tribe[p].facepix div 10 * 49)
+    Tribe[P].InitAge(GetAge(P));
+    if Assigned(Tribe[P].faceHGr) then
+      Dump(Offscreen, Tribe[P].faceHGr, X, Y, 64, 48,
+        1 + Tribe[P].facepix mod 10 * 65, 1 + Tribe[P].facepix div 10 * 49)
     else
       FillRect(Rect(X, Y, X + 64, Y + 48));
     Brush.Style := bsClear;
@@ -442,10 +442,10 @@ end;
 
 procedure TNegoDlg.SetButtonStates;
 var
-  cix: integer;
-  IsActionPage: boolean;
+  cix: Integer;
+  IsActionPage: Boolean;
 begin
-  IsActionPage := Page = History[me].n;
+  IsActionPage := Page = History[Me].N;
 
   AcceptBtn.Possible := IsActionPage and
     (scDipAccept - scDipStart in CommandAllowed);
@@ -482,27 +482,27 @@ end;
 
 procedure TNegoDlg.OffscreenPaint;
 var
-  i, cred: integer;
-  s: string;
-  OkEnabled: boolean;
+  I, cred: Integer;
+  S: string;
+  OkEnabled: Boolean;
 begin
   if (OffscreenUser <> nil) and (OffscreenUser <> self) then
     OffscreenUser.Update;
   // complete working with old owner to prevent rebound
   OffscreenUser := self;
 
-  if (DipCommand >= 0) and (Page = History[me].n) then
-    History[me].Text[History[me].n] :=
-      copy(DipCommandToString(me, DipMem[me].pContact,
-      MyRO.Treaty[DipMem[me].pContact], ClientMode, DipCommand, ReceivedOffer,
+  if (DipCommand >= 0) and (Page = History[Me].N) then
+    History[Me].Text[History[Me].N] :=
+      Copy(DipCommandToString(Me, DipMem[Me].pContact,
+      MyRO.Treaty[DipMem[Me].pContact], ClientMode, DipCommand, ReceivedOffer,
       CurrentOffer), 1, 255);
 
-  FwdBtn.Visible := Page < History[me].n;
+  FwdBtn.Visible := Page < History[Me].N;
   BwdBtn.Visible := Page >= 2;
-  if Page < History[me].n then
-    OkEnabled := false
+  if Page < History[Me].N then
+    OkEnabled := False
   else if DipCommand = scDipOffer then
-    OkEnabled := Server(scDipOffer - sExecute, me, 0, CurrentOffer) >= rExecuted
+    OkEnabled := Server(scDipOffer - sExecute, Me, 0, CurrentOffer) >= rExecuted
   else
     OkEnabled := DipCommand >= 0;
   OkBtn.Visible := OkEnabled;
@@ -531,40 +531,40 @@ begin
   RFrame(Offscreen.Canvas, xPad1 - 2, yPad1 - 2, xPad1 + 41 + 42 * 3,
     yPad1 + 41 + 42 * 2, $FFFFFF, $B0B0B0);
 
-  PaintNationPicture(xNationPicture0, yNationPicture, DipMem[me].pContact);
-  PaintNationPicture(xNationPicture1, yNationPicture, me);
+  PaintNationPicture(xNationPicture0, yNationPicture, DipMem[Me].pContact);
+  PaintNationPicture(xNationPicture1, yNationPicture, Me);
 
-  if History[me].Text[Page - 1] <> '' then
+  if History[Me].Text[Page - 1] <> '' then
   begin
     FillSeamless(Offscreen.Canvas, xText0, yText0, wText, hText, 0, 0, Paper);
-    i := Page - 1;
-    if History[me].Text[0] = '' then
-      dec(i);
-    if i < 16 then
+    I := Page - 1;
+    if History[Me].Text[0] = '' then
+      Dec(I);
+    if I < 16 then
     begin
       Offscreen.Canvas.Font.Assign(RomanFont);
       Offscreen.Canvas.TextOut
-        (xText0 + (wText - Offscreen.Canvas.TextWidth(RomanNo[i])) div 2,
-        yText0 + (hText - Offscreen.Canvas.TextHeight(RomanNo[i])) div 2,
-        RomanNo[i]);
+        (xText0 + (wText - Offscreen.Canvas.TextWidth(RomanNo[I])) div 2,
+        yText0 + (hText - Offscreen.Canvas.TextHeight(RomanNo[I])) div 2,
+        RomanNo[I]);
     end
   end;
   FillSeamless(Offscreen.Canvas, xText1, yText1, wText, hText, 0, 0, Paper);
-  i := Page;
-  if History[me].Text[0] = '' then
-    dec(i);
-  if i < 16 then
+  I := Page;
+  if History[Me].Text[0] = '' then
+    Dec(I);
+  if I < 16 then
   begin
     Offscreen.Canvas.Font.Assign(RomanFont);
     Offscreen.Canvas.TextOut
-      (xText1 + (wText - Offscreen.Canvas.TextWidth(RomanNo[i])) div 2,
-      yText1 + (hText - Offscreen.Canvas.TextHeight(RomanNo[i])) div 2,
-      RomanNo[i]);
+      (xText1 + (wText - Offscreen.Canvas.TextWidth(RomanNo[I])) div 2,
+      yText1 + (hText - Offscreen.Canvas.TextHeight(RomanNo[I])) div 2,
+      RomanNo[I]);
   end;
   with Offscreen.Canvas do
   begin
     Brush.Color := MainTexture.ColorBevelShade;
-    if History[me].Text[Page - 1] <> '' then
+    if History[Me].Text[Page - 1] <> '' then
     begin
       FillRect(Rect(xText0 + wText, yText0 + PaperShade,
         xText0 + wText + PaperShade, yText0 + hText + PaperShade));
@@ -582,95 +582,95 @@ begin
 
   { if Page=History[me].n then
     begin // show attitude
-    s:=Phrases.Lookup('ATTITUDE',MyRO.EnemyReport[DipMem[me].pContact].Attitude);
+    S:=Phrases.Lookup('ATTITUDE',MyRO.EnemyReport[DipMem[Me].pContact].Attitude);
     //LoweredTextOut(Offscreen.Canvas,-1,MainTexture,
     RisedTextOut(Offscreen.Canvas,xText0+wText div 2-
-    BiColorTextWidth(Offscreen.Canvas,s) div 2,yAttitude,s);
-    s:=Phrases.Lookup('ATTITUDE',MyRO.Attitude[DipMem[me].pContact]);
+    BiColorTextWidth(Offscreen.Canvas,S) div 2,yAttitude,S);
+    S:=Phrases.Lookup('ATTITUDE',MyRO.Attitude[DipMem[Me].pContact]);
     //LoweredTextOut(Offscreen.Canvas,-1,MainTexture,
     RisedTextOut(Offscreen.Canvas,xText1+wText div 2-
-    BiColorTextWidth(Offscreen.Canvas,s) div 2,yAttitude,s);
+    BiColorTextWidth(Offscreen.Canvas,S) div 2,yAttitude,S);
     end; }
 
-  if History[me].Text[Page - 1] <> '' then
-    SplitText(History[me].Text[Page - 1], Rect(xText0, yText0, xText0 + wText,
+  if History[Me].Text[Page - 1] <> '' then
+    SplitText(History[Me].Text[Page - 1], Rect(xText0, yText0, xText0 + wText,
       yText0 + hText));
-  if (Page < History[me].n) or OkEnabled then
-    SplitText(History[me].Text[Page], Rect(xText1, yText1, xText1 + wText,
+  if (Page < History[Me].N) or OkEnabled then
+    SplitText(History[Me].Text[Page], Rect(xText1, yText1, xText1 + wText,
       yText1 + hText));
 
   // show credibility
   Offscreen.Canvas.Font.Assign(UniFont[ftTiny]);
-  cred := MyRO.EnemyReport[DipMem[me].pContact].Credibility;
+  cred := MyRO.EnemyReport[DipMem[Me].pContact].Credibility;
   case cred of
     0 .. 49:
-      i := 3;
+      I := 3;
     50 .. 90:
-      i := 0;
+      I := 0;
     91 .. 100:
-      i := 1;
+      I := 1;
   end;
-  PaintProgressBar(Offscreen.Canvas, i, xCred0, yCred0 + 17, (cred + 2) div 5,
+  PaintProgressBar(Offscreen.Canvas, I, xCred0, yCred0 + 17, (cred + 2) div 5,
     0, 20, MainTexture);
-  s := IntToStr(cred);
+  S := IntToStr(cred);
   RisedTextOut(Offscreen.Canvas, xCred0 + 10 -
-    (BiColorTextWidth(Offscreen.Canvas, s) + 1) div 2, yCred0, s);
+    (BiColorTextWidth(Offscreen.Canvas, S) + 1) div 2, yCred0, S);
   case MyRO.Credibility of
     0 .. 49:
-      i := 3;
+      I := 3;
     50 .. 90:
-      i := 0;
+      I := 0;
     91 .. 100:
-      i := 1;
+      I := 1;
   end;
-  PaintProgressBar(Offscreen.Canvas, i, xCred1, yCred1 + 17,
+  PaintProgressBar(Offscreen.Canvas, I, xCred1, yCred1 + 17,
     (MyRO.Credibility + 2) div 5, 0, 20, MainTexture);
-  s := IntToStr(MyRO.Credibility);
+  S := IntToStr(MyRO.Credibility);
   RisedTextOut(Offscreen.Canvas, xCred1 + 10 -
-    (BiColorTextWidth(Offscreen.Canvas, s) + 1) div 2, yCred1, s);
+    (BiColorTextWidth(Offscreen.Canvas, S) + 1) div 2, yCred1, S);
 
   MarkUsedOffscreen(ClientWidth, ClientHeight);
 end;
 
 procedure TNegoDlg.Initiate;
 begin
-  History[me].n := 1;
-  History[me].Text[0] := '';
+  History[Me].N := 1;
+  History[Me].Text[0] := '';
 end;
 
 procedure TNegoDlg.Respond;
 begin
-  History[me].n := 0;
+  History[Me].N := 0;
 end;
 
 procedure TNegoDlg.FormMouseDown(Sender: TObject; Button: TMouseButton;
-  Shift: TShiftState; X, Y: integer);
+  Shift: TShiftState; X, Y: Integer);
 begin
   if (X >= xNationPicture0) and (X < xNationPicture0 + 64) and
     (Y >= yNationPicture) and (Y < yNationPicture + 48) then
-    NatStatDlg.ShowNewContent(WindowModeMakePersistent(FWindowMode), DipMem[me].pContact)
+    NatStatDlg.ShowNewContent(WindowModeMakePersistent(FWindowMode), DipMem[Me].pContact)
   else if (X >= xNationPicture1) and (X < xNationPicture1 + 64) and
     (Y >= yNationPicture) and (Y < yNationPicture + 48) then
-    NatStatDlg.ShowNewContent(WindowModeMakePersistent(FWindowMode), me)
+    NatStatDlg.ShowNewContent(WindowModeMakePersistent(FWindowMode), Me)
 end;
 
 procedure TNegoDlg.BwdBtnClick(Sender: TObject);
 begin
-  dec(Page, 2);
+  Dec(Page, 2);
   SetButtonStates;
   SmartUpdateContent;
 end;
 
 procedure TNegoDlg.FwdBtnClick(Sender: TObject);
 begin
-  inc(Page, 2);
+  Inc(Page, 2);
   SetButtonStates;
   SmartUpdateContent;
 end;
 
 procedure TNegoDlg.OkBtnClick(Sender: TObject);
 begin
-  inc(History[me].n);
+  Inc(History[Me].N);
   if DipCommand = scDipOffer then
     MainScreen.OfferCall(CurrentOffer)
   else
@@ -696,33 +696,33 @@ end;
 
 procedure TNegoDlg.BuildCurrentOffer;
 var
-  i: integer;
+  I: Integer;
 begin
   CurrentOffer.nDeliver := 0;
   CurrentOffer.nCost := 0;
-  for i := 0 to 11 do
-    if Delivers[i] <> $FFFFFFFF then
+  for I := 0 to 11 do
+    if Delivers[I] <> $FFFFFFFF then
     begin
-      CurrentOffer.Price[CurrentOffer.nDeliver] := Delivers[i];
-      inc(CurrentOffer.nDeliver);
+      CurrentOffer.Price[CurrentOffer.nDeliver] := Delivers[I];
+      Inc(CurrentOffer.nDeliver);
     end;
-  for i := 0 to 11 do
-    if Costs[i] <> $FFFFFFFF then
+  for I := 0 to 11 do
+    if Costs[I] <> $FFFFFFFF then
     begin
       CurrentOffer.Price[CurrentOffer.nDeliver + CurrentOffer.nCost] :=
-        Costs[i];
-      inc(CurrentOffer.nCost);
+        Costs[I];
+      Inc(CurrentOffer.nCost);
     end;
 end;
 
 procedure TNegoDlg.WantClick(Sender: TObject);
 var
-  a, i, max: integer;
-  Price: cardinal;
+  A, I, Max: Integer;
+  Price: Cardinal;
 begin
-  if (Page <> History[me].n) or (ClientMode = scDipCancelTreaty) or
+  if (Page <> History[Me].N) or (ClientMode = scDipCancelTreaty) or
     (ClientMode = scDipBreak) then
-    exit;
+    Exit;
   if Costs[TButtonN(Sender).Tag and $FF] <> $FFFFFFFF then
     Price := $FFFFFFFF // toggle off
   else
@@ -730,14 +730,14 @@ begin
     if CurrentOffer.nCost >= 2 then
     begin
       SimpleMessage(Phrases.Lookup('MAX2WANTS'));
-      exit
+      Exit
     end;
     Price := ButtonPrice[TButtonN(Sender).Tag and $FF];
     if not(Price shr 24 in OppoAllowed) then
-      exit;
+      Exit;
     case Price of
       opCivilReport, opMilReport:
-        inc(Price, DipMem[me].pContact shl 16 + MyRO.Turn);
+        Inc(Price, DipMem[Me].pContact shl 16 + MyRO.Turn);
         // !!! choose player and year!
       opMoney:
         begin // choose amount
@@ -746,11 +746,11 @@ begin
           InputDlg.CenterToRect(BoundsRect);
           InputDlg.ShowModal;
           if InputDlg.ModalResult <> mrOK then
-            exit;
-          val(InputDlg.EInput.Text, a, i);
-          if (i <> 0) or (a <= 0) or (a >= MaxMoneyPrice) then
-            exit;
-          inc(Price, a);
+            Exit;
+          val(InputDlg.EInput.Text, A, I);
+          if (I <> 0) or (A <= 0) or (A >= MaxMoneyPrice) then
+            Exit;
+          Inc(Price, A);
         end;
       opShipParts:
         begin // choose type and number
@@ -764,59 +764,59 @@ begin
               IconIndex := imSpacePort;
               ShowModal;
               if ModalResult <> mrOK then
-                exit
+                Exit
             end;
           ModalSelectDlg.ShowNewContent(wmModal, kEShipPart);
-          if ModalSelectDlg.result < 0 then
-            exit;
-          inc(Price, ModalSelectDlg.result shl 16);
-          max := MyRO.Ship[DipMem[me].pContact].Parts[ModalSelectDlg.result];
+          if ModalSelectDlg.Result < 0 then
+            Exit;
+          Inc(Price, ModalSelectDlg.Result shl 16);
+          Max := MyRO.Ship[DipMem[Me].pContact].Parts[ModalSelectDlg.Result];
           InputDlg.Caption := Phrases.Lookup('TITLE_NUMBER');
           InputDlg.EInput.Text := '';
           InputDlg.CenterToRect(BoundsRect);
           InputDlg.ShowModal;
           if InputDlg.ModalResult <> mrOK then
-            exit;
-          val(InputDlg.EInput.Text, a, i);
-          if (i <> 0) or (a <= 0) then
-            exit;
-          if a > max then
-            a := max;
-          if a > MaxShipPartPrice then
-            a := MaxShipPartPrice;
-          inc(Price, a);
+            Exit;
+          val(InputDlg.EInput.Text, A, I);
+          if (I <> 0) or (A <= 0) then
+            Exit;
+          if A > Max then
+            A := Max;
+          if A > MaxShipPartPrice then
+            A := MaxShipPartPrice;
+          Inc(Price, A);
         end;
       opAllTech:
         begin // choose technology
           ModalSelectDlg.ShowNewContent(wmModal, kChooseETech);
-          if ModalSelectDlg.result < 0 then
-            exit;
-          if ModalSelectDlg.result = adAll then
+          if ModalSelectDlg.Result < 0 then
+            Exit;
+          if ModalSelectDlg.Result = adAll then
             Price := opAllTech
           else
-            Price := OpTech + ModalSelectDlg.result;
+            Price := OpTech + ModalSelectDlg.Result;
         end;
       opAllModel:
         begin // choose model
           ModalSelectDlg.ShowNewContent(wmModal, kChooseEModel);
-          if ModalSelectDlg.result < 0 then
-            exit;
-          if ModalSelectDlg.result = mixAll then
+          if ModalSelectDlg.Result < 0 then
+            Exit;
+          if ModalSelectDlg.Result = mixAll then
             Price := opAllModel
           else
-            Price := OpModel + MyRO.EnemyModel[ModalSelectDlg.result].mix;
+            Price := OpModel + MyRO.EnemyModel[ModalSelectDlg.Result].mix;
         end;
       opTreaty:
         begin
-          if MyRO.Treaty[DipMem[me].pContact] < trPeace then
+          if MyRO.Treaty[DipMem[Me].pContact] < trPeace then
             Price := opTreaty + trPeace
           else
-            Price := opTreaty + MyRO.Treaty[DipMem[me].pContact] + 1;
+            Price := opTreaty + MyRO.Treaty[DipMem[Me].pContact] + 1;
         end;
       { opLowTreaty:
         begin
-        if MyRO.Treaty[DipMem[me].pContact]=trNone then Price:=opTreaty+trCeaseFire
-        else Price:=opTreaty+MyRO.Treaty[DipMem[me].pContact]-1;
+        if MyRO.Treaty[DipMem[Me].pContact]=trNone then Price:=opTreaty+trCeaseFire
+        else Price:=opTreaty+MyRO.Treaty[DipMem[Me].pContact]-1;
         end }
     end;
   end;
@@ -830,12 +830,12 @@ end;
 
 procedure TNegoDlg.OfferClick(Sender: TObject);
 var
-  a, i, max: integer;
-  Price: cardinal;
+  A, I, Max: Integer;
+  Price: Cardinal;
 begin
-  if (Page <> History[me].n) or (ClientMode = scDipCancelTreaty) or
+  if (Page <> History[Me].N) or (ClientMode = scDipCancelTreaty) or
     (ClientMode = scDipBreak) then
-    exit;
+    Exit;
   if Delivers[TButtonN(Sender).Tag and $FF] <> $FFFFFFFF then
     Price := $FFFFFFFF // toggle off
   else
@@ -843,14 +843,14 @@ begin
     if CurrentOffer.nDeliver >= 2 then
     begin
       SimpleMessage(Phrases.Lookup('MAX2OFFERS'));
-      exit;
+      Exit;
     end;
     Price := ButtonPrice[TButtonN(Sender).Tag and $FF];
     if not(Price shr 24 in MyAllowed) then
-      exit;
+      Exit;
     case Price of
       opCivilReport, opMilReport:
-        inc(Price, me shl 16 + MyRO.Turn); // !!! choose player and year!
+        Inc(Price, Me shl 16 + MyRO.Turn); // !!! choose player and year!
       opMoney:
         begin // choose amount
           InputDlg.Caption := Phrases.Lookup('TITLE_AMOUNT');
@@ -858,67 +858,67 @@ begin
           InputDlg.CenterToRect(BoundsRect);
           InputDlg.ShowModal;
           if InputDlg.ModalResult <> mrOK then
-            exit;
-          val(InputDlg.EInput.Text, a, i);
-          if (i <> 0) or (a <= 0) or (a >= MaxMoneyPrice) then
-            exit;
-          if (Price = opMoney) and (a > MyRO.Money) then
-            a := MyRO.Money;
-          inc(Price, a);
+            Exit;
+          val(InputDlg.EInput.Text, A, I);
+          if (I <> 0) or (A <= 0) or (A >= MaxMoneyPrice) then
+            Exit;
+          if (Price = opMoney) and (A > MyRO.Money) then
+            A := MyRO.Money;
+          Inc(Price, A);
         end;
       opShipParts:
         begin // choose type and number
           ModalSelectDlg.ShowNewContent(wmModal, kShipPart);
-          if ModalSelectDlg.result < 0 then
-            exit;
-          inc(Price, ModalSelectDlg.result shl 16);
-          max := MyRO.Ship[me].Parts[ModalSelectDlg.result];
+          if ModalSelectDlg.Result < 0 then
+            Exit;
+          Inc(Price, ModalSelectDlg.Result shl 16);
+          Max := MyRO.Ship[Me].Parts[ModalSelectDlg.Result];
           InputDlg.Caption := Phrases.Lookup('TITLE_NUMBER');
           InputDlg.EInput.Text := '';
           InputDlg.CenterToRect(BoundsRect);
           InputDlg.ShowModal;
           if InputDlg.ModalResult <> mrOK then
-            exit;
-          val(InputDlg.EInput.Text, a, i);
-          if (i <> 0) or (a <= 0) then
-            exit;
-          if a > max then
-            a := max;
-          if a > MaxShipPartPrice then
-            a := MaxShipPartPrice;
-          inc(Price, a);
+            Exit;
+          val(InputDlg.EInput.Text, A, I);
+          if (I <> 0) or (A <= 0) then
+            Exit;
+          if A > Max then
+            A := Max;
+          if A > MaxShipPartPrice then
+            A := MaxShipPartPrice;
+          Inc(Price, A);
         end;
       opAllTech:
         begin // choose technology
           ModalSelectDlg.ShowNewContent(wmModal, kChooseTech);
-          if ModalSelectDlg.result < 0 then
-            exit;
-          if ModalSelectDlg.result = adAll then
+          if ModalSelectDlg.Result < 0 then
+            Exit;
+          if ModalSelectDlg.Result = adAll then
             Price := opAllTech
           else
-            Price := OpTech + ModalSelectDlg.result;
+            Price := OpTech + ModalSelectDlg.Result;
         end;
       opAllModel:
         begin // choose model
           ModalSelectDlg.ShowNewContent(wmModal, kChooseModel);
-          if ModalSelectDlg.result < 0 then
-            exit;
-          if ModalSelectDlg.result = mixAll then
+          if ModalSelectDlg.Result < 0 then
+            Exit;
+          if ModalSelectDlg.Result = mixAll then
             Price := opAllModel
           else
-            Price := OpModel + ModalSelectDlg.result;
+            Price := OpModel + ModalSelectDlg.Result;
         end;
       opTreaty:
         begin
-          if MyRO.Treaty[DipMem[me].pContact] < trPeace then
+          if MyRO.Treaty[DipMem[Me].pContact] < trPeace then
             Price := opTreaty + trPeace
           else
-            Price := opTreaty + MyRO.Treaty[DipMem[me].pContact] + 1;
+            Price := opTreaty + MyRO.Treaty[DipMem[Me].pContact] + 1;
         end;
       { opLowTreaty:
         begin
-        if MyRO.Treaty[DipMem[me].pContact]=trNone then Price:=opTreaty+trCeaseFire
-        else Price:=opTreaty+MyRO.Treaty[DipMem[me].pContact]-1;
+        if MyRO.Treaty[DipMem[Me].pContact]=trNone then Price:=opTreaty+trCeaseFire
+        else Price:=opTreaty+MyRO.Treaty[DipMem[Me].pContact]-1;
         end }
     end;
   end;
@@ -932,19 +932,19 @@ end;
 
 procedure TNegoDlg.FastBtnClick(Sender: TObject);
 var
-  NewCommand: cardinal;
+  NewCommand: Cardinal;
 begin
-  if Page <> History[me].n then
-    exit;
+  if Page <> History[Me].N then
+    Exit;
   NewCommand := TButtonN(Sender).Tag and $FF + scDipStart;
   if not(NewCommand - scDipStart in CommandAllowed) then
-    exit;
+    Exit;
   if (NewCommand = scDipCancelTreaty) and
-    (MyRO.Turn < MyRO.LastCancelTreaty[DipMem[me].pContact] + CancelTreatyTurns)
+    (MyRO.Turn < MyRO.LastCancelTreaty[DipMem[Me].pContact] + CancelTreatyTurns)
   then
   begin
     SimpleMessage(Phrases.Lookup('CANCELTREATYRUSH'));
-    exit;
+    Exit;
   end;
   if (NewCommand = scDipOffer) and ((ClientMode = scDipCancelTreaty) or
     (ClientMode = scDipBreak)) then

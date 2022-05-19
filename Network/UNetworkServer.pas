@@ -68,7 +68,7 @@ type
     TCPServerThread: TTCPServerThread;
     ServerEventLoop: TEventLoop;
     procedure ConnectExecute(Sender: TConnectionBasedSocket; AStream: TSocketStream);
-    procedure Client(Command: TCommand; Player: integer; var Data);
+    procedure Client(Command: TCommand; Player: Integer; var Data);
   public
     TCPServer: TTCPServer;
     Server: TServerCall;
@@ -80,7 +80,7 @@ var
   NetworkServer: TNetworkServer;
 {$ENDIF}
 
-procedure Client(Command, Player: integer; var Data); stdcall;
+procedure Client(Command, Player: Integer; var Data); stdcall;
 
 
 implementation
@@ -90,7 +90,7 @@ uses
   Global, UNetworkCommon;
 {$ENDIF}
 
-procedure Client(Command, Player: integer; var Data);
+procedure Client(Command, Player: Integer; var Data);
 begin
   {$IFDEF UNIX}
   if not Assigned(NetworkServer) then begin
@@ -336,4 +336,5 @@ end;
 {$ENDIF}
 
 end.
+
 

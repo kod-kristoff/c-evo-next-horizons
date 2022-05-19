@@ -9,28 +9,28 @@ type
   TButtonN = class(TGraphicControl)
     constructor Create(aOwner: TComponent); override;
   private
-    FPossible, FLit: boolean;
+    FPossible, FLit: Boolean;
     FGraphic, FMask, FBackGraphic: TBitmap;
-    FIndex, BackIndex: integer;
+    FIndex, BackIndex: Integer;
     FSmartHint: string;
     ChangeProc: TNotifyEvent;
-    procedure SetPossible(x: boolean);
-    procedure SetLit(x: boolean);
-    procedure SetIndex(x: integer);
-    procedure SetSmartHint(x: string);
+    procedure SetPossible(X: Boolean);
+    procedure SetLit(X: Boolean);
+    procedure SetIndex(X: Integer);
+    procedure SetSmartHint(X: string);
   published
-    property Possible: boolean read FPossible write SetPossible;
-    property Lit: boolean read FLit write SetLit;
+    property Possible: Boolean read FPossible write SetPossible;
+    property Lit: Boolean read FLit write SetLit;
     property SmartHint: string read FSmartHint write SetSmartHint;
     property Graphic: TBitmap read FGraphic write FGraphic;
     property Mask: TBitmap read FMask write FMask;
     property BackGraphic: TBitmap read FBackGraphic write FBackGraphic;
-    property ButtonIndex: integer read FIndex write SetIndex;
+    property ButtonIndex: Integer read FIndex write SetIndex;
     property OnClick: TNotifyEvent read ChangeProc write ChangeProc;
   protected
     procedure Paint; override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
-      x, y: integer); override;
+      X, Y: Integer); override;
   end;
 
 procedure Register;
@@ -45,11 +45,11 @@ end;
 constructor TButtonN.Create(aOwner: TComponent);
 begin
   inherited;
-  ShowHint := true;
+  ShowHint := True;
   FGraphic := nil;
   FBackGraphic := nil;
-  FPossible := true;
-  FLit := false;
+  FPossible := True;
+  FLit := False;
   FIndex := -1;
   ChangeProc := nil;
   SetBounds(0, 0, 42, 42);
@@ -62,7 +62,7 @@ begin
     if FGraphic <> nil then
     begin
       BitBltCanvas(Canvas, 1, 1, 40, 40, FBackGraphic.Canvas,
-        1 + 80 * BackIndex + 40 * byte(FPossible and FLit), 176);
+        1 + 80 * BackIndex + 40 * Byte(FPossible and FLit), 176);
       if FPossible then
       begin
         BitBltCanvas(Canvas, 3, 3, 36, 36, FMask.Canvas,
@@ -82,18 +82,18 @@ begin
 end;
 
 procedure TButtonN.MouseDown(Button: TMouseButton; Shift: TShiftState;
-  x, y: integer);
+  X, Y: Integer);
 begin
   if FPossible and (Button = mbLeft) and (@ChangeProc <> nil) then
     ChangeProc(Self);
 end;
 
-procedure TButtonN.SetPossible(x: boolean);
+procedure TButtonN.SetPossible(X: Boolean);
 begin
-  if x <> FPossible then
+  if X <> FPossible then
   begin
-    FPossible := x;
-    if x then
+    FPossible := X;
+    if X then
       Hint := FSmartHint
     else
       Hint := '';
@@ -101,21 +101,21 @@ begin
   end;
 end;
 
-procedure TButtonN.SetLit(x: boolean);
+procedure TButtonN.SetLit(X: Boolean);
 begin
-  if x <> FLit then
+  if X <> FLit then
   begin
-    FLit := x;
+    FLit := X;
     Invalidate;
   end;
 end;
 
-procedure TButtonN.SetIndex(x: integer);
+procedure TButtonN.SetIndex(X: Integer);
 begin
-  if x <> FIndex then
+  if X <> FIndex then
   begin
-    FIndex := x;
-    if x < 6 then
+    FIndex := X;
+    if X < 6 then
       BackIndex := 1
     else
       BackIndex := 0;
@@ -123,13 +123,13 @@ begin
   end;
 end;
 
-procedure TButtonN.SetSmartHint(x: string);
+procedure TButtonN.SetSmartHint(X: string);
 begin
-  if x <> FSmartHint then
+  if X <> FSmartHint then
   begin
-    FSmartHint := x;
+    FSmartHint := X;
     if FPossible then
-      Hint := x;
+      Hint := X;
   end;
 end;
 

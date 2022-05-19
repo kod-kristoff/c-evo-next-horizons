@@ -10,13 +10,13 @@ type
     constructor Create(aOwner: TComponent); override;
   private
     FMask: TBitmap;
-    FIndex: integer;
-    procedure SetIndex(Text: integer);
+    FIndex: Integer;
+    procedure SetIndex(Text: Integer);
   public
     property Mask: TBitmap read FMask write FMask;
   published
     property Visible;
-    property ButtonIndex: integer read FIndex write SetIndex;
+    property ButtonIndex: Integer read FIndex write SetIndex;
     property OnClick;
   protected
     procedure Paint; override;
@@ -60,7 +60,7 @@ begin
     end;
 end;
 
-procedure TButtonB.SetIndex(Text: integer);
+procedure TButtonB.SetIndex(Text: Integer);
 begin
   if Text <> FIndex then begin
     FIndex := Text;

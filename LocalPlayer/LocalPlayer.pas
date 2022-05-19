@@ -3,8 +3,8 @@ unit LocalPlayer;
 
 interface
 
-procedure Client(Command, Player: integer; var Data); stdcall;
-procedure SetAIName(p: integer; Name: string);
+procedure Client(Command, Player: Integer; var Data); stdcall;
+procedure SetAIName(P: Integer; Name: string);
 
 implementation
 
@@ -13,13 +13,13 @@ uses
   NatStat, Wonders, Nego, Enhance, BaseWin, Battle, Rates, TechTree, Forms;
 
 var
-  FormsCreated: boolean;
+  FormsCreated: Boolean;
 
-procedure Client(Command, Player: integer; var Data);
+procedure Client(Command, Player: Integer; var Data);
 begin
   if not FormsCreated then
   begin
-    FormsCreated := true;
+    FormsCreated := True;
     // TODO: Changing application name in runtime will cause change of Linux XML registry file path
 //    Application.MainForm := MainScreen;
     Application.CreateForm(TMainScreen, MainScreen);
@@ -44,13 +44,13 @@ begin
   MainScreen.Client(Command, Player, Data);
 end;
 
-procedure SetAIName(p: integer; Name: string);
+procedure SetAIName(P: Integer; Name: string);
 begin
-  MainScreen.SetAIName(p, Name);
+  MainScreen.SetAIName(P, Name);
 end;
 
 initialization
 
-FormsCreated := false;
+FormsCreated := False;
 
 end.

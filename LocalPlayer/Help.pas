@@ -40,8 +40,8 @@ type
 
   THyperText = class(TStringList)
   public
-    procedure AddLine(s: String = ''; Format: integer = 0; Picpix: Integer = 0;
-      LinkCategory: integer = 0; LinkIndex: integer = 0);
+    procedure AddLine(S: String = ''; Format: Integer = 0; Picpix: Integer = 0;
+      LinkCategory: Integer = 0; LinkIndex: Integer = 0);
     procedure LineFeed;
     procedure AppendList(Source: THyperText);
     destructor Destroy; override;
@@ -77,9 +77,9 @@ type
     procedure FormPaint(Sender: TObject);
     procedure CloseBtnClick(Sender: TObject);
     procedure PaintBox1MouseMove(Sender: TObject; Shift: TShiftState;
-      x, y: integer);
+      X, Y: Integer);
     procedure PaintBox1MouseDown(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; x, y: integer);
+      Shift: TShiftState; X, Y: Integer);
     procedure BackBtnClick(Sender: TObject);
     procedure TopBtnClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -103,9 +103,9 @@ type
     ScrollBar: TPVScrollbar;
     NoMap: TIsoMap;
     x0: array [-2..180] of Integer;
-    procedure PaintTerrIcon(x, y, xSrc, ySrc: Integer);
+    procedure PaintTerrIcon(X, Y, xSrc, ySrc: Integer);
     procedure ScrollBarUpdate(Sender: TObject);
-    procedure Line(ca: TCanvas; i: Integer; lit: Boolean);
+    procedure Line(ca: TCanvas; I: Integer; lit: Boolean);
     procedure Prepare(sbPos: Integer = 0);
     procedure ShowNewContentProcExecute(NewMode: TWindowMode; HelpContext: string);
     procedure WaterSign(x0, y0, iix: Integer);
@@ -175,8 +175,8 @@ begin
   Add(Result);
 end;
 
-procedure THyperText.AddLine(s: String; Format: integer; Picpix: integer;
-  LinkCategory: integer; LinkIndex: integer);
+procedure THyperText.AddLine(S: String; Format: Integer; Picpix: Integer;
+  LinkCategory: Integer; LinkIndex: Integer);
 var
   HelpLineInfo: THelpLineInfo;
 begin
@@ -186,7 +186,7 @@ begin
   HelpLineInfo.Format := Format;
   HelpLineInfo.Picpix := Picpix;
   HelpLineInfo.Link := LinkCategory shl 8 + LinkIndex;
-  AddObject(s, TObject(HelpLineInfo));
+  AddObject(S, TObject(HelpLineInfo));
 end;
 
 procedure THyperText.LineFeed;
@@ -262,12 +262,12 @@ const
     SeeKind: hkFeature; SeeNo: mcDefense));
 
   nTerrainHelp = 14;
-  TerrainHelp: array [0 .. nTerrainHelp - 1] of integer = (fGrass, fGrass + 12,
+  TerrainHelp: array [0 .. nTerrainHelp - 1] of Integer = (fGrass, fGrass + 12,
     fPrairie, fForest, fJungle, fHills, fMountains, fSwamp, fTundra, fArctic,
     fDesert, 3 * 12 { DeadLands } , fShore, fOcean);
 
   nJobHelp = 8;
-  JobHelp: array [0 .. nJobHelp - 1] of integer = (jRoad, jRR, jCanal, jIrr,
+  JobHelp: array [0 .. nJobHelp - 1] of Integer = (jRoad, jRR, jCanal, jIrr,
     jFarm, jMine, jFort, jBase);
 
 procedure THelpDlg.FormCreate(Sender: TObject);
@@ -279,7 +279,7 @@ begin
 
   CaptionLeft := BackBtn.Left + BackBtn.Width;
   CaptionRight := SearchBtn.Left;
-  inc(ModalFrameIndent, 29);
+  Inc(ModalFrameIndent, 29);
   MainText := THyperText.Create;
   MainText.OwnsObjects := True;
   SearchResult := THyperText.Create;
@@ -355,7 +355,7 @@ begin
   { TODO: Handled by MouseWheel event
   if ScrollBar.Process(Msg) then begin
     Sel := -1;
-    SmartUpdateContent(true)
+    SmartUpdateContent(True)
   end;
   }
 end;
@@ -363,7 +363,7 @@ end;
 procedure THelpDlg.OnMouseLeave(var Msg: TMessage);
 begin
   if Sel <> -1 then begin
-    Line(Canvas, Sel, false);
+    Line(Canvas, Sel, False);
     Sel := -1
   end;
 end;
@@ -379,43 +379,43 @@ begin
   Canvas.Font.Assign(UniFont[ftNormal]);
 end;
 
-procedure THelpDlg.Line(ca: TCanvas; i: Integer; lit: Boolean);
+procedure THelpDlg.Line(ca: TCanvas; I: Integer; lit: Boolean);
 var
-  TextColor, x, y: Integer;
+  TextColor, X, Y: Integer;
   TextSize: TSize;
-  s: string;
+  S: string;
 begin
-  s := MainText[ScrollBar.Position + i];
-  if s = '' then
+  S := MainText[ScrollBar.Position + I];
+  if S = '' then
     Exit;
-  x := x0[i];
-  y := 2 + i * 24;
+  X := x0[I];
+  Y := 2 + I * 24;
   if ca = Canvas then
   begin
-    x := x + SideFrame;
-    y := y + WideFrame
+    X := X + SideFrame;
+    Y := Y + WideFrame
   end;
-  if THelpLineInfo(MainText.Objects[ScrollBar.Position + i]).Format
+  if THelpLineInfo(MainText.Objects[ScrollBar.Position + I]).Format
     in [pkCaption, pkBigTer, pkRightIcon, pkBigFeature] then
   begin
     ca.Font.Assign(CaptionFont);
     { ca.brush.color:=CaptionColor;
-      ca.FillRect(rect(x,i*24,x+24,i*24+24));
-      ca.brush.color:=$FFFFFF;
-      ca.FrameRect(rect(x+1,i*24+1,x+24-1,i*24+24-1));
+      ca.FillRect(rect(X,I*24,X+24,I*24+24));
+      ca.Brush.Color:=$FFFFFF;
+      ca.FrameRect(rect(X+1,I*24+1,X+24-1,I*24+24-1));
       ca.Brush.Style:=bsClear; }
-    BitBltCanvas(ca, x, y - 4, 24, 24, HGrSystem.Data.Canvas, 1,
+    BitBltCanvas(ca, X, Y - 4, 24, 24, HGrSystem.Data.Canvas, 1,
       146);
-    BiColorTextOut(ca, $FFFFFF, $7F007F, x + 10 - ca.Textwidth(s[1]) div 2,
-      y - 3, s[1]);
-    BiColorTextOut(ca, CaptionColor, $7F007F, x + 24, y - 3, copy(s, 2, 255));
+    BiColorTextOut(ca, $FFFFFF, $7F007F, X + 10 - ca.Textwidth(S[1]) div 2,
+      Y - 3, S[1]);
+    BiColorTextOut(ca, CaptionColor, $7F007F, X + 24, Y - 3, Copy(S, 2, 255));
     ca.Font.Assign(UniFont[ftNormal]);
   end
-  else if THelpLineInfo(MainText.Objects[ScrollBar.Position + i]).Format = pkSection
+  else if THelpLineInfo(MainText.Objects[ScrollBar.Position + I]).Format = pkSection
   then
   begin
     ca.Font.Assign(CaptionFont);
-    BiColorTextOut(ca, CaptionColor, $7F007F, x, y - 3, s);
+    BiColorTextOut(ca, CaptionColor, $7F007F, X, Y - 3, S);
     ca.Font.Assign(UniFont[ftNormal]);
   end
   else
@@ -425,34 +425,34 @@ begin
     TextColor := Colors.Canvas.Pixels[clkMisc, cliPaperText];
     if ca = Canvas then
     begin
-      TextSize.cx := BiColorTextWidth(ca, s);
-      TextSize.cy := ca.TextHeight(s);
-      if y + TextSize.cy >= WideFrame + InnerHeight then
-        TextSize.cy := WideFrame + InnerHeight - y;
-      FillSeamless(ca, x, y, TextSize.cx, TextSize.cy, -SideFrame,
+      TextSize.cx := BiColorTextWidth(ca, S);
+      TextSize.cy := ca.TextHeight(S);
+      if Y + TextSize.cy >= WideFrame + InnerHeight then
+        TextSize.cy := WideFrame + InnerHeight - Y;
+      FillSeamless(ca, X, Y, TextSize.cx, TextSize.cy, -SideFrame,
         ScrollBar.Position * 24 - WideFrame, Paper);
     end;
-    BiColorTextOut(ca, TextColor, $7F007F, x, y, s);
+    BiColorTextOut(ca, TextColor, $7F007F, X, Y, S);
     if lit then
       with ca do
       begin
         Assert(ca = Canvas);
         Pen.Color := TextColor;
-        MoveTo(x + 1, y + TextSize.cy - 2);
-        LineTo(x + TextSize.cx, y + TextSize.cy - 2);
+        MoveTo(X + 1, Y + TextSize.cy - 2);
+        LineTo(X + TextSize.cx, Y + TextSize.cy - 2);
       end;
     if (Kind = hkMisc) and (no = miscMain) then
       ca.Font.Assign(UniFont[ftNormal]);
   end;
 end;
 
-procedure THelpDlg.WaterSign(x0, y0, iix: integer);
+procedure THelpDlg.WaterSign(x0, y0, iix: Integer);
 const
   nHeaven = 28;
   MaxSum = 9 * 9 * 255 * 75 div 100;
 var
-  x, y, dx, dy, xSrc, ySrc, Sum, xx: integer;
-  Heaven: array [0..nHeaven] of integer;
+  X, Y, dx, dy, xSrc, ySrc, Sum, xx: Integer;
+  Heaven: array [0..nHeaven] of Integer;
   PaintPtr: TPixelPointer;
   CoalPtr: TPixelPointer;
   ImpPtr: array [-1..1] of TPixelPointer;
@@ -470,22 +470,22 @@ begin
   CoalPtr := PixelPointer(Templates.Data, ScaleToNative(xCoal), ScaleToNative(yCoal));
   for dy := -1 to 1 do
     ImpPtr[dy] := PixelPointer(BigImp, ScaleToNative(xSrc), ScaleToNative(ySrc));
-  for y := 0 to ScaleToNative(ySizeBig) * 2 - 1 do begin
-    if ((ScaleToNative(y0) + y) >= 0) and ((ScaleToNative(y0) + y) < ScaleToNative(InnerHeight)) then begin
+  for Y := 0 to ScaleToNative(ySizeBig) * 2 - 1 do begin
+    if ((ScaleToNative(y0) + Y) >= 0) and ((ScaleToNative(y0) + Y) < ScaleToNative(InnerHeight)) then begin
       for dy := -1 to 1 do
-        if ((Max(y + ScaleToNative(dy), 0) shr 1) >= 0) and ((Max(y + ScaleToNative(dy), 0) shr 1) < ScaleToNative(ySizeBig)) then
-          ImpPtr[dy].SetXY(0, Max(y + ScaleToNative(dy), 0) shr 1);
-      for x := 0 to ScaleToNative(xSizeBig * 2) - 1 do begin
+        if ((Max(Y + ScaleToNative(dy), 0) shr 1) >= 0) and ((Max(Y + ScaleToNative(dy), 0) shr 1) < ScaleToNative(ySizeBig)) then
+          ImpPtr[dy].SetXY(0, Max(Y + ScaleToNative(dy), 0) shr 1);
+      for X := 0 to ScaleToNative(xSizeBig * 2) - 1 do begin
         Sum := 0;
         for dx := -1 to 1 do begin
-          xx := Max((x + ScaleToNative(dx)), 0) shr 1;
+          xx := Max((X + ScaleToNative(dx)), 0) shr 1;
           for dy := -1 to 1 do begin
             ImpPtr[dy].SetX(xx);
-            if ((y + ScaleToNative(dy)) shr 1 < 0) or ((y + ScaleToNative(dy)) shr 1 >= ScaleToNative(ySizeBig)) or
-              ((x + ScaleToNative(dx)) shr 1 < 0) or ((x + ScaleToNative(dx)) shr 1 >= ScaleToNative(xSizeBig)) or
-              ((y + ScaleToNative(dy)) shr 1 < ScaleToNative(nHeaven)) and
+            if ((Y + ScaleToNative(dy)) shr 1 < 0) or ((Y + ScaleToNative(dy)) shr 1 >= ScaleToNative(ySizeBig)) or
+              ((X + ScaleToNative(dx)) shr 1 < 0) or ((X + ScaleToNative(dx)) shr 1 >= ScaleToNative(xSizeBig)) or
+              ((Y + ScaleToNative(dy)) shr 1 < ScaleToNative(nHeaven)) and
               (ImpPtr[dy].Pixel^.B shl 16 + ImpPtr[dy].Pixel^.G shl 8 +
-              ImpPtr[dy].Pixel^.R = Heaven[(ScaleFromNative(y + ScaleToNative(dy))) shr 1]) then
+              ImpPtr[dy].Pixel^.R = Heaven[(ScaleFromNative(Y + ScaleToNative(dy))) shr 1]) then
               Sum := Sum + 9 * 255
             else
               Sum := Sum + ImpPtr[dy].Pixel^.B + 5 * ImpPtr[dy].Pixel^.G + 3 *
@@ -509,29 +509,29 @@ begin
   BigImp.EndUpdate;
 end;
 
-procedure THelpDlg.PaintTerrIcon(x, y, xSrc, ySrc: integer);
+procedure THelpDlg.PaintTerrIcon(X, Y, xSrc, ySrc: Integer);
 begin
   with NoMap do begin
-    Frame(OffScreen.Canvas, x - 1, y - 1, x + xSizeBig, y + ySizeBig,
+    Frame(OffScreen.Canvas, X - 1, Y - 1, X + xSizeBig, Y + ySizeBig,
       $000000, $000000);
     if 2 * yyt < 40 then begin
-      Sprite(OffScreen, HGrTerrain, x, y, 56, 2 * yyt, xSrc, ySrc);
-      Sprite(OffScreen, HGrTerrain, x, y + 2 * yyt, 56, 40 - 2 * yyt,
+      Sprite(OffScreen, HGrTerrain, X, Y, 56, 2 * yyt, xSrc, ySrc);
+      Sprite(OffScreen, HGrTerrain, X, Y + 2 * yyt, 56, 40 - 2 * yyt,
         xSrc, ySrc);
     end else
-      Sprite(OffScreen, HGrTerrain, x, y, 56, 40, xSrc, ySrc);
-    Sprite(OffScreen, HGrTerrain, x, y, xxt, yyt, xSrc + xxt, ySrc + yyt);
-    Sprite(OffScreen, HGrTerrain, x, y + yyt, xxt, 40 - yyt, xSrc + xxt, ySrc);
-    Sprite(OffScreen, HGrTerrain, x + xxt, y, 56 - xxt, yyt, xSrc, ySrc + yyt);
-    Sprite(OffScreen, HGrTerrain, x + xxt, y + yyt, 56 - xxt, 40 - yyt,
+      Sprite(OffScreen, HGrTerrain, X, Y, 56, 40, xSrc, ySrc);
+    Sprite(OffScreen, HGrTerrain, X, Y, xxt, yyt, xSrc + xxt, ySrc + yyt);
+    Sprite(OffScreen, HGrTerrain, X, Y + yyt, xxt, 40 - yyt, xSrc + xxt, ySrc);
+    Sprite(OffScreen, HGrTerrain, X + xxt, Y, 56 - xxt, yyt, xSrc, ySrc + yyt);
+    Sprite(OffScreen, HGrTerrain, X + xxt, Y + yyt, 56 - xxt, 40 - yyt,
       xSrc, ySrc);
   end;
 end;
 
 procedure THelpDlg.OffscreenPaint;
 var
-  i, j, yl, srcno, ofs, cnt, y: Integer;
-  s: string;
+  I, J, yl, srcno, ofs, cnt, Y: Integer;
+  S: string;
   HelpLineInfo: THelpLineInfo;
 begin
   inherited;
@@ -541,184 +541,184 @@ begin
   with OffScreen.Canvas do
   begin
     Font.Assign(UniFont[ftNormal]);
-    for i := -ScrollBar.Position to InnerHeight div 24 do
-      if ScrollBar.Position + i < MainText.Count then
+    for I := -ScrollBar.Position to InnerHeight div 24 do
+      if ScrollBar.Position + I < MainText.Count then
       begin
-        HelpLineInfo := THelpLineInfo(MainText.Objects[ScrollBar.Position + i]);
+        HelpLineInfo := THelpLineInfo(MainText.Objects[ScrollBar.Position + I]);
         if HelpLineInfo.Format = pkExternal then
         begin
           yl := ExtPic.Height;
-          if 4 + i * 24 + yl > InnerHeight then
-            yl := InnerHeight - (4 + i * 24);
-          BitBltCanvas(OffScreen.Canvas, 8, 4 + i * 24, ExtPic.Width, yl, ExtPic.Canvas,
+          if 4 + I * 24 + yl > InnerHeight then
+            yl := InnerHeight - (4 + I * 24);
+          BitBltCanvas(OffScreen.Canvas, 8, 4 + I * 24, ExtPic.Width, yl, ExtPic.Canvas,
             0, 0);
         end;
       end;
-    for i := -2 to InnerHeight div 24 do
-      if (ScrollBar.Position + i >= 0) and (ScrollBar.Position + i < MainText.Count) then
+    for I := -2 to InnerHeight div 24 do
+      if (ScrollBar.Position + I >= 0) and (ScrollBar.Position + I < MainText.Count) then
       begin
-        HelpLineInfo := THelpLineInfo(MainText.Objects[ScrollBar.Position + i]);
+        HelpLineInfo := THelpLineInfo(MainText.Objects[ScrollBar.Position + I]);
         if HelpLineInfo.Link <> 0 then
         begin
           if (Kind = hkMisc) and (no = miscSearchResult) then
-            Sprite(OffScreen, HGrSystem, 18, 9 + i * 24, 8, 8, 90, 16)
+            Sprite(OffScreen, HGrSystem, 18, 9 + I * 24, 8, 8, 90, 16)
           else if HelpLineInfo.Format in [pkSmallIcon_AsPreq, pkAdvIcon_AsPreq]
           then
-            Sprite(OffScreen, HGrSystem, 12, i * 24 + 5, 14, 14, 65, 20)
+            Sprite(OffScreen, HGrSystem, 12, I * 24 + 5, 14, 14, 65, 20)
           else if HelpLineInfo.Link and (hkCrossLink shl 8) <> 0 then
-            Sprite(OffScreen, HGrSystem, 12, i * 24 + 5, 14, 14, 80, 1)
+            Sprite(OffScreen, HGrSystem, 12, I * 24 + 5, 14, 14, 80, 1)
           else if not((Kind = hkMisc) and (no = miscMain)) then
-            Sprite(OffScreen, HGrSystem, 10, i * 24 + 6, 14, 14, 65, 1);
-          x0[i] := 24;
+            Sprite(OffScreen, HGrSystem, 10, I * 24 + 6, 14, 14, 65, 1);
+          x0[I] := 24;
         end
         else
-          x0[i] := 0;
+          x0[I] := 0;
         case HelpLineInfo.Format of
           pkLogo:
             begin
-              Server(sGetVersion, 0, 0, j);
-              s := Format('%d.%d.%d', [j shr 16 and $FF, j shr 8 and $FF,
-                j and $FF]);
-              PaintLogo(OffScreen.Canvas, (InnerWidth - 122) div 2, i * 24 + 1,
+              Server(sGetVersion, 0, 0, J);
+              S := Format('%d.%d.%d', [J shr 16 and $FF, J shr 8 and $FF,
+                J and $FF]);
+              PaintLogo(OffScreen.Canvas, (InnerWidth - 122) div 2, I * 24 + 1,
                 HGrSystem.Data.Canvas.Pixels[95, 1], $000000);
               Font.Assign(UniFont[ftSmall]);
               BiColorTextOut(OffScreen.Canvas, $000000, $7F007F,
-                (InnerWidth - Textwidth(s)) div 2, i * 24 + 26, s);
+                (InnerWidth - Textwidth(S)) div 2, I * 24 + 26, S);
               Font.Assign(UniFont[ftNormal]);
             end;
           pkSmallIcon, pkSmallIcon_AsPreq:
             begin
-              ScreenTools.Frame(OffScreen.Canvas, 8 - 1 + x0[i], 2 - 1 + i * 24,
-                8 + xSizeSmall + x0[i], 2 + 20 + i * 24, $000000, $000000);
+              ScreenTools.Frame(OffScreen.Canvas, 8 - 1 + x0[I], 2 - 1 + I * 24,
+                8 + xSizeSmall + x0[I], 2 + 20 + I * 24, $000000, $000000);
               if HelpLineInfo.Picpix = imPalace then
-                BitBltCanvas(OffScreen.Canvas, 8 + x0[i], 2 + i * 24,
+                BitBltCanvas(OffScreen.Canvas, 8 + x0[I], 2 + I * 24,
                   xSizeSmall, ySizeSmall, SmallImp.Canvas,
                   0 * xSizeSmall, 1 * ySizeSmall)
               else
-                BitBltCanvas(OffScreen.Canvas, 8 + x0[i], 2 + i * 24,
+                BitBltCanvas(OffScreen.Canvas, 8 + x0[I], 2 + I * 24,
                   xSizeSmall, ySizeSmall, SmallImp.Canvas,
                   HelpLineInfo.Picpix mod 7 * xSizeSmall,
                   (HelpLineInfo.Picpix + SystemIconLines * 7) div 7 *
                   ySizeSmall);
-              x0[i] := x0[i] + (8 + 8 + 36);
+              x0[I] := x0[I] + (8 + 8 + 36);
             end;
           pkBigIcon:
             begin
-              FrameImage(OffScreen.Canvas, BigImp, x0[i] + 12, i * 24 - 7, 56,
+              FrameImage(OffScreen.Canvas, BigImp, x0[I] + 12, I * 24 - 7, 56,
                 40, HelpLineInfo.Picpix mod 7 * xSizeBig,
                 HelpLineInfo.Picpix div 7 * ySizeBig);
-              x0[i] := 64 + 8 + 8 + x0[i];
+              x0[I] := 64 + 8 + 8 + x0[I];
             end;
           pkSpecialIcon:
             begin
               case HelpLineInfo.Picpix of
                 0:
                   FrameImage(OffScreen.Canvas, HGrSystem2.Data,
-                    12 + x0[i], -7 + i * 24, 56, 40, 137, 127);
+                    12 + x0[I], -7 + I * 24, 56, 40, 137, 127);
                 1:
                   with NoMap do begin
-                    PaintTerrIcon(12 + x0[i], -7 + i * 24,
+                    PaintTerrIcon(12 + x0[I], -7 + I * 24,
                       1 + 3 * (xxt * 2 + 1), 1 + yyt);
                     if 2 * yyt < 40 then
-                      Sprite(OffScreen, HGrTerrain, 12 + x0[i], -7 + 4 + i * 24,
+                      Sprite(OffScreen, HGrTerrain, 12 + x0[I], -7 + 4 + I * 24,
                         56, 2 * yyt, 1 + 3 * (xxt * 2 + 1) + xxt - 28,
                         1 + yyt + 1 * (yyt * 3 + 1))
                     else
-                      Sprite(OffScreen, HGrTerrain, 12 + x0[i],
-                        -7 + 4 + i * 24 - 4, 56, 40, 1 + 3 * (xxt * 2 + 1) + xxt
+                      Sprite(OffScreen, HGrTerrain, 12 + x0[I],
+                        -7 + 4 + I * 24 - 4, 56, 40, 1 + 3 * (xxt * 2 + 1) + xxt
                         - 28, 1 + yyt + 1 * (yyt * 3 + 1) + yyt - 20);
                   end;
                 2:
                   with NoMap do begin
-                    PaintTerrIcon(12 + x0[i], -7 + i * 24,
+                    PaintTerrIcon(12 + x0[I], -7 + I * 24,
                       1 + 7 * (xxt * 2 + 1), 1 + yyt + 4 * (yyt * 3 + 1));
                     if 2 * yyt < 40 then
-                      Sprite(OffScreen, HGrTerrain, 12 + x0[i], -7 + 4 + i * 24,
+                      Sprite(OffScreen, HGrTerrain, 12 + x0[I], -7 + 4 + I * 24,
                         56, 32, 1 + 4 * (xxt * 2 + 1) + xxt - 28,
                         1 + yyt + 12 * (yyt * 3 + 1) + yyt - 16)
                     else
-                      Sprite(OffScreen, HGrTerrain, 12 + x0[i], -7 + 4 + i * 24,
+                      Sprite(OffScreen, HGrTerrain, 12 + x0[I], -7 + 4 + I * 24,
                         56, 32, 1 + 4 * (xxt * 2 + 1) + xxt - 28,
                         1 + yyt + 12 * (yyt * 3 + 1) + yyt - 16)
                   end;
               end;
-              x0[i] := 64 + 8 + 8 + x0[i];
+              x0[I] := 64 + 8 + 8 + x0[I];
             end;
           pkDomain:
             begin
-              ScreenTools.Frame(OffScreen.Canvas, 8 - 1 + x0[i], 2 - 1 + i * 24,
-                8 + 36 + x0[i], 2 + 20 + i * 24, $000000, $000000);
-              Dump(OffScreen, HGrSystem, 8 + x0[i], 2 + i * 24, 36, 20,
+              ScreenTools.Frame(OffScreen.Canvas, 8 - 1 + x0[I], 2 - 1 + I * 24,
+                8 + 36 + x0[I], 2 + 20 + I * 24, $000000, $000000);
+              Dump(OffScreen, HGrSystem, 8 + x0[I], 2 + I * 24, 36, 20,
                 75 + HelpLineInfo.Picpix * 37, 295);
-              x0[i] := x0[i] + (8 + 8 + 36);
+              x0[I] := x0[I] + (8 + 8 + 36);
             end;
           pkAdvIcon, pkAdvIcon_AsPreq:
             begin
-              ScreenTools.Frame(OffScreen.Canvas, 8 - 1 + x0[i], 2 - 1 + i * 24,
-                8 + xSizeSmall + x0[i], 2 + ySizeSmall + i * 24,
+              ScreenTools.Frame(OffScreen.Canvas, 8 - 1 + x0[I], 2 - 1 + I * 24,
+                8 + xSizeSmall + x0[I], 2 + ySizeSmall + I * 24,
                 $000000, $000000);
               if AdvIcon[HelpLineInfo.Picpix] < 84 then
-                BitBltCanvas(OffScreen.Canvas, 8 + x0[i], 2 + i * 24,
+                BitBltCanvas(OffScreen.Canvas, 8 + x0[I], 2 + I * 24,
                   xSizeSmall, ySizeSmall, SmallImp.Canvas,
                   (AdvIcon[HelpLineInfo.Picpix] + SystemIconLines * 7) mod 7 *
                   xSizeSmall, (AdvIcon[HelpLineInfo.Picpix] + SystemIconLines *
                   7) div 7 * ySizeSmall)
               else
-                Dump(OffScreen, HGrSystem, 8 + x0[i], 2 + i * 24, 36, 20,
+                Dump(OffScreen, HGrSystem, 8 + x0[I], 2 + I * 24, 36, 20,
                   1 + (AdvIcon[HelpLineInfo.Picpix] - 84) mod 8 * 37,
                   295 + (AdvIcon[HelpLineInfo.Picpix] - 84) div 8 * 21);
-              j := AdvValue[HelpLineInfo.Picpix] div 1000;
-              BitBltCanvas(OffScreen.Canvas, x0[i] + 4, 4 + i * 24, 14, 14,
-                HGrSystem.Mask.Canvas, 127 + j * 15, 85, SRCAND);
-              Sprite(OffScreen, HGrSystem, x0[i] + 3, 3 + i * 24, 14, 14,
-                127 + j * 15, 85);
-              x0[i] := x0[i] + (8 + 8 + 36);
+              J := AdvValue[HelpLineInfo.Picpix] div 1000;
+              BitBltCanvas(OffScreen.Canvas, x0[I] + 4, 4 + I * 24, 14, 14,
+                HGrSystem.Mask.Canvas, 127 + J * 15, 85, SRCAND);
+              Sprite(OffScreen, HGrSystem, x0[I] + 3, 3 + I * 24, 14, 14,
+                127 + J * 15, 85);
+              x0[I] := x0[I] + (8 + 8 + 36);
             end;
           pkRightIcon:
             begin
               if Imp[HelpLineInfo.Picpix].Kind <> ikWonder then
-                ImpImage(OffScreen.Canvas, InnerWidth - (40 + xSizeBig), i * 24,
+                ImpImage(OffScreen.Canvas, InnerWidth - (40 + xSizeBig), I * 24,
                   HelpLineInfo.Picpix, gDespotism)
               else
-                WaterSign(InnerWidth - (40 + 2 * xSizeBig), i * 24 - 8,
+                WaterSign(InnerWidth - (40 + 2 * xSizeBig), I * 24 - 8,
                   HelpLineInfo.Picpix + 7);
-              x0[i] := x0[i] + 8;
+              x0[I] := x0[I] + 8;
             end;
           pkIllu:
-            WaterSign(8, i * 24 - 8, HelpLineInfo.Picpix);
+            WaterSign(8, I * 24 - 8, HelpLineInfo.Picpix);
           pkBigFeature:
             begin
               cnt := 0;
-              for j := nDomains - 1 downto 0 do
-                if 1 shl j and Feature[HelpLineInfo.Picpix].Domains <> 0 then
+              for J := nDomains - 1 downto 0 do
+                if 1 shl J and Feature[HelpLineInfo.Picpix].Domains <> 0 then
                 begin
-                  inc(cnt);
+                  Inc(cnt);
                   Dump(OffScreen, HGrSystem, InnerWidth - 38 - 38 * cnt,
-                    i * 24 + 1, 36, 20, 75 + j * 37, 295);
-                  ScreenTools.Frame(OffScreen.Canvas, InnerWidth - 39 - 38 * cnt, i * 24,
-                    InnerWidth - 2 - 38 * cnt, i * 24 + 21, $000000, $000000);
+                    I * 24 + 1, 36, 20, 75 + J * 37, 295);
+                  ScreenTools.Frame(OffScreen.Canvas, InnerWidth - 39 - 38 * cnt, I * 24,
+                    InnerWidth - 2 - 38 * cnt, I * 24 + 21, $000000, $000000);
                 end;
               DarkGradient(OffScreen.Canvas, InnerWidth - 38 - 38 * cnt,
-                i * 24 + 23, cnt * 38 - 2, 1);
+                I * 24 + 23, cnt * 38 - 2, 1);
               ofs := InnerWidth - (39 + 7) - 19 * cnt;
               with OffScreen.Canvas do
               begin
-                Brush.color := $C0C0C0;
-                FrameRect(Rect(ofs, 1 + 23 + i * 24, ofs + 14,
-                  15 + 23 + i * 24));
+                Brush.Color := $C0C0C0;
+                FrameRect(Rect(ofs, 1 + 23 + I * 24, ofs + 14,
+                  15 + 23 + I * 24));
                 Brush.Style := bsClear;
-                Sprite(OffScreen, HGrSystem, ofs + 2, 3 + 23 + i * 24, 10, 10,
+                Sprite(OffScreen, HGrSystem, ofs + 2, 3 + 23 + I * 24, 10, 10,
                   66 + HelpLineInfo.Picpix mod 11 * 11,
                   137 + HelpLineInfo.Picpix div 11 * 11);
               end;
-              x0[i] := x0[i] + 8;
+              x0[I] := x0[I] + 8;
             end;
           pkTer, pkBigTer:
             with NoMap do begin
               if HelpLineInfo.Format = pkBigTer then
-                y := i * 24 - 3 + yyt
+                Y := I * 24 - 3 + yyt
               else
-                y := i * 24 + 13;
+                Y := I * 24 + 13;
               if HelpLineInfo.Picpix >= 3 * 12 then
                 srcno := 2 * 9 + 6
               else if HelpLineInfo.Picpix mod 12 = fJungle then
@@ -729,29 +729,29 @@ begin
                 srcno := 27 + (HelpLineInfo.Picpix mod 12 - 9) * 18;
               if HelpLineInfo.Format = pkTer then
               begin
-                ofs := x0[i] + 8;
-                x0[i] := 2 * xxt + 8 + ofs;
+                ofs := x0[I] + 8;
+                x0[I] := 2 * xxt + 8 + ofs;
               end
               else
               begin
                 ofs := InnerWidth - (2 * xxt + 38);
-                x0[i] := x0[i] + 8;
+                x0[I] := x0[I] + 8;
               end;
               if srcno >= fJungle then
               begin
-                Sprite(OffScreen, HGrTerrain, ofs + 4, y - yyt + 2, xxt * 2 - 8,
+                Sprite(OffScreen, HGrTerrain, ofs + 4, Y - yyt + 2, xxt * 2 - 8,
                   yyt * 2 - 4, 5 + 2 * (xxt * 2 + 1),
                   3 + yyt + 2 * (yyt * 3 + 1));
-                Sprite(OffScreen, HGrTerrain, ofs, y - 2 * yyt, xxt * 2,
+                Sprite(OffScreen, HGrTerrain, ofs, Y - 2 * yyt, xxt * 2,
                   yyt * 3 - 2, 1 + srcno mod 9 * (xxt * 2 + 1),
                   1 + srcno div 9 * (yyt * 3 + 1));
               end
               else
-                Sprite(OffScreen, HGrTerrain, ofs + 4, y - yyt + 2, xxt * 2 - 8,
+                Sprite(OffScreen, HGrTerrain, ofs + 4, Y - yyt + 2, xxt * 2 - 8,
                   yyt * 2 - 4, 5 + srcno mod 9 * (xxt * 2 + 1),
                   3 + yyt + srcno div 9 * (yyt * 3 + 1));
               if HelpLineInfo.Picpix >= 3 * 12 then { rare resource }
-                Sprite(OffScreen, HGrTerrain, ofs, y - 2 * yyt, xxt * 2,
+                Sprite(OffScreen, HGrTerrain, ofs, Y - 2 * yyt, xxt * 2,
                   yyt * 3, 1 + 8 * (xxt * 2 + 1),
                   1 + (HelpLineInfo.Picpix - 2 * 12) * (yyt * 3 + 1))
               else if HelpLineInfo.Picpix >= 12 then { special tile }
@@ -763,7 +763,7 @@ begin
                 else
                   srcno := 18 + 8 + (HelpLineInfo.Picpix mod 12 - 9) * 18;
                 srcno := srcno + HelpLineInfo.Picpix div 12 * 9;
-                Sprite(OffScreen, HGrTerrain, ofs, y - 2 * yyt, xxt * 2,
+                Sprite(OffScreen, HGrTerrain, ofs, Y - 2 * yyt, xxt * 2,
                   yyt * 3, 1 + srcno mod 9 * (xxt * 2 + 1),
                   1 + srcno div 9 * (yyt * 3 + 1));
               end;
@@ -773,97 +773,97 @@ begin
               ofs := 8;
               if HelpLineInfo.Picpix = 5 then
               begin // display mine on hills
-                Sprite(OffScreen, HGrTerrain, ofs + 4, i * 24 + 13 - yyt,
+                Sprite(OffScreen, HGrTerrain, ofs + 4, I * 24 + 13 - yyt,
                   xxt * 2 - 8, yyt * 2 - 4, 5 + 2 * (xxt * 2 + 1),
                   3 + yyt + 2 * (yyt * 3 + 1));
                 srcno := 45;
               end
               else
                 srcno := fPrairie; // display on prairie
-              Sprite(OffScreen, HGrTerrain, ofs + 4, i * 24 + 13 - yyt,
+              Sprite(OffScreen, HGrTerrain, ofs + 4, I * 24 + 13 - yyt,
                 xxt * 2 - 8, yyt * 2 - 4, 5 + srcno mod 9 * (xxt * 2 + 1),
                 3 + yyt + srcno div 9 * (yyt * 3 + 1));
               if HelpLineInfo.Picpix = 12 then { river }
-                Sprite(OffScreen, HGrTerrain, ofs, i * 24 + 11 - yyt, xxt * 2,
+                Sprite(OffScreen, HGrTerrain, ofs, I * 24 + 11 - yyt, xxt * 2,
                   yyt * 2, 1 + 5 * (xxt * 2 + 1), 1 + yyt + 13 * (yyt * 3 + 1))
               else if HelpLineInfo.Picpix >= 3 then { improvement 2 }
               begin
                 if HelpLineInfo.Picpix = 6 then
-                  Sprite(OffScreen, HGrTerrain, ofs, i * 24 + 11 - 2 * yyt,
+                  Sprite(OffScreen, HGrTerrain, ofs, I * 24 + 11 - 2 * yyt,
                     xxt * 2, yyt * 3, 1 + 7 * (xxt * 2 + 1),
                     1 + 12 * (yyt * 3 + 1));
-                Sprite(OffScreen, HGrTerrain, ofs, i * 24 + 11 - 2 * yyt,
+                Sprite(OffScreen, HGrTerrain, ofs, I * 24 + 11 - 2 * yyt,
                   xxt * 2, yyt * 3, 1 + (HelpLineInfo.Picpix - 3) *
                   (xxt * 2 + 1), 1 + 12 * (yyt * 3 + 1))
               end
               else { improvement 1 }
               begin
-                Sprite(OffScreen, HGrTerrain, ofs, i * 24 + 11 - 2 * yyt,
+                Sprite(OffScreen, HGrTerrain, ofs, I * 24 + 11 - 2 * yyt,
                   xxt * 2, yyt * 3, 1 + 2 * (xxt * 2 + 1),
                   1 + (9 + HelpLineInfo.Picpix) * (yyt * 3 + 1));
-                Sprite(OffScreen, HGrTerrain, ofs, i * 24 + 11 - 2 * yyt,
+                Sprite(OffScreen, HGrTerrain, ofs, I * 24 + 11 - 2 * yyt,
                   xxt * 2, yyt * 3, 1 + 5 * (xxt * 2 + 1),
                   1 + (9 + HelpLineInfo.Picpix) * (yyt * 3 + 1))
               end;
-              x0[i] := x0[i] + 8;
+              x0[I] := x0[I] + 8;
             end;
           pkModel:
             begin
-              FrameImage(OffScreen.Canvas, BigImp, x0[i] + 12, i * 24 - 7,
+              FrameImage(OffScreen.Canvas, BigImp, x0[I] + 12, I * 24 - 7,
                 56, 40, 0, 0);
-              Sprite(OffScreen, HGrStdUnits, x0[i] + 8, i * 24 - 11, 64, 44,
+              Sprite(OffScreen, HGrStdUnits, x0[I] + 8, I * 24 - 11, 64, 44,
                 1 + HelpLineInfo.Picpix mod 10 * 65,
                 1 + HelpLineInfo.Picpix div 10 * 49);
-              x0[i] := 64 + 8 + 8 + x0[i];
+              x0[I] := 64 + 8 + 8 + x0[I];
             end;
           pkFeature:
             begin
-              DarkGradient(OffScreen.Canvas, x0[i] + 8 - 1,
-                7 + i * 24 - 3, 16, 1);
-              ScreenTools.Frame(OffScreen.Canvas, x0[i] + 8, 7 + i * 24 - 2, x0[i] + 8 + 13,
-                7 + i * 24 - 2 + 13, $C0C0C0, $C0C0C0);
-              Sprite(OffScreen, HGrSystem, x0[i] + 8 + 2, 7 + i * 24, 10, 10,
+              DarkGradient(OffScreen.Canvas, x0[I] + 8 - 1,
+                7 + I * 24 - 3, 16, 1);
+              ScreenTools.Frame(OffScreen.Canvas, x0[I] + 8, 7 + I * 24 - 2, x0[I] + 8 + 13,
+                7 + I * 24 - 2 + 13, $C0C0C0, $C0C0C0);
+              Sprite(OffScreen, HGrSystem, x0[I] + 8 + 2, 7 + I * 24, 10, 10,
                 66 + HelpLineInfo.Picpix mod 11 * 11,
                 137 + HelpLineInfo.Picpix div 11 * 11);
-              x0[i] := x0[i] + 8 + 8 + 2 + 13;
+              x0[I] := x0[I] + 8 + 8 + 2 + 13;
             end;
           pkExp:
             begin
-              ScreenTools.Frame(OffScreen.Canvas, 20 - 1, 8 - 4 + i * 24, 20 + 12,
-                8 + 11 + i * 24, $000000, $000000);
-              Dump(OffScreen, HGrSystem, 20, 8 - 3 + i * 24, 12, 14,
+              ScreenTools.Frame(OffScreen.Canvas, 20 - 1, 8 - 4 + I * 24, 20 + 12,
+                8 + 11 + I * 24, $000000, $000000);
+              Dump(OffScreen, HGrSystem, 20, 8 - 3 + I * 24, 12, 14,
                 121 + HelpLineInfo.Picpix * 13, 28);
-              x0[i] := 20 + 8 + 11;
+              x0[I] := 20 + 8 + 11;
             end;
           pkAITStat:
             begin
-              Sprite(OffScreen, HGrSystem, 20, 6 + i * 24, 14, 14,
+              Sprite(OffScreen, HGrSystem, 20, 6 + I * 24, 14, 14,
                 1 + HelpLineInfo.Picpix * 15, 316);
-              x0[i] := 20 + 8 + 11;
+              x0[I] := 20 + 8 + 11;
             end;
           pkGov:
             begin
-              ScreenTools.Frame(OffScreen.Canvas, 8 - 1 + x0[i], 2 - 1 + i * 24,
-                8 + xSizeSmall + x0[i], 2 + 20 + i * 24, $000000, $000000);
-              BitBltCanvas(OffScreen.Canvas, 8 + x0[i], 2 + i * 24, xSizeSmall,
+              ScreenTools.Frame(OffScreen.Canvas, 8 - 1 + x0[I], 2 - 1 + I * 24,
+                8 + xSizeSmall + x0[I], 2 + 20 + I * 24, $000000, $000000);
+              BitBltCanvas(OffScreen.Canvas, 8 + x0[I], 2 + I * 24, xSizeSmall,
                 ySizeSmall, SmallImp.Canvas, (HelpLineInfo.Picpix - 1) *
                 xSizeSmall, ySizeSmall);
-              x0[i] := x0[i] + (8 + 8 + 36);
+              x0[I] := x0[I] + (8 + 8 + 36);
             end;
           pkDot:
             begin
-              Sprite(OffScreen, HGrSystem, x0[i] + 18, 9 + i * 24, 8,
+              Sprite(OffScreen, HGrSystem, x0[I] + 18, 9 + I * 24, 8,
                 8, 81, 16);
-              x0[i] := 20 + 8 + 4;
+              x0[I] := 20 + 8 + 4;
             end;
           pkNormal_Dot:
-            x0[i] := 20 + 8 + 4;
+            x0[I] := 20 + 8 + 4;
           pkNormal_64:
-            x0[i] := 64 + 8 + 8;
+            x0[I] := 64 + 8 + 8;
         else
-          x0[i] := x0[i] + 8;
+          x0[I] := x0[I] + 8;
         end;
-        Self.Line(OffScreen.Canvas, i, False)
+        Self.Line(OffScreen.Canvas, I, False)
       end;
   end;
   MarkUsedOffscreen(InnerWidth, InnerHeight + 13 + 48);
@@ -872,70 +872,70 @@ end;
 procedure THelpDlg.ScrollBarUpdate(Sender: TObject);
 begin
   Sel := -1;
-  SmartUpdateContent(true)
+  SmartUpdateContent(True)
 end;
 
-procedure THelpDlg.Prepare(sbPos: integer = 0);
+procedure THelpDlg.Prepare(sbPos: Integer = 0);
 var
-  i, j, Special, Domain, Headline, TerrType, TerrSubType: integer;
-  s: string;
-  ps: pchar;
+  I, J, Special, Domain, Headline, TerrType, TerrSubType: Integer;
+  S: string;
+  ps: PChar;
   List: THyperText;
   CheckSeeAlso: Boolean;
 
-  procedure AddAdvance(i: integer);
+  procedure AddAdvance(I: Integer);
   begin
-    MainText.AddLine(Phrases.Lookup('ADVANCES', i), pkAdvIcon, i,
-      hkAdv + hkCrossLink, i);
+    MainText.AddLine(Phrases.Lookup('ADVANCES', I), pkAdvIcon, I,
+      hkAdv + hkCrossLink, I);
   end;
 
-  procedure AddPreqAdv(i: integer);
+  procedure AddPreqAdv(I: Integer);
   begin
-    MainText.AddLine(Phrases.Lookup('ADVANCES', i), pkAdvIcon_AsPreq, i,
-      hkAdv + hkCrossLink, i);
+    MainText.AddLine(Phrases.Lookup('ADVANCES', I), pkAdvIcon_AsPreq, I,
+      hkAdv + hkCrossLink, I);
   end;
 
-  procedure AddImprovement(i: integer);
+  procedure AddImprovement(I: Integer);
   begin
-    MainText.AddLine(Phrases.Lookup('IMPROVEMENTS', i), pkSmallIcon, i,
-      hkImp + hkCrossLink, i);
+    MainText.AddLine(Phrases.Lookup('IMPROVEMENTS', I), pkSmallIcon, I,
+      hkImp + hkCrossLink, I);
   end;
 
-  procedure AddPreqImp(i: integer);
+  procedure AddPreqImp(I: Integer);
   begin
-    MainText.AddLine(Phrases.Lookup('IMPROVEMENTS', i), pkSmallIcon_AsPreq, i,
-      hkImp + hkCrossLink, i);
+    MainText.AddLine(Phrases.Lookup('IMPROVEMENTS', I), pkSmallIcon_AsPreq, I,
+      hkImp + hkCrossLink, I);
   end;
 
-  procedure AddTerrain(i: integer);
+  procedure AddTerrain(I: Integer);
   begin
     if MainText.Count > 1 then
     begin
       MainText.LineFeed;
     end;
-    MainText.AddLine(Phrases.Lookup('TERRAIN', i), pkTer, i, hkTer, i);
+    MainText.AddLine(Phrases.Lookup('TERRAIN', I), pkTer, I, hkTer, I);
   end;
 
-  procedure AddFeature(i: integer);
+  procedure AddFeature(I: Integer);
   begin
-    MainText.AddLine(Phrases.Lookup('FEATURES', i), pkFeature, i,
-      hkFeature + hkCrossLink, i);
+    MainText.AddLine(Phrases.Lookup('FEATURES', I), pkFeature, I,
+      hkFeature + hkCrossLink, I);
   end;
 
-  procedure AddModel(i: integer);
+  procedure AddModel(I: Integer);
   var
-    pix: integer;
+    pix: Integer;
     Name: string;
   begin
     if MainText.Count > 1 then
       MainText.LineFeed;
-    FindStdModelPicture(SpecialModelPictureCode[i], pix, Name);
-    MainText.AddLine(Name, pkModel, pix, hkModel + hkCrossLink, i)
+    FindStdModelPicture(SpecialModelPictureCode[I], pix, Name);
+    MainText.AddLine(Name, pkModel, pix, hkModel + hkCrossLink, I)
   end;
 
   procedure AddStandardBlock(Item: string);
   var
-    i: integer;
+    I: Integer;
   begin
     with MainText do
     begin
@@ -946,39 +946,39 @@ var
       end
       else if Item = 'TECHFORMULA' then
       begin
-        i := Difficulty;
-        if i = 0 then
-          i := 2;
-        AddLine(Format(HelpText.Lookup('TECHFORMULA'), [TechFormula_M[i],
-          TechFormula_D[i]]))
+        I := Difficulty;
+        if I = 0 then
+          I := 2;
+        AddLine(Format(HelpText.Lookup('TECHFORMULA'), [TechFormula_M[I],
+          TechFormula_D[I]]))
       end
       else if Item = 'EXPERIENCE' then
-        for i := 0 to nExp - 1 do
-          AddLine(Phrases.Lookup('EXPERIENCE', i), pkExp, i)
+        for I := 0 to nExp - 1 do
+          AddLine(Phrases.Lookup('EXPERIENCE', I), pkExp, I)
       else if Item = 'MODERN' then
-        for i := 1 to 3 do
+        for I := 1 to 3 do
         begin
           LineFeed;
-          AddLine(Phrases.Lookup('TERRAIN', 3 * 12 + i), pkTer, 3 * 12 + i);
+          AddLine(Phrases.Lookup('TERRAIN', 3 * 12 + I), pkTer, 3 * 12 + I);
         end
       else if Item = 'SAVED' then
         AddLine(DataDir + 'Saved', pkNormal)
       else if Item = 'AITSTAT' then
-        for i := 0 to 3 do
-          AddLine(Phrases2.Lookup('AITSTAT', i), pkAITStat, i)
+        for I := 0 to 3 do
+          AddLine(Phrases2.Lookup('AITSTAT', I), pkAITStat, I)
     end
   end;
 
-  procedure DecodeItem(s: string; var Category, Index: Integer);
+  procedure DecodeItem(S: string; var Category, Index: Integer);
   var
-    i: Integer;
+    I: Integer;
   begin
-    if (Length(s) > 0) and (s[1] = ':') then begin
+    if (Length(S) > 0) and (S[1] = ':') then begin
       Category := hkMisc;
       Index := 0;
-      for i := 3 to length(s) do
-        Index := Index * 10 + Ord(s[i]) - 48;
-      case s[2] of
+      for I := 3 to Length(S) do
+        Index := Index * 10 + Ord(S[I]) - 48;
+      case S[2] of
         'A': Category := hkAdv;
         'B': Category := hkImp;
         'T': Category := hkTer;
@@ -993,15 +993,15 @@ var
         Index := 200;
     end else begin
       Category := hkText;
-      Index := HelpText.Gethandle(Copy(s, 1, 255));
+      Index := HelpText.Gethandle(Copy(S, 1, 255));
     end;
   end;
 
-  procedure AddTextual(s: string);
+  procedure AddTextual(S: string);
   var
-    i: Integer;
-    p: Integer;
-    l: Integer;
+    I: Integer;
+    P: Integer;
+    L: Integer;
     ofs: Integer;
     CurrentFormat: Integer;
     FollowFormat: Integer;
@@ -1014,39 +1014,39 @@ var
   begin
     RightMargin := InnerWidth - 16 - GetSystemMetrics(SM_CXVSCROLL);
     FollowFormat := pkNormal;
-    while s <> '' do
+    while S <> '' do
     begin
       Picpix := 0;
       LinkCategory := 0;
       LinkIndex := 0;
-      if s[1] = '$' then
+      if S[1] = '$' then
       begin // window caption
-        p := 1;
+        P := 1;
         repeat
-          inc(p)
-        until (p > Length(s)) or (s[p] = '\');
-        Caption := Copy(s, 2, p - 2);
-        Delete(s, 1, p);
+          Inc(P);
+        until (P > Length(S)) or (S[P] = '\');
+        Caption := Copy(S, 2, P - 2);
+        Delete(S, 1, P);
       end
-      else if s[1] = '&' then
+      else if S[1] = '&' then
       begin // standard block
-        p := 1;
+        P := 1;
         repeat
-          inc(p)
-        until (p > Length(s)) or (s[p] = '\');
-        AddStandardBlock(Copy(s, 2, p - 2));
-        Delete(s, 1, p);
+          Inc(P);
+        until (P > Length(S)) or (S[P] = '\');
+        AddStandardBlock(Copy(S, 2, P - 2));
+        Delete(S, 1, P);
       end
-      else if s[1] = '@' then
+      else if S[1] = '@' then
       begin // image
-        if (Length(s) >= 2) and (s[2] = '@') then
+        if (Length(S) >= 2) and (S[2] = '@') then
         begin // generate from icon
           Picpix := 0;
-          p := 3;
-          while (p <= Length(s)) and (s[p] <> '\') do
+          P := 3;
+          while (P <= Length(S)) and (S[P] <> '\') do
           begin
-            Picpix := Picpix * 10 + Ord(s[p]) - 48;
-            inc(p)
+            Picpix := Picpix * 10 + Ord(S[P]) - 48;
+            Inc(P);
           end;
           if (Picpix < 0) or (Picpix >= nImp) then
             Picpix := 0;
@@ -1056,30 +1056,30 @@ var
         end
         else
         begin // external image
-          p := 1;
+          P := 1;
           repeat
-            Inc(p)
-          until (p > Length(s)) or (s[p] = '\');
+            Inc(P);
+          until (P > Length(S)) or (S[P] = '\');
           if LoadGraphicFile(ExtPic, LocalizedFilePath('Help' +
-            DirectorySeparator + Copy(s, 2, p - 2)) + '.png') then
+            DirectorySeparator + Copy(S, 2, P - 2)) + '.png') then
           begin
             MainText.AddLine('', pkExternal);
-            for i := 0 to (ExtPic.Height - 12) div 24 do
+            for I := 0 to (ExtPic.Height - 12) div 24 do
               MainText.LineFeed;
           end;
         end;
-        Delete(s, 1, p);
+        Delete(S, 1, P);
       end
       else
       begin
-        case s[1] of
+        case S[1] of
           ':', ';':
             begin // link
-              p := 1;
+              P := 1;
               repeat
-                inc(p)
-              until (p > Length(s)) or (s[p] = '\') or (s[p] = ' ');
-              DecodeItem(Copy(s, 2, p - 2), LinkCategory, LinkIndex);
+                Inc(P)
+              until (P > Length(S)) or (S[P] = '\') or (S[P] = ' ');
+              DecodeItem(Copy(S, 2, P - 2), LinkCategory, LinkIndex);
               CurrentFormat := 0;
               if (LinkCategory <> hkText) and (LinkIndex < 200) then
               // show icon
@@ -1111,33 +1111,33 @@ var
                         Picpix, Name);
                     end;
                 end;
-              if s[1] = ':' then
+              if S[1] = ':' then
                 LinkCategory := LinkCategory + hkCrossLink;
-              if (p > Length(s)) or (s[p] = ' ') then
-                Delete(s, 1, p)
+              if (P > Length(S)) or (S[P] = ' ') then
+                Delete(S, 1, P)
               else
-                Delete(s, 1, p - 1)
+                Delete(S, 1, P - 1)
             end;
           '!': // highlited
-            if (Length(s) >= 2) and (s[2] = '!') then
+            if (Length(S) >= 2) and (S[2] = '!') then
             begin
               if MainText.Count > 1 then
                 MainText.LineFeed;
               FollowFormat := pkCaption;
               CurrentFormat := pkCaption;
-              Delete(s, 1, 2);
+              Delete(S, 1, 2);
             end
             else
             begin
               FollowFormat := pkSection;
               CurrentFormat := pkSection;
-              Delete(s, 1, 1);
+              Delete(S, 1, 1);
             end;
           '-':
             begin // list
               FollowFormat := pkNormal_Dot;
               CurrentFormat := pkDot;
-              Delete(s, 1, 1);
+              Delete(S, 1, 1);
             end;
         else
           CurrentFormat := FollowFormat;
@@ -1146,28 +1146,28 @@ var
           ofs := 20 + 4 + 8
         else
           ofs := 8;
-        p := 0;
+        P := 0;
         repeat
           repeat
-            Inc(p)
-          until (p > Length(s)) or (s[p] = ' ') or (s[p] = '\');
-          if (BiColorTextWidth(OffScreen.Canvas, Copy(s, 1, p - 1)) <=
+            Inc(P)
+          until (P > Length(S)) or (S[P] = ' ') or (S[P] = '\');
+          if (BiColorTextWidth(OffScreen.Canvas, Copy(S, 1, P - 1)) <=
             RightMargin - ofs) then
-            l := p - 1
+            L := P - 1
           else
             Break;
-        until (p >= Length(s)) or (s[l + 1] = '\');
-        Text := Copy(s, 1, l);
-        if LinkCategory and $3f = hkInternet then begin
+        until (P >= Length(S)) or (S[L + 1] = '\');
+        Text := Copy(S, 1, L);
+        if LinkCategory and $3F = hkInternet then begin
           if LinkIndex = 1 then Text := AITemplateManual
           else if LinkIndex = 2 then Text := CevoHomepageShort
           else if LinkIndex = 3 then Text := CevoContactShort;
         end;
         MainText.AddLine(Text, CurrentFormat, Picpix, LinkCategory,
           LinkIndex);
-        if (l < Length(s)) and (s[l + 1] = '\') then
+        if (L < Length(S)) and (S[L + 1] = '\') then
           FollowFormat := pkNormal;
-        Delete(s, 1, l + 1);
+        Delete(S, 1, L + 1);
       end
     end
   end;
@@ -1177,41 +1177,41 @@ var
     AddTextual(HelpText.Lookup(Item));
   end;
 
-  procedure AddModelText(i: Integer);
+  procedure AddModelText(I: Integer);
   var
     pix: Integer;
-    s: string;
+    S: string;
   begin
     with MainText do begin
       if Count > 1 then begin
         LineFeed;
         LineFeed;
       end;
-      FindStdModelPicture(SpecialModelPictureCode[i], pix, s);
-      AddLine(s, pkSection);
-      AddLine(Format(HelpText.Lookup('STRENGTH'), [SpecialModel[i].Attack,
-        SpecialModel[i].Defense]), pkNormal_64);
+      FindStdModelPicture(SpecialModelPictureCode[I], pix, S);
+      AddLine(S, pkSection);
+      AddLine(Format(HelpText.Lookup('STRENGTH'), [SpecialModel[I].Attack,
+        SpecialModel[I].Defense]), pkNormal_64);
       AddLine(Format(HelpText.Lookup('SPEED'),
-        [MovementToString(SpecialModel[i].Speed)]), pkModel, pix);
+        [MovementToString(SpecialModel[I].Speed)]), pkModel, pix);
       if Difficulty = 0 then
-        AddLine(Format(HelpText.Lookup('BUILDCOST'), [SpecialModel[i].Cost]),
+        AddLine(Format(HelpText.Lookup('BUILDCOST'), [SpecialModel[I].Cost]),
           pkNormal_64)
       else
         AddLine(Format(HelpText.Lookup('BUILDCOST'),
-          [SpecialModel[i].Cost * BuildCostMod[Difficulty] div 12]),
+          [SpecialModel[I].Cost * BuildCostMod[Difficulty] div 12]),
           pkNormal_64);
-      s := HelpText.LookupByHandle(hSPECIALMODEL, i);
-      if (s <> '') and (s <> '*') then
-        AddTextual(s);
-      if SpecialModelPreq[i] >= 0 then
-        AddPreqAdv(SpecialModelPreq[i])
-      else if SpecialModelPreq[i] = preLighthouse then
+      S := HelpText.LookupByHandle(hSPECIALMODEL, I);
+      if (S <> '') and (S <> '*') then
+        AddTextual(S);
+      if SpecialModelPreq[I] >= 0 then
+        AddPreqAdv(SpecialModelPreq[I])
+      else if SpecialModelPreq[I] = preLighthouse then
         AddPreqImp(woLighthouse)
-      else if SpecialModelPreq[i] = preBuilder then
+      else if SpecialModelPreq[I] = preBuilder then
         AddPreqImp(woPyramids)
-      else if SpecialModelPreq[i] = preLeo then
+      else if SpecialModelPreq[I] = preLeo then
         AddPreqImp(woLeo);
-      if SpecialModelPreq[i] <> preNone then
+      if SpecialModelPreq[I] <> preNone then
         MainText[Count - 1] := Format(HelpText.Lookup('REQUIRED'),
           [MainText[Count - 1]]);
     end
@@ -1219,21 +1219,21 @@ var
 
   procedure AddJobList;
   var
-    i, JobCost: Integer;
+    I, JobCost: Integer;
   begin
     with MainText do begin
-      for i := 0 to nJobHelp - 1 do begin
-        if i > 0 then begin
+      for I := 0 to nJobHelp - 1 do begin
+        if I > 0 then begin
           LineFeed;
           LineFeed;
         end;
-        AddLine(Phrases.Lookup('JOBRESULT', JobHelp[i]), pkSection);
+        AddLine(Phrases.Lookup('JOBRESULT', JobHelp[I]), pkSection);
         AddLine;
-        AddLine('', pkTerImp, i);
+        AddLine('', pkTerImp, I);
         AddLine;
-        AddTextual(HelpText.LookupByHandle(hJOBHELP, i));
+        AddTextual(HelpText.LookupByHandle(hJOBHELP, I));
         JobCost := -1;
-        case JobHelp[i] of
+        case JobHelp[I] of
           jCanal: JobCost := CanalWork;
           jFort: JobCost := FortWork;
           jBase: JobCost := BaseWork;
@@ -1243,8 +1243,8 @@ var
             [MovementToString(JobCost)]))
         else
           AddTextual(HelpText.Lookup('JOBCOSTVAR'));
-        if JobPreq[JobHelp[i]] <> preNone then begin
-          AddPreqAdv(JobPreq[JobHelp[i]]);
+        if JobPreq[JobHelp[I]] <> preNone then begin
+          AddPreqAdv(JobPreq[JobHelp[I]]);
           MainText[Count - 1] := Format(HelpText.Lookup('REQUIRED'),
             [MainText[Count - 1]]);
         end;
@@ -1254,8 +1254,8 @@ var
 
   procedure AddGraphicCredits;
   var
-    i: Integer;
-    s: string;
+    I: Integer;
+    S: string;
     sr: TSearchRec;
     List, Plus: TStringList;
   begin
@@ -1270,37 +1270,37 @@ var
     FreeAndNil(Plus);
 
     List.Sort;
-    i := 1;
-    while i < List.Count do
-      if List[i] = List[i - 1] then
-        List.Delete(i)
+    I := 1;
+    while I < List.Count do
+      if List[I] = List[I - 1] then
+        List.Delete(I)
       else
-        Inc(i);
+        Inc(I);
 
-    for i := 0 to List.Count - 1 do begin
-      s := List[i];
-      while BiColorTextWidth(OffScreen.Canvas, s) > InnerWidth - 16 -
+    for I := 0 to List.Count - 1 do begin
+      S := List[I];
+      while BiColorTextWidth(OffScreen.Canvas, S) > InnerWidth - 16 -
         GetSystemMetrics(SM_CXVSCROLL) do
-        Delete(s, length(s), 1);
-      MainText.AddLine(s);
+        Delete(S, Length(S), 1);
+      MainText.AddLine(S);
     end;
     FreeAndNil(List);
   end;
 
   procedure AddSoundCredits;
   var
-    i: Integer;
-    s: string;
+    I: Integer;
+    S: string;
     List: TStringList;
   begin
     List := TStringList.Create;
     List.LoadFromFile(GetSoundsDir + DirectorySeparator + 'sound.credits.txt');
-    for i := 0 to List.Count - 1 do begin
-      s := List[i];
-      while BiColorTextWidth(OffScreen.Canvas, s) > InnerWidth - 16 -
+    for I := 0 to List.Count - 1 do begin
+      S := List[I];
+      while BiColorTextWidth(OffScreen.Canvas, S) > InnerWidth - 16 -
         GetSystemMetrics(SM_CXVSCROLL) do
-        Delete(s, length(s), 1);
-      MainText.AddLine(s);
+        Delete(S, Length(S), 1);
+      MainText.AddLine(S);
     end;
     FreeAndNil(List);
   end;
@@ -1348,8 +1348,8 @@ begin { Prepare }
                 AddLine(HelpText.Lookup('HELPTITLE_TECHLIST'), pkBigIcon, 39,
                   hkAdv, 200);
                 LineFeed;
-                FindStdModelPicture(SpecialModelPictureCode[6], i, s);
-                AddLine(HelpText.Lookup('HELPTITLE_MODELLIST'), pkModel, i,
+                FindStdModelPicture(SpecialModelPictureCode[6], I, S);
+                AddLine(HelpText.Lookup('HELPTITLE_MODELLIST'), pkModel, I,
                   hkModel, 0);
                 LineFeed;
                 AddLine(HelpText.Lookup('HELPTITLE_FEATURELIST'), pkBigIcon, 28,
@@ -1401,23 +1401,23 @@ begin { Prepare }
             miscGovList:
               begin
                 Caption := HelpText.Lookup('HELPTITLE_GOVLIST');
-                for i := 1 to nGov do
+                for I := 1 to nGov do
                 begin
-                  AddLine(Phrases.Lookup('GOVERNMENT', i mod nGov), pkSection);
+                  AddLine(Phrases.Lookup('GOVERNMENT', I mod nGov), pkSection);
                   LineFeed;
-                  if i = nGov then
+                  if I = nGov then
                     AddLine('', pkBigIcon, 7 * SystemIconLines + imPalace)
                   else
-                    AddLine('', pkBigIcon, i + 6);
+                    AddLine('', pkBigIcon, I + 6);
                   LineFeed;
-                  AddTextual(HelpText.LookupByHandle(hGOVHELP, i mod nGov));
-                  if i mod nGov >= 2 then
+                  AddTextual(HelpText.LookupByHandle(hGOVHELP, I mod nGov));
+                  if I mod nGov >= 2 then
                   begin
-                    AddPreqAdv(GovPreq[i mod nGov]);
+                    AddPreqAdv(GovPreq[I mod nGov]);
                     MainText[Count - 1] := Format(HelpText.Lookup('REQUIRED'),
                       [MainText[Count - 1]]);
                   end;
-                  if i < nGov then
+                  if I < nGov then
                   begin
                     LineFeed;
                     LineFeed;
@@ -1439,28 +1439,28 @@ begin { Prepare }
           Caption := HelpText.Lookup('HELPTITLE_TECHLIST');
           List := THyperText.Create;
           List.OwnsObjects := True;
-          for j := 0 to 3 do
+          for J := 0 to 3 do
           begin
-            if j > 0 then
+            if J > 0 then
             begin
               LineFeed;
               LineFeed;
             end;
-            AddLine(HelpText.Lookup('TECHAGE', j), pkSection);
-            if j = 1 then
+            AddLine(HelpText.Lookup('TECHAGE', J), pkSection);
+            if J = 1 then
               AddLine(Phrases.Lookup('ADVANCES', adScience) + ' ' +
                 HelpText.Lookup('BASETECH'), pkAdvIcon, adScience, hkAdv,
                 adScience);
-            if j = 2 then
+            if J = 2 then
               AddLine(Phrases.Lookup('ADVANCES', adMassProduction) + ' ' +
                 HelpText.Lookup('BASETECH'), pkAdvIcon, adMassProduction, hkAdv,
                 adMassProduction);
             List.Clear;
-            for i := 0 to nAdv - 1 do
-              if (i <> adScience) and (i <> adMassProduction) and
-                (AdvValue[i] div 1000 = j) then
-                List.AddLine(Phrases.Lookup('ADVANCES', i), pkAdvIcon, i,
-                  hkAdv, i);
+            for I := 0 to nAdv - 1 do
+              if (I <> adScience) and (I <> adMassProduction) and
+                (AdvValue[I] div 1000 = J) then
+                List.AddLine(Phrases.Lookup('ADVANCES', I), pkAdvIcon, I,
+                  hkAdv, I);
             List.Sort;
             AppendList(List);
           end;
@@ -1486,67 +1486,67 @@ begin { Prepare }
             NextSection('PREREQALT')
           else
             NextSection('PREREQ');
-          for i := 0 to 2 do
-            if AdvPreq[no, i] <> preNone then
-              AddPreqAdv(AdvPreq[no, i]);
+          for I := 0 to 2 do
+            if AdvPreq[no, I] <> preNone then
+              AddPreqAdv(AdvPreq[no, I]);
           NextSection('GOVALLOW');
-          for i := 2 to nGov - 1 do
-            if GovPreq[i] = no then
-              AddLine(Phrases.Lookup('GOVERNMENT', i), pkGov, i,
+          for I := 2 to nGov - 1 do
+            if GovPreq[I] = no then
+              AddLine(Phrases.Lookup('GOVERNMENT', I), pkGov, I,
                 hkMisc + hkCrossLink, miscGovList);
           NextSection('BUILDALLOW');
-          for i := 0 to nWonder - 1 do
-            if Imp[i].Preq = no then
-              AddImprovement(i);
-          for i := nWonder to nImp - 1 do
-            if (Imp[i].Preq = no) and (Imp[i].Kind <> ikCommon) then
-              AddImprovement(i);
-          for i := nWonder to nImp - 1 do
-            if (Imp[i].Preq = no) and (Imp[i].Kind = ikCommon) then
-              AddImprovement(i);
+          for I := 0 to nWonder - 1 do
+            if Imp[I].Preq = no then
+              AddImprovement(I);
+          for I := nWonder to nImp - 1 do
+            if (Imp[I].Preq = no) and (Imp[I].Kind <> ikCommon) then
+              AddImprovement(I);
+          for I := nWonder to nImp - 1 do
+            if (Imp[I].Preq = no) and (Imp[I].Kind = ikCommon) then
+              AddImprovement(I);
           NextSection('MODELALLOW');
-          for i := 0 to nSpecialModel - 1 do
-            if SpecialModelPreq[i] = no then
-              AddModel(i);
+          for I := 0 to nSpecialModel - 1 do
+            if SpecialModelPreq[I] = no then
+              AddModel(I);
           NextSection('FEATALLOW');
-          for i := 0 to nFeature - 1 do
-            if Feature[i].Preq = no then
-              AddFeature(i);
+          for I := 0 to nFeature - 1 do
+            if Feature[I].Preq = no then
+              AddFeature(I);
           NextSection('FOLLOWADV');
-          for i := 0 to nAdv - 1 do
-            if (AdvPreq[i, 0] = no) or (AdvPreq[i, 1] = no) or
-              (AdvPreq[i, 2] = no) then
-              AddAdvance(i);
+          for I := 0 to nAdv - 1 do
+            if (AdvPreq[I, 0] = no) or (AdvPreq[I, 1] = no) or
+              (AdvPreq[I, 2] = no) then
+              AddAdvance(I);
           NextSection('UPGRADEALLOW');
           for Domain := 0 to nDomains - 1 do
-            for i := 1 to nUpgrade - 1 do
-              if upgrade[Domain, i].Preq = no then
+            for I := 1 to nUpgrade - 1 do
+              if upgrade[Domain, I].Preq = no then
               begin
-                if upgrade[Domain, i].Strength > 0 then
+                if upgrade[Domain, I].Strength > 0 then
                   AddLine(Format(HelpText.Lookup('STRENGTHUP'),
                     [Phrases.Lookup('DOMAIN', Domain), upgrade[Domain,
-                    i].Strength]), pkDomain, Domain);
-                if upgrade[Domain, i].Trans > 0 then
+                    I].Strength]), pkDomain, Domain);
+                if upgrade[Domain, I].Trans > 0 then
                   AddLine(Format(HelpText.Lookup('TRANSUP'),
-                    [Phrases.Lookup('DOMAIN', Domain), upgrade[Domain, i].Trans]
+                    [Phrases.Lookup('DOMAIN', Domain), upgrade[Domain, I].Trans]
                     ), pkDomain, Domain);
                 if no in FutureTech then
                   AddLine(Format(HelpText.Lookup('COSTUP'),
-                    [upgrade[Domain, i].Cost]), pkNormal_Dot)
+                    [upgrade[Domain, I].Cost]), pkNormal_Dot)
                 else
                   AddLine(Format(HelpText.Lookup('COSTMIN'),
-                    [upgrade[Domain, i].Cost]), pkNormal_Dot)
+                    [upgrade[Domain, I].Cost]), pkNormal_Dot)
               end;
           NextSection('EXPIRATION');
-          for i := 0 to nWonder - 1 do
-            if (Imp[i].Preq <> preNA) and (Imp[i].Expiration = no) then
-              AddImprovement(i);
+          for I := 0 to nWonder - 1 do
+            if (Imp[I].Preq <> preNA) and (Imp[I].Expiration = no) then
+              AddImprovement(I);
           NextSection('ADVEFFECT');
-          s := HelpText.LookupByHandle(hADVHELP, no);
-          if s <> '*' then
-            AddTextual(s);
+          S := HelpText.LookupByHandle(hADVHELP, no);
+          if S <> '*' then
+            AddTextual(S);
           NextSection('SEEALSO');
-          CheckSeeAlso := true
+          CheckSeeAlso := True
         end;
 
       hkImp:
@@ -1556,11 +1556,11 @@ begin { Prepare }
           // AddLine(HelpText.Lookup('HELPTITLE_IMPLIST'),pkSection);
           List := THyperText.Create;
           List.OwnsObjects := True;
-          for i := nWonder to nImp - 1 do
-            if (i <> imTrGoods) and (Imp[i].Preq <> preNA) and
-              (Imp[i].Kind = ikCommon) then
-              List.AddLine(Phrases.Lookup('IMPROVEMENTS', i), pkSmallIcon,
-                i, hkImp, i);
+          for I := nWonder to nImp - 1 do
+            if (I <> imTrGoods) and (Imp[I].Preq <> preNA) and
+              (Imp[I].Kind = ikCommon) then
+              List.AddLine(Phrases.Lookup('IMPROVEMENTS', I), pkSmallIcon,
+                I, hkImp, I);
           List.Sort;
           AppendList(List);
           FreeAndNil(List);
@@ -1569,26 +1569,26 @@ begin { Prepare }
         begin // complete nat. project list
           Caption := HelpText.Lookup('HELPTITLE_UNIQUELIST');
           // AddLine(HelpText.Lookup('HELPTITLE_UNIQUELIST'),pkSection);
-          for i := nWonder to nImp - 1 do
-            if (Imp[i].Preq <> preNA) and
-              ((Imp[i].Kind = ikNatLocal) or (Imp[i].Kind = ikNatGlobal)) then
-              AddLine(Phrases.Lookup('IMPROVEMENTS', i), pkSmallIcon, i,
-                hkImp, i);
+          for I := nWonder to nImp - 1 do
+            if (Imp[I].Preq <> preNA) and
+              ((Imp[I].Kind = ikNatLocal) or (Imp[I].Kind = ikNatGlobal)) then
+              AddLine(Phrases.Lookup('IMPROVEMENTS', I), pkSmallIcon, I,
+                hkImp, I);
           { LineFeed;
             LineFeed;
             AddLine(HelpText.Lookup('HELPTITLE_SHIPPARTLIST'),pkSection);
-            for i:= nWonder to nImp-1 do
-            if (Imp[i].Preq<>preNA) and (Imp[i].Kind=ikShipPart) then
-            AddLine(Phrases.Lookup('IMPROVEMENTS',i),pkSmallIcon,i,hkImp,i); }
+            for I:= nWonder to nImp-1 do
+            if (Imp[I].Preq<>preNA) and (Imp[I].Kind=ikShipPart) then
+            AddLine(Phrases.Lookup('IMPROVEMENTS',I),pkSmallIcon,I,hkImp,I); }
         end
         else if no = 202 then
         begin // complete wonder list
           Caption := HelpText.Lookup('HELPTITLE_WONDERLIST');
           // AddLine(HelpText.Lookup('HELPTITLE_WONDERLIST'),pkSection);
-          for i := 0 to nWonder - 1 do
-            if Imp[i].Preq <> preNA then
-              AddLine(Phrases.Lookup('IMPROVEMENTS', i), pkSmallIcon, i,
-                hkImp, i);
+          for I := 0 to nWonder - 1 do
+            if Imp[I].Preq <> preNA then
+              AddLine(Phrases.Lookup('IMPROVEMENTS', I), pkSmallIcon, I,
+                hkImp, I);
         end
         else
         begin // single building
@@ -1626,56 +1626,56 @@ begin { Prepare }
           end;
           NextSection('COSTS');
           if Difficulty = 0 then
-            s := Format(HelpText.Lookup('BUILDCOST'), [Imp[no].Cost])
+            S := Format(HelpText.Lookup('BUILDCOST'), [Imp[no].Cost])
           else
-            s := Format(HelpText.Lookup('BUILDCOST'),
+            S := Format(HelpText.Lookup('BUILDCOST'),
               [Imp[no].Cost * BuildCostMod[Difficulty] div 12]);
-          AddLine(s);
+          AddLine(S);
           if Imp[no].Maint > 0 then
             AddLine(Format(HelpText.Lookup('MAINTCOST'), [Imp[no].Maint]));
-          j := 0;
-          for i := 0 to nImpReplacement - 1 do
-            if ImpReplacement[i].NewImp = no then
+          J := 0;
+          for I := 0 to nImpReplacement - 1 do
+            if ImpReplacement[I].NewImp = no then
             begin
-              if j = 0 then
+              if J = 0 then
               begin
                 NextSection('REPLACE');
                 AddItem('REPLACETEXT');
-                j := 1;
+                J := 1;
               end;
-              AddImprovement(ImpReplacement[i].OldImp);
+              AddImprovement(ImpReplacement[I].OldImp);
             end;
           if Imp[no].Kind = ikShipPart then
           begin
             LineFeed;
             if no = imShipComp then
-              i := 1
+              I := 1
             else if no = imShipPow then
-              i := 2
+              I := 2
             else { if no=imShipHab then }
-              i := 3;
+              I := 3;
             AddLine(Format(HelpText.Lookup('RAREREQUIRED'),
-              [Phrases.Lookup('TERRAIN', 3 * 12 + i)]), pkTer, 3 * 12 + i);
+              [Phrases.Lookup('TERRAIN', 3 * 12 + I)]), pkTer, 3 * 12 + I);
           end;
           if (no < nWonder) and (Imp[no].Expiration >= 0) then
           begin
             NextSection('EXPIRATION');
-            s := Format(HelpText.Lookup('EXPWITH'),
+            S := Format(HelpText.Lookup('EXPWITH'),
               [Phrases.Lookup('ADVANCES', Imp[no].Expiration)]);
             if no = woPyramids then
-              s := s + ' ' + HelpText.Lookup('EXPSLAVE');
-            AddTextual(s);
+              S := S + ' ' + HelpText.Lookup('EXPSLAVE');
+            AddTextual(S);
           end;
           NextSection('SEEALSO');
           if (no < nWonder) and (Imp[no].Expiration >= 0) then
             AddImprovement(woEiffel);
-          for i := 0 to nImpReplacement - 1 do
-            if ImpReplacement[i].OldImp = no then
-              AddImprovement(ImpReplacement[i].NewImp);
+          for I := 0 to nImpReplacement - 1 do
+            if ImpReplacement[I].OldImp = no then
+              AddImprovement(ImpReplacement[I].NewImp);
           if no = imSupermarket then
             AddLine(HelpText.Lookup('HELPTITLE_JOBLIST'), pkNormal, 0,
               hkMisc + hkCrossLink, miscJobList);
-          CheckSeeAlso := true;
+          CheckSeeAlso := True;
         end;
 
       hkTer:
@@ -1683,8 +1683,8 @@ begin { Prepare }
         begin // complete terrain type list
           Caption := HelpText.Lookup('HELPTITLE_TERLIST');
           // AddLine(HelpText.Lookup('HELPTITLE_TERLIST'),pkSection);
-          for i := 0 to nTerrainHelp - 1 do
-            AddTerrain(TerrainHelp[i]);
+          for I := 0 to nTerrainHelp - 1 do
+            AddTerrain(TerrainHelp[I]);
         end
         else
         begin // sigle terrain type
@@ -1745,13 +1745,13 @@ begin { Prepare }
             if (no < 3 * 12) and (TransTerrain >= 0) then
             begin
               LineFeed;
-              i := TransTerrain;
-              if (TerrType <> fGrass) and (i <> fGrass) then
-                i := i + TerrSubType * 12;
+              I := TransTerrain;
+              if (TerrType <> fGrass) and (I <> fGrass) then
+                I := I + TerrSubType * 12;
               // trafo to same Special resource group
               AddLine(Format(HelpText.Lookup('TRAFO'),
-                [Phrases.Lookup('TERRAIN', i)]), pkTer, i,
-                hkTer + hkCrossLink, i);
+                [Phrases.Lookup('TERRAIN', I)]), pkTer, I,
+                hkTer + hkCrossLink, I);
               if no = fSwamp + 12 then
               begin
                 LineFeed;
@@ -1759,7 +1759,7 @@ begin { Prepare }
                   [Phrases.Lookup('TERRAIN', TransTerrain + 24)]), pkTer,
                   TransTerrain + 24, hkTer + hkCrossLink, TransTerrain + 24);
               end
-              else if i = fGrass then
+              else if I = fGrass then
               begin
                 LineFeed;
                 AddLine(Format(HelpText.Lookup('TRAFO'),
@@ -1789,18 +1789,18 @@ begin { Prepare }
                     LineFeed;
                   AddLine(Phrases.Lookup('TERRAIN', no + Special * 12), pkTer,
                     no + Special * 12);
-                  i := FoodRes[Special] - FoodRes[0];
-                  if i <> 0 then
+                  I := FoodRes[Special] - FoodRes[0];
+                  if I <> 0 then
                     MainText[Count - 1] := MainText[Count - 1] +
-                      Format(HelpText.Lookup('SPECIALFOOD'), [i]);
-                  i := ProdRes[Special] - ProdRes[0];
-                  if i <> 0 then
+                      Format(HelpText.Lookup('SPECIALFOOD'), [I]);
+                  I := ProdRes[Special] - ProdRes[0];
+                  if I <> 0 then
                     MainText[Count - 1] := MainText[Count - 1] +
-                      Format(HelpText.Lookup('SPECIALPROD'), [i]);
-                  i := TradeRes[Special] - TradeRes[0];
-                  if i <> 0 then
+                      Format(HelpText.Lookup('SPECIALPROD'), [I]);
+                  I := TradeRes[Special] - TradeRes[0];
+                  if I <> 0 then
                     MainText[Count - 1] := MainText[Count - 1] +
-                      Format(HelpText.Lookup('SPECIALTRADE'), [i]);
+                      Format(HelpText.Lookup('SPECIALTRADE'), [I]);
                 end;
             end;
             if no = 3 * 12 then
@@ -1812,7 +1812,7 @@ begin { Prepare }
             begin
               NextSection('SEEALSO');
               AddImprovement(woGardens);
-              CheckSeeAlso := true
+              CheckSeeAlso := True
             end;
           end;
         end;
@@ -1836,18 +1836,18 @@ begin { Prepare }
               2: AddLine(HelpText.Lookup('HELPTITLE_FEATURE3LIST'), pkSection);
             end;
             List.Clear;
-            for i := 0 to nFeature - 1 do
-              if Feature[i].Preq <> preNA then
+            for I := 0 to nFeature - 1 do
+              if Feature[I].Preq <> preNA then
               begin
-                if i < mcFirstNonCap then
-                  j := 0
-                else if i in AutoFeature then
-                  j := 2
+                if I < mcFirstNonCap then
+                  J := 0
+                else if I in AutoFeature then
+                  J := 2
                 else
-                  j := 1;
-                if j = Special then
-                  List.AddLine(Phrases.Lookup('FEATURES', i), pkFeature, i,
-                    hkFeature, i);
+                  J := 1;
+                if J = Special then
+                  List.AddLine(Phrases.Lookup('FEATURES', I), pkFeature, I,
+                    hkFeature, I);
               end;
             List.Sort;
             AppendList(List);
@@ -1870,10 +1870,10 @@ begin { Prepare }
           if (Feature[no].Weight <> 0) or (Feature[no].Cost <> 0) then
           begin
             NextSection('COSTS');
-            s := IntToStr(Feature[no].Cost);
+            S := IntToStr(Feature[no].Cost);
             if Feature[no].Cost >= 0 then
-              s := '+' + s;
-            AddLine(Format(HelpText.Lookup('COSTBASE'), [s]));
+              S := '+' + S;
+            AddLine(Format(HelpText.Lookup('COSTBASE'), [S]));
             if Feature[no].Weight > 0 then
             begin
               AddLine(Format(HelpText.Lookup('WEIGHT'),
@@ -1900,21 +1900,21 @@ begin { Prepare }
       hkModel:
         begin
           Caption := HelpText.Lookup('HELPTITLE_MODELLIST');
-          for i := 0 to nSpecialModel - 1 do
-            if i <> 2 then
-              AddModelText(i);
+          for I := 0 to nSpecialModel - 1 do
+            if I <> 2 then
+              AddModelText(I);
           LineFeed;
           AddItem('MODELNOTE');
         end;
 
     end;
     if CheckSeeAlso then
-      for i := 0 to nSeeAlso - 1 do
-        if (SeeAlso[i].Kind = Kind) and (SeeAlso[i].no = no) then
-          case SeeAlso[i].SeeKind of
-            hkImp: AddImprovement(SeeAlso[i].SeeNo);
-            hkAdv: AddAdvance(SeeAlso[i].SeeNo);
-            hkFeature: AddFeature(SeeAlso[i].SeeNo);
+      for I := 0 to nSeeAlso - 1 do
+        if (SeeAlso[I].Kind = Kind) and (SeeAlso[I].no = no) then
+          case SeeAlso[I].SeeKind of
+            hkImp: AddImprovement(SeeAlso[I].SeeNo);
+            hkAdv: AddAdvance(SeeAlso[I].SeeNo);
+            hkFeature: AddFeature(SeeAlso[I].SeeNo);
           end;
     if (Headline >= 0) and (Count = Headline + 1) then
       Delete(Headline)
@@ -1948,16 +1948,16 @@ begin
 end;
 
 procedure THelpDlg.PaintBox1MouseMove(Sender: TObject; Shift: TShiftState;
-  x, y: integer);
+  X, Y: Integer);
 var
   i0, Sel0: Integer;
 begin
-  y := y - WideFrame;
+  Y := Y - WideFrame;
   i0 := ScrollBar.Position;
   Sel0 := Sel;
-  if (x >= SideFrame) and (x < SideFrame + InnerWidth) and (y >= 0) and
-    (y < InnerHeight) and (y mod 24 >= 8) then
-    Sel := y div 24
+  if (X >= SideFrame) and (X < SideFrame + InnerWidth) and (Y >= 0) and
+    (Y < InnerHeight) and (Y mod 24 >= 8) then
+    Sel := Y div 24
   else
     Sel := -1;
   if (Sel + i0 >= MainText.Count) or (Sel >= 0) and
@@ -1973,7 +1973,7 @@ begin
 end;
 
 procedure THelpDlg.PaintBox1MouseDown(Sender: TObject; Button: TMouseButton;
-  Shift: TShiftState; x, y: integer);
+  Shift: TShiftState; X, Y: Integer);
 begin
   if Sel >= 0 then
     with THelpLineInfo(MainText.Objects[Sel + ScrollBar.Position]) do
@@ -1986,7 +1986,7 @@ begin
       else
       begin
         if (Link >= $8000) and (Link and $3FFF = liInvalid) then
-          exit; // invalid link;
+          Exit; // invalid link;
         if Link >= $8000 then
           ShowNewContent(FWindowMode, hkText, Link and $3FFF)
         else
@@ -2078,8 +2078,8 @@ end;
 
 procedure THelpDlg.Search(SearchString: string);
 var
-  h, i, PrevHandle, PrevIndex, p, RightMargin: Integer;
-  s: string;
+  H, I, PrevHandle, PrevIndex, P, RightMargin: Integer;
+  S: string;
   mADVHELP, mIMPHELP, mFEATUREHELP: set of 0 .. 255;
   bGOVHELP, bSPECIALMODEL, bJOBHELP: Boolean;
 begin
@@ -2093,26 +2093,26 @@ begin
 
   // search in generic reference
   SearchString := UpperCase(SearchString);
-  for i := 0 to 35 + 4 do begin
-    s := Phrases.Lookup('TERRAIN', i);
-    if pos(SearchString, UpperCase(s)) > 0 then
-      if i < 36 then
-        SearchResult.AddLine(s + ' ' + HelpText.Lookup('HELPSPEC_TER'),
-          pkNormal, 0, hkTer + hkCrossLink, i)
+  for I := 0 to 35 + 4 do begin
+    S := Phrases.Lookup('TERRAIN', I);
+    if Pos(SearchString, UpperCase(S)) > 0 then
+      if I < 36 then
+        SearchResult.AddLine(S + ' ' + HelpText.Lookup('HELPSPEC_TER'),
+          pkNormal, 0, hkTer + hkCrossLink, I)
       else
       begin
         SearchResult.AddLine(Phrases.Lookup('TERRAIN', 36) + ' ' +
           HelpText.Lookup('HELPSPEC_TER'), pkNormal, 0,
           hkTer + hkCrossLink, 36);
-        if i > 36 then
+        if I > 36 then
           SearchResult.AddLine(Phrases.Lookup('IMPROVEMENTS',
-            imShipComp + i - 37) + ' ' + HelpText.Lookup('HELPSPEC_SHIPPART'),
-            pkNormal, 0, hkImp + hkCrossLink, imShipComp + i - 37);
+            imShipComp + I - 37) + ' ' + HelpText.Lookup('HELPSPEC_SHIPPART'),
+            pkNormal, 0, hkImp + hkCrossLink, imShipComp + I - 37);
         Break;
       end;
   end;
-  for i := 0 to nJobHelp - 1 do
-    if pos(SearchString, UpperCase(Phrases.Lookup('JOBRESULT', JobHelp[i]))) > 0
+  for I := 0 to nJobHelp - 1 do
+    if Pos(SearchString, UpperCase(Phrases.Lookup('JOBRESULT', JobHelp[I]))) > 0
     then
     begin
       SearchResult.AddLine(HelpText.Lookup('HELPTITLE_JOBLIST'), pkNormal, 0,
@@ -2120,23 +2120,23 @@ begin
       bJOBHELP := True;
       Break;
     end;
-  for i := 0 to nAdv - 1 do
+  for I := 0 to nAdv - 1 do
   begin
-    s := Phrases.Lookup('ADVANCES', i);
-    if pos(SearchString, UpperCase(s)) > 0 then
+    S := Phrases.Lookup('ADVANCES', I);
+    if Pos(SearchString, UpperCase(S)) > 0 then
     begin
-      if i in FutureTech then
-        s := s + ' ' + HelpText.Lookup('HELPSPEC_FUTURE')
+      if I in FutureTech then
+        S := S + ' ' + HelpText.Lookup('HELPSPEC_FUTURE')
       else
-        s := s + ' ' + HelpText.Lookup('HELPSPEC_ADV');
-      SearchResult.AddLine(s, pkNormal, 0, hkAdv + hkCrossLink, i);
-      include(mADVHELP, i);
+        S := S + ' ' + HelpText.Lookup('HELPSPEC_ADV');
+      SearchResult.AddLine(S, pkNormal, 0, hkAdv + hkCrossLink, I);
+      Include(mADVHELP, I);
     end;
   end;
-  for i := 0 to nSpecialModel - 1 do
+  for I := 0 to nSpecialModel - 1 do
   begin
-    FindStdModelPicture(SpecialModelPictureCode[i], h, s);
-    if pos(SearchString, UpperCase(s)) > 0 then
+    FindStdModelPicture(SpecialModelPictureCode[I], H, S);
+    if Pos(SearchString, UpperCase(S)) > 0 then
     begin
       SearchResult.AddLine(HelpText.Lookup('HELPTITLE_MODELLIST'), pkNormal, 0,
         hkModel + hkCrossLink, 0);
@@ -2144,42 +2144,42 @@ begin
       Break;
     end;
   end;
-  for i := 0 to nFeature - 1 do
+  for I := 0 to nFeature - 1 do
   begin
-    s := Phrases.Lookup('FEATURES', i);
-    if Pos(SearchString, UpperCase(s)) > 0 then
+    S := Phrases.Lookup('FEATURES', I);
+    if Pos(SearchString, UpperCase(S)) > 0 then
     begin
-      if i < mcFirstNonCap then
-        s := s + ' ' + HelpText.Lookup('HELPSPEC_CAP')
-      else if i in AutoFeature then
-        s := s + ' ' + HelpText.Lookup('HELPSPEC_STANDARD')
+      if I < mcFirstNonCap then
+        S := S + ' ' + HelpText.Lookup('HELPSPEC_CAP')
+      else if I in AutoFeature then
+        S := S + ' ' + HelpText.Lookup('HELPSPEC_STANDARD')
       else
-        s := s + ' ' + HelpText.Lookup('HELPSPEC_FEATURE');
-      SearchResult.AddLine(s, pkNormal, 0, hkFeature + hkCrossLink, i);
-      Include(mFEATUREHELP, i);
+        S := S + ' ' + HelpText.Lookup('HELPSPEC_FEATURE');
+      SearchResult.AddLine(S, pkNormal, 0, hkFeature + hkCrossLink, I);
+      Include(mFEATUREHELP, I);
     end;
   end;
-  for i := 0 to nImp - 1 do
+  for I := 0 to nImp - 1 do
   begin
-    s := Phrases.Lookup('IMPROVEMENTS', i);
-    if Pos(SearchString, UpperCase(s)) > 0 then
+    S := Phrases.Lookup('IMPROVEMENTS', I);
+    if Pos(SearchString, UpperCase(S)) > 0 then
     begin
-      case Imp[i].Kind of
+      case Imp[I].Kind of
         ikWonder:
-          s := s + ' ' + HelpText.Lookup('HELPSPEC_WONDER');
+          S := S + ' ' + HelpText.Lookup('HELPSPEC_WONDER');
         ikCommon:
-          s := s + ' ' + HelpText.Lookup('HELPSPEC_IMP');
+          S := S + ' ' + HelpText.Lookup('HELPSPEC_IMP');
         ikShipPart:
-          s := s + ' ' + HelpText.Lookup('HELPSPEC_SHIPPART');
+          S := S + ' ' + HelpText.Lookup('HELPSPEC_SHIPPART');
       else
-        s := s + ' ' + HelpText.Lookup('HELPSPEC_NAT')
+        S := S + ' ' + HelpText.Lookup('HELPSPEC_NAT')
       end;
-      SearchResult.AddLine(s, pkNormal, 0, hkImp + hkCrossLink, i);
-      Include(mIMPHELP, i);
+      SearchResult.AddLine(S, pkNormal, 0, hkImp + hkCrossLink, I);
+      Include(mIMPHELP, I);
     end
   end;
-  for i := 0 to nGov - 1 do
-    if Pos(SearchString, UpperCase(Phrases.Lookup('GOVERNMENT', i))) > 0 then
+  for I := 0 to nGov - 1 do
+    if Pos(SearchString, UpperCase(Phrases.Lookup('GOVERNMENT', I))) > 0 then
     begin
       SearchResult.AddLine(HelpText.Lookup('HELPTITLE_GOVLIST'), pkNormal, 0,
         hkMisc + hkCrossLink, miscGovList);
@@ -2188,88 +2188,88 @@ begin
     end;
 
   // full text search
-  h := -1;
+  H := -1;
   repeat
-    PrevHandle := h;
-    PrevIndex := i;
-    if not HelpText.Search(SearchString, h, i) then
+    PrevHandle := H;
+    PrevIndex := I;
+    if not HelpText.Search(SearchString, H, I) then
       Break;
-    if h = hADVHELP then
+    if H = hADVHELP then
     begin
-      if (i >= 0) and ((i <> PrevIndex) or (h <> PrevHandle)) and
-        not(i in mADVHELP) then
+      if (I >= 0) and ((I <> PrevIndex) or (H <> PrevHandle)) and
+        not(I in mADVHELP) then
       begin
-        s := Phrases.Lookup('ADVANCES', i);
-        if i in FutureTech then
-          s := s + ' ' + HelpText.Lookup('HELPSPEC_FUTURE')
+        S := Phrases.Lookup('ADVANCES', I);
+        if I in FutureTech then
+          S := S + ' ' + HelpText.Lookup('HELPSPEC_FUTURE')
         else
-          s := s + ' ' + HelpText.Lookup('HELPSPEC_ADV');
-        SearchResult.AddLine(s, pkNormal, 0, hkAdv + hkCrossLink, i)
+          S := S + ' ' + HelpText.Lookup('HELPSPEC_ADV');
+        SearchResult.AddLine(S, pkNormal, 0, hkAdv + hkCrossLink, I)
       end;
     end
-    else if h = hIMPHELP then
+    else if H = hIMPHELP then
     begin
-      if (i >= 0) and ((i <> PrevIndex) or (h <> PrevHandle)) and
-        not(i in mIMPHELP) then
+      if (I >= 0) and ((I <> PrevIndex) or (H <> PrevHandle)) and
+        not(I in mIMPHELP) then
       begin
-        s := Phrases.Lookup('IMPROVEMENTS', i);
-        case Imp[i].Kind of
+        S := Phrases.Lookup('IMPROVEMENTS', I);
+        case Imp[I].Kind of
           ikWonder:
-            s := s + ' ' + HelpText.Lookup('HELPSPEC_WONDER');
+            S := S + ' ' + HelpText.Lookup('HELPSPEC_WONDER');
           ikCommon:
-            s := s + ' ' + HelpText.Lookup('HELPSPEC_IMP');
+            S := S + ' ' + HelpText.Lookup('HELPSPEC_IMP');
           ikShipPart:
-            s := s + ' ' + HelpText.Lookup('HELPSPEC_SHIPPART');
+            S := S + ' ' + HelpText.Lookup('HELPSPEC_SHIPPART');
         else
-          s := s + ' ' + HelpText.Lookup('HELPSPEC_NAT')
+          S := S + ' ' + HelpText.Lookup('HELPSPEC_NAT')
         end;
-        SearchResult.AddLine(s, pkNormal, 0, hkImp + hkCrossLink, i)
+        SearchResult.AddLine(S, pkNormal, 0, hkImp + hkCrossLink, I)
       end;
     end
-    else if h = hFEATUREHELP then
+    else if H = hFEATUREHELP then
     begin
-      if (i >= 0) and ((i <> PrevIndex) or (h <> PrevHandle)) and
-        not(i in mFEATUREHELP) then
+      if (I >= 0) and ((I <> PrevIndex) or (H <> PrevHandle)) and
+        not(I in mFEATUREHELP) then
       begin
-        s := Phrases.Lookup('FEATURES', i);
-        if i < mcFirstNonCap then
-          s := s + ' ' + HelpText.Lookup('HELPSPEC_CAP')
-        else if i in AutoFeature then
-          s := s + ' ' + HelpText.Lookup('HELPSPEC_STANDARD')
+        S := Phrases.Lookup('FEATURES', I);
+        if I < mcFirstNonCap then
+          S := S + ' ' + HelpText.Lookup('HELPSPEC_CAP')
+        else if I in AutoFeature then
+          S := S + ' ' + HelpText.Lookup('HELPSPEC_STANDARD')
         else
-          s := s + ' ' + HelpText.Lookup('HELPSPEC_FEATURE');
-        SearchResult.AddLine(s, pkNormal, 0, hkFeature + hkCrossLink, i);
+          S := S + ' ' + HelpText.Lookup('HELPSPEC_FEATURE');
+        SearchResult.AddLine(S, pkNormal, 0, hkFeature + hkCrossLink, I);
       end;
     end
-    else if h = hGOVHELP then
+    else if H = hGOVHELP then
     begin
-      if (i >= 0) and (h <> PrevHandle) and not bGOVHELP then
+      if (I >= 0) and (H <> PrevHandle) and not bGOVHELP then
         SearchResult.AddLine(HelpText.Lookup('HELPTITLE_GOVLIST'), pkNormal, 0,
           hkMisc + hkCrossLink, miscGovList)
     end
-    else if h = hSPECIALMODEL then
+    else if H = hSPECIALMODEL then
     begin
-      if (i >= 0) and (h <> PrevHandle) and not bSPECIALMODEL then
+      if (I >= 0) and (H <> PrevHandle) and not bSPECIALMODEL then
         SearchResult.AddLine(HelpText.Lookup('HELPTITLE_MODELLIST'), pkNormal,
           0, hkModel + hkCrossLink, 0)
     end
-    else if h = hJOBHELP then
+    else if H = hJOBHELP then
     begin
-      if (i >= 0) and (h <> PrevHandle) and not bJOBHELP then
+      if (I >= 0) and (H <> PrevHandle) and not bJOBHELP then
         SearchResult.AddLine(HelpText.Lookup('HELPTITLE_JOBLIST'), pkNormal, 0,
           hkMisc + hkCrossLink, miscJobList)
     end
-    else if { (h<>hMAIN) and } (h <> PrevHandle) then
+    else if { (h<>hMAIN) and } (H <> PrevHandle) then
     begin
-      s := HelpText.LookupByHandle(h);
-      p := Pos('$', s);
-      if p > 0 then
+      S := HelpText.LookupByHandle(H);
+      P := Pos('$', S);
+      if P > 0 then
       begin
-        s := Copy(s, p + 1, maxint);
-        p := Pos('\', s);
-        if p > 0 then
-          s := Copy(s, 1, p - 1);
-        SearchResult.AddLine(s, pkNormal, 0, hkText + hkCrossLink, h);
+        S := Copy(S, P + 1, maxint);
+        P := Pos('\', S);
+        if P > 0 then
+          S := Copy(S, 1, P - 1);
+        SearchResult.AddLine(S, pkNormal, 0, hkText + hkCrossLink, H);
       end;
     end;
     until False;
@@ -2277,11 +2277,11 @@ begin
     // cut lines to fit to window
     RightMargin := InnerWidth - 16 - GetSystemMetrics(SM_CXVSCROLL);
     OffScreen.Canvas.Font.Assign(UniFont[ftNormal]);
-    for i := 0 to SearchResult.Count - 1 do
+    for I := 0 to SearchResult.Count - 1 do
     begin
-      while BiColorTextWidth(OffScreen.Canvas, SearchResult[i]) >
+      while BiColorTextWidth(OffScreen.Canvas, SearchResult[I]) >
         RightMargin - 32 do
-        SearchResult[i] := copy(SearchResult[i], 1, length(SearchResult[i]) - 1)
+        SearchResult[I] := Copy(SearchResult[I], 1, Length(SearchResult[I]) - 1)
     end;
   end;
 

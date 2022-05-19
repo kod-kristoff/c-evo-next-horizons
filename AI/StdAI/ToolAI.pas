@@ -10,25 +10,25 @@ uses
 
 type
   TGroupTransportPlan = record
-    LoadLoc, uixTransport, nLoad, TurnsEmpty, TurnsLoaded: integer;
-    uixLoad: array[0..15] of integer;
+    LoadLoc, uixTransport, nLoad, TurnsEmpty, TurnsLoaded: Integer;
+    uixLoad: array[0..15] of Integer;
   end;
 
 
   TToolAI = class(TCustomAI)
   protected
-  {$IFDEF DEBUG}DebugMap: array[0..lxmax * lymax - 1] of integer;{$ENDIF}
+  {$IFDEF DEBUG}DebugMap: array[0..lxmax * lymax - 1] of Integer;{$ENDIF}
 
-    function CenterOfEmpire: integer;
+    function CenterOfEmpire: Integer;
     // tile that is in the middle of all own cities
 
-    function CityTaxBalance(cix: integer; const CityReport: TCityReport): integer;
+    function CityTaxBalance(cix: Integer; const CityReport: TCityReport): Integer;
     // calculates exact difference of income and maintenance cost for a single city
     // positive result = income higher than maintenance
     // negative result = income lower than maintenance
     // respects production and food converted to gold
     // CityReport must have been prepared before
-    procedure SumCities(TaxRate: integer; var TaxSum, ScienceSum: integer);
+    procedure SumCities(TaxRate: Integer; var TaxSum, ScienceSum: Integer);
     // calculates exact total tax and science income
     // tax is reduced by maintenance (so might be negative)
     // luxury not supported
@@ -45,10 +45,10 @@ type
 
     procedure JobAssignment_Initialize;
     // initialization, must be called first of the JobAssignment functions
-    procedure JobAssignment_AddJob(Loc, Job, Score: integer);
+    procedure JobAssignment_AddJob(Loc, Job, Score: Integer);
     // add job for settlers with certain score
     // jobs include founding cities!
-    procedure JobAssignment_AddUnit(uix: integer);
+    procedure JobAssignment_AddUnit(uix: Integer);
     // add a settler unit to do jobs
     procedure JobAssignment_Go;
     // to be called after all jobs and the settlers for them have been added
@@ -56,16 +56,16 @@ type
     // settlers prefer jobs which are closer to their current location and jobs with a higher score
     // starting a job one turn earlier counts the same as 4 points of score
     // function does not cancel jobs that are already started
-    function JobAssignment_GotJob(uix: integer): boolean;
+    function JobAssignment_GotJob(uix: Integer): Boolean;
     // can be called after JobAssignment_Go to find out whether
     // a certain settler has been assigned a job to
 
     procedure AnalyzeMap;
     // calculates formations and districts
 
-    function CheckStep(MoveStyle, TimeBeforeStep, CrossCorner: integer;
-      var TimeAfterStep, RecoverTurns: integer; FromTile, ToTile: integer;
-      IsCapture: boolean): integer;
+    function CheckStep(MoveStyle, TimeBeforeStep, CrossCorner: Integer;
+      var TimeAfterStep, RecoverTurns: Integer; FromTile, ToTile: Integer;
+      IsCapture: Boolean): Integer;
     // forecast single unit move between adjacent tiles
     // format of TimeBeforeStep and TimeAfterStep: $1000*number of turns + $800-MP left
     // RecoverTurns: number of turns needed to rest outside city in order to
@@ -73,9 +73,9 @@ type
     // FromTile and ToTile must be Map[FromLoc] and Map[ToLoc], no location codes
     // CrossCorner=1 for long moves that cross the tile corner, =0 for short ones that don't
 
-    function GetMyMoveStyle(mix, Health: integer): integer;
+    function GetMyMoveStyle(mix, Health: Integer): Integer;
 
-    function Unit_MoveEx(uix, ToLoc: integer; Options: integer = 0): integer;
+    function Unit_MoveEx(uix, ToLoc: Integer; Options: Integer = 0): Integer;
 
     procedure SeaTransport_BeginInitialize;
     procedure SeaTransport_EndInitialize;
@@ -89,10 +89,10 @@ type
     // - all transports have same speed
     // - all transports have same capacity
     // - no transport is damaged
-    procedure SeaTransport_AddLoad(uix: integer);
-    procedure SeaTransport_AddTransport(uix: integer);
-    procedure SeaTransport_AddDestination(Loc: integer);
-    function SeaTransport_MakeGroupPlan(var TransportPlan: TGroupTransportPlan): boolean;
+    procedure SeaTransport_AddLoad(uix: Integer);
+    procedure SeaTransport_AddTransport(uix: Integer);
+    procedure SeaTransport_AddDestination(Loc: Integer);
+    function SeaTransport_MakeGroupPlan(var TransportPlan: TGroupTransportPlan): Boolean;
     // make plan for group of units to transport from a single loading location by a single transport
     // the plan optimizes:
     // - time for the units to move to the loading location
@@ -102,7 +102,7 @@ type
     //   subsequent calls to MakeGroupPlan result in plans that may be executed parallel
     // function returns false if no more transports are possible
 
-    function CurrentMStrength(Domain: integer): integer;
+    function CurrentMStrength(Domain: Integer): Integer;
   end;
 
 const
@@ -131,15 +131,15 @@ const
   mxAdjacent = $00000001;
 
 var
-  nContinent, nOcean, nDistrict: integer;
-  Formation: array[0..lxmax * lymax - 1] of integer;
+  nContinent, nOcean, nDistrict: Integer;
+  Formation: array[0..lxmax * lymax - 1] of Integer;
   // water: ocean index, land: continent index, sorted by size
   // territory unpassable due to peace treaty divides a continent
-  District: array[0..lxmax * lymax - 1] of integer;
+  District: array[0..lxmax * lymax - 1] of Integer;
   // index of coherent own territory, sorted by size
-  CityResult: array[0..nCmax - 1] of integer;
+  CityResult: array[0..nCmax - 1] of Integer;
 
-  Advancedness: array[0..nAdv - 1] of integer;
+  Advancedness: array[0..nAdv - 1] of Integer;
 // total number of prerequisites for each advance
 
 implementation
@@ -148,21 +148,21 @@ uses
   Pile;
 
 type
-  pinteger = ^integer;
+  pinteger = ^Integer;
 
 var
   // for JobAssignment
-  MaxScore: integer;
-  TileJob, TileJobScore: array[0..lxmax * lymax - 1] of byte;
-  JobLocOfSettler: array[0..nUmax - 1] of integer; // ToAssign = find job
+  MaxScore: Integer;
+  TileJob, TileJobScore: array[0..lxmax * lymax - 1] of Byte;
+  JobLocOfSettler: array[0..nUmax - 1] of Integer; // ToAssign = find job
 
   // for Transport
-  TransportMoveStyle, TransportCapacity, nTransportLoad: integer;
-  InitComplete, HaveDestinations: boolean;
-  uixTransportLoad, TransportAvailable: array[0..nUmax - 1] of integer;
-  TurnsAfterLoad: array[0..lxmax * lymax - 1] of shortint;
+  TransportMoveStyle, TransportCapacity, nTransportLoad: Integer;
+  InitComplete, HaveDestinations: Boolean;
+  uixTransportLoad, TransportAvailable: array[0..nUmax - 1] of Integer;
+  TurnsAfterLoad: array[0..lxmax * lymax - 1] of ShortInt;
 
-procedure ReplaceD(Start, Stop: pinteger; Raider, Twix: integer);
+procedure ReplaceD(Start, Stop: pinteger; Raider, Twix: Integer);
 begin
   while Start <> Stop do
   begin
@@ -172,19 +172,19 @@ begin
   end;
 end;
 
-function NextZero(Start, Stop: pinteger; Mask: cardinal): pinteger;
+function NextZero(Start, Stop: pinteger; Mask: Cardinal): pinteger;
 begin
   while (Start <> Stop) and (Start^ and Mask <> 0) do
     Inc(Start);
   Result := Start;
 end;
 
-function TToolAI.CenterOfEmpire: integer;
+function TToolAI.CenterOfEmpire: Integer;
 var
-  cix, Loc, x, y, sy, n: integer;
-  a, su, sv: double;
+  cix, Loc, X, Y, sy, N: Integer;
+  A, su, sv: Double;
 begin
-  n := 0;
+  N := 0;
   sy := 0;
   su := 0;
   sv := 0;
@@ -193,27 +193,27 @@ begin
     Loc := MyCity[cix].Loc;
     if Loc >= 0 then
     begin
-      y := Loc div G.lx;
-      x := Loc - y * G.lx;
-      Inc(sy, y);
-      a := 2 * pi * x / G.lx;
-      su := su + cos(a);
-      sv := sv + sin(a);
-      Inc(n);
+      Y := Loc div G.lx;
+      X := Loc - Y * G.lx;
+      Inc(sy, Y);
+      A := 2 * pi * X / G.lx;
+      su := su + cos(A);
+      sv := sv + sin(A);
+      Inc(N);
     end;
   end;
-  a := arctan2(sv, su);
-  x := round(G.lx * a / (2 * pi));
-  while x >= G.lx do
-    Dec(x, G.lx);
-  while x < 0 do
-    Inc(x, G.lx);
-  Result := ((2 * sy + n) div (2 * n)) * G.lx + x;
+  A := arctan2(sv, su);
+  X := round(G.lx * A / (2 * pi));
+  while X >= G.lx do
+    Dec(X, G.lx);
+  while X < 0 do
+    Inc(X, G.lx);
+  Result := ((2 * sy + N) div (2 * N)) * G.lx + X;
 end;
 
-function TToolAI.CityTaxBalance(cix: integer; const CityReport: TCityReport): integer;
+function TToolAI.CityTaxBalance(cix: Integer; const CityReport: TCityReport): Integer;
 var
-  i: integer;
+  I: Integer;
 begin
   Result := 0;
   if (CityReport.Working - CityReport.Happy <= MyCity[cix].Size shr 1) {no disorder} and
@@ -228,20 +228,20 @@ begin
       (CityReport.FoodRep > CityReport.Eaten) then
       Inc(Result, CityReport.FoodRep - CityReport.Eaten);
   end;
-  for i := nWonder to nImp - 1 do
-    if MyCity[cix].Built[i] > 0 then
-      Dec(Result, Imp[i].Maint);
+  for I := nWonder to nImp - 1 do
+    if MyCity[cix].Built[I] > 0 then
+      Dec(Result, Imp[I].Maint);
 end;
 
-procedure TToolAI.SumCities(TaxRate: integer; var TaxSum, ScienceSum: integer);
+procedure TToolAI.SumCities(TaxRate: Integer; var TaxSum, ScienceSum: Integer);
 var
-  cix, p1: integer;
+  cix, p1: Integer;
   CityReport: TCityReport;
 begin
   TaxSum := 0;
   ScienceSum := 0;
   if RO.Government = gAnarchy then
-    exit;
+    Exit;
   for p1 := 0 to nPl - 1 do
     if RO.Tribute[p1] <= RO.TributePaid[p1] then
       // don't rely on tribute from bankrupt nations
@@ -267,7 +267,7 @@ const
 
 procedure TToolAI.OptimizeCityTiles;
 var
-  cix: integer;
+  cix: Integer;
 begin
   for cix := 0 to RO.nCity - 1 do
     with MyCity[cix] do
@@ -277,7 +277,7 @@ end;
 
 procedure TToolAI.GetCityProdPotential;
 var
-  cix: integer;
+  cix: Integer;
   Advice: TCityTileAdviceData;
 begin
   for cix := 0 to RO.nCity - 1 do
@@ -285,14 +285,14 @@ begin
       if Loc >= 0 then
       begin
         Advice.ResourceWeights := rwMaxProd;
-        Server(sGetCityTileAdvice, me, cix, Advice);
+        Server(sGetCityTileAdvice, Me, cix, Advice);
         CityResult[cix] := Advice.CityReport.ProdRep; // considers factory, but shouldn't
       end;
 end;
 
 procedure TToolAI.GetCityTradePotential;
 var
-  cix: integer;
+  cix: Integer;
   Advice: TCityTileAdviceData;
 begin
   for cix := 0 to RO.nCity - 1 do
@@ -300,7 +300,7 @@ begin
       if Loc >= 0 then
       begin
         Advice.ResourceWeights := rwMaxScience;
-        Server(sGetCityTileAdvice, me, cix, Advice);
+        Server(sGetCityTileAdvice, Me, cix, Advice);
         CityResult[cix] := Advice.CityReport.Trade;
       end;
 end;
@@ -313,13 +313,13 @@ const
 
 procedure TToolAI.JobAssignment_Initialize;
 begin
-  fillchar(JobLocOfSettler, RO.nUn * sizeof(integer), $FF); // -1
-  fillchar(TileJob, MapSize, jNone);
-  fillchar(TileJobScore, MapSize, 0);
+  FillChar(JobLocOfSettler, RO.nUn * SizeOf(Integer), $FF); // -1
+  FillChar(TileJob, MapSize, jNone);
+  FillChar(TileJobScore, MapSize, 0);
   MaxScore := 0;
 end;
 
-procedure TToolAI.JobAssignment_AddJob(Loc, Job, Score: integer);
+procedure TToolAI.JobAssignment_AddJob(Loc, Job, Score: Integer);
 begin
   if Score > 255 then
     Score := 255;
@@ -332,13 +332,13 @@ begin
   end;
 end;
 
-procedure TToolAI.JobAssignment_AddUnit(uix: integer);
+procedure TToolAI.JobAssignment_AddUnit(uix: Integer);
 begin
-  assert(MyModel[MyUnit[uix].mix].Kind in [mkSettler, mkSlaves]);
+  Assert(MyModel[MyUnit[uix].mix].Kind in [mkSettler, mkSlaves]);
   JobLocOfSettler[uix] := ToAssign;
 end;
 
-function TToolAI.JobAssignment_GotJob(uix: integer): boolean;
+function TToolAI.JobAssignment_GotJob(uix: Integer): Boolean;
 begin
   Result := JobLocOfSettler[uix] >= 0;
 end;
@@ -346,19 +346,19 @@ end;
 procedure TToolAI.JobAssignment_Go;
 const
   DistanceScore = 4;
-  StepSizeByTerrain: array[0..11] of integer =
+  StepSizeByTerrain: array[0..11] of Integer =
     (0, 0, 1, 2, 1, 1, 0, 1, 0, 1, 1, 2);
   //Oc-Sh-Gr-De-Pr-Tu-Ar-Sw-XX-Fo-Hi-Mo
 var
   uix, BestScore, BestCount, BestLoc, BestJob, BestDistance, TestLoc,
-  NextLoc, TestDistance, V8, TestScore, StepSize, MoveResult: integer;
-  UnitsToAssign: boolean;
+  NextLoc, TestDistance, V8, TestScore, StepSize, MoveResult: Integer;
+  UnitsToAssign: Boolean;
   Adjacent: TVicinity8Loc;
   SettlerOfJobLoc, DistToLoc: array[0..lxmax * lymax - 1] of smallint;
   // DistToLoc is only defined where SettlerOfJobLoc>=0
-  TileChecked: array[0..lxmax * lymax - 1] of boolean;
+  TileChecked: array[0..lxmax * lymax - 1] of Boolean;
 begin
-  fillchar(SettlerOfJobLoc, MapSize * 2, $FF); // -1
+  FillChar(SettlerOfJobLoc, MapSize * 2, $FF); // -1
 
   // keep up jobs that are already started
   for uix := 0 to RO.nUn - 1 do
@@ -379,7 +379,7 @@ begin
       begin
         BestJob := jNone;
         BestScore := -999999;
-        FillChar(TileChecked, MapSize * sizeof(boolean), False);
+        FillChar(TileChecked, MapSize * SizeOf(Boolean), False);
         Pile.Create(MapSize);
         Pile.Put(MyUnit[uix].Loc, 0); // start search for new job at current location
         while Pile.Get(TestLoc, TestDistance) do
@@ -398,7 +398,7 @@ begin
                 if (StepSize > 0) // no water or arctic tile
                   and (Map[NextLoc] and (fUnit or fOwned) <> fUnit) // no foreign unit
                   and ((RO.Territory[NextLoc] < 0) or
-                  (RO.Territory[NextLoc] = me)) // no foreign territory
+                  (RO.Territory[NextLoc] = Me)) // no foreign territory
                   and (Map[TestLoc] and Map[NextLoc] and fInEnemyZoC = 0) then
                   // move not prevented by ZoC
                   Pile.Put(NextLoc, TestDistance + StepSize);
@@ -413,7 +413,7 @@ begin
             (TileJob[TestLoc] <> jCity)) and
             ((SettlerOfJobLoc[TestLoc] < 0) or (DistToLoc[TestLoc] > TestDistance)) then
           begin
-            TestScore := integer(TileJobScore[TestLoc]) - DistanceScore * TestDistance;
+            TestScore := Integer(TileJobScore[TestLoc]) - DistanceScore * TestDistance;
             if TestScore > BestScore then
               BestCount := 0;
             if TestScore >= BestScore then
@@ -468,12 +468,12 @@ end;
 
 procedure TToolAI.AnalyzeMap;
 var
-  i, j, Loc, Loc1, V8, Count, Kind, MostIndex: integer;
+  I, J, Loc, Loc1, V8, Count, Kind, MostIndex: Integer;
   Adjacent: TVicinity8Loc;
   IndexOfID: array[0..lxmax * lymax - 1] of smallint;
   IDOfIndex: array[0..lxmax * lymax div 2 - 1] of smallint;
 begin
-  fillchar(District, MapSize * 4, $FF);
+  FillChar(District, MapSize * 4, $FF);
   for Loc := 0 to MapSize - 1 do
     if Map[Loc] and fTerrain = fUNKNOWN then
       Formation[Loc] := nfUndiscovered
@@ -499,7 +499,7 @@ begin
             ReplaceD(@Formation[Formation[Loc]], @Formation[Loc + 1],
               Formation[Loc], Formation[Loc1]);
       end;
-      if (RO.Territory[Loc] = me) and (Map[Loc] and fTerrain >= fGrass) then
+      if (RO.Territory[Loc] = Me) and (Map[Loc] and fTerrain >= fGrass) then
       begin
         District[Loc] := Loc;
         for V8 := 0 to 7 do
@@ -544,21 +544,21 @@ begin
         IDOfIndex[Count] := Loc;
         Inc(Count);
       end;
-    for i := 0 to Count - 2 do
+    for I := 0 to Count - 2 do
     begin
-      MostIndex := i;
-      for j := i + 1 to Count - 1 do
-        if IndexOfID[IDOfIndex[j]] > IndexOfID[IDOfIndex[MostIndex]] then
-          MostIndex := j;
-      if MostIndex <> i then
+      MostIndex := I;
+      for J := I + 1 to Count - 1 do
+        if IndexOfID[IDOfIndex[J]] > IndexOfID[IDOfIndex[MostIndex]] then
+          MostIndex := J;
+      if MostIndex <> I then
       begin
-        j := IDOfIndex[i];
-        IDOfIndex[i] := IDOfIndex[MostIndex];
-        IDOfIndex[MostIndex] := j;
+        J := IDOfIndex[I];
+        IDOfIndex[I] := IDOfIndex[MostIndex];
+        IDOfIndex[MostIndex] := J;
       end;
     end;
-    for i := 0 to Count - 1 do
-      IndexOfID[IDOfIndex[i]] := i;
+    for I := 0 to Count - 1 do
+      IndexOfID[IDOfIndex[I]] := I;
 
     case Kind of
       0: // continents
@@ -604,7 +604,7 @@ const
 // ground: |   Basic   |Ho| Speed  |       HeavyCost       |        RailCost       |
 // other:  |   Basic   | 0| Speed  |              X X X             | MaxTerrType  |
 
-function TToolAI.GetMyMoveStyle(mix, Health: integer): integer;
+function TToolAI.GetMyMoveStyle(mix, Health: Integer): Integer;
 begin
   with MyModel[mix] do
   begin
@@ -613,9 +613,9 @@ begin
       dGround:
       begin
         Inc(Result, (50 + (Speed - 150) * 13 shr 7) shl 8); //HeavyCost
-        if RO.Wonder[woShinkansen].EffectiveOwner <> me then
+        if RO.Wonder[woShinkansen].EffectiveOwner <> Me then
           Inc(Result, Speed * (4 * 1311) shr 17); // RailCost
-        if (RO.Wonder[woGardens].EffectiveOwner <> me) or
+        if (RO.Wonder[woGardens].EffectiveOwner <> Me) or
           (Kind = mkSettler) and (Speed >= 200) then
           Inc(Result, msHostile);
         if Kind = mkDiplomat then
@@ -630,7 +630,7 @@ begin
       dSea:
       begin
         Result := Speed;
-        if RO.Wonder[woMagellan].EffectiveOwner = me then
+        if RO.Wonder[woMagellan].EffectiveOwner = Me then
           Inc(Result, 200);
         if Health < 100 then
           Result := ((Result - 250) * Health div 5000) * 50 + 250;
@@ -645,14 +645,14 @@ begin
   end;
 end;
 
-function TToolAI.CheckStep(MoveStyle, TimeBeforeStep, CrossCorner: integer;
-  var TimeAfterStep, RecoverTurns: integer; FromTile, ToTile: integer;
-  IsCapture: boolean): integer;
+function TToolAI.CheckStep(MoveStyle, TimeBeforeStep, CrossCorner: Integer;
+  var TimeAfterStep, RecoverTurns: Integer; FromTile, ToTile: Integer;
+  IsCapture: Boolean): Integer;
 var
-  MoveCost, RecoverCost: integer;
+  MoveCost, RecoverCost: Integer;
 begin
   //IsCapture:=true;
-  assert(((FromTile and fTerrain <= fMountains) or (FromTile and
+  Assert(((FromTile and fTerrain <= fMountains) or (FromTile and
     fTerrain = fUNKNOWN)) and ((ToTile and fTerrain <= fMountains) or
     (ToTile and fTerrain = fUNKNOWN)));
   // do not pass location codes for FromTile and ToTile!
@@ -700,7 +700,7 @@ begin
                 Result := csOk;
                 if ToTile and fPeace <> 0 then
                   Result := csCheckTerritory;
-                exit;
+                Exit;
               end;
             end;
           end;
@@ -819,7 +819,7 @@ begin
           else
           begin
             Result := csForbiddenTile;
-            exit;
+            Exit;
           end;
         end
         else
@@ -868,7 +868,7 @@ begin
                 TimeAfterStep := TimeBeforeStep and $7FFFF000 + $2800;
               // must wait for next turn
               Result := csOk;
-              exit;
+              Exit;
             end;
           end;
         end;
@@ -893,11 +893,11 @@ end;
 (*
 -------- Pathfinding Reference Implementation --------
 var
-MoveStyle,V8,Loc,Time,NextLoc,NextTime,RecoverTurns: integer;
+MoveStyle,V8,Loc,Time,NextLoc,NextTime,RecoverTurns: Integer;
 Adjacent: TVicinity8Loc;
-Reached: array[0..lxmax*lymax-1] of boolean;
+Reached: array[0..lxmax*lymax-1] of Boolean;
 begin
-fillchar(Reached, MapSize, false);
+FillChar(Reached, MapSize, False);
 MoveStyle:=GetMyMoveStyle(MyUnit[uix].mix, MyUnit[uix].Health);
 Pile.Create(MapSize);
 Pile.Put(MyUnit[uix].Loc, $800-MyUnit[uix].Movement);
@@ -905,7 +905,7 @@ while Pile.Get(Loc, Time) do
   begin
   // todo: check exit condition, e.g. whether destination reached
 
-  Reached[Loc]:=true;
+  Reached[Loc]:=True;
   V8_to_Loc(Loc, Adjacent);
   for V8:=0 to 7 do
     begin
@@ -915,7 +915,7 @@ while Pile.Get(Loc, Time) do
         csOk:
           Pile.Put(NextLoc, NextTime+RecoverTurns*$1000);
         csForbiddenTile:
-          Reached[NextLoc]:=true; // don't check moving there again
+          Reached[NextLoc]:=True; // don't check moving there again
         csCheckTerritory:
           if RO.Territory[NextLoc]=RO.Territory[Loc] then
             Pile.Put(NextLoc, NextTime+RecoverTurns*$1000);
@@ -926,18 +926,18 @@ Pile.Free;
 end;
 *)
 
-function TToolAI.Unit_MoveEx(uix, ToLoc: integer; Options: integer): integer;
+function TToolAI.Unit_MoveEx(uix, ToLoc: Integer; Options: Integer): Integer;
 var
   Loc, NextLoc, Temp, FromLoc, EndLoc, Time, V8, MoveResult, RecoverTurns,
-  NextTime, MoveStyle: integer;
+  NextTime, MoveStyle: Integer;
   Adjacent: TVicinity8Loc;
-  PreLoc: array[0..lxmax * lymax - 1] of integer;
-  Reached: array[0..lxmax * lymax - 1] of boolean;
+  PreLoc: array[0..lxmax * lymax - 1] of Integer;
+  Reached: array[0..lxmax * lymax - 1] of Boolean;
 begin
   Result := eOk;
   FromLoc := MyUnit[uix].Loc;
   if FromLoc = ToLoc then
-    exit;
+    Exit;
 
   FillChar(Reached, MapSize, False);
   MoveStyle := GetMyMoveStyle(MyUnit[uix].mix, MyUnit[uix].Health);
@@ -1002,7 +1002,7 @@ begin
       if (MoveResult <> eOK) and (MoveResult <> eLoaded) then
       begin
         Result := MoveResult;
-        break;
+        Break;
       end;
     end;
   end
@@ -1015,7 +1015,7 @@ end;
 
 procedure TToolAI.SeaTransport_BeginInitialize;
 begin
-  fillchar(TransportAvailable, RO.nUn * sizeof(integer), $FF); // -1
+  FillChar(TransportAvailable, RO.nUn * SizeOf(Integer), $FF); // -1
   InitComplete := False;
   HaveDestinations := False;
   nTransportLoad := 0;
@@ -1024,26 +1024,26 @@ begin
   Pile.Create(MapSize);
 end;
 
-procedure TToolAI.SeaTransport_AddLoad(uix: integer);
+procedure TToolAI.SeaTransport_AddLoad(uix: Integer);
 var
-  i: integer;
+  I: Integer;
 begin
-  assert(not InitComplete); // call order violation!
+  Assert(not InitComplete); // call order violation!
   if Map[MyUnit[uix].Loc] and fTerrain < fGrass then
-    exit;
-  for i := 0 to nTransportLoad - 1 do
-    if uix = uixTransportLoad[i] then
-      exit;
+    Exit;
+  for I := 0 to nTransportLoad - 1 do
+    if uix = uixTransportLoad[I] then
+      Exit;
   uixTransportLoad[nTransportLoad] := uix;
   Inc(nTransportLoad);
 end;
 
-procedure TToolAI.SeaTransport_AddTransport(uix: integer);
+procedure TToolAI.SeaTransport_AddTransport(uix: Integer);
 var
-  MoveStyle: integer;
+  MoveStyle: Integer;
 begin
-  assert(not InitComplete); // call order violation!
-  assert(MyModel[MyUnit[uix].mix].Cap[mcSeaTrans] > 0);
+  Assert(not InitComplete); // call order violation!
+  Assert(MyModel[MyUnit[uix].mix].Cap[mcSeaTrans] > 0);
   TransportAvailable[uix] := 1;
   with MyModel[MyUnit[uix].mix] do
   begin
@@ -1057,23 +1057,23 @@ begin
   end;
 end;
 
-procedure TToolAI.SeaTransport_AddDestination(Loc: integer);
+procedure TToolAI.SeaTransport_AddDestination(Loc: Integer);
 begin
-  assert(not InitComplete); // call order violation!
+  Assert(not InitComplete); // call order violation!
   Pile.Put(Loc, $800);
   HaveDestinations := True;
 end;
 
 procedure TToolAI.SeaTransport_EndInitialize;
 var
-  Loc0, Time0, V8, Loc1, ArriveTime, RecoverTurns: integer;
+  Loc0, Time0, V8, Loc1, ArriveTime, RecoverTurns: Integer;
   Adjacent: TVicinity8Loc;
 begin
-  assert(not InitComplete); // call order violation!
+  Assert(not InitComplete); // call order violation!
   InitComplete := True;
   if HaveDestinations then
   begin // calculate TurnsAfterLoad from destination locs
-    fillchar(TurnsAfterLoad, MapSize, $FF); // -1
+    FillChar(TurnsAfterLoad, MapSize, $FF); // -1
     while Pile.Get(Loc0, Time0) do
     begin // search backward
       if Time0 = $800 then
@@ -1099,24 +1099,24 @@ begin
 end;
 
 function TToolAI.SeaTransport_MakeGroupPlan(
-  var TransportPlan: TGroupTransportPlan): boolean;
+  var TransportPlan: TGroupTransportPlan): Boolean;
 var
-  V8, i, j, iPicked, uix, Loc0, Time0, Loc1, RecoverTurns, MoveStyle,
+  V8, I, J, iPicked, uix, Loc0, Time0, Loc1, RecoverTurns, MoveStyle,
   TurnsLoaded, TurnCount, tuix, tuix1, ArriveTime, TotalDelay,
   BestTotalDelay, GroupCount, BestGroupCount, BestLoadLoc, FullMovementLoc,
-  nSelectedLoad, f, OriginContinent, a, b: integer;
-  CompleteFlag, NotReachedFlag, ContinueUnit: cardinal;
-  IsComplete, ok, IsFirstLoc: boolean;
+  nSelectedLoad, F, OriginContinent, A, B: Integer;
+  CompleteFlag, NotReachedFlag, ContinueUnit: Cardinal;
+  IsComplete, ok, IsFirstLoc: Boolean;
   StartLocPtr, ArrivedEnd: pinteger;
   Adjacent: TVicinity8Loc;
-  uixSelectedLoad: array[0..15] of integer;
-  tuixSelectedLoad: array[0..15] of integer;
-  Arrived: array[0..lxmax * lymax] of cardinal;
+  uixSelectedLoad: array[0..15] of Integer;
+  tuixSelectedLoad: array[0..15] of Integer;
+  Arrived: array[0..lxmax * lymax] of Cardinal;
   ResponsibleTransport: array[0..lxmax * lymax - 1] of smallint;
-  TurnsBeforeLoad: array[0..lxmax * lymax - 1] of shortint;
-  GroupComplete: array[0..lxmax * lymax - 1] of boolean;
+  TurnsBeforeLoad: array[0..lxmax * lymax - 1] of ShortInt;
+  GroupComplete: array[0..lxmax * lymax - 1] of Boolean;
 begin
-  assert(InitComplete); // call order violation!
+  Assert(InitComplete); // call order violation!
 
   if HaveDestinations and (nTransportLoad > 0) then
   begin // transport and units already adjacent?
@@ -1127,10 +1127,10 @@ begin
         GroupCount := 0;
         for tuix := 0 to nTransportLoad - 1 do
         begin
-          Loc_to_ab(MyUnit[uix].Loc, MyUnit[uixTransportLoad[tuix]].Loc, a, b);
-          if (abs(a) <= 1) and (abs(b) <= 1) then
+          Loc_to_ab(MyUnit[uix].Loc, MyUnit[uixTransportLoad[tuix]].Loc, A, B);
+          if (abs(A) <= 1) and (abs(B) <= 1) then
           begin
-            assert((a <> 0) or (b <> 0));
+            Assert((A <> 0) or (B <> 0));
             Inc(GroupCount);
           end;
         end;
@@ -1144,19 +1144,19 @@ begin
           TransportPlan.nLoad := 0;
           for tuix := nTransportLoad - 1 downto 0 do
           begin
-            Loc_to_ab(TransportPlan.LoadLoc, MyUnit[uixTransportLoad[tuix]].Loc, a, b);
-            if (abs(a) <= 1) and (abs(b) <= 1) then
+            Loc_to_ab(TransportPlan.LoadLoc, MyUnit[uixTransportLoad[tuix]].Loc, A, B);
+            if (abs(A) <= 1) and (abs(B) <= 1) then
             begin
               TransportPlan.uixLoad[TransportPlan.nLoad] := uixTransportLoad[tuix];
               uixTransportLoad[tuix] := uixTransportLoad[nTransportLoad - 1];
               Dec(nTransportLoad);
               Inc(TransportPlan.nLoad);
               if TransportPlan.nLoad = TransportCapacity then
-                break;
+                Break;
             end;
           end;
           Result := True;
-          exit;
+          Exit;
         end;
       end;
   end;
@@ -1164,18 +1164,18 @@ begin
   while HaveDestinations and (nTransportLoad > 0) do
   begin
     // select units from same continent
-    fillchar(Arrived, 4 * nContinent, 0); // misuse Arrived as counter
+    FillChar(Arrived, 4 * nContinent, 0); // misuse Arrived as counter
     for tuix := 0 to nTransportLoad - 1 do
     begin
-      assert(Map[MyUnit[uixTransportLoad[tuix]].Loc] and fTerrain >= fGrass);
-      f := Formation[MyUnit[uixTransportLoad[tuix]].Loc];
-      if f >= 0 then
-        Inc(Arrived[f]);
+      Assert(Map[MyUnit[uixTransportLoad[tuix]].Loc] and fTerrain >= fGrass);
+      F := Formation[MyUnit[uixTransportLoad[tuix]].Loc];
+      if F >= 0 then
+        Inc(Arrived[F]);
     end;
     OriginContinent := 0;
-    for f := 1 to nContinent - 1 do
-      if Arrived[f] > Arrived[OriginContinent] then
-        OriginContinent := f;
+    for F := 1 to nContinent - 1 do
+      if Arrived[F] > Arrived[OriginContinent] then
+        OriginContinent := F;
     nSelectedLoad := 0;
     for tuix := 0 to nTransportLoad - 1 do
       if Formation[MyUnit[uixTransportLoad[tuix]].Loc] = OriginContinent then
@@ -1184,12 +1184,12 @@ begin
         uixSelectedLoad[nSelectedLoad] := uixTransportLoad[tuix];
         Inc(nSelectedLoad);
         if nSelectedLoad = 16 then
-          break;
+          Break;
       end;
 
     Pile.Create(MapSize);
-    fillchar(ResponsibleTransport, MapSize * 2, $FF); // -1
-    fillchar(TurnsBeforeLoad, MapSize, $FF); // -1
+    FillChar(ResponsibleTransport, MapSize * 2, $FF); // -1
+    FillChar(TurnsBeforeLoad, MapSize, $FF); // -1
     ok := False;
     for uix := 0 to RO.nUn - 1 do
       if TransportAvailable[uix] > 0 then
@@ -1202,7 +1202,7 @@ begin
       TransportPlan.LoadLoc := -1;
       Result := False;
       Pile.Free;
-      exit;
+      Exit;
     end;
     while Pile.Get(Loc0, Time0) do
     begin
@@ -1223,15 +1223,15 @@ begin
       end;
     end;
 
-    fillchar(Arrived, MapSize * 4, $55); // set NotReachedFlag for all tiles
-    fillchar(GroupComplete, MapSize, False);
+    FillChar(Arrived, MapSize * 4, $55); // set NotReachedFlag for all tiles
+    FillChar(GroupComplete, MapSize, False);
     BestLoadLoc := -1;
 
     // check direct loading
     for tuix := 0 to nSelectedLoad - 1 do
     begin
       uix := uixSelectedLoad[tuix];
-      if MyUnit[uix].Movement = integer(MyModel[MyUnit[uix].mix].Speed) then
+      if MyUnit[uix].Movement = Integer(MyModel[MyUnit[uix].mix].Speed) then
       begin
         NotReachedFlag := 1 shl (2 * tuix);
         CompleteFlag := NotReachedFlag shl 1;
@@ -1245,15 +1245,15 @@ begin
             Arrived[Loc1] := (Arrived[Loc1] or CompleteFlag) and not NotReachedFlag;
             if (TurnsBeforeLoad[Loc1] >= 0) and (TurnsAfterLoad[Loc1] >= 0) then
             begin
-              i := 1;
+              I := 1;
               GroupCount := 0;
               for tuix1 := 0 to nSelectedLoad - 1 do
               begin
-                if Arrived[loc1] and i = 0 then
+                if Arrived[loc1] and I = 0 then
                   Inc(GroupCount);
-                i := i shl 2;
+                I := I shl 2;
               end;
-              assert(GroupCount <= TransportCapacity);
+              Assert(GroupCount <= TransportCapacity);
               if (GroupCount = TransportCapacity) or (GroupCount = nSelectedLoad) then
                 GroupComplete[loc1] := True;
               TotalDelay := TurnsBeforeLoad[Loc1] + TurnsAfterLoad[Loc1];
@@ -1291,7 +1291,7 @@ begin
           if TurnCount = 0 then
           begin
             Pile.Put(MyUnit[uix].Loc, $1800 - MyUnit[uix].Movement);
-            if MyUnit[uix].Movement = integer(MyModel[MyUnit[uix].mix].Speed) then
+            if MyUnit[uix].Movement = Integer(MyModel[MyUnit[uix].mix].Speed) then
               FullMovementLoc := MyUnit[uix].Loc;
             // surrounding tiles can be loaded immediately
             StartLocPtr := ArrivedEnd;
@@ -1307,7 +1307,7 @@ begin
                 CompleteFlag or NotReachedFlag);
             if StartLocPtr <> ArrivedEnd then
             begin
-              Loc0 := (integer(StartLocPtr) - integer(@Arrived)) shr 2;
+              Loc0 := (Integer(StartLocPtr) - Integer(@Arrived)) shr 2;
               Inc(StartLocPtr);
               Time0 := $800;
             end
@@ -1315,22 +1315,22 @@ begin
             begin
               if IsFirstLoc then
                 ContinueUnit := ContinueUnit and not (1 shl tuix);
-              break;
+              Break;
             end;
             IsFirstLoc := False;
 
             Arrived[Loc0] := Arrived[Loc0] and not NotReachedFlag;
             if not GroupComplete[Loc0] and (Map[Loc0] and fTerrain <> fMountains) then
             begin // check whether group complete -- no mountains because complete flag might be faked there
-              i := 1;
+              I := 1;
               GroupCount := 0;
               for tuix1 := 0 to nSelectedLoad - 1 do
               begin
-                if Arrived[Loc0] and i = 0 then
+                if Arrived[Loc0] and I = 0 then
                   Inc(GroupCount);
-                i := i shl 2;
+                I := I shl 2;
               end;
-              assert(GroupCount <= TransportCapacity);
+              Assert(GroupCount <= TransportCapacity);
               if (GroupCount = TransportCapacity) or (GroupCount = nSelectedLoad) then
                 GroupComplete[Loc0] := True;
             end;
@@ -1352,15 +1352,15 @@ begin
                 Adjacent[V8] := -1;
                 if (TurnsBeforeLoad[Loc1] >= 0) and (TurnsAfterLoad[Loc1] >= 0) then
                 begin
-                  i := 1;
+                  I := 1;
                   GroupCount := 0;
                   for tuix1 := 0 to nSelectedLoad - 1 do
                   begin
-                    if Arrived[loc1] and i = 0 then
+                    if Arrived[loc1] and I = 0 then
                       Inc(GroupCount);
-                    i := i shl 2;
+                    I := I shl 2;
                   end;
-                  assert(GroupCount <= TransportCapacity);
+                  Assert(GroupCount <= TransportCapacity);
                   if (GroupCount = TransportCapacity) or
                     (GroupCount = nSelectedLoad) then
                     GroupComplete[loc1] := True;
@@ -1435,7 +1435,7 @@ begin
       for tuix := nSelectedLoad - 1 downto 0 do
         if 1 shl (2 * tuix) and Arrived[BestLoadLoc] = 0 then
         begin
-          assert(uixTransportLoad[tuixSelectedLoad[tuix]] = uixSelectedLoad[tuix]);
+          Assert(uixTransportLoad[tuixSelectedLoad[tuix]] = uixSelectedLoad[tuix]);
           TransportPlan.uixLoad[TransportPlan.nLoad] := uixSelectedLoad[tuix];
           uixTransportLoad[tuixSelectedLoad[tuix]] :=
             uixTransportLoad[nTransportLoad - 1];
@@ -1443,14 +1443,14 @@ begin
           Inc(TransportPlan.nLoad);
         end;
       Result := True;
-      exit;
+      Exit;
     end;
 
     // no loading location for a single of these units -- remove all
     // should be pretty rare case
     for tuix := nSelectedLoad - 1 downto 0 do
     begin
-      assert(uixTransportLoad[tuixSelectedLoad[tuix]] = uixSelectedLoad[tuix]);
+      Assert(uixTransportLoad[tuixSelectedLoad[tuix]] = uixSelectedLoad[tuix]);
       uixTransportLoad[tuixSelectedLoad[tuix]] :=
         uixTransportLoad[nTransportLoad - 1];
       Dec(nTransportLoad);
@@ -1463,13 +1463,13 @@ end;
 //------------------------------------------------------------------------------
 // Misc
 
-function TToolAI.CurrentMStrength(Domain: integer): integer;
+function TToolAI.CurrentMStrength(Domain: Integer): Integer;
 var
-  i: integer;
+  I: Integer;
 begin
   Result := 0;
-  for i := 0 to nUpgrade - 1 do
-    with upgrade[Domain, i] do
+  for I := 0 to nUpgrade - 1 do
+    with upgrade[Domain, I] do
       if (Preq = preNone) or (Preq >= 0) and
         ((RO.Tech[Preq] >= tsApplicable) or (Preq in FutureTech) and
         (RO.Tech[Preq] >= 0)) then
@@ -1485,19 +1485,19 @@ end;
 
 procedure SetAdvancedness;
 var
-  ad, j, Reduction, AgeThreshold: integer;
-  known: array[0..nAdv - 1] of integer;
+  ad, J, Reduction, AgeThreshold: Integer;
+  known: array[0..nAdv - 1] of Integer;
 
-  procedure MarkPreqs(ad: integer);
+  procedure MarkPreqs(ad: Integer);
   var
-    i: integer;
+    I: Integer;
   begin
     if known[ad] = 0 then
     begin
       known[ad] := 1;
-      for i := 0 to 2 do
-        if AdvPreq[ad, i] >= 0 then
-          MarkPreqs(AdvPreq[ad, i]);
+      for I := 0 to 2 do
+        if AdvPreq[ad, I] >= 0 then
+          MarkPreqs(AdvPreq[ad, I]);
     end;
   end;
 
@@ -1507,8 +1507,8 @@ begin
   begin
     FillChar(known, SizeOf(known), 0);
     MarkPreqs(ad);
-    for j := 0 to nAdv - 1 do
-      if known[j] > 0 then
+    for J := 0 to nAdv - 1 do
+      if known[J] > 0 then
         Inc(Advancedness[ad]);
   end;
   AgeThreshold := Advancedness[adScience];

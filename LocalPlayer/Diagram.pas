@@ -18,22 +18,22 @@ type
     procedure FormCreate(Sender: TObject);
     procedure ToggleBtnClick(Sender: TObject);
     procedure PlayerClick(Sender: TObject);
-    procedure FormKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
 
   public
     procedure OffscreenPaint; override;
     procedure ShowNewContent_Charts(NewMode: TWindowMode);
-    procedure ShowNewContent_Ship(NewMode: TWindowMode; p: integer = -1);
+    procedure ShowNewContent_Ship(NewMode: TWindowMode; P: Integer = -1);
 
   private
     Kind: (dkChart, dkShip);
-    Player, Mode: integer;
+    Player, Mode: Integer;
   end;
 
 var
   DiaDlg: TDiaDlg;
 
-procedure PaintColonyShip(canvas: TCanvas; Player, Left, Width, Top: integer);
+procedure PaintColonyShip(Canvas: TCanvas; Player, Left, Width, Top: Integer);
 
 implementation
 
@@ -44,36 +44,36 @@ uses
 
 const
   Border = 24;
-  RoundPixels: array [0 .. nStat - 1] of integer = (0, 0, 0, 5, 5, 5);
+  RoundPixels: array [0 .. nStat - 1] of Integer = (0, 0, 0, 5, 5, 5);
 
   yArea = 48;
-  xComp: array [0 .. 5] of integer = (-60, -28, 4, 4, 36, 68);
-  yComp: array [0 .. 5] of integer = (-40, -40, -79, -1, -40, -40);
-  xPow: array [0 .. 3] of integer = (-116, -116, -116, -116);
-  yPow: array [0 .. 3] of integer = (-28, 0, -44, 16);
-  xHab: array [0 .. 1] of integer = (23, 23);
-  yHab: array [0 .. 1] of integer = (-81, 1);
+  xComp: array [0 .. 5] of Integer = (-60, -28, 4, 4, 36, 68);
+  yComp: array [0 .. 5] of Integer = (-40, -40, -79, -1, -40, -40);
+  xPow: array [0 .. 3] of Integer = (-116, -116, -116, -116);
+  yPow: array [0 .. 3] of Integer = (-28, 0, -44, 16);
+  xHab: array [0 .. 1] of Integer = (23, 23);
+  yHab: array [0 .. 1] of Integer = (-81, 1);
 
-procedure PaintColonyShip(canvas: TCanvas; Player, Left, Width, Top: integer);
+procedure PaintColonyShip(Canvas: TCanvas; Player, Left, Width, Top: Integer);
 var
-  i, x, r, nComp, nPow, nHab: integer;
+  I, X, R, nComp, nPow, nHab: Integer;
 begin
   Canvas.Brush.Color := $000000;
   Canvas.FillRect(Rect(Left, Top, Left + Width, Top + 200));
   Canvas.Brush.Style := bsClear;
-    ScreenTools.Frame(canvas, Left - 1, Top - 1, Left + Width, Top + 200,
+    ScreenTools.Frame(Canvas, Left - 1, Top - 1, Left + Width, Top + 200,
       MainTexture.ColorBevelShade, MainTexture.ColorBevelLight);
-    RFrame(canvas, Left - 2, Top - 2, Left + Width + 1, Top + 200 + 1,
+    RFrame(Canvas, Left - 2, Top - 2, Left + Width + 1, Top + 200 + 1,
       MainTexture.ColorBevelShade, MainTexture.ColorBevelLight);
 
     // stars
     DelphiRandSeed := Player * 11111;
-    for i := 1 to Width - 16 do
+    for I := 1 to Width - 16 do
     begin
-      x := DelphiRandom((Width - 16) * 200);
-      r := DelphiRandom(13) + 28;
-      Canvas.Pixels[x div 200 + 8, x mod 200 + Top] :=
-        (r * r * r * r div 10001) * $10101;
+      X := DelphiRandom((Width - 16) * 200);
+      R := DelphiRandom(13) + 28;
+      Canvas.Pixels[X div 200 + 8, X mod 200 + Top] :=
+        (R * R * R * R div 10001) * $10101;
     end;
 
     nComp := MyRO.Ship[Player].Parts[spComp];
@@ -85,42 +85,42 @@ begin
       nPow := 4;
     if nHab > 2 then
       nHab := 2;
-    for i := 0 to nHab - 1 do
-      Sprite(canvas, HGrSystem2, Left + Width div 2 + xHab[i],
-        Top + 100 + yHab[i], 80, 80, 34, 1);
-    for i := 0 to nComp - 1 do
-      Sprite(canvas, HGrSystem2, Left + Width div 2 + xComp[i],
-        Top + 100 + yComp[i], 32, 80, 1, 1);
+    for I := 0 to nHab - 1 do
+      Sprite(Canvas, HGrSystem2, Left + Width div 2 + xHab[I],
+        Top + 100 + yHab[I], 80, 80, 34, 1);
+    for I := 0 to nComp - 1 do
+      Sprite(Canvas, HGrSystem2, Left + Width div 2 + xComp[I],
+        Top + 100 + yComp[I], 32, 80, 1, 1);
     if nComp > 0 then
-      for i := 3 downto nPow do
-        Sprite(canvas, HGrSystem2, Left + Width div 2 + xPow[i] + 40,
-          Top + 100 + yPow[i], 16, 27, 1, 82);
-    for i := nPow - 1 downto 0 do
-      Sprite(canvas, HGrSystem2, Left + Width div 2 + xPow[i],
-        Top + 100 + yPow[i], 56, 28, 58, 82);
+      for I := 3 downto nPow do
+        Sprite(Canvas, HGrSystem2, Left + Width div 2 + xPow[I] + 40,
+          Top + 100 + yPow[I], 16, 27, 1, 82);
+    for I := nPow - 1 downto 0 do
+      Sprite(Canvas, HGrSystem2, Left + Width div 2 + xPow[I],
+        Top + 100 + yPow[I], 56, 28, 58, 82);
     if (nComp < 3) and (nHab >= 1) then
-      Sprite(canvas, HGrSystem2, Left + Width div 2 + xComp[2] + 32 - 16,
+      Sprite(Canvas, HGrSystem2, Left + Width div 2 + xComp[2] + 32 - 16,
         Top + 100 + 7 + yComp[2], 16, 27, 1, 82);
     if (nComp >= 3) and (nHab < 1) then
-      Sprite(canvas, HGrSystem2, Left + Width div 2 + xComp[2] + 32,
+      Sprite(Canvas, HGrSystem2, Left + Width div 2 + xComp[2] + 32,
         Top + 100 + 7 + yComp[2], 16, 27, 18, 82);
     if (nComp < 4) and (nHab >= 2) then
-      Sprite(canvas, HGrSystem2, Left + Width div 2 + xComp[3] + 32 - 16,
+      Sprite(Canvas, HGrSystem2, Left + Width div 2 + xComp[3] + 32 - 16,
         Top + 100 + 46 + yComp[3], 16, 27, 1, 82);
     if (nComp >= 4) and (nHab < 2) then
-      Sprite(canvas, HGrSystem2, Left + Width div 2 + xComp[3] + 32,
+      Sprite(Canvas, HGrSystem2, Left + Width div 2 + xComp[3] + 32,
         Top + 100 + 46 + yComp[3], 16, 27, 18, 82);
     if (nComp <> 6) and (nComp <> 2) and not((nComp = 0) and (nPow < 1)) then
-      Sprite(canvas, HGrSystem2, Left + Width div 2 + xComp[nComp],
+      Sprite(Canvas, HGrSystem2, Left + Width div 2 + xComp[nComp],
         Top + 100 + 7 + yComp[nComp], 16, 27, 18, 82);
     if (nComp <> 6) and (nComp <> 3) and not((nComp = 0) and (nPow < 2)) then
-      Sprite(canvas, HGrSystem2, Left + Width div 2 + xComp[nComp],
+      Sprite(Canvas, HGrSystem2, Left + Width div 2 + xComp[nComp],
         Top + 100 + 46 + yComp[nComp], 16, 27, 18, 82);
     if nComp = 2 then
-      Sprite(canvas, HGrSystem2, Left + Width div 2 + xComp[3],
+      Sprite(Canvas, HGrSystem2, Left + Width div 2 + xComp[3],
         Top + 100 + 7 + yComp[3], 16, 27, 18, 82);
     if nComp = 3 then
-      Sprite(canvas, HGrSystem2, Left + Width div 2 + xComp[4],
+      Sprite(Canvas, HGrSystem2, Left + Width div 2 + xComp[4],
         Top + 100 + 7 + yComp[4], 16, 27, 18, 82);
 end;
 
@@ -141,41 +141,41 @@ end;
 
 procedure TDiaDlg.OffscreenPaint;
 var
-  p, T, max, x, y, y0, Stop, r, RoundRange, LineStep: integer;
-  s: string;
+  P, T, Max, X, Y, y0, Stop, R, RoundRange, LineStep: Integer;
+  S: string;
   List: ^TChart;
 
-  function Round(T: integer): integer;
+  function Round(T: Integer): Integer;
   var
-    n, i: integer;
+    N, I: Integer;
   begin
     if T < RoundRange then
-      n := T
+      N := T
     else
-      n := RoundRange;
-    result := 0;
-    for i := T - n to T do
-      inc(result, List[i]);
-    result := result div (n + 1);
+      N := RoundRange;
+    Result := 0;
+    for I := T - N to T do
+      Inc(Result, List[I]);
+    Result := Result div (N + 1);
   end;
 
-  procedure ShareBar(x, y: integer; Cap: string; val0, val1: integer);
+  procedure ShareBar(X, Y: Integer; Cap: string; val0, val1: Integer);
   begin
-    LoweredTextOut(offscreen.canvas, -1, MainTexture, x - 2, y, Cap);
-    DLine(offscreen.canvas, x - 2, x + 169, y + 16, MainTexture.ColorTextShade,
+    LoweredTextOut(Offscreen.Canvas, -1, MainTexture, X - 2, Y, Cap);
+    DLine(Offscreen.Canvas, X - 2, X + 169, Y + 16, MainTexture.ColorTextShade,
       MainTexture.ColorTextLight);
     if val0 > 0 then
-      s := Format(Phrases.Lookup('SHARE'), [val0, val1])
+      S := Format(Phrases.Lookup('SHARE'), [val0, val1])
     else
-      s := '0';
-    RisedTextOut(offscreen.canvas,
-      x + 170 - BiColorTextWidth(offscreen.canvas, s), y, s);
+      S := '0';
+    RisedTextOut(Offscreen.Canvas,
+      X + 170 - BiColorTextWidth(Offscreen.Canvas, S), Y, S);
   end;
 
 begin
   inherited;
   if Kind = dkChart then
-    with offscreen.canvas do
+    with Offscreen.Canvas do
     begin
       Font.Assign(UniFont[ftTiny]);
       Font.Color := $808080;
@@ -185,18 +185,18 @@ begin
 
       GetMem(List, 4 * (MyRO.Turn + 2));
       if Mode = stExplore then
-        max := G.lx * G.ly
+        Max := G.lx * G.ly
       else
       begin
-        max := -1;
-        for p := 0 to nPl - 1 do
-          if (G.Difficulty[p] > 0) and
-            (Server(sGetChart + Mode shl 4, me, p, List^) >= rExecuted) then
+        Max := -1;
+        for P := 0 to nPl - 1 do
+          if (G.Difficulty[P] > 0) and
+            (Server(sGetChart + Mode shl 4, Me, P, List^) >= rExecuted) then
             for T := 0 to MyRO.Turn - 1 do
             begin
-              r := Round(T);
-              if r > max then
-                max := r;
+              R := Round(T);
+              if R > Max then
+                Max := R;
             end;
       end;
 
@@ -214,55 +214,55 @@ begin
         LineStep := 50;
       for T := 0 to (MyRO.Turn - 1) div LineStep do
       begin
-        x := Border + (InnerWidth - 2 * Border) * T *
+        X := Border + (InnerWidth - 2 * Border) * T *
           LineStep div (MyRO.Turn - 1);
-        MoveTo(x, Border);
-        LineTo(x, InnerHeight - Border);
-        s := IntToStr(abs(TurnToYear(T * LineStep)));
-        Textout(x - TextWidth(s) div 2, Border - 16, s);
+        MoveTo(X, Border);
+        LineTo(X, InnerHeight - Border);
+        S := IntToStr(abs(TurnToYear(T * LineStep)));
+        Textout(X - TextWidth(S) div 2, Border - 16, S);
       end;
 
       y0 := 0;
-      if max > 0 then
+      if Max > 0 then
       begin
-        for p := 0 to nPl - 1 do
-          if (G.Difficulty[p] > 0) and
-            (Server(sGetChart + Mode shl 4, me, p, List^) >= rExecuted) then
+        for P := 0 to nPl - 1 do
+          if (G.Difficulty[P] > 0) and
+            (Server(sGetChart + Mode shl 4, Me, P, List^) >= rExecuted) then
           begin
-            Pen.Color := Tribe[p].Color;
+            Pen.Color := Tribe[P].Color;
             Stop := MyRO.Turn - 1;
             while (Stop > 0) and (List[Stop] = 0) do
-              dec(Stop);
+              Dec(Stop);
             for T := 0 to Stop do
             begin
-              r := Round(T);
-              x := Border + (InnerWidth - 2 * Border) * T div (MyRO.Turn - 1);
-              y := InnerHeight - Border - (InnerHeight - 2 * Border) *
-                r div max;
+              R := Round(T);
+              X := Border + (InnerWidth - 2 * Border) * T div (MyRO.Turn - 1);
+              Y := InnerHeight - Border - (InnerHeight - 2 * Border) *
+                R div Max;
               if T = 0 then
-                MoveTo(x, y)
+                MoveTo(X, Y)
                 // else if Mode=stTerritory then
                 // begin LineTo(x,y0); LineTo(x,y) end
               else if RoundPixels[Mode] = 0 then
               begin
-                if (y <> y0) or (T = Stop) then
-                  LineTo(x, y)
+                if (Y <> y0) or (T = Stop) then
+                  LineTo(X, Y)
               end
               else
-                LineTo(x, y);
-              y0 := y;
+                LineTo(X, Y);
+              y0 := Y;
             end;
           end;
       end;
       FreeMem(List);
     end
   else
-    with offscreen.canvas do
+    with Offscreen.Canvas do
     begin
       Font.Assign(UniFont[ftSmall]);
       FillOffscreen(0, 0, InnerWidth, InnerHeight);
 
-      PaintColonyShip(offscreen.canvas, Player, 8, InnerWidth - 16, yArea);
+      PaintColonyShip(Offscreen.Canvas, Player, 8, InnerWidth - 16, yArea);
 
       ShareBar(InnerWidth div 2 - 85, InnerHeight - 62,
         Phrases.Lookup('SHIPHAB'), MyRO.Ship[Player].Parts[spHab], 2);
@@ -276,16 +276,16 @@ end;
 
 procedure TDiaDlg.FormPaint(Sender: TObject);
 var
-  s: string;
+  S: string;
 begin
   inherited;
-  canvas.Font.Assign(UniFont[ftNormal]);
+  Canvas.Font.Assign(UniFont[ftNormal]);
   if Kind = dkChart then
-    s := Phrases.Lookup('DIAGRAM', Mode)
+    S := Phrases.Lookup('DIAGRAM', Mode)
   else
-    s := Tribe[Player].TPhrase('SHORTNAME');
-  LoweredTextOut(canvas, -1, MainTexture,
-    (ClientWidth - BiColorTextWidth(canvas, s)) div 2, 31, s);
+    S := Tribe[Player].TPhrase('SHORTNAME');
+  LoweredTextOut(Canvas, -1, MainTexture,
+    (ClientWidth - BiColorTextWidth(Canvas, S)) div 2, 31, S);
 end;
 
 procedure TDiaDlg.FormShow(Sender: TObject);
@@ -308,18 +308,18 @@ begin
   inherited ShowNewContent(NewMode);
 end;
 
-procedure TDiaDlg.ShowNewContent_Ship(NewMode: TWindowMode; p: integer);
+procedure TDiaDlg.ShowNewContent_Ship(NewMode: TWindowMode; P: Integer);
 begin
   Kind := dkShip;
-  if p < 0 then
+  if P < 0 then
   begin
-    Player := me;
+    Player := Me;
     while MyRO.Ship[Player].Parts[spComp] + MyRO.Ship[Player].Parts[spPow] +
       MyRO.Ship[Player].Parts[spHab] = 0 do
       Player := (Player + 1) mod nPl;
   end
   else
-    Player := p;
+    Player := P;
   ToggleBtn.ButtonIndex := 28;
   ToggleBtn.Hint := Phrases.Lookup('BTN_SELECT');
   Caption := Phrases.Lookup('TITLE_SHIPS');
@@ -328,8 +328,8 @@ end;
 
 procedure TDiaDlg.ToggleBtnClick(Sender: TObject);
 var
-  p1: integer;
-  m: TMenuItem;
+  p1: Integer;
+  M: TMenuItem;
 begin
   if Kind = dkChart then
   begin
@@ -344,14 +344,14 @@ begin
       if MyRO.Ship[p1].Parts[spComp] + MyRO.Ship[p1].Parts[spPow] +
         MyRO.Ship[p1].Parts[spHab] > 0 then
       begin
-        m := TMenuItem.Create(Popup);
-        m.RadioItem := true;
-        m.Caption := Tribe[p1].TPhrase('SHORTNAME');
-        m.Tag := p1;
-        m.OnClick := PlayerClick;
+        M := TMenuItem.Create(Popup);
+        M.RadioItem := True;
+        M.Caption := Tribe[p1].TPhrase('SHORTNAME');
+        M.Tag := p1;
+        M.OnClick := PlayerClick;
         if p1 = Player then
-          m.Checked := true;
-        Popup.Items.Add(m);
+          M.Checked := True;
+        Popup.Items.Add(M);
       end;
     Popup.Popup(Left + ToggleBtn.Left, Top + ToggleBtn.Top + ToggleBtn.Height);
   end;
@@ -362,7 +362,7 @@ begin
   ShowNewContent_Ship(FWindowMode, TComponent(Sender).Tag);
 end;
 
-procedure TDiaDlg.FormKeyDown(Sender: TObject; var Key: word;
+procedure TDiaDlg.FormKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
   if (Key = VK_F6) and (Kind = dkChart) then // my key

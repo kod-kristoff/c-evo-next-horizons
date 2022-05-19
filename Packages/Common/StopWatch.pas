@@ -34,7 +34,7 @@ type
 
 implementation
 
-constructor TStopWatch.Create(const startOnCreate : boolean = false) ;
+constructor TStopWatch.Create(const startOnCreate : Boolean = False) ;
 begin
   inherited Create;
 
@@ -71,7 +71,7 @@ var
   dt: TDateTime;
 begin
   dt := ElapsedMiliseconds / MSecsPerSec / SecsPerDay;
-  result := Format('%d days, %s', [Trunc(dt), FormatDateTime('hh:nn:ss.z', Frac(dt))]) ;
+  Result := Format('%d days, %s', [Trunc(dt), FormatDateTime('hh:nn:ss.z', Frac(dt))]) ;
 end;
 
 function TStopWatch.GetElapsedMiliseconds: TLargeInteger;

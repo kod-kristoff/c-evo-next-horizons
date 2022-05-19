@@ -28,8 +28,8 @@ type
     State: Integer;
     Gone: Boolean;
     Quick: Boolean;
-    procedure SetInfo(x: string);
-    procedure SetState(x: integer);
+    procedure SetInfo(X: string);
+    procedure SetState(X: Integer);
     procedure OnGo(var Msg: TMessage); message WM_GO;
     procedure OnChangeClient(var Msg: TMessage); message WM_CHANGECLIENT;
     procedure OnNextPlayer(var Msg: TMessage); message WM_NEXTPLAYER;
@@ -56,7 +56,7 @@ procedure TDirectDlg.DlgNotify(ID: TNotify; Index: Integer = 0);
 var
 //  hMem: Cardinal;
 //  p: pointer;
-  s: string;
+  S: string;
 Begin
   case ID of
     ntInitLocalHuman: begin
@@ -71,10 +71,10 @@ Begin
     ntInitModule:
       if visible then
       begin
-        s := Format(Phrases.Lookup('BUSY_MOD'), [Brains[Index].Name]);
-        while BiColorTextWidth(Canvas, s) + 64 > ClientWidth do
-          Delete(s, Length(s), 1);
-        SetInfo(s);
+        S := Format(Phrases.Lookup('BUSY_MOD'), [Brains[Index].Name]);
+        while BiColorTextWidth(Canvas, S) + 64 > ClientWidth do
+          Delete(S, Length(S), 1);
+        SetInfo(S);
       end;
     ntCreateWorld:
       if visible then
@@ -110,9 +110,9 @@ Begin
           NotifyMessage := NotifyMessage + #0;
           hMem := GlobalAlloc(GMEM_MOVEABLE or GMEM_DDESHARE,
             Length(NotifyMessage));
-          p := GlobalLock(hMem);
-          if p <> nil then
-            move(NotifyMessage[1], p^, Length(NotifyMessage));
+          P := GlobalLock(hMem);
+          if P <> nil then
+            Move(NotifyMessage[1], P^, Length(NotifyMessage));
           GlobalUnlock(hMem);
           SetClipboardData(CF_TEXT, hMem);
           CloseClipboard;
@@ -197,7 +197,7 @@ begin
   if not Gone then
   begin
     PostMessage(Handle, WM_GO, 0, 0);
-    Gone := true;
+    Gone := True;
   end;
 end;
 
@@ -208,8 +208,8 @@ end;
 
 procedure TDirectDlg.OnGo(var Msg: TMessage);
 var
-  i: integer;
-  s: string;
+  I: Integer;
+  S: string;
   FileName: string;
 begin
   Hide;
@@ -219,19 +219,19 @@ begin
     Close;
     Exit;
   end;
-  Quick := false;
+  Quick := False;
   if ParamCount > 0 then
   begin
-    s := ParamStr(1);
-    if (s[1] = '-') {$IFDEF WINDOWS}or (s[1] = '/'){$ENDIF} then
+    S := ParamStr(1);
+    if (S[1] = '-') {$IFDEF WINDOWS}or (S[1] = '/'){$ENDIF} then
     begin // special mode
-      Delete(s, 1, 1);
-      for i := 1 to Length(s) do
-        if s[i] in ['a' .. 'z'] then
-          dec(s[i], 32);
-      if s = 'MAN' then
+      Delete(S, 1, 1);
+      for I := 1 to Length(S) do
+        if S[I] in ['a' .. 'z'] then
+          Dec(S[I], 32);
+      if S = 'MAN' then
       begin
-        Quick := true;
+        Quick := True;
         DirectHelp(cHelpOnly);
         Close;
       end;
@@ -241,7 +241,7 @@ begin
       if ExtractFileExt(FileName) = CevoExt then begin
         Quick := True;
         if not LoadGame(ExtractFilePath(ParamStr(1)), ExtractFileName(ParamStr(1)
-        ), -1, false) then begin
+        ), -1, False) then begin
           SimpleMessage(Phrases.Lookup('LOADERR'));
           Close;
         end;
@@ -296,9 +296,9 @@ begin
       MainTexture);
 end;
 
-procedure TDirectDlg.SetInfo(x: string);
+procedure TDirectDlg.SetInfo(X: string);
 begin
-  Info := x;
+  Info := X;
   Invalidate;
   Update;
   {$IFDEF UNIX}
@@ -306,15 +306,15 @@ begin
   {$ENDIF}
 end;
 
-procedure TDirectDlg.SetState(x: integer);
+procedure TDirectDlg.SetState(X: Integer);
 begin
-  if (x < 0) <> (State < 0) then begin
-    State := x;
+  if (X < 0) <> (State < 0) then begin
+    State := X;
     Invalidate;
     Update;
   end
-  else if x <> State then begin
-    State := x;
+  else if X <> State then begin
+    State := X;
     PaintProgressBar(Canvas, 6, ClientWidth div 2 - 64, 40, State, 128 - State,
       128, MainTexture);
   end;

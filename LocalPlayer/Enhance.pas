@@ -36,9 +36,9 @@ type
   private
     NoMap: TIsoMap;
   public
-    procedure ShowNewContent(NewMode: TWindowMode; TerrType: integer = -1);
+    procedure ShowNewContent(NewMode: TWindowMode; TerrType: Integer = -1);
   protected
-    Page: integer;
+    Page: Integer;
     procedure OffscreenPaint; override;
   end;
 
@@ -55,8 +55,8 @@ uses
 
 procedure TEnhanceDlg.FormCreate(Sender: TObject);
 var
-  TerrType: integer;
-  m: TMenuItem;
+  TerrType: Integer;
+  M: TMenuItem;
 begin
   inherited;
   NoMap := TIsoMap.Create;
@@ -70,21 +70,21 @@ begin
   for TerrType := fGrass to fMountains do
     if TerrType <> fJungle then
     begin
-      m := TMenuItem.Create(Popup);
-      m.RadioItem := true;
+      M := TMenuItem.Create(Popup);
+      M.RadioItem := True;
       if TerrType = fGrass then
-        m.Caption := Format(Phrases.Lookup('TWOTERRAINS'),
+        M.Caption := Format(Phrases.Lookup('TWOTERRAINS'),
           [Phrases.Lookup('TERRAIN', fGrass), Phrases.Lookup('TERRAIN',
           fGrass + 12)])
       else if TerrType = fForest then
-        m.Caption := Format(Phrases.Lookup('TWOTERRAINS'),
+        M.Caption := Format(Phrases.Lookup('TWOTERRAINS'),
           [Phrases.Lookup('TERRAIN', fForest), Phrases.Lookup('TERRAIN',
           fJungle)])
       else
-        m.Caption := Phrases.Lookup('TERRAIN', TerrType);
-      m.Tag := TerrType;
-      m.OnClick := TerrClick;
-      Popup.Items.Add(m);
+        M.Caption := Phrases.Lookup('TERRAIN', TerrType);
+      M.Tag := TerrType;
+      M.OnClick := TerrClick;
+      Popup.Items.Add(M);
     end;
 end;
 
@@ -95,18 +95,18 @@ end;
 
 procedure TEnhanceDlg.FormPaint(Sender: TObject);
 var
-  i: integer;
+  I: Integer;
 begin
   inherited;
   BtnFrame(Canvas, Rect(job1.Left, job1.Top, job7.Left + job7.Width,
     job1.Top + job1.Height), MainTexture);
   BtnFrame(Canvas, Rect(job3.Left, job3.Top, job9.Left + job9.Width,
     job3.Top + job3.Height), MainTexture);
-  for i := 0 to ControlCount - 1 do
-    if Controls[i] is TButtonC then
-      BitBltCanvas(Canvas, Controls[i].Left + 2, Controls[i].Top - 11, 8, 8,
-        HGrSystem.Data.Canvas, 121 + Controls[i].Tag mod 7 * 9,
-        1 + Controls[i].Tag div 7 * 9);
+  for I := 0 to ControlCount - 1 do
+    if Controls[I] is TButtonC then
+      BitBltCanvas(Canvas, Controls[I].Left + 2, Controls[I].Top - 11, 8, 8,
+        HGrSystem.Data.Canvas, 121 + Controls[I].Tag mod 7 * 9,
+        1 + Controls[I].Tag div 7 * 9);
 end;
 
 procedure TEnhanceDlg.FormShow(Sender: TObject);
@@ -114,7 +114,7 @@ begin
   OffscreenPaint;
 end;
 
-procedure TEnhanceDlg.ShowNewContent(NewMode: TWindowMode; TerrType: integer);
+procedure TEnhanceDlg.ShowNewContent(NewMode: TWindowMode; TerrType: Integer);
 begin
   if (TerrType < fGrass) or (TerrType > fMountains) then
     Page := fGrass
@@ -125,20 +125,20 @@ end;
 
 procedure TEnhanceDlg.OffscreenPaint;
 var
-  i, stage, TerrType, TileImp, x, EndStage, Cost, LastJob: integer;
-  s: string;
+  I, stage, TerrType, TileImp, X, EndStage, Cost, LastJob: Integer;
+  S: string;
   Done: Set of jNone .. jTrans;
-  TypeChanged: boolean;
+  TypeChanged: Boolean;
 begin
   OffscreenUser := self;
-  offscreen.Canvas.Font.Assign(UniFont[ftSmall]);
+  Offscreen.Canvas.Font.Assign(UniFont[ftSmall]);
   FillOffscreen(0, 0, InnerWidth, InnerHeight);
 
   EndStage := 0;
   while (EndStage < 5) and (MyData.EnhancementJobs[Page, EndStage] <> jNone) do
-    inc(EndStage);
+    Inc(EndStage);
   with NoMap do
-    x := InnerWidth div 2 - xxt - (xxt + 3) * EndStage;
+    X := InnerWidth div 2 - xxt - (xxt + 3) * EndStage;
 
   TerrType := Page;
   TileImp := 0;
@@ -148,98 +148,98 @@ begin
   begin
     if stage > 0 then
     begin
-      Sprite(offscreen, HGrSystem, x - 10, 66, 14, 14, 80, 1);
+      Sprite(Offscreen, HGrSystem, X - 10, 66, 14, 14, 80, 1);
       case MyData.EnhancementJobs[Page, stage - 1] of
         jRoad:
           begin
-            inc(Cost, Terrain[TerrType].MoveCost * RoadWork);
+            Inc(Cost, Terrain[TerrType].MoveCost * RoadWork);
             TileImp := TileImp or fRoad;
           end;
         jRR:
           begin
-            inc(Cost, Terrain[TerrType].MoveCost * RRWork);
+            Inc(Cost, Terrain[TerrType].MoveCost * RRWork);
             TileImp := TileImp or fRR;
           end;
         jIrr:
           begin
-            inc(Cost, Terrain[TerrType].IrrClearWork);
+            Inc(Cost, Terrain[TerrType].IrrClearWork);
             TileImp := TileImp and not fTerImp or tiIrrigation;
           end;
         jFarm:
           begin
-            inc(Cost, Terrain[TerrType].IrrClearWork * FarmWork);
+            Inc(Cost, Terrain[TerrType].IrrClearWork * FarmWork);
             TileImp := TileImp and not fTerImp or tiFarm;
           end;
         jMine:
           begin
-            inc(Cost, Terrain[TerrType].MineAfforestWork);
+            Inc(Cost, Terrain[TerrType].MineAfforestWork);
             TileImp := TileImp and not fTerImp or tiMine;
           end;
         jClear:
           begin
-            inc(Cost, Terrain[TerrType].IrrClearWork);
+            Inc(Cost, Terrain[TerrType].IrrClearWork);
             TerrType := Terrain[TerrType].ClearTerrain;
           end;
         jAfforest:
           begin
-            inc(Cost, Terrain[TerrType].MineAfforestWork);
+            Inc(Cost, Terrain[TerrType].MineAfforestWork);
             TerrType := Terrain[TerrType].AfforestTerrain;
           end;
         jTrans:
           begin
-            inc(Cost, Terrain[TerrType].TransWork);
+            Inc(Cost, Terrain[TerrType].TransWork);
             TerrType := Terrain[TerrType].TransTerrain;
           end;
       end;
-      include(Done, MyData.EnhancementJobs[Page, stage - 1]);
+      Include(Done, MyData.EnhancementJobs[Page, stage - 1]);
     end;
 
     with NoMap do begin
       if TerrType < fForest then
-        Sprite(offscreen, HGrTerrain, x, 64 - yyt, xxt * 2, yyt * 2,
+        Sprite(Offscreen, HGrTerrain, X, 64 - yyt, xxt * 2, yyt * 2,
           1 + TerrType * (xxt * 2 + 1), 1 + yyt)
       else
       begin
-        Sprite(offscreen, HGrTerrain, x, 64 - yyt, xxt * 2, yyt * 2,
+        Sprite(Offscreen, HGrTerrain, X, 64 - yyt, xxt * 2, yyt * 2,
           1 + 2 * (xxt * 2 + 1), 1 + yyt + 2 * (yyt * 3 + 1));
-        Sprite(offscreen, HGrTerrain, x, 64 - yyt, xxt * 2, yyt * 2,
+        Sprite(Offscreen, HGrTerrain, X, 64 - yyt, xxt * 2, yyt * 2,
           1 + 7 * (xxt * 2 + 1), 1 + yyt + 2 * (2 + TerrType - fForest) *
           (yyt * 3 + 1));
       end;
       if TileImp and fTerImp = tiFarm then
-        Sprite(offscreen, HGrTerrain, x, 64 - yyt, xxt * 2, yyt * 2,
+        Sprite(Offscreen, HGrTerrain, X, 64 - yyt, xxt * 2, yyt * 2,
           1 + (xxt * 2 + 1), 1 + yyt + 12 * (yyt * 3 + 1))
       else if TileImp and fTerImp = tiIrrigation then
-        Sprite(offscreen, HGrTerrain, x, 64 - yyt, xxt * 2, yyt * 2, 1,
+        Sprite(Offscreen, HGrTerrain, X, 64 - yyt, xxt * 2, yyt * 2, 1,
           1 + yyt + 12 * (yyt * 3 + 1));
       if TileImp and fRR <> 0 then
       begin
-        Sprite(offscreen, HGrTerrain, x, 64 - yyt, xxt * 2, yyt * 2,
+        Sprite(Offscreen, HGrTerrain, X, 64 - yyt, xxt * 2, yyt * 2,
           1 + 6 * (xxt * 2 + 1), 1 + yyt + 10 * (yyt * 3 + 1));
-        Sprite(offscreen, HGrTerrain, x, 64 - yyt, xxt * 2, yyt * 2,
+        Sprite(Offscreen, HGrTerrain, X, 64 - yyt, xxt * 2, yyt * 2,
           1 + 2 * (xxt * 2 + 1), 1 + yyt + 10 * (yyt * 3 + 1));
       end
       else if TileImp and fRoad <> 0 then
       begin
-        Sprite(offscreen, HGrTerrain, x, 64 - yyt, xxt * 2, yyt * 2,
+        Sprite(Offscreen, HGrTerrain, X, 64 - yyt, xxt * 2, yyt * 2,
           1 + 6 * (xxt * 2 + 1), 1 + yyt + 9 * (yyt * 3 + 1));
-        Sprite(offscreen, HGrTerrain, x, 64 - yyt, xxt * 2, yyt * 2,
+        Sprite(Offscreen, HGrTerrain, X, 64 - yyt, xxt * 2, yyt * 2,
           1 + 2 * (xxt * 2 + 1), 1 + yyt + 9 * (yyt * 3 + 1));
       end;
       if TileImp and fTerImp = tiMine then
-        Sprite(offscreen, HGrTerrain, x, 64 - yyt, xxt * 2, yyt * 2,
+        Sprite(Offscreen, HGrTerrain, X, 64 - yyt, xxt * 2, yyt * 2,
           1 + 2 * (xxt * 2 + 1), 1 + yyt + 12 * (yyt * 3 + 1));
-      inc(x, xxt * 2 + 6);
+      Inc(X, xxt * 2 + 6);
     end;
   end;
 
-  for i := 0 to Popup.Items.Count - 1 do
-    if Popup.Items[i].Tag = Page then
-      s := Popup.Items[i].Caption;
+  for I := 0 to Popup.Items.Count - 1 do
+    if Popup.Items[I].Tag = Page then
+      S := Popup.Items[I].Caption;
   if Cost > 0 then
-    s := Format(Phrases.Lookup('ENHANCE'), [s, MovementToString(Cost)]);
-  LoweredTextOut(offscreen.Canvas, -1, MainTexture,
-    (InnerWidth - BiColorTextWidth(offscreen.Canvas, s)) div 2, 12, s);
+    S := Format(Phrases.Lookup('ENHANCE'), [S, MovementToString(Cost)]);
+  LoweredTextOut(Offscreen.Canvas, -1, MainTexture,
+    (InnerWidth - BiColorTextWidth(Offscreen.Canvas, S)) div 2, 12, S);
 
   if EndStage > 0 then
     LastJob := MyData.EnhancementJobs[Page, EndStage - 1]
@@ -288,7 +288,7 @@ begin
   job7.Visible := (jMine in Done) or not TypeChanged and
     (Terrain[TerrType].MineEff > 0);
   job3.Visible := not TypeChanged and (Terrain[TerrType].ClearTerrain >= 0) and
-    ((TerrType <> fDesert) or (MyRO.Wonder[woGardens].EffectiveOwner = me)) or
+    ((TerrType <> fDesert) or (MyRO.Wonder[woGardens].EffectiveOwner = Me)) or
     (LastJob = jClear);
   job6.Visible := not TypeChanged and (Terrain[TerrType].AfforestTerrain >= 0)
     or (LastJob = jAfforest);
@@ -305,10 +305,10 @@ end;
 
 procedure TEnhanceDlg.ToggleBtnClick(Sender: TObject);
 var
-  i: integer;
+  I: Integer;
 begin
-  for i := 0 to Popup.Items.Count - 1 do
-    Popup.Items[i].Checked := Popup.Items[i].Tag = Page;
+  for I := 0 to Popup.Items.Count - 1 do
+    Popup.Items[I].Checked := Popup.Items[I].Tag = Page;
   Popup.Popup(Left + ToggleBtn.Left, Top + ToggleBtn.Top + ToggleBtn.Height);
 end;
 
@@ -320,25 +320,25 @@ end;
 
 procedure TEnhanceDlg.JobClick(Sender: TObject);
 var
-  stage, NewJob: integer;
+  stage, NewJob: Integer;
   Done: Set of jNone .. jTrans;
 
-  procedure RemoveJob(j: integer);
+  procedure RemoveJob(J: Integer);
   begin // remove job
     stage := 0;
     while (stage < 5) and (MyData.EnhancementJobs[Page, stage] <> jNone) do
     begin
-      if (MyData.EnhancementJobs[Page, stage] = j) or (j = jRoad) and
-        (MyData.EnhancementJobs[Page, stage] = jRR) or (j = jIrr) and
+      if (MyData.EnhancementJobs[Page, stage] = J) or (J = jRoad) and
+        (MyData.EnhancementJobs[Page, stage] = jRR) or (J = jIrr) and
         (MyData.EnhancementJobs[Page, stage] = jFarm) then
       begin
         if stage < 4 then
-          move(MyData.EnhancementJobs[Page, stage + 1],
+          Move(MyData.EnhancementJobs[Page, stage + 1],
             MyData.EnhancementJobs[Page, stage], 4 - stage);
         MyData.EnhancementJobs[Page, 4] := jNone;
       end
       else
-        inc(stage);
+        Inc(stage);
     end;
   end;
 
@@ -348,8 +348,8 @@ begin
   stage := 0;
   while (stage < 5) and (MyData.EnhancementJobs[Page, stage] <> jNone) do
   begin
-    include(Done, MyData.EnhancementJobs[Page, stage]);
-    inc(stage);
+    Include(Done, MyData.EnhancementJobs[Page, stage]);
+    Inc(stage);
   end;
   if NewJob in Done then
     RemoveJob(NewJob)
@@ -362,12 +362,12 @@ begin
     if (NewJob = jRR) and not(jRoad in Done) then
     begin
       MyData.EnhancementJobs[Page, stage] := jRoad;
-      inc(stage);
+      Inc(stage);
     end;
     if (NewJob = jFarm) and not(jIrr in Done) then
     begin
       MyData.EnhancementJobs[Page, stage] := jIrr;
-      inc(stage);
+      Inc(stage);
     end;
     MyData.EnhancementJobs[Page, stage] := NewJob;
   end;

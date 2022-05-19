@@ -15,11 +15,11 @@ type
   public
     constructor Create;
     destructor Destroy; override;
-    function LoadFromFile(const FileName: String): boolean;
-    function GetHandle(const Item: string): integer;
-    function LookupByHandle(Handle: integer; Index: integer = -1): string;
+    function LoadFromFile(const FileName: String): Boolean;
+    function GetHandle(const Item: string): Integer;
+    function LookupByHandle(Handle: Integer; Index: Integer = -1): string;
     function Lookup(const Item: string; Index: Integer = -1): string;
-    function Search(const Content: string; var Handle, Index: integer): boolean;
+    function Search(const Content: string; var Handle, Index: Integer): Boolean;
   end;
 
 
@@ -44,7 +44,7 @@ begin
   FreeAndNil(Lines);
 end;
 
-function TStringTable.LoadFromFile(const FileName: String): boolean;
+function TStringTable.LoadFromFile(const FileName: String): Boolean;
 begin
   Result := True;
   Lines.Clear;
@@ -55,7 +55,7 @@ begin
   end;
 end;
 
-function TStringTable.GetHandle(const Item: string): integer;
+function TStringTable.GetHandle(const Item: string): Integer;
 var
   I: Integer;
 begin
@@ -66,9 +66,9 @@ begin
     else Result := -1;
 end;
 
-function TStringTable.LookupByHandle(Handle: integer; Index: integer): string;
+function TStringTable.LookupByHandle(Handle: Integer; Index: Integer): string;
 var
-  s: string;
+  S: string;
 begin
   if Index < 0 then begin
     if Handle < 0 then begin
@@ -76,13 +76,13 @@ begin
       Exit;
     end else begin
       if Pos(' ', Lines[Handle]) = 0 then S := ''
-        else s := Copy(Lines[Handle], Pos(' ', Lines[Handle]) + 1, MaxInt);
+        else S := Copy(Lines[Handle], Pos(' ', Lines[Handle]) + 1, MaxInt);
       while ((Handle + 1) < Lines.Count) and (Copy(Lines[Handle + 1], 1, 1) <> '#') do begin
         Inc(Handle);
         if (Length(Lines[Handle]) > 0) and (Lines[Handle][1] <> '''') then begin
-          if (s <> '') and (s[Length(s)] <> '\') then
-            s := s + ' ';
-          s := s + Lines[Handle];
+          if (S <> '') and (S[Length(S)] <> '\') then
+            S := S + ' ';
+          S := S + Lines[Handle];
         end;
       end;
       Result := S;
@@ -115,54 +115,54 @@ end;
 
 { might become necessary for 1.3
 
-  function TStringTable.Lookup(const Fallback: TStringTable; const Item: string; Index: integer): string;
+  function TStringTable.Lookup(const Fallback: TStringTable; const Item: string; Index: Integer): string;
   var
-  Handle: integer;
+  Handle: Integer;
   begin
   Handle:=Gethandle(Item);
-  if Handle>=0 then result:=LookupByHandle(Handle, Index)
-  else result:='';
-  if result='' then
-  result:=Fallback.Lookup(Item, Index);
+  if Handle>=0 then Result:=LookupByHandle(Handle, Index)
+  else Result:='';
+  if Result='' then
+  Result:=Fallback.Lookup(Item, Index);
   end;
 
-  function TStringTable.TryLookup(const Item: string; Index: integer): string;
+  function TStringTable.TryLookup(const Item: string; Index: Integer): string;
   var
-  Handle: integer;
+  Handle: Integer;
   begin
   Handle:=Gethandle(Item);
-  if Handle>=0 then result:=LookupByHandle(Handle, Index)
-  else result:='';
+  if Handle>=0 then Result:=LookupByHandle(Handle, Index)
+  else Result:='';
   end; }
 
 function TStringTable.Search(const Content: string;
-  var Handle, Index: integer): boolean;
+  var Handle, Index: Integer): Boolean;
 var
-  h, i: integer;
+  H, I: Integer;
   UContent: string;
 begin
   UContent := UpperCase(Content);
-  h := Handle;
-  if h < 0 then
-    i := 0
+  H := Handle;
+  if H < 0 then
+    I := 0
   else
-    i := Index + 1;
+    I := Index + 1;
   repeat
-    if h + i + 1 >= Lines.Count then
+    if H + I + 1 >= Lines.Count then
     begin
-      result := false;
-      exit;
+      Result := False;
+      Exit;
     end;
-    if Copy(Lines[h + i + 1], 1, 1) = '#' then
+    if Copy(Lines[H + I + 1], 1, 1) = '#' then
     begin
-      h := h + i + 1;
-      i := -1;
+      H := H + I + 1;
+      I := -1;
     end;
-    if (h >= 0) and not ((Length(Lines[h + i + 1]) > 0) and (Lines[h + i + 1][1] in ['#', ':', ';'])) and
-      (Pos(UContent, UpperCase(Lines[h + i + 1])) > 0) then
+    if (H >= 0) and not ((Length(Lines[H + I + 1]) > 0) and (Lines[H + I + 1][1] in ['#', ':', ';'])) and
+      (Pos(UContent, UpperCase(Lines[H + I + 1])) > 0) then
     begin
-      Index := i;
-      Handle := h;
+      Index := I;
+      Handle := H;
       Result := True;
       Exit;
     end;

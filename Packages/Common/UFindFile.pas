@@ -5,7 +5,7 @@ http://delphi.about.com/library/weekly/aa052300a.htm
 
 Tired of using FindFirst, Next and Close?
 Come see how to encapsulate all those functions
-in a single "find-files-recursively" component.
+in A Single "find-files-recursively" component.
 It's easy to use, free and with code.
 
 
@@ -33,8 +33,8 @@ type
 
   TFindFile = class(TComponent)
   private
-    s : TStringList;
-    fSubFolder : boolean;
+    S : TStringList;
+    fSubFolder : Boolean;
     fAttr: TFileAttrib;
     fPath : string;
     fFileMask : string;
@@ -46,7 +46,7 @@ type
     function SearchForFiles: TStringList;
   published
     property FileAttr: TFileAttrib read fAttr write fAttr;
-    property InSubFolders : boolean read fSubFolder write fSubFolder;
+    property InSubFolders : Boolean read fSubFolder write fSubFolder;
     property Path : string read fPath write SetPath;
     property FileMask : string read fFileMask write fFileMask ;
   end;
@@ -78,12 +78,12 @@ begin
   Path := IncludeTrailingBackslash(UTF8Encode(GetCurrentDir));
   FileMask := FilterAll;
   FileAttr := [ffaAnyFile];
-  s := TStringList.Create;
+  S := TStringList.Create;
 end;
 
 destructor TFindFile.Destroy;
 begin
-  s.Free;
+  S.Free;
   inherited Destroy;
 end;
 
@@ -100,17 +100,17 @@ end;
 
 function TFindFile.SearchForFiles: TStringList;
 begin
-  s.Clear;
+  S.Clear;
   try
     FileSearch(Path);
   finally
-    Result := s;
+    Result := S;
   end;
 end;
 
 procedure TFindFile.FileSearch(const InPath : string);
 var Rec  : TSearchRec;
-    Attr : integer;
+    Attr : Integer;
 begin
   Attr := 0;
   if ffaReadOnly in FileAttr then Attr := Attr + faReadOnly;
@@ -124,7 +124,7 @@ begin
   if SysUtils.FindFirst(inPath + FileMask, Attr, Rec) = 0 then
   try
     repeat
-      s.Add(inPath + Rec.Name);
+      S.Add(inPath + Rec.Name);
     until SysUtils.FindNext(Rec) <> 0;
   finally
     SysUtils.FindClose(Rec);

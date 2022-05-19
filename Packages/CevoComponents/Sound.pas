@@ -279,7 +279,7 @@ end;
 function PrepareSound(FileName: string): Integer;
 begin
   Result := 0;
-  while (Result < SoundList.Count) and (SoundList[result].FFileName <> FileName) do
+  while (Result < SoundList.Count) and (SoundList[Result].FFileName <> FileName) do
     Inc(Result);
   if Result = SoundList.Count then begin
     // First time this sound is played

@@ -48,8 +48,8 @@ type
     ModelName: array [-1 .. 256] of string;
     constructor Create(FileName: string);
     destructor Destroy; override;
-    function GetCityName(i: Integer): string;
-{$IFNDEF SCR} procedure SetCityName(i: Integer; NewName: string); {$ENDIF}
+    function GetCityName(I: Integer): string;
+{$IFNDEF SCR} procedure SetCityName(I: Integer; NewName: string); {$ENDIF}
 {$IFNDEF SCR} function TString(Template: string): string;
     function TPhrase(Item: string): string; {$ENDIF}
     procedure SetModelPicture(const Info: TModelPictureInfo; IsNew: Boolean);
@@ -73,7 +73,7 @@ function CityName(Founder: Integer): string;
 function ModelCode(const ModelInfo: TModelInfo): Integer;
 procedure FindStdModelPicture(Code: Integer; var pix: Integer; var Name: string);
 function GetTribeInfo(FileName: string; var Name: string; var Color: TColor): Boolean;
-procedure FindPosition(HGr: TGraphicSet; x, y, xmax, ymax: Integer; Mark: TColor;
+procedure FindPosition(HGr: TGraphicSet; X, Y, xmax, ymax: Integer; Mark: TColor;
   var xp, yp: Integer);
 
 
@@ -214,33 +214,33 @@ var
 
 function Get: string;
 var
-  p: Integer;
+  P: Integer;
 begin
   while (Input <> '') and ((Input[1] = ' ') or (Input[1] = #9)) do
     Delete(Input, 1, 1);
-  p := Pos(',', Input);
-  if p = 0 then
-    p := Length(Input) + 1;
-  Result := Copy(Input, 1, p - 1);
-  Delete(Input, 1, p);
+  P := Pos(',', Input);
+  if P = 0 then
+    P := Length(Input) + 1;
+  Result := Copy(Input, 1, P - 1);
+  Delete(Input, 1, P);
 end;
 
 function GetNum: Integer;
 var
-  i: Integer;
+  I: Integer;
 begin
-  Val(Get, Result, i);
-  if i <> 0 then
+  Val(Get, Result, I);
+  if I <> 0 then
     Result := 0;
 end;
 
 procedure FindStdModelPicture(Code: Integer; var pix: Integer; var Name: string);
 var
-  i: Integer;
+  I: Integer;
 begin
-  for i := 0 to StdUnitScript.Count - 1 do
+  for I := 0 to StdUnitScript.Count - 1 do
   begin // look through StdUnits
-    Input := StdUnitScript[i];
+    Input := StdUnitScript[I];
     pix := GetNum;
     if Code = GetNum then
     begin
@@ -339,68 +339,68 @@ begin
   inherited;
 end;
 
-procedure FindPosition(HGr: TGraphicSet; x, y, xmax, ymax: Integer; Mark: TColor;
+procedure FindPosition(HGr: TGraphicSet; X, Y, xmax, ymax: Integer; Mark: TColor;
   var xp, yp: Integer);
 begin
   xp := 0;
-  while (xp < xmax) and (HGr.Data.Canvas.Pixels[x + 1 + xp, y] <> Mark) do
+  while (xp < xmax) and (HGr.Data.Canvas.Pixels[X + 1 + xp, Y] <> Mark) do
     Inc(xp);
   yp := 0;
-  while (yp < ymax) and (HGr.Data.Canvas.Pixels[x, y + 1 + yp] <> Mark) do
+  while (yp < ymax) and (HGr.Data.Canvas.Pixels[X, Y + 1 + yp] <> Mark) do
     Inc(yp);
 end;
 
-function TTribe.GetCityName(i: Integer): string;
+function TTribe.GetCityName(I: Integer): string;
 begin
   Result := '';
-  if nCityLines > i then
+  if nCityLines > I then
   begin
-    Result := Script[CityLine0 + i];
+    Result := Script[CityLine0 + I];
     while (Result <> '') and ((Result[1] = ' ') or (Result[1] = #9)) do
       Delete(Result, 1, 1);
   end
 {$IFNDEF SCR}
   else
-    Result := Format(TPhrase('GENCITY'), [i + 1]);
+    Result := Format(TPhrase('GENCITY'), [I + 1]);
 {$ENDIF}
 end;
 
 {$IFNDEF SCR}
-procedure TTribe.SetCityName(i: Integer; NewName: string);
+procedure TTribe.SetCityName(I: Integer; NewName: string);
 begin
-  while nCityLines <= i do
+  while nCityLines <= I do
   begin
     Script.Insert(CityLine0 + nCityLines, Format(TPhrase('GENCITY'),
       [nCityLines + 1]));
     Inc(nCityLines);
   end;
-  Script[CityLine0 + i] := NewName;
+  Script[CityLine0 + I] := NewName;
 end;
 
 function TTribe.TString(Template: string): string;
 var
-  p: Integer;
+  P: Integer;
   Variant: Char;
   CaseUp: Boolean;
 begin
   repeat
-    p := pos('#', Template);
-    if (p = 0) or (p = Length(Template)) then
+    P := Pos('#', Template);
+    if (P = 0) or (P = Length(Template)) then
       Break;
-    Variant := Template[p + 1];
+    Variant := Template[P + 1];
     CaseUp := Variant in ['A' .. 'Z'];
     if CaseUp then
       Inc(Variant, 32);
-    Delete(Template, p, 2);
+    Delete(Template, P, 2);
     if Variant in ['a' .. 'z'] then
     begin
       if NumberName < 0 then
-        Insert(Name[Variant], Template, p)
+        Insert(Name[Variant], Template, P)
       else
-        Insert(Format('P%d', [NumberName]), Template, p);
-      if CaseUp and (Length(Template) >= p) and
-        (Template[p] in ['a' .. 'z', #$E0 .. #$FF]) then
-        Dec(Template[p], 32);
+        Insert(Format('P%d', [NumberName]), Template, P);
+      if CaseUp and (Length(Template) >= P) and
+        (Template[P] in ['a' .. 'z', #$E0 .. #$FF]) then
+        Dec(Template[P], 32);
     end
   until False;
   Result := Template;
@@ -417,7 +417,7 @@ procedure TTribe.InitAge(Age: Integer);
 type
   TLine = array [0 .. 649, 0 .. 2] of Byte;
 var
-  i, x, Gray: Integer;
+  I, X, Gray: Integer;
   Item: string;
 begin
   if Age = cAge then
@@ -425,13 +425,13 @@ begin
   cAge := Age;
   with Script do
   begin
-    i := 0;
-    while (i < Count) and (Copy(Strings[i], 1, 6) <>
+    I := 0;
+    while (I < Count) and (Copy(Strings[I], 1, 6) <>
         '#AGE' + char(48 + Age) + ' ') do
-      Inc(i);
-    if i < Count then
+      Inc(I);
+    if I < Count then
     begin
-      Input := Strings[i];
+      Input := Strings[I];
       system.Delete(Input, 1, 6);
       Item := Get;
       cpix := GetNum;
@@ -447,9 +447,9 @@ begin
             end;
           end;
         cHGr := LoadGraphicSet(Item + '.png');
-        for x := 0 to 3 do
-          with CityPicture[x] do begin
-            FindPosition(cHGr, x * 65, cpix * 49, 63, 47, $00FFFF,
+        for X := 0 to 3 do
+          with CityPicture[X] do begin
+            FindPosition(cHGr, X * 65, cpix * 49, 63, 47, $00FFFF,
               xShield, yShield);
             // FindPosition(cHGr,x*65,cpix*49,$FFFFFF,xf,yf);
           end;
@@ -485,22 +485,22 @@ end;
 
 procedure TTribe.SetModelPicture(const Info: TModelPictureInfo; IsNew: Boolean);
 var
-  i: Integer;
+  I: Integer;
   ok: Boolean;
 begin
   with Info do
   begin
     if not IsNew then
     begin
-      i := nPictureList - 1;
-      while (i >= 0) and (PictureList[i].Hash <> Info.Hash) do
-        Dec(i);
-      assert(i >= 0);
-      assert(PictureList[i].HGr = LoadGraphicSet(GrName));
-      assert(PictureList[i].pix = pix);
-      ModelPicture[mix].HGr := PictureList[i].HGr;
-      ModelPicture[mix].pix := PictureList[i].pix;
-      ModelName[mix] := PictureList[i].ModelName;
+      I := nPictureList - 1;
+      while (I >= 0) and (PictureList[I].Hash <> Info.Hash) do
+        Dec(I);
+      Assert(I >= 0);
+      Assert(PictureList[I].HGr = LoadGraphicSet(GrName));
+      Assert(PictureList[I].pix = pix);
+      ModelPicture[mix].HGr := PictureList[I].HGr;
+      ModelPicture[mix].pix := PictureList[I].pix;
+      ModelName[mix] := PictureList[I].ModelName;
     end
     else
     begin
@@ -514,9 +514,9 @@ begin
 
       // read model name from tribe script
       ok := False;
-      for i := 0 to Script.Count - 1 do
+      for I := 0 to Script.Count - 1 do
       begin
-        Input := Script[i];
+        Input := Script[I];
         if Input = '#UNITS ' + ExtractFileNameOnly(GrName) then
           ok := True
         else if (Input <> '') and (Input[1] = '#') then
@@ -530,9 +530,9 @@ begin
 
       if ModelName[mix] = '' then
       begin // read model name from StdUnits.txt
-        for i := 0 to StdUnitScript.Count - 1 do
+        for I := 0 to StdUnitScript.Count - 1 do
         begin
-          Input := StdUnitScript[i];
+          Input := StdUnitScript[I];
           if GetNum = pix then
           begin
             Get;
@@ -566,7 +566,7 @@ end;
 function TTribe.ChooseModelPicture(var Picture: TModelPictureInfo;
   Code, Turn: Integer; ForceNew: Boolean): Boolean;
 var
-  i: Integer;
+  I: Integer;
   Cnt: Integer;
   HGr: TGraphicSet;
   Used: Integer;
@@ -605,11 +605,11 @@ begin
   // look for identical model to assign same picture again
   if not ForceNew and (Picture.Hash > 0) then
   begin
-    for i := 0 to nPictureList - 1 do
-      if PictureList[i].Hash = Picture.Hash then
+    for I := 0 to nPictureList - 1 do
+      if PictureList[I].Hash = Picture.Hash then
       begin
-        Picture.GrName := PictureList[i].HGr.Name;
-        Picture.pix := PictureList[i].pix;
+        Picture.GrName := PictureList[I].HGr.Name;
+        Picture.pix := PictureList[I].pix;
         Result := False;
         Exit;
       end;
@@ -621,16 +621,16 @@ begin
 
   TestPic.GrName := 'StdUnits.png';
   HGr := HGrStdUnits;
-  for i := 0 to StdUnitScript.Count - 1 do
+  for I := 0 to StdUnitScript.Count - 1 do
   begin // look through StdUnits
-    Input := StdUnitScript[i];
+    Input := StdUnitScript[I];
     Check;
   end;
 
   ok := False;
-  for i := 0 to Script.Count - 1 do
+  for I := 0 to Script.Count - 1 do
   begin // look through units defined in tribe script
-    Input := Script[i];
+    Input := Script[I];
     if Copy(Input, 1, 6) = '#UNITS' then
     begin
       ok := True;

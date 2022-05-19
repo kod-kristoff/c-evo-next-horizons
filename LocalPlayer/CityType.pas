@@ -17,9 +17,9 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure PaintBox1MouseDown(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; x, y: integer);
+      Shift: TShiftState; X, Y: Integer);
     procedure PaintBox1MouseUp(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; x, y: integer);
+      Shift: TShiftState; X, Y: Integer);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure DeleteBtnClick(Sender: TObject);
   public
@@ -27,11 +27,11 @@ type
   protected
     procedure OffscreenPaint; override;
   private
-    nPool, dragiix, ctype: integer;
-    Pooliix: array [0 .. nImp - 1] of integer;
+    nPool, dragiix, ctype: Integer;
+    Pooliix: array [0 .. nImp - 1] of Integer;
     listed: Set of 0 .. nImp;
-    Changed: boolean;
-    procedure LoadType(NewType: integer);
+    Changed: Boolean;
+    procedure LoadType(NewType: Integer);
     procedure SaveType;
   end;
 
@@ -81,79 +81,79 @@ end;
 
 procedure TCityTypeDlg.OffscreenPaint;
 var
-  i, iix: integer;
-  s: string;
+  I, iix: Integer;
+  S: string;
 begin
   inherited;
-  offscreen.Canvas.Font.Assign(UniFont[ftSmall]);
+  Offscreen.Canvas.Font.Assign(UniFont[ftSmall]);
   FillOffscreen(xList - 7, yList, 42 * nListCol + 14, 32 * nListRow);
   FillOffscreen(xPool - 7, yPool, 42 * nPoolCol + 14, 32 * nPoolRow);
   FillOffscreen(0, yList + 32 * nListRow, 42 * nPoolCol + 14,
     yPool - yList - 32 * nListRow);
 
-  Frame(offscreen.Canvas, 0, yList + 32 * nListRow, InnerWidth - 255,
+  Frame(Offscreen.Canvas, 0, yList + 32 * nListRow, InnerWidth - 255,
     yPool - 23, MainTexture.ColorBevelLight, MainTexture.ColorBevelShade);
-  Frame(offscreen.Canvas, InnerWidth - 254, yList + 32 * nListRow,
+  Frame(Offscreen.Canvas, InnerWidth - 254, yList + 32 * nListRow,
     InnerWidth - 89, yPool - 23, MainTexture.ColorBevelLight,
     MainTexture.ColorBevelShade);
-  Frame(offscreen.Canvas, InnerWidth - 88, yList + 32 * nListRow,
+  Frame(Offscreen.Canvas, InnerWidth - 88, yList + 32 * nListRow,
     InnerWidth - 1, yPool - 23, MainTexture.ColorBevelLight,
     MainTexture.ColorBevelShade);
-  Frame(offscreen.Canvas, 0, yPool - 22, InnerWidth - 1, yPool - 1,
+  Frame(Offscreen.Canvas, 0, yPool - 22, InnerWidth - 1, yPool - 1,
     MainTexture.ColorBevelLight, MainTexture.ColorBevelShade);
-  for i := 0 to nCityType - 1 do
+  for I := 0 to nCityType - 1 do
   begin
-    RFrame(offscreen.Canvas, xSwitch + i * 42, ySwitch, xSwitch + 39 + i * 42,
+    RFrame(Offscreen.Canvas, xSwitch + I * 42, ySwitch, xSwitch + 39 + I * 42,
       ySwitch + 23, MainTexture.ColorBevelShade, MainTexture.ColorBevelLight);
-    if i = ctype then
-      Frame(offscreen.Canvas, xSwitch + 1 + i * 42, ySwitch + 1,
-        xSwitch + 38 + i * 42, ySwitch + 22, MainTexture.ColorBevelShade,
+    if I = ctype then
+      Frame(Offscreen.Canvas, xSwitch + 1 + I * 42, ySwitch + 1,
+        xSwitch + 38 + I * 42, ySwitch + 22, MainTexture.ColorBevelShade,
         MainTexture.ColorBevelLight)
     else
-      Frame(offscreen.Canvas, xSwitch + 1 + i * 42, ySwitch + 1,
-        xSwitch + 38 + i * 42, ySwitch + 22, MainTexture.ColorBevelLight,
+      Frame(Offscreen.Canvas, xSwitch + 1 + I * 42, ySwitch + 1,
+        xSwitch + 38 + I * 42, ySwitch + 22, MainTexture.ColorBevelLight,
         MainTexture.ColorBevelShade);
-    BitBltCanvas(offscreen.Canvas, xSwitch + 2 + i * 42, ySwitch + 2,
-      xSizeSmall, ySizeSmall, SmallImp.Canvas, (i + 3) * xSizeSmall, 0);
+    BitBltCanvas(Offscreen.Canvas, xSwitch + 2 + I * 42, ySwitch + 2,
+      xSizeSmall, ySizeSmall, SmallImp.Canvas, (I + 3) * xSizeSmall, 0);
   end;
-  RisedTextOut(offscreen.Canvas, 8, yList + 32 * nListRow + 2,
+  RisedTextOut(Offscreen.Canvas, 8, yList + 32 * nListRow + 2,
     Phrases.Lookup('BUILDORDER'));
-  RisedTextOut(offscreen.Canvas, 8, ySwitch + 26,
+  RisedTextOut(Offscreen.Canvas, 8, ySwitch + 26,
     Phrases.Lookup('CITYTYPE', ctype));
-  s := Phrases.Lookup('BUILDREST');
-  RisedTextOut(offscreen.Canvas,
-    (InnerWidth - BiColorTextWidth(offscreen.Canvas, s)) div 2,
-    yList + 72 + 32 * nListRow, s);
+  S := Phrases.Lookup('BUILDREST');
+  RisedTextOut(Offscreen.Canvas,
+    (InnerWidth - BiColorTextWidth(Offscreen.Canvas, S)) div 2,
+    yList + 72 + 32 * nListRow, S);
 
-  with offscreen.Canvas do
+  with Offscreen.Canvas do
   begin
-    for i := 1 to nListRow - 1 do
-      DLine(offscreen.Canvas, xList - 5, xList + 4 + 42 * nListCol,
-        yList - 1 + 32 * i, MainTexture.ColorBevelLight, MainTexture.ColorBevelShade);
-    for i := 0 to nListCol * nListRow - 1 do
+    for I := 1 to nListRow - 1 do
+      DLine(Offscreen.Canvas, xList - 5, xList + 4 + 42 * nListCol,
+        yList - 1 + 32 * I, MainTexture.ColorBevelLight, MainTexture.ColorBevelShade);
+    for I := 0 to nListCol * nListRow - 1 do
     begin
-      s := IntToStr(i + 1);
+      S := IntToStr(I + 1);
       Font.Color := MainTexture.ColorTextLight;
-      Textout(xList + 20 + i mod nListCol * 42 - TextWidth(s) div 2,
-        yList + 15 + i div nListCol * 32 - TextHeight(s) div 2, s);
+      Textout(xList + 20 + I mod nListCol * 42 - TextWidth(S) div 2,
+        yList + 15 + I div nListCol * 32 - TextHeight(S) div 2, S);
     end;
   end;
 
-  i := 0;
-  while MyData.ImpOrder[ctype, i] >= 0 do
+  I := 0;
+  while MyData.ImpOrder[ctype, I] >= 0 do
   begin
-    RFrame(offscreen.Canvas, xList + 20 - xSizeSmall div 2 + i mod nListCol *
-      42, yList + 15 - ySizeSmall div 2 + i div nListCol * 32,
-      xList + 21 + xSizeSmall div 2 + i mod nListCol * 42,
-      yList + 16 + ySizeSmall div 2 + i div nListCol * 32,
+    RFrame(Offscreen.Canvas, xList + 20 - xSizeSmall div 2 + I mod nListCol *
+      42, yList + 15 - ySizeSmall div 2 + I div nListCol * 32,
+      xList + 21 + xSizeSmall div 2 + I mod nListCol * 42,
+      yList + 16 + ySizeSmall div 2 + I div nListCol * 32,
       MainTexture.ColorBevelLight, MainTexture.ColorBevelShade);
-    BitBltCanvas(offscreen.Canvas, xList + 21 - xSizeSmall div 2 +
-      i mod nListCol * 42, yList + 16 - ySizeSmall div 2 + i div nListCol * 32,
+    BitBltCanvas(Offscreen.Canvas, xList + 21 - xSizeSmall div 2 +
+      I mod nListCol * 42, yList + 16 - ySizeSmall div 2 + I div nListCol * 32,
       xSizeSmall, ySizeSmall, SmallImp.Canvas,
-      MyData.ImpOrder[ctype, i] mod 7 * xSizeSmall,
-      (MyData.ImpOrder[ctype, i] + SystemIconLines * 7) div 7 *
+      MyData.ImpOrder[ctype, I] mod 7 * xSizeSmall,
+      (MyData.ImpOrder[ctype, I] + SystemIconLines * 7) div 7 *
       ySizeSmall);
-    inc(i);
+    Inc(I);
   end;
 
   nPool := 0;
@@ -164,57 +164,57 @@ begin
     then
     begin
       Pooliix[nPool] := iix;
-      RFrame(offscreen.Canvas, xPool + 20 - xSizeSmall div 2 +
+      RFrame(Offscreen.Canvas, xPool + 20 - xSizeSmall div 2 +
         nPool mod nPoolCol * 42, yPool + 15 - ySizeSmall div 2 +
         nPool div nPoolCol * 32, xPool + 21 + xSizeSmall div 2 +
         nPool mod nPoolCol * 42, yPool + 16 + ySizeSmall div 2 +
         nPool div nPoolCol * 32, MainTexture.ColorBevelLight,
         MainTexture.ColorBevelShade);
-      BitBltCanvas(offscreen.Canvas, xPool + 21 - xSizeSmall div 2 +
+      BitBltCanvas(Offscreen.Canvas, xPool + 21 - xSizeSmall div 2 +
         nPool mod nPoolCol * 42, yPool + 16 - ySizeSmall div 2 +
         nPool div nPoolCol * 32, xSizeSmall, ySizeSmall, SmallImp.Canvas,
         iix mod 7 * xSizeSmall, (iix + SystemIconLines * 7) div 7 *
         ySizeSmall);
-      inc(nPool);
+      Inc(nPool);
     end;
   DeleteBtn.Visible := MyData.ImpOrder[ctype, 0] >= 0;
 
   if dragiix >= 0 then
   begin
-    ImpImage(offscreen.Canvas, xView + 9, yView + 5, dragiix);
-    s := Phrases.Lookup('IMPROVEMENTS', dragiix);
-    RisedTextOut(offscreen.Canvas,
-      xView + 36 - BiColorTextWidth(offscreen.Canvas, s) div 2,
-      ySwitch + 26, s);
+    ImpImage(Offscreen.Canvas, xView + 9, yView + 5, dragiix);
+    S := Phrases.Lookup('IMPROVEMENTS', dragiix);
+    RisedTextOut(Offscreen.Canvas,
+      xView + 36 - BiColorTextWidth(Offscreen.Canvas, S) div 2,
+      ySwitch + 26, S);
   end;
   MarkUsedOffscreen(InnerWidth, InnerHeight);
 end;
 
-procedure TCityTypeDlg.LoadType(NewType: integer);
+procedure TCityTypeDlg.LoadType(NewType: Integer);
 var
-  i: integer;
+  I: Integer;
 begin
   ctype := NewType;
   listed := [];
-  i := 0;
-  while MyData.ImpOrder[ctype, i] >= 0 do
+  I := 0;
+  while MyData.ImpOrder[ctype, I] >= 0 do
   begin
-    include(listed, MyData.ImpOrder[ctype, i]);
-    inc(i);
+    Include(listed, MyData.ImpOrder[ctype, I]);
+    Inc(I);
   end;
-  Changed := false;
+  Changed := False;
 end;
 
 procedure TCityTypeDlg.SaveType;
 var
-  cix: integer;
+  cix: Integer;
 begin
   if Changed then
   begin
     for cix := 0 to MyRO.nCity - 1 do
       if (MyCity[cix].Loc >= 0) and (MyCity[cix].Status and 7 = ctype + 1) then
         AutoBuild(cix, MyData.ImpOrder[ctype]);
-    Changed := false;
+    Changed := False;
   end;
 end;
 
@@ -231,99 +231,99 @@ begin
 end;
 
 procedure TCityTypeDlg.PaintBox1MouseDown(Sender: TObject; Button: TMouseButton;
-  Shift: TShiftState; x, y: integer);
+  Shift: TShiftState; X, Y: Integer);
 var
-  i: integer;
+  I: Integer;
 begin
-  x := x - SideFrame;
-  y := y - WideFrame;
-  i := (x - xList) div 42 + (y - yList) div 32 * nListCol;
-  if (i < nImp) and (MyData.ImpOrder[ctype, i] >= 0) and
-    (x > xList + 2 + i mod nListCol * 42) and
-    (y > yList + 5 + i div nListCol * 32) and
-    (x < xList + 3 + 36 + i mod nListCol * 42) and
-    (y < yList + 6 + 20 + i div nListCol * 32) then
+  X := X - SideFrame;
+  Y := Y - WideFrame;
+  I := (X - xList) div 42 + (Y - yList) div 32 * nListCol;
+  if (I < nImp) and (MyData.ImpOrder[ctype, I] >= 0) and
+    (X > xList + 2 + I mod nListCol * 42) and
+    (Y > yList + 5 + I div nListCol * 32) and
+    (X < xList + 3 + 36 + I mod nListCol * 42) and
+    (Y < yList + 6 + 20 + I div nListCol * 32) then
   begin
     if ssShift in Shift then
       HelpDlg.ShowNewContent(WindowModeMakePersistent(FWindowMode), hkImp,
-        MyData.ImpOrder[ctype, i])
+        MyData.ImpOrder[ctype, I])
     else
     begin
-      dragiix := MyData.ImpOrder[ctype, i];
+      dragiix := MyData.ImpOrder[ctype, I];
       Screen.Cursor := crImpDrag;
       SmartUpdateContent;
     end;
-    exit;
+    Exit;
   end;
-  i := (x - xPool) div 42 + (y - yPool) div 32 * nPoolCol;
-  if (i < nPool) and (x > xPool + 2 + i mod nPoolCol * 42) and
-    (y > yPool + 5 + i div nPoolCol * 32) and
-    (x < xPool + 3 + 36 + i mod nPoolCol * 42) and
-    (y < yPool + 6 + 20 + i div nPoolCol * 32) then
+  I := (X - xPool) div 42 + (Y - yPool) div 32 * nPoolCol;
+  if (I < nPool) and (X > xPool + 2 + I mod nPoolCol * 42) and
+    (Y > yPool + 5 + I div nPoolCol * 32) and
+    (X < xPool + 3 + 36 + I mod nPoolCol * 42) and
+    (Y < yPool + 6 + 20 + I div nPoolCol * 32) then
   begin
     if ssShift in Shift then
-      HelpDlg.ShowNewContent(WindowModeMakePersistent(FWindowMode), hkImp, Pooliix[i])
+      HelpDlg.ShowNewContent(WindowModeMakePersistent(FWindowMode), hkImp, Pooliix[I])
     else
     begin
-      dragiix := Pooliix[i];
+      dragiix := Pooliix[I];
       Screen.Cursor := crImpDrag;
       SmartUpdateContent;
     end;
-    exit;
+    Exit;
   end;
-  i := (x - xSwitch) div 42;
-  if (i < nCityType) and (x > xSwitch + 2 + i * 42) and
-    (x < xSwitch + 3 + 36 + i * 42) and (y >= ySwitch + 2) and (y < ySwitch + 22)
+  I := (X - xSwitch) div 42;
+  if (I < nCityType) and (X > xSwitch + 2 + I * 42) and
+    (X < xSwitch + 3 + 36 + I * 42) and (Y >= ySwitch + 2) and (Y < ySwitch + 22)
   then
   begin
     SaveType;
-    LoadType(i);
+    LoadType(I);
     SmartUpdateContent;
   end;
 end;
 
 procedure TCityTypeDlg.PaintBox1MouseUp(Sender: TObject; Button: TMouseButton;
-  Shift: TShiftState; x, y: integer);
+  Shift: TShiftState; X, Y: Integer);
 
-  procedure UnList(iix: integer);
+  procedure UnList(iix: Integer);
   var
-    i: integer;
+    I: Integer;
   begin
-    i := 0;
-    while (MyData.ImpOrder[ctype, i] >= 0) and
-      (MyData.ImpOrder[ctype, i] <> iix) do
-      inc(i);
-    assert(MyData.ImpOrder[ctype, i] = iix);
-    move(MyData.ImpOrder[ctype, i + 1], MyData.ImpOrder[ctype, i], nImp - i);
+    I := 0;
+    while (MyData.ImpOrder[ctype, I] >= 0) and
+      (MyData.ImpOrder[ctype, I] <> iix) do
+      Inc(I);
+    Assert(MyData.ImpOrder[ctype, I] = iix);
+    Move(MyData.ImpOrder[ctype, I + 1], MyData.ImpOrder[ctype, I], nImp - I);
     Exclude(listed, iix);
   end;
 
 var
-  i: integer;
+  I: Integer;
 begin
-  x := x - SideFrame;
-  y := y - WideFrame;
+  X := X - SideFrame;
+  Y := Y - WideFrame;
   if dragiix >= 0 then
   begin
-    if (x >= xList) and (x < xList + nListCol * 42) and (y >= yList) and
-      (y < yList + nListRow * 32) then
+    if (X >= xList) and (X < xList + nListCol * 42) and (Y >= yList) and
+      (Y < yList + nListRow * 32) then
     begin
       if dragiix in listed then
         UnList(dragiix);
-      i := (x - xList) div 42 + (y - yList) div 32 * nListCol;
-      while (i > 0) and (MyData.ImpOrder[ctype, i - 1] < 0) do
-        dec(i);
-      move(MyData.ImpOrder[ctype, i], MyData.ImpOrder[ctype, i + 1],
-        nImp - i - 1);
-      MyData.ImpOrder[ctype, i] := dragiix;
-      include(listed, dragiix);
-      Changed := true;
+      I := (X - xList) div 42 + (Y - yList) div 32 * nListCol;
+      while (I > 0) and (MyData.ImpOrder[ctype, I - 1] < 0) do
+        Dec(I);
+      Move(MyData.ImpOrder[ctype, I], MyData.ImpOrder[ctype, I + 1],
+        nImp - I - 1);
+      MyData.ImpOrder[ctype, I] := dragiix;
+      Include(listed, dragiix);
+      Changed := True;
     end
-    else if (dragiix in listed) and (x >= xPool) and (x < xPool + nPoolCol * 42)
-      and (y >= yPool) and (y < yPool + nPoolRow * 32) then
+    else if (dragiix in listed) and (X >= xPool) and (X < xPool + nPoolCol * 42)
+      and (Y >= yPool) and (Y < yPool + nPoolRow * 32) then
     begin
       UnList(dragiix);
-      Changed := true;
+      Changed := True;
     end;
     dragiix := -1;
     SmartUpdateContent;
@@ -339,9 +339,9 @@ end;
 
 procedure TCityTypeDlg.DeleteBtnClick(Sender: TObject);
 begin
-  fillchar(MyData.ImpOrder[ctype], sizeof(MyData.ImpOrder[ctype]), Byte(-1));
+  FillChar(MyData.ImpOrder[ctype], SizeOf(MyData.ImpOrder[ctype]), Byte(-1));
   listed := [];
-  Changed := true;
+  Changed := True;
   SmartUpdateContent;
 end;
 

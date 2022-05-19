@@ -258,7 +258,7 @@ begin
     for I := 0 to High(Temp) do
     begin
       ImgList.Add(Temp[I], nil);
-      Temp[i].Free;
+      Temp[I].Free;
     end;
   finally
     ImgList.EndUpdate;

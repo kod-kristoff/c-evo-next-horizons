@@ -8,12 +8,12 @@ uses
 
 const
   nOfferedResourceWeights = 6;
-  OfferedResourceWeights: array [0 .. nOfferedResourceWeights - 1] of cardinal =
+  OfferedResourceWeights: array [0 .. nOfferedResourceWeights - 1] of Cardinal =
     (rwOff, rwMaxScience, rwForceScience, rwMaxGrowth, rwForceProd, rwMaxProd);
 
 type
-  TImpOrder = array [0 .. (nImp + 4) div 4 * 4 - 1] of shortint;
-  TEnhancementJobs = array [0 .. 11, 0 .. 7] of byte;
+  TImpOrder = array [0 .. (nImp + 4) div 4 * 4 - 1] of ShortInt;
+  TEnhancementJobs = array [0 .. 11, 0 .. 7] of Byte;
   JobResultSet = set of 0 .. 39;
 
   TMapOption = (
@@ -35,43 +35,43 @@ type
 var
   Server: TServerCall;
   G: TNewGameData;
-  me: integer;
+  Me: Integer;
   MyRO: ^TPlayerContext;
   MyMap: ^TTileList;
   MyUn: ^TUnList;
   MyCity: ^TCityList;
   MyModel: ^TModelList;
 
-  AdvValue: array [0 .. nAdv - 1] of integer;
+  AdvValue: array [0 .. nAdv - 1] of Integer;
 
-function dLoc(Loc, dx, dy: integer): integer;
-function Distance(Loc0, Loc1: integer): integer;
-function UnrestAtLoc(uix, Loc: integer): boolean;
-function GetMoveAdvice(uix, ToLoc: integer;
-  var MoveAdviceData: TMoveAdviceData): integer;
-function ColorOfHealth(Health: integer): integer;
-function IsMultiPlayerGame: boolean;
-procedure ItsMeAgain(p: integer);
-function GetAge(p: integer): integer;
-function IsCivilReportNew(Enemy: integer): boolean;
-function IsMilReportNew(Enemy: integer): boolean;
-function CutCityFoodSurplus(FoodSurplus: integer; IsCityAlive: boolean;
-  gov, size: integer): integer;
-function CityTaxBalance(cix: integer; const CityReport: TCityReportNew): integer;
-procedure SumCities(var TaxSum, ScienceSum: integer);
-function JobTest(uix, Job: integer; IgnoreResults: JobResultSet = []): boolean;
-procedure GetUnitInfo(Loc: integer; var uix: integer; var UnitInfo: TUnitInfo);
-procedure GetCityInfo(Loc: integer; var cix: integer; var CityInfo: TCityInfo);
-function UnitExhausted(uix: integer): boolean;
-function ModelHash(const ModelInfo: TModelInfo): integer;
-function ProcessEnhancement(uix: integer; const Jobs: TEnhancementJobs): integer;
-function AutoBuild(cix: integer; const ImpOrder: TImpOrder): boolean;
-procedure DebugMessage(Level: integer; Text: string);
+function dLoc(Loc, dx, dy: Integer): Integer;
+function Distance(Loc0, Loc1: Integer): Integer;
+function UnrestAtLoc(uix, Loc: Integer): Boolean;
+function GetMoveAdvice(uix, ToLoc: Integer;
+  var MoveAdviceData: TMoveAdviceData): Integer;
+function ColorOfHealth(Health: Integer): Integer;
+function IsMultiPlayerGame: Boolean;
+procedure ItsMeAgain(P: Integer);
+function GetAge(P: Integer): Integer;
+function IsCivilReportNew(Enemy: Integer): Boolean;
+function IsMilReportNew(Enemy: Integer): Boolean;
+function CutCityFoodSurplus(FoodSurplus: Integer; IsCityAlive: Boolean;
+  gov, size: Integer): Integer;
+function CityTaxBalance(cix: Integer; const CityReport: TCityReportNew): Integer;
+procedure SumCities(var TaxSum, ScienceSum: Integer);
+function JobTest(uix, Job: Integer; IgnoreResults: JobResultSet = []): Boolean;
+procedure GetUnitInfo(Loc: Integer; var uix: Integer; var UnitInfo: TUnitInfo);
+procedure GetCityInfo(Loc: Integer; var cix: Integer; var CityInfo: TCityInfo);
+function UnitExhausted(uix: Integer): Boolean;
+function ModelHash(const ModelInfo: TModelInfo): Integer;
+function ProcessEnhancement(uix: Integer; const Jobs: TEnhancementJobs): Integer;
+function AutoBuild(cix: Integer; const ImpOrder: TImpOrder): Boolean;
+procedure DebugMessage(Level: Integer; Text: string);
 procedure CityOptimizer_BeginOfTurn;
-procedure CityOptimizer_CityChange(cix: integer);
-procedure CityOptimizer_TileBecomesAvailable(Loc: integer);
-procedure CityOptimizer_ReleaseCityTiles(cix, ReleasedTiles: integer);
-procedure CityOptimizer_BeforeRemoveUnit(uix: integer);
+procedure CityOptimizer_CityChange(cix: Integer);
+procedure CityOptimizer_TileBecomesAvailable(Loc: Integer);
+procedure CityOptimizer_ReleaseCityTiles(cix, ReleasedTiles: Integer);
+procedure CityOptimizer_BeforeRemoveUnit(uix: Integer);
 procedure CityOptimizer_AfterRemoveUnit;
 procedure CityOptimizer_EndOfTurn;
 function GetMyCityByLoc(Loc: Integer): PCity;
@@ -83,19 +83,19 @@ function GetEnemyUnitByLoc(Loc: Integer): PUnitInfo;
 implementation
 
 var
-  CityNeedsOptimize: array [0 .. ncmax - 1] of boolean;
+  CityNeedsOptimize: array [0 .. ncmax - 1] of Boolean;
 
-function dLoc(Loc, dx, dy: integer): integer;
+function dLoc(Loc, dx, dy: Integer): Integer;
 var
-  y0: integer;
+  y0: Integer;
 begin
   y0 := (Loc + G.lx * 1024) div G.lx - 1024;
   Result := (Loc + (dx + y0 and 1 + G.lx * 1024) shr 1) mod G.lx + G.lx * (y0 + dy);
 end;
 
-function Distance(Loc0, Loc1: integer): integer;
+function Distance(Loc0, Loc1: Integer): Integer;
 var
-  dx, dy: integer;
+  dx, dy: Integer;
 begin
   Inc(Loc0, G.lx * 1024);
   Inc(Loc1, G.lx * 1024);
@@ -105,18 +105,18 @@ begin
   Result := dx + dy + abs(dx - dy) shr 1;
 end;
 
-function UnrestAtLoc(uix, Loc: integer): boolean;
+function UnrestAtLoc(uix, Loc: Integer): Boolean;
 var
-  uix1: integer;
+  uix1: Integer;
 begin
   Result := False;
   if MyModel[MyUn[uix].mix].Flags and mdCivil = 0 then
     case MyRO.Government of
       gRepublic, gFuture:
-        Result := (MyRO.Territory[Loc] >= 0) and (MyRO.Territory[Loc] <> me) and
+        Result := (MyRO.Territory[Loc] >= 0) and (MyRO.Territory[Loc] <> Me) and
           (MyRO.Treaty[MyRO.Territory[Loc]] < trAlliance);
       gDemocracy:
-        Result := (MyRO.Territory[Loc] < 0) or (MyRO.Territory[Loc] <> me) and
+        Result := (MyRO.Territory[Loc] < 0) or (MyRO.Territory[Loc] <> Me) and
           (MyRO.Treaty[MyRO.Territory[Loc]] < trAlliance);
     end;
   with MyModel[MyUn[uix].mix] do
@@ -126,10 +126,10 @@ begin
           Result := Result or UnrestAtLoc(uix1, Loc);
 end;
 
-function GetMoveAdvice(uix, ToLoc: integer;
-  var MoveAdviceData: TMoveAdviceData): integer;
+function GetMoveAdvice(uix, ToLoc: Integer;
+  var MoveAdviceData: TMoveAdviceData): Integer;
 var
-  MinEndHealth: integer;
+  MinEndHealth: Integer;
 begin
   if MyModel[MyUn[uix].mix].Domain = dGround then
     MinEndHealth := 100
@@ -141,9 +141,9 @@ begin
       MoveAdviceData.ToLoc := ToLoc;
       MoveAdviceData.MoreTurns := 999;
       MoveAdviceData.MaxHostile_MovementLeft := MyUn[uix].Health - MinEndHealth;
-      Result := Server(sGetMoveAdvice, me, uix, MoveAdviceData);
+      Result := Server(sGetMoveAdvice, Me, uix, MoveAdviceData);
       if (MinEndHealth <= 1) or (Result <> eNoWay) then
-        exit;
+        Exit;
     end;
     case MinEndHealth of
       100:
@@ -158,22 +158,22 @@ begin
   until False;
 end;
 
-function ColorOfHealth(Health: integer): integer;
+function ColorOfHealth(Health: Integer): Integer;
 var
-  red, green: integer;
+  Red, Green: Integer;
 begin
-  green := 400 * Health div 100;
-  if green > 200 then
-    green := 200;
-  red := 510 * (100 - Health) div 100;
-  if red > 255 then
-    red := 255;
-  Result := green shl 8 + red;
+  Green := 400 * Health div 100;
+  if Green > 200 then
+    Green := 200;
+  Red := 510 * (100 - Health) div 100;
+  if Red > 255 then
+    Red := 255;
+  Result := Green shl 8 + Red;
 end;
 
-function IsMultiPlayerGame: boolean;
+function IsMultiPlayerGame: Boolean;
 var
-  p1: integer;
+  p1: Integer;
 begin
   Result := False;
   for p1 := 1 to nPl - 1 do
@@ -181,58 +181,58 @@ begin
       Result := True;
 end;
 
-procedure ItsMeAgain(p: integer);
+procedure ItsMeAgain(P: Integer);
 begin
-  if G.RO[p] <> nil then
-    MyRO := pointer(G.RO[p])
-  else if G.SuperVisorRO[p] <> nil then
-    MyRO := pointer(G.SuperVisorRO[p])
+  if G.RO[P] <> nil then
+    MyRO := Pointer(G.RO[P])
+  else if G.SuperVisorRO[P] <> nil then
+    MyRO := Pointer(G.SuperVisorRO[P])
   else
-    exit;
-  me := p;
-  MyMap := pointer(MyRO.Map);
-  MyUn := pointer(MyRO.Un);
-  MyCity := pointer(MyRO.City);
-  MyModel := pointer(MyRO.Model);
+    Exit;
+  Me := P;
+  MyMap := Pointer(MyRO.Map);
+  MyUn := Pointer(MyRO.Un);
+  MyCity := Pointer(MyRO.City);
+  MyModel := Pointer(MyRO.Model);
 end;
 
-function GetAge(p: integer): integer;
+function GetAge(P: Integer): Integer;
 var
-  i: integer;
+  I: Integer;
 begin
-  if p = me then begin
+  if P = Me then begin
     Result := 0;
-    for i := 1 to 3 do
-      if MyRO.Tech[AgePreq[i]] >= tsApplicable then
-        Result := i;
+    for I := 1 to 3 do
+      if MyRO.Tech[AgePreq[I]] >= tsApplicable then
+        Result := I;
   end else begin
     Result := 0;
-    for i := 1 to 3 do
-      if MyRO.EnemyReport[p].Tech[AgePreq[i]] >= tsApplicable then
-        Result := i;
+    for I := 1 to 3 do
+      if MyRO.EnemyReport[P].Tech[AgePreq[I]] >= tsApplicable then
+        Result := I;
   end;
 end;
 
-function IsCivilReportNew(Enemy: integer): boolean;
+function IsCivilReportNew(Enemy: Integer): Boolean;
 var
-  i: integer;
+  I: Integer;
 begin
-  assert(Enemy <> me);
-  i := MyRO.EnemyReport[Enemy].TurnOfCivilReport;
-  Result := (i = MyRO.Turn) or (i = MyRO.Turn - 1) and (Enemy > me);
+  Assert(Enemy <> Me);
+  I := MyRO.EnemyReport[Enemy].TurnOfCivilReport;
+  Result := (I = MyRO.Turn) or (I = MyRO.Turn - 1) and (Enemy > Me);
 end;
 
-function IsMilReportNew(Enemy: integer): boolean;
+function IsMilReportNew(Enemy: Integer): Boolean;
 var
-  i: integer;
+  I: Integer;
 begin
-  assert(Enemy <> me);
-  i := MyRO.EnemyReport[Enemy].TurnOfMilReport;
-  Result := (i = MyRO.Turn) or (i = MyRO.Turn - 1) and (Enemy > me);
+  Assert(Enemy <> Me);
+  I := MyRO.EnemyReport[Enemy].TurnOfMilReport;
+  Result := (I = MyRO.Turn) or (I = MyRO.Turn - 1) and (Enemy > Me);
 end;
 
-function CutCityFoodSurplus(FoodSurplus: integer; IsCityAlive: boolean;
-  gov, size: integer): integer;
+function CutCityFoodSurplus(FoodSurplus: Integer; IsCityAlive: Boolean;
+  gov, size: Integer): Integer;
 begin
   Result := FoodSurplus;
   if not IsCityAlive or (Result > 0) and ((gov = gFuture) or
@@ -240,9 +240,9 @@ begin
     Result := 0; { no growth }
 end;
 
-function CityTaxBalance(cix: integer; const CityReport: TCityReportNew): integer;
+function CityTaxBalance(cix: Integer; const CityReport: TCityReportNew): Integer;
 var
-  i: integer;
+  I: Integer;
 begin
   Result := 0;
   if (CityReport.HappinessBalance >= 0) { no disorder } and
@@ -257,27 +257,27 @@ begin
       (CityReport.FoodSurplus > 0) then
       Inc(Result, CityReport.FoodSurplus);
   end;
-  for i := nWonder to nImp - 1 do
-    if MyCity[cix].Built[i] > 0 then
-      Dec(Result, Imp[i].Maint);
+  for I := nWonder to nImp - 1 do
+    if MyCity[cix].Built[I] > 0 then
+      Dec(Result, Imp[I].Maint);
 end;
 
-procedure SumCities(var TaxSum, ScienceSum: integer);
+procedure SumCities(var TaxSum, ScienceSum: Integer);
 var
-  cix: integer;
+  cix: Integer;
   CityReport: TCityReportNew;
 begin
   TaxSum := MyRO.OracleIncome;
   ScienceSum := 0;
   if MyRO.Government = gAnarchy then
-    exit;
+    Exit;
   for cix := 0 to MyRO.nCity - 1 do
     if MyCity[cix].Loc >= 0 then
     begin
       CityReport.HypoTiles := -1;
       CityReport.HypoTaxRate := -1;
       CityReport.HypoLuxuryRate := -1;
-      Server(sGetCityReportNew, me, cix, CityReport);
+      Server(sGetCityReportNew, Me, cix, CityReport);
       if (CityReport.HappinessBalance >= 0) { no disorder } and
         (MyCity[cix].Flags and chCaptured = 0) then // not captured
         ScienceSum := ScienceSum + CityReport.Science;
@@ -285,26 +285,26 @@ begin
     end;
 end;
 
-function JobTest(uix, Job: integer; IgnoreResults: JobResultSet): boolean;
+function JobTest(uix, Job: Integer; IgnoreResults: JobResultSet): Boolean;
 var
-  Test: integer;
+  Test: Integer;
 begin
-  Test := Server(sStartJob + Job shl 4 - sExecute, me, uix, nil^);
+  Test := Server(sStartJob + Job shl 4 - sExecute, Me, uix, nil^);
   Result := (Test >= rExecuted) or (Test in IgnoreResults);
 end;
 
-procedure GetUnitInfo(Loc: integer; var uix: integer; var UnitInfo: TUnitInfo);
+procedure GetUnitInfo(Loc: Integer; var uix: Integer; var UnitInfo: TUnitInfo);
 var
-  i, Cnt: integer;
+  I, Cnt: Integer;
 begin
   if MyMap[Loc] and fOwned <> 0 then
   begin
-    Server(sGetDefender, me, Loc, uix);
+    Server(sGetDefender, Me, Loc, uix);
     Cnt := 0;
-    for i := 0 to MyRO.nUn - 1 do
-      if MyUn[i].Loc = Loc then
+    for I := 0 to MyRO.nUn - 1 do
+      if MyUn[I].Loc = Loc then
         Inc(Cnt);
-    MakeUnitInfo(me, MyUn[uix], UnitInfo);
+    MakeUnitInfo(Me, MyUn[uix], UnitInfo);
     if Cnt > 1 then
       UnitInfo.Flags := UnitInfo.Flags or unMulti;
   end
@@ -317,7 +317,7 @@ begin
   end;
 end;
 
-procedure GetCityInfo(Loc: integer; var cix: integer; var CityInfo: TCityInfo);
+procedure GetCityInfo(Loc: Integer; var cix: Integer; var CityInfo: TCityInfo);
 begin
   if MyMap[Loc] and fOwned <> 0 then
   begin
@@ -327,7 +327,7 @@ begin
       Dec(cix);
     with CityInfo do
     begin
-      Owner := me;
+      Owner := Me;
       ID := MyCity[cix].ID;
       size := MyCity[cix].size;
       Flags := 0;
@@ -355,14 +355,14 @@ begin
   end;
 end;
 
-function UnitExhausted(uix: integer): boolean;
+function UnitExhausted(uix: Integer): Boolean;
   // check if another move of this unit is still possible
 var
-  dx, dy: integer;
+  dx, dy: Integer;
 begin
   Result := True;
   if (MyUn[uix].Movement > 0) or
-    (MyRO.Wonder[woShinkansen].EffectiveOwner = me) then
+    (MyRO.Wonder[woShinkansen].EffectiveOwner = Me) then
     if (MyUn[uix].Movement >= 100) or
       ((MyModel[MyUn[uix].mix].Kind = mkCaravan) and
       (MyMap[MyUn[uix].Loc] and fCity <> 0)) then
@@ -372,43 +372,43 @@ begin
         for dy := -2 to 2 do
           if abs(dx) + abs(dy) = 2 then
             if Server(sMoveUnit - sExecute + dx and 7 shl 4 + dy and
-              7 shl 7, me, uix, nil^) >= rExecuted then
+              7 shl 7, Me, uix, nil^) >= rExecuted then
               Result := False;
 end;
 
-function ModelHash(const ModelInfo: TModelInfo): integer;
+function ModelHash(const ModelInfo: TModelInfo): Integer;
 var
-  i, FeatureCode, Hash1, Hash2, Hash2r, d: cardinal;
+  I, FeatureCode, Hash1, Hash2, Hash2r, D: Cardinal;
 begin
   with ModelInfo do
     if Kind > mkEnemyDeveloped then
-      Result := integer($C0000000 + Speed div 50 + Kind shl 8)
+      Result := Integer($C0000000 + Speed div 50 + Kind shl 8)
     else
     begin
       FeatureCode := 0;
-      for i := mcFirstNonCap to nFeature - 1 do
-        if 1 shl Domain and Feature[i].Domains <> 0 then
+      for I := mcFirstNonCap to nFeature - 1 do
+        if 1 shl Domain and Feature[I].Domains <> 0 then
         begin
           FeatureCode := FeatureCode * 2;
-          if 1 shl (i - mcFirstNonCap) <> 0 then
+          if 1 shl (I - mcFirstNonCap) <> 0 then
             Inc(FeatureCode);
         end;
       case Domain of
         dGround:
         begin
-          assert(FeatureCode < 1 shl 8);
-          assert(Attack < 5113);
-          assert(Defense < 2273);
-          assert(Cost < 1611);
+          Assert(FeatureCode < 1 shl 8);
+          Assert(Attack < 5113);
+          Assert(Defense < 2273);
+          Assert(Cost < 1611);
           Hash1 := (Attack * 2273 + Defense) * 9 + (Speed - 150) div 50;
           Hash2 := FeatureCode * 1611 + Cost;
         end;
         dSea:
         begin
-          assert(FeatureCode < 1 shl 9);
-          assert(Attack < 12193);
-          assert(Defense < 6097);
-          assert(Cost < 4381);
+          Assert(FeatureCode < 1 shl 9);
+          Assert(Attack < 12193);
+          Assert(Defense < 6097);
+          Assert(Cost < 4381);
           Hash1 := ((Attack * 6097 + Defense) * 5 +
             (Speed - 350) div 100) * 2;
           if Weight >= 6 then
@@ -418,50 +418,50 @@ begin
         end;
         dAir:
         begin
-          assert(FeatureCode < 1 shl 5);
-          assert(Attack < 2407);
-          assert(Defense < 1605);
-          assert(Bombs < 4813);
-          assert(Cost < 2089);
+          Assert(FeatureCode < 1 shl 5);
+          Assert(Attack < 2407);
+          Assert(Defense < 1605);
+          Assert(Bombs < 4813);
+          Assert(Cost < 2089);
           Hash1 := (Attack * 1605 + Defense) shl 5 + FeatureCode;
           Hash2 := ((Bombs * 7 + ATrans_Fuel) * 4 + TTrans) * 2089 + Cost;
         end;
       end;
       Hash2r := 0;
-      for i := 0 to 7 do
+      for I := 0 to 7 do
       begin
         Hash2r := Hash2r * 13;
-        d := Hash2 div 13;
-        Inc(Hash2r, Hash2 - d * 13);
-        Hash2 := d;
+        D := Hash2 div 13;
+        Inc(Hash2r, Hash2 - D * 13);
+        Hash2 := D;
       end;
-      Result := integer(Domain shl 30 + Hash1 xor Hash2r);
+      Result := Integer(Domain shl 30 + Hash1 xor Hash2r);
     end;
 end;
 
-function ProcessEnhancement(uix: integer; const Jobs: TEnhancementJobs): integer;
+function ProcessEnhancement(uix: Integer; const Jobs: TEnhancementJobs): Integer;
   { return values:
     eJobDone - all applicable jobs done
     eOK - enhancement not complete
     eDied - job done and died (thurst) }
 var
-  stage, NextJob, Tile: integer;
+  stage, NextJob, Tile: Integer;
   Done: set of jNone .. jPoll;
 begin
   Done := [];
   Tile := MyMap[MyUn[uix].Loc];
   if Tile and fRoad <> 0 then
-    include(Done, jRoad);
+    Include(Done, jRoad);
   if Tile and fRR <> 0 then
-    include(Done, jRR);
+    Include(Done, jRR);
   if (Tile and fTerImp = tiIrrigation) or (Tile and fTerImp = tiFarm) then
-    include(Done, jIrr);
+    Include(Done, jIrr);
   if Tile and fTerImp = tiFarm then
-    include(Done, jFarm);
+    Include(Done, jFarm);
   if Tile and fTerImp = tiMine then
-    include(Done, jMine);
+    Include(Done, jMine);
   if Tile and fPoll = 0 then
-    include(Done, jPoll);
+    Include(Done, jPoll);
 
   if MyUn[uix].Job = jNone then
     Result := eJobDone
@@ -484,85 +484,85 @@ begin
       Result := eJobDone;
       Break;
     end; // tile enhancement complete
-    Result := Server(sStartJob + NextJob shl 4, me, uix, nil^);
-    include(Done, NextJob);
+    Result := Server(sStartJob + NextJob shl 4, Me, uix, nil^);
+    Include(Done, NextJob);
   end;
 end;
 
-function AutoBuild(cix: integer; const ImpOrder: TImpOrder): boolean;
+function AutoBuild(cix: Integer; const ImpOrder: TImpOrder): Boolean;
 var
-  i, NewProject: integer;
+  I, NewProject: Integer;
 begin
   Result := False;
   if (MyCity[cix].Project and (cpImp + cpIndex) = cpImp + imTrGoods) or
     (MyCity[cix].Flags and chProduction <> 0) then
   begin
-    i := 0;
+    I := 0;
     repeat
-      while (ImpOrder[i] >= 0) and (MyCity[cix].Built[ImpOrder[i]] > 0) do
-        Inc(i);
-      if ImpOrder[i] < 0 then
+      while (ImpOrder[I] >= 0) and (MyCity[cix].Built[ImpOrder[I]] > 0) do
+        Inc(I);
+      if ImpOrder[I] < 0 then
         Break;
-      assert(i < nImp);
-      NewProject := cpImp + ImpOrder[i];
-      if Server(sSetCityProject, me, cix, NewProject) >= rExecuted then
+      Assert(I < nImp);
+      NewProject := cpImp + ImpOrder[I];
+      if Server(sSetCityProject, Me, cix, NewProject) >= rExecuted then
       begin
         Result := True;
         CityOptimizer_CityChange(cix);
         Break;
       end;
-      Inc(i);
+      Inc(I);
     until False;
   end;
 end;
 
 procedure CalculateAdvValues;
 var
-  i, j: integer;
-  known: array [0 .. nAdv - 1] of integer;
+  I, J: Integer;
+  known: array [0 .. nAdv - 1] of Integer;
 
-  procedure MarkPreqs(i: integer);
+  procedure MarkPreqs(I: Integer);
   begin
-    if known[i] = 0 then
+    if known[I] = 0 then
     begin
-      known[i] := 1;
-      if (i <> adScience) and (i <> adMassProduction) then
+      known[I] := 1;
+      if (I <> adScience) and (I <> adMassProduction) then
       begin
-        if (AdvPreq[i, 0] >= 0) then
-          MarkPreqs(AdvPreq[i, 0]);
-        if (AdvPreq[i, 1] >= 0) then
-          MarkPreqs(AdvPreq[i, 1]);
+        if (AdvPreq[I, 0] >= 0) then
+          MarkPreqs(AdvPreq[I, 0]);
+        if (AdvPreq[I, 1] >= 0) then
+          MarkPreqs(AdvPreq[I, 1]);
       end;
     end;
   end;
 
 begin
   FillChar(AdvValue, SizeOf(AdvValue), 0);
-  for i := 0 to nAdv - 1 do
+  for I := 0 to nAdv - 1 do
   begin
     FillChar(known, SizeOf(known), 0);
-    MarkPreqs(i);
-    for j := 0 to nAdv - 1 do
-      if known[j] > 0 then
-        Inc(AdvValue[i]);
-    if i in FutureTech then
-      Inc(AdvValue[i], 3000)
+    MarkPreqs(I);
+    for J := 0 to nAdv - 1 do
+      if known[J] > 0 then
+        Inc(AdvValue[I]);
+    if I in FutureTech then
+      Inc(AdvValue[I], 3000)
     else if known[adMassProduction] > 0 then
-      Inc(AdvValue[i], 2000)
+      Inc(AdvValue[I], 2000)
     else if known[adScience] > 0 then
-      Inc(AdvValue[i], 1000);
+      Inc(AdvValue[I], 1000);
   end;
 end;
 
-procedure DebugMessage(Level: integer; Text: string);
+procedure DebugMessage(Level: Integer; Text: string);
 begin
-  Server(sMessage, me, Level, PChar(Text)^);
+  Server(sMessage, Me, Level, PChar(Text)^);
 end;
 
-function MarkCitiesAround(Loc, cixExcept: integer): boolean;
+function MarkCitiesAround(Loc, cixExcept: Integer): Boolean;
   // return whether a city was marked
 var
-  cix: integer;
+  cix: Integer;
 begin
   Result := False;
   for cix := 0 to MyRO.nCity - 1 do
@@ -575,10 +575,10 @@ begin
     end;
 end;
 
-procedure OptimizeCities(CheckOnly: boolean);
+procedure OptimizeCities(CheckOnly: Boolean);
 var
-  cix, fix, dx, dy, Loc1, OptiType: integer;
-  Done: boolean;
+  cix, fix, dx, dy, Loc1, OptiType: Integer;
+  Done: Boolean;
   Advice: TCityTileAdviceData;
 begin
   repeat
@@ -590,7 +590,7 @@ begin
         if OptiType <> 0 then
         begin
           Advice.ResourceWeights := OfferedResourceWeights[OptiType];
-          Server(sGetCityTileAdvice, me, cix, Advice);
+          Server(sGetCityTileAdvice, Me, cix, Advice);
           if Advice.Tiles <> MyCity[cix].Tiles then
             if CheckOnly then
             begin
@@ -610,7 +610,7 @@ begin
                   if MarkCitiesAround(Loc1, cix) then
                     Done := False;
                 end;
-              Server(sSetCityTiles, me, cix, Advice.Tiles);
+              Server(sSetCityTiles, Me, cix, Advice.Tiles);
             end;
         end;
         CityNeedsOptimize[cix] := False;
@@ -620,7 +620,7 @@ end;
 
 procedure CityOptimizer_BeginOfTurn;
 var
-  cix: integer;
+  cix: Integer;
 begin
   FillChar(CityNeedsOptimize, MyRO.nCity - 1, 0); // false
   if MyRO.Government <> gAnarchy then
@@ -633,7 +633,7 @@ begin
   end;
 end;
 
-procedure CityOptimizer_CityChange(cix: integer);
+procedure CityOptimizer_CityChange(cix: Integer);
 begin
   if (MyRO.Government <> gAnarchy) and (cix <> -1) and (MyCity[cix].Flags and
     chCaptured = 0) then
@@ -643,16 +643,16 @@ begin
   end;
 end;
 
-procedure CityOptimizer_TileBecomesAvailable(Loc: integer);
+procedure CityOptimizer_TileBecomesAvailable(Loc: Integer);
 begin
   if (MyRO.Government <> gAnarchy) and MarkCitiesAround(Loc, -1) then
     OptimizeCities(False);
 end;
 
-procedure CityOptimizer_ReleaseCityTiles(cix, ReleasedTiles: integer);
+procedure CityOptimizer_ReleaseCityTiles(cix, ReleasedTiles: Integer);
 var
-  fix, dx, dy, Loc1: integer;
-  Done: boolean;
+  fix, dx, dy, Loc1: Integer;
+  Done: Boolean;
 begin
   if (MyRO.Government <> gAnarchy) and (ReleasedTiles <> 0) then
   begin
@@ -671,9 +671,9 @@ begin
   end;
 end;
 
-procedure CityOptimizer_BeforeRemoveUnit(uix: integer);
+procedure CityOptimizer_BeforeRemoveUnit(uix: Integer);
 var
-  uix1: integer;
+  uix1: Integer;
 begin
   if MyRO.Government <> gAnarchy then
   begin
@@ -697,7 +697,7 @@ end;
 procedure CityOptimizer_EndOfTurn;
 // all cities should already be optimized here -- only check this
 var
-  cix: integer;
+  cix: Integer;
 begin
 {$IFOPT O-}
   if MyRO.Government <> gAnarchy then

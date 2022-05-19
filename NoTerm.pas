@@ -17,9 +17,9 @@ type
     procedure QuitBtnClick(Sender: TObject);
     procedure FormPaint(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure FormKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
   public
-    procedure Client(Command, Player: integer; var Data);
+    procedure Client(Command, Player: Integer; var Data);
   private
     Me: Integer;
     Active: Integer;
@@ -42,14 +42,14 @@ type
     Mode: TRunMode;
     procedure NewStat;
     procedure EndPlaying;
-    procedure ShowActive(p: integer; Active: boolean);
+    procedure ShowActive(P: Integer; Active: Boolean);
     procedure ShowYear;
   end;
 
 var
   NoTermDlg: TNoTermDlg;
 
-procedure Client(Command, Player: integer; var Data); stdcall;
+procedure Client(Command, Player: Integer; var Data); stdcall;
 
 
 implementation
@@ -68,19 +68,19 @@ const
   y0Brain = 124 + 48 + 7 + 16;
   dxBrain = 128;
   dyBrain = 128;
-  xBrain: array [0 .. nPlOffered - 1] of integer = (x0Brain, x0Brain,
+  xBrain: array [0 .. nPlOffered - 1] of Integer = (x0Brain, x0Brain,
     x0Brain + dxBrain, x0Brain + dxBrain, x0Brain + dxBrain, x0Brain,
     x0Brain - dxBrain, x0Brain - dxBrain, x0Brain - dxBrain);
-  yBrain: array [0 .. nPlOffered - 1] of integer = (y0Brain, y0Brain - dyBrain,
+  yBrain: array [0 .. nPlOffered - 1] of Integer = (y0Brain, y0Brain - dyBrain,
     y0Brain - dyBrain, y0Brain, y0Brain + dyBrain, y0Brain + dyBrain,
     y0Brain + dyBrain, y0Brain, y0Brain - dyBrain);
-  xActive: array [0 .. nPlOffered - 1] of integer = (0, 0, 36, 51, 36, 0,
+  xActive: array [0 .. nPlOffered - 1] of Integer = (0, 0, 36, 51, 36, 0,
     -36, -51, -36);
-  yActive: array [0 .. nPlOffered - 1] of integer = (0, -51, -36, 0, 36, 51,
+  yActive: array [0 .. nPlOffered - 1] of Integer = (0, -51, -36, 0, 36, 51,
     36, 0, -36);
 
 var
-  FormsCreated: boolean;
+  FormsCreated: Boolean;
 
 procedure TNoTermDlg.FormCreate(Sender: TObject);
 begin
@@ -107,10 +107,10 @@ end;
 
 procedure TNoTermDlg.EndPlaying;
 var
-  EndCommand: integer;
+  EndCommand: Integer;
 begin
   NewStat;
-  if G.RO[me].Turn > 0 then
+  if G.RO[Me].Turn > 0 then
     with MessgDlg do
     begin
       MessgText := Phrases.Lookup('ENDTOUR');
@@ -126,32 +126,32 @@ begin
   Server(EndCommand, Me, 0, nil^);
 end;
 
-procedure TNoTermDlg.ShowActive(p: integer; Active: boolean);
+procedure TNoTermDlg.ShowActive(P: Integer; Active: Boolean);
 begin
-  if p < nPlOffered then
-    Sprite(Canvas, HGrSystem, x0Brain + 28 + xActive[p],
-      y0Brain + 28 + yActive[p], 8, 8, 81 + 9 * Byte(Active), 16);
+  if P < nPlOffered then
+    Sprite(Canvas, HGrSystem, x0Brain + 28 + xActive[P],
+      y0Brain + 28 + yActive[P], 8, 8, 81 + 9 * Byte(Active), 16);
 end;
 
 procedure TNoTermDlg.ShowYear;
 begin
   Fill(State.Canvas, 0, 0, 192, 20, 64, 287 + 138);
   RisedTextOut(State.Canvas, 0, 0, Format(Phrases.Lookup('AIT_ROUND'), [Round])
-    + ' ' + TurnToString(G.RO[me].Turn));
+    + ' ' + TurnToString(G.RO[Me].Turn));
   BitBltCanvas(Canvas, 64, 287 + 138, 192, 20, State.Canvas, 0, 0);
 end;
 
-procedure TNoTermDlg.Client(Command, Player: integer; var Data);
+procedure TNoTermDlg.Client(Command, Player: Integer; var Data);
 var
-  i, x, y, p: integer;
-  ActiveDuration: extended;
-  ShipComplete: boolean;
-  r: TRect;
+  I, X, Y, P: Integer;
+  ActiveDuration: Extended;
+  ShipComplete: Boolean;
+  R: TRect;
   nowt: TDateTime;
 begin
   case Command of
     cDebugMessage:
-      LogDlg.Add(Player, G.RO[0].Turn, pchar(@Data));
+      LogDlg.Add(Player, G.RO[0].Turn, PChar(@Data));
 
     cInitModule:
       begin
@@ -159,12 +159,12 @@ begin
         TInitModuleData(Data).Flags := aiThreaded;
         Shade := TBitmap.Create;
         Shade.SetSize(64, 64);
-        for x := 0 to 63 do
-          for y := 0 to 63 do
-            if Odd(x + y) then
-              Shade.Canvas.Pixels[x, y] := $FFFFFF
+        for X := 0 to 63 do
+          for Y := 0 to 63 do
+            if Odd(X + Y) then
+              Shade.Canvas.Pixels[X, Y] := $FFFFFF
             else
-              Shade.Canvas.Pixels[x, y] := $000000;
+              Shade.Canvas.Pixels[X, Y] := $000000;
         State := TBitmap.Create;
         State.SetSize(192, 20);
         State.Canvas.Brush.Style := bsClear;
@@ -180,7 +180,7 @@ begin
 
     cNewGame, cLoadGame:
       begin
-        inc(Round);
+        Inc(Round);
         if Mode = rmRunning then
         begin
           Invalidate;
@@ -189,9 +189,9 @@ begin
         else
           Show;
         G := TNewGameData(Data);
-        LogDlg.mSlot.Visible := false;
+        LogDlg.mSlot.Visible := False;
         LogDlg.Host := nil;
-        ToldAlive := G.RO[me].Alive;
+        ToldAlive := G.RO[Me].Alive;
         Active := -1;
         FillChar(DisallowShowActive, SizeOf(DisallowShowActive), 0); // false
         LastShowTurnChange := 0;
@@ -212,10 +212,10 @@ begin
 
     cTurn, cResume, cContinue:
       begin
-        me := Player;
+        Me := Player;
         if Active >= 0 then
         begin
-          ShowActive(Active, false);
+          ShowActive(Active, False);
           Active := -1;
         end; // should not happen
 
@@ -227,42 +227,42 @@ begin
         end;
         TurnTime := SecondOf(nowt - LastNewTurn);
         LastNewTurn := nowt;
-        if (G.RO[me].Alive <> ToldAlive) then
+        if (G.RO[Me].Alive <> ToldAlive) then
         begin
-          for p := 1 to nPlOffered - 1 do
-            if 1 shl p and (G.RO[me].Alive xor ToldAlive) <> 0 then
+          for P := 1 to nPlOffered - 1 do
+            if 1 shl P and (G.RO[Me].Alive xor ToldAlive) <> 0 then
             begin
-              r := Rect(xBrain[p], yBrain[p] - 16, xBrain[p] + 64,
-                yBrain[p] - 16 + 64);
-              InvalidateRect(Handle, @r, false);
+              R := Rect(xBrain[P], yBrain[P] - 16, xBrain[P] + 64,
+                yBrain[P] - 16 + 64);
+              InvalidateRect(Handle, @R, False);
             end;
-          ToldAlive := G.RO[me].Alive;
+          ToldAlive := G.RO[Me].Alive;
         end;
         Application.ProcessMessages;
         if Mode = rmQuit then
           EndPlaying
-        else if G.RO[me].Happened and phGameEnd <> 0 then
+        else if G.RO[Me].Happened and phGameEnd <> 0 then
         begin // game ended, update statistics
-          for p := 1 to nPlOffered - 1 do
-            if Assigned(PlayersBrain[p]) then
-              if 1 shl p and G.RO[me].Alive = 0 then
-                inc(ExtStat[p]) // extinct
-              else if G.RO[me].Alive = 1 shl p then
-                inc(AloneStat[p]) // only player alive
+          for P := 1 to nPlOffered - 1 do
+            if Assigned(PlayersBrain[P]) then
+              if 1 shl P and G.RO[Me].Alive = 0 then
+                Inc(ExtStat[P]) // extinct
+              else if G.RO[Me].Alive = 1 shl P then
+                Inc(AloneStat[P]) // only player alive
               else
               begin // alive but not alone -- check colony ship
-                ShipComplete := true;
-                for i := 0 to nShipPart - 1 do
-                  if G.RO[me].Ship[p].Parts[i] < ShipNeed[i] then
-                    ShipComplete := false;
+                ShipComplete := True;
+                for I := 0 to nShipPart - 1 do
+                  if G.RO[Me].Ship[P].Parts[I] < ShipNeed[I] then
+                    ShipComplete := False;
                 if ShipComplete then
-                  inc(WinStat[p]);
+                  Inc(WinStat[P]);
               end;
           if Mode = rmRunning then
-            Server(sNextRound, me, 0, nil^);
+            Server(sNextRound, Me, 0, nil^);
         end
         else if Mode = rmRunning then
-          Server(sTurn, me, 0, nil^);
+          Server(sTurn, Me, 0, nil^);
         if Mode = rmStop then
         begin
           GoBtn.ButtonIndex := 22;
@@ -279,15 +279,15 @@ begin
           TimeStat[Active] := TimeStat[Active] + ActiveDuration;
           TotalStatTime := TotalStatTime + ActiveDuration;
           if not DisallowShowActive[Active] then
-            ShowActive(Active, false);
+            ShowActive(Active, False);
           DisallowShowActive[Active] := (ActiveDuration < TurnTime * 0.25) and
             (ActiveDuration < ShowActiveThreshold);
         end;
         LastShowTurnChange := nowt;
 
-        Active := integer(Data);
+        Active := Integer(Data);
         if (Active >= 0) and not DisallowShowActive[Active] then
-          ShowActive(Active, true);
+          ShowActive(Active, True);
       end;
   end;
 end;
@@ -301,7 +301,7 @@ begin
     Mode := rmRunning;
     GoBtn.ButtonIndex := 23;
     GoBtn.Update;
-    Server(sTurn, me, 0, nil^);
+    Server(sTurn, Me, 0, nil^);
   end;
 end;
 
@@ -313,7 +313,7 @@ end;
 
 procedure TNoTermDlg.FormPaint(Sender: TObject);
 var
-  i, TimeShare: integer;
+  I, TimeShare: Integer;
 begin
   Fill(Canvas, 3, 3, ClientWidth - 6, ClientHeight - 6, 0, 0);
   Frame(Canvas, 0, 0, ClientWidth - 1, ClientHeight - 1, $000000, $000000);
@@ -329,38 +329,38 @@ begin
   RisedTextOut(Canvas, (ClientWidth - BiColorTextWidth(Canvas, Caption)) div 2,
     7, Caption);
   Canvas.Font.Assign(UniFont[ftSmall]);
-  for i := 1 to nPlOffered - 1 do
-    if Assigned(PlayersBrain[i]) then
+  for I := 1 to nPlOffered - 1 do
+    if Assigned(PlayersBrain[I]) then
     begin
-      Frame(Canvas, xBrain[i] - 24, yBrain[i] - 8 - 16, xBrain[i] - 24 + 111,
-        yBrain[i] - 8 - 16 + 111, MainTexture.ColorBevelShade,
+      Frame(Canvas, xBrain[I] - 24, yBrain[I] - 8 - 16, xBrain[I] - 24 + 111,
+        yBrain[I] - 8 - 16 + 111, MainTexture.ColorBevelShade,
         MainTexture.ColorBevelShade);
-      FrameImage(Canvas, PlayersBrain[i].Picture, xBrain[i],
-        yBrain[i] - 16, 64, 64, 0, 0);
-      if 1 shl i and G.RO[me].Alive = 0 then
-        BitBltCanvas(Canvas, xBrain[i], yBrain[i] - 16, 64, 64,
+      FrameImage(Canvas, PlayersBrain[I].Picture, xBrain[I],
+        yBrain[I] - 16, 64, 64, 0, 0);
+      if 1 shl I and G.RO[Me].Alive = 0 then
+        BitBltCanvas(Canvas, xBrain[I], yBrain[I] - 16, 64, 64,
           Shade.Canvas, 0, 0, SRCAND);
-      Sprite(Canvas, HGrSystem, xBrain[i] + 30 - 14, yBrain[i] + 53, 14,
+      Sprite(Canvas, HGrSystem, xBrain[I] + 30 - 14, yBrain[I] + 53, 14,
         14, 1, 316);
-      RisedTextOut(Canvas, xBrain[i] + 30 - 16 - BiColorTextWidth(Canvas,
-        IntToStr(WinStat[i])), yBrain[i] + 51, IntToStr(WinStat[i]));
-      Sprite(Canvas, HGrSystem, xBrain[i] + 34, yBrain[i] + 53, 14, 14,
+      RisedTextOut(Canvas, xBrain[I] + 30 - 16 - BiColorTextWidth(Canvas,
+        IntToStr(WinStat[I])), yBrain[I] + 51, IntToStr(WinStat[I]));
+      Sprite(Canvas, HGrSystem, xBrain[I] + 34, yBrain[I] + 53, 14, 14,
         1 + 15, 316);
-      RisedTextOut(Canvas, xBrain[i] + 34 + 16, yBrain[i] + 51,
-        IntToStr(AloneStat[i]));
-      Sprite(Canvas, HGrSystem, xBrain[i] + 30 - 14, yBrain[i] + 53 + 16, 14,
+      RisedTextOut(Canvas, xBrain[I] + 34 + 16, yBrain[I] + 51,
+        IntToStr(AloneStat[I]));
+      Sprite(Canvas, HGrSystem, xBrain[I] + 30 - 14, yBrain[I] + 53 + 16, 14,
         14, 1 + 30, 316);
-      RisedTextOut(Canvas, xBrain[i] + 30 - 16 - BiColorTextWidth(Canvas,
-        IntToStr(ExtStat[i])), yBrain[i] + 51 + 16, IntToStr(ExtStat[i]));
-      Sprite(Canvas, HGrSystem, xBrain[i] + 34, yBrain[i] + 53 + 16, 14, 14,
+      RisedTextOut(Canvas, xBrain[I] + 30 - 16 - BiColorTextWidth(Canvas,
+        IntToStr(ExtStat[I])), yBrain[I] + 51 + 16, IntToStr(ExtStat[I]));
+      Sprite(Canvas, HGrSystem, xBrain[I] + 34, yBrain[I] + 53 + 16, 14, 14,
         1 + 45, 316);
       if TotalStatTime > 0 then
       begin
-        TimeShare := trunc(TimeStat[i] / TotalStatTime * 100 + 0.5);
-        RisedTextOut(Canvas, xBrain[i] + 34 + 16, yBrain[i] + 51 + 16,
+        TimeShare := trunc(TimeStat[I] / TotalStatTime * 100 + 0.5);
+        RisedTextOut(Canvas, xBrain[I] + 34 + 16, yBrain[I] + 51 + 16,
           IntToStr(TimeShare) + '%');
       end;
-      ShowActive(i, i = Active);
+      ShowActive(I, I = Active);
     end;
   Sprite(Canvas, HGrSystem2, x0Brain + 32 - 20, y0Brain + 32 - 20, 40,
     40, 115, 1);
@@ -380,7 +380,7 @@ begin
   NoTermDlg.Client(Command, Player, Data);
 end;
 
-procedure TNoTermDlg.FormKeyDown(Sender: TObject; var Key: word;
+procedure TNoTermDlg.FormKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
   if (char(Key) = 'M') and (ssCtrl in Shift) then

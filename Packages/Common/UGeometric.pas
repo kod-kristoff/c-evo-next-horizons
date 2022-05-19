@@ -51,7 +51,7 @@ end;
 
 function PointToLineDistance(const P, V, W: TPoint): Integer;
 var
-  l2, t: Double;
+  l2, T: Double;
   tt: TPoint;
 begin
   // Return minimum distance between line segment vw and point p
@@ -163,4 +163,5 @@ end;
 
 
 end.
+
 

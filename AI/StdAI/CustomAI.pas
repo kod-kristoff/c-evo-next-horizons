@@ -12,109 +12,109 @@ type
 
   TCustomAI = class
   public
-    procedure Process(Command: integer; var Data);
+    procedure Process(Command: Integer; var Data);
 
     // overridables
-    constructor Create(Nation: integer); virtual;
+    constructor Create(Nation: Integer); virtual;
     destructor Destroy; override;
     procedure SetDataDefaults; virtual;
     procedure SetDataRandom; virtual;
     procedure OnBeforeEnemyAttack(UnitInfo: TUnitInfo;
-      ToLoc, EndHealth, EndHealthDef: integer); virtual;
-    procedure OnBeforeEnemyCapture(UnitInfo: TUnitInfo; ToLoc: integer); virtual;
+      ToLoc, EndHealth, EndHealthDef: Integer); virtual;
+    procedure OnBeforeEnemyCapture(UnitInfo: TUnitInfo; ToLoc: Integer); virtual;
     procedure OnAfterEnemyAttack; virtual;
     procedure OnAfterEnemyCapture; virtual;
 
   protected
-    me: integer; // index of the controlled nation
+    Me: Integer; // index of the controlled nation
     RO: ^TPlayerContext;
     Map: ^TTileList;
     MyUnit: ^TUnList;
     MyCity: ^TCityList;
     MyModel: ^TModelList;
 
-    cixStateImp: array[imPalace..imSpacePort] of integer;
+    cixStateImp: array[imPalace..imSpacePort] of Integer;
 
     // negotiation
-    Opponent: integer; // nation i'm in negotiation with, -1 indicates no-negotiation mode
-    MyAction, MyLastAction, OppoAction: integer;
+    Opponent: Integer; // nation i'm in negotiation with, -1 indicates no-negotiation mode
+    MyAction, MyLastAction, OppoAction: Integer;
     MyOffer, MyLastOffer, OppoOffer: TOffer;
 
     // overridables
     procedure DoTurn; virtual;
     procedure DoNegotiation; virtual;
-    function ChooseResearchAdvance: integer; virtual;
-    function ChooseStealAdvance: integer; virtual;
-    function ChooseGovernment: integer; virtual;
-    function WantNegotiation(Nation: integer; NegoTime: TNegoTime): boolean; virtual;
-    function OnNegoRejected_CancelTreaty: boolean; virtual;
+    function ChooseResearchAdvance: Integer; virtual;
+    function ChooseStealAdvance: Integer; virtual;
+    function ChooseGovernment: Integer; virtual;
+    function WantNegotiation(Nation: Integer; NegoTime: TNegoTime): Boolean; virtual;
+    function OnNegoRejected_CancelTreaty: Boolean; virtual;
 
     // general functions
-    function IsResearched(Advance: integer): boolean;
-    function ResearchCost: integer;
-    function ChangeAttitude(Nation, Attitude: integer): integer;
-    function Revolution: integer;
-    function ChangeRates(Tax, Lux: integer): integer;
-    function PrepareNewModel(Domain: integer): integer;
-    function SetNewModelFeature(F, Count: integer): integer;
-    function AdvanceResearchable(Advance: integer): boolean;
-    function AdvanceStealable(Advance: integer): boolean;
-    function GetJobProgress(Loc: integer; var JobProgress: TJobProgressData): boolean;
-    function DebugMessage(Level: integer; Text: string): boolean;
-    function SetDebugMap(var DebugMap): boolean;
+    function IsResearched(Advance: Integer): Boolean;
+    function ResearchCost: Integer;
+    function ChangeAttitude(Nation, Attitude: Integer): Integer;
+    function Revolution: Integer;
+    function ChangeRates(Tax, Lux: Integer): Integer;
+    function PrepareNewModel(Domain: Integer): Integer;
+    function SetNewModelFeature(F, Count: Integer): Integer;
+    function AdvanceResearchable(Advance: Integer): Boolean;
+    function AdvanceStealable(Advance: Integer): Boolean;
+    function GetJobProgress(Loc: Integer; var JobProgress: TJobProgressData): Boolean;
+    function DebugMessage(Level: Integer; Text: string): Boolean;
+    function SetDebugMap(var DebugMap): Boolean;
 
     // unit functions
-    procedure Unit_FindMyDefender(Loc: integer; var uix: integer);
-    procedure Unit_FindEnemyDefender(Loc: integer; var euix: integer);
-    function Unit_Move(uix, ToLoc: integer): integer;
-    function Unit_Step(uix, ToLoc: integer): integer;
-    function Unit_Attack(uix, ToLoc: integer): integer;
-    function Unit_DoMission(uix, MissionType, ToLoc: integer): integer;
-    function Unit_MoveForecast(uix, ToLoc: integer;
-      var RemainingMovement: integer): boolean;
-    function Unit_AttackForecast(uix, ToLoc, AttackMovement: integer;
-      var RemainingHealth: integer): boolean;
-    function Unit_DefenseForecast(euix, ToLoc: integer;
-      var RemainingHealth: integer): boolean;
-    function Unit_Disband(uix: integer): integer;
-    function Unit_StartJob(uix, NewJob: integer): integer;
-    function Unit_SetHomeHere(uix: integer): integer;
-    function Unit_Load(uix: integer): integer;
-    function Unit_Unload(uix: integer): integer;
-    function Unit_SelectTransport(uix: integer): integer;
-    function Unit_AddToCity(uix: integer): integer;
+    procedure Unit_FindMyDefender(Loc: Integer; var uix: Integer);
+    procedure Unit_FindEnemyDefender(Loc: Integer; var euix: Integer);
+    function Unit_Move(uix, ToLoc: Integer): Integer;
+    function Unit_Step(uix, ToLoc: Integer): Integer;
+    function Unit_Attack(uix, ToLoc: Integer): Integer;
+    function Unit_DoMission(uix, MissionType, ToLoc: Integer): Integer;
+    function Unit_MoveForecast(uix, ToLoc: Integer;
+      var RemainingMovement: Integer): Boolean;
+    function Unit_AttackForecast(uix, ToLoc, AttackMovement: Integer;
+      var RemainingHealth: Integer): Boolean;
+    function Unit_DefenseForecast(euix, ToLoc: Integer;
+      var RemainingHealth: Integer): Boolean;
+    function Unit_Disband(uix: Integer): Integer;
+    function Unit_StartJob(uix, NewJob: Integer): Integer;
+    function Unit_SetHomeHere(uix: Integer): Integer;
+    function Unit_Load(uix: Integer): Integer;
+    function Unit_Unload(uix: Integer): Integer;
+    function Unit_SelectTransport(uix: Integer): Integer;
+    function Unit_AddToCity(uix: Integer): Integer;
 
     // city functions
-    procedure City_FindMyCity(Loc: integer; var cix: integer);
-    procedure City_FindEnemyCity(Loc: integer; var ecix: integer);
-    function City_HasProject(cix: integer): boolean;
-    function City_CurrentImprovementProject(cix: integer): integer;
-    function City_CurrentUnitProject(cix: integer): integer;
-    function City_GetTileInfo(cix, TileLoc: integer; var TileInfo: TTileInfo): integer;
-    function City_GetReport(cix: integer; var Report: TCityReport): integer;
-    function City_GetHypoReport(cix, HypoTiles, HypoTax, HypoLux: integer;
-      var Report: TCityReport): integer;
-    function City_GetReportNew(cix: integer; var Report: TCityReportNew): integer;
-    function City_GetHypoReportNew(cix, HypoTiles, HypoTaxRate, HypoLuxuryRate: integer;
-      var Report: TCityReportNew): integer;
-    function City_GetAreaInfo(cix: integer; var AreaInfo: TCityAreaInfo): integer;
-    function City_StartUnitProduction(cix, mix: integer): integer;
-    function City_StartEmigration(cix, mix: integer;
-      AllowDisbandCity, AsConscripts: boolean): integer;
-    function City_StartImprovement(cix, iix: integer): integer;
-    function City_Improvable(cix, iix: integer): boolean;
-    function City_StopProduction(cix: integer): integer;
-    function City_BuyProject(cix: integer): integer;
-    function City_SellImprovement(cix, iix: integer): integer;
-    function City_RebuildImprovement(cix, iix: integer): integer;
-    function City_SetTiles(cix, NewTiles: integer): integer;
-    procedure City_OptimizeTiles(cix: integer; ResourceWeights: cardinal = rwMaxGrowth);
+    procedure City_FindMyCity(Loc: Integer; var cix: Integer);
+    procedure City_FindEnemyCity(Loc: Integer; var ecix: Integer);
+    function City_HasProject(cix: Integer): Boolean;
+    function City_CurrentImprovementProject(cix: Integer): Integer;
+    function City_CurrentUnitProject(cix: Integer): Integer;
+    function City_GetTileInfo(cix, TileLoc: Integer; var TileInfo: TTileInfo): Integer;
+    function City_GetReport(cix: Integer; var Report: TCityReport): Integer;
+    function City_GetHypoReport(cix, HypoTiles, HypoTax, HypoLux: Integer;
+      var Report: TCityReport): Integer;
+    function City_GetReportNew(cix: Integer; var Report: TCityReportNew): Integer;
+    function City_GetHypoReportNew(cix, HypoTiles, HypoTaxRate, HypoLuxuryRate: Integer;
+      var Report: TCityReportNew): Integer;
+    function City_GetAreaInfo(cix: Integer; var AreaInfo: TCityAreaInfo): Integer;
+    function City_StartUnitProduction(cix, mix: Integer): Integer;
+    function City_StartEmigration(cix, mix: Integer;
+      AllowDisbandCity, AsConscripts: Boolean): Integer;
+    function City_StartImprovement(cix, iix: Integer): Integer;
+    function City_Improvable(cix, iix: Integer): Boolean;
+    function City_StopProduction(cix: Integer): Integer;
+    function City_BuyProject(cix: Integer): Integer;
+    function City_SellImprovement(cix, iix: Integer): Integer;
+    function City_RebuildImprovement(cix, iix: Integer): Integer;
+    function City_SetTiles(cix, NewTiles: Integer): Integer;
+    procedure City_OptimizeTiles(cix: Integer; ResourceWeights: Cardinal = rwMaxGrowth);
 
     // negotiation
-    function Nego_CheckMyAction: integer;
+    function Nego_CheckMyAction: Integer;
 
   private
-    HaveTurned: boolean;
+    HaveTurned: Boolean;
     UnwantedNego: set of 0..nPl - 1;
     Contacted: set of 0..nPl - 1;
     procedure StealAdvance;
@@ -124,9 +124,9 @@ type
 var
   Server: TServerCall;
   G: TNewGameData;
-  RWDataSize, MapSize: integer;
-  decompose24: cardinal;
-  nodata: pointer;
+  RWDataSize, MapSize: Integer;
+  decompose24: Cardinal;
+  nodata: Pointer;
 
 const
   CityOwnTile = 13; // = ab_to_V21(0,0)
@@ -138,53 +138,53 @@ const
 // Unit_Move: move was not interrupted, location not reached yet
 
 type
-  TVicinity8Loc = array[0..7] of integer;
-  TVicinity21Loc = array[0..27] of integer;
+  TVicinity8Loc = array[0..7] of Integer;
+  TVicinity21Loc = array[0..27] of Integer;
 
 
 procedure Init(NewGameData: TNewGameData);
 
-procedure ab_to_Loc(Loc0, a, b: integer; var Loc: integer);
-procedure Loc_to_ab(Loc0, Loc: integer; var a, b: integer);
-procedure ab_to_V8(a, b: integer; var V8: integer);
-procedure V8_to_ab(V8: integer; var a, b: integer);
-procedure ab_to_V21(a, b: integer; var V21: integer);
-procedure V21_to_ab(V21: integer; var a, b: integer);
-procedure V8_to_Loc(Loc0: integer; var VicinityLoc: TVicinity8Loc);
-procedure V21_to_Loc(Loc0: integer; var VicinityLoc: TVicinity21Loc);
-function Distance(Loc0, Loc1: integer): integer;
+procedure ab_to_Loc(Loc0, A, B: Integer; var Loc: Integer);
+procedure Loc_to_ab(Loc0, Loc: Integer; var A, B: Integer);
+procedure ab_to_V8(A, B: Integer; var V8: Integer);
+procedure V8_to_ab(V8: Integer; var A, B: Integer);
+procedure ab_to_V21(A, B: Integer; var V21: Integer);
+procedure V21_to_ab(V21: Integer; var A, B: Integer);
+procedure V8_to_Loc(Loc0: Integer; var VicinityLoc: TVicinity8Loc);
+procedure V21_to_Loc(Loc0: Integer; var VicinityLoc: TVicinity21Loc);
+function Distance(Loc0, Loc1: Integer): Integer;
 
 
 implementation
 
 const
-  ab_v8: array[-4..4] of integer = (5, 6, 7, 4, -1, 0, 3, 2, 1);
-  v8_a: array[0..7] of integer = (1, 1, 0, -1, -1, -1, 0, 1);
-  v8_b: array[0..7] of integer = (0, 1, 1, 1, 0, -1, -1, -1);
+  ab_v8: array[-4..4] of Integer = (5, 6, 7, 4, -1, 0, 3, 2, 1);
+  v8_a: array[0..7] of Integer = (1, 1, 0, -1, -1, -1, 0, 1);
+  v8_b: array[0..7] of Integer = (0, 1, 1, 1, 0, -1, -1, -1);
 
 
-procedure ab_to_Loc(Loc0, a, b: integer; var Loc: integer);
+procedure ab_to_Loc(Loc0, A, B: Integer; var Loc: Integer);
 {relative location from Loc0}
 var
-  y0: integer;
+  y0: Integer;
 begin
-  assert((Loc0 >= 0) and (Loc0 < MapSize) and (a - b + G.lx >= 0));
-  y0 := cardinal(Loc0) * decompose24 shr 24;
-  Loc := (Loc0 + (a - b + y0 and 1 + G.lx + G.lx) shr 1) mod G.lx + G.lx * (y0 + a + b);
+  Assert((Loc0 >= 0) and (Loc0 < MapSize) and (A - B + G.lx >= 0));
+  y0 := Cardinal(Loc0) * decompose24 shr 24;
+  Loc := (Loc0 + (A - B + y0 and 1 + G.lx + G.lx) shr 1) mod G.lx + G.lx * (y0 + A + B);
   if Loc >= MapSize then
     Loc := -$1000;
 end;
 
-procedure Loc_to_ab(Loc0, Loc: integer; var a, b: integer);
+procedure Loc_to_ab(Loc0, Loc: Integer; var A, B: Integer);
 {$IFDEF FPC}// freepascal
 var
-  dx, dy: integer;
+  dx, dy: Integer;
 begin
   dx := ((Loc mod G.lx * 2 + Loc div G.lx and 1) - (Loc0 mod G.lx * 2 + Loc0 div
     G.lx and 1) + 3 * G.lx) mod (2 * G.lx) - G.lx;
   dy := Loc div G.lx - Loc0 div G.lx;
-  a := (dx + dy) div 2;
-  b := (dy - dx) div 2;
+  A := (dx + dy) div 2;
+  B := (dy - dx) div 2;
 end;
 
 {$ELSE}// delphi
@@ -194,13 +194,13 @@ push ebx
 
 // calculate
 push ecx
-div byte ptr [G]
+div Byte ptr [G]
 xor ebx,ebx
 mov bl,ah  // ebx:=Loc0 mod G.lx
 mov ecx,eax
 and ecx,$000000FF // ecx:=Loc0 div G.lx
 mov eax,edx
-div byte ptr [G]
+div Byte ptr [G]
 xor edx,edx
 mov dl,ah // edx:=Loc mod G.lx
 and eax,$000000FF // eax:=Loc div G.lx
@@ -217,11 +217,11 @@ pop ecx
 // normalize
 mov edx,dword ptr [G]
 cmp eax,edx
-jl @a
+jl @A
   sub eax,edx
   sub eax,edx
   jmp @ok
-@a:
+@A:
 neg edx
 cmp eax,edx
 jnl @ok
@@ -234,48 +234,48 @@ mov edx,ebx
 sub edx,eax
 add eax,ebx
 sar edx,1 // edx:=b
-mov ebx,[b]
+mov ebx,[B]
 mov [ebx],edx
 sar eax,1 // eax:=a
-mov [a],eax
+mov [A],eax
 
 pop ebx
 end;
 {$ENDIF}
 
-procedure ab_to_V8(a, b: integer; var V8: integer);
+procedure ab_to_V8(A, B: Integer; var V8: Integer);
 begin
-  assert((abs(a) <= 1) and (abs(b) <= 1) and ((a <> 0) or (b <> 0)));
-  V8 := ab_v8[2 * b + b + a];
+  Assert((abs(A) <= 1) and (abs(B) <= 1) and ((A <> 0) or (B <> 0)));
+  V8 := ab_v8[2 * B + B + A];
 end;
 
-procedure V8_to_ab(V8: integer; var a, b: integer);
+procedure V8_to_ab(V8: Integer; var A, B: Integer);
 begin
-  a := v8_a[V8];
-  b := V8_b[V8];
+  A := v8_a[V8];
+  B := V8_b[V8];
 end;
 
-procedure ab_to_V21(a, b: integer; var V21: integer);
+procedure ab_to_V21(A, B: Integer; var V21: Integer);
 begin
-  V21 := (a + b + 3) shl 2 + (a - b + 3) shr 1;
+  V21 := (A + B + 3) shl 2 + (A - B + 3) shr 1;
 end;
 
-procedure V21_to_ab(V21: integer; var a, b: integer);
+procedure V21_to_ab(V21: Integer; var A, B: Integer);
 var
-  dx, dy: integer;
+  dx, dy: Integer;
 begin
   dy := V21 shr 2 - 3;
   dx := V21 and 3 shl 1 - 3 + (dy + 3) and 1;
-  a := (dx + dy) div 2;
-  b := (dy - dx) div 2;
+  A := (dx + dy) div 2;
+  B := (dy - dx) div 2;
 end;
 
-procedure V8_to_Loc(Loc0: integer; var VicinityLoc: TVicinity8Loc);
+procedure V8_to_Loc(Loc0: Integer; var VicinityLoc: TVicinity8Loc);
 var
-  x0, y0, lx: integer;
+  x0, y0, lx: Integer;
 begin
   lx := G.lx;
-  y0 := cardinal(Loc0) * decompose24 shr 24;
+  y0 := Cardinal(Loc0) * decompose24 shr 24;
   x0 := Loc0 - y0 * lx; // Loc0 mod lx;
   VicinityLoc[1] := Loc0 + lx * 2;
   VicinityLoc[3] := Loc0 - 1;
@@ -322,12 +322,12 @@ begin
   end;
 end;
 
-procedure V21_to_Loc(Loc0: integer; var VicinityLoc: TVicinity21Loc);
+procedure V21_to_Loc(Loc0: Integer; var VicinityLoc: TVicinity21Loc);
 var
-  dx, dy, bit, y0, xComp, yComp, xComp0, xCompSwitch: integer;
-  dst: ^integer;
+  dx, dy, bit, y0, xComp, yComp, xComp0, xCompSwitch: Integer;
+  dst: ^Integer;
 begin
-  y0 := cardinal(Loc0) * decompose24 shr 24;
+  y0 := Cardinal(Loc0) * decompose24 shr 24;
   xComp0 := Loc0 - y0 * G.lx - 1; // Loc0 mod G.lx -1
   xCompSwitch := xComp0 - 1 + y0 and 1;
   if xComp0 < 0 then
@@ -367,20 +367,20 @@ begin
     end;
 end;
 
-function Distance(Loc0, Loc1: integer): integer;
+function Distance(Loc0, Loc1: Integer): Integer;
 var
-  a, b, dx, dy: integer;
+  A, B, dx, dy: Integer;
 begin
-  Loc_to_ab(Loc0, Loc1, a, b);
-  dx := abs(a - b);
-  dy := abs(a + b);
+  Loc_to_ab(Loc0, Loc1, A, B);
+  dx := abs(A - B);
+  dy := abs(A + B);
   Result := dx + dy + abs(dx - dy) shr 1;
 end;
 
 
 procedure Init(NewGameData: TNewGameData);
 {$IFDEF DEBUG}var
-  Loc: integer;
+  Loc: Integer;
 {$ENDIF}
 begin
   G := NewGameData;
@@ -388,45 +388,45 @@ begin
   decompose24 := (1 shl 24 - 1) div G.lx + 1;
 {$IFDEF DEBUG}
   for Loc := 0 to MapSize - 1 do
-    assert(cardinal(Loc) * decompose24 shr 24 = cardinal(Loc div G.lx));
+    Assert(Cardinal(Loc) * decompose24 shr 24 = Cardinal(Loc div G.lx));
 {$ENDIF}
 end;
 
 
-constructor TCustomAI.Create(Nation: integer);
+constructor TCustomAI.Create(Nation: Integer);
 begin
   inherited Create;
-  me := Nation;
-  RO := pointer(G.RO[Nation]);
-  Map := pointer(RO.Map);
-  MyUnit := pointer(RO.Un);
-  MyCity := pointer(RO.City);
-  MyModel := pointer(RO.Model);
+  Me := Nation;
+  RO := Pointer(G.RO[Nation]);
+  Map := Pointer(RO.Map);
+  MyUnit := Pointer(RO.Un);
+  MyCity := Pointer(RO.City);
+  MyModel := Pointer(RO.Model);
   Opponent := -1;
 end;
 
 destructor TCustomAI.Destroy;
 begin
-  Server(sSetDebugMap, me, 0, nodata^);
+  Server(sSetDebugMap, Me, 0, nodata^);
 end;
 
 
-procedure TCustomAI.Process(Command: integer; var Data);
+procedure TCustomAI.Process(Command: Integer; var Data);
 var
-  Nation, NewResearch, NewGov, Count, ad, cix, iix: integer;
+  Nation, NewResearch, NewGov, Count, ad, cix, iix: Integer;
   NegoTime: TNegoTime;
 begin
   case Command of
     cTurn, cContinue:
     begin
-      if RO.Alive and (1 shl me) = 0 then
+      if RO.Alive and (1 shl Me) = 0 then
       begin // I'm dead, huhu
-        Server(sTurn, me, 0, nodata^);
-        exit;
+        Server(sTurn, Me, 0, nodata^);
+        Exit;
       end;
       if Command = cTurn then
       begin
-        fillchar(cixStateImp, sizeof(cixStateImp), $FF);
+        FillChar(cixStateImp, SizeOf(cixStateImp), $FF);
         for cix := 0 to RO.nCity - 1 do
           if MyCity[cix].Loc >= 0 then
             for iix := imPalace to imSpacePort do
@@ -436,7 +436,7 @@ begin
         begin
           NewGov := ChooseGovernment;
           if NewGov > gAnarchy then
-            Server(sSetGovernment, me, NewGov, nodata^);
+            Server(sSetGovernment, Me, NewGov, nodata^);
         end;
         HaveTurned := False;
         Contacted := [];
@@ -445,8 +445,8 @@ begin
       begin
         if OnNegoRejected_CancelTreaty then
           if RO.Treaty[Opponent] >= trPeace then
-            if Server(sCancelTreaty, me, 0, nodata^) < rExecuted then
-              assert(False);
+            if Server(sCancelTreaty, Me, 0, nodata^) < rExecuted then
+              Assert(False);
       end
       else
         UnwantedNego := [];
@@ -458,22 +458,22 @@ begin
           NegoTime := BeginOfTurn;
         if RO.Government <> gAnarchy then
           for Nation := 0 to nPl - 1 do
-            if (Nation <> me) and (1 shl Nation and RO.Alive <> 0) and
+            if (Nation <> Me) and (1 shl Nation and RO.Alive <> 0) and
               (RO.Treaty[Nation] >= trNone) and not (Nation in Contacted) and not
               (Nation in UnwantedNego) and
-              (Server(scContact - sExecute + Nation shl 4, me, 0, nodata^) >= rExecuted) then
+              (Server(scContact - sExecute + Nation shl 4, Me, 0, nodata^) >= rExecuted) then
               if WantNegotiation(Nation, NegoTime) then
               begin
-                if Server(scContact + Nation shl 4, me, 0, nodata^) >= rExecuted then
+                if Server(scContact + Nation shl 4, Me, 0, nodata^) >= rExecuted then
                 begin
-                  include(Contacted, Nation);
+                  Include(Contacted, Nation);
                   Opponent := Nation;
                   MyAction := scContact;
-                  exit;
+                  Exit;
                 end;
               end
               else
-                include(UnwantedNego, Nation);
+                Include(UnwantedNego, Nation);
         if NegoTime = BeginOfTurn then
         begin
           DoTurn;
@@ -482,7 +482,7 @@ begin
           UnwantedNego := [];
         end
         else
-          break;
+          Break;
       until False;
       if RO.Happened and phTech <> 0 then
       begin
@@ -498,23 +498,23 @@ begin
                 NewResearch := ad;
             end;
         end;
-        Server(sSetResearch, me, NewResearch, nodata^);
+        Server(sSetResearch, Me, NewResearch, nodata^);
       end;
-      if Server(sTurn, me, 0, nodata^) < rExecuted then
-        assert(False);
+      if Server(sTurn, Me, 0, nodata^) < rExecuted then
+        Assert(False);
     end;
     scContact:
-      if WantNegotiation(integer(Data), EnemyCalled) then
+      if WantNegotiation(Integer(Data), EnemyCalled) then
       begin
-        if Server(scDipStart, me, 0, nodata^) < rExecuted then
-          assert(False);
-        Opponent := integer(Data);
+        if Server(scDipStart, Me, 0, nodata^) < rExecuted then
+          Assert(False);
+        Opponent := Integer(Data);
         MyAction := scDipStart;
       end
       else
       begin
-        if Server(scReject, me, 0, nodata^) < rExecuted then
-          assert(False);
+        if Server(scReject, Me, 0, nodata^) < rExecuted then
+          Assert(False);
       end;
     scDipStart, scDipNotice, scDipAccept, scDipCancelTreaty, scDipOffer, scDipBreak:
     begin
@@ -537,12 +537,12 @@ begin
         MyOffer.nCost := 0;
       end;
       DoNegotiation;
-      assert((MyAction = scDipNotice) or (MyAction = scDipAccept) or
+      Assert((MyAction = scDipNotice) or (MyAction = scDipAccept) or
         (MyAction = scDipCancelTreaty) or (MyAction = scDipOffer) or (MyAction = scDipBreak));
       if MyAction = scDipOffer then
-        Server(MyAction, me, 0, MyOffer)
+        Server(MyAction, Me, 0, MyOffer)
       else
-        Server(MyAction, me, 0, nodata^);
+        Server(MyAction, Me, 0, nodata^);
     end;
     cShowEndContact:
       Opponent := -1;
@@ -567,11 +567,11 @@ begin
 end;
 
 procedure TCustomAI.OnBeforeEnemyAttack(UnitInfo: TUnitInfo;
-  ToLoc, EndHealth, EndHealthDef: integer);
+  ToLoc, EndHealth, EndHealthDef: Integer);
 begin
 end;
 
-procedure TCustomAI.OnBeforeEnemyCapture(UnitInfo: TUnitInfo; ToLoc: integer);
+procedure TCustomAI.OnBeforeEnemyCapture(UnitInfo: TUnitInfo; ToLoc: Integer);
 begin
 end;
 
@@ -583,27 +583,27 @@ procedure TCustomAI.OnAfterEnemyCapture;
 begin
 end;
 
-function TCustomAI.ChooseResearchAdvance: integer;
+function TCustomAI.ChooseResearchAdvance: Integer;
 begin
   Result := -1;
 end;
 
-function TCustomAI.ChooseStealAdvance: integer;
+function TCustomAI.ChooseStealAdvance: Integer;
 begin
   Result := -1;
 end;
 
-function TCustomAI.ChooseGovernment: integer;
+function TCustomAI.ChooseGovernment: Integer;
 begin
   Result := gDespotism;
 end;
 
-function TCustomAI.WantNegotiation(Nation: integer; NegoTime: TNegoTime): boolean;
+function TCustomAI.WantNegotiation(Nation: Integer; NegoTime: TNegoTime): Boolean;
 begin
   Result := False;
 end;
 
-function TCustomAI.OnNegoRejected_CancelTreaty: boolean;
+function TCustomAI.OnNegoRejected_CancelTreaty: Boolean;
 begin
   Result := False;
 end;
@@ -612,7 +612,7 @@ end;
 
 procedure TCustomAI.StealAdvance;
 var
-  Steal, ad, Count: integer;
+  Steal, ad, Count: Integer;
 begin
   Steal := ChooseStealAdvance;
   if Steal < 0 then
@@ -627,118 +627,118 @@ begin
       end;
   end;
   if Steal >= 0 then
-    Server(sStealTech, me, Steal, nodata^);
+    Server(sStealTech, Me, Steal, nodata^);
   RO.Happened := RO.Happened and not phStealTech;
 end;
 
-function TCustomAI.IsResearched(Advance: integer): boolean;
+function TCustomAI.IsResearched(Advance: Integer): Boolean;
 begin
   Result := (Advance = preNone) or (Advance <> preNA) and (RO.Tech[Advance] >= tsApplicable);
 end;
 
-function TCustomAI.ResearchCost: integer;
+function TCustomAI.ResearchCost: Integer;
 begin
-  Server(sGetTechCost, me, 0, Result);
+  Server(sGetTechCost, Me, 0, Result);
 end;
 
-function TCustomAI.ChangeAttitude(Nation, Attitude: integer): integer;
+function TCustomAI.ChangeAttitude(Nation, Attitude: Integer): Integer;
 begin
-  Result := Server(sSetAttitude + Nation shl 4, me, Attitude, nodata^);
+  Result := Server(sSetAttitude + Nation shl 4, Me, Attitude, nodata^);
 end;
 
-function TCustomAI.Revolution: integer;
+function TCustomAI.Revolution: Integer;
 begin
-  Result := Server(sRevolution, me, 0, nodata^);
+  Result := Server(sRevolution, Me, 0, nodata^);
 end;
 
-function TCustomAI.ChangeRates(Tax, Lux: integer): integer;
+function TCustomAI.ChangeRates(Tax, Lux: Integer): Integer;
 begin
-  Result := Server(sSetRates, me, Tax div 10 and $f + Lux div 10 and $f shl 4, nodata^);
+  Result := Server(sSetRates, Me, Tax div 10 and $F + Lux div 10 and $F shl 4, nodata^);
 end;
 
-function TCustomAI.PrepareNewModel(Domain: integer): integer;
+function TCustomAI.PrepareNewModel(Domain: Integer): Integer;
 begin
-  Result := Server(sCreateDevModel, me, Domain, nodata^);
+  Result := Server(sCreateDevModel, Me, Domain, nodata^);
 end;
 
-function TCustomAI.SetNewModelFeature(F, Count: integer): integer;
+function TCustomAI.SetNewModelFeature(F, Count: Integer): Integer;
 begin
-  Result := Server(sSetDevModelCap + Count shl 4, me, F, nodata^);
+  Result := Server(sSetDevModelCap + Count shl 4, Me, F, nodata^);
 end;
 
-function TCustomAI.AdvanceResearchable(Advance: integer): boolean;
+function TCustomAI.AdvanceResearchable(Advance: Integer): Boolean;
 begin
-  Result := Server(sSetResearch - sExecute, me, Advance, nodata^) >= rExecuted;
+  Result := Server(sSetResearch - sExecute, Me, Advance, nodata^) >= rExecuted;
 end;
 
-function TCustomAI.AdvanceStealable(Advance: integer): boolean;
+function TCustomAI.AdvanceStealable(Advance: Integer): Boolean;
 begin
-  Result := Server(sStealTech - sExecute, me, Advance, nodata^) >= rExecuted;
+  Result := Server(sStealTech - sExecute, Me, Advance, nodata^) >= rExecuted;
 end;
 
-function TCustomAI.GetJobProgress(Loc: integer;
-  var JobProgress: TJobProgressData): boolean;
+function TCustomAI.GetJobProgress(Loc: Integer;
+  var JobProgress: TJobProgressData): Boolean;
 begin
-  Result := Server(sGetJobProgress, me, Loc, JobProgress) >= rExecuted;
+  Result := Server(sGetJobProgress, Me, Loc, JobProgress) >= rExecuted;
 end;
 
-function TCustomAI.DebugMessage(Level: integer; Text: string): boolean;
+function TCustomAI.DebugMessage(Level: Integer; Text: string): Boolean;
 begin
-  Text := copy('P' + char(48 + me) + ' ' + Text, 1, 254);
-  Server(sMessage, me, Level, PChar(Text)^);
+  Text := Copy('P' + char(48 + Me) + ' ' + Text, 1, 254);
+  Server(sMessage, Me, Level, PChar(Text)^);
 
   Result := True;
   // always returns true so that it can be used like
   // "assert(DebugMessage(...));" -> not compiled in release build
 end;
 
-function TCustomAI.SetDebugMap(var DebugMap): boolean;
+function TCustomAI.SetDebugMap(var DebugMap): Boolean;
 begin
-  Server(sSetDebugMap, me, 0, DebugMap);
+  Server(sSetDebugMap, Me, 0, DebugMap);
 
   Result := True;
   // always returns true so that it can be used like
   // "assert(SetDebugMap(...));" -> not compiled in release build
 end;
 
-procedure TCustomAI.Unit_FindMyDefender(Loc: integer; var uix: integer);
+procedure TCustomAI.Unit_FindMyDefender(Loc: Integer; var uix: Integer);
 begin
-  if Server(sGetDefender, me, Loc, uix) < rExecuted then
+  if Server(sGetDefender, Me, Loc, uix) < rExecuted then
     uix := -1;
 end;
 
-procedure TCustomAI.Unit_FindEnemyDefender(Loc: integer; var euix: integer);
+procedure TCustomAI.Unit_FindEnemyDefender(Loc: Integer; var euix: Integer);
 begin
   euix := RO.nEnemyUn - 1;
   while (euix >= 0) and (RO.EnemyUn[euix].Loc <> Loc) do
     Dec(euix);
 end;
 
-function TCustomAI.Unit_Move(uix, ToLoc: integer): integer;
+function TCustomAI.Unit_Move(uix, ToLoc: Integer): Integer;
 var
-  Step: integer;
-  DestinationReached: boolean;
+  Step: Integer;
+  DestinationReached: Boolean;
   Advice: TMoveAdviceData;
 begin
-  assert((uix >= 0) and (uix < RO.nUn) and (MyUnit[uix].Loc >= 0)); // is a unit
+  Assert((uix >= 0) and (uix < RO.nUn) and (MyUnit[uix].Loc >= 0)); // is a unit
 {Loc_to_ab(MyUnit[uix].Loc,ToLoc,a,b);
-assert((a<>0) or (b<>0));
-if (a>=-1) and (a<=1) and (b>=-1) and (b<=1) then
+Assert((A<>0) or (B<>0));
+if (A>=-1) and (A<=1) and (B>=-1) and (B<=1) then
   begin // move to adjacent tile
-  !!!problem: if move is invalid, return codes are not consistent with other branch (eNoWay)
+  !!!problem: if Move is invalid, return codes are not consistent with other branch (eNoWay)
   Advice.nStep:=1;
-  Advice.dx[0]:=a-b;
-  Advice.dy[0]:=a+b;
+  Advice.dx[0]:=A-B;
+  Advice.dy[0]:=A+B;
   Advice.MoreTurns:=0;
   Advice.MaxHostile_MovementLeft:=MyUnit[uix].Movement;
-  result:=eOK;
+  Result:=eOK;
   end
 else}
   begin // move to non-adjacent tile, find shortest path
     Advice.ToLoc := ToLoc;
     Advice.MoreTurns := 9999;
     Advice.MaxHostile_MovementLeft := 100;
-    Result := Server(sGetMoveAdvice, me, uix, Advice);
+    Result := Server(sGetMoveAdvice, Me, uix, Advice);
   end;
   if Result = eOk then
   begin
@@ -754,16 +754,16 @@ else}
           or (MyModel[MyUnit[uix].mix].Flags and mdCivil <> 0))) then // can't capture
         begin
           DestinationReached := True;
-          break;
+          Break;
         end // stop next to destination
         else if Step = Advice.nStep then
           DestinationReached := True; // normal move -- stop at destination
 
       if (Step = Advice.nStep) or (Result <> eOK) and (Result <> eLoaded) then
-        break;
+        Break;
 
       Result := Server(sMoveUnit + (Advice.dx[Step] and 7) shl 4 +
-        (Advice.dy[Step] and 7) shl 7, me, uix, nodata^);
+        (Advice.dy[Step] and 7) shl 7, Me, uix, nodata^);
       Inc(Step);
       if RO.Happened and phStealTech <> 0 then
         StealAdvance;
@@ -778,61 +778,61 @@ else}
   end;
 end;
 
-function TCustomAI.Unit_Step(uix, ToLoc: integer): integer;
+function TCustomAI.Unit_Step(uix, ToLoc: Integer): Integer;
 var
-  a, b: integer;
+  A, B: Integer;
 begin
-  Loc_to_ab(MyUnit[uix].Loc, ToLoc, a, b);
-  assert(((a <> 0) or (b <> 0)) and (a >= -1) and (a <= 1) and (b >= -1) and (b <= 1));
-  Result := Server(sMoveUnit + ((a - b) and 7) shl 4 + ((a + b) and 7) shl 7, me, uix, nodata^);
+  Loc_to_ab(MyUnit[uix].Loc, ToLoc, A, B);
+  Assert(((A <> 0) or (B <> 0)) and (A >= -1) and (A <= 1) and (B >= -1) and (B <= 1));
+  Result := Server(sMoveUnit + ((A - B) and 7) shl 4 + ((A + B) and 7) shl 7, Me, uix, nodata^);
   if RO.Happened and phStealTech <> 0 then
     StealAdvance;
 end;
 
-function TCustomAI.Unit_Attack(uix, ToLoc: integer): integer;
+function TCustomAI.Unit_Attack(uix, ToLoc: Integer): Integer;
 var
-  a, b: integer;
+  A, B: Integer;
 begin
-  assert((uix >= 0) and (uix < RO.nUn) and (MyUnit[uix].Loc >= 0) // is a unit
+  Assert((uix >= 0) and (uix < RO.nUn) and (MyUnit[uix].Loc >= 0) // is a unit
     and ((Map[ToLoc] and (fUnit or fOwned) = fUnit) // is an attack
     or (Map[ToLoc] and (fCity or fOwned) = fCity) and
     (MyModel[MyUnit[uix].mix].Domain <> dGround))); // is a bombardment
-  Loc_to_ab(MyUnit[uix].Loc, ToLoc, a, b);
-  assert(((a <> 0) or (b <> 0)) and (a >= -1) and (a <= 1) and (b >= -1) and (b <= 1));
+  Loc_to_ab(MyUnit[uix].Loc, ToLoc, A, B);
+  Assert(((A <> 0) or (B <> 0)) and (A >= -1) and (A <= 1) and (B >= -1) and (B <= 1));
   // attack to adjacent tile
-  Result := Server(sMoveUnit + (a - b) and 7 shl 4 + (a + b) and 7 shl 7, me, uix, nodata^);
+  Result := Server(sMoveUnit + (A - B) and 7 shl 4 + (A + B) and 7 shl 7, Me, uix, nodata^);
 end;
 
-function TCustomAI.Unit_DoMission(uix, MissionType, ToLoc: integer): integer;
+function TCustomAI.Unit_DoMission(uix, MissionType, ToLoc: Integer): Integer;
 var
-  a, b: integer;
+  A, B: Integer;
 begin
-  Result := Server(sSetSpyMission + MissionType shl 4, me, 0, nodata^);
+  Result := Server(sSetSpyMission + MissionType shl 4, Me, 0, nodata^);
   if Result >= rExecuted then
   begin
-    assert((uix >= 0) and (uix < RO.nUn) and (MyUnit[uix].Loc >= 0) // is a unit
+    Assert((uix >= 0) and (uix < RO.nUn) and (MyUnit[uix].Loc >= 0) // is a unit
       and (MyModel[MyUnit[uix].mix].Kind = mkDiplomat)); // is a commando
-    Loc_to_ab(MyUnit[uix].Loc, ToLoc, a, b);
-    assert(((a <> 0) or (b <> 0)) and (a >= -1) and (a <= 1) and (b >= -1) and (b <= 1));
+    Loc_to_ab(MyUnit[uix].Loc, ToLoc, A, B);
+    Assert(((A <> 0) or (B <> 0)) and (A >= -1) and (A <= 1) and (B >= -1) and (B <= 1));
     // city must be adjacent
-    Result := Server(sMoveUnit - sExecute + (a - b) and 7 shl 4 + (a + b) and 7 shl 7, me, uix, nodata^);
+    Result := Server(sMoveUnit - sExecute + (A - B) and 7 shl 4 + (A + B) and 7 shl 7, Me, uix, nodata^);
     if Result = eMissionDone then
-      Result := Server(sMoveUnit + (a - b) and 7 shl 4 + (a + b) and 7 shl 7, me, uix, nodata^)
+      Result := Server(sMoveUnit + (A - B) and 7 shl 4 + (A + B) and 7 shl 7, Me, uix, nodata^)
     else if (Result <> eNoTime_Move) and (Result <> eTreaty) and (Result <> eNoTurn) then
       Result := eInvalid; // not a special commando mission!
   end;
 end;
 
-function TCustomAI.Unit_MoveForecast(uix, ToLoc: integer;
-  var RemainingMovement: integer): boolean;
+function TCustomAI.Unit_MoveForecast(uix, ToLoc: Integer;
+  var RemainingMovement: Integer): Boolean;
 var
   Advice: TMoveAdviceData;
 begin
-  assert((uix >= 0) and (uix < RO.nUn) and (MyUnit[uix].Loc >= 0)); // is a unit
+  Assert((uix >= 0) and (uix < RO.nUn) and (MyUnit[uix].Loc >= 0)); // is a unit
   Advice.ToLoc := ToLoc;
   Advice.MoreTurns := 0;
   Advice.MaxHostile_MovementLeft := 100;
-  if Server(sGetMoveAdvice, me, uix, Advice) = eOk then
+  if Server(sGetMoveAdvice, Me, uix, Advice) = eOk then
   begin
     RemainingMovement := Advice.MaxHostile_MovementLeft;
     Result := True;
@@ -845,25 +845,25 @@ begin
 end;
 
 // negative RemainingHealth is remaining helth of defender if lost
-function TCustomAI.Unit_AttackForecast(uix, ToLoc, AttackMovement: integer;
-  var RemainingHealth: integer): boolean;
+function TCustomAI.Unit_AttackForecast(uix, ToLoc, AttackMovement: Integer;
+  var RemainingHealth: Integer): Boolean;
 var
   BattleForecast: TBattleForecast;
 begin
-  assert((uix >= 0) and (uix < RO.nUn) and (MyUnit[uix].Loc >= 0) // is a unit
+  Assert((uix >= 0) and (uix < RO.nUn) and (MyUnit[uix].Loc >= 0) // is a unit
     and (Map[ToLoc] and (fUnit or fOwned) = fUnit)); // is an attack
   RemainingHealth := -$100;
   Result := False;
   if AttackMovement >= 0 then
     with MyUnit[uix] do
     begin
-      BattleForecast.pAtt := me;
+      BattleForecast.pAtt := Me;
       BattleForecast.mixAtt := mix;
       BattleForecast.HealthAtt := Health;
       BattleForecast.ExpAtt := Exp;
       BattleForecast.FlagsAtt := Flags;
       BattleForecast.Movement := AttackMovement;
-      if Server(sGetBattleForecast, me, ToLoc, BattleForecast) >= rExecuted then
+      if Server(sGetBattleForecast, Me, ToLoc, BattleForecast) >= rExecuted then
       begin
         if BattleForecast.EndHealthAtt > 0 then
           RemainingHealth := BattleForecast.EndHealthAtt
@@ -874,12 +874,12 @@ begin
     end;
 end;
 
-function TCustomAI.Unit_DefenseForecast(euix, ToLoc: integer;
-  var RemainingHealth: integer): boolean;
+function TCustomAI.Unit_DefenseForecast(euix, ToLoc: Integer;
+  var RemainingHealth: Integer): Boolean;
 var
   BattleForecast: TBattleForecast;
 begin
-  assert((euix >= 0) and (euix < RO.nEnemyUn) and (RO.EnemyUn[euix].Loc >= 0) // is an enemy unit
+  Assert((euix >= 0) and (euix < RO.nEnemyUn) and (RO.EnemyUn[euix].Loc >= 0) // is an enemy unit
     and (Map[ToLoc] and (fUnit or fOwned) = (fUnit or fOwned))); // is an attack
   RemainingHealth := $100;
   Result := False;
@@ -891,7 +891,7 @@ begin
     BattleForecast.ExpAtt := Exp;
     BattleForecast.FlagsAtt := Flags;
     BattleForecast.Movement := 100;
-    if Server(sGetBattleForecast, me, ToLoc, BattleForecast) >= rExecuted then
+    if Server(sGetBattleForecast, Me, ToLoc, BattleForecast) >= rExecuted then
     begin
       if BattleForecast.EndHealthDef > 0 then
         RemainingHealth := BattleForecast.EndHealthDef
@@ -902,43 +902,43 @@ begin
   end;
 end;
 
-function TCustomAI.Unit_Disband(uix: integer): integer;
+function TCustomAI.Unit_Disband(uix: Integer): Integer;
 begin
-  Result := Server(sRemoveUnit, me, uix, nodata^);
+  Result := Server(sRemoveUnit, Me, uix, nodata^);
 end;
 
-function TCustomAI.Unit_StartJob(uix, NewJob: integer): integer;
+function TCustomAI.Unit_StartJob(uix, NewJob: Integer): Integer;
 begin
-  Result := Server(sStartJob + NewJob shl 4, me, uix, nodata^);
+  Result := Server(sStartJob + NewJob shl 4, Me, uix, nodata^);
 end;
 
-function TCustomAI.Unit_SetHomeHere(uix: integer): integer;
+function TCustomAI.Unit_SetHomeHere(uix: Integer): Integer;
 begin
-  Result := Server(sSetUnitHome, me, uix, nodata^);
+  Result := Server(sSetUnitHome, Me, uix, nodata^);
 end;
 
-function TCustomAI.Unit_Load(uix: integer): integer;
+function TCustomAI.Unit_Load(uix: Integer): Integer;
 begin
-  Result := Server(sLoadUnit, me, uix, nodata^);
+  Result := Server(sLoadUnit, Me, uix, nodata^);
 end;
 
-function TCustomAI.Unit_Unload(uix: integer): integer;
+function TCustomAI.Unit_Unload(uix: Integer): Integer;
 begin
-  Result := Server(sUnloadUnit, me, uix, nodata^);
+  Result := Server(sUnloadUnit, Me, uix, nodata^);
 end;
 
-function TCustomAI.Unit_AddToCity(uix: integer): integer;
+function TCustomAI.Unit_AddToCity(uix: Integer): Integer;
 begin
-  Result := Server(sAddToCity, me, uix, nodata^);
+  Result := Server(sAddToCity, Me, uix, nodata^);
 end;
 
-function TCustomAI.Unit_SelectTransport(uix: integer): integer;
+function TCustomAI.Unit_SelectTransport(uix: Integer): Integer;
 begin
-  Result := Server(sSelectTransport, me, uix, nodata^);
+  Result := Server(sSelectTransport, Me, uix, nodata^);
 end;
 
 
-procedure TCustomAI.City_FindMyCity(Loc: integer; var cix: integer);
+procedure TCustomAI.City_FindMyCity(Loc: Integer; var cix: Integer);
 begin
   if Map[Loc] and (fCity or fOwned) <> fCity or fOwned then
     cix := -1
@@ -950,7 +950,7 @@ begin
   end;
 end;
 
-procedure TCustomAI.City_FindEnemyCity(Loc: integer; var ecix: integer);
+procedure TCustomAI.City_FindEnemyCity(Loc: Integer; var ecix: Integer);
 begin
   if Map[Loc] and (fCity or fOwned) <> fCity then
     ecix := -1
@@ -962,12 +962,12 @@ begin
   end;
 end;
 
-function TCustomAI.City_HasProject(cix: integer): boolean;
+function TCustomAI.City_HasProject(cix: Integer): Boolean;
 begin
   Result := MyCity[cix].Project and (cpImp + cpIndex) <> cpImp + imTrGoods;
 end;
 
-function TCustomAI.City_CurrentImprovementProject(cix: integer): integer;
+function TCustomAI.City_CurrentImprovementProject(cix: Integer): Integer;
 begin
   if MyCity[cix].Project and cpImp = 0 then
     Result := -1
@@ -979,7 +979,7 @@ begin
   end;
 end;
 
-function TCustomAI.City_CurrentUnitProject(cix: integer): integer;
+function TCustomAI.City_CurrentUnitProject(cix: Integer): Integer;
 begin
   if MyCity[cix].Project and cpImp <> 0 then
     Result := -1
@@ -987,143 +987,143 @@ begin
     Result := MyCity[cix].Project and cpIndex;
 end;
 
-function TCustomAI.City_GetTileInfo(cix, TileLoc: integer;
-  var TileInfo: TTileInfo): integer;
+function TCustomAI.City_GetTileInfo(cix, TileLoc: Integer;
+  var TileInfo: TTileInfo): Integer;
 begin
   TileInfo.ExplCity := cix;
-  Result := Server(sGetHypoCityTileInfo, me, TileLoc, TileInfo);
+  Result := Server(sGetHypoCityTileInfo, Me, TileLoc, TileInfo);
 end;
 
-function TCustomAI.City_GetReport(cix: integer; var Report: TCityReport): integer;
+function TCustomAI.City_GetReport(cix: Integer; var Report: TCityReport): Integer;
 begin
   Report.HypoTiles := -1;
   Report.HypoTax := -1;
   Report.HypoLux := -1;
-  Result := Server(sGetCityReport, me, cix, Report);
+  Result := Server(sGetCityReport, Me, cix, Report);
 end;
 
-function TCustomAI.City_GetHypoReport(cix, HypoTiles, HypoTax, HypoLux: integer;
-  var Report: TCityReport): integer;
+function TCustomAI.City_GetHypoReport(cix, HypoTiles, HypoTax, HypoLux: Integer;
+  var Report: TCityReport): Integer;
 begin
   Report.HypoTiles := HypoTiles;
   Report.HypoTax := HypoTax;
   Report.HypoLux := HypoLux;
-  Result := Server(sGetCityReport, me, cix, Report);
+  Result := Server(sGetCityReport, Me, cix, Report);
 end;
 
-function TCustomAI.City_GetReportNew(cix: integer; var Report: TCityReportNew): integer;
+function TCustomAI.City_GetReportNew(cix: Integer; var Report: TCityReportNew): Integer;
 begin
   Report.HypoTiles := -1;
   Report.HypoTaxRate := -1;
   Report.HypoLuxuryRate := -1;
-  Result := Server(sGetCityReportNew, me, cix, Report);
+  Result := Server(sGetCityReportNew, Me, cix, Report);
 end;
 
 function TCustomAI.City_GetHypoReportNew(cix, HypoTiles, HypoTaxRate,
-  HypoLuxuryRate: integer; var Report: TCityReportNew): integer;
+  HypoLuxuryRate: Integer; var Report: TCityReportNew): Integer;
 begin
   Report.HypoTiles := HypoTiles;
   Report.HypoTaxRate := HypoTaxRate;
   Report.HypoLuxuryRate := HypoLuxuryRate;
-  Result := Server(sGetCityReportNew, me, cix, Report);
+  Result := Server(sGetCityReportNew, Me, cix, Report);
 end;
 
-function TCustomAI.City_GetAreaInfo(cix: integer; var AreaInfo: TCityAreaInfo): integer;
+function TCustomAI.City_GetAreaInfo(cix: Integer; var AreaInfo: TCityAreaInfo): Integer;
 begin
-  Result := Server(sGetCityAreaInfo, me, cix, AreaInfo);
+  Result := Server(sGetCityAreaInfo, Me, cix, AreaInfo);
 end;
 
-function TCustomAI.City_StartUnitProduction(cix, mix: integer): integer;
+function TCustomAI.City_StartUnitProduction(cix, mix: Integer): Integer;
 begin
   if (MyCity[cix].Project and (cpImp + cpIndex) <> mix) then
     // not already producing that
-    Result := Server(sSetCityProject, me, cix, mix);
+    Result := Server(sSetCityProject, Me, cix, mix);
 end;
 
-function TCustomAI.City_StartEmigration(cix, mix: integer;
-  AllowDisbandCity, AsConscripts: boolean): integer;
+function TCustomAI.City_StartEmigration(cix, mix: Integer;
+  AllowDisbandCity, AsConscripts: Boolean): Integer;
 var
-  NewProject: integer;
+  NewProject: Integer;
 begin
   NewProject := mix;
   if AllowDisbandCity then
     NewProject := NewProject or cpDisbandCity;
   if AsConscripts then
     NewProject := NewProject or cpConscripts;
-  Result := Server(sSetCityProject, me, cix, NewProject);
+  Result := Server(sSetCityProject, Me, cix, NewProject);
 end;
 
-function TCustomAI.City_StartImprovement(cix, iix: integer): integer;
+function TCustomAI.City_StartImprovement(cix, iix: Integer): Integer;
 var
-  NewProject: integer;
+  NewProject: Integer;
 begin
   NewProject := iix + cpImp;
   if (MyCity[cix].Project and (cpImp + cpIndex) <> NewProject) then
     // not already producing that
-    Result := Server(sSetCityProject, me, cix, NewProject);
+    Result := Server(sSetCityProject, Me, cix, NewProject);
 end;
 
-function TCustomAI.City_Improvable(cix, iix: integer): boolean;
+function TCustomAI.City_Improvable(cix, iix: Integer): Boolean;
 var
-  NewProject: integer;
+  NewProject: Integer;
 begin
   NewProject := iix + cpImp;
-  Result := Server(sSetCityProject - sExecute, me, cix, NewProject) >= rExecuted;
+  Result := Server(sSetCityProject - sExecute, Me, cix, NewProject) >= rExecuted;
 end;
 
-function TCustomAI.City_StopProduction(cix: integer): integer;
+function TCustomAI.City_StopProduction(cix: Integer): Integer;
 var
-  NewProject: integer;
+  NewProject: Integer;
 begin
   NewProject := imTrGoods + cpImp;
-  Result := Server(sSetCityProject, me, cix, NewProject);
+  Result := Server(sSetCityProject, Me, cix, NewProject);
 end;
 
-function TCustomAI.City_BuyProject(cix: integer): integer;
+function TCustomAI.City_BuyProject(cix: Integer): Integer;
 begin
-  Result := Server(sBuyCityProject, me, cix, nodata^);
+  Result := Server(sBuyCityProject, Me, cix, nodata^);
 end;
 
-function TCustomAI.City_SellImprovement(cix, iix: integer): integer;
+function TCustomAI.City_SellImprovement(cix, iix: Integer): Integer;
 begin
-  Result := Server(sSellCityImprovement, me, cix, iix);
+  Result := Server(sSellCityImprovement, Me, cix, iix);
 end;
 
-function TCustomAI.City_RebuildImprovement(cix, iix: integer): integer;
+function TCustomAI.City_RebuildImprovement(cix, iix: Integer): Integer;
 begin
-  Result := Server(sRebuildCityImprovement, me, cix, iix);
+  Result := Server(sRebuildCityImprovement, Me, cix, iix);
 end;
 
-function TCustomAI.City_SetTiles(cix, NewTiles: integer): integer;
+function TCustomAI.City_SetTiles(cix, NewTiles: Integer): Integer;
 begin
-  Result := Server(sSetCityTiles, me, cix, NewTiles);
+  Result := Server(sSetCityTiles, Me, cix, NewTiles);
 end;
 
-procedure TCustomAI.City_OptimizeTiles(cix: integer; ResourceWeights: cardinal);
+procedure TCustomAI.City_OptimizeTiles(cix: Integer; ResourceWeights: Cardinal);
 var
   Advice: TCityTileAdviceData;
 begin
   Advice.ResourceWeights := ResourceWeights;
-  Server(sGetCityTileAdvice, me, cix, Advice);
+  Server(sGetCityTileAdvice, Me, cix, Advice);
   City_SetTiles(cix, Advice.Tiles);
 end;
 
 
 // negotiation
-function TCustomAI.Nego_CheckMyAction: integer;
+function TCustomAI.Nego_CheckMyAction: Integer;
 begin
-  assert(Opponent >= 0); // only allowed in negotiation mode
-  assert((MyAction = scDipNotice) or (MyAction = scDipAccept) or
+  Assert(Opponent >= 0); // only allowed in negotiation mode
+  Assert((MyAction = scDipNotice) or (MyAction = scDipAccept) or
     (MyAction = scDipCancelTreaty) or (MyAction = scDipOffer) or (MyAction = scDipBreak));
   if MyAction = scDipOffer then
-    Result := Server(MyAction - sExecute, me, 0, MyOffer)
+    Result := Server(MyAction - sExecute, Me, 0, MyOffer)
   else
-    Result := Server(MyAction - sExecute, me, 0, nodata^);
+    Result := Server(MyAction - sExecute, Me, 0, nodata^);
 end;
 
 
 initialization
-  nodata := pointer(0);
+  nodata := Pointer(0);
   RWDataSize := 0;
 
 end.

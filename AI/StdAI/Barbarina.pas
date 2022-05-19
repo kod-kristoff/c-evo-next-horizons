@@ -24,43 +24,43 @@ const
 
 type
   TColonyShipPlan = array[0..nShipPart - 1] of record
-    cixProducing: integer;
-    LocResource: array[0..maxModern - 1] of integer;
-    nLocResource: integer;
-    LocFoundCity: array[0..maxModern - 1] of integer;
-    nLocFoundCity: integer;
+    cixProducing: Integer;
+    LocResource: array[0..maxModern - 1] of Integer;
+    nLocResource: Integer;
+    LocFoundCity: array[0..maxModern - 1] of Integer;
+    nLocFoundCity: Integer;
   end;
 
   TBarbarina = class(TToolAI)
-    constructor Create(Nation: integer); override;
+    constructor Create(Nation: Integer); override;
 
   protected
     ColonyShipPlan: TColonyShipPlan;
-    function Barbarina_GoHidden: boolean; // whether we should prepare for barbarina mode
-    function Barbarina_Go: boolean; // whether we should switch to barbarina mode now
+    function Barbarina_GoHidden: Boolean; // whether we should prepare for barbarina mode
+    function Barbarina_Go: Boolean; // whether we should switch to barbarina mode now
     procedure Barbarina_DoTurn;
     procedure Barbarina_SetCityProduction;
-    function Barbarina_ChooseResearchAdvance: integer;
-    function Barbarina_WantCheckNegotiation(Nation: integer): boolean;
+    function Barbarina_ChooseResearchAdvance: Integer;
+    function Barbarina_WantCheckNegotiation(Nation: Integer): Boolean;
     procedure Barbarina_DoCheckNegotiation;
-    function Barbarina_WantNegotiation(Nation: integer; NegoTime: TNegoTime): boolean;
+    function Barbarina_WantNegotiation(Nation: Integer; NegoTime: TNegoTime): Boolean;
     procedure Barbarina_DoNegotiation;
     procedure MakeColonyShipPlan;
 
   private
-    TurnOfMapAnalysis, Neighbours: integer;
-    ContinentPresence: array[0..maxCOD - 1] of integer;
-    OceanPresence: array[0..maxCOD - 1] of integer;
-    ContinentSize: array[0..maxCOD - 1] of integer;
-    OceanSize: array[0..maxCOD - 1] of integer;
-    mixBest: array[0..nModelCategory - 1] of integer;
+    TurnOfMapAnalysis, Neighbours: Integer;
+    ContinentPresence: array[0..maxCOD - 1] of Integer;
+    OceanPresence: array[0..maxCOD - 1] of Integer;
+    ContinentSize: array[0..maxCOD - 1] of Integer;
+    OceanSize: array[0..maxCOD - 1] of Integer;
+    mixBest: array[0..nModelCategory - 1] of Integer;
     NegoCause: (CancelTreaty);
-    function IsModelAvailable(rmix: integer): boolean;
+    function IsModelAvailable(rmix: Integer): Boolean;
     procedure FindBestModels;
     procedure AnalyzeMap;
-    procedure RateAttack(uix: integer);
-    function DoAttack(uix, AttackLoc: integer): boolean;
-    function ProcessMove(uix: integer): boolean;
+    procedure RateAttack(uix: Integer);
+    function DoAttack(uix, AttackLoc: Integer): Boolean;
+    function ProcessMove(uix: Integer): Boolean;
     procedure AttackAndPatrol;
   end;
 
@@ -72,9 +72,9 @@ uses
 
 type
   TResearchModel = record
-    Category, Domain, Weight, adStop, FutMStrength: integer;
-    Upgrades: cardinal;
-    Cap: array [0..nFeature - 1] of integer;
+    Category, Domain, Weight, adStop, FutMStrength: Integer;
+    Upgrades: Cardinal;
+    Cap: array [0..nFeature - 1] of Integer;
   end;
 
 const
@@ -92,7 +92,7 @@ const
   ReduceDefense = 16; // if this is x, 1/x of all units is used to defend cities
 
   nResearchOrder = 40;
-  ResearchOrder: array[0..nResearchOrder - 1] of integer =
+  ResearchOrder: array[0..nResearchOrder - 1] of Integer =
     (adBronzeWorking, -adMapMaking, adChivalry, adMonotheism, adIronWorking,
     adGunPowder, adTheology, adConstruction, adCodeOfLaws, -adEngineering,
     -adSeafaring, -adNavigation, adMetallurgy, adBallistics, adScience, adExplosives,
@@ -170,22 +170,22 @@ const
 
 
 var
-  Moved: array[0..numax - 1] of boolean;
-  UnitPresence: array[0..lxmax * lymax - 1] of byte;
+  Moved: array[0..numax - 1] of Boolean;
+  UnitPresence: array[0..lxmax * lymax - 1] of Byte;
   euixMap: array[0..lxmax * lymax - 1] of smallint;
   uixAttack: array[0..neumax - 1] of smallint;
-  AttackScore: array[0..neumax - 1] of integer;
+  AttackScore: array[0..neumax - 1] of Integer;
 
-constructor TBarbarina.Create(Nation: integer);
+constructor TBarbarina.Create(Nation: Integer);
 begin
   inherited;
   TurnOfMapAnalysis := -1;
 end;
 
 // whether one of the existing models matches a specific research model
-function TBarbarina.IsModelAvailable(rmix: integer): boolean;
+function TBarbarina.IsModelAvailable(rmix: Integer): Boolean;
 var
-  i, mix, MStrength: integer;
+  I, mix, MStrength: Integer;
 begin
   Result := False;
   with ResearchModel[rmix] do
@@ -198,21 +198,21 @@ begin
       begin
         Result := MStrength < (MyModel[mix].MStrength * 3) div 2;
         // for future techs: don't count model available if 50% stronger possible
-        for i := 0 to nFeature - 1 do
-          if MyModel[mix].Cap[i] < Cap[i] then
+        for I := 0 to nFeature - 1 do
+          if MyModel[mix].Cap[I] < Cap[I] then
           begin
             Result := False;
-            break;
+            Break;
           end;
         if Result then
-          break;
+          Break;
       end;
   end;
 end;
 
-function TBarbarina.Barbarina_GoHidden: boolean;
+function TBarbarina.Barbarina_GoHidden: Boolean;
 var
-  V21, Loc1, cix: integer;
+  V21, Loc1, cix: Integer;
   Radius: TVicinity21Loc;
 begin
   if IsResearched(adMassProduction) then
@@ -237,7 +237,7 @@ begin
     Result := False;
 end;
 
-function TBarbarina.Barbarina_Go: boolean;
+function TBarbarina.Barbarina_Go: Boolean;
 begin
   if IsResearched(adMassProduction) then
     Result := IsResearched(adTheology) and IsModelAvailable(EntryModel_MassProduction)
@@ -248,27 +248,27 @@ begin
   begin
     Result := (RO.nCity >= 3) and IsResearched(adMapMaking) and
       IsModelAvailable(EntryModel_Base);
-    exit;
+    Exit;
   end;
   Result := Result and ((RO.nUn >= RO.nCity * 3) or
-    (RO.Wonder[woZeus].EffectiveOwner = me));
+    (RO.Wonder[woZeus].EffectiveOwner = Me));
 end;
 
 procedure TBarbarina.AnalyzeMap;
 var
-  Loc, Loc1, V8, f1, p1, cix: integer;
+  Loc, Loc1, V8, f1, p1, cix: Integer;
   Adjacent: TVicinity8Loc;
 begin
   if TurnOfMapAnalysis = RO.Turn then
-    exit;
+    Exit;
 
   // inherited;
 
   // collect nation presence information for continents and oceans
-  fillchar(ContinentPresence, sizeof(ContinentPresence), 0);
-  fillchar(OceanPresence, sizeof(OceanPresence), 0);
-  fillchar(ContinentSize, sizeof(ContinentSize), 0);
-  fillchar(OceanSize, sizeof(OceanSize), 0);
+  FillChar(ContinentPresence, SizeOf(ContinentPresence), 0);
+  FillChar(OceanPresence, SizeOf(OceanPresence), 0);
+  FillChar(ContinentSize, SizeOf(ContinentSize), 0);
+  FillChar(OceanSize, SizeOf(OceanSize), 0);
   for Loc := 0 to MapSize - 1 do
   begin
     f1 := Formation[Loc];
@@ -338,10 +338,10 @@ end;
 
 procedure TBarbarina.FindBestModels;
 var
-  i, mix, rmix, cat: integer;
+  I, mix, rmix, cat: Integer;
 begin
-  for i := 0 to nModelCategory - 1 do
-    mixBest[i] := -1;
+  for I := 0 to nModelCategory - 1 do
+    mixBest[I] := -1;
   for rmix := nResearchModel - 1 downto 0 do
     with ResearchModel[rmix] do
       if mixBest[Category] < 0 then
@@ -350,14 +350,14 @@ begin
             (Upgrades and not MyModel[mix].Upgrades = 0) then
           begin
             mixBest[Category] := mix;
-            for i := 0 to nFeature - 1 do
-              if MyModel[mix].Cap[i] < Cap[i] then
+            for I := 0 to nFeature - 1 do
+              if MyModel[mix].Cap[I] < Cap[I] then
               begin
                 mixBest[Category] := -1;
-                break;
+                Break;
               end;
             if mixBest[Category] >= 0 then
-              break;
+              Break;
           end;
   for mix := 3 to RO.nModel - 1 do
     with MyModel[mix] do
@@ -386,7 +386,7 @@ begin
       if MyModel[mix].Cap[mcSeaTrans] > 0 then
       begin
         mixBest[ctSeaTrans] := mix;
-        break;
+        Break;
       end;
 end;
 
@@ -405,20 +405,20 @@ begin
 end;
 
 // find one unit to destroy each known enemy unit, result in uixAttack
-procedure TBarbarina.RateAttack(uix: integer);
+procedure TBarbarina.RateAttack(uix: Integer);
 var
   MoveStyle, TestLoc, TestTime, NextLoc, NextTime, V8, RemHealth,
-  RecoverTurns, Score, BestScore, euixBest, uixOld: integer;
-  NextTile: cardinal;
+  RecoverTurns, Score, BestScore, euixBest, uixOld: Integer;
+  NextTile: Cardinal;
   Adjacent: TVicinity8Loc;
   Defense: ^TUnitInfo;
-  Reached: array[0..lxmax * lymax - 1] of boolean;
+  Reached: array[0..lxmax * lymax - 1] of Boolean;
 begin
   with MyUnit[uix] do
     if Movement > 0 then
     begin
       BestScore := 0;
-      fillchar(Reached, MapSize, False);
+      FillChar(Reached, MapSize, False);
       MoveStyle := GetMyMoveStyle(mix, Health);
       Pile.Create(MapSize);
       Pile.Put(Loc, $800 - Movement);
@@ -493,16 +493,16 @@ begin
     end;
 end;
 
-function TBarbarina.DoAttack(uix, AttackLoc: integer): boolean;
+function TBarbarina.DoAttack(uix, AttackLoc: Integer): Boolean;
   // AttackLoc=maNextCity means bombard only
 var
   MoveResult, Kind, Temp, MoveStyle, TestLoc, TestTime, NextLoc,
-  NextTime, V8, RecoverTurns, ecix: integer;
-  NextTile: cardinal;
-  AttackPositionReached, IsBombardment: boolean;
+  NextTime, V8, RecoverTurns, ecix: Integer;
+  NextTile: Cardinal;
+  AttackPositionReached, IsBombardment: Boolean;
   Adjacent: TVicinity8Loc;
-  PreLoc: array[0..lxmax * lymax - 1] of word;
-  Reached: array[0..lxmax * lymax - 1] of boolean;
+  PreLoc: array[0..lxmax * lymax - 1] of Word;
+  Reached: array[0..lxmax * lymax - 1] of Boolean;
 begin
   Result := False;
   IsBombardment := AttackLoc = maNextCity;
@@ -515,7 +515,7 @@ begin
         Kind := ukSlow
     else
       Kind := 0;
-    fillchar(Reached, MapSize, False);
+    FillChar(Reached, MapSize, False);
     AttackPositionReached := False;
     MoveStyle := GetMyMoveStyle(mix, Health);
     Pile.Create(MapSize);
@@ -523,7 +523,7 @@ begin
     while Pile.Get(TestLoc, TestTime) do
     begin
       if (TestTime >= $800) or (AttackLoc = maNextCity) and (TestTime > $800 - 100) then
-        break;
+        Break;
       Reached[TestLoc] := True;
       V8_to_Loc(TestLoc, Adjacent);
       for V8 := 0 to 7 do
@@ -536,7 +536,7 @@ begin
             (RO.Treaty[RO.Territory[NextLoc]] < trPeace) then
           begin
             City_FindEnemyCity(NextLoc, ecix);
-            assert(ecix >= 0);
+            Assert(ecix >= 0);
             with RO.EnemyCity[ecix] do
               if (Size > 2) and (Flags and ciCoastalFort = 0) then
                 AttackLoc := NextLoc;
@@ -546,7 +546,7 @@ begin
             // ships can only attack from water
           begin
             AttackPositionReached := True;
-            break;
+            Break;
           end
           else if not Reached[NextLoc] then
           begin
@@ -571,12 +571,12 @@ begin
       if AttackPositionReached then
       begin
         PreLoc[NextLoc] := TestLoc;
-        break;
+        Break;
       end;
     end;
     Pile.Free;
     if not AttackPositionReached then
-      exit;
+      Exit;
 
     TestLoc := AttackLoc;
     NextLoc := PreLoc[TestLoc];
@@ -600,7 +600,7 @@ begin
     if IsBombardment and Result then
     begin
       City_FindEnemyCity(AttackLoc, ecix);
-      assert(ecix >= 0);
+      Assert(ecix >= 0);
       while (Movement >= 100) and (RO.EnemyCity[ecix].Size > 2) do
         Unit_Step(uix, AttackLoc);
     end;
@@ -610,20 +610,20 @@ begin
   end;
 end;
 
-function TBarbarina.ProcessMove(uix: integer): boolean;
+function TBarbarina.ProcessMove(uix: Integer): Boolean;
   // return true if no new enemy spotted
 const
   DistanceScore = 4;
 var
   PatrolScore, BestCount, PatrolLoc, TestLoc, NextLoc, TestTime, V8,
   TestScore, MoveResult, MoveStyle, NextTime, TerrOwner, Kind, Temp,
-  RecoverTurns, MaxScore: integer;
-  Tile, NextTile: cardinal;
-  CaptureOnly, PeaceBorder, done, NextToEnemyCity: boolean;
+  RecoverTurns, MaxScore: Integer;
+  Tile, NextTile: Cardinal;
+  CaptureOnly, PeaceBorder, done, NextToEnemyCity: Boolean;
   Adjacent: TVicinity8Loc;
-  AdjacentUnknown: array[0..lxmax * lymax - 1] of shortint;
-  PreLoc: array[0..lxmax * lymax - 1] of word;
-  MoreTurn: array[0..lxmax * lymax - 1] of byte;
+  AdjacentUnknown: array[0..lxmax * lymax - 1] of ShortInt;
+  PreLoc: array[0..lxmax * lymax - 1] of Word;
+  MoreTurn: array[0..lxmax * lymax - 1] of Byte;
 
 begin
   Result := True;
@@ -636,7 +636,7 @@ begin
       begin
         if Map[Loc] and fCity = 0 then
           Unit_MoveEx(uix, maNextCity);
-        exit;
+        Exit;
       end;
 
       if (MyModel[mix].Domain = dGround) and (MyModel[mix].Attack > 0) then
@@ -665,11 +665,11 @@ begin
         if (MaxScore * $1000 - DistanceScore * TestTime <= PatrolScore)
           // assume a score of $400 is the best achievable
           or CaptureOnly and (TestTime >= $1000) then
-          break;
+          Break;
 
         TestScore := 0;
         Tile := Map[TestLoc];
-        assert(Tile and (fUnit or fOwned) <> fUnit);
+        Assert(Tile and (fUnit or fOwned) <> fUnit);
         TerrOwner := RO.Territory[TestLoc];
         AdjacentUnknown[TestLoc] := 0;
         PeaceBorder := False;
@@ -742,7 +742,7 @@ begin
               (MyModel[mix].Domain = dGround) then
               TestScore := $400 - 14
             else if AdjacentUnknown[TestLoc] > 0 then
-              if PeaceBorder or (TerrOwner >= 0) and (TerrOwner <> me) and
+              if PeaceBorder or (TerrOwner >= 0) and (TerrOwner <> Me) and
                 (RO.Treaty[TerrOwner] < trPeace) then
                 TestScore := $400 - 32 + AdjacentUnknown[TestLoc]
               else
@@ -789,7 +789,7 @@ begin
           done := True; // no effect if enemy spotted
         end;
         if PatrolLoc = Loc then
-          exit;
+          Exit;
         TestLoc := PatrolLoc;
         NextLoc := PreLoc[TestLoc];
         while TestLoc <> Loc do
@@ -813,9 +813,9 @@ begin
               Moved[uix] := True;
             Result := MoveResult and rEnemySpotted = 0;
             done := True;
-            break;
+            Break;
           end;
-          assert(Loc = NextLoc);
+          Assert(Loc = NextLoc);
         end;
         if Loc >= 0 then
         begin
@@ -838,9 +838,9 @@ procedure TBarbarina.AttackAndPatrol;
 
   procedure SetCityDefenders;
   var
-    uix, cix, V8, Loc1, Best, uixBest, det: integer;
+    uix, cix, V8, Loc1, Best, uixBest, det: Integer;
     Adjacent: TVicinity8Loc;
-    IsPort: boolean;
+    IsPort: Boolean;
   begin
     for cix := 0 to RO.nCity - 1 do
       with MyCity[cix] do
@@ -886,17 +886,17 @@ procedure TBarbarina.AttackAndPatrol;
 
   procedure ProcessSeaTransport;
   var
-    i, f, uix, Loc1, a, b: integer;
-    ready, go: boolean;
+    I, F, uix, Loc1, A, B: Integer;
+    ready, go: Boolean;
     TransportPlan: TGroupTransportPlan;
   begin
     go := False;
-    for f := 0 to maxCOD - 1 do
-      if (f < nContinent) and (ContinentPresence[f] and not
-        (1 shl me or PresenceUnknown) <> 0) then
+    for F := 0 to maxCOD - 1 do
+      if (F < nContinent) and (ContinentPresence[F] and not
+        (1 shl Me or PresenceUnknown) <> 0) then
         go := True; // any enemy island known?
     if not go then
-      exit;
+      Exit;
 
     SeaTransport_BeginInitialize;
     go := False;
@@ -906,9 +906,9 @@ procedure TBarbarina.AttackAndPatrol;
           if (Loc >= 0) and (MyModel[mix].Domain = dGround) and
             (MyModel[mix].Attack > 0) and (Map[Loc] and fTerrain >= fGrass) then
           begin
-            f := Formation[Loc];
-            if (f >= 0) and (f < maxCOD) and (ContinentPresence[f] and
-              not (1 shl me) = 0) then
+            F := Formation[Loc];
+            if (F >= 0) and (F < maxCOD) and (ContinentPresence[F] and
+              not (1 shl Me) = 0) then
             begin
               go := True;
               SeaTransport_AddLoad(uix);
@@ -931,9 +931,9 @@ procedure TBarbarina.AttackAndPatrol;
       for Loc1 := 0 to MapSize - 1 do
         if Map[Loc1] and fTerrain >= fGrass then
         begin
-          f := Formation[Loc1];
-          if (f >= 0) and (f < maxCOD) and (ContinentPresence[f] and
-            not (1 shl me or PresenceUnknown) <> 0) then
+          F := Formation[Loc1];
+          if (F >= 0) and (F < maxCOD) and (ContinentPresence[F] and
+            not (1 shl Me or PresenceUnknown) <> 0) then
             SeaTransport_AddDestination(Loc1);
         end;
     SeaTransport_EndInitialize;
@@ -947,36 +947,36 @@ procedure TBarbarina.AttackAndPatrol;
         ready := MyUnit[TransportPlan.uixTransport].Loc = TransportPlan.LoadLoc;
       end;
       if ready then
-        for i := 0 to TransportPlan.nLoad - 1 do
+        for I := 0 to TransportPlan.nLoad - 1 do
         begin
           Loc_to_ab(TransportPlan.LoadLoc,
-            MyUnit[TransportPlan.uixLoad[i]].Loc, a, b);
-          ready := ready and (abs(a) <= 1) and (abs(b) <= 1);
+            MyUnit[TransportPlan.uixLoad[I]].Loc, A, B);
+          ready := ready and (abs(A) <= 1) and (abs(B) <= 1);
         end;
       if ready then
       begin
-        for i := 0 to TransportPlan.nLoad - 1 do
+        for I := 0 to TransportPlan.nLoad - 1 do
         begin
-          Unit_Step(TransportPlan.uixLoad[i], TransportPlan.LoadLoc);
-          Moved[TransportPlan.uixLoad[i]] := True;
+          Unit_Step(TransportPlan.uixLoad[I], TransportPlan.LoadLoc);
+          Moved[TransportPlan.uixLoad[I]] := True;
         end;
       end
       else
       begin
-        for i := 0 to TransportPlan.nLoad - 1 do
+        for I := 0 to TransportPlan.nLoad - 1 do
         begin
-          Unit_MoveEx(TransportPlan.uixLoad[i], TransportPlan.LoadLoc, mxAdjacent);
-          Moved[TransportPlan.uixLoad[i]] := True;
+          Unit_MoveEx(TransportPlan.uixLoad[I], TransportPlan.LoadLoc, mxAdjacent);
+          Moved[TransportPlan.uixLoad[I]] := True;
         end;
       end;
     end;
   end;
 
-  procedure ProcessUnload(uix: integer);
+  procedure ProcessUnload(uix: Integer);
 
-    procedure Unload(Kind, ToLoc: integer);
+    procedure Unload(Kind, ToLoc: Integer);
     var
-      uix1: integer;
+      uix1: Integer;
     begin
       for uix1 := 0 to RO.nUn - 1 do
         with MyUnit[uix1] do
@@ -986,16 +986,16 @@ procedure TBarbarina.AttackAndPatrol;
           begin
             Unit_Step(uix1, ToLoc);
             UnitPresence[ToLoc] := UnitPresence[ToLoc] or Kind;
-            break;
+            Break;
           end;
     end;
 
   var
     uix1, MoveStyle, TestLoc, TestTime, NextLoc, NextTime, V8,
-    RecoverTurns, nSlow, nFast, SlowUnloadLoc, FastUnloadLoc, EndLoc, f: integer;
-    NextTile: cardinal;
+    RecoverTurns, nSlow, nFast, SlowUnloadLoc, FastUnloadLoc, EndLoc, F: Integer;
+    NextTile: Cardinal;
     Adjacent: TVicinity8Loc;
-    Reached: array[0..lxmax * lymax - 1] of boolean;
+    Reached: array[0..lxmax * lymax - 1] of Boolean;
   begin
     // inventory
     nSlow := 0;
@@ -1016,7 +1016,7 @@ procedure TBarbarina.AttackAndPatrol;
         SlowUnloadLoc := -1;
         FastUnloadLoc := -1;
         EndLoc := -1;
-        fillchar(Reached, MapSize, False);
+        FillChar(Reached, MapSize, False);
         Pile.Create(MapSize);
         Pile.Put(Loc, $800 - Movement);
         while (SlowUnloadLoc < 0) and (FastUnloadLoc < 0) and
@@ -1033,9 +1033,9 @@ procedure TBarbarina.AttackAndPatrol;
               if NextTile and fTerrain = fUnknown then
               else if NextTile and fTerrain >= fGrass then
               begin
-                f := Formation[NextLoc];
-                if (f >= 0) and (f < maxCOD) and
-                  (ContinentPresence[f] and not (1 shl me or PresenceUnknown) <> 0) and
+                F := Formation[NextLoc];
+                if (F >= 0) and (F < maxCOD) and
+                  (ContinentPresence[F] and not (1 shl Me or PresenceUnknown) <> 0) and
                   (NextTile and (fUnit or fOwned) <> fUnit) then
                 begin
                   if (nSlow > 0) and (UnitPresence[NextLoc] and
@@ -1073,11 +1073,11 @@ procedure TBarbarina.AttackAndPatrol;
         Pile.Free;
 
         if EndLoc < 0 then
-          exit;
+          Exit;
         if Loc <> EndLoc then
           Unit_MoveEx(uix, EndLoc);
         if Loc <> EndLoc then
-          exit;
+          Exit;
         if SlowUnloadLoc >= 0 then
         begin
           Unload(ukSlow, SlowUnloadLoc);
@@ -1091,18 +1091,18 @@ procedure TBarbarina.AttackAndPatrol;
         if TroopLoad = 0 then
         begin
           Moved[uix] := False;
-          exit;
+          Exit;
         end
       until False;
     end;
   end;
 
 var
-  uix, euix, Kind, euixBest, AttackLoc: integer;
-  OldTile: cardinal;
-  BackToStart, FirstLoop: boolean;
+  uix, euix, Kind, euixBest, AttackLoc: Integer;
+  OldTile: Cardinal;
+  BackToStart, FirstLoop: Boolean;
 begin
-  fillchar(UnitPresence, MapSize, 0);
+  FillChar(UnitPresence, MapSize, 0);
   for uix := 0 to RO.nUn - 1 do
     with MyUnit[uix] do
       if (Loc >= 0) and (MyModel[mix].Domain = dGround) and
@@ -1115,7 +1115,7 @@ begin
         UnitPresence[Loc] := UnitPresence[Loc] or Kind;
       end;
 
-  fillchar(Moved, RO.nUn, False);
+  FillChar(Moved, RO.nUn, False);
   for uix := 0 to RO.nUn - 1 do
     if (MyUnit[uix].Master >= 0) or (MyUnit[uix].TroopLoad > 0) then
       Moved[uix] := True;
@@ -1127,8 +1127,8 @@ begin
       BackToStart := False;
       if RO.nEnemyUn > 0 then
       begin
-        fillchar(euixMap, MapSize * 2, $FF);
-        fillchar(AttackScore, RO.nEnemyUn * 4, 0);
+        FillChar(euixMap, MapSize * 2, $FF);
+        FillChar(AttackScore, RO.nEnemyUn * 4, 0);
         for euix := 0 to RO.nEnemyUn - 1 do
           with RO.EnemyUn[euix] do
             if (Loc >= 0) and (RO.Treaty[Owner] < trPeace) then
@@ -1139,7 +1139,7 @@ begin
             end;
       end;
       if not BackToStart then
-        break;
+        Break;
 
       for uix := 0 to RO.nUn - 1 do
         with MyUnit[uix] do
@@ -1154,7 +1154,7 @@ begin
             (AttackScore[euix] > AttackScore[euixBest])) then
             euixBest := euix;
         if euixBest < 0 then
-          break;
+          Break;
         uix := uixAttack[euixBest];
         AttackLoc := RO.EnemyUn[euixBest].Loc;
         OldTile := Map[AttackLoc];
@@ -1201,7 +1201,7 @@ begin
             if not ProcessMove(uix) then
             begin
               BackToStart := True;
-              break;
+              Break;
             end
   until not BackToStart;
 end;
@@ -1213,9 +1213,9 @@ const
   PrimeWonder = 1 shl woColossus + 1 shl woGrLibrary + 1 shl woSun +
     1 shl woMagellan + 1 shl woEiffel + 1 shl woLiberty + 1 shl woShinkansen;
 
-  function LowPriority(cix: integer): boolean;
+  function LowPriority(cix: Integer): Boolean;
   var
-    part, cixHighPriority, TestDistance: integer;
+    part, cixHighPriority, TestDistance: Integer;
   begin
     Result := False;
     for part := 0 to nShipPart - 1 do
@@ -1227,15 +1227,15 @@ const
         if TestDistance < 11 then
         begin
           Result := True;
-          exit;
+          Exit;
         end;
       end;
     end;
   end;
 
-  function ChooseWonderToBuild(WonderAvailable: integer; AllowCoastal: boolean): integer;
+  function ChooseWonderToBuild(WonderAvailable: Integer; AllowCoastal: Boolean): Integer;
   var
-    Count, iix: integer;
+    Count, iix: Integer;
   begin
     if (WonderAvailable and PrimeWonder > 0) and (AllowCoastal or
       (WonderAvailable and PrimeWonder and not CoastalWonder > 0)) then
@@ -1266,21 +1266,21 @@ const
       if Count < 0 then
       begin
         Result := iix;
-        exit;
+        Exit;
       end;
     end;
   end;
 
 var
-  i, iix, cix, mix, uix, mixProduce, mixShip, V8, V21, Loc1, TotalPop,
-  AlonePop, f, f1, nTownGuard, ShipPart, ProduceShipPart, TestDistance,
-  part, WonderAvailable, WonderInWork, cixNewCapital, Center, Score, BestScore: integer;
-  mixCount: array[0..nmmax - 1] of integer;
+  I, iix, cix, mix, uix, mixProduce, mixShip, V8, V21, Loc1, TotalPop,
+  AlonePop, F, f1, nTownGuard, ShipPart, ProduceShipPart, TestDistance,
+  part, WonderAvailable, WonderInWork, cixNewCapital, Center, Score, BestScore: Integer;
+  mixCount: array[0..nmmax - 1] of Integer;
   //RareLoc: array[0..5] of integer;
   Adjacent: TVicinity8Loc;
   IsCoastal, IsPort, IsUnitProjectObsolete, HasSettler, SpezializeShipProduction,
   AlgaeAvailable, ProjectComplete, DoLowPriority, WillProduceColonyShip,
-  ImportantCity: boolean;
+  ImportantCity: Boolean;
   Radius: TVicinity21Loc;
   Report: TCityReportNew;
 begin
@@ -1288,7 +1288,7 @@ begin
 
   FindBestModels;
 
-  fillchar(mixCount, RO.nModel * 4, 0);
+  FillChar(mixCount, RO.nModel * 4, 0);
   for uix := 0 to RO.nUn - 1 do
     with MyUnit[uix] do
       if Loc >= 0 then
@@ -1316,8 +1316,8 @@ begin
       if (Loc >= 0) and (Flags and chCaptured = 0) then
       begin
         Inc(TotalPop, Size);
-        f := Formation[Loc];
-        if (f < 0) or (f >= maxCOD) or (ContinentPresence[f] = 1 shl me) then
+        F := Formation[Loc];
+        if (F < 0) or (F >= maxCOD) or (ContinentPresence[F] = 1 shl Me) then
           Inc(AlonePop, Size);
       end;
   SpezializeShipProduction := AlonePop * 2 >= TotalPop;
@@ -1357,10 +1357,10 @@ begin
               f1 := Formation[Loc1];
               if (f1 >= 0) and (f1 < maxCOD) and
                 ((OceanSize[f1] >= 8) or (OceanPresence[f1] and not
-                (1 shl me) <> 0)) then
+                (1 shl Me) <> 0)) then
               begin // prefer non-coastal cities
                 Dec(Score, 18);
-                break;
+                Break;
               end;
             end;
           end;
@@ -1389,7 +1389,7 @@ begin
         if (Loc >= 0) and (Flags and chCaptured = 0) and
           (LowPriority(cix) = DoLowPriority) then
         begin
-          f := Formation[Loc];
+          F := Formation[Loc];
           IsCoastal := False;
           IsPort := False;
           V8_to_Loc(Loc, Adjacent);
@@ -1401,20 +1401,20 @@ begin
               IsCoastal := True;
               f1 := Formation[Loc1];
               if (f1 >= 0) and (f1 < maxCOD) and (OceanSize[f1] >= 8) and
-                (OceanPresence[f1] and not (1 shl me) <> 0) then
+                (OceanPresence[f1] and not (1 shl Me) <> 0) then
               begin
                 IsPort := True;
-                break;
+                Break;
               end;
             end;
           end;
           if (City_CurrentUnitProject(cix) >= 0) and
             (RO.Model[City_CurrentUnitProject(cix)].Kind <> mkSettler) then
           begin
-            i := nModelCategory - 1;
-            while (i >= 0) and (City_CurrentUnitProject(cix) <> mixBest[i]) do
-              Dec(i);
-            IsUnitProjectObsolete := i < 0;
+            I := nModelCategory - 1;
+            while (I >= 0) and (City_CurrentUnitProject(cix) <> mixBest[I]) do
+              Dec(I);
+            IsUnitProjectObsolete := I < 0;
           end
           else
             IsUnitProjectObsolete := False;
@@ -1580,12 +1580,12 @@ begin
               and City_Improvable(cix,imMissileBat) then
               City_StartImprovement(cix,imMissileBat)}
                 else if IsPort and (not SpezializeShipProduction or
-                  (f < 0) or (f >= maxCOD) or (ContinentPresence[f] = 1 shl me)) and
+                  (F < 0) or (F >= maxCOD) or (ContinentPresence[F] = 1 shl Me)) and
                   (Built[imDockyard] = 0) and City_Improvable(cix, imDockyard) then
                   City_StartImprovement(cix, imDockyard)
                 else if IsPort and (mixShip >= 0) and
-                  (not SpezializeShipProduction or (f < 0) or
-                  (f >= maxCOD) or (ContinentPresence[f] = 1 shl me)) then
+                  (not SpezializeShipProduction or (F < 0) or
+                  (F >= maxCOD) or (ContinentPresence[F] = 1 shl Me)) then
                   City_StartUnitProduction(cix, mixShip)
                 else if (Built[imBarracks] + Built[imMilAcademy] = 0) and
                   City_Improvable(cix, imBarracks) then
@@ -1599,8 +1599,8 @@ begin
           end;
           if (City_CurrentImprovementProject(cix) = imCourt) and
             (Built[imTownHall] > 0) and (prod >= imp[imCourt].cost *
-            BuildCostMod[G.Difficulty[me]] div 12 -
-            (imp[imTownHall].cost * BuildCostMod[G.Difficulty[me]] div 12) *
+            BuildCostMod[G.Difficulty[Me]] div 12 -
+            (imp[imTownHall].cost * BuildCostMod[G.Difficulty[Me]] div 12) *
             2 div 3) then
             City_RebuildImprovement(cix, imTownHall)
           else if (RO.Government = gFundamentalism) and not WillProduceColonyShip then
@@ -1613,34 +1613,34 @@ begin
               begin
                 if City_RebuildImprovement(cix, iix) < rExecuted then
                   City_SellImprovement(cix, iix);
-                break;
+                Break;
               end;
         end;
 end;
 
-function TBarbarina.Barbarina_ChooseResearchAdvance: integer;
+function TBarbarina.Barbarina_ChooseResearchAdvance: Integer;
 var
-  nPreq, rmix, rmixChosen, i, MaxWeight, MaxDefense, ChosenPreq: integer;
-  NeedSeaUnits, ready: boolean;
+  nPreq, rmix, rmixChosen, I, MaxWeight, MaxDefense, ChosenPreq: Integer;
+  NeedSeaUnits, ready: Boolean;
   ModelExists: set of 0..nModelCategory - 1;
-  known: array[0..nAdv - 1] of integer;
+  known: array[0..nAdv - 1] of Integer;
 
-  procedure ChoosePreq(ad: integer);
+  procedure ChoosePreq(ad: Integer);
   var
-    i: integer;
-    PreqOk: boolean;
+    I: Integer;
+    PreqOk: Boolean;
   begin
-    assert(RO.Tech[ad] < tsApplicable);
+    Assert(RO.Tech[ad] < tsApplicable);
     if known[ad] = 0 then
     begin
       known[ad] := 1;
       PreqOk := True;
       if not (ad in [adScience, adMassProduction]) and (RO.Tech[ad] < tsSeen) then
-        for i := 0 to 1 do
-          if (AdvPreq[ad, i] >= 0) and (RO.Tech[AdvPreq[ad, i]] < tsApplicable) then
+        for I := 0 to 1 do
+          if (AdvPreq[ad, I] >= 0) and (RO.Tech[AdvPreq[ad, I]] < tsApplicable) then
           begin
             PreqOk := False;
-            ChoosePreq(AdvPreq[ad, i]);
+            ChoosePreq(AdvPreq[ad, I]);
           end;
       if PreqOk then
       begin
@@ -1696,20 +1696,20 @@ begin
           Inc(MaxDefense);
         ready := (MaxWeight >= Weight) and (MaxDefense >= Cap[mcDefense]);
         if ready then
-          for i := 0 to nFeature - 1 do
-            if (Cap[i] > 0) and (Feature[i].Preq <> preNone) and
-              ((Feature[i].Preq < 0) or not IsResearched(Feature[i].Preq)) then
+          for I := 0 to nFeature - 1 do
+            if (Cap[I] > 0) and (Feature[I].Preq <> preNone) and
+              ((Feature[I].Preq < 0) or not IsResearched(Feature[I].Preq)) then
               ready := False;
         if ready then
         begin
-          for i := 0 to nUpgrade - 1 do
-            if (Upgrades and (1 shl i) <> 0) and not
-              IsResearched(Upgrade[Domain, i].Preq) then
+          for I := 0 to nUpgrade - 1 do
+            if (Upgrades and (1 shl I) <> 0) and not
+              IsResearched(Upgrade[Domain, I].Preq) then
               ready := False;
         end;
         if ready then
         begin
-          include(ModelExists, Category);
+          Include(ModelExists, Category);
           if not IsModelAvailable(rmix) then
             rmixChosen := rmix;
         end;
@@ -1718,10 +1718,10 @@ begin
     with ResearchModel[rmixChosen] do
     begin
       PrepareNewModel(Domain);
-      for i := 0 to nFeature - 1 do
-        if (i < 2) or (Cap[i] > 0) then
-          SetNewModelFeature(i, Cap[i]);
-      if RO.Wonder[woSun].EffectiveOwner = me then
+      for I := 0 to nFeature - 1 do
+        if (I < 2) or (Cap[I] > 0) then
+          SetNewModelFeature(I, Cap[I]);
+      if RO.Wonder[woSun].EffectiveOwner = Me then
       begin
         //if Cap[mcWeapons]>=2*Cap[mcArmor] then
         //  SetNewModelFeature(mcFirst,1);
@@ -1729,15 +1729,15 @@ begin
           SetNewModelFeature(mcWill, 1);
       end;
       Result := adMilitary;
-      exit;
+      Exit;
     end;
 
   NeedSeaUnits := True;
-  i := 0;
-  while (i < nResearchOrder) and (not NeedSeaUnits and (ResearchOrder[i] < 0) or
-      IsResearched(abs(ResearchOrder[i]))) do
-    Inc(i);
-  if i >= nResearchOrder then // list done, continue with future tech
+  I := 0;
+  while (I < nResearchOrder) and (not NeedSeaUnits and (ResearchOrder[I] < 0) or
+      IsResearched(abs(ResearchOrder[I]))) do
+    Inc(I);
+  if I >= nResearchOrder then // list done, continue with future tech
   begin
     if random(2) = 1 then
       Result := futArtificialIntelligence
@@ -1749,13 +1749,13 @@ begin
     FillChar(known, SizeOf(known), 0);
     nPreq := 0;
     ChosenPreq := -1;
-    ChoosePreq(abs(ResearchOrder[i]));
-    assert(nPreq > 0);
+    ChoosePreq(abs(ResearchOrder[I]));
+    Assert(nPreq > 0);
     Result := ChosenPreq;
   end;
 end;
 
-function TBarbarina.Barbarina_WantCheckNegotiation(Nation: integer): boolean;
+function TBarbarina.Barbarina_WantCheckNegotiation(Nation: Integer): Boolean;
 begin
   if (RO.Tech[adTheRepublic] < tsSeen) and (RO.Tech[adTheology] >= tsApplicable) and
     (RO.Tech[adGunPowder] >= tsApplicable) and
@@ -1768,7 +1768,7 @@ end;
 procedure TBarbarina.Barbarina_DoCheckNegotiation;
 begin
   if RO.Tech[adTheRepublic] >= tsSeen then
-    exit; // default reaction
+    Exit; // default reaction
   if MyLastAction = scContact then
   begin
     MyAction := scDipOffer;
@@ -1796,10 +1796,10 @@ begin
     MyAction := scDipBreak;
 end;
 
-function TBarbarina.Barbarina_WantNegotiation(Nation: integer;
-  NegoTime: TNegoTime): boolean;
+function TBarbarina.Barbarina_WantNegotiation(Nation: Integer;
+  NegoTime: TNegoTime): Boolean;
 var
-  uix, TestLoc, V8: integer;
+  uix, TestLoc, V8: Integer;
   Adjacent: TVicinity8Loc;
 begin
   Result := False;
@@ -1811,7 +1811,7 @@ begin
     BeginOfTurn:
       if RO.Turn >= RO.LastCancelTreaty[Nation] + CancelTreatyTurns then
       begin
-        if (RO.Turn and 3 = (Nation + $F - me) and 3) and
+        if (RO.Turn and 3 = (Nation + $F - Me) and 3) and
           (RO.Treaty[Nation] > trPeace) then
         begin
           DebugMessage(1, 'End alliance/friendly contact with P' + char(48 + Nation));
@@ -1837,7 +1837,7 @@ begin
                     DebugMessage(1, 'Declare war on P' + char(48 + Nation));
                     NegoCause := CancelTreaty;
                     Result := True;
-                    exit;
+                    Exit;
                   end;
                 end;
               end;
@@ -1857,10 +1857,10 @@ end;
 
 procedure TBarbarina.MakeColonyShipPlan;
 var
-  i, V21, V21C, CityLoc, Loc1, part, cix, BestValue, TestValue, FoodCount,
-  ProdCount, ProdExtra, Score, BestScore: integer;
-  Tile: cardinal;
-  ok, check: boolean;
+  I, V21, V21C, CityLoc, Loc1, part, cix, BestValue, TestValue, FoodCount,
+  ProdCount, ProdExtra, Score, BestScore: Integer;
+  Tile: Cardinal;
+  ok, check: Boolean;
   Radius, RadiusC: TVicinity21Loc;
 begin
   for part := 0 to nShipPart - 1 do
@@ -1886,17 +1886,17 @@ begin
               if Tile and fModern <> 0 then
               begin
                 part := (Tile and fModern) shr 25 - 1;
-                if RO.Ship[me].Parts[part] < ShipNeed[part] then
+                if RO.Ship[Me].Parts[part] < ShipNeed[part] then
                   // not enough of this kind already
                 begin
                   ok := True;
                   if ColonyShipPlan[part].cixProducing >= 0 then
                   begin // another city is already assigned to this ship part, choose one of the two
-                    TestValue := (ID and $FFF) shl 4 + ((ID shr 12) + 15 - me) and $F;
+                    TestValue := (ID and $FFF) shl 4 + ((ID shr 12) + 15 - Me) and $F;
                     BestValue :=
                       (MyCity[ColonyShipPlan[part].cixProducing].ID and $FFF) shl
                       4 + ((MyCity[ColonyShipPlan[part].cixProducing].ID shr 12) +
-                      15 - me) and $F;
+                      15 - Me) and $F;
                     if TestValue <= BestValue then
                       ok := False;
                   end;
@@ -1911,7 +1911,7 @@ begin
     // for parts without existing city, look for location of city to found
     check := False;
     for part := 0 to nShipPart - 1 do
-      if (RO.Ship[me].Parts[part] < ShipNeed[part]) // not enough of this kind already
+      if (RO.Ship[Me].Parts[part] < ShipNeed[part]) // not enough of this kind already
         and (ColonyShipPlan[part].cixProducing < 0) then // no city to produce
         check := True;
     if check then
@@ -1930,14 +1930,14 @@ begin
         end;
       end;
       for part := 0 to nShipPart - 1 do
-        if (RO.Ship[me].Parts[part] < ShipNeed[part]) // not enough of this kind already
+        if (RO.Ship[Me].Parts[part] < ShipNeed[part]) // not enough of this kind already
           and (ColonyShipPlan[part].cixProducing < 0) // no city to produce
           and (ColonyShipPlan[part].nLocResource > 0) then // resource is known
         begin
-          for i := 0 to ColonyShipPlan[part].nLocResource - 1 do
+          for I := 0 to ColonyShipPlan[part].nLocResource - 1 do
           begin
             BestScore := 0;
-            V21_to_Loc(ColonyShipPlan[part].LocResource[i], Radius);
+            V21_to_Loc(ColonyShipPlan[part].LocResource[I], Radius);
             for V21 := 1 to 26 do
             begin // check all potential cities in range
               CityLoc := Radius[V21];
@@ -1983,7 +1983,7 @@ begin
                     if FoodCount < 5 then
                       Dec(ProdCount, 5 - FoodCount);
                     Score := ProdCount * 4 + ProdExtra * 8 + FoodCount;
-                    Score := Score shl 8 + ((CityLoc xor me) * 4567) mod 251;
+                    Score := Score shl 8 + ((CityLoc xor Me) * 4567) mod 251;
                     // some unexactness, random but always the same for this tile
                   end;
                   if Score > BestScore then

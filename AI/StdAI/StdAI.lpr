@@ -11,12 +11,12 @@ uses
 
 var
   AIList: array[0..nPl - 1] of TCustomAI;
-  Defender: integer;
+  Defender: Integer;
 
 
-  procedure Client(Command, Player: integer; var Data); stdcall;
+  procedure Client(Command, Player: Integer; var Data); stdcall;
   var
-    p, y0, ToLoc: integer;
+    P, y0, ToLoc: Integer;
     UnitInfo: TUnitInfo;
   begin
     case Command of
@@ -31,24 +31,24 @@ var
         Randomize;
 {$ENDIF}
         CustomAI.Init(TNewGameData(Data));
-        for p := nPl - 1 downto 0 do
-          if G.RO[p] <> nil then
+        for P := nPl - 1 downto 0 do
+          if G.RO[P] <> nil then
           begin
-            AIList[p] := TAI.Create(p);
-            AIList[p].SetDataDefaults;
+            AIList[P] := TAI.Create(P);
+            AIList[P].SetDataDefaults;
           end
           else
-            AIList[p] := nil;
+            AIList[P] := nil;
         Defender := -1;
       end;
       cGetReady:
-        for p := nPl - 1 downto 0 do
-          if AIList[p] <> nil then
-            AIList[p].SetDataRandom;
+        for P := nPl - 1 downto 0 do
+          if AIList[P] <> nil then
+            AIList[P].SetDataRandom;
       cBreakGame:
-        for p := 0 to nPl - 1 do
-          if AIList[p] <> nil then
-            AIList[p].Free;
+        for P := 0 to nPl - 1 do
+          if AIList[P] <> nil then
+            AIList[P].Free;
 
       cTurn, cContinue, scContact..scDipBreak, cShowEndContact:
         AIList[Player].Process(Command, Data);

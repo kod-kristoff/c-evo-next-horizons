@@ -38,11 +38,11 @@ type
     CenterTo: Integer;
     IconKind: TMessageIconKind;
     OpenSound: string;
-    function ShowModal: integer; override;
+    function ShowModal: Integer; override;
     procedure CancelMovie;
   private
-    MovieCancelled: boolean;
-    procedure PaintBook(ca: TCanvas; x, y, clPage, clCover: integer);
+    MovieCancelled: Boolean;
+    procedure PaintBook(ca: TCanvas; X, Y, clPage, clCover: Integer);
     procedure PaintMyArmy;
     procedure PaintEnemyArmy;
     procedure OnPlaySound(var Msg: TMessage); message WM_PLAYSOUND;
@@ -52,11 +52,11 @@ var
   MessgExDlg: TMessgExDlg;
 
 procedure SoundMessageEx(SimpleText, SoundItem: string);
-procedure TribeMessage(p: integer; SimpleText, SoundItem: string);
+procedure TribeMessage(P: Integer; SimpleText, SoundItem: string);
 function SimpleQuery(QueryKind: TMessageKind; SimpleText, SoundItem: string)
-  : integer;
+  : Integer;
 procedure ContextMessage(SimpleText, SoundItem: string;
-  ContextKind, ContextNo: integer);
+  ContextKind, ContextNo: Integer);
 
 
 implementation
@@ -80,7 +80,7 @@ end;
 
 procedure TMessgExDlg.FormShow(Sender: TObject);
 var
-  i: integer;
+  I: Integer;
 begin
   if IconKind = mikEnemyArmy then
     InitAllEnemyModels;
@@ -149,7 +149,7 @@ begin
     TopSpace := 0;
   end;
 
-  SplitText(true);
+  SplitText(True);
   ClientHeight := 72 + Border + TopSpace + Lines * MessageLineSpacing;
   if GameMode = cMovie then
     ClientHeight := ClientHeight - 32;
@@ -180,13 +180,13 @@ begin
         Top := (Screen.Height - ClientHeight) div 3 - MapCenterUp;
       end;
   end;
-  for i := 0 to ControlCount - 1 do
-    Controls[i].Top := ClientHeight - (34 + Border);
+  for I := 0 to ControlCount - 1 do
+    Controls[I].Top := ClientHeight - (34 + Border);
   if Kind = mkModel then
     EInput.Top := ClientHeight - (76 + Border);
 end;
 
-function TMessgExDlg.ShowModal: integer;
+function TMessgExDlg.ShowModal: Integer;
 var
   Ticks0: TDateTime;
   Ticks: TDateTime;
@@ -196,7 +196,7 @@ begin
   begin
     if not((GameMode = cMovie) and (MovieSpeed = 4)) then
     begin
-      MovieCancelled := false;
+      MovieCancelled := False;
       Show;
       Ticks0 := NowPrecise;
       repeat
@@ -206,19 +206,19 @@ begin
       until MovieCancelled or (Round((Ticks - Ticks0) / OneMillisecond) >= 1500);
       Hide;
     end;
-    result := mrOk;
+    Result := mrOk;
   end
   else
-    result := inherited;
+    Result := inherited;
   Gtk2Fix;
 end;
 
 procedure TMessgExDlg.CancelMovie;
 begin
-  MovieCancelled := true;
+  MovieCancelled := True;
 end;
 
-procedure TMessgExDlg.PaintBook(ca: TCanvas; x, y, clPage, clCover: integer);
+procedure TMessgExDlg.PaintBook(ca: TCanvas; X, Y, clPage, clCover: Integer);
 const
   xScrewed = 77;
   yScrewed = 10;
@@ -227,9 +227,9 @@ const
 type
   TScrewed = array [0 .. wScrewed - 1, 0 .. hScrewed - 1, 0 .. 3] of Single;
 var
-  ix, iy, xDst, yDst, dx, dy, xIcon, yIcon: integer;
+  ix, iy, xDst, yDst, dx, dy, xIcon, yIcon: Integer;
   BookRect: TRect;
-  x1, xR, yR, share: single;
+  x1, xR, yR, share: Single;
   Screwed: TScrewed;
   SrcPtr: TPixelPointer;
   Width: Integer;
@@ -283,11 +283,11 @@ begin
   begin
     BookRect := SmallBook.BoundsRect;
   end;
-  x := x - BookRect.Width div 2;
+  X := X - BookRect.Width div 2;
 
   // paint
   UnshareBitmap(LogoBuffer);
-  BitBltCanvas(LogoBuffer.Canvas, 0, 0, BookRect.Width, BookRect.Height, ca, x, y);
+  BitBltCanvas(LogoBuffer.Canvas, 0, 0, BookRect.Width, BookRect.Height, ca, X, Y);
 
   if IconIndex >= 0 then
     for iy := 0 to hScrewed - 1 do
@@ -300,7 +300,7 @@ begin
 
   ImageOp_BCC(LogoBuffer, Templates.Data, Point(0, 0), BookRect, clCover, clPage);
 
-  BitBltCanvas(ca, x, y, BookRect.Width, BookRect.Height, LogoBuffer.Canvas, 0, 0);
+  BitBltCanvas(ca, X, Y, BookRect.Width, BookRect.Height, LogoBuffer.Canvas, 0, 0);
 end;
 
 procedure TMessgExDlg.PaintMyArmy;
@@ -309,7 +309,7 @@ end;
 
 procedure TMessgExDlg.PaintEnemyArmy;
 var
-  emix, ix, iy, x, y, count, UnitsInLine: integer;
+  emix, ix, iy, X, Y, count, UnitsInLine: Integer;
 begin
   ix := 0;
   iy := 0;
@@ -320,24 +320,24 @@ begin
   for emix := 0 to MyRO.nEnemyModel - 1 do
     for count := 0 to LostArmy[emix] - 1 do
     begin
-      x := ClientWidth div 2 + ix * 64 - UnitsInLine * 32;
-      y := 26 + Border + TopSpace + Lines * MessageLineSpacing + iy * 48;
+      X := ClientWidth div 2 + ix * 64 - UnitsInLine * 32;
+      Y := 26 + Border + TopSpace + Lines * MessageLineSpacing + iy * 48;
       with MyRO.EnemyModel[emix], Tribe[Owner].ModelPicture[mix] do
       begin
-        BitBltCanvas(Canvas, x, y, 64, 48, HGr.Mask.Canvas,
+        BitBltCanvas(Canvas, X, Y, 64, 48, HGr.Mask.Canvas,
           pix mod 10 * 65 + 1, pix div 10 * 49 + 1, SRCAND);
-        BitBltCanvas(Canvas, x, y, 64, 48, HGr.Data.Canvas,
+        BitBltCanvas(Canvas, X, Y, 64, 48, HGr.Data.Canvas,
           pix mod 10 * 65 + 1, pix div 10 * 49 + 1, SRCPAINT);
       end;
 
       // next position
-      inc(ix);
+      Inc(ix);
       if ix = LostUnitsPerLine then
       begin // next line
         ix := 0;
-        inc(iy);
+        Inc(iy);
         if iy = 6 then
-          exit;
+          Exit;
         UnitsInLine := nLostArmy - LostUnitsPerLine * iy;
         if UnitsInLine > LostUnitsPerLine then
           UnitsInLine := LostUnitsPerLine;
@@ -347,7 +347,7 @@ end;
 
 procedure TMessgExDlg.FormPaint(Sender: TObject);
 var
-  p1, clSaveTextLight, clSaveTextShade: integer;
+  p1, clSaveTextLight, clSaveTextShade: Integer;
 begin
   if (IconKind = mikImp) and (IconIndex = 27) then
   begin // "YOU WIN" message
@@ -393,7 +393,7 @@ begin
           ImpImage(Canvas, ClientWidth div 2 - 28, 24, 24 + IconIndex)
       end;
     mikModel:
-      with Tribe[me].ModelPicture[IconIndex] do
+      with Tribe[Me].ModelPicture[IconIndex] do
       begin
         FrameImage(Canvas, BigImp, ClientWidth div 2 - 28, 24, xSizeBig,
           ySizeBig, 0, 0);
@@ -497,7 +497,7 @@ begin
   end;
 end;
 
-procedure TribeMessage(p: integer; SimpleText, SoundItem: string);
+procedure TribeMessage(P: Integer; SimpleText, SoundItem: string);
 begin
   with MessgExDlg do
   begin
@@ -505,13 +505,13 @@ begin
     MessgText := SimpleText;
     Kind := mkOk;
     IconKind := mikTribe;
-    IconIndex := p;
+    IconIndex := P;
     ShowModal;
   end;
 end;
 
 function SimpleQuery(QueryKind: TMessageKind; SimpleText, SoundItem: string)
-  : integer;
+  : Integer;
 begin
   with MessgExDlg do
   begin
@@ -519,12 +519,12 @@ begin
     OpenSound := SoundItem;
     Kind := QueryKind;
     ShowModal;
-    result := ModalResult;
+    Result := ModalResult;
   end;
 end;
 
 procedure ContextMessage(SimpleText, SoundItem: string;
-  ContextKind, ContextNo: integer);
+  ContextKind, ContextNo: Integer);
 begin
   with MessgExDlg do
   begin

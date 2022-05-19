@@ -29,9 +29,9 @@ type
     destructor Destroy; override;
     procedure Init(Max, PageSize: Integer);
     procedure SetPos(Pos: Integer);
-    function Process(const Msg: TMessage): boolean;
+    function Process(const Msg: TMessage): Boolean;
     function ProcessMouseWheel(Delta: Integer): Boolean;
-    procedure Show(Visible: boolean);
+    procedure Show(Visible: Boolean);
     procedure EndSB;
     procedure SetBorderSpacing(Top, Right, Bottom: Integer);
     property OnUpdate: TNotifyEvent read FOnUpdate write FOnUpdate;
@@ -62,17 +62,17 @@ begin
   end;
 end;
 
-function TPVScrollBar.Process(const Msg: TMessage): boolean;
+function TPVScrollBar.Process(const Msg: TMessage): Boolean;
 var
-  NewPos: integer;
+  NewPos: Integer;
 begin
     if Max < ScrollBar.PageSize then
-      result := false
+      Result := False
     else
     begin
       if (Msg.wParam and $ffff) in [SB_THUMBPOSITION, SB_THUMBTRACK] then
       begin
-        result := ((Msg.wParam shr 16) and $ffff) <> ScrollBar.Position;
+        Result := ((Msg.wParam shr 16) and $ffff) <> ScrollBar.Position;
         ScrollBar.Position := (Msg.wParam shr 16) and $ffff;
       end else begin
         case (Msg.wParam and $ffff) of
@@ -91,7 +91,7 @@ begin
           NewPos := 0;
         if NewPos > Max - ScrollBar.PageSize + 1 then
           NewPos := Max - ScrollBar.PageSize + 1;
-        result := NewPos <> ScrollBar.Position;
+        Result := NewPos <> ScrollBar.Position;
         if (NewPos <> ScrollBar.Position) or ((Msg.wParam and $ffff) = SB_ENDSCROLL) then
         begin
           ScrollBar.Position := NewPos;
@@ -102,7 +102,7 @@ end;
 
 function TPVScrollBar.ProcessMouseWheel(Delta: Integer): Boolean;
 var
-  NewPos: integer;
+  NewPos: Integer;
 begin
     if Max < ScrollBar.PageSize then Result := False
     else begin
@@ -117,7 +117,7 @@ begin
     end;
 end;
 
-procedure TPVScrollBar.Show(Visible: boolean);
+procedure TPVScrollBar.Show(Visible: Boolean);
 begin
   if not Visible or (Max < ScrollBar.PageSize) then
     ScrollBar.Visible := False

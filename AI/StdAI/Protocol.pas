@@ -915,7 +915,7 @@ record
   Preq: Integer;
   Cost: Integer;
   Maint: Integer;
-  Expiration: integer;
+  Expiration: Integer;
 end
 = ((Kind: ikWonder; Preq: adMathematics; Cost: 400; Maint: 0;
   Expiration: adDemocracy), // woPyramids
@@ -1119,7 +1119,7 @@ upgrade: array [0 .. nDomains - 1, 0 .. nUpgrade - 1] of record
   Preq: Integer;
   Strength: Integer;
   Trans: Integer;
-  Cost: integer;
+  Cost: Integer;
 end
 = (((Preq: adWarriorCode; Strength: 4; Trans: 0; Cost: 3),
   (Preq: adBronzeWorking; Strength: 2; Trans: 0; Cost: 4),
@@ -1509,7 +1509,7 @@ type
 
   TGetCityData = record
     Owner: Integer;
-    c: TCity;
+    C: TCity;
   end;
 
   TCityAreaInfo = record
@@ -1590,7 +1590,7 @@ type
   end;
   TCreateUnitData = record
     Loc: Integer;
-    p: Integer;
+    P: Integer;
     mix: Integer;
   end;
 
@@ -1599,7 +1599,7 @@ type
   TTileObservedLastList = array [0 .. INFIN] of SmallInt;
   TOwnerList = array [0 .. INFIN] of ShortInt;
   TByteList = array [0 .. INFIN] of Byte;
-  TIntList = array [0 .. INFIN] of integer;
+  TIntList = array [0 .. INFIN] of Integer;
   TCityList = array [0 .. INFIN] of TCity;
   TUnList = array [0 .. INFIN] of TUn;
   TModelList = array [0 .. INFIN] of TModel;
@@ -1760,7 +1760,7 @@ const
     Upgrades: 0; Flags: 0; Cap: (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)));
 
-  SpecialModelPreq: array [0 .. nSpecialModel - 1] of integer = (preNone,
+  SpecialModelPreq: array [0 .. nSpecialModel - 1] of Integer = (preNone,
     adExplosives, preNone, preNone, (* adWri, *) adIntelligence, adTrade,
     (* adTheCorporation,adHorsebackRiding,adAutomobile,adNavigation,
       adCombustionEngine, *) adMapMaking, preBuilder,
@@ -1769,8 +1769,8 @@ const
 var
   DelphiRandSeed: Integer;
 
-procedure MakeUnitInfo(p: Integer; const u: TUn; var ui: TUnitInfo);
-procedure MakeModelInfo(p, mix: Integer; const m: TModel; var mi: TModelInfo);
+procedure MakeUnitInfo(P: Integer; const U: TUn; var ui: TUnitInfo);
+procedure MakeModelInfo(P, mix: Integer; const M: TModel; var mi: TModelInfo);
 function IsSameModel(const mi1, mi2: TModelInfo): Boolean;
 function SpecialTile(Loc, TerrType, lx: Integer): Integer;
 function DelphiRandom(const pi_Max: Integer): Integer; overload;
@@ -1780,55 +1780,55 @@ procedure DelphiRandomize;
 
 implementation
 
-procedure MakeUnitInfo(p: Integer; const u: TUn; var ui: TUnitInfo);
+procedure MakeUnitInfo(P: Integer; const U: TUn; var ui: TUnitInfo);
 begin
-  ui.Owner := p;
-  ui.Loc := u.Loc;
-  ui.Health := u.Health;
-  ui.Fuel := u.Fuel;
-  ui.Job := u.Job;
-  ui.Exp := u.Exp;
-  ui.Load := u.TroopLoad + u.AirLoad;
-  ui.mix := u.mix;
-  ui.Flags := u.Flags;
+  ui.Owner := P;
+  ui.Loc := U.Loc;
+  ui.Health := U.Health;
+  ui.Fuel := U.Fuel;
+  ui.Job := U.Job;
+  ui.Exp := U.Exp;
+  ui.Load := U.TroopLoad + U.AirLoad;
+  ui.mix := U.mix;
+  ui.Flags := U.Flags;
 end;
 
-procedure MakeModelInfo(p, mix: Integer; const m: TModel; var mi: TModelInfo);
+procedure MakeModelInfo(P, mix: Integer; const M: TModel; var mi: TModelInfo);
 var
-  i: Integer;
+  I: Integer;
 begin
-  mi.Owner := p;
+  mi.Owner := P;
   mi.mix := mix;
-  mi.ID := m.ID;
-  mi.Domain := m.Domain;
-  if m.Kind = mkEnemyDeveloped then
+  mi.ID := M.ID;
+  mi.Domain := M.Domain;
+  if M.Kind = mkEnemyDeveloped then
     mi.Kind := mkSelfDeveloped // important for IsSameModel()
   else
-    mi.Kind := m.Kind;
-  mi.Attack := m.Attack;
-  mi.Defense := m.Defense;
-  mi.Speed := m.Speed;
-  mi.Cost := m.Cost;
+    mi.Kind := M.Kind;
+  mi.Attack := M.Attack;
+  mi.Defense := M.Defense;
+  mi.Speed := M.Speed;
+  mi.Cost := M.Cost;
   if mi.Domain = dAir then
   begin
-    mi.TTrans := m.Cap[mcAirTrans] * m.MTrans;
-    mi.ATrans_Fuel := m.Cap[mcFuel];
+    mi.TTrans := M.Cap[mcAirTrans] * M.MTrans;
+    mi.ATrans_Fuel := M.Cap[mcFuel];
   end
   else
   begin
-    mi.TTrans := m.Cap[mcSeaTrans] * m.MTrans;
-    mi.ATrans_Fuel := m.Cap[mcCarrier] * m.MTrans;
+    mi.TTrans := M.Cap[mcSeaTrans] * M.MTrans;
+    mi.ATrans_Fuel := M.Cap[mcCarrier] * M.MTrans;
   end;
-  mi.Bombs := m.Cap[mcBombs] * m.MStrength * 2;
+  mi.Bombs := M.Cap[mcBombs] * M.MStrength * 2;
   mi.Cap := 0;
-  for i := mcFirstNonCap to nFeature - 1 do
-    if m.Cap[i] > 0 then
-      mi.Cap := mi.Cap or (1 shl (i - mcFirstNonCap));
+  for I := mcFirstNonCap to nFeature - 1 do
+    if M.Cap[I] > 0 then
+      mi.Cap := mi.Cap or (1 shl (I - mcFirstNonCap));
   mi.MaxUpgrade := 0;
-  for i := 1 to nUpgrade - 1 do
-    if m.Upgrades and (1 shl i) <> 0 then
-      mi.MaxUpgrade := i;
-  mi.Weight := m.Weight;
+  for I := 1 to nUpgrade - 1 do
+    if M.Upgrades and (1 shl I) <> 0 then
+      mi.MaxUpgrade := I;
+  mi.Weight := M.Weight;
   mi.Lost := 0;
 end;
 
@@ -1840,53 +1840,53 @@ var
 begin
   Compare1 := @mi1;
   Compare2 := @mi2;
-  result := (Compare1[1] and $FFFF0000 = Compare2[1] and $FFFF0000) and
+  Result := (Compare1[1] and $FFFF0000 = Compare2[1] and $FFFF0000) and
     (Compare1[2] = Compare2[2]) and (Compare1[3] = Compare2[3]) and
     (Compare1[4] = Compare2[4]) and (Compare1[5] = Compare2[5])
 end;
 
 function SpecialTile(Loc, TerrType, lx: Integer): Integer;
 var
-  x, y, qx, qy, a: Integer;
+  X, Y, qx, qy, A: Integer;
 begin
   if TerrType = fOcean then
-    result := 0
+    Result := 0
   else
   begin
-    y := Loc div lx;
-    x := Loc - y * lx;
+    Y := Loc div lx;
+    X := Loc - Y * lx;
     if TerrType = fGrass then { formula for productive grassland }
-      if Odd((lymax + x - y shr 1) shr 1 + x + (y + 1) shr 1) then
-        result := 1
+      if Odd((lymax + X - Y shr 1) shr 1 + X + (Y + 1) shr 1) then
+        Result := 1
       else
-        result := 0
+        Result := 0
     else { formula for special resources }
     begin
-      a := 4 * x - y + 9980;
-      qx := a div 10;
-      if (qx * 10 = a) and (qx and 3 <> 0) then
+      A := 4 * X - Y + 9980;
+      qx := A div 10;
+      if (qx * 10 = A) and (qx and 3 <> 0) then
       begin
-        qy := (y + x) div 5;
+        qy := (Y + X) div 5;
         if qy and 3 <> qx shr 2 and 1 * 2 then
           if (TerrType = fArctic) or (TerrType = fSwamp) then
-            result := 1
+            Result := 1
           else if TerrType = fShore then
           begin
             if (qx + qy) and 1 = 0 then
               if qx and 3 = 2 then
-                result := 2
+                Result := 2
               else
-                result := 1
+                Result := 1
             else
-              result := 0
+              Result := 0
           end
           else
-            result := (qx + qy) and 1 + 1
+            Result := (qx + qy) and 1 + 1
         else
-          result := 0;
+          Result := 0;
       end
       else
-        result := 0;
+        Result := 0;
     end
   end;
 end;

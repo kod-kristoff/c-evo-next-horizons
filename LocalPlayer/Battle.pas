@@ -31,7 +31,7 @@ type
   public
     uix, ToLoc: Integer;
     Forecast: TBattleForecastEx;
-    IsSuicideQuery: boolean;
+    IsSuicideQuery: Boolean;
   end;
 
 var
@@ -62,7 +62,7 @@ var
   UnitInfo: TUnitInfo;
   TextSize: TSize;
   LabelText: string;
-  FirstStrike: boolean;
+  FirstStrike: Boolean;
 begin
   MaxBar := 65;
 
@@ -195,7 +195,7 @@ begin
 
   BitBltCanvas(Buffer.Canvas, 0, 0, 66, 48, ca, xm - 8 - 4 - 66,
     ym + 8 + 12);
-  MakeUnitInfo(me, MyUn[uix], UnitInfo);
+  MakeUnitInfo(Me, MyUn[uix], UnitInfo);
   UnitInfo.Flags := UnitInfo.Flags and not unFortified;
   IsoMap.PaintUnit(1, 0, UnitInfo, 0);
   BitBltCanvas(ca, xm - 8 - 4 - 66, ym + 8 + 12, 66, 48, Buffer.Canvas, 0, 0);
@@ -215,8 +215,8 @@ begin
   begin
     ClientWidth := 300;
     ClientHeight := 288;
-    OKBtn.Visible := true;
-    CancelBtn.Visible := true;
+    OKBtn.Visible := True;
+    CancelBtn.Visible := True;
     Left := (Screen.Width - ClientWidth) div 2; // center on screen
     Top := (Screen.Height - ClientHeight) div 2;
   end
@@ -224,15 +224,15 @@ begin
   begin
     ClientWidth := 178;
     ClientHeight := 178;
-    OKBtn.Visible := false;
-    CancelBtn.Visible := false;
+    OKBtn.Visible := False;
+    CancelBtn.Visible := False;
   end;
 end;
 
 procedure TBattleDlg.FormPaint(Sender: TObject);
 var
-  ym, cix, p: Integer;
-  s, s1: string;
+  ym, cix, P: Integer;
+  S, s1: string;
 begin
   with Canvas do
   begin
@@ -252,21 +252,21 @@ begin
   if IsSuicideQuery then
   begin
     Canvas.Font.Assign(UniFont[ftCaption]);
-    s := Phrases.Lookup('TITLE_SUICIDE');
-    RisedTextOut(Canvas, (ClientWidth - BiColorTextWidth(Canvas, s)) div 2,
-      7 + Border, s);
+    S := Phrases.Lookup('TITLE_SUICIDE');
+    RisedTextOut(Canvas, (ClientWidth - BiColorTextWidth(Canvas, S)) div 2,
+      7 + Border, S);
     Canvas.Font.Assign(UniFont[ftNormal]);
-    s := Phrases.Lookup('SUICIDE');
-    p := pos('\', s);
-    if p = 0 then
-      RisedTextOut(Canvas, (ClientWidth - BiColorTextWidth(Canvas, s))
-        div 2, 205, s)
+    S := Phrases.Lookup('SUICIDE');
+    P := Pos('\', S);
+    if P = 0 then
+      RisedTextOut(Canvas, (ClientWidth - BiColorTextWidth(Canvas, S))
+        div 2, 205, S)
     else
     begin
-      s1 := copy(s, 1, p - 1);
+      s1 := Copy(S, 1, P - 1);
       RisedTextOut(Canvas, (ClientWidth - BiColorTextWidth(Canvas, s1)) div 2,
         205 - MessageLineSpacing div 2, s1);
-      s1 := copy(s, p + 1, 255);
+      s1 := Copy(S, P + 1, 255);
       RisedTextOut(Canvas, (ClientWidth - BiColorTextWidth(Canvas, s1)) div 2,
         205 + (MessageLineSpacing - MessageLineSpacing div 2), s1);
     end;

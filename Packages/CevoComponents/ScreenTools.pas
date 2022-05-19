@@ -16,24 +16,24 @@ type
   TFontType = (ftNormal, ftSmall, ftTiny, ftCaption, ftButton);
 
 {$IFDEF WINDOWS}
-function ChangeResolution(x, y, bpp, freq: integer): boolean;
+function ChangeResolution(X, Y, bpp, freq: Integer): Boolean;
 {$ENDIF}
 procedure RestoreResolution;
 procedure EmptyMenu(MenuItems: TMenuItem; Keep: Integer = 0);
-function TurnToYear(Turn: integer): integer;
-function TurnToString(Turn: integer): string;
-function MovementToString(Movement: integer): string;
-procedure BtnFrame(ca: TCanvas; p: TRect; T: TTexture);
-procedure EditFrame(ca: TCanvas; p: TRect; T: TTexture);
-function HexStringToColor(S: string): integer;
+function TurnToYear(Turn: Integer): Integer;
+function TurnToString(Turn: Integer): string;
+function MovementToString(Movement: Integer): string;
+procedure BtnFrame(ca: TCanvas; P: TRect; T: TTexture);
+procedure EditFrame(ca: TCanvas; P: TRect; T: TTexture);
+function HexStringToColor(S: string): Integer;
 function ExtractFileNameWithoutExt(const Filename: string): string;
-function LoadGraphicFile(Bmp: TBitmap; FileName: string; Options: TLoadGraphicFileOptions = []): boolean;
+function LoadGraphicFile(Bmp: TBitmap; FileName: string; Options: TLoadGraphicFileOptions = []): Boolean;
 function LoadGraphicSet(const Name: string; Transparency: Boolean = True): TGraphicSet;
-procedure Dump(dst: TBitmap; HGr: TGraphicSet; xDst, yDst, Width, Height, xGr, yGr: integer);
+procedure Dump(dst: TBitmap; HGr: TGraphicSet; xDst, yDst, Width, Height, xGr, yGr: Integer);
 procedure BitmapReplaceColor(Dst: TBitmap; X, Y, Width, Height: Integer; OldColor, NewColor: TColor);
-procedure Sprite(Canvas: TCanvas; HGr: TGraphicSet; xDst, yDst, Width, Height, xGr, yGr: integer);
+procedure Sprite(Canvas: TCanvas; HGr: TGraphicSet; xDst, yDst, Width, Height, xGr, yGr: Integer);
   overload;
-procedure Sprite(dst: TBitmap; HGr: TGraphicSet; xDst, yDst, Width, Height, xGr, yGr: integer);
+procedure Sprite(dst: TBitmap; HGr: TGraphicSet; xDst, yDst, Width, Height, xGr, yGr: Integer);
   overload;
 procedure MakeBlue(Dst: TBitmap; X, Y, Width, Height: Integer);
 procedure MakeRed(Dst: TBitmap; X, Y, Width, Height: Integer);
@@ -44,7 +44,7 @@ procedure ImageOp_BCC(Dst, Src: TBitmap;
   DstPos: TPoint; SrcRect: TRect; Color1, Color2: Integer); overload;
 procedure ImageOp_CBC(Dst, Src: TBitmap; xDst, yDst, xSrc, ySrc, Width, Height,
   Color0, Color2: Integer);
-procedure ImageOp_CCC(bmp: TBitmap; x, y, Width, Height, Color0, Color1, Color2: Integer);
+procedure ImageOp_CCC(bmp: TBitmap; X, Y, Width, Height, Color0, Color1, Color2: Integer);
 function BitBltCanvas(DestCanvas: TCanvas; X, Y, Width, Height: Integer;
   SrcCanvas: TCanvas; XSrc, YSrc: Integer; Rop: DWORD = SRCCOPY): Boolean; overload;
 function BitBltCanvas(Dest: TCanvas; DestRect: TRect;
@@ -53,45 +53,45 @@ function BitBltBitmap(Dest: TBitmap; X, Y, Width, Height: Integer;
   Src: TBitmap; XSrc, YSrc: Integer; Rop: DWORD = SRCCOPY): Boolean; overload;
 function BitBltBitmap(Dest: TBitmap; DestRect: TRect;
   Src: TBitmap; SrcPos: TPoint; Rop: DWORD = SRCCOPY): Boolean; overload;
-procedure SLine(ca: TCanvas; x0, x1, y: integer; cl: TColor);
-procedure DLine(ca: TCanvas; x0, x1, y: integer; cl0, cl1: TColor);
-procedure Frame(ca: TCanvas; x0, y0, x1, y1: integer; cl0, cl1: TColor);
-procedure RFrame(ca: TCanvas; x0, y0, x1, y1: integer; cl0, cl1: TColor);
-procedure CFrame(ca: TCanvas; x0, y0, x1, y1, Corner: integer; cl: TColor);
+procedure SLine(ca: TCanvas; x0, x1, Y: Integer; cl: TColor);
+procedure DLine(ca: TCanvas; x0, x1, Y: Integer; cl0, cl1: TColor);
+procedure Frame(ca: TCanvas; x0, y0, x1, y1: Integer; cl0, cl1: TColor);
+procedure RFrame(ca: TCanvas; x0, y0, x1, y1: Integer; cl0, cl1: TColor);
+procedure CFrame(ca: TCanvas; x0, y0, x1, y1, Corner: Integer; cl: TColor);
 procedure FrameImage(ca: TCanvas; Src: TBitmap;
-  x, y, Width, Height, xSrc, ySrc: integer; IsControl: boolean = False);
-procedure GlowFrame(Dst: TBitmap; x0, y0, Width, Height: integer; cl: TColor);
+  X, Y, Width, Height, xSrc, ySrc: Integer; IsControl: Boolean = False);
+procedure GlowFrame(Dst: TBitmap; x0, y0, Width, Height: Integer; cl: TColor);
 procedure InitOrnament;
 procedure InitCityMark(T: TTexture);
-procedure Fill(ca: TCanvas; Left, Top, Width, Height, xOffset, yOffset: integer); overload;
+procedure Fill(ca: TCanvas; Left, Top, Width, Height, xOffset, yOffset: Integer); overload;
 procedure Fill(Canvas: TCanvas; Rect: TRect; Offset: TPoint); overload;
-procedure FillLarge(ca: TCanvas; x0, y0, x1, y1, xm: integer);
-procedure FillSeamless(ca: TCanvas; Left, Top, Width, Height, xOffset, yOffset: integer;
+procedure FillLarge(ca: TCanvas; x0, y0, x1, y1, xm: Integer);
+procedure FillSeamless(ca: TCanvas; Left, Top, Width, Height, xOffset, yOffset: Integer;
   const Texture: TBitmap);
-procedure FillRectSeamless(ca: TCanvas; x0, y0, x1, y1, xOffset, yOffset: integer;
+procedure FillRectSeamless(ca: TCanvas; x0, y0, x1, y1, xOffset, yOffset: Integer;
   const Texture: TBitmap);
-procedure PaintBackground(Form: TForm; Left, Top, Width, Height: integer);
-procedure Corner(ca: TCanvas; x, y, Kind: integer; T: TTexture);
-procedure BiColorTextOut(ca: TCanvas; clMain, clBack: TColor; x, y: integer; s: string);
+procedure PaintBackground(Form: TForm; Left, Top, Width, Height: Integer);
+procedure Corner(ca: TCanvas; X, Y, Kind: Integer; T: TTexture);
+procedure BiColorTextOut(ca: TCanvas; clMain, clBack: TColor; X, Y: Integer; S: string);
 procedure LoweredTextOut(ca: TCanvas; cl: TColor; T: TTexture;
-  x, y: integer; s: string);
-function BiColorTextWidth(ca: TCanvas; s: string): integer;
-procedure RisedTextOut(ca: TCanvas; x, y: integer; s: string);
-procedure LightGradient(ca: TCanvas; x, y, Width, Color: integer);
-procedure DarkGradient(ca: TCanvas; x, y, Width, Kind: integer);
-procedure VLightGradient(ca: TCanvas; x, y, Height, Color: integer);
-procedure VDarkGradient(ca: TCanvas; x, y, Height, Kind: integer);
+  X, Y: Integer; S: string);
+function BiColorTextWidth(ca: TCanvas; S: string): Integer;
+procedure RisedTextOut(ca: TCanvas; X, Y: Integer; S: string);
+procedure LightGradient(ca: TCanvas; X, Y, Width, Color: Integer);
+procedure DarkGradient(ca: TCanvas; X, Y, Width, Kind: Integer);
+procedure VLightGradient(ca: TCanvas; X, Y, Height, Color: Integer);
+procedure VDarkGradient(ca: TCanvas; X, Y, Height, Kind: Integer);
 procedure UnderlinedTitleValue(Canvas: TCanvas; Title, Value: string; X, Y, Width: Integer);
-procedure NumberBar(dst: TBitmap; x, y: integer; Cap: string; val: integer;
+procedure NumberBar(dst: TBitmap; X, Y: Integer; Cap: string; val: Integer;
   T: TTexture);
-procedure CountBar(dst: TBitmap; x, y, w: integer; Kind: integer;
-  Cap: string; val: integer; T: TTexture);
-procedure PaintProgressBar(ca: TCanvas; Kind, x, y, pos, Growth, max: integer;
+procedure CountBar(dst: TBitmap; X, Y, W: Integer; Kind: Integer;
+  Cap: string; val: Integer; T: TTexture);
+procedure PaintProgressBar(ca: TCanvas; Kind, X, Y, Pos, Growth, Max: Integer;
   T: TTexture);
 procedure PaintRelativeProgressBar(ca: TCanvas;
-  Kind, x, y, size, pos, Growth, max: integer; IndicateComplete: boolean;
+  Kind, X, Y, size, Pos, Growth, Max: Integer; IndicateComplete: Boolean;
   T: TTexture);
-procedure PaintLogo(Canvas: TCanvas; X, Y, LightColor, ShadeColor: integer);
+procedure PaintLogo(Canvas: TCanvas; X, Y, LightColor, ShadeColor: Integer);
 procedure LoadPhrases;
 procedure Texturize(Dest, Texture: TBitmap; TransparentColor: Cardinal);
 procedure DarkenImage(Bitmap: TBitmap; Change: Integer);
@@ -203,21 +203,21 @@ uses
 var
   {$IFDEF WINDOWS}
   StartResolution: TDeviceMode;
-  ResolutionChanged: boolean;
+  ResolutionChanged: Boolean;
   {$ENDIF}
 
   GammaLookupTable: array [0..255] of Byte;
 
 {$IFDEF WINDOWS}
-function ChangeResolution(x, y, bpp, freq: integer): boolean;
+function ChangeResolution(X, Y, bpp, freq: Integer): Boolean;
 var
   DevMode: TDeviceMode;
 begin
   EnumDisplaySettings(nil, 0, DevMode);
   DevMode.dmFields := DM_PELSWIDTH or DM_PELSHEIGHT or DM_BITSPERPEL or
     DM_DISPLAYFREQUENCY;
-  DevMode.dmPelsWidth := x;
-  DevMode.dmPelsHeight := y;
+  DevMode.dmPelsWidth := X;
+  DevMode.dmPelsHeight := Y;
   DevMode.dmBitsPerPel := bpp;
   DevMode.dmDisplayFrequency := freq;
   Result := ChangeDisplaySettings(DevMode, 0) = DISP_CHANGE_SUCCESSFUL;
@@ -317,24 +317,24 @@ begin
   end;
 end;
 
-procedure BtnFrame(ca: TCanvas; p: TRect; T: TTexture);
+procedure BtnFrame(ca: TCanvas; P: TRect; T: TTexture);
 begin
-  RFrame(ca, p.Left - 1, p.Top - 1, p.Right, p.Bottom, T.ColorBevelShade,
+  RFrame(ca, P.Left - 1, P.Top - 1, P.Right, P.Bottom, T.ColorBevelShade,
     T.ColorBevelLight);
 end;
 
-procedure EditFrame(ca: TCanvas; p: TRect; T: TTexture);
+procedure EditFrame(ca: TCanvas; P: TRect; T: TTexture);
 begin
-  Frame(ca, p.Left - 1, p.Top - 1, p.Right, p.Bottom, $000000, $000000);
-  Frame(ca, p.Left - 2, p.Top - 2, p.Right + 1, p.Bottom + 1, $000000, $000000);
-  Frame(ca, p.Left - 3, p.Top - 3, p.Right + 2, p.Bottom + 1, $000000, $000000);
-  RFrame(ca, p.Left - 4, p.Top - 4, p.Right + 3, p.Bottom + 2, T.ColorBevelShade,
+  Frame(ca, P.Left - 1, P.Top - 1, P.Right, P.Bottom, $000000, $000000);
+  Frame(ca, P.Left - 2, P.Top - 2, P.Right + 1, P.Bottom + 1, $000000, $000000);
+  Frame(ca, P.Left - 3, P.Top - 3, P.Right + 2, P.Bottom + 1, $000000, $000000);
+  RFrame(ca, P.Left - 4, P.Top - 4, P.Right + 3, P.Bottom + 2, T.ColorBevelShade,
     T.ColorBevelLight);
 end;
 
 function HexCharToInt(X: Char): Integer;
 begin
-  case x of
+  case X of
     '0' .. '9': Result := Ord(X) - Ord('0');
     'A' .. 'F': Result := Ord(X) - Ord('A') + 10;
     'a' .. 'f': Result := Ord(X) - Ord('a') + 10;
@@ -491,8 +491,8 @@ end;
 
 function LoadGraphicSet(const Name: string; Transparency: Boolean = True): TGraphicSet;
 var
-  x: Integer;
-  y: Integer;
+  X: Integer;
+  Y: Integer;
   OriginalColor: Integer;
   FileName: string;
   DataPixel: TPixelPointer;
@@ -521,8 +521,8 @@ begin
       Result.Mask.BeginUpdate;
       DataPixel := PixelPointer(Result.Data);
       MaskPixel := PixelPointer(Result.Mask);
-      for y := 0 to ScaleToNative(Result.Data.Height) - 1 do begin
-        for x := 0 to ScaleToNative(Result.Data.Width) - 1 do begin
+      for Y := 0 to ScaleToNative(Result.Data.Height) - 1 do begin
+        for X := 0 to ScaleToNative(Result.Data.Width) - 1 do begin
           OriginalColor := DataPixel.Pixel^.ARGB and $FFFFFF;
           if (OriginalColor = TransparentColor1) or (OriginalColor = TransparentColor2) then begin
             MaskPixel.Pixel^.R := $FF;
@@ -551,7 +551,7 @@ begin
   end;
 end;
 
-procedure Dump(dst: TBitmap; HGr: TGraphicSet; xDst, yDst, Width, Height, xGr, yGr: integer);
+procedure Dump(dst: TBitmap; HGr: TGraphicSet; xDst, yDst, Width, Height, xGr, yGr: Integer);
 begin
   BitBltCanvas(dst.Canvas, xDst, yDst, Width, Height,
     HGr.Data.Canvas, xGr, yGr);
@@ -649,7 +649,7 @@ begin
   if yDst + Height > ScaleToNative(dst.Height) then
     Height := ScaleToNative(dst.Height) - yDst;
   if (Width < 0) or (Height < 0) then
-    exit;
+    Exit;
 
   dst.BeginUpdate;
   Src.BeginUpdate;
@@ -658,18 +658,18 @@ begin
   for Y := 0 to Height - 1 do begin
     for X := 0 to Width - 1 do  begin
       Brightness := PixelSrc.Pixel^.B; // One byte for 8-bit color
-      test := (PixelDst.Pixel^.R * Brightness) shr 7;
-      if test >= 256 then
+      Test := (PixelDst.Pixel^.R * Brightness) shr 7;
+      if Test >= 256 then
         PixelDst.Pixel^.R := 255
       else
-        PixelDst.Pixel^.R := test; // Red
-      test := (PixelDst.Pixel^.G * Brightness) shr 7;
-      if test >= 256 then
+        PixelDst.Pixel^.R := Test; // Red
+      Test := (PixelDst.Pixel^.G * Brightness) shr 7;
+      if Test >= 256 then
         PixelDst.Pixel^.G := 255
       else
-        PixelDst.Pixel^.G := test; // Green
-      test := (PixelDst.Pixel^.B * Brightness) shr 7;
-      if test >= 256 then
+        PixelDst.Pixel^.G := Test; // Green
+      Test := (PixelDst.Pixel^.B * Brightness) shr 7;
+      if Test >= 256 then
         PixelDst.Pixel^.R := 255
       else
         PixelDst.Pixel^.B := Test; // Blue
@@ -715,7 +715,7 @@ begin
   if yDst + Height > ScaleToNative(dst.Height) then
     Height := ScaleToNative(dst.Height) - yDst;
   if (Width < 0) or (Height < 0) then
-    exit;
+    Exit;
 
   Src.BeginUpdate;
   dst.BeginUpdate;
@@ -764,7 +764,7 @@ procedure ImageOp_CBC(Dst, Src: TBitmap; xDst, yDst, xSrc, ySrc, Width, Height,
 // G channel = background amp (old Dst content), 128=original brightness
 // R channel = Color2 amp
 var
-  ix, iy, amp0, amp1, trans, Value: integer;
+  ix, iy, amp0, amp1, trans, Value: Integer;
   SrcPixel: TPixelPointer;
   DstPixel: TPixelPointer;
 begin
@@ -806,13 +806,13 @@ begin
   Dst.EndUpdate;
 end;
 
-procedure ImageOp_CCC(bmp: TBitmap; x, y, Width, Height, Color0, Color1, Color2: Integer);
+procedure ImageOp_CCC(bmp: TBitmap; X, Y, Width, Height, Color0, Color1, Color2: Integer);
 // Bmp is template
 // B channel = Color0 amp, 128=original brightness
 // G channel = Color1 amp, 128=original brightness
 // R channel = Color2 amp, 128=original brightness
 var
-  i, Red, Green: Integer;
+  I, Red, Green: Integer;
   PixelPtr: TPixelPointer;
 begin
   X := ScaleToNative(X);
@@ -820,11 +820,11 @@ begin
   Width := ScaleToNative(Width);
   Height := ScaleToNative(Height);
   bmp.BeginUpdate;
-  assert(bmp.PixelFormat = pf24bit);
-  Height := y + Height;
-  PixelPtr := PixelPointer(Bmp, x, y);
-  while y < Height do begin
-    for i := 0 to Width - 1 do begin
+  Assert(bmp.PixelFormat = pf24bit);
+  Height := Y + Height;
+  PixelPtr := PixelPointer(Bmp, X, Y);
+  while Y < Height do begin
+    for I := 0 to Width - 1 do begin
       Red := ((PixelPtr.Pixel^.B * (Color0 and $0000FF) + PixelPtr.Pixel^.G *
         (Color1 and $0000FF) + PixelPtr.Pixel^.R * (Color2 and $0000FF)) shr 8) and $ff;
       Green := ((PixelPtr.Pixel^.B * ((Color0 shr 8) and $0000FF) +
@@ -837,13 +837,13 @@ begin
       PixelPtr.Pixel^.R := Red;
       PixelPtr.NextPixel;
     end;
-    Inc(y);
+    Inc(Y);
     PixelPtr.NextLine;
   end;
   bmp.EndUpdate;
 end;
 
-procedure Sprite(Canvas: TCanvas; HGr: TGraphicSet; xDst, yDst, Width, Height, xGr, yGr: integer);
+procedure Sprite(Canvas: TCanvas; HGr: TGraphicSet; xDst, yDst, Width, Height, xGr, yGr: Integer);
 begin
   BitBltCanvas(Canvas, xDst, yDst, Width, Height,
     HGr.Mask.Canvas, xGr, yGr, SRCAND);
@@ -851,7 +851,7 @@ begin
     HGr.Data.Canvas, xGr, yGr, SRCPAINT);
 end;
 
-procedure Sprite(dst: TBitmap; HGr: TGraphicSet; xDst, yDst, Width, Height, xGr, yGr: integer);
+procedure Sprite(dst: TBitmap; HGr: TGraphicSet; xDst, yDst, Width, Height, xGr, yGr: Integer);
 begin
   BitBltCanvas(dst.Canvas, xDst, yDst, Width, Height,
     HGr.Mask.Canvas, xGr, yGr, SRCAND);
@@ -889,30 +889,30 @@ begin
   Result := BitBltCanvas(Dest.Canvas, DestRect, Src.Canvas, SrcPos, Rop);
 end;
 
-procedure SLine(ca: TCanvas; x0, x1, y: integer; cl: TColor);
+procedure SLine(ca: TCanvas; x0, x1, Y: Integer; cl: TColor);
 begin
   with ca do begin
     Pen.Color := cl;
-    MoveTo(x0, y);
-    LineTo(x1 + 1, y);
+    MoveTo(x0, Y);
+    LineTo(x1 + 1, Y);
   end;
 end;
 
-procedure DLine(ca: TCanvas; x0, x1, y: integer; cl0, cl1: TColor);
+procedure DLine(ca: TCanvas; x0, x1, Y: Integer; cl0, cl1: TColor);
 begin
   with ca do begin
     Pen.Color := cl0;
-    MoveTo(x0, y);
-    LineTo(x1, y);
+    MoveTo(x0, Y);
+    LineTo(x1, Y);
     Pen.Color := cl1;
-    MoveTo(x0 + 1, y + 1);
-    LineTo(x1 + 1, y + 1);
-    Pixels[x0, y + 1] := cl0;
-    Pixels[x1, y] := cl1;
+    MoveTo(x0 + 1, Y + 1);
+    LineTo(x1 + 1, Y + 1);
+    Pixels[x0, Y + 1] := cl0;
+    Pixels[x1, Y] := cl1;
   end;
 end;
 
-procedure Frame(ca: TCanvas; x0, y0, x1, y1: integer; cl0, cl1: TColor);
+procedure Frame(ca: TCanvas; x0, y0, x1, y1: Integer; cl0, cl1: TColor);
 begin
   with ca do begin
     MoveTo(x0, y1);
@@ -925,7 +925,7 @@ begin
   end;
 end;
 
-procedure RFrame(ca: TCanvas; x0, y0, x1, y1: integer; cl0, cl1: TColor);
+procedure RFrame(ca: TCanvas; x0, y0, x1, y1: Integer; cl0, cl1: TColor);
 begin
   with ca do begin
     Pen.Color := cl0;
@@ -941,7 +941,7 @@ begin
   end;
 end;
 
-procedure CFrame(ca: TCanvas; x0, y0, x1, y1, Corner: integer; cl: TColor);
+procedure CFrame(ca: TCanvas; x0, y0, x1, y1, Corner: Integer; cl: TColor);
 begin
   with ca do begin
     Pen.Color := cl;
@@ -961,19 +961,19 @@ begin
 end;
 
 procedure FrameImage(ca: TCanvas; Src: TBitmap;
-  x, y, Width, Height, xSrc, ySrc: integer; IsControl: boolean = False);
+  X, Y, Width, Height, xSrc, ySrc: Integer; IsControl: Boolean = False);
 begin
   if IsControl then begin
-    Frame(ca, x - 1, y - 1, x + Width, y + Height, $B0B0B0, $FFFFFF);
-    RFrame(ca, x - 2, y - 2, x + Width + 1, y + Height + 1, $FFFFFF, $B0B0B0);
+    Frame(ca, X - 1, Y - 1, X + Width, Y + Height, $B0B0B0, $FFFFFF);
+    RFrame(ca, X - 2, Y - 2, X + Width + 1, Y + Height + 1, $FFFFFF, $B0B0B0);
   end else
-    Frame(ca, x - 1, y - 1, x + Width, y + Height, $000000, $000000);
-  BitBltCanvas(ca, x, y, Width, Height, Src.Canvas, xSrc, ySrc);
+    Frame(ca, X - 1, Y - 1, X + Width, Y + Height, $000000, $000000);
+  BitBltCanvas(ca, X, Y, Width, Height, Src.Canvas, xSrc, ySrc);
 end;
 
 procedure GlowFrame(Dst: TBitmap; x0, y0, Width, Height: Integer; cl: TColor);
 var
-  x, y, ch, r: Integer;
+  X, Y, ch, R: Integer;
   DstPtr: TPixelPointer;
   DpiGlowRange: Integer;
 begin
@@ -984,37 +984,37 @@ begin
   Height := ScaleToNative(Height);
   Dst.BeginUpdate;
   DstPtr := PixelPointer(Dst, x0 - DpiGlowRange + 1, y0 - DpiGlowRange + 1);
-  for y := -DpiGlowRange + 1 to Height - 1 + DpiGlowRange - 1 do begin
-    for x := -DpiGlowRange + 1 to Width - 1 + DpiGlowRange - 1 do begin
-      if x < 0 then
-        if y < 0 then
-          r := round(sqrt(sqr(x) + sqr(y)))
-        else if y >= Height then
-          r := round(sqrt(sqr(x) + sqr(y - (Height - 1))))
+  for Y := -DpiGlowRange + 1 to Height - 1 + DpiGlowRange - 1 do begin
+    for X := -DpiGlowRange + 1 to Width - 1 + DpiGlowRange - 1 do begin
+      if X < 0 then
+        if Y < 0 then
+          R := round(sqrt(sqr(X) + sqr(Y)))
+        else if Y >= Height then
+          R := round(sqrt(sqr(X) + sqr(Y - (Height - 1))))
         else
-          r := -x
-      else if x >= Width then
-        if y < 0 then
-          r := round(sqrt(sqr(x - (Width - 1)) + sqr(y)))
-        else if y >= Height then
-          r := round(sqrt(sqr(x - (Width - 1)) + sqr(y - (Height - 1))))
+          R := -X
+      else if X >= Width then
+        if Y < 0 then
+          R := round(sqrt(sqr(X - (Width - 1)) + sqr(Y)))
+        else if Y >= Height then
+          R := round(sqrt(sqr(X - (Width - 1)) + sqr(Y - (Height - 1))))
         else
-          r := x - (Width - 1)
-      else if y < 0 then
-        r := -y
-      else if y >= Height then
-        r := y - (Height - 1)
+          R := X - (Width - 1)
+      else if Y < 0 then
+        R := -Y
+      else if Y >= Height then
+        R := Y - (Height - 1)
       else begin
         DstPtr.NextPixel;
         continue;
       end;
-      if r = 0 then
-        r := 1;
-      if r < DpiGlowRange then
+      if R = 0 then
+        R := 1;
+      if R < DpiGlowRange then
         for ch := 0 to 2 do
           DstPtr.Pixel^.Planes[2 - ch] :=
-            (DstPtr.Pixel^.Planes[2 - ch] * (r - 1) + (cl shr (8 * ch) and $FF) *
-            (DpiGlowRange - r)) div (DpiGlowRange - 1);
+            (DstPtr.Pixel^.Planes[2 - ch] * (R - 1) + (cl shr (8 * ch) and $FF) *
+            (DpiGlowRange - R)) div (DpiGlowRange - 1);
       DstPtr.NextPixel;
     end;
     DstPtr.NextLine;
@@ -1064,17 +1064,17 @@ end;
 
 procedure InitCityMark(T: TTexture);
 var
-  x: Integer;
-  y: Integer;
+  X: Integer;
+  Y: Integer;
   Intensity: Integer;
 begin
-  for x := 0 to CityMark1.Width - 1 do begin
-    for y := 0 to CityMark1.Height - 1 do begin
-      if HGrSystem.Mask.Canvas.Pixels[CityMark1.Left + x, CityMark1.Top + y] = 0 then
+  for X := 0 to CityMark1.Width - 1 do begin
+    for Y := 0 to CityMark1.Height - 1 do begin
+      if HGrSystem.Mask.Canvas.Pixels[CityMark1.Left + X, CityMark1.Top + Y] = 0 then
       begin
         Intensity := HGrSystem.Data.Canvas.Pixels[CityMark1.Left +
-          x, CityMark1.Top + y] and $FF;
-        HGrSystem.Data.Canvas.Pixels[CityMark2.Left + x, CityMark2.Top + y] :=
+          X, CityMark1.Top + Y] and $FF;
+        HGrSystem.Data.Canvas.Pixels[CityMark2.Left + X, CityMark2.Top + Y] :=
           T.ColorMark and $FF * Intensity div $FF + T.ColorMark shr 8 and
           $FF * Intensity div $FF shl 8 + T.ColorMark shr 16 and
           $FF * Intensity div $FF shl 16;
@@ -1102,13 +1102,13 @@ procedure FillLarge(ca: TCanvas; x0, y0, x1, y1, xm: Integer);
 
   function Band(I: Integer): Integer;
   var
-    n: integer;
+    N: Integer;
   begin
-    n := ((MainTexture.Height div 2) div (y1 - y0)) * 2;
+    N := ((MainTexture.Height div 2) div (y1 - y0)) * 2;
     while MainTexture.Height div 2 + (I + 1) * (y1 - y0) > MainTexture.Height do
-      Dec(I, n);
+      Dec(I, N);
     while MainTexture.Height div 2 + I * (y1 - y0) < 0 do
-      Inc(I, n);
+      Inc(I, N);
     Result := I;
   end;
 
@@ -1136,32 +1136,32 @@ end;
 procedure FillSeamless(ca: TCanvas; Left, Top, Width, Height, xOffset, yOffset: Integer;
   const Texture: TBitmap);
 var
-  x, y, x0cut, y0cut, x1cut, y1cut: Integer;
+  X, Y, x0cut, y0cut, x1cut, y1cut: Integer;
 begin
   while xOffset < 0 do
     Inc(xOffset, Texture.Width);
   while yOffset < 0 do
     Inc(yOffset, Texture.Height);
-  for y := (Top + yOffset) div Texture.Height to (Top + yOffset + Height - 1) div
+  for Y := (Top + yOffset) div Texture.Height to (Top + yOffset + Height - 1) div
     Texture.Height do
   begin
-    y0cut := Top + yOffset - y * Texture.Height;
+    y0cut := Top + yOffset - Y * Texture.Height;
     if y0cut < 0 then
       y0cut := 0;
-    y1cut := (y + 1) * Texture.Height - (Top + yOffset + Height);
+    y1cut := (Y + 1) * Texture.Height - (Top + yOffset + Height);
     if y1cut < 0 then
       y1cut := 0;
-    for x := (Left + xOffset) div Texture.Width to (Left + xOffset + Width - 1) div
+    for X := (Left + xOffset) div Texture.Width to (Left + xOffset + Width - 1) div
       Texture.Width do
     begin
-      x0cut := Left + xOffset - x * Texture.Width;
+      x0cut := Left + xOffset - X * Texture.Width;
       if x0cut < 0 then
         x0cut := 0;
-      x1cut := (x + 1) * Texture.Width - (Left + xOffset + Width);
+      x1cut := (X + 1) * Texture.Width - (Left + xOffset + Width);
       if x1cut < 0 then
         x1cut := 0;
-      BitBltCanvas(ca, x * Texture.Width + x0cut - xOffset,
-        y * Texture.Height + y0cut - yOffset, Texture.Width - x0cut - x1cut,
+      BitBltCanvas(ca, X * Texture.Width + x0cut - xOffset,
+        Y * Texture.Height + y0cut - yOffset, Texture.Width - x0cut - x1cut,
         Texture.Height - y0cut - y1cut, Texture.Canvas, x0cut, y0cut);
     end;
   end;
@@ -1179,32 +1179,32 @@ begin
     2, (MainTexture.Height - Form.ClientHeight) div 2);
 end;
 
-procedure Corner(ca: TCanvas; x, y, Kind: Integer; T: TTexture);
+procedure Corner(ca: TCanvas; X, Y, Kind: Integer; T: TTexture);
 begin
   { BitBltCanvas(ca,x,y,8,8,T.HGr.Mask.Canvas,
     T.xGr+29+Kind*9,T.yGr+89,SRCAND);
-    BitBltCanvas(ca,x,y,8,8,T.HGr.Data.Canvas,
+    BitBltCanvas(ca,X,Y,8,8,T.HGr.Data.Canvas,
     T.xGr+29+Kind*9,T.yGr+89,SRCPAINT); }
 end;
 
-procedure BiColorTextOut(ca: TCanvas; clMain, clBack: TColor; x, y: Integer; s: string);
+procedure BiColorTextOut(ca: TCanvas; clMain, clBack: TColor; X, Y: Integer; S: string);
 
-  procedure PaintIcon(x, y, Kind: Integer);
+  procedure PaintIcon(X, Y, Kind: Integer);
   begin
-    BitBltCanvas(ca, x, y + 6, 10, 10, HGrSystem.Mask.Canvas,
+    BitBltCanvas(ca, X, Y + 6, 10, 10, HGrSystem.Mask.Canvas,
       66 + Kind mod 11 * 11, 115 + Kind div 11 * 11, SRCAND);
-    BitBltCanvas(ca, x, y + 6, 10, 10, HGrSystem.Data.Canvas,
+    BitBltCanvas(ca, X, Y + 6, 10, 10, HGrSystem.Data.Canvas,
       66 + Kind mod 11 * 11, 115 + Kind div 11 * 11, SRCPAINT);
   end;
 
 var
-  p, xp: Integer;
+  P, xp: Integer;
   sp: string;
   shadow: Boolean;
   Text: string;
 begin
-  Inc(x);
-  Inc(y);
+  Inc(X);
+  Inc(Y);
   for shadow := True downto False do
     with ca do
       if not shadow or (clBack <> $7F007F) then
@@ -1213,146 +1213,146 @@ begin
           Font.Color := clBack
         else
           Font.Color := clMain;
-        sp := s;
-        xp := x;
+        sp := S;
+        xp := X;
         repeat
-          p := pos('%', sp);
-          if (p = 0) or (p + 1 > Length(sp)) or not
-            (sp[p + 1] in ['c', 'f', 'l', 'm', 'n', 'o', 'p', 'r', 't', 'w']) then
+          P := Pos('%', sp);
+          if (P = 0) or (P + 1 > Length(sp)) or not
+            (sp[P + 1] in ['c', 'f', 'l', 'm', 'n', 'o', 'p', 'r', 't', 'w']) then
           begin
-            ca.Textout(xp, y, sp);
+            ca.Textout(xp, Y, sp);
             Break;
           end
           else
           begin
-            Text := Copy(sp, 1, p - 1);
-            Textout(xp, y, Text);
+            Text := Copy(sp, 1, P - 1);
+            Textout(xp, Y, Text);
             Inc(xp, ca.TextWidth(Text));
             if not shadow then
-              case sp[p + 1] of
-                'c': PaintIcon(xp + 1, y, 6);
-                'f': PaintIcon(xp + 1, y, 0);
-                'l': PaintIcon(xp + 1, y, 8);
-                'm': PaintIcon(xp + 1, y, 17);
-                'n': PaintIcon(xp + 1, y, 7);
-                'o': PaintIcon(xp + 1, y, 16);
-                'p': PaintIcon(xp + 1, y, 2);
-                'r': PaintIcon(xp + 1, y, 12);
-                't': PaintIcon(xp + 1, y, 4);
-                'w': PaintIcon(xp + 1, y, 13);
+              case sp[P + 1] of
+                'c': PaintIcon(xp + 1, Y, 6);
+                'f': PaintIcon(xp + 1, Y, 0);
+                'l': PaintIcon(xp + 1, Y, 8);
+                'm': PaintIcon(xp + 1, Y, 17);
+                'n': PaintIcon(xp + 1, Y, 7);
+                'o': PaintIcon(xp + 1, Y, 16);
+                'p': PaintIcon(xp + 1, Y, 2);
+                'r': PaintIcon(xp + 1, Y, 12);
+                't': PaintIcon(xp + 1, Y, 4);
+                'w': PaintIcon(xp + 1, Y, 13);
               end;
             Inc(xp, 10);
-            Delete(sp, 1, p + 1);
+            Delete(sp, 1, P + 1);
           end;
         until False;
-        Dec(x);
-        Dec(y);
+        Dec(X);
+        Dec(Y);
       end;
 end;
 
-function BiColorTextWidth(ca: TCanvas; s: string): Integer;
+function BiColorTextWidth(ca: TCanvas; S: string): Integer;
 var
   P: Integer;
 begin
   Result := 1;
   repeat
-    P := Pos('%', s);
-    if (P = 0) or (P = Length(s)) then
+    P := Pos('%', S);
+    if (P = 0) or (P = Length(S)) then
     begin
-      Inc(Result, ca.TextWidth(s));
+      Inc(Result, ca.TextWidth(S));
       Break;
     end
     else
     begin
-      if not (s[P + 1] in ['c', 'f', 'l', 'm', 'n', 'o', 'p', 'r', 't', 'w'])
+      if not (S[P + 1] in ['c', 'f', 'l', 'm', 'n', 'o', 'p', 'r', 't', 'w'])
       then
-        Inc(Result, ca.TextWidth(copy(s, 1, P + 1)))
+        Inc(Result, ca.TextWidth(Copy(S, 1, P + 1)))
       else
-        Inc(Result, ca.TextWidth(copy(s, 1, P - 1)) + 10);
-      Delete(s, 1, P + 1);
+        Inc(Result, ca.TextWidth(Copy(S, 1, P - 1)) + 10);
+      Delete(S, 1, P + 1);
     end;
   until False;
 end;
 
 procedure LoweredTextOut(ca: TCanvas; cl: TColor; T: TTexture;
-  x, y: Integer; s: string);
+  X, Y: Integer; S: string);
 begin
   if cl = -2 then
     BiColorTextOut(ca, (T.ColorBevelShade and $FEFEFE) shr 1,
-      T.ColorBevelLight, x, y, s)
+      T.ColorBevelLight, X, Y, S)
   else if cl < 0 then
-    BiColorTextOut(ca, T.ColorTextShade, T.ColorTextLight, x, y, s)
+    BiColorTextOut(ca, T.ColorTextShade, T.ColorTextLight, X, Y, S)
   else
-    BiColorTextOut(ca, cl, T.ColorTextLight, x, y, s);
+    BiColorTextOut(ca, cl, T.ColorTextLight, X, Y, S);
 end;
 
-procedure RisedTextOut(ca: TCanvas; x, y: integer; s: string);
+procedure RisedTextOut(ca: TCanvas; X, Y: Integer; S: string);
 begin
-  BiColorTextOut(ca, $FFFFFF, $000000, x, y, s);
+  BiColorTextOut(ca, $FFFFFF, $000000, X, Y, S);
 end;
 
-procedure Gradient(ca: TCanvas; x, y, dx, dy, Width, Height, Color: Integer;
-  Brightness: array of integer);
+procedure Gradient(ca: TCanvas; X, Y, dx, dy, Width, Height, Color: Integer;
+  Brightness: array of Integer);
 var
-  i, r, g, b: Integer;
+  I, R, G, B: Integer;
 begin
-  for i := 0 to Length(Brightness) - 1 do begin // gradient
-    r := Color and $FF + Brightness[i];
-    if r < 0 then
-      r := 0
-    else if r >= 256 then
-      r := 255;
-    g := Color shr 8 and $FF + Brightness[i];
-    if g < 0 then
-      g := 0
-    else if g >= 256 then
-      g := 255;
-    b := Color shr 16 and $FF + Brightness[i];
-    if b < 0 then
-      b := 0
-    else if b >= 256 then
-      b := 255;
-    ca.Pen.Color := r + g shl 8 + b shl 16;
-    ca.MoveTo(x + dx * i, y + dy * i);
-    ca.LineTo(x + dx * i + Width, y + dy * i + Height);
+  for I := 0 to Length(Brightness) - 1 do begin // gradient
+    R := Color and $FF + Brightness[I];
+    if R < 0 then
+      R := 0
+    else if R >= 256 then
+      R := 255;
+    G := Color shr 8 and $FF + Brightness[I];
+    if G < 0 then
+      G := 0
+    else if G >= 256 then
+      G := 255;
+    B := Color shr 16 and $FF + Brightness[I];
+    if B < 0 then
+      B := 0
+    else if B >= 256 then
+      B := 255;
+    ca.Pen.Color := R + G shl 8 + B shl 16;
+    ca.MoveTo(X + dx * I, Y + dy * I);
+    ca.LineTo(X + dx * I + Width, Y + dy * I + Height);
   end;
   ca.Pen.Color := $000000;
-  ca.MoveTo(x + 1, y + 16 * dy + Height);
-  ca.LineTo(x + 16 * dx + Width, y + 16 * dy + Height);
-  ca.LineTo(x + 16 * dx + Width, y);
+  ca.MoveTo(X + 1, Y + 16 * dy + Height);
+  ca.LineTo(X + 16 * dx + Width, Y + 16 * dy + Height);
+  ca.LineTo(X + 16 * dx + Width, Y);
 end;
 
-procedure LightGradient(ca: TCanvas; x, y, Width, Color: Integer);
+procedure LightGradient(ca: TCanvas; X, Y, Width, Color: Integer);
 const
-  Brightness: array [0 .. 15] of integer =
+  Brightness: array [0 .. 15] of Integer =
     (16, 12, 8, 4, 0, -4, -8, -12, -16, -20, -24, -28, -32, -36, -40, -44);
 begin
-  Gradient(ca, x, y, 0, 1, Width, 0, Color, Brightness);
+  Gradient(ca, X, Y, 0, 1, Width, 0, Color, Brightness);
 end;
 
-procedure DarkGradient(ca: TCanvas; x, y, Width, Kind: Integer);
+procedure DarkGradient(ca: TCanvas; X, Y, Width, Kind: Integer);
 const
-  Brightness: array [0 .. 15] of integer =
+  Brightness: array [0 .. 15] of Integer =
     (16, 12, 8, 4, 0, -4, -8, -12 - 24, -16 + 16, -20, -24, -28, -32, -36, -40, -44);
 begin
-  Gradient(ca, x, y, 0, 1, Width, 0, HGrSystem.Data.Canvas.Pixels
+  Gradient(ca, X, Y, 0, 1, Width, 0, HGrSystem.Data.Canvas.Pixels
     [187, 137 + Kind], Brightness);
 end;
 
-procedure VLightGradient(ca: TCanvas; x, y, Height, Color: Integer);
+procedure VLightGradient(ca: TCanvas; X, Y, Height, Color: Integer);
 const
-  Brightness: array [0 .. 15] of integer =
+  Brightness: array [0 .. 15] of Integer =
     (16, 12, 8, 4, 0, -4, -8, -12, -16, -20, -24, -28, -32, -36, -40, -44);
 begin
-  Gradient(ca, x, y, 1, 0, 0, Height, Color, Brightness);
+  Gradient(ca, X, Y, 1, 0, 0, Height, Color, Brightness);
 end;
 
-procedure VDarkGradient(ca: TCanvas; x, y, Height, Kind: Integer);
+procedure VDarkGradient(ca: TCanvas; X, Y, Height, Kind: Integer);
 const
-  Brightness: array [0 .. 15] of integer =
+  Brightness: array [0 .. 15] of Integer =
     (16, 12, 8, 4, 0, -4, -8, -12 - 24, -16 + 16, -20, -24, -28, -32, -36, -40, -44);
 begin
-  Gradient(ca, x, y, 1, 0, 0, Height,
+  Gradient(ca, X, Y, 1, 0, 0, Height,
     HGrSystem.Data.Canvas.Pixels[187, 137 + Kind], Brightness);
 end;
 
@@ -1363,27 +1363,27 @@ begin
   RisedTextOut(Canvas, X + Width - BiColorTextWidth(Canvas, Value), Y, Value);
 end;
 
-procedure NumberBar(dst: TBitmap; x, y: integer; Cap: string;
+procedure NumberBar(dst: TBitmap; X, Y: Integer; Cap: string;
   val: Integer; T: TTexture);
 var
-  s: string;
+  S: string;
 begin
   if val > 0 then
   begin
-    DLine(dst.Canvas, x - 2, x + 170, y + 16, T.ColorBevelShade,
+    DLine(dst.Canvas, X - 2, X + 170, Y + 16, T.ColorBevelShade,
       T.ColorBevelLight);
-    LoweredTextOut(dst.Canvas, -1, T, x - 2, y, Cap);
-    s := IntToStr(val);
-    RisedTextOut(dst.Canvas, x + 170 - BiColorTextWidth(dst.Canvas,
-      s), y, s);
+    LoweredTextOut(dst.Canvas, -1, T, X - 2, Y, Cap);
+    S := IntToStr(val);
+    RisedTextOut(dst.Canvas, X + 170 - BiColorTextWidth(dst.Canvas,
+      S), Y, S);
   end;
 end;
 
-procedure CountBar(dst: TBitmap; x, y, w: Integer; Kind: Integer;
+procedure CountBar(dst: TBitmap; X, Y, W: Integer; Kind: Integer;
   Cap: string; val: Integer; T: TTexture);
 var
-  i, sd, ld, cl, xIcon, yIcon: Integer;
-  s: string;
+  I, sd, ld, cl, xIcon, yIcon: Integer;
+  S: string;
 begin
   // val:=random(40); //!!!
   if val = 0 then
@@ -1395,19 +1395,19 @@ begin
     // yIcon:=y;
     // DLine(dst.Canvas,x-2,x+170+32,y+16,T.ColorBevelShade,T.ColorBevelLight);
 
-    xIcon := x - 5;
-    yIcon := y + 15;
-    DLine(dst.Canvas, x - 2, xIcon + w + 2, yIcon + 16, T.ColorBevelShade,
+    xIcon := X - 5;
+    yIcon := Y + 15;
+    DLine(dst.Canvas, X - 2, xIcon + W + 2, yIcon + 16, T.ColorBevelShade,
       T.ColorBevelLight);
 
-    s := IntToStr(val);
+    S := IntToStr(val);
     if val < 0 then
       cl := $0000FF
     else
       cl := -1;
-    LoweredTextOut(dst.Canvas, cl, T, x - 2, y, Cap);
+    LoweredTextOut(dst.Canvas, cl, T, X - 2, Y, Cap);
     LoweredTextOut(dst.Canvas, cl, T,
-      xIcon + w + 2 - BiColorTextWidth(dst.Canvas, s), yIcon, s);
+      xIcon + W + 2 - BiColorTextWidth(dst.Canvas, S), yIcon, S);
 
     if (Kind = 12) and (val >= 100) then
     begin // science with symbol for 100
@@ -1415,26 +1415,26 @@ begin
       sd := 14 * (val div 10 + val mod 10 - 1);
       if sd = 0 then
         sd := 1;
-      if sd < w - 44 then
+      if sd < W - 44 then
         ld := sd
       else
-        ld := w - 44;
-      for i := 0 to val mod 10 - 1 do
+        ld := W - 44;
+      for I := 0 to val mod 10 - 1 do
       begin
-        BitBltCanvas(dst.Canvas, xIcon + 4 + i * (14 * ld div sd), yIcon + 2 + 1, 14,
+        BitBltCanvas(dst.Canvas, xIcon + 4 + I * (14 * ld div sd), yIcon + 2 + 1, 14,
           14, HGrSystem.Mask.Canvas, 67 + Kind mod 8 * 15,
           70 + Kind div 8 * 15, SRCAND);
-        Sprite(dst, HGrSystem, xIcon + 3 + i * (14 * ld div sd), yIcon + 2,
+        Sprite(dst, HGrSystem, xIcon + 3 + I * (14 * ld div sd), yIcon + 2,
           14, 14, 67 + Kind mod 8 * 15, 70 + Kind div 8 * 15);
       end;
-      for i := 0 to val div 10 - 1 do
+      for I := 0 to val div 10 - 1 do
       begin
         BitBltCanvas(dst.Canvas, xIcon + 4 + (val mod 10) *
-          (14 * ld div sd) + i * (14 * ld div sd), yIcon + 3, 14, 14,
+          (14 * ld div sd) + I * (14 * ld div sd), yIcon + 3, 14, 14,
           HGrSystem.Mask.Canvas, 67 + 7 mod 8 * 15,
           70 + 7 div 8 * 15, SRCAND);
         Sprite(dst, HGrSystem, xIcon + 3 + (val mod 10) *
-          (14 * ld div sd) + i * (14 * ld div sd), yIcon + 2, 14,
+          (14 * ld div sd) + I * (14 * ld div sd), yIcon + 2, 14,
           14, 67 + 7 mod 8 * 15,
           70 + 7 div 8 * 15);
       end;
@@ -1448,26 +1448,26 @@ begin
         sd := 10 * (val mod 10 - 1) + 14 * (val div 10);
       if sd = 0 then
         sd := 1;
-      if sd < w - 44 then
+      if sd < W - 44 then
         ld := sd
       else
-        ld := w - 44;
-      for i := 0 to val div 10 - 1 do
+        ld := W - 44;
+      for I := 0 to val div 10 - 1 do
       begin
-        BitBltCanvas(dst.Canvas, xIcon + 4 + i * (14 * ld div sd), yIcon + 3, 14, 14,
+        BitBltCanvas(dst.Canvas, xIcon + 4 + I * (14 * ld div sd), yIcon + 3, 14, 14,
           HGrSystem.Mask.Canvas, 67 + Kind mod 8 * 15,
           70 + Kind div 8 * 15, SRCAND);
-        Sprite(dst, HGrSystem, xIcon + 3 + i * (14 * ld div sd), yIcon + 2,
+        Sprite(dst, HGrSystem, xIcon + 3 + I * (14 * ld div sd), yIcon + 2,
           14, 14, 67 + Kind mod 8 * 15, 70 + Kind div 8 * 15);
       end;
-      for i := 0 to val mod 10 - 1 do
+      for I := 0 to val mod 10 - 1 do
       begin
         BitBltCanvas(dst.Canvas, xIcon + 4 + (val div 10) *
-          (14 * ld div sd) + i * (10 * ld div sd), yIcon + 7, 10, 10,
+          (14 * ld div sd) + I * (10 * ld div sd), yIcon + 7, 10, 10,
           HGrSystem.Mask.Canvas, 66 + Kind mod 11 * 11,
           115 + Kind div 11 * 11, SRCAND);
         Sprite(dst, HGrSystem, xIcon + 3 + (val div 10) *
-          (14 * ld div sd) + i * (10 * ld div sd), yIcon + 6, 10,
+          (14 * ld div sd) + I * (10 * ld div sd), yIcon + 6, 10,
           10, 66 + Kind mod 11 * 11,
           115 + Kind div 11 * 11);
       end;
@@ -1475,71 +1475,71 @@ begin
   end;
 end;
 
-procedure PaintProgressBar(ca: TCanvas; Kind, x, y, pos, Growth, max: Integer;
+procedure PaintProgressBar(ca: TCanvas; Kind, X, Y, Pos, Growth, Max: Integer;
   T: TTexture);
 var
-  i: Integer;
+  I: Integer;
 begin
-  if pos > max then
-    pos := max;
+  if Pos > Max then
+    Pos := Max;
   if Growth < 0 then
   begin
-    pos := pos + Growth;
-    if pos < 0 then
+    Pos := Pos + Growth;
+    if Pos < 0 then
     begin
-      Growth := Growth - pos;
-      pos := 0;
+      Growth := Growth - Pos;
+      Pos := 0;
     end;
   end
-  else if pos + Growth > max then
-    Growth := max - pos;
-  Frame(ca, x - 1, y - 1, x + max, y + 7, $000000, $000000);
-  RFrame(ca, x - 2, y - 2, x + max + 1, y + 8, T.ColorBevelShade,
+  else if Pos + Growth > Max then
+    Growth := Max - Pos;
+  Frame(ca, X - 1, Y - 1, X + Max, Y + 7, $000000, $000000);
+  RFrame(ca, X - 2, Y - 2, X + Max + 1, Y + 8, T.ColorBevelShade,
     T.ColorBevelLight);
   with ca do
   begin
-    for i := 0 to pos div 8 - 1 do
-      BitBltCanvas(ca, x + i * 8, y, 8, 7,
+    for I := 0 to Pos div 8 - 1 do
+      BitBltCanvas(ca, X + I * 8, Y, 8, 7,
         HGrSystem.Data.Canvas, 104, 9 + 8 * Kind);
-    BitBltCanvas(ca, x + 8 * (pos div 8), y, pos - 8 * (pos div 8), 7,
+    BitBltCanvas(ca, X + 8 * (Pos div 8), Y, Pos - 8 * (Pos div 8), 7,
       HGrSystem.Data.Canvas, 104, 9 + 8 * Kind);
     if Growth > 0 then
     begin
-      for i := 0 to Growth div 8 - 1 do
-        BitBltCanvas(ca, x + pos + i * 8, y, 8, 7,
+      for I := 0 to Growth div 8 - 1 do
+        BitBltCanvas(ca, X + Pos + I * 8, Y, 8, 7,
           HGrSystem.Data.Canvas, 112, 9 + 8 * Kind);
-      BitBltCanvas(ca, x + pos + 8 * (Growth div 8), y,
+      BitBltCanvas(ca, X + Pos + 8 * (Growth div 8), Y,
         Growth - 8 * (Growth div 8), 7, HGrSystem.Data.Canvas,
         112, 9 + 8 * Kind);
     end
     else if Growth < 0 then
     begin
-      for i := 0 to -Growth div 8 - 1 do
-        BitBltCanvas(ca, x + pos + i * 8, y, 8, 7,
+      for I := 0 to -Growth div 8 - 1 do
+        BitBltCanvas(ca, X + Pos + I * 8, Y, 8, 7,
           HGrSystem.Data.Canvas, 104, 1);
-      BitBltCanvas(ca, x + pos + 8 * (-Growth div 8), y, -Growth -
+      BitBltCanvas(ca, X + Pos + 8 * (-Growth div 8), Y, -Growth -
         8 * (-Growth div 8), 7,
         HGrSystem.Data.Canvas, 104, 1);
     end;
     Brush.Color := $000000;
-    FillRect(Rect(x + pos + abs(Growth), y, x + max, y + 7));
+    FillRect(Rect(X + Pos + abs(Growth), Y, X + Max, Y + 7));
     Brush.Style := bsClear;
   end;
 end;
 
 // pos and growth are relative to max, set size independent
 procedure PaintRelativeProgressBar(ca: TCanvas;
-  Kind, x, y, size, pos, Growth, max: Integer; IndicateComplete: Boolean;
+  Kind, X, Y, size, Pos, Growth, Max: Integer; IndicateComplete: Boolean;
   T: TTexture);
 begin
   if Growth > 0 then
-    PaintProgressBar(ca, Kind, x, y, pos * size div max,
-      (Growth * size + max div 2) div max, size, T)
+    PaintProgressBar(ca, Kind, X, Y, Pos * size div Max,
+      (Growth * size + Max div 2) div Max, size, T)
   else
-    PaintProgressBar(ca, Kind, x, y, pos * size div max,
-      (Growth * size - max div 2) div max, size, T);
-  if IndicateComplete and (pos + Growth >= max) then
-    Sprite(ca, HGrSystem, x + size - 10, y - 7, 23, 16, 1, 129);
+    PaintProgressBar(ca, Kind, X, Y, Pos * size div Max,
+      (Growth * size - Max div 2) div Max, size, T);
+  if IndicateComplete and (Pos + Growth >= Max) then
+    Sprite(ca, HGrSystem, X + size - 10, Y - 7, 23, 16, 1, 129);
 end;
 
 procedure PaintLogo(Canvas: TCanvas; X, Y, LightColor, ShadeColor: Integer);
@@ -1609,13 +1609,13 @@ end;
 
 procedure DarkenImage(Bitmap: TBitmap; Change: Integer);
 var
-  x, y: integer;
+  X, Y: Integer;
   PicturePixel: TPixelPointer;
 begin
   Bitmap.BeginUpdate;
   PicturePixel := PixelPointer(Bitmap);
-  for y := 0 to ScaleToNative(Bitmap.Height) - 1 do begin
-    for x := 0 to ScaleToNative(Bitmap.Width) - 1 do begin
+  for Y := 0 to ScaleToNative(Bitmap.Height) - 1 do begin
+    for X := 0 to ScaleToNative(Bitmap.Width) - 1 do begin
       PicturePixel.Pixel^.B := Max(PicturePixel.Pixel^.B - Change, 0);
       PicturePixel.Pixel^.G := Max(PicturePixel.Pixel^.G - Change, 0);
       PicturePixel.Pixel^.R := Max(PicturePixel.Pixel^.R - Change, 0);
@@ -1661,34 +1661,34 @@ procedure LoadFonts;
 var
   Section: TFontType;
   FontScript: TextFile;
-  Size: integer;
+  Size: Integer;
   S: string;
-  I: integer;
-  P: integer;
+  I: Integer;
+  P: Integer;
 begin
   Section := ftNormal;
   AssignFile(FontScript, LocalizedFilePath('Fonts.txt'));
   try
     Reset(FontScript);
     while not Eof(FontScript) do begin
-      ReadLn(FontScript, s);
-      if s <> '' then
-        if s[1] = '#' then begin
-          s := TrimRight(s);
-          if s = '#SMALL' then Section := ftSmall
-          else if s = '#TINY' then Section := ftTiny
-          else if s = '#CAPTION' then Section := ftCaption
-          else if s = '#BUTTON' then Section := ftButton
+      ReadLn(FontScript, S);
+      if S <> '' then
+        if S[1] = '#' then begin
+          S := TrimRight(S);
+          if S = '#SMALL' then Section := ftSmall
+          else if S = '#TINY' then Section := ftTiny
+          else if S = '#CAPTION' then Section := ftCaption
+          else if S = '#BUTTON' then Section := ftButton
           else Section := ftNormal;
         end else begin
-          p := Pos(',', s);
-          if p > 0 then begin
-            UniFont[section].Name := Trim(Copy(s, 1, p - 1));
+          P := Pos(',', S);
+          if P > 0 then begin
+            UniFont[section].Name := Trim(Copy(S, 1, P - 1));
             Size := 0;
-            for i := p + 1 to Length(s) do
-              case s[i] of
+            for I := P + 1 to Length(S) do
+              case S[I] of
                 '0' .. '9':
-                  Size := Size * 10 + Byte(s[i]) - 48;
+                  Size := Size * 10 + Byte(S[I]) - 48;
                 'B', 'b':
                   UniFont[section].Style := UniFont[section].Style + [fsBold];
                 'I', 'i':

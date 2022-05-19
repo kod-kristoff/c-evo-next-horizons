@@ -32,10 +32,10 @@ begin
   Lang := Copy(GetEnvironmentVariableUTF8('LANG'), 1, 2);
 
   if Lang = '' then begin
-    for i := 1 to Paramcount - 1 do
-      if (ParamStrUTF8(i) = '--LANG') or (ParamStrUTF8(i) = '-l') or
-        (ParamStrUTF8(i) = '--lang') then
-          Lang := ParamStrUTF8(i + 1);
+    for I := 1 to Paramcount - 1 do
+      if (ParamStrUTF8(I) = '--LANG') or (ParamStrUTF8(I) = '-l') or
+        (ParamStrUTF8(I) = '--lang') then
+          Lang := ParamStrUTF8(I + 1);
   end;
   if Lang = '' then begin
     T := '';
@@ -72,7 +72,7 @@ begin
       if (FindFirst(DestinationDir + DirectorySeparator + Src.Name, $21, Dst) <> 0) or
         (Dst.Time < Src.Time) then
         CopyFile(SourceDir + DirectorySeparator + Src.Name,
-          DestinationDir + DirectorySeparator + Src.Name, false);
+          DestinationDir + DirectorySeparator + Src.Name, False);
       FindClose(Dst);
     until FindNext(Src) <> 0;
   FindClose(Src);

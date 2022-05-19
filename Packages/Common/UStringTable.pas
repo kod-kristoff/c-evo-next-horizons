@@ -38,7 +38,7 @@ end;
 
 function TStringTable.GetColCount: Integer;
 begin
-  Result := Size.x;
+  Result := Size.X;
 end;
 
 function TStringTable.GetRowCount: Integer;

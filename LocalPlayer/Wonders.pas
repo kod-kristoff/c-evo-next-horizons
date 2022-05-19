@@ -22,8 +22,8 @@ type
   private
     Selection: Integer;
     Center: TPoint;
-    procedure DarkIcon(i: Integer);
-    procedure Glow(i, GlowColor: Integer);
+    procedure DarkIcon(I: Integer);
+    procedure Glow(I, GlowColor: Integer);
     procedure PaintBackgroundShape;
   public
     procedure OffscreenPaint; override;
@@ -115,25 +115,25 @@ begin
   Line[3] := PixelPointer(Offscreen, ScaleToNative(Center.X) - 1, ScaleToNative(Center.Y) - 1);
   for Y := 0 to Height - 1 do begin
     for X := 0 to Width - 1 do begin
-      r := X * X * ((Height div 4) * (Height div 4)) + Y * Y * ((Width div 4) * (Width div 4));
+      R := X * X * ((Height div 4) * (Height div 4)) + Y * Y * ((Width div 4) * (Width div 4));
       ax := ((1 shl 16 div (Height div 4)) * (Width div 4)) * Y;
-      if (r < ScaleToNative(8) * Height * Width * Width) and
-        ((r >= (Height div 4) * (Height div 2) * (Width div 2) * (Width div 2)) and (ax < amax2 * X) and
+      if (R < ScaleToNative(8) * Height * Width * Width) and
+        ((R >= (Height div 4) * (Height div 2) * (Width div 2) * (Width div 2)) and (ax < amax2 * X) and
         ((ax < amax0 * X) or (ax > amin2 * X)) or (ax > amin1 * X) and
         ((ax < amax1 * X) or (ax > amin3 * X))) then begin
         for ch := 0 to 2 do begin
-          c := Line[0].Pixel^.Planes[ch] - Darken;
-          if c < 0 then Line[0].Pixel^.Planes[ch] := 0
-            else Line[0].Pixel^.Planes[ch] := c;
-          c := Line[1].Pixel^.Planes[ch] - Darken;
-          if c < 0 then Line[1].Pixel^.Planes[ch] := 0
-            else Line[1].Pixel^.Planes[ch] := c;
-          c := Line[2].Pixel^.Planes[ch] - Darken;
-          if c < 0 then Line[2].Pixel^.Planes[ch] := 0
-            else Line[2].Pixel^.Planes[ch] := c;
-          c := Line[3].Pixel^.Planes[ch] - Darken;
-          if c < 0 then Line[3].Pixel^.Planes[ch] := 0
-            else Line[3].Pixel^.Planes[ch] := c;
+          C := Line[0].Pixel^.Planes[ch] - Darken;
+          if C < 0 then Line[0].Pixel^.Planes[ch] := 0
+            else Line[0].Pixel^.Planes[ch] := C;
+          C := Line[1].Pixel^.Planes[ch] - Darken;
+          if C < 0 then Line[1].Pixel^.Planes[ch] := 0
+            else Line[1].Pixel^.Planes[ch] := C;
+          C := Line[2].Pixel^.Planes[ch] - Darken;
+          if C < 0 then Line[2].Pixel^.Planes[ch] := 0
+            else Line[2].Pixel^.Planes[ch] := C;
+          C := Line[3].Pixel^.Planes[ch] - Darken;
+          if C < 0 then Line[3].Pixel^.Planes[ch] := 0
+            else Line[3].Pixel^.Planes[ch] := C;
         end;
       end;
       Line[0].NextPixel;
@@ -149,16 +149,16 @@ begin
   Offscreen.EndUpdate;
 end;
 
-procedure TWondersDlg.DarkIcon(i: Integer);
+procedure TWondersDlg.DarkIcon(I: Integer);
 var
-  X, Y, ch, x0Dst, y0Dst, x0Src, y0Src, darken, c: Integer;
+  X, Y, ch, x0Dst, y0Dst, x0Src, y0Src, darken, C: Integer;
   Src, Dst: TPixelPointer;
 begin
   Offscreen.BeginUpdate;
-  x0Dst := ClientWidth div 2 - xSizeBig div 2 + RingPosition[i].X;
-  y0Dst := ClientHeight div 2 - ySizeBig div 2 + RingPosition[i].Y;
-  x0Src := (i mod 7) * xSizeBig;
-  y0Src := (i div 7 + SystemIconLines) * ySizeBig;
+  x0Dst := ClientWidth div 2 - xSizeBig div 2 + RingPosition[I].X;
+  y0Dst := ClientHeight div 2 - ySizeBig div 2 + RingPosition[I].Y;
+  x0Src := (I mod 7) * xSizeBig;
+  y0Src := (I div 7 + SystemIconLines) * ySizeBig;
   Src := PixelPointer(BigImp, ScaleToNative(x0Src), ScaleToNative(y0Src));
   Dst := PixelPointer(Offscreen, ScaleToNative(x0Dst), ScaleToNative(y0Dst));
   for Y := 0 to ScaleToNative(ySizeBig) - 1 do begin
@@ -166,9 +166,9 @@ begin
       Darken := ((255 - Src.Pixel^.B) * 3 + (255 - Src.Pixel^.G) *
         15 + (255 - Src.Pixel^.R) * 9) div 128;
       for ch := 0 to 2 do begin
-        c := Dst.Pixel^.Planes[ch] - Darken;
-        if c < 0 then Dst.Pixel^.Planes[ch] := 0
-          else Dst.Pixel^.Planes[ch] := c;
+        C := Dst.Pixel^.Planes[ch] - Darken;
+        if C < 0 then Dst.Pixel^.Planes[ch] := 0
+          else Dst.Pixel^.Planes[ch] := C;
       end;
       Src.NextPixel;
       Dst.NextPixel;
@@ -179,11 +179,11 @@ begin
   Offscreen.EndUpdate;
 end;
 
-procedure TWondersDlg.Glow(i, GlowColor: Integer);
+procedure TWondersDlg.Glow(I, GlowColor: Integer);
 begin
   GlowFrame(Offscreen,
-    ClientWidth div 2 - xSizeBig div 2 + RingPosition[i].X,
-    ClientHeight div 2 - ySizeBig div 2 + RingPosition[i].Y,
+    ClientWidth div 2 - xSizeBig div 2 + RingPosition[I].X,
+    ClientHeight div 2 - ySizeBig div 2 + RingPosition[I].Y,
     xSizeBig, ySizeBig, GlowColor);
 end;
 

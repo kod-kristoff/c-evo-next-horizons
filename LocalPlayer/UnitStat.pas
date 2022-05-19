@@ -27,16 +27,16 @@ type
     NoMap: TIsoMap;
   public
     procedure CheckAge;
-    procedure ShowNewContent_OwnModel(NewMode: TWindowMode; mix: integer);
-    procedure ShowNewContent_OwnUnit(NewMode: TWindowMode; uix: integer);
-    procedure ShowNewContent_EnemyUnit(NewMode: TWindowMode; euix: integer);
-    procedure ShowNewContent_EnemyLoc(NewMode: TWindowMode; Loc: integer);
-    procedure ShowNewContent_EnemyModel(NewMode: TWindowMode; emix: integer);
-    procedure ShowNewContent_EnemyCity(NewMode: TWindowMode; Loc: integer);
+    procedure ShowNewContent_OwnModel(NewMode: TWindowMode; mix: Integer);
+    procedure ShowNewContent_OwnUnit(NewMode: TWindowMode; uix: Integer);
+    procedure ShowNewContent_EnemyUnit(NewMode: TWindowMode; euix: Integer);
+    procedure ShowNewContent_EnemyLoc(NewMode: TWindowMode; Loc: Integer);
+    procedure ShowNewContent_EnemyModel(NewMode: TWindowMode; emix: Integer);
+    procedure ShowNewContent_EnemyCity(NewMode: TWindowMode; Loc: Integer);
 
   protected
     mixShow, // for dkOwnModel
-    uixShow, euixShow, ecixShow, UnitLoc, AgePrepared: integer;
+    uixShow, euixShow, ecixShow, UnitLoc, AgePrepared: Integer;
     // for dkEnemyUnit, euixShow=-1 ->
     mox: ^TModelInfo; // for dkEnemyModel
     Kind: (dkOwnModel, dkOwnUnit, dkEnemyModel, dkEnemyUnit, dkEnemyCityDefense,
@@ -120,8 +120,8 @@ end;
 
 procedure TUnitStatDlg.FormShow(Sender: TObject);
 var
-  owner, mix: integer;
-  IsSpecialUnit: boolean;
+  owner, mix: Integer;
+  IsSpecialUnit: Boolean;
 begin
   if Kind in [dkEnemyUnit, dkEnemyCityDefense, dkEnemyCity] then
   begin
@@ -131,8 +131,8 @@ begin
       begin
         euixShow := MyRO.nEnemyUn - 1;
         while (euixShow >= 0) and (MyRO.EnemyUn[euixShow].Loc <> UnitLoc) do
-          dec(euixShow);
-        assert(euixShow >= 0);
+          Dec(euixShow);
+        Assert(euixShow >= 0);
       end;
       with MyRO.EnemyUn[euixShow] do
       begin
@@ -147,8 +147,8 @@ begin
     begin
       ecixShow := MyRO.nEnemyCity - 1;
       while (ecixShow >= 0) and (MyRO.EnemyCity[ecixShow].Loc <> UnitLoc) do
-        dec(ecixShow);
-      assert(ecixShow >= 0);
+        Dec(ecixShow);
+      Assert(ecixShow >= 0);
     end;
   end;
   case Kind of
@@ -177,11 +177,11 @@ begin
     Top := (Screen.Height - Height) div 2;
   end;
 
-  SwitchBtn.Visible := not supervising and (Kind = dkOwnModel);
-  ConscriptsBtn.Visible := not supervising and (Kind = dkOwnModel) and
+  SwitchBtn.Visible := not Supervising and (Kind = dkOwnModel);
+  ConscriptsBtn.Visible := not Supervising and (Kind = dkOwnModel) and
     (MyRO.Tech[adConscription] >= tsApplicable) and
     (MyModel[mixShow].Domain = dGround) and (MyModel[mixShow].Kind < mkScout);
-  IsSpecialUnit := false;
+  IsSpecialUnit := False;
   if Kind in [dkEnemyCity, dkEnemyCityDefense] then
     Caption := CityName(MyRO.EnemyCity[ecixShow].ID)
   else
@@ -189,13 +189,13 @@ begin
     case Kind of
       dkOwnModel:
         begin
-          owner := me;
+          owner := Me;
           mix := mixShow;
           IsSpecialUnit := MyModel[mix].Kind >= $10;
         end;
       dkOwnUnit:
         begin
-          owner := me;
+          owner := Me;
           mix := MyUn[uixShow].mix;
           IsSpecialUnit := MyModel[mix].Kind >= $10;
         end
@@ -217,21 +217,21 @@ begin
   OffscreenPaint;
 end;
 
-procedure TUnitStatDlg.ShowNewContent_OwnModel(NewMode: TWindowMode; mix: integer);
+procedure TUnitStatDlg.ShowNewContent_OwnModel(NewMode: TWindowMode; mix: Integer);
 begin
   Kind := dkOwnModel;
   mixShow := mix;
   inherited ShowNewContent(NewMode);
 end;
 
-procedure TUnitStatDlg.ShowNewContent_OwnUnit(NewMode: TWindowMode; uix: integer);
+procedure TUnitStatDlg.ShowNewContent_OwnUnit(NewMode: TWindowMode; uix: Integer);
 begin
   Kind := dkOwnUnit;
   uixShow := uix;
   inherited ShowNewContent(NewMode);
 end;
 
-procedure TUnitStatDlg.ShowNewContent_EnemyUnit(NewMode: TWindowMode; euix: integer);
+procedure TUnitStatDlg.ShowNewContent_EnemyUnit(NewMode: TWindowMode; euix: Integer);
 begin
   Kind := dkEnemyUnit;
   euixShow := euix;
@@ -239,7 +239,7 @@ begin
   inherited ShowNewContent(NewMode);
 end;
 
-procedure TUnitStatDlg.ShowNewContent_EnemyLoc(NewMode: TWindowMode; Loc: integer);
+procedure TUnitStatDlg.ShowNewContent_EnemyLoc(NewMode: TWindowMode; Loc: Integer);
 begin
   Kind := dkEnemyUnit;
   UnitLoc := Loc;
@@ -247,14 +247,14 @@ begin
   inherited ShowNewContent(NewMode);
 end;
 
-procedure TUnitStatDlg.ShowNewContent_EnemyModel(NewMode: TWindowMode; emix: integer);
+procedure TUnitStatDlg.ShowNewContent_EnemyModel(NewMode: TWindowMode; emix: Integer);
 begin
   Kind := dkEnemyModel;
   mox := @MyRO.EnemyModel[emix];
   inherited ShowNewContent(NewMode);
 end;
 
-procedure TUnitStatDlg.ShowNewContent_EnemyCity(NewMode: TWindowMode; Loc: integer);
+procedure TUnitStatDlg.ShowNewContent_EnemyCity(NewMode: TWindowMode; Loc: Integer);
 begin
   if MyMap[Loc] and fUnit <> 0 then
     Kind := dkEnemyCityDefense
@@ -285,7 +285,7 @@ procedure TUnitStatDlg.OffscreenPaint;
 var
   PPicture: ^TModelPicture;
 
-  function IsToCount(emix: integer): boolean;
+  function IsToCount(emix: Integer): Boolean;
   var
     PTestPicture: ^TModelPicture;
   begin
@@ -293,39 +293,39 @@ var
     begin
       PTestPicture := @Tribe[MyRO.EnemyModel[emix].owner].ModelPicture
         [MyRO.EnemyModel[emix].mix];
-      result := (PPicture.HGr = PTestPicture.HGr) and
+      Result := (PPicture.HGr = PTestPicture.HGr) and
         (PPicture.pix = PTestPicture.pix) and
         (ModelHash(mox^) = ModelHash(MyRO.EnemyModel[emix]));
     end
     else
-      result := (MyRO.EnemyModel[emix].owner = mox.owner) and
+      Result := (MyRO.EnemyModel[emix].owner = mox.owner) and
         (MyRO.EnemyModel[emix].mix = mox.mix);
   end;
 
-  procedure FeatureBar(dst: TBitmap; x, y: integer; const mi: TModelInfo;
+  procedure FeatureBar(dst: TBitmap; X, Y: Integer; const mi: TModelInfo;
     T: TTexture);
   var
-    i, w, dx, num: integer;
-    s: string;
+    I, W, dx, num: Integer;
+    S: string;
   begin
-    DarkGradient(dst.Canvas, x - 6, y + 1, 180, 1);
+    DarkGradient(dst.Canvas, X - 6, Y + 1, 180, 1);
     with dst.Canvas do
       if mi.Kind >= $10 then
       begin
-        s := Phrases.Lookup('UNITSPECIAL');
+        S := Phrases.Lookup('UNITSPECIAL');
         Font.Color := $000000;
-        Textout(x - 1, y + 1, s);
+        Textout(X - 1, Y + 1, S);
         Font.Color := $B0B0B0;
-        Textout(x - 2, y, s);
+        Textout(X - 2, Y, S);
       end
       else
       begin
         Font.Color := $000000;
         dx := 2;
-        for i := 3 to nFeature - 1 do
+        for I := 3 to nFeature - 1 do
         begin
           num := 0;
-          case i of
+          case I of
             mcSeaTrans:
               if mi.Domain = dSea then
                 num := mi.TTrans;
@@ -341,45 +341,45 @@ var
               if mi.Domain = dAir then
                 num := mi.TTrans;
             mcFirstNonCap .. nFeature - 1:
-              if mi.Cap and (1 shl (i - mcFirstNonCap)) <> 0 then
+              if mi.Cap and (1 shl (I - mcFirstNonCap)) <> 0 then
                 num := 1
           end;
           if (num > 0) and
-            ((i <> mcSE) or (mi.Cap and (1 shl (mcNP - mcFirstNonCap)) = 0))
+            ((I <> mcSE) or (mi.Cap and (1 shl (mcNP - mcFirstNonCap)) = 0))
           then
           begin
             if num > 1 then
             begin
-              s := IntToStr(num);
-              w := TextWidth(s);
+              S := IntToStr(num);
+              W := TextWidth(S);
               Brush.Color := $FFFFFF;
-              FillRect(Rect(x - 3 + dx, y + 2, x + w - 1 + dx, y + 16));
+              FillRect(Rect(X - 3 + dx, Y + 2, X + W - 1 + dx, Y + 16));
               Brush.Style := bsClear;
-              Textout(x - 3 + dx + 1, y, s);
-              inc(dx, w + 1)
+              Textout(X - 3 + dx + 1, Y, S);
+              Inc(dx, W + 1)
             end;
             Brush.Color := $C0C0C0;
-            FrameRect(Rect(x - 3 + dx, y + 2, x + 11 + dx, y + 16));
+            FrameRect(Rect(X - 3 + dx, Y + 2, X + 11 + dx, Y + 16));
             Brush.Style := bsClear;
-            Sprite(dst, HGrSystem, x - 1 + dx, y + 4, 10, 10,
-              66 + i mod 11 * 11, 137 + i div 11 * 11);
-            inc(dx, 15)
+            Sprite(dst, HGrSystem, X - 1 + dx, Y + 4, 10, 10,
+              66 + I mod 11 * 11, 137 + I div 11 * 11);
+            Inc(dx, 15)
           end;
         end;
       end;
   end; { featurebar }
 
-  procedure NumberBarS(dst: TBitmap; x, y: integer; Cap, s: string; T: TTexture);
+  procedure NumberBarS(dst: TBitmap; X, Y: Integer; Cap, S: string; T: TTexture);
   begin
-    DLine(dst.Canvas, x - 2, x + 170, y + 16, T.ColorBevelShade, T.ColorBevelLight);
-    LoweredTextOut(dst.Canvas, -1, T, x - 2, y, Cap);
-    RisedTextout(dst.Canvas, x + 170 - BiColorTextWidth(dst.Canvas, s), y, s);
+    DLine(dst.Canvas, X - 2, X + 170, Y + 16, T.ColorBevelShade, T.ColorBevelLight);
+    LoweredTextOut(dst.Canvas, -1, T, X - 2, Y, Cap);
+    RisedTextout(dst.Canvas, X + 170 - BiColorTextWidth(dst.Canvas, S), Y, S);
   end;
 
 var
-  i, j, x, y, cix, uix, emix, InProd, Available, Destroyed, Loc, Cnt, yView,
-    yTotal, yCaption: integer;
-  s: string;
+  I, J, X, Y, cix, uix, emix, InProd, Available, Destroyed, Loc, Cnt, yView,
+    yTotal, yCaption: Integer;
+  S: string;
   ui: TUnitInfo;
   mi: TModelInfo;
 begin
@@ -388,35 +388,35 @@ begin
   case Kind of
     dkOwnModel:
       begin
-        BitBltCanvas(offscreen.Canvas, 0, 0, wCommon, hOwnModel,
+        BitBltCanvas(Offscreen.Canvas, 0, 0, wCommon, hOwnModel,
           Back.Canvas, 0, 0);
         yView := 13;
         yTotal := 92;
       end;
     dkEnemyModel:
       begin
-        BitBltCanvas(offscreen.Canvas, 0, 0, wCommon, hEnemyModel,
+        BitBltCanvas(Offscreen.Canvas, 0, 0, wCommon, hEnemyModel,
           Back.Canvas, wCommon, 0);
         yView := 13;
         yTotal := 92;
       end;
     dkEnemyUnit, dkOwnUnit:
       begin
-        BitBltCanvas(offscreen.Canvas, 0, 0, wCommon, hEnemyUnit,
+        BitBltCanvas(Offscreen.Canvas, 0, 0, wCommon, hEnemyUnit,
           Back.Canvas, 2 * wCommon, 0);
         yView := 13;
         yTotal := 123;
       end;
     dkEnemyCityDefense:
       begin
-        BitBltCanvas(offscreen.Canvas, 0, 0, wCommon, hEnemyCityDefense,
+        BitBltCanvas(Offscreen.Canvas, 0, 0, wCommon, hEnemyCityDefense,
           Back.Canvas, 3 * wCommon, 0);
         yView := 171;
         yTotal := 231;
       end;
     dkEnemyCity:
       begin
-        BitBltCanvas(offscreen.Canvas, 0, 0, wCommon, hEnemyCity,
+        BitBltCanvas(Offscreen.Canvas, 0, 0, wCommon, hEnemyCity,
           Back.Canvas, 4 * wCommon, 0);
       end;
   end;
@@ -426,26 +426,26 @@ begin
   if Kind in [dkEnemyCityDefense, dkEnemyCity] then
   begin // show city defense facilities
     Cnt := 0;
-    for i := 0 to 3 do
-      if MyRO.EnemyCity[ecixShow].Flags and (2 shl i) <> 0 then
-        inc(Cnt);
-    x := (wCommon - Cnt * xSizeSmall) div 2 - (Cnt - 1) * 2;
-    for i := 0 to 3 do
-      if MyRO.EnemyCity[ecixShow].Flags and (2 shl i) <> 0 then
+    for I := 0 to 3 do
+      if MyRO.EnemyCity[ecixShow].Flags and (2 shl I) <> 0 then
+        Inc(Cnt);
+    X := (wCommon - Cnt * xSizeSmall) div 2 - (Cnt - 1) * 2;
+    for I := 0 to 3 do
+      if MyRO.EnemyCity[ecixShow].Flags and (2 shl I) <> 0 then
       begin
-        case i of
-          0: j := imWalls;
-          1: j := imCoastalFort;
-          2: j := imMissileBat;
-          3: j := imBunker
+        case I of
+          0: J := imWalls;
+          1: J := imCoastalFort;
+          2: J := imMissileBat;
+          3: J := imBunker
         end;
-        Frame(offscreen.Canvas, x - 1, yImp - 1, x + xSizeSmall,
+        Frame(Offscreen.Canvas, X - 1, yImp - 1, X + xSizeSmall,
           yImp + ySizeSmall, MainTexture.ColorBevelLight,
           MainTexture.ColorBevelShade);
-        BitBltCanvas(offscreen.Canvas, x, yImp, xSizeSmall, ySizeSmall,
-          SmallImp.Canvas, j mod 7 * xSizeSmall,
-          (j + SystemIconLines * 7) div 7 * ySizeSmall);
-        inc(x, xSizeSmall + 4);
+        BitBltCanvas(Offscreen.Canvas, X, yImp, xSizeSmall, ySizeSmall,
+          SmallImp.Canvas, J mod 7 * xSizeSmall,
+          (J + SystemIconLines * 7) div 7 * ySizeSmall);
+        Inc(X, xSizeSmall + 4);
       end;
   end;
 
@@ -453,59 +453,59 @@ begin
   begin
     PPicture := @Tribe[mox.owner].ModelPicture[mox.mix];
     Available := 0;
-    if G.Difficulty[me] = 0 then // supervisor -- count stacked units too
+    if G.Difficulty[Me] = 0 then // supervisor -- count stacked units too
       for Loc := 0 to G.lx * G.ly - 1 do
       begin
         if MyMap[Loc] and fUnit <> 0 then
         begin
-          Server(sGetUnits, me, Loc, Cnt);
+          Server(sGetUnits, Me, Loc, Cnt);
           for uix := 0 to Cnt - 1 do
             if IsToCount(MyRO.EnemyUn[MyRO.nEnemyUn + uix].emix) then
-              inc(Available);
+              Inc(Available);
         end;
       end
     else // no supervisor -- can only count stack top units
       for uix := 0 to MyRO.nEnemyUn - 1 do
         if (MyRO.EnemyUn[uix].Loc >= 0) and IsToCount(MyRO.EnemyUn[uix].emix)
         then
-          inc(Available);
+          Inc(Available);
     Destroyed := 0;
     for emix := 0 to MyRO.nEnemyModel - 1 do
       if IsToCount(emix) then
-        inc(Destroyed, MyRO.EnemyModel[emix].Lost);
+        Inc(Destroyed, MyRO.EnemyModel[emix].Lost);
   end
   else
   begin
     Available := 0;
     for uix := 0 to MyRO.nUn - 1 do
       if (MyUn[uix].Loc >= 0) and (MyUn[uix].mix = mixShow) then
-        inc(Available);
+        Inc(Available);
     InProd := 0;
     for cix := 0 to MyRO.nCity - 1 do
       if (MyCity[cix].Loc >= 0) and
         (MyCity[cix].Project and (cpImp + cpIndex) = mixShow) then
-        inc(InProd);
+        Inc(InProd);
   end;
 
-  offscreen.Canvas.Font.Assign(UniFont[ftSmall]);
+  Offscreen.Canvas.Font.Assign(UniFont[ftSmall]);
   if Kind in [dkEnemyCityDefense, dkEnemyCity] then
   begin
-    NoMap.SetOutput(offscreen);
-    NoMap.PaintCity(ClientWidth div 2, 53, MyRO.EnemyCity[ecixShow], false);
+    NoMap.SetOutput(Offscreen);
+    NoMap.PaintCity(ClientWidth div 2, 53, MyRO.EnemyCity[ecixShow], False);
 
-    s := Tribe[MyRO.EnemyCity[ecixShow].owner].TPhrase('UNITOWNER');
-    LoweredTextOut(offscreen.Canvas, -1, MainTexture,
-      (ClientWidth - BiColorTextWidth(offscreen.Canvas, s)) div 2, 105, s);
+    S := Tribe[MyRO.EnemyCity[ecixShow].owner].TPhrase('UNITOWNER');
+    LoweredTextOut(Offscreen.Canvas, -1, MainTexture,
+      (ClientWidth - BiColorTextWidth(Offscreen.Canvas, S)) div 2, 105, S);
   end;
 
   if Kind <> dkEnemyCity then
   begin // show unit stats
     if Kind = dkOwnModel then
-      MakeModelInfo(me, mixShow, MyModel[mixShow], mi)
+      MakeModelInfo(Me, mixShow, MyModel[mixShow], mi)
     else if Kind = dkOwnUnit then
     begin
-      MakeUnitInfo(me, MyUn[uixShow], ui);
-      MakeModelInfo(me, MyUn[uixShow].mix, MyModel[MyUn[uixShow].mix], mi);
+      MakeUnitInfo(Me, MyUn[uixShow], ui);
+      MakeModelInfo(Me, MyUn[uixShow].mix, MyModel[MyUn[uixShow].mix], mi);
     end
     else
     begin
@@ -521,101 +521,101 @@ begin
         begin
           { Frame(offscreen.canvas,xView-1,yView-1,xView+64,yView+48,
             MainTexture.ColorBevelShade,MainTexture.ColorBevelLight);
-            RFrame(offscreen.canvas,xView-2,yView-2,xView+65,yView+49,
+            RFrame(Offscreen.Canvas,xView-2,yView-2,xView+65,yView+49,
             MainTexture.ColorBevelShade,MainTexture.ColorBevelLight); }
-          with offscreen.Canvas do
+          with Offscreen.Canvas do
           begin
             Brush.Color := HGrSystem.Data.Canvas.Pixels[98, 67];
-            offscreen.Canvas.FillRect(Rect(xView, yView, xView + 64,
+            Offscreen.Canvas.FillRect(Rect(xView, yView, xView + 64,
               yView + 16));
             Brush.Style := bsClear;
           end;
 
           if MyMap[Loc] and fTerrain >= fForest then
           begin
-            x := 1 + 2 * (xxt * 2 + 1);
-            y := 1 + yyt + 2 * (yyt * 3 + 1);
+            X := 1 + 2 * (xxt * 2 + 1);
+            Y := 1 + yyt + 2 * (yyt * 3 + 1);
           end
           else
           begin
-            x := integer(MyMap[Loc] and fTerrain) * (xxt * 2 + 1) + 1;
-            y := 1 + yyt;
+            X := Integer(MyMap[Loc] and fTerrain) * (xxt * 2 + 1) + 1;
+            Y := 1 + yyt;
           end;
-          for j := -1 to 1 do
-            for i := -1 to 1 do
-              if (i + j) and 1 = 0 then
+          for J := -1 to 1 do
+            for I := -1 to 1 do
+              if (I + J) and 1 = 0 then
               begin
-                Sprite(Buffer, HGrTerrain, i * xxt, j * yyt, xxt * 2,
-                  yyt * 2, x, y);
+                Sprite(Buffer, HGrTerrain, I * xxt, J * yyt, xxt * 2,
+                  yyt * 2, X, Y);
                 if MyMap[Loc] and (fTerrain or fSpecial) = fGrass or fSpecial1
                 then
-                  Sprite(Buffer, HGrTerrain, i * xxt, j * yyt, xxt * 2, yyt * 2,
+                  Sprite(Buffer, HGrTerrain, I * xxt, J * yyt, xxt * 2, yyt * 2,
                     1 + 2 * (xxt * 2 + 1), 1 + yyt + 1 * (yyt * 3 + 1))
                 else if (MyMap[Loc] and fTerrain = fForest) and
                   IsJungle(Loc div G.lx) then
-                  Sprite(Buffer, HGrTerrain, i * xxt, j * yyt, xxt * 2, yyt * 2,
+                  Sprite(Buffer, HGrTerrain, I * xxt, J * yyt, xxt * 2, yyt * 2,
                     1 + 7 * (xxt * 2 + 1), 1 + yyt + 19 * (yyt * 3 + 1))
                 else if MyMap[Loc] and fTerrain >= fForest then
-                  Sprite(Buffer, HGrTerrain, i * xxt, j * yyt, xxt * 2, yyt * 2,
+                  Sprite(Buffer, HGrTerrain, I * xxt, J * yyt, xxt * 2, yyt * 2,
                     1 + 7 * (xxt * 2 + 1),
-                    1 + yyt + 2 * integer(2 + MyMap[Loc] and fTerrain - fForest)
+                    1 + yyt + 2 * Integer(2 + MyMap[Loc] and fTerrain - fForest)
                     * (yyt * 3 + 1));
               end;
-          BitBltCanvas(offscreen.Canvas, xView, yView + 16, 64, 32,
+          BitBltCanvas(Offscreen.Canvas, xView, yView + 16, 64, 32,
             Buffer.Canvas, 1, 0);
 
           // show unit, experience and health
-          Sprite(offscreen, HGr, xView, yView, 64, 48, pix mod 10 * 65 + 1,
+          Sprite(Offscreen, HGr, xView, yView, 64, 48, pix mod 10 * 65 + 1,
             pix div 10 * 49 + 1);
           if Flags and unFortified <> 0 then
-            Sprite(offscreen, HGrStdUnits, xView, yView, xxu * 2, yyu * 2,
+            Sprite(Offscreen, HGrStdUnits, xView, yView, xxu * 2, yyu * 2,
               1 + 6 * (xxu * 2 + 1), 1);
-          FrameImage(offscreen.Canvas, HGrSystem.Data, xView - 20,
+          FrameImage(Offscreen.Canvas, HGrSystem.Data, xView - 20,
             yView + 5, 12, 14, 121 + Exp div ExpCost * 13, 28);
           if Health < 100 then
           begin
-            s := IntToStr(Health) + '%';
-            LightGradient(offscreen.Canvas, xView - 45, yView + 24, 38,
+            S := IntToStr(Health) + '%';
+            LightGradient(Offscreen.Canvas, xView - 45, yView + 24, 38,
               (ColorOfHealth(Health) and $FEFEFE shr 2) * 3);
-            RisedTextout(offscreen.Canvas, xView - 45 + 20 -
-              BiColorTextWidth(offscreen.Canvas, s) div 2, yView + 23, s);
+            RisedTextout(Offscreen.Canvas, xView - 45 + 20 -
+              BiColorTextWidth(Offscreen.Canvas, S) div 2, yView + 23, S);
           end;
 
           if Kind = dkEnemyUnit then
           begin
-            s := Tribe[mox.owner].TPhrase('UNITOWNER');
-            LoweredTextOut(offscreen.Canvas, -1, MainTexture,
-              (ClientWidth - BiColorTextWidth(offscreen.Canvas, s)) div 2,
-              yView + 80, s);
+            S := Tribe[mox.owner].TPhrase('UNITOWNER');
+            LoweredTextOut(Offscreen.Canvas, -1, MainTexture,
+              (ClientWidth - BiColorTextWidth(Offscreen.Canvas, S)) div 2,
+              yView + 80, S);
           end;
         end
       else
       begin
-        FrameImage(offscreen.Canvas, BigImp, xView + 4, yView, 56, 40, 0, 0);
-        Sprite(offscreen, HGr, xView, yView - 4, 64, 44, pix mod 10 * 65 + 1,
+        FrameImage(Offscreen.Canvas, BigImp, xView + 4, yView, 56, 40, 0, 0);
+        Sprite(Offscreen, HGr, xView, yView - 4, 64, 44, pix mod 10 * 65 + 1,
           pix div 10 * 49 + 1);
       end;
 
-      DarkGradient(offscreen.Canvas, xTotal - 6, yTotal + 1, 180, 2);
-      RisedTextout(offscreen.Canvas, xTotal - 2, yTotal,
+      DarkGradient(Offscreen.Canvas, xTotal - 6, yTotal + 1, 180, 2);
+      RisedTextout(Offscreen.Canvas, xTotal - 2, yTotal,
         Phrases.Lookup('UNITSTRENGTH'));
-      s := IntToStr(mi.Attack) + '/' + IntToStr(mi.Defense);
-      RisedTextout(offscreen.Canvas,
-        xTotal + 170 - BiColorTextWidth(offscreen.Canvas, s), yTotal, s);
-      FeatureBar(offscreen, xTotal, yTotal + 19, mi, MainTexture);
-      NumberBarS(offscreen, xTotal, yTotal + 38, Phrases.Lookup('UNITSPEED'),
+      S := IntToStr(mi.Attack) + '/' + IntToStr(mi.Defense);
+      RisedTextout(Offscreen.Canvas,
+        xTotal + 170 - BiColorTextWidth(Offscreen.Canvas, S), yTotal, S);
+      FeatureBar(Offscreen, xTotal, yTotal + 19, mi, MainTexture);
+      NumberBarS(Offscreen, xTotal, yTotal + 38, Phrases.Lookup('UNITSPEED'),
         MovementToString(mi.Speed), MainTexture);
-      LoweredTextOut(offscreen.Canvas, -1, MainTexture, xTotal - 2, yTotal + 57,
+      LoweredTextOut(Offscreen.Canvas, -1, MainTexture, xTotal - 2, yTotal + 57,
         Phrases.Lookup('UNITCOST'));
-      DLine(offscreen.Canvas, xTotal - 2, xTotal + 170, yTotal + 57 + 16,
+      DLine(Offscreen.Canvas, xTotal - 2, xTotal + 170, yTotal + 57 + 16,
         MainTexture.ColorBevelShade, MainTexture.ColorBevelLight);
-      if G.Difficulty[me] = 0 then
-        s := IntToStr(mi.cost)
+      if G.Difficulty[Me] = 0 then
+        S := IntToStr(mi.cost)
       else
-        s := IntToStr(mi.cost * BuildCostMod[G.Difficulty[me]] div 12);
-      RisedTextout(offscreen.Canvas,
-        xTotal + 159 - BiColorTextWidth(offscreen.Canvas, s), yTotal + 57, s);
-      Sprite(offscreen, HGrSystem, xTotal + 160, yTotal + 57 + 5, 10,
+        S := IntToStr(mi.cost * BuildCostMod[G.Difficulty[Me]] div 12);
+      RisedTextout(Offscreen.Canvas,
+        xTotal + 159 - BiColorTextWidth(Offscreen.Canvas, S), yTotal + 57, S);
+      Sprite(Offscreen, HGrSystem, xTotal + 160, yTotal + 57 + 5, 10,
         10, 88, 115);
 
       if Kind = dkOwnModel then
@@ -623,30 +623,30 @@ begin
         if MyModel[mixShow].IntroTurn > 0 then
         begin
           if MyModel[mixShow].Kind = mkEnemyDeveloped then
-            LoweredTextOut(offscreen.Canvas, -1, MainTexture, xTotal - 2,
+            LoweredTextOut(Offscreen.Canvas, -1, MainTexture, xTotal - 2,
               (yTotal + StatDown - 19), Phrases.Lookup('UNITADOPT'))
           else
-            LoweredTextOut(offscreen.Canvas, -1, MainTexture, xTotal - 2,
+            LoweredTextOut(Offscreen.Canvas, -1, MainTexture, xTotal - 2,
               (yTotal + StatDown - 19), Phrases.Lookup('UNITINTRO'));
-          DLine(offscreen.Canvas, xTotal - 2, xTotal + 170,
+          DLine(Offscreen.Canvas, xTotal - 2, xTotal + 170,
             (yTotal + StatDown - 19) + 16, MainTexture.ColorTextShade,
             MainTexture.ColorTextLight);
-          s := TurnToString(MyModel[mixShow].IntroTurn);
-          RisedTextout(offscreen.Canvas,
-            xTotal + 170 - BiColorTextWidth(offscreen.Canvas, s),
-            (yTotal + StatDown - 19), s);
+          S := TurnToString(MyModel[mixShow].IntroTurn);
+          RisedTextout(Offscreen.Canvas,
+            xTotal + 170 - BiColorTextWidth(Offscreen.Canvas, S),
+            (yTotal + StatDown - 19), S);
         end;
 
-        NumberBar(offscreen, xTotal, yTotal + StatDown,
+        NumberBar(Offscreen, xTotal, yTotal + StatDown,
           Phrases.Lookup('UNITBUILT'), MyModel[mixShow].Built, MainTexture);
         if MyModel[mixShow].Lost > 0 then
-          NumberBar(offscreen, xTotal, yTotal + StatDown + 19,
+          NumberBar(Offscreen, xTotal, yTotal + StatDown + 19,
             Phrases.Lookup('UNITLOST'), MyModel[mixShow].Lost, MainTexture);
         if InProd > 0 then
-          NumberBar(offscreen, xTotal, yTotal + StatDown + 57,
+          NumberBar(Offscreen, xTotal, yTotal + StatDown + 57,
             Phrases.Lookup('UNITINPROD'), InProd, MainTexture);
         if Available > 0 then
-          NumberBar(offscreen, xTotal, yTotal + StatDown + 38,
+          NumberBar(Offscreen, xTotal, yTotal + StatDown + 38,
             Phrases.Lookup('UNITAVAILABLE'), Available, MainTexture);
 
         if MyModel[mixShow].Status and msObsolete <> 0 then
@@ -673,16 +673,16 @@ begin
       else if Kind = dkEnemyModel then
       begin
         if Destroyed > 0 then
-          NumberBar(offscreen, xTotal, yTotal + StatDown - 19,
+          NumberBar(Offscreen, xTotal, yTotal + StatDown - 19,
             Phrases.Lookup('UNITDESTROYED'), Destroyed, MainTexture);
         if Available > 0 then
-          NumberBar(offscreen, xTotal, yTotal + StatDown,
+          NumberBar(Offscreen, xTotal, yTotal + StatDown,
             Phrases.Lookup('UNITKNOWN'), Available, MainTexture);
       end;
     end;
   end;
 
-  offscreen.Canvas.Font.Assign(UniFont[ftNormal]);
+  Offscreen.Canvas.Font.Assign(UniFont[ftNormal]);
   case Kind of
     dkOwnModel, dkEnemyModel:
       yCaption := yView + 46;
@@ -691,8 +691,8 @@ begin
     dkEnemyCityDefense, dkEnemyCity:
       yCaption := 79;
   end;
-  RisedTextout(offscreen.Canvas,
-    (ClientWidth - BiColorTextWidth(offscreen.Canvas, Caption)) div 2,
+  RisedTextout(Offscreen.Canvas,
+    (ClientWidth - BiColorTextWidth(Offscreen.Canvas, Caption)) div 2,
     yCaption, Caption);
 end;
 

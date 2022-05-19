@@ -22,7 +22,7 @@ const
     futArmorTechnology, futMissileTechnology];
 
   nResearchOrder = 46;
-  ResearchOrder: array[0..1, 0..nResearchOrder - 1] of integer =
+  ResearchOrder: array[0..1, 0..nResearchOrder - 1] of Integer =
     ((adWheel, adWarriorCode, adHorsebackRiding, adCeremonialBurial, adPolytheism,
     adMonarchy, adMysticism, adPoetry, adAstronomy, adMonotheism,
     adTheology, adChivalry, adPottery, adMedicine, adGunpowder, adChemistry,
@@ -75,7 +75,7 @@ const
   mctCruiser = 3;
 
   // mil research
-  BetterQuality: array[0..nModelCat - 1] of integer = (50, 50, 80, 80);
+  BetterQuality: array[0..nModelCat - 1] of Integer = (50, 50, 80, 80);
   MaxBuildWorseThanBestModel = 20;
   MaxExistWorseThanBestModel = 50;
 
@@ -84,80 +84,80 @@ const
 
   nRequestedTechs = 48;
 
-  PlayerHash: array[0..nPl - 1] of integer =
+  PlayerHash: array[0..nPl - 1] of Integer =
     (7, 6, 0, 2, 10, 8, 12, 14, 4, 1, 3, 5, 9, 11, 13);
 
 type
   Suggestion = (suContact, suPeace, suFriendly);
 
   TPersistentData = record
-    LastResearchTech, BehaviorFlags, TheologyPartner: integer;
+    LastResearchTech, BehaviorFlags, TheologyPartner: Integer;
     RejectTurn: array[Suggestion, 0..15] of smallint;
-    RequestedTechs: array[0..nRequestedTechs - 1] of integer;
+    RequestedTechs: array[0..nRequestedTechs - 1] of Integer;
     // ad + p shl 8 + Turn shl 16
   end;
 
   TAI = class(TBarbarina)
-    constructor Create(Nation: integer); override;
+    constructor Create(Nation: Integer); override;
 
     procedure SetDataDefaults; override;
 
   protected
     Data: ^TPersistentData;
     WarNations, BombardingNations, mixSettlers, mixCaravan, mixTownGuard,
-    mixSlaves, mixMilitia, mixCruiser, OceanWithShip: integer;
+    mixSlaves, mixMilitia, mixCruiser, OceanWithShip: Integer;
     NegoCause: (Routine, CheckBarbarina);
-    SettlerSurplus: array[0..maxCOD - 1] of integer;
-    uixPatrol: array[0..maxCOD - 1] of integer;
+    SettlerSurplus: array[0..maxCOD - 1] of Integer;
+    uixPatrol: array[0..maxCOD - 1] of Integer;
 
-    ContinentPresence: array[0..maxCOD - 1] of integer;
-    OceanPresence: array[0..maxCOD - 1] of integer;
-    UnitLack: array[0..maxCOD - 1, mctGroundDefender..mctGroundAttacker] of integer;
+    ContinentPresence: array[0..maxCOD - 1] of Integer;
+    OceanPresence: array[0..maxCOD - 1] of Integer;
+    UnitLack: array[0..maxCOD - 1, mctGroundDefender..mctGroundAttacker] of Integer;
 
-    TotalPopulation: array[0..nPl - 1] of integer;
-    ContinentPopulation: array[0..nPl - 1, 0..maxCOD - 1] of integer;
+    TotalPopulation: array[0..nPl - 1] of Integer;
+    ContinentPopulation: array[0..nPl - 1, 0..maxCOD - 1] of Integer;
     // 1 means enemy territory spotted but no city
-    DistrictPopulation: array[0..maxCOD - 1] of integer;
+    DistrictPopulation: array[0..maxCOD - 1] of Integer;
 
-    ModelCat: array[0..nMmax - 1] of integer;
-    ModelQuality: array[0..nMmax - 1] of integer;
-    ModelBestQuality: array[0..nModelCat - 1] of integer;
+    ModelCat: array[0..nMmax - 1] of Integer;
+    ModelQuality: array[0..nMmax - 1] of Integer;
+    ModelBestQuality: array[0..nModelCat - 1] of Integer;
 
-    AdvanceValue: array[0..nAdv - 1] of integer;
-    AdvanceValuesSet: boolean;
+    AdvanceValue: array[0..nAdv - 1] of Integer;
+    AdvanceValuesSet: Boolean;
 
     procedure DoTurn; override;
     procedure DoNegotiation; override;
-    function ChooseResearchAdvance: integer; override;
-    function ChooseStealAdvance: integer; override;
-    function ChooseGovernment: integer; override;
-    function WantNegotiation(Nation: integer; NegoTime: TNegoTime): boolean; override;
-    function OnNegoRejected_CancelTreaty: boolean; override;
+    function ChooseResearchAdvance: Integer; override;
+    function ChooseStealAdvance: Integer; override;
+    function ChooseGovernment: Integer; override;
+    function WantNegotiation(Nation: Integer; NegoTime: TNegoTime): Boolean; override;
+    function OnNegoRejected_CancelTreaty: Boolean; override;
 
-    procedure FindBestTrade(Nation: integer; var adWanted, adGiveAway: integer);
+    procedure FindBestTrade(Nation: Integer; var adWanted, adGiveAway: Integer);
     procedure CheckGender;
     procedure AnalyzeMap;
     procedure CollectModelCatStat;
     procedure AttackAndPatrol;
     procedure MoveUnitsHome;
-    procedure CheckAttack(uix: integer);
-    procedure Patrol(uix: integer);
+    procedure CheckAttack(uix: Integer);
+    procedure Patrol(uix: Integer);
     procedure SetCityProduction;
     procedure SetAdvanceValues;
-    function HavePort: boolean;
-  {$IFDEF DEBUG}procedure TraceAdvanceValues(Nation: integer);{$ENDIF}
+    function HavePort: Boolean;
+  {$IFDEF DEBUG}procedure TraceAdvanceValues(Nation: Integer);{$ENDIF}
 
     // research
-    procedure RateModel(const mi: TModelInfo; var Category, Quality: integer);
-    procedure RateMyModel(mix: integer; var Category, Quality: integer);
-    function IsBetterModel(const mi: TModelInfo): boolean;
+    procedure RateModel(const mi: TModelInfo; var Category, Quality: Integer);
+    procedure RateMyModel(mix: Integer; var Category, Quality: Integer);
+    function IsBetterModel(const mi: TModelInfo): Boolean;
 
     //terraforming
-    procedure TileWorkPlan(Loc, cix: integer; var Value, NextJob, TotalWork: integer);
+    procedure TileWorkPlan(Loc, cix: Integer; var Value, NextJob, TotalWork: Integer);
     procedure ProcessSettlers;
 
     // diplomacy
-    function MostWanted(Nation, adGiveAway: integer): integer;
+    function MostWanted(Nation, adGiveAway: Integer): Integer;
 
   end;
 
@@ -173,12 +173,12 @@ const
   DestroyBonus = 30; // percent of building cost
 
 var
-  LeaveOutValue: array[0..nAdv - 1] of integer;
+  LeaveOutValue: array[0..nAdv - 1] of Integer;
 
-constructor TAI.Create(Nation: integer);
+constructor TAI.Create(Nation: Integer);
 begin
   inherited;
-  Data := pointer(RO.Data);
+  Data := Pointer(RO.Data);
 {$IFDEF DEBUG}
   if Nation = 1 then
     SetDebugMap(DebugMap);
@@ -191,18 +191,18 @@ begin
   with Data^ do
   begin
     LastResearchTech := -1;
-    if PlayerHash[me] > 7 then
+    if PlayerHash[Me] > 7 then
       BehaviorFlags := bFemale
     else
       BehaviorFlags := bMale;
     DebugMessage(1, 'Gender:=' + char(48 + BehaviorFlags and bGender));
     TheologyPartner := -1;
-    fillchar(RejectTurn, sizeof(RejectTurn), $FF);
-    Fillchar(RequestedTechs, sizeof(RequestedTechs), $FF);
+    FillChar(RejectTurn, SizeOf(RejectTurn), $FF);
+    Fillchar(RequestedTechs, SizeOf(RequestedTechs), $FF);
   end;
 end;
 
-function TAI.OnNegoRejected_CancelTreaty: boolean;
+function TAI.OnNegoRejected_CancelTreaty: Boolean;
 begin
   Data.RejectTurn[suContact, Opponent] := RO.Turn;
   Result := Data.BehaviorFlags and bBarbarina <> 0;
@@ -212,14 +212,14 @@ end;
 //            RESEARCH
 //-------------------------------
 
-procedure TAI.RateModel(const mi: TModelInfo; var Category, Quality: integer);
+procedure TAI.RateModel(const mi: TModelInfo; var Category, Quality: Integer);
 var
-  EffectiveTransport: integer;
+  EffectiveTransport: Integer;
 begin
   if mi.Kind >= mkScout then
   begin
     Category := mctNone;
-    exit;
+    Exit;
   end;
   case mi.Domain of
     dGround:
@@ -291,17 +291,17 @@ begin
   //!!!assert(Quality>0);
 end;
 
-procedure TAI.RateMyModel(mix: integer; var Category, Quality: integer);
+procedure TAI.RateMyModel(mix: Integer; var Category, Quality: Integer);
 var
   mi: TModelInfo;
 begin
-  MakeModelInfo(me, mix, MyModel[mix], mi);
+  MakeModelInfo(Me, mix, MyModel[mix], mi);
   RateModel(mi, Category, Quality);
 end;
 
-function TAI.IsBetterModel(const mi: TModelInfo): boolean;
+function TAI.IsBetterModel(const mi: TModelInfo): Boolean;
 var
-  mix, Cat, Quality, Cat1, Quality1: integer;
+  mix, Cat, Quality, Cat1, Quality1: Integer;
 begin
   RateModel(mi, Cat, Quality);
   for mix := 0 to RO.nModel - 1 do
@@ -311,21 +311,21 @@ begin
       if (Cat = Cat1) and (Quality < Quality1 + BetterQuality[Cat]) then
       begin
         Result := False;
-        exit;
+        Exit;
       end;
     end;
   Result := True;
 end;
 
-function TAI.ChooseResearchAdvance: integer;
+function TAI.ChooseResearchAdvance: Integer;
 var
-  adNext, iad, i, ad, Count, EarliestNeeded, EarliestNeeded_NoLeaveOut,
-  NewResearch, StateOfArt, mix: integer;
+  adNext, iad, I, ad, Count, EarliestNeeded, EarliestNeeded_NoLeaveOut,
+  NewResearch, StateOfArt, mix: Integer;
   mi: TModelInfo;
-  Entry: array[0..nAdv - 1] of boolean;
-  ok: boolean;
+  Entry: array[0..nAdv - 1] of Boolean;
+  ok: Boolean;
 
-  function MarkEntry(ad: integer): boolean;
+  function MarkEntry(ad: Integer): Boolean;
   begin
     if RO.Tech[ad] >= tsApplicable then
       Result := False // nothing more to research here
@@ -372,32 +372,32 @@ var
     end;
   end;
 
-  procedure OptimizeDevModel(OptimizeCaps: integer);
+  procedure OptimizeDevModel(OptimizeCaps: Integer);
   var
-    f, Cat, OriginalCat, Quality, BestQuality, Best: integer;
+    F, Cat, OriginalCat, Quality, BestQuality, Best: Integer;
     mi: TModelInfo;
   begin
-    MakeModelInfo(me, 0, RO.DevModel, mi);
+    MakeModelInfo(Me, 0, RO.DevModel, mi);
     RateModel(mi, OriginalCat, BestQuality);
     repeat
       Best := -1;
-      for f := 0 to nFeature - 1 do
-        if (1 shl f and OptimizeCaps <> 0) and
-          ((Feature[f].Preq < 0) or IsResearched(Feature[f].Preq)) // check prerequisite
-          and (RO.DevModel.Weight + Feature[f].Weight <= RO.DevModel.MaxWeight) and
-          not ((f >= mcFirstNonCap) and (RO.DevModel.Cap[f] > 0)) then
+      for F := 0 to nFeature - 1 do
+        if (1 shl F and OptimizeCaps <> 0) and
+          ((Feature[F].Preq < 0) or IsResearched(Feature[F].Preq)) // check prerequisite
+          and (RO.DevModel.Weight + Feature[F].Weight <= RO.DevModel.MaxWeight) and
+          not ((F >= mcFirstNonCap) and (RO.DevModel.Cap[F] > 0)) then
         begin
-          if SetNewModelFeature(f, RO.DevModel.Cap[f] + 1) >= rExecuted then
+          if SetNewModelFeature(F, RO.DevModel.Cap[F] + 1) >= rExecuted then
           begin
-            MakeModelInfo(me, 0, RO.DevModel, mi);
+            MakeModelInfo(Me, 0, RO.DevModel, mi);
             RateModel(mi, Cat, Quality);
-            assert(Cat = OriginalCat);
+            Assert(Cat = OriginalCat);
             if Quality > BestQuality then
             begin
-              Best := f;
+              Best := F;
               BestQuality := Quality;
             end;
-            SetNewModelFeature(f, RO.DevModel.Cap[f] - 1);
+            SetNewModelFeature(F, RO.DevModel.Cap[F] - 1);
           end;
         end;
       if Best >= 0 then
@@ -405,9 +405,9 @@ var
     until Best < 0;
   end;
 
-  function LeaveOutsMissing(ad: integer): boolean;
+  function LeaveOutsMissing(ad: Integer): Boolean;
   var
-    i: integer;
+    I: Integer;
   begin
     Result := False;
     if RO.Tech[ad] < tsSeen then
@@ -421,9 +421,9 @@ var
       else if ad = adMassProduction then
         Result := True
       else
-        for i := 0 to 1 do
-          if AdvPreq[ad, i] >= 0 then
-            Result := Result or LeaveOutsMissing(AdvPreq[ad, i]);
+        for I := 0 to 1 do
+          if AdvPreq[ad, I] >= 0 then
+            Result := Result or LeaveOutsMissing(AdvPreq[ad, I]);
   end;
 
 begin
@@ -431,7 +431,7 @@ begin
   begin
     Result := Barbarina_ChooseResearchAdvance;
     if Result >= 0 then
-      exit;
+      Exit;
   end;
 
   SetAdvanceValues;
@@ -443,7 +443,7 @@ begin
       (AdvanceValue[ad] > AdvanceValue[Result])) then
       Result := ad;
   if Result >= 0 then
-    exit;
+    Exit;
 
   if Data.BehaviorFlags and bBarbarina = 0 then
   begin
@@ -459,22 +459,22 @@ begin
       SetNewModelFeature(mcMob, 2);
       OptimizeDevModel(1 shl mcOffense + 1 shl mcDefense + 1 shl
         mcMob + 1 shl mcLongRange + 1 shl mcFanatic);
-      MakeModelInfo(me, 0, RO.DevModel, mi);
+      MakeModelInfo(Me, 0, RO.DevModel, mi);
       if IsBetterModel(mi) then
       begin
         Result := adMilitary;
-        exit;
+        Exit;
       end;
 
       PrepareNewModel(dGround);
       SetNewModelFeature(mcDefense, 2);
       SetNewModelFeature(mcOffense, 1);
       OptimizeDevModel(1 shl mcOffense + 1 shl mcDefense + 1 shl mcFanatic);
-      MakeModelInfo(me, 0, RO.DevModel, mi);
+      MakeModelInfo(Me, 0, RO.DevModel, mi);
       if IsBetterModel(mi) then
       begin
         Result := adMilitary;
-        exit;
+        Exit;
       end;
     end;
 
@@ -490,7 +490,7 @@ begin
         PrepareNewModel(dSea);
         SetNewModelFeature(mcWeapons, 0);
         SetNewModelFeature(mcDefense, 3);
-        exit;
+        Exit;
       end;
     end;
 
@@ -505,9 +505,9 @@ begin
       SetNewModelFeature(mcSeaTrans,1);
       OptimizeDevModel(1 shl mcDefense+1 shl mcSeaTrans+1 shl mcTurbines
         +1 shl mcAirDef);
-      MakeModelInfo(me,0,RO.DevModel,mi);
+      MakeModelInfo(Me,0,RO.DevModel,mi);
       if IsBetterModel(mi) then
-        begin result:=adMilitary; exit end;
+        begin Result:=adMilitary; Exit end;
       end;
 
     // new cruiser?
@@ -518,9 +518,9 @@ begin
       SetNewModelFeature(mcOffense,2);
       OptimizeDevModel(1 shl mcOffense+1 shl mcDefense
         +1 shl mcLongRange+1 shl mcAirDef+1 shl mcRadar);
-      MakeModelInfo(me,0,RO.DevModel,mi);
+      MakeModelInfo(Me,0,RO.DevModel,mi);
       if IsBetterModel(mi) then
-        begin result:=adMilitary; exit end;
+        begin Result:=adMilitary; Exit end;
       end
     end;
   *)
@@ -544,7 +544,7 @@ begin
         if ResearchOrder[Data.BehaviorFlags and bGender, iad] = ad then
         begin
           ok := True;
-          break;
+          Break;
         end;
       if not ok then
       begin
@@ -587,13 +587,13 @@ begin
         if AdvPreq[ad, 2] <> preNone then
         begin // 2 of 3 required
           Count := 0;
-          for i := 0 to 2 do
-            if RO.Tech[AdvPreq[ad, i]] >= tsApplicable then
+          for I := 0 to 2 do
+            if RO.Tech[AdvPreq[ad, I]] >= tsApplicable then
               Inc(Count);
           if Count >= 2 then
           begin
             Result := ad;
-            exit;
+            Exit;
           end;
         end
         else if ((AdvPreq[ad, 0] = preNone) or
@@ -601,7 +601,7 @@ begin
           ((AdvPreq[ad, 1] = preNone) or (RO.Tech[AdvPreq[ad, 1]] >= tsApplicable)) then
         begin
           Result := ad;
-          exit;
+          Exit;
         end;
       end;
     end;
@@ -617,32 +617,32 @@ begin
     else
     begin // go for future techs
       Result := -1;
-      i := 0;
+      I := 0;
       for ad := nAdv - 4 to nAdv - 1 do
         if (RO.Tech[ad] < MaxFutureTech) and (RO.Tech[AdvPreq[ad, 0]] >=
           tsApplicable) then
         begin
-          Inc(i);
-          if random(i) = 0 then
+          Inc(I);
+          if random(I) = 0 then
             Result := ad;
         end;
-      assert((Result < 0) or AdvanceResearchable(Result));
-      exit;
+      Assert((Result < 0) or AdvanceResearchable(Result));
+      Exit;
     end;
 
-  assert(NewResearch >= 0);
-  fillchar(Entry, sizeof(Entry), False);
+  Assert(NewResearch >= 0);
+  FillChar(Entry, SizeOf(Entry), False);
   MarkEntry(NewResearch);
   Result := -1;
   for ad := 0 to nAdv - 1 do
     if Entry[ad] and ((Result < 0) or (Advancedness[ad] > Advancedness[Result])) then
       Result := ad;
-  assert(Result >= 0);
+  Assert(Result >= 0);
 end;
 
-function TAI.ChooseStealAdvance: integer;
+function TAI.ChooseStealAdvance: Integer;
 var
-  ad: integer;
+  ad: Integer;
 begin
   Result := -1;
   for ad := 0 to nAdv - 1 do
@@ -658,9 +658,9 @@ end;
 const
   twpAllowFarmland = $0001;
 
-procedure TAI.TileWorkPlan(Loc, cix: integer; var Value, NextJob, TotalWork: integer);
+procedure TAI.TileWorkPlan(Loc, cix: Integer; var Value, NextJob, TotalWork: Integer);
 var
-  OldTile, TerrType: cardinal;
+  OldTile, TerrType: Cardinal;
   TileInfo: TTileInfo;
 begin
   TotalWork := 0;
@@ -668,7 +668,7 @@ begin
   if Map[Loc] and (fRare1 or fRare2) <> 0 then
   begin
     Value := 3 * 8 - 1;
-    exit;
+    Exit;
   end; // better than any tile with 2 food
 
   OldTile := Map[Loc];
@@ -689,7 +689,7 @@ begin
       Inc(TotalWork, Terrain[TerrType].IrrClearWork);
       Map[Loc] := Map[Loc] and not fTerrain or fGrass;
       TerrType := fGrass;
-      Map[Loc] := Map[Loc] or cardinal(SpecialTile(Loc, TerrType, G.lx) shl 5);
+      Map[Loc] := Map[Loc] or Cardinal(SpecialTile(Loc, TerrType, G.lx) shl 5);
     end
     else if IsResearched(adExplosives) and
       (Map[Loc] and (fTerrain or fSpecial) in [fTundra, fHills]) and
@@ -700,7 +700,7 @@ begin
       Inc(TotalWork, Terrain[TerrType].TransWork);
       Map[Loc] := Map[Loc] and not fTerrain or fGrass;
       TerrType := fGrass;
-      Map[Loc] := Map[Loc] or cardinal(SpecialTile(Loc, TerrType, G.lx) shl 5);
+      Map[Loc] := Map[Loc] or Cardinal(SpecialTile(Loc, TerrType, G.lx) shl 5);
     end;
     if (Terrain[TerrType].MineEff > 0) and (RO.Government <> gDespotism) then
     begin
@@ -763,7 +763,7 @@ begin
       Map[Loc] := Map[Loc] and not fRoad or fRR;
     end;
   end;
-  Server(sGetTileInfo, me, Loc, TileInfo);
+  Server(sGetTileInfo, Me, Loc, TileInfo);
   Value := TileInfo.Food * 8 + TileInfo.Prod * 2 + TileInfo.Trade;
   Map[Loc] := OldTile;
 end;
@@ -771,16 +771,16 @@ end;
 // ProcessSettlers: move settlers, do terrain improvement, found cities
 procedure TAI.ProcessSettlers;
 var
-  i, uix, cix, ecix, dtr, Loc, RadiusLoc, Special, Food, Prod, Trade,
+  I, uix, cix, ecix, dtr, Loc, RadiusLoc, Special, Food, Prod, Trade,
   CityFood, Happy, TestScore, BestNearCityScore, BestUnusedValue,
-  BestUnusedLoc, Value, NextJob, TotalWork, V21, part, Loc1: integer;
-  Tile: cardinal;
-  FoodOk, Started: boolean;
+  BestUnusedLoc, Value, NextJob, TotalWork, V21, part, Loc1: Integer;
+  Tile: Cardinal;
+  FoodOk, Started: Boolean;
   Radius: TVicinity21Loc;
   CityAreaInfo: TCityAreaInfo;
-  TileFood, ResourceScore, CityScore: array[0..lxmax * lymax - 1] of integer;
+  TileFood, ResourceScore, CityScore: array[0..lxmax * lymax - 1] of Integer;
 
-  procedure AddJob(Loc, Job, Score: integer);
+  procedure AddJob(Loc, Job, Score: Integer);
   // set Score=1 for low-priority jobs
   begin
     JobAssignment_AddJob(Loc, Job, Score);
@@ -788,9 +788,9 @@ var
       Dec(SettlerSurplus[District[Loc]]);
   end;
 
-  procedure ReserveCityRadius(Loc: integer);
+  procedure ReserveCityRadius(Loc: Integer);
   var
-    V21, RadiusLoc: integer;
+    V21, RadiusLoc: Integer;
     Radius: TVicinity21Loc;
   begin
     V21_to_Loc(Loc, Radius);
@@ -807,9 +807,9 @@ var
 
   procedure ScoreRoadConnections;
   var
-    V8, nFragments, Loc, Loc1, History, RoadScore, a, b, FullyDeveloped,
-    ConnectMask: integer;
-    BridgeOk: boolean;
+    V8, nFragments, Loc, Loc1, History, RoadScore, A, B, FullyDeveloped,
+    ConnectMask: Integer;
+    BridgeOk: Boolean;
     Adjacent: TVicinity8Loc;
   begin
     BridgeOk := IsResearched(adBridgeBuilding);
@@ -820,7 +820,7 @@ var
     for Loc := G.lx to G.lx * (G.ly - 1) - 1 do
       if ((1 shl (Map[Loc] and fTerrain)) and (1 shl fOcean or 1 shl
         fShore or 1 shl fDesert or 1 shl fArctic or 1 shl fUNKNOWN) = 0) and
-        (RO.Territory[Loc] = me) and (Map[Loc] and FullyDeveloped = 0) and
+        (RO.Territory[Loc] = Me) and (Map[Loc] and FullyDeveloped = 0) and
         (BridgeOk or (Map[Loc] and fRiver = 0)) then
       begin
         nFragments := 0;
@@ -834,7 +834,7 @@ var
         begin
           Loc1 := Adjacent[V8 and 7];
           History := History shl 1;
-          if (Loc1 >= 0) and (RO.Territory[Loc1] = me) and
+          if (Loc1 >= 0) and (RO.Territory[Loc1] = Me) and
             (Map[Loc1] and ConnectMask <> 0) then
           begin
             Inc(History);
@@ -850,8 +850,8 @@ var
                     Dec(nFragments)
                   else if History and 4 <> 0 then
                   begin
-                    V8_to_ab((V8 - 1) and 7, a, b);
-                    ab_to_Loc(Loc, a shl 1, b shl 1, Loc1);
+                    V8_to_ab((V8 - 1) and 7, A, B);
+                    ab_to_Loc(Loc, A shl 1, B shl 1, Loc1);
                     if (Loc1 >= 0) and (Map[Loc1] and ConnectMask <> 0) then
                       Dec(nFragments);
                   end
@@ -875,13 +875,13 @@ var
   end;
 
 begin
-  fillchar(SettlerSurplus, sizeof(SettlerSurplus), 0);
+  FillChar(SettlerSurplus, SizeOf(SettlerSurplus), 0);
   JobAssignment_Initialize;
 
   if (Data.BehaviorFlags and bBarbarina = 0) or (RO.nCity < 3) then
   begin
-    fillchar(TileFood, sizeof(TileFood), 0);
-    fillchar(ResourceScore, sizeof(ResourceScore), 0);
+    FillChar(TileFood, SizeOf(TileFood), 0);
+    FillChar(ResourceScore, SizeOf(ResourceScore), 0);
     for Loc := 0 to MapSize - 1 do
       if Map[Loc] and fTerrain <> fUNKNOWN then
         if Map[Loc] and fDeadLands <> 0 then
@@ -922,14 +922,14 @@ begin
     // these resources already have an enemy city
 
     // rate possible new cities
-    fillchar(CityScore, MapSize * sizeof(integer), 0);
+    FillChar(CityScore, MapSize * SizeOf(Integer), 0);
     for Loc := 0 to MapSize - 1 do
     begin
       FoodOk := (TileFood[Loc] > 0) and
         ((Map[Loc] and fTerrain = fGrass) and
         ((RO.Government <> gDespotism) or (Map[Loc] and fSpecial = fSpecial1)) or
         (Map[Loc] and (fTerrain or fSpecial) = fPrairie or fSpecial1));
-      if FoodOk and ((RO.Territory[Loc] < 0) or (RO.Territory[Loc] = me)) then
+      if FoodOk and ((RO.Territory[Loc] < 0) or (RO.Territory[Loc] = Me)) then
       begin
         TestScore := 0;
         CityFood := 0;
@@ -949,7 +949,7 @@ begin
         end;
         if CityFood >= MinCityFood then // city is worth founding
         begin
-          TestScore := (72 + 2 * TestScore) shl 8 + ((loc xor me) * 4567) mod 251;
+          TestScore := (72 + 2 * TestScore) shl 8 + ((loc xor Me) * 4567) mod 251;
           // some unexactness, random but always the same for this tile
           if TestScore > BestNearCityScore then
           begin // better than all other sites in radius
@@ -987,7 +987,7 @@ begin
               RadiusLoc := Radius[V21];
               if not (Map[RadiusLoc] and fTerrain in [fDesert, fArctic]) then
               begin
-                assert(RadiusLoc >= 0);
+                Assert(RadiusLoc >= 0);
                 TileWorkPlan(RadiusLoc, cix, Value, NextJob, TotalWork);
                 if (NextJob = jRoad) and (Built[imPalace] +
                   Built[imCourt] + Built[imTownHall] = 0) then
@@ -999,7 +999,7 @@ begin
             else if CityAreaInfo.Available[V21] = faAvailable then
             begin // tile could be exploited
               RadiusLoc := Radius[V21];
-              assert(RadiusLoc >= 0);
+              Assert(RadiusLoc >= 0);
               if not (Map[RadiusLoc] and fTerrain in [fDesert, fArctic]) then
               begin
                 TileWorkPlan(RadiusLoc, cix, Value, NextJob, TotalWork);
@@ -1023,7 +1023,7 @@ begin
 
   if Data.BehaviorFlags and bBarbarina = 0 then // low priority jobs
     for Loc := 0 to MapSize - 1 do
-      if RO.Territory[Loc] = me then
+      if RO.Territory[Loc] = Me then
       begin
         Tile := Map[Loc];
         if Tile and fPoll <> 0 then
@@ -1047,15 +1047,15 @@ begin
   if Data.BehaviorFlags and bBarbarina = bBarbarina then
   begin
     for part := 0 to nShipPart - 1 do
-      for i := 0 to ColonyShipPlan[part].nLocFoundCity - 1 do
+      for I := 0 to ColonyShipPlan[part].nLocFoundCity - 1 do
       begin
-        Loc := ColonyShipPlan[part].LocFoundCity[i];
+        Loc := ColonyShipPlan[part].LocFoundCity[I];
         Started := False;
         for uix := 0 to RO.nUn - 1 do
           if (MyUnit[uix].Loc = Loc) and (MyUnit[uix].Job = jCity) then
           begin
             Started := True;
-            break;
+            Break;
           end;
         if not Started then
         begin
@@ -1118,15 +1118,15 @@ begin
               (Size <= NeedSewerSize - 2) or (Size <= NeedAqueductSize - 2) then
             begin // settlers could be added to this city
               Happy := BasicHappy;
-              for i := 0 to nWonder - 1 do
-                if Built[i] > 0 then
+              for I := 0 to nWonder - 1 do
+                if Built[I] > 0 then
                   Inc(Happy);
               if Built[imTemple] > 0 then
                 Inc(Happy);
               if Built[imCathedral] > 0 then
               begin
                 Inc(Happy, 2);
-                if RO.Wonder[woBach].EffectiveOwner = me then
+                if RO.Wonder[woBach].EffectiveOwner = Me then
                   Inc(Happy, 1);
               end;
               if Built[imTheater] > 0 then
@@ -1149,14 +1149,14 @@ end;
 
 procedure TAI.DoTurn;
 var
-  emix, i, p1, TaxSum, ScienceSum, NewTaxRate: integer;
-  AllHateMe: boolean;
+  emix, I, p1, TaxSum, ScienceSum, NewTaxRate: Integer;
+  AllHateMe: Boolean;
 {$IFDEF PERF}
   PF, t0, t1, t2, t3, t4, t5, t6, t7, t8, t9: int64;
 {$ENDIF}
 begin
 {$IFDEF DEBUG}
-  fillchar(DebugMap, sizeof(DebugMap), 0);
+  FillChar(DebugMap, SizeOf(DebugMap), 0);
 {$ENDIF}
 
 {$IFDEF PERF}
@@ -1168,7 +1168,7 @@ begin
 
   WarNations := PresenceUnknown;
   for p1 := 0 to nPl - 1 do
-    if (p1 <> me) and (1 shl p1 and RO.Alive <> 0) and (RO.Treaty[p1] < trPeace) then
+    if (p1 <> Me) and (1 shl p1 and RO.Alive <> 0) and (RO.Treaty[p1] < trPeace) then
       Inc(WarNations, 1 shl p1);
   BombardingNations := 0;
   for emix := 0 to RO.nEnemyModel - 1 do
@@ -1184,11 +1184,11 @@ begin
     (RO.Tech[ResearchOrder[Data.BehaviorFlags and bGender, 8]] < tsApplicable) then
     CheckGender;
 
-  if G.Difficulty[me] < MaxDiff then // not on beginner level
+  if G.Difficulty[Me] < MaxDiff then // not on beginner level
   begin
     if (Data.LastResearchTech = adHorsebackRiding) and (RO.ResearchTech < 0) and
       (random(6) = 0) and (HavePort or (ContinentPresence[0] and not
-      (1 shl me or PresenceUnknown) <> 0)) then
+      (1 shl Me or PresenceUnknown) <> 0)) then
     begin
       Data.BehaviorFlags := Data.BehaviorFlags or bBarbarina_Hide;
       DebugMessage(1, 'Early Barbarina!');
@@ -1205,7 +1205,7 @@ begin
           else
           begin
             AllHateMe := False;
-            break;
+            Break;
           end;
       if AllHateMe then
       begin
@@ -1301,15 +1301,15 @@ begin
     ChangeRates(0, 0)
   else
   begin
-    if (RO.TaxRate = 0) or (RO.Money < (TotalPopulation[me] - 4) * 2) then
+    if (RO.TaxRate = 0) or (RO.Money < (TotalPopulation[Me] - 4) * 2) then
       NewTaxRate := RO.TaxRate // don't check decreasing tax
     else
       NewTaxRate := RO.TaxRate - 10;
     while NewTaxRate < 100 do
     begin
       SumCities(NewTaxRate, TaxSum, ScienceSum);
-      if RO.Money + TaxSum >= (TotalPopulation[me] - 4) then
-        break; // enough
+      if RO.Money + TaxSum >= (TotalPopulation[Me] - 4) then
+        Break; // enough
       Inc(NewTaxRate, 10);
     end;
     if NewTaxRate <> RO.TaxRate then
@@ -1323,23 +1323,23 @@ begin
   if (Data.LastResearchTech >= 0) and (Data.LastResearchTech <> RO.ResearchTech) then
     // research completed
     for p1 := 0 to nPl - 1 do
-      if (p1 <> me) and (1 shl p1 and RO.Alive <> 0) and
+      if (p1 <> Me) and (1 shl p1 and RO.Alive <> 0) and
         (RO.EnemyReport[p1].TurnOfCivilReport + TechReportOutdated > RO.Turn) and
         (RO.EnemyReport[p1].Tech[Data.LastResearchTech] < tsSeen) then
       begin // latest researched advance might be of interest to this nation
-        for i := 0 to nRequestedTechs - 1 do
-          if (Data.RequestedTechs[i] >= 0) and
-            (Data.RequestedTechs[i] shr 8 and $F = p1) then
-            Data.RequestedTechs[i] := -1;
+        for I := 0 to nRequestedTechs - 1 do
+          if (Data.RequestedTechs[I] >= 0) and
+            (Data.RequestedTechs[I] shr 8 and $F = p1) then
+            Data.RequestedTechs[I] := -1;
       end;
   if RO.ResearchTech = adMilitary then
     Data.LastResearchTech := -1
   else
     Data.LastResearchTech := RO.ResearchTech;
-  for i := 0 to nRequestedTechs - 1 do
-    if (Data.RequestedTechs[i] >= 0) and
-      (RO.Tech[Data.RequestedTechs[i] and $FF] >= tsSeen) then
-      Data.RequestedTechs[i] := -1;
+  for I := 0 to nRequestedTechs - 1 do
+    if (Data.RequestedTechs[I] >= 0) and
+      (RO.Tech[Data.RequestedTechs[I] and $FF] >= tsSeen) then
+      Data.RequestedTechs[I] := -1;
 
   // prepare negotiation
   AdvanceValuesSet := False;
@@ -1347,7 +1347,7 @@ begin
 
 {$IFDEF DEBUG}
 (*for p1:=0 to nPl-1 do
-  if (p1<>me) and (1 shl p1 and RO.Alive<>0) and (RO.Treaty[p1]>=trPeace)
+  if (p1<>Me) and (1 shl p1 and RO.Alive<>0) and (RO.Treaty[p1]>=trPeace)
     and (RO.EnemyReport[p1].TurnOfCivilReport>=0) then
     TraceAdvanceValues(p1);*)
 {$ENDIF}
@@ -1362,9 +1362,9 @@ begin
 end;
 
 {$IFDEF DEBUG}
-procedure TAI.TraceAdvanceValues(Nation: integer);
+procedure TAI.TraceAdvanceValues(Nation: Integer);
 var
-  ad: integer;
+  ad: Integer;
 begin
   for ad := 0 to nAdv - 1 do
     if (RO.Tech[ad] < tsSeen) and (RO.EnemyReport[Nation].Tech[ad] >= tsApplicable) and
@@ -1378,18 +1378,18 @@ end;
 
 procedure TAI.CheckGender;
 var
-  p1, NewGender: integer;
+  p1, NewGender: Integer;
 begin
   NewGender := -1;
   for p1 := 0 to nPl - 1 do
-    if (p1 <> me) and (1 shl p1 and RO.Alive <> 0) and
+    if (p1 <> Me) and (1 shl p1 and RO.Alive <> 0) and
       (RO.Treaty[p1] >= trFriendlyContact) then
-      if PlayerHash[me] > PlayerHash[p1] then
+      if PlayerHash[Me] > PlayerHash[p1] then
       begin
         if NewGender = bMale then
         begin
           NewGender := -2;
-          break;
+          Break;
         end; // ambiguous, don't change gender
         NewGender := bFemale;
       end
@@ -1398,7 +1398,7 @@ begin
         if NewGender = bFemale then
         begin
           NewGender := -2;
-          break;
+          Break;
         end; // ambiguous, don't change gender
         NewGender := bMale;
       end;
@@ -1411,9 +1411,9 @@ end;
 
 procedure TAI.SetAdvanceValues;
 
-  procedure RateResearchAdv(ad, Time: integer);
+  procedure RateResearchAdv(ad, Time: Integer);
   var
-    Value: integer;
+    Value: Integer;
   begin
     if Time = 0 then
       Value := TechValue_ForResearch_Next
@@ -1423,7 +1423,7 @@ procedure TAI.SetAdvanceValues;
       AdvanceValue[ad] := Value;
   end;
 
-  procedure SetPreqValues(ad, Value: integer);
+  procedure SetPreqValues(ad, Value: Integer);
   begin
     if (RO.Tech[ad] < tsSeen) and (ad <> RO.ResearchTech) then
     begin
@@ -1446,22 +1446,22 @@ procedure TAI.SetAdvanceValues;
     end;
   end;
 
-  procedure RateImpPreq(iix, Value: integer);
+  procedure RateImpPreq(iix, Value: Integer);
   begin
     if (Value > 0) and (Imp[iix].Preq >= 0) then
       Inc(AdvanceValue[Imp[iix].Preq], Value);
   end;
 
 var
-  emix, cix, adMissing, iad, ad, Count, i, Time, d, CurrentCost,
-  CurrentStrength, MaxSize, MaxTrade: integer;
-  PreView, Emergency, Bombarded: boolean;
+  emix, cix, adMissing, iad, ad, Count, I, Time, D, CurrentCost,
+  CurrentStrength, MaxSize, MaxTrade: Integer;
+  PreView, Emergency, Bombarded: Boolean;
 begin
   if AdvanceValuesSet then
-    exit;
+    Exit;
   AdvanceValuesSet := True;
 
-  fillchar(AdvanceValue, sizeof(AdvanceValue), 0);
+  FillChar(AdvanceValue, SizeOf(AdvanceValue), 0);
 
   // rate techs to ensure research progress
   Time := 0;
@@ -1481,9 +1481,9 @@ begin
       if AdvPreq[ad, 2] <> preNone then
       begin // 2 of 3 required
         Count := 0;
-        for i := 0 to 2 do
-          if (AdvPreq[ad, i] = RO.ResearchTech) or
-            (RO.Tech[AdvPreq[ad, i]] >= tsSeen) then
+        for I := 0 to 2 do
+          if (AdvPreq[ad, I] = RO.ResearchTech) or
+            (RO.Tech[AdvPreq[ad, I]] >= tsSeen) then
             Inc(Count);
         if Count >= 2 then
           Emergency := False
@@ -1491,10 +1491,10 @@ begin
         begin
           if ad <> adMassProduction then // don't score third preq for MP
           begin
-            for i := 0 to 2 do
-              if (AdvPreq[ad, i] <> RO.ResearchTech) and
-                (RO.Tech[AdvPreq[ad, i]] < tsSeen) then
-                RateResearchAdv(AdvPreq[ad, i], Time);
+            for I := 0 to 2 do
+              if (AdvPreq[ad, I] <> RO.ResearchTech) and
+                (RO.Tech[AdvPreq[ad, I]] < tsSeen) then
+                RateResearchAdv(AdvPreq[ad, I], Time);
           end;
           Inc(Time, 2 - Count);
         end;
@@ -1502,11 +1502,11 @@ begin
       else
       begin
         Count := 0;
-        for i := 0 to 1 do
-          if (AdvPreq[ad, i] <> preNone) and (AdvPreq[ad, i] <> RO.ResearchTech) and
-            (RO.Tech[AdvPreq[ad, i]] < tsSeen) then
+        for I := 0 to 1 do
+          if (AdvPreq[ad, I] <> preNone) and (AdvPreq[ad, I] <> RO.ResearchTech) and
+            (RO.Tech[AdvPreq[ad, I]] < tsSeen) then
           begin
-            RateResearchAdv(AdvPreq[ad, i], Time);
+            RateResearchAdv(AdvPreq[ad, I], Time);
             Inc(Count);
           end;
         if Count = 0 then
@@ -1535,13 +1535,13 @@ begin
   end;
 
   // rate military techs
-  for d := 0 to nDomains - 1 do
+  for D := 0 to nDomains - 1 do
   begin
     CurrentCost := 0;
     CurrentStrength := 0;
     for PreView := True downto False do
-      for i := 0 to nUpgrade - 1 do
-        with Upgrade[d, i] do
+      for I := 0 to nUpgrade - 1 do
+        with Upgrade[D, I] do
           if (Preq >= 0) and not (Preq in FutureTech) then
             if ((Ro.ResearchTech = Preq) or (RO.Tech[Preq] >= tsSeen)) = PreView then
               if PreView then
@@ -1552,14 +1552,14 @@ begin
               end
               else
               begin // rate
-                if (i > 0) and (Trans > 0) then
+                if (I > 0) and (Trans > 0) then
                   Inc(AdvanceValue[Preq], $400);
                 if Cost <= CurrentCost then
-                  Inc(AdvanceValue[Preq], (4 - d) * Strength * $400 div
-                    (CurrentStrength + Upgrade[d, 0].Strength))
+                  Inc(AdvanceValue[Preq], (4 - D) * Strength * $400 div
+                    (CurrentStrength + Upgrade[D, 0].Strength))
                 else
-                  Inc(AdvanceValue[Preq], (4 - d) * Strength * $200 div
-                    (CurrentStrength + Upgrade[d, 0].Strength));
+                  Inc(AdvanceValue[Preq], (4 - D) * Strength * $200 div
+                    (CurrentStrength + Upgrade[D, 0].Strength));
               end;
   end;
   // speed
@@ -1639,14 +1639,14 @@ end;
 
 procedure TAI.AnalyzeMap;
 var
-  cix, Loc, Loc1, V8, f1, p1: integer;
+  cix, Loc, Loc1, V8, f1, p1: Integer;
   Adjacent: TVicinity8Loc;
 begin
   inherited;
 
   // collect nation presence information for continents and oceans
-  fillchar(ContinentPresence, sizeof(ContinentPresence), 0);
-  fillchar(OceanPresence, sizeof(OceanPresence), 0);
+  FillChar(ContinentPresence, SizeOf(ContinentPresence), 0);
+  FillChar(OceanPresence, SizeOf(OceanPresence), 0);
   for Loc := 0 to MapSize - 1 do
   begin
     f1 := Formation[Loc];
@@ -1698,9 +1698,9 @@ begin
     end;
   end;
 
-  fillchar(TotalPopulation, sizeof(TotalPopulation), 0);
-  fillchar(ContinentPopulation, sizeof(ContinentPopulation), 0);
-  fillchar(DistrictPopulation, 4 * nDistrict, 0);
+  FillChar(TotalPopulation, SizeOf(TotalPopulation), 0);
+  FillChar(ContinentPopulation, SizeOf(ContinentPopulation), 0);
+  FillChar(DistrictPopulation, 4 * nDistrict, 0);
 
   // count population
   for cix := 0 to RO.nEnemyCity - 1 do
@@ -1715,8 +1715,8 @@ begin
     with RO.City[cix] do
       if Loc >= 0 then
       begin
-        Inc(TotalPopulation[me], Size);
-        assert(District[Loc] >= 0);
+        Inc(TotalPopulation[Me], Size);
+        Assert(District[Loc] >= 0);
         if District[Loc] < maxCOD then
           Inc(DistrictPopulation[District[Loc]], Size);
       end;
@@ -1724,7 +1724,7 @@ end;
 
 procedure TAI.CollectModelCatStat;
 var
-  i, uix, Cat, mix, Quality: integer;
+  I, uix, Cat, mix, Quality: Integer;
 begin
   // categorize models
   for Cat := 0 to nModelCat - 1 do
@@ -1770,28 +1770,28 @@ begin
       with MyUnit[uix] do
         if (Loc >= 0) and (mix = mixCruiser) and (Map[Loc] and fTerrain < fGrass) then
         begin
-          i := Formation[Loc];
-          if (i >= 0) and (i < maxCOD) then
-            OceanWithShip := OceanWithShip or (1 shl i);
+          I := Formation[Loc];
+          if (I >= 0) and (I < maxCOD) then
+            OceanWithShip := OceanWithShip or (1 shl I);
         end;
 end;
 
 procedure TAI.MoveUnitsHome;
 const
   PatrolDestination = lxmax * lymax;
-  FirstSurplusLoop: array[mctGroundDefender..mctGroundAttacker] of integer = (2, 1);
+  FirstSurplusLoop: array[mctGroundDefender..mctGroundAttacker] of Integer = (2, 1);
 var
-  Cat, i, mix, cix, uix, Loop, nModelOrder: integer;
+  Cat, I, mix, cix, uix, Loop, nModelOrder: Integer;
   Adjacent: TVicinity8Loc;
-  LocNeed: array[0..lxmax * lymax - 1] of shortint;
-  Destination: array[0..nUmax - 1] of integer;
-  DistrictNeed, DistrictNeed0: array[0..maxCOD - 1] of integer;
-  ModelOrder: array[0..nMmax - 1] of integer;
-  complete, Fortified: boolean;
+  LocNeed: array[0..lxmax * lymax - 1] of ShortInt;
+  Destination: array[0..nUmax - 1] of Integer;
+  DistrictNeed, DistrictNeed0: array[0..maxCOD - 1] of Integer;
+  ModelOrder: array[0..nMmax - 1] of Integer;
+  complete, Fortified: Boolean;
 
-  function IsBombarded(cix: integer): boolean;
+  function IsBombarded(cix: Integer): Boolean;
   var
-    Loc1, V8: integer;
+    Loc1, V8: Integer;
     Adjacent: TVicinity8Loc;
   begin
     Result := False;
@@ -1808,15 +1808,15 @@ var
             PresenceUnknown) <> 0) then
           begin
             Result := True;
-            exit;
+            Exit;
           end;
         end;
       end;
   end;
 
-  procedure TryUtilize(uix: integer);
+  procedure TryUtilize(uix: Integer);
   var
-    cix, ProdCost, UtilizeCost: integer;
+    cix, ProdCost, UtilizeCost: Integer;
   begin
     if (MyUnit[uix].Health = 100) and (Map[MyUnit[uix].Loc] and
       (fCity or fOwned) = fCity or fOwned) then
@@ -1828,18 +1828,18 @@ var
           ProdCost := MyModel[Project and cpIndex].Cost;
           UtilizeCost := MyModel[MyUnit[uix].mix].Cost;
           if Prod < (ProdCost - UtilizeCost * 2 div 3) *
-            BuildCostMod[G.Difficulty[me]] div 12 then
+            BuildCostMod[G.Difficulty[Me]] div 12 then
             Unit_Disband(uix);
         end;
     end;
   end;
 
-  procedure FindDestination(uix: integer);
+  procedure FindDestination(uix: Integer);
   var
-    MoveStyle, V8, Loc1, Time, NextLoc, NextTime, RecoverTurns: integer;
-    Reached: array[0..lxmax * lymax - 1] of boolean;
+    MoveStyle, V8, Loc1, Time, NextLoc, NextTime, RecoverTurns: Integer;
+    Reached: array[0..lxmax * lymax - 1] of Boolean;
   begin
-    fillchar(Reached, MapSize, False);
+    FillChar(Reached, MapSize, False);
     Pile.Create(MapSize);
     with MyUnit[uix] do
     begin
@@ -1853,18 +1853,18 @@ var
         LocNeed[Loc1] := 0;
         if (District[Loc1] >= 0) and (District[Loc1] < maxCOD) then
         begin
-          assert(DistrictNeed[District[Loc1]] > 0);
+          Assert(DistrictNeed[District[Loc1]] > 0);
           Dec(DistrictNeed[District[Loc1]]);
         end;
         Destination[uix] := Loc1;
-        break;
+        Break;
       end;
       Reached[Loc1] := True;
       V8_to_Loc(Loc1, Adjacent);
       for V8 := 0 to 7 do
       begin
         NextLoc := Adjacent[V8];
-        if (NextLoc >= 0) and not Reached[NextLoc] and (RO.Territory[NextLoc] = me) then
+        if (NextLoc >= 0) and not Reached[NextLoc] and (RO.Territory[NextLoc] = Me) then
           case CheckStep(MoveStyle, Time, V8 and 1, NextTime, RecoverTurns,
               Map[Loc1], Map[NextLoc], False) of
             csOk:
@@ -1872,7 +1872,7 @@ var
             csForbiddenTile:
               Reached[NextLoc] := True; // don't check moving there again
             csCheckTerritory:
-              assert(False);
+              Assert(False);
           end;
       end;
     end;
@@ -1886,11 +1886,11 @@ begin
         if (Loc >= 0) and (Master < 0) and (mix = mixTownGuard) then
           Unit_Disband(uix);
 
-  fillchar(UnitLack, sizeof(UnitLack), 0);
-  fillchar(Destination, 4 * RO.nUn, $FF);
-  for i := 0 to maxCOD - 1 do
-    if uixPatrol[i] >= 0 then
-      Destination[uixPatrol[i]] := PatrolDestination;
+  FillChar(UnitLack, SizeOf(UnitLack), 0);
+  FillChar(Destination, 4 * RO.nUn, $FF);
+  for I := 0 to maxCOD - 1 do
+    if uixPatrol[I] >= 0 then
+      Destination[uixPatrol[I]] := PatrolDestination;
   for uix := 0 to RO.nUn - 1 do
     if (MyUnit[uix].mix = mixMilitia) or (MyUnit[uix].mix = mixCruiser) then
       Destination[uix] := PatrolDestination;
@@ -1902,13 +1902,13 @@ begin
     for mix := 0 to Ro.nModel - 1 do
       if ModelCat[mix] = Cat then
       begin
-        i := nModelOrder;
-        while (i > 0) and (ModelQuality[mix] < ModelQuality[ModelOrder[i - 1]]) do
+        I := nModelOrder;
+        while (I > 0) and (ModelQuality[mix] < ModelQuality[ModelOrder[I - 1]]) do
         begin
-          ModelOrder[i] := ModelOrder[i - 1];
-          Dec(i);
+          ModelOrder[I] := ModelOrder[I - 1];
+          Dec(I);
         end;
-        ModelOrder[i] := mix;
+        ModelOrder[I] := mix;
         Inc(nModelOrder);
       end;
 
@@ -1921,8 +1921,8 @@ begin
               (ModelCat[mix] = Cat) and (ModelQuality[mix] < 0) then
               TryUtilize(uix);
 
-      fillchar(LocNeed, MapSize, 0);
-      fillchar(DistrictNeed, sizeof(DistrictNeed), 0);
+      FillChar(LocNeed, MapSize, 0);
+      FillChar(DistrictNeed, SizeOf(DistrictNeed), 0);
 
       for cix := 0 to RO.nCity - 1 do
         with MyCity[cix] do
@@ -1945,7 +1945,7 @@ begin
       if Loop = 0 then // protect city building sites
         for uix := 0 to RO.nUn - 1 do
           with MyUnit[uix] do
-            if (Loc >= 0) and (Job = jCity) and (RO.Territory[Loc] = me) then
+            if (Loc >= 0) and (Job = jCity) and (RO.Territory[Loc] = Me) then
             begin
               LocNeed[Loc] := 1;
               if (District[Loc] >= 0) and (District[Loc] < maxCOD) then
@@ -1953,12 +1953,12 @@ begin
             end;
 
       complete := Loop >= FirstSurplusLoop[Cat];
-      for i := nModelOrder - 1 downto 0 do
+      for I := nModelOrder - 1 downto 0 do
       begin
         for Fortified := True downto False do
           for uix := 0 to RO.nUn - 1 do
             with MyUnit[uix] do
-              if (mix = ModelOrder[i]) and (Loc >= 0) and
+              if (mix = ModelOrder[I]) and (Loc >= 0) and
                 (Destination[uix] < 0) and (Master < 0) and
                 ((Flags and unFortified <> 0) = Fortified) and (LocNeed[Loc] > 0) then
               begin
@@ -1971,7 +1971,7 @@ begin
 
         for uix := 0 to RO.nUn - 1 do
           with MyUnit[uix] do
-            if (mix = ModelOrder[i]) and (Loc >= 0) and (Destination[uix] < 0) and
+            if (mix = ModelOrder[I]) and (Loc >= 0) and (Destination[uix] < 0) and
               (Master < 0) then
               if (District[Loc] >= 0) and (District[Loc] < maxCOD) and
                 (DistrictNeed[District[Loc]] = 0) then
@@ -1988,8 +1988,8 @@ begin
 
   // distribute obsolete settlers
   repeat
-    fillchar(LocNeed, MapSize, 0);
-    fillchar(DistrictNeed, sizeof(DistrictNeed), 0);
+    FillChar(LocNeed, MapSize, 0);
+    FillChar(DistrictNeed, SizeOf(DistrictNeed), 0);
 
     for cix := 0 to RO.nCity - 1 do
       with MyCity[cix] do
@@ -2039,7 +2039,7 @@ begin
 
   for uix := 0 to RO.nUn - 1 do
     with MyUnit[uix] do
-      if (Loc >= 0) and (RO.Territory[Loc] = me) and (District[Loc] >= 0) and
+      if (Loc >= 0) and (RO.Territory[Loc] = Me) and (District[Loc] >= 0) and
         (District[Loc] < maxCOD) and (ModelQuality[mix] > 0) then
         case ModelCat[mix] of
           mctGroundDefender, mctGroundAttacker:
@@ -2047,15 +2047,15 @@ begin
         end;
 end;
 
-procedure TAI.CheckAttack(uix: integer);
+procedure TAI.CheckAttack(uix: Integer);
 var
   AttackScore, BestCount, AttackLoc, TestLoc, NextLoc, TestTime, V8,
   TestScore, euix, MyDamage, EnemyDamage, OldLoc, AttackForecast,
-  MoveResult, AttackResult, MoveStyle, NextTime, RecoverTurns: integer;
-  Tile: cardinal;
-  Exhausted: boolean;
+  MoveResult, AttackResult, MoveStyle, NextTime, RecoverTurns: Integer;
+  Tile: Cardinal;
+  Exhausted: Boolean;
   Adjacent: TVicinity8Loc;
-  Reached: array[0..lxmax * lymax - 1] of boolean;
+  Reached: array[0..lxmax * lymax - 1] of Boolean;
 
 begin
   with MyUnit[uix] do
@@ -2064,7 +2064,7 @@ begin
     repeat
       AttackScore := -999999;
       AttackLoc := -1;
-      fillchar(Reached, MapSize, False);
+      FillChar(Reached, MapSize, False);
       Pile.Create(MapSize);
       Pile.Put(Loc, $800 - Movement);
       // start search for something to do at current location
@@ -2076,7 +2076,7 @@ begin
 
         if ((Tile and fUnit) <> 0) and ((Tile and fOwned) = 0) then
         begin // enemy unit
-          assert(TestTime < $1000);
+          Assert(TestTime < $1000);
           Unit_FindEnemyDefender(TestLoc, euix);
           if RO.Treaty[RO.EnemyUn[euix].Owner] < trPeace then
             if Unit_AttackForecast(uix, TestLoc, $800 - TestTime, AttackForecast) then
@@ -2167,16 +2167,16 @@ begin
   end;
 end;
 
-procedure TAI.Patrol(uix: integer);
+procedure TAI.Patrol(uix: Integer);
 const
   DistanceScore = 4;
 var
   PatrolScore, BestCount, PatrolLoc, TestLoc, NextLoc, TestTime, V8,
-  TestScore, OldLoc, MoveResult, MoveStyle, NextTime, RecoverTurns: integer;
-  Tile: cardinal;
-  Exhausted, CaptureOnly: boolean;
+  TestScore, OldLoc, MoveResult, MoveStyle, NextTime, RecoverTurns: Integer;
+  Tile: Cardinal;
+  Exhausted, CaptureOnly: Boolean;
   Adjacent: TVicinity8Loc;
-  AdjacentUnknown: array[0..lxmax * lymax - 1] of shortint;
+  AdjacentUnknown: array[0..lxmax * lymax - 1] of ShortInt;
 
 begin
   with MyUnit[uix] do
@@ -2195,7 +2195,7 @@ begin
         if (50 * $1000 - DistanceScore * TestTime <= PatrolScore)
           // assume a score of 50 is the best achievable
           or CaptureOnly and (TestTime >= $1000) then
-          break;
+          Break;
 
         TestScore := 0;
         Tile := Map[TestLoc];
@@ -2275,11 +2275,11 @@ end;
 procedure TAI.AttackAndPatrol;
 const
   nAttackCatOrder = 3;
-  AttackCatOrder: array[0..nAttackCatOrder - 1] of integer =
+  AttackCatOrder: array[0..nAttackCatOrder - 1] of Integer =
     (mctGroundAttacker, mctCruiser, mctGroundDefender);
 var
-  iCat, uix, uix1: integer;
-  IsPatrolUnit, Fortified: boolean;
+  iCat, uix, uix1: Integer;
+  IsPatrolUnit, Fortified: Boolean;
 begin
   for uix := 0 to RO.nUn - 1 do
     with MyUnit[uix] do // utilize militia
@@ -2298,7 +2298,7 @@ begin
               Fortified) then
               CheckAttack(uix);
 
-  fillchar(uixPatrol, sizeof(uixPatrol), $FF);
+  FillChar(uixPatrol, SizeOf(uixPatrol), $FF);
   for uix := 0 to RO.nUn - 1 do
     with MyUnit[uix], MyModel[mix] do
       if (Loc >= 0) and (Domain = dGround) and (Attack > 0) and
@@ -2332,9 +2332,9 @@ begin
       end;
 end;
 
-function TAI.HavePort: boolean;
+function TAI.HavePort: Boolean;
 var
-  V8, cix, AdjacentLoc, f: integer;
+  V8, cix, AdjacentLoc, F: Integer;
   Adjacent: TVicinity8Loc;
 begin
   Result := False;
@@ -2348,9 +2348,9 @@ begin
           AdjacentLoc := Adjacent[V8];
           if (AdjacentLoc >= 0) and ((Map[AdjacentLoc] and fTerrain) < fGrass) then
           begin
-            f := Formation[AdjacentLoc];
-            if (f >= 0) and (f < maxCOD) and (OceanPresence[f] and
-              not (1 shl me) <> 0) then
+            F := Formation[AdjacentLoc];
+            if (F >= 0) and (F < maxCOD) and (OceanPresence[F] and
+              not (1 shl Me) <> 0) then
               Result := True;
           end;
         end;
@@ -2360,17 +2360,17 @@ end;
 procedure TAI.SetCityProduction;
 var
   uix, cix, iix, dtr, V8, V21, NewImprovement, AdjacentLoc, MaxSettlers,
-  maxcount, cixMilAcademy: integer;
-  TerrType: cardinal;
+  maxcount, cixMilAcademy: Integer;
+  TerrType: Cardinal;
   IsPort, IsNavalBase, NeedCruiser, CheckProd, Destructed, ProduceSettlers,
-  ProduceMil: boolean;
+  ProduceMil: Boolean;
   Adjacent: TVicinity8Loc;
   Radius: TVicinity21Loc;
   Report: TCityReport;
-  HomeCount, CityProdRep: array[0..nCmax - 1] of integer;
-  MilProdCity: array[0..nCmax - 1] of boolean;
+  HomeCount, CityProdRep: array[0..nCmax - 1] of Integer;
+  MilProdCity: array[0..nCmax - 1] of Boolean;
 
-  procedure TryBuild(Improvement: integer);
+  procedure TryBuild(Improvement: Integer);
   begin
     if (NewImprovement = imTrGoods) // not already improvement of higher priority found
       and (MyCity[cix].Built[Improvement] = 0) // not built yet
@@ -2380,10 +2380,10 @@ var
       NewImprovement := Improvement;
   end;
 
-  procedure TryDestruct(Improvement: integer);
+  procedure TryDestruct(Improvement: Integer);
   begin
     if Destructed or (MyCity[cix].Built[Improvement] = 0) then
-      exit;
+      Exit;
     if City_CurrentImprovementProject(cix) >= 0 then
       City_RebuildImprovement(cix, Improvement)
     else
@@ -2391,13 +2391,13 @@ var
 {    if (CurrentImprovementProject>=0)
       and (Imp[CurrentImprovementProject].Kind in [ikCommon,ikNatGlobal,ikNatLocal])
       and ((Imp[CurrentImprovementProject].Cost*3-Imp[Improvement].Cost*2)
-      *BuildCostMod[G.Difficulty[me]]>MyCity[cix].Prod*(12*3)) then}
+      *BuildCostMod[G.Difficulty[Me]]>MyCity[cix].Prod*(12*3)) then}
     Destructed := True;
   end;
 
-  function ChooseBuildModel(Cat: integer): integer;
+  function ChooseBuildModel(Cat: Integer): Integer;
   var
-    Count, mix: integer;
+    Count, mix: Integer;
   begin
     Count := 0;
     for mix := 0 to RO.nModel - 1 do
@@ -2408,22 +2408,22 @@ var
         if random(Count) = 0 then
           Result := mix;
       end;
-    assert(Count > 0);
+    Assert(Count > 0);
   end;
 
   procedure NominateMilProdCities;
   // find military production cities
   var
-    cix, Total, d, Threshold, NewThreshold, Share, SharePlus, cixWorst: integer;
+    cix, Total, D, Threshold, NewThreshold, Share, SharePlus, cixWorst: Integer;
   begin
-    fillchar(MilProdCity, RO.nCity, 0);
+    FillChar(MilProdCity, RO.nCity, 0);
     GetCityProdPotential;
-    for d := 0 to maxCOD - 1 do
+    for D := 0 to maxCOD - 1 do
     begin
       Total := 0;
       for cix := 0 to RO.nCity - 1 do
         with MyCity[cix] do
-          if (Loc >= 0) and (District[Loc] = d) then
+          if (Loc >= 0) and (District[Loc] = D) then
             Total := Total + CityResult[cix];
       if Total = 0 then
         continue; // district does not exist
@@ -2432,7 +2432,7 @@ var
       cixWorst := -1;
       for cix := 0 to RO.nCity - 1 do
         with MyCity[cix] do
-          if (Loc >= 0) and (District[Loc] = d) and
+          if (Loc >= 0) and (District[Loc] = D) and
             (Built[imBarracks] + Built[imMilAcademy] > 0) then
           begin
             MilProdCity[cix] := True;
@@ -2447,7 +2447,7 @@ var
         NewThreshold := -1;
         for cix := 0 to RO.nCity - 1 do
           with MyCity[cix] do
-            if (Loc >= 0) and (District[Loc] = d) and
+            if (Loc >= 0) and (District[Loc] = D) and
               (Built[imBarracks] + Built[imMilAcademy] = 0) and
               (Built[imObservatory] = 0) and (CityResult[cix] < Threshold) and
               (CityResult[cix] >= NewThreshold) then
@@ -2464,26 +2464,26 @@ var
 
       for cix := 0 to RO.nCity - 1 do
         with MyCity[cix] do
-          if (Loc >= 0) and (District[Loc] = d) and
+          if (Loc >= 0) and (District[Loc] = D) and
             (Built[imBarracks] + Built[imMilAcademy] = 0) and
             (CityResult[cix] >= Threshold) then
             MilProdCity[cix] := True;
 {    if (cixWorst>=0)
       and (Share-CityResult[cixWorst]*2>=Total*MilProdShare div 100) then
-      MilProdCity[cixWorst]:=false;}
+      MilProdCity[cixWorst]:=False;}
     end;
 
     // check best city for military academy
     cixMilAcademy := cixStateImp[imMilAcademy];
     if cixStateImp[imPalace] >= 0 then
     begin
-      d := District[MyCity[cixStateImp[imPalace]].Loc];
-      if (d >= 0) and (d < maxCOD) then
+      D := District[MyCity[cixStateImp[imPalace]].Loc];
+      if (D >= 0) and (D < maxCOD) then
       begin
         cixMilAcademy := -1;
         for cix := 0 to RO.nCity - 1 do
           with MyCity[cix] do
-            if (Loc >= 0) and (District[Loc] = d) and
+            if (Loc >= 0) and (District[Loc] = D) and
               (Built[imObservatory] + Built[imPalace] = 0) and
               ((cixMilAcademy < 0) or (CityResult[cix] > CityResult[cixMilAcademy])) then
               cixMilAcademy := cix;
@@ -2499,10 +2499,10 @@ var
 
   procedure ChangeHomeCities;
   var
-    uix, NewHome, HomeSupport, NewHomeSupport, SingleSupport: integer;
+    uix, NewHome, HomeSupport, NewHomeSupport, SingleSupport: Integer;
   begin
     if RO.Government in [gAnarchy, gFundamentalism] then
-      exit;
+      Exit;
     for uix := 0 to RO.nUn - 1 do
       with MyUnit[uix] do
         if (Loc >= 0) and (Home >= 0) and (Map[Loc] and fCity <> 0) and
@@ -2550,7 +2550,7 @@ var
   end;
 
 begin
-  fillchar(HomeCount, 4 * RO.nCity, 0);
+  FillChar(HomeCount, 4 * RO.nCity, 0);
   for uix := 0 to RO.nUn - 1 do
     with MyUnit[uix] do
       if (Loc >= 0) and (Home >= 0) then
@@ -2743,7 +2743,7 @@ begin
                       fHills, fMountains] then
                     begin
                       TryBuild(imHarbor);
-                      break;
+                      Break;
                     end;
                   end;
               end;
@@ -2761,7 +2761,7 @@ begin
             if Report.PollRep >= 15 then
               TryBuild(imRecycling);
             if (Report.Trade - Report.Corruption >= 11) and
-              (RO.Money < TotalPopulation[me] * 2) then
+              (RO.Money < TotalPopulation[Me] * 2) then
               TryBuild(imBank);
             if (RO.NatBuilt[imStockEx] = 0) and
               (Built[imObservatory] + Built[imMilAcademy] = 0) and
@@ -2798,7 +2798,7 @@ begin
             City_StopProduction(cix);
 
           // rebuild imps no longer needed
-          if (RO.TaxRate = 0) and (RO.Money >= TotalPopulation[me] * 4) then
+          if (RO.TaxRate = 0) and (RO.Money >= TotalPopulation[Me] * 4) then
             TryDestruct(imBank)
           else if Report.Happy * 2 >= Size + 6 then
             TryDestruct(imTheater)
@@ -2824,7 +2824,7 @@ begin
   ChangeHomeCities;
 end;
 
-function TAI.ChooseGovernment: integer;
+function TAI.ChooseGovernment: Integer;
 begin
   if Data.BehaviorFlags and bBarbarina <> 0 then
     if IsResearched(adTheology) then
@@ -2845,9 +2845,9 @@ end;
 //           DIPLOMACY
 //-------------------------------
 
-function TAI.MostWanted(Nation, adGiveAway: integer): integer;
+function TAI.MostWanted(Nation, adGiveAway: Integer): Integer;
 var
-  ad: integer;
+  ad: Integer;
 begin
   Result := -1;
   if RO.Tech[adGiveAway] >= tsApplicable then
@@ -2875,9 +2875,9 @@ begin
           Result := ad;
 end;
 
-procedure TAI.FindBestTrade(Nation: integer; var adWanted, adGiveAway: integer);
+procedure TAI.FindBestTrade(Nation: Integer; var adWanted, adGiveAway: Integer);
 var
-  i, ad, ead, adTestGiveAway: integer;
+  I, ad, ead, adTestGiveAway: Integer;
 begin
   adWanted := -1;
   adGiveAway := -1;
@@ -2887,9 +2887,9 @@ begin
       ((adWanted < 0) or (AdvanceValue[ead] > AdvanceValue[adWanted])) then
     begin
       adTestGiveAway := -1;
-      for i := 0 to nRequestedTechs - 1 do
-        if (Data.RequestedTechs[i] >= 0) and
-          (Data.RequestedTechs[i] and $FFFF = Nation shl 8 + ead) then
+      for I := 0 to nRequestedTechs - 1 do
+        if (Data.RequestedTechs[I] >= 0) and
+          (Data.RequestedTechs[I] and $FFFF = Nation shl 8 + ead) then
           adTestGiveAway := -2; // already requested before
       if adTestGiveAway = -1 then
       begin
@@ -2912,14 +2912,14 @@ begin
     end;
 end;
 
-function TAI.WantNegotiation(Nation: integer; NegoTime: TNegoTime): boolean;
+function TAI.WantNegotiation(Nation: Integer; NegoTime: TNegoTime): Boolean;
 var
-  p1, Count, adWanted, adGiveAway: integer;
+  p1, Count, adWanted, adGiveAway: Integer;
 begin
   if Data.BehaviorFlags and bBarbarina = bBarbarina then
   begin
     Result := Barbarina_WantNegotiation(Nation, NegoTime);
-    exit;
+    Exit;
   end;
 
   if RO.Treaty[Nation] < trPeace then
@@ -2927,16 +2927,16 @@ begin
     if Data.BehaviorFlags and bBarbarina <> 0 then
     begin
       Result := False;
-      exit;
+      Exit;
     end;
     Count := 0;
     for p1 := 0 to nPl - 1 do
-      if (p1 <> me) and (1 shl p1 and RO.Alive <> 0) and (RO.Treaty[p1] >= trPeace) then
+      if (p1 <> Me) and (1 shl p1 and RO.Alive <> 0) and (RO.Treaty[p1] >= trPeace) then
         Inc(Count);
     if Count >= 3 then // enough peace made
     begin
       Result := False;
-      exit;
+      Exit;
     end;
   end;
 
@@ -2977,8 +2977,8 @@ end;
 
 procedure TAI.DoNegotiation;
 var
-  i, adWanted, adGiveAway, adToGet, Slot: integer;
-  BuildFreeOffer: boolean;
+  I, adWanted, adGiveAway, adToGet, Slot: Integer;
+  BuildFreeOffer: Boolean;
 begin
   if MyLastAction = scDipOffer then
     if OppoAction = scDipAccept then
@@ -3009,13 +3009,13 @@ begin
   if Data.BehaviorFlags and bBarbarina = bBarbarina then
   begin
     Barbarina_DoNegotiation;
-    exit;
+    Exit;
   end;
 
   if NegoCause = CheckBarbarina then
   begin
     Barbarina_DoCheckNegotiation;
-    exit;
+    Exit;
   end;
 
   SetAdvanceValues; // in case no turn played after loading this game
@@ -3030,14 +3030,14 @@ begin
     if (Data.BehaviorFlags and bBarbarina = 0) and
       (OppoOffer.nDeliver + OppoOffer.nCost = 1) and
       (OppoOffer.Price[0] and opMask = opTreaty) and
-      (integer(OppoOffer.Price[0] - opTreaty) > RO.Treaty[Opponent]) and
+      (Integer(OppoOffer.Price[0] - opTreaty) > RO.Treaty[Opponent]) and
       ((OppoOffer.Price[0] - opTreaty < trAlliance) or
       (RO.Tech[adScience] >= tsSeen)) then
       MyAction := scDipAccept // accept all treaties
     else if (RO.Treaty[Opponent] >= trPeace) and (OppoOffer.nDeliver = 1) and
-      (OppoOffer.Price[0] and $FFFF0000 = opCivilReport + cardinal(Opponent) shl 16) and
+      (OppoOffer.Price[0] and $FFFF0000 = opCivilReport + Cardinal(Opponent) shl 16) and
       (OppoOffer.nCost = 1) and (OppoOffer.Price[1] and $FFFF0000 =
-      opCivilReport + cardinal(me) shl 16) then
+      opCivilReport + Cardinal(Me) shl 16) then
       MyAction := scDipAccept // accept exchange of civil reports
     else if (OppoOffer.nDeliver = 1) and (OppoOffer.nCost = 1) and
       (OppoOffer.Price[1] and opMask = opTech) then
@@ -3067,7 +3067,7 @@ begin
       begin // choose price
         adWanted := MostWanted(Opponent, OppoOffer.Price[1] - opTech);
         if (OppoOffer.Price[0] and opMask = opTech) and
-          (cardinal(adWanted) = OppoOffer.Price[0] - opTech) then
+          (Cardinal(adWanted) = OppoOffer.Price[0] - opTech) then
           MyAction := scDipAccept // opponent's offer is already perfect
         else if adWanted >= 0 then
         begin // make improved counter offer
@@ -3123,15 +3123,15 @@ begin
         MyOffer.Price[0] := opTech + adGiveAway;
         MyOffer.Price[1] := opTech + adWanted;
         MyAction := scDipOffer;
-        for i := 0 to nRequestedTechs - 1 do
-          if Data.RequestedTechs[i] < 0 then
+        for I := 0 to nRequestedTechs - 1 do
+          if Data.RequestedTechs[I] < 0 then
           begin
-            Slot := i;
-            break;
+            Slot := I;
+            Break;
           end
-          else if (i = 0) or (Data.RequestedTechs[i] shr 16 <
+          else if (I = 0) or (Data.RequestedTechs[I] shr 16 <
             Data.RequestedTechs[Slot] shr 16) then // find most outdated entry
-            Slot := i;
+            Slot := I;
         Data.RequestedTechs[Slot] := RO.Turn shl 16 + Opponent shl 8 + adWanted;
       end;
     end;
@@ -3140,25 +3140,25 @@ end;
 
 procedure SetLeaveOutValue;
 
-  procedure Process(ad: integer);
+  procedure Process(ad: Integer);
   var
-    i: integer;
+    I: Integer;
   begin
     if LeaveOutValue[ad] < 0 then
     begin
       LeaveOutValue[ad] := 0;
-      for i := 0 to 1 do
-        if AdvPreq[ad, i] >= 0 then
+      for I := 0 to 1 do
+        if AdvPreq[ad, I] >= 0 then
         begin
-          Process(AdvPreq[ad, i]);
-          if AdvPreq[ad, i] in LeaveOutTechs then
-            Inc(LeaveOutValue[ad], LeaveOutValue[AdvPreq[ad, i]] + 1);
+          Process(AdvPreq[ad, I]);
+          if AdvPreq[ad, I] in LeaveOutTechs then
+            Inc(LeaveOutValue[ad], LeaveOutValue[AdvPreq[ad, I]] + 1);
         end;
     end;
   end;
 
 var
-  ad: integer;
+  ad: Integer;
 begin
   FillChar(LeaveOutValue, SizeOf(LeaveOutValue), $FF);
   for ad := 0 to nAdv - 5 do
@@ -3167,7 +3167,7 @@ end;
 
 
 initialization
-  RWDataSize := sizeof(TPersistentData);
+  RWDataSize := SizeOf(TPersistentData);
   SetLeaveOutValue;
 
 end.

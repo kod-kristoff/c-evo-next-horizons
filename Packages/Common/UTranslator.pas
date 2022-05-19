@@ -419,10 +419,10 @@ begin
     Lang := Language.Code;
 
   if Lang = '' then begin
-    for i := 1 to Paramcount - 1 do
-      if (ParamStr(i) = '--LANG') or (ParamStr(i) = '-l') or
-        (ParamStr(i) = '--lang') then
-        Lang := ParamStr(i + 1);
+    for I := 1 to Paramcount - 1 do
+      if (ParamStr(I) = '--LANG') or (ParamStr(I) = '-l') or
+        (ParamStr(I) = '--lang') then
+        Lang := ParamStr(I + 1);
   end;
   if Lang = '' then begin
     T := '';
@@ -472,73 +472,73 @@ begin
     Result := ExtractFilePath(ParamStrUTF8(0)) + LangID +
       DirectorySeparator + ChangeFileExt(ExtractFileName(ParamStrUTF8(0)), LCExt);
     if FileExistsUTF8(Result) then
-      exit;
+      Exit;
 
     Result := ExtractFilePath(ParamStrUTF8(0)) + 'languages' + DirectorySeparator + LangID +
       DirectorySeparator + ChangeFileExt(ExtractFileName(ParamStrUTF8(0)), LCExt);
     if FileExistsUTF8(Result) then
-      exit;
+      Exit;
 
     Result := ExtractFilePath(ParamStrUTF8(0)) + 'locale' + DirectorySeparator
       + LangID + DirectorySeparator + ChangeFileExt(ExtractFileName(ParamStrUTF8(0)), LCExt);
     if FileExistsUTF8(Result) then
-      exit;
+      Exit;
 
     Result := ExtractFilePath(ParamStrUTF8(0)) + 'locale' + DirectorySeparator
       + LangID + DirectorySeparator + 'LC_MESSAGES' + DirectorySeparator +
       ChangeFileExt(ExtractFileName(ParamStrUTF8(0)), LCExt);
     if FileExistsUTF8(Result) then
-      exit;
+      Exit;
 
     {$IFDEF UNIX}
     // In unix-like systems we can try to search for global locale
     Result := '/usr/share/locale/' + LangID + '/LC_MESSAGES/' +
       ChangeFileExt(ExtractFileName(ParamStrUTF8(0)), LCExt);
     if FileExistsUTF8(Result) then
-      exit;
+      Exit;
     {$ENDIF}
     // Let us search for reducted files
-    LangShortID := copy(LangID, 1, 2);
+    LangShortID := Copy(LangID, 1, 2);
     // At first, check all was checked
     Result := ExtractFilePath(ParamStrUTF8(0)) + LangShortID +
       DirectorySeparator + ChangeFileExt(ExtractFileName(ParamStrUTF8(0)), LCExt);
     if FileExistsUTF8(Result) then
-      exit;
+      Exit;
 
     Result := ExtractFilePath(ParamStrUTF8(0)) + 'languages' + DirectorySeparator +
       LangShortID + DirectorySeparator + ChangeFileExt(
       ExtractFileName(ParamStrUTF8(0)), LCExt);
     if FileExistsUTF8(Result) then
-      exit;
+      Exit;
 
     Result := ExtractFilePath(ParamStrUTF8(0)) + 'locale' + DirectorySeparator
       + LangShortID + DirectorySeparator + ChangeFileExt(
       ExtractFileName(ParamStrUTF8(0)), LCExt);
     if FileExistsUTF8(Result) then
-      exit;
+      Exit;
 
     Result := ExtractFilePath(ParamStrUTF8(0)) + 'locale' + DirectorySeparator
       + LangShortID + DirectorySeparator + 'LC_MESSAGES' + DirectorySeparator +
       ChangeFileExt(ExtractFileName(ParamStrUTF8(0)), LCExt);
     if FileExistsUTF8(Result) then
-      exit;
+      Exit;
 
     // Full language in file name - this will be default for the project
     // We need more careful handling, as it MAY result in incorrect filename
     try
       Result := ExtractFilePath(ParamStrUTF8(0)) + ChangeFileExt(ExtractFileName(ParamStrUTF8(0)), Format(FormatLang, [LangID])) + LCExt;
       if FileExistsUTF8(Result) then
-        exit;
+        Exit;
       // Common location (like in Lazarus)
       Result := ExtractFilePath(ParamStrUTF8(0)) + 'locale' + DirectorySeparator +
         ChangeFileExt(ExtractFileName(ParamStrUTF8(0)), Format(FormatLang, [LangID])) + LCExt;
       if FileExistsUTF8(Result) then
-        exit;
+        Exit;
 
       Result := ExtractFilePath(ParamStrUTF8(0)) + 'languages' +
         DirectorySeparator + ChangeFileExt(ExtractFileName(ParamStrUTF8(0)), Format(FormatLang, [LangID])) + LCExt;
       if FileExistsUTF8(Result) then
-        exit;
+        Exit;
     except
       Result := ''; // Or do something else (useless)
     end;
@@ -547,22 +547,22 @@ begin
     Result := '/usr/share/locale/' + LangShortID + '/LC_MESSAGES/' +
       ChangeFileExt(ExtractFileName(ParamStrUTF8(0)), LCExt);
     if FileExistsUTF8(Result) then
-      exit;
+      Exit;
     {$ENDIF}
     Result := ExtractFilePath(ParamStrUTF8(0)) + ChangeFileExt(
       ExtractFileName(ParamStrUTF8(0)), Format(FormatLang, [LangShortID])) + LCExt;
     if FileExistsUTF8(Result) then
-      exit;
+      Exit;
 
     Result := ExtractFilePath(ParamStrUTF8(0)) + 'locale' + DirectorySeparator +
       ChangeFileExt(ExtractFileName(ParamStrUTF8(0)), Format(FormatLang, [LangShortID])) + LCExt;
     if FileExistsUTF8(Result) then
-      exit;
+      Exit;
 
     Result := ExtractFilePath(ParamStrUTF8(0)) + 'languages' + DirectorySeparator +
       ChangeFileExt(ExtractFileName(ParamStrUTF8(0)), Format(FormatLang, [LangShortID])) + LCExt;
     if FileExistsUTF8(Result) then
-      exit;
+      Exit;
   end;
 
   Result := '';

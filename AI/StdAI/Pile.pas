@@ -7,12 +7,12 @@ unit Pile;
 
 interface
 
-procedure Create(Size: integer);
+procedure Create(Size: Integer);
 procedure Free;
 procedure Empty;
-function Put(Item, Value: integer): boolean;
-function TestPut(Item, Value: integer): boolean;
-function Get(var Item, Value: integer): boolean;
+function Put(Item, Value: Integer): Boolean;
+function TestPut(Item, Value: Integer): Boolean;
+function Get(var Item, Value: Integer): Boolean;
 
 
 implementation
@@ -22,28 +22,28 @@ const
 
 type
   TheapItem = record
-    Item: integer;
-    Value: integer;
+    Item: Integer;
+    Value: Integer;
   end;
 
 var
   bh: array[0..MaxSize - 1] of TheapItem;
-  Ix: array[0..MaxSize - 1] of integer;
-  n, CurrentSize: integer;
-{$IFDEF DEBUG}InUse: boolean;{$ENDIF}
+  Ix: array[0..MaxSize - 1] of Integer;
+  N, CurrentSize: Integer;
+{$IFDEF DEBUG}InUse: Boolean;{$ENDIF}
 
 
-procedure Create(Size: integer);
+procedure Create(Size: Integer);
 begin
   {$IFDEF DEBUG}
-  assert(not InUse, 'Pile is a single instance class, ' +
+  Assert(not InUse, 'Pile is a single instance class, ' +
     'no multiple usage possible. Always call Pile.Free after use.');
 {$ENDIF}
-  assert(Size <= MaxSize);
-  if (n <> 0) or (Size > CurrentSize) then
+  Assert(Size <= MaxSize);
+  if (N <> 0) or (Size > CurrentSize) then
   begin
-    FillChar(Ix, Size * sizeOf(integer), 255);
-    n := 0;
+    FillChar(Ix, Size * sizeOf(Integer), 255);
+    N := 0;
   end;
   CurrentSize := Size;
         {$IFDEF DEBUG}
@@ -54,77 +54,77 @@ end;
 procedure Free;
 begin
         {$IFDEF DEBUG}
-  assert(InUse);
+  Assert(InUse);
   InUse := False;
 {$ENDIF}
 end;
 
 procedure Empty;
 begin
-  if n <> 0 then
+  if N <> 0 then
   begin
-    FillChar(Ix, CurrentSize * sizeOf(integer), 255);
-    n := 0;
+    FillChar(Ix, CurrentSize * sizeOf(Integer), 255);
+    N := 0;
   end;
 end;
 
 //Parent(i) = (i-1)/2.
-function Put(Item, Value: integer): boolean; //O(lg(n))
+function Put(Item, Value: Integer): Boolean; //O(lg(n))
 var
-  i, j: integer;
+  I, J: Integer;
 begin
-  assert(Item < CurrentSize);
-  i := Ix[Item];
-  if i >= 0 then
+  Assert(Item < CurrentSize);
+  I := Ix[Item];
+  if I >= 0 then
   begin
-    if bh[i].Value <= Value then
+    if bh[I].Value <= Value then
     begin
       Result := False;
-      exit;
+      Exit;
     end;
   end
   else
   begin
-    i := n;
-    Inc(n);
+    I := N;
+    Inc(N);
   end;
 
-  while i > 0 do
+  while I > 0 do
   begin
-    j := (i - 1) shr 1;  //Parent(i) = (i-1)/2
-    if Value >= bh[j].Value then
-      break;
-    bh[i] := bh[j];
-    Ix[bh[i].Item] := i;
-    i := j;
+    J := (I - 1) shr 1;  //Parent(i) = (i-1)/2
+    if Value >= bh[J].Value then
+      Break;
+    bh[I] := bh[J];
+    Ix[bh[I].Item] := I;
+    I := J;
   end;
   //  Insert the new Item at the insertion point found.
-  bh[i].Value := Value;
-  bh[i].Item := Item;
-  Ix[bh[i].Item] := i;
+  bh[I].Value := Value;
+  bh[I].Item := Item;
+  Ix[bh[I].Item] := I;
   Result := True;
 end;
 
-function TestPut(Item, Value: integer): boolean;
+function TestPut(Item, Value: Integer): Boolean;
 var
-  i: integer;
+  I: Integer;
 begin
-  assert(Item < CurrentSize);
-  i := Ix[Item];
-  Result := (i < 0) or (bh[i].Value > Value);
+  Assert(Item < CurrentSize);
+  I := Ix[Item];
+  Result := (I < 0) or (bh[I].Value > Value);
 end;
 
 //Left(i) = 2*i+1.
 //Right(i) = 2*i+2 => Left(i)+1
-function Get(var Item, Value: integer): boolean; //O(lg(n))
+function Get(var Item, Value: Integer): Boolean; //O(lg(n))
 var
-  i, j: integer;
-  last: TheapItem;
+  I, J: Integer;
+  Last: TheapItem;
 begin
-  if n = 0 then
+  if N = 0 then
   begin
     Result := False;
-    exit;
+    Exit;
   end;
 
   Item := bh[0].Item;
@@ -132,35 +132,35 @@ begin
 
   Ix[Item] := -1;
 
-  Dec(n);
-  if n > 0 then
+  Dec(N);
+  if N > 0 then
   begin
-    last := bh[n];
-    i := 0;
-    j := 1;
-    while j < n do
+    Last := bh[N];
+    I := 0;
+    J := 1;
+    while J < N do
     begin
       //  Right(i) = Left(i)+1
-      if (j < n - 1) and (bh[j].Value > bh[j + 1].Value) then
-        Inc(j);
-      if last.Value <= bh[j].Value then
-        break;
+      if (J < N - 1) and (bh[J].Value > bh[J + 1].Value) then
+        Inc(J);
+      if Last.Value <= bh[J].Value then
+        Break;
 
-      bh[i] := bh[j];
-      Ix[bh[i].Item] := i;
-      i := j;
-      j := j shl 1 + 1;  //Left(j) = 2*j+1
+      bh[I] := bh[J];
+      Ix[bh[I].Item] := I;
+      I := J;
+      J := J shl 1 + 1;  //Left(j) = 2*j+1
     end;
 
     // Insert the root in the correct place in the heap.
-    bh[i] := last;
-    Ix[last.Item] := i;
+    bh[I] := Last;
+    Ix[Last.Item] := I;
   end;
   Result := True;
 end;
 
 initialization
-  n := 0;
+  N := 0;
   CurrentSize := 0;
         {$IFDEF DEBUG}
   InUse := False;

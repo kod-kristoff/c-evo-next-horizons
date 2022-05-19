@@ -52,7 +52,7 @@ end;
 
 procedure TMessgDlg.FormShow(Sender: TObject);
 begin
-  Button1.Visible := true;
+  Button1.Visible := True;
   Button2.Visible := not(Kind in [mkOK]);
   if Button2.Visible then
     Button1.Left := 101
@@ -69,7 +69,7 @@ begin
     Button2.Caption := Phrases.Lookup('BTN_CANCEL');
   end;
 
-  SplitText(true);
+  SplitText(True);
   CorrectHeight;
 end;
 

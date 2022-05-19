@@ -20,7 +20,7 @@ type
   public
     procedure CenterToRect(Rect: TRect);
   private
-    Center: boolean;
+    Center: Boolean;
   end;
 
 var
@@ -53,9 +53,9 @@ begin
   RisedTextOut(Canvas, (ClientWidth - BiColorTextWidth(Canvas, Caption)) div 2,
     9, Caption);
   { Corner(canvas,1,1,0,MainTexture);
-    Corner(canvas,ClientWidth-9,1,1,MainTexture);
-    Corner(canvas,1,ClientHeight-9,2,MainTexture);
-    Corner(canvas,ClientWidth-9,ClientHeight-9,3,MainTexture); }
+    Corner(Canvas,ClientWidth-9,1,1,MainTexture);
+    Corner(Canvas,1,ClientHeight-9,2,MainTexture);
+    Corner(Canvas,ClientWidth-9,ClientHeight-9,3,MainTexture); }
 end;
 
 procedure TInputDlg.OKBtnClick(Sender: TObject);

@@ -22,7 +22,7 @@ type
     procedure FormPaint(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormDeactivate(Sender: TObject);
-    procedure SmartUpdateContent(ImmUpdate: Boolean = false);
+    procedure SmartUpdateContent(ImmUpdate: Boolean = False);
     procedure StayOnTop_Workaround;
   protected
     FWindowMode: TWindowMode;
@@ -49,7 +49,7 @@ type
     CaptionLeft: Integer;
     CaptionRight: Integer;
     InnerWidth: Integer;
-    InnerHeight: integer;
+    InnerHeight: Integer;
     WideBottom: Boolean;
     FullCaption: Boolean;
     TexOverride: Boolean;
@@ -179,13 +179,13 @@ begin
     begin // make modal
       UserLeft := Left;
       UserTop := Top;
-      Visible := false;
+      Visible := False;
       FWindowMode := NewMode;
       ShowModal;
     end
     else if forceclose then
     begin // make modal
-      Visible := false;
+      Visible := False;
       FWindowMode := NewMode;
       Left := UserLeft;
       Top := UserTop;
@@ -271,7 +271,7 @@ end;
 
 procedure TFramedDlg.SmartInvalidate;
 var
-  i, BottomFrame: integer;
+  I, BottomFrame: Integer;
   r0, r1: HRgn;
 begin
   if WideBottom then
@@ -280,10 +280,10 @@ begin
     BottomFrame := NarrowFrame;
   r0 := CreateRectRgn(SideFrame, TitleHeight, ClientWidth - SideFrame,
     ClientHeight - BottomFrame);
-  for i := 0 to ControlCount - 1 do
-    if not(Controls[i] is TArea) and Controls[i].Visible then
+  for I := 0 to ControlCount - 1 do
+    if not(Controls[I] is TArea) and Controls[I].Visible then
     begin
-      with Controls[i].BoundsRect do
+      with Controls[I].BoundsRect do
         r1 := CreateRectRgn(Left, Top, Right, Bottom);
       CombineRgn(r0, r0, r1, RGN_DIFF);
       DeleteObject(r1);
@@ -294,7 +294,7 @@ end;
 
 procedure TFramedDlg.VPaint;
 
-  procedure CornerFrame(x0, y0, x1, y1: integer);
+  procedure CornerFrame(x0, y0, x1, y1: Integer);
   begin
     Frame(Canvas, x0 + 1, y0 + 1, x1 - 2, y1 - 2, MainTexture.ColorBevelLight,
       MainTexture.ColorBevelShade);
@@ -307,8 +307,8 @@ procedure TFramedDlg.VPaint;
   end;
 
 var
-  i, l, FrameTop, FrameBottom, InnerBottom, Cut, xTexOffset,
-    yTexOffset: integer;
+  I, L, FrameTop, FrameBottom, InnerBottom, Cut, xTexOffset,
+    yTexOffset: Integer;
   R: TRect;
 begin
   if not TexOverride then
@@ -320,8 +320,8 @@ begin
     MainTexture := MainTexture;
   end;
   Canvas.Font.Assign(UniFont[ftCaption]);
-  l := BiColorTextWidth(Canvas, Caption);
-  Cut := (ClientWidth - l) div 2;
+  L := BiColorTextWidth(Canvas, Caption);
+  Cut := (ClientWidth - L) div 2;
   xTexOffset := (Maintexture.Width - ClientWidth) div 2;
   yTexOffset := (Maintexture.Height - ClientHeight) div 2;
   if WideBottom then
@@ -445,10 +445,10 @@ begin
   end;
   RisedTextOut(Canvas, Cut - 1, 7, Caption);
 
-  for i := 0 to ControlCount - 1 do
-    if Controls[i].Visible and (Controls[i] is TButtonBase) then
+  for I := 0 to ControlCount - 1 do
+    if Controls[I].Visible and (Controls[I] is TButtonBase) then
     begin
-      R := Controls[i].BoundsRect;
+      R := Controls[I].BoundsRect;
       if (R.Bottom <= TitleHeight) or (R.Top >= InnerBottom) then
         BtnFrame(Canvas, R, MainTexture);
     end;
@@ -462,7 +462,7 @@ var
   r0, r1: HRgn;
 begin
   if FullCaption then
-    exit;
+    Exit;
   r0 := CreateRectRgn(0, 0, ClientWidth, ClientHeight);
   r1 := CreateRectRgn(0, 0, CaptionLeft, TitleHeight - NarrowFrame);
   CombineRgn(r0, r0, r1, RGN_DIFF);

@@ -13,7 +13,7 @@ type
     procedure SetIndex(Text: Integer);
   published
     property Visible;
-    property ButtonIndex: integer read FIndex write SetIndex;
+    property ButtonIndex: Integer read FIndex write SetIndex;
     property OnClick;
   protected
     procedure Paint; override;
@@ -49,7 +49,7 @@ begin
     end;
 end;
 
-procedure TButtonC.SetIndex(Text: integer);
+procedure TButtonC.SetIndex(Text: Integer);
 begin
   if Text <> FIndex then
   begin

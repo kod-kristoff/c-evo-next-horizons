@@ -68,10 +68,10 @@ type
     procedure BrainClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormMouseDown(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; x, y: integer);
+      Shift: TShiftState; X, Y: Integer);
     procedure FormMouseUp(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; x, y: integer);
-    procedure FormMouseMove(Sender: TObject; Shift: TShiftState; x, y: integer);
+      Shift: TShiftState; X, Y: Integer);
+    procedure FormMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
     procedure Up1BtnClick(Sender: TObject);
     procedure Down1BtnClick(Sender: TObject);
     procedure ListClick(Sender: TObject);
@@ -121,15 +121,15 @@ type
     DefaultAI: string;
     MiniMap: TMiniMap;
     LastGame: string;
-    procedure DrawAction(y, IconIndex: integer; HeaderItem, TextItem: string);
+    procedure DrawAction(Y, IconIndex: Integer; HeaderItem, TextItem: string);
     procedure InitPopup(PlayerIndex: Integer);
     procedure OfferBrain(Brain: TBrain; FixedLines: Integer);
     procedure PaintInfo;
     procedure ChangePage(NewPage: TStartPage);
     procedure ChangeTab(NewTab: TStartTab);
     procedure UnlistBackupFile(FileName: string);
-    procedure SmartInvalidate(x0, y0, x1, y1: integer;
-      invalidateTab0: boolean = false); overload;
+    procedure SmartInvalidate(x0, y0, x1, y1: Integer;
+      invalidateTab0: Boolean = False); overload;
     procedure LoadConfig;
     procedure SaveConfig;
     procedure LoadLanguages;
@@ -159,8 +159,8 @@ const
   // predefined world size
   // attention: lx*ly+1 must be prime!
   { MaxWorldSize=8;
-    lxpre: array[0..nWorldSize-1] of integer =(30,40,50,60,70,90,110,130);
-    lypre: array[0..nWorldSize-1] of integer =(46,52,60,70,84,94,110,130);
+    lxpre: array[0..nWorldSize-1] of Integer =(30,40,50,60,70,90,110,130);
+    lypre: array[0..nWorldSize-1] of Integer =(46,52,60,70,84,94,110,130);
     DefaultWorldTiles=4200; }
   MaxWorldSize = 6;
   WorldSizes: array [0 .. MaxWorldSize - 1] of TPoint = ((X: 30; Y: 46),
@@ -191,31 +191,31 @@ const
   y0Brain = 148;
   dxBrain = 104;
   dyBrain = 80;
-  xBrain: array [0 .. nPlOffered - 1] of integer = (x0Brain, x0Brain,
+  xBrain: array [0 .. nPlOffered - 1] of Integer = (x0Brain, x0Brain,
     x0Brain + dxBrain, x0Brain + dxBrain, x0Brain + dxBrain, x0Brain,
     x0Brain - dxBrain, x0Brain - dxBrain, x0Brain - dxBrain);
-  yBrain: array [0 .. nPlOffered - 1] of integer = (y0Brain, y0Brain - dyBrain,
+  yBrain: array [0 .. nPlOffered - 1] of Integer = (y0Brain, y0Brain - dyBrain,
     y0Brain - dyBrain, y0Brain, y0Brain + dyBrain, y0Brain + dyBrain,
     y0Brain + dyBrain, y0Brain, y0Brain - dyBrain);
   TabOffset = -115;
   TabSize = 159;
   TabHeight = 40;
 
-  InitAlive: array [1 .. nPl] of integer = (1, 1 + 2, 1 + 2 + 32,
+  InitAlive: array [1 .. nPl] of Integer = (1, 1 + 2, 1 + 2 + 32,
     1 + 2 + 8 + 128, 1 + 2 + 8 + 32 + 128, 1 + 2 + 8 + 16 + 64 + 128,
     1 + 2 + 4 + 16 + 32 + 64 + 256, 511 - 32, 511, 511 - 32, 511, 511 - 32, 511,
     511 - 32, 511);
-  InitMulti: array [nPlOffered + 1 .. nPl] of integer = (256, 256, 256 + 128,
+  InitMulti: array [nPlOffered + 1 .. nPl] of Integer = (256, 256, 256 + 128,
     256 + 128, 256 + 128 + 64, 256 + 128 + 64);
 
-  PlayerAutoDiff: array [1 .. 5] of integer = (1, 1, 2, 2, 3);
-  EnemyAutoDiff: array [1 .. 5] of integer = (4, 3, 2, 1, 1);
+  PlayerAutoDiff: array [1 .. 5] of Integer = (1, 1, 2, 2, 3);
+  EnemyAutoDiff: array [1 .. 5] of Integer = (4, 3, 2, 1, 1);
 
 { TStartDlg }
 
 procedure TStartDlg.FormCreate(Sender: TObject);
 var
-  x, i: Integer;
+  X, I: Integer;
   PlayerSlot: TPlayerSlot;
   AIBrains: TBrains;
 begin
@@ -235,9 +235,9 @@ begin
     Include(ActionsOffered, maAIDev);
 
   BrainDefault := nil;
-  for i := Brains.IndexOf(BrainRandom) to Brains.Count - 1 do
-    if AnsiCompareFileName(DefaultAI, Brains[i].FileName) = 0 then
-      BrainDefault := Brains[i];
+  for I := Brains.IndexOf(BrainRandom) to Brains.Count - 1 do
+    if AnsiCompareFileName(DefaultAI, Brains[I].FileName) = 0 then
+      BrainDefault := Brains[I];
   if (BrainDefault = BrainRandom) and (Brains.GetKindCount(btAI) < 2) then
     BrainDefault := nil;
   if (not Assigned(BrainDefault)) and (Brains.GetKindCount(btAI) > 0) then
@@ -259,36 +259,36 @@ begin
   QuitBtn.Hint := Phrases.Lookup('STARTCONTROLS', 0);
   ReplayBtn.Hint := Phrases.Lookup('BTN_REPLAY');
   PlayerSlots.Count := nPlOffered;
-  for i := 0 to PlayerSlots.Count - 1 do
-  with PlayerSlots[i] do begin
+  for I := 0 to PlayerSlots.Count - 1 do
+  with PlayerSlots[I] do begin
     DiffUpBtn := TButtonC.Create(self);
     DiffUpBtn.Graphic := HGrSystem.Data;
-    DiffUpBtn.left := xBrain[i] - 18;
-    DiffUpBtn.top := yBrain[i] + 39;
+    DiffUpBtn.left := xBrain[I] - 18;
+    DiffUpBtn.top := yBrain[I] + 39;
     DiffUpBtn.ButtonIndex := 1;
     DiffUpBtn.Parent := self;
     DiffUpBtn.OnClick := DiffBtnClick;
     DiffDownBtn := TButtonC.Create(self);
     DiffDownBtn.Graphic := HGrSystem.Data;
-    DiffDownBtn.left := xBrain[i] - 18;
-    DiffDownBtn.top := yBrain[i] + 51;
+    DiffDownBtn.left := xBrain[I] - 18;
+    DiffDownBtn.top := yBrain[I] + 51;
     DiffDownBtn.ButtonIndex := 0;
     DiffDownBtn.Parent := self;
     DiffDownBtn.OnClick := DiffBtnClick;
   end;
-  for i := 6 to 8 do
-  with PlayerSlots[i] do begin
+  for I := 6 to 8 do
+  with PlayerSlots[I] do begin
     MultiBtn := TButtonC.Create(self);
     MultiBtn.Graphic := HGrSystem.Data;
-    MultiBtn.left := xBrain[i] - 18;
-    MultiBtn.top := yBrain[i];
+    MultiBtn.left := xBrain[I] - 18;
+    MultiBtn.top := yBrain[I];
     MultiBtn.Parent := self;
     MultiBtn.OnClick := MultiBtnClick;
     OfferMultiple := True;
   end;
 
-  x := BiColorTextWidth(Canvas, Phrases.Lookup('STARTCONTROLS', 7)) div 2;
-  CustomizeBtn.left := x0Brain + 32 - 16 - x;
+  X := BiColorTextWidth(Canvas, Phrases.Lookup('STARTCONTROLS', 7)) div 2;
+  CustomizeBtn.left := x0Brain + 32 - 16 - X;
   if AutoDiff < 0 then
     CustomizeBtn.ButtonIndex := 3
   else
@@ -338,17 +338,17 @@ begin
   FreeAndNil(MiniMap);
 end;
 
-procedure TStartDlg.SmartInvalidate(x0, y0, x1, y1: integer;
-  invalidateTab0: boolean);
+procedure TStartDlg.SmartInvalidate(x0, y0, x1, y1: Integer;
+  invalidateTab0: Boolean);
 var
-  i: integer;
+  I: Integer;
   r0, r1: HRgn;
 begin
   r0 := CreateRectRgn(x0, y0, x1, y1);
-  for i := 0 to ControlCount - 1 do
-    if not (Controls[i] is TArea) and Controls[i].Visible then
+  for I := 0 to ControlCount - 1 do
+    if not (Controls[I] is TArea) and Controls[I].Visible then
     begin
-      with Controls[i].BoundsRect do
+      with Controls[I].BoundsRect do
         r1 := CreateRectRgn(left, top, Right, Bottom);
       CombineRgn(r0, r0, r1, RGN_DIFF);
       DeleteObject(r1);
@@ -358,7 +358,7 @@ begin
     CombineRgn(r0, r0, r1, RGN_DIFF);
     DeleteObject(r1);
   end;
-  InvalidateRgn(Handle, r0, false);
+  InvalidateRgn(Handle, r0, False);
   DeleteObject(r0);
 end;
 
@@ -529,24 +529,24 @@ begin
   FreeAndNil(SettingsDlg);
 end;
 
-procedure TStartDlg.DrawAction(y, IconIndex: integer; HeaderItem, TextItem: string);
+procedure TStartDlg.DrawAction(Y, IconIndex: Integer; HeaderItem, TextItem: string);
 begin
   Canvas.Font.Assign(UniFont[ftCaption]);
   Canvas.Font.Style := Canvas.Font.Style + [fsUnderline];
-  RisedTextOut(Canvas, xAction, y - 3, Phrases2.Lookup(HeaderItem));
+  RisedTextOut(Canvas, xAction, Y - 3, Phrases2.Lookup(HeaderItem));
   Canvas.Font.Assign(UniFont[ftNormal]);
   BiColorTextOut(Canvas, Colors.Canvas.Pixels[clkAge0 - 1, cliDimmedText],
-    $000000, xAction, y + 21, Phrases2.Lookup(TextItem));
+    $000000, xAction, Y + 21, Phrases2.Lookup(TextItem));
 
   UnshareBitmap(LogoBuffer);
   BitBltCanvas(LogoBuffer.Canvas, 0, 0, 50, 50, Canvas,
-    xActionIcon - 2, y - 2);
+    xActionIcon - 2, Y - 2);
   GlowFrame(LogoBuffer, 8, 8, 34, 34, $202020);
-  BitBltCanvas(Canvas, xActionIcon - 2, y - 2, 50, 50,
+  BitBltCanvas(Canvas, xActionIcon - 2, Y - 2, 50, 50,
     LogoBuffer.Canvas, 0, 0);
-  BitBltCanvas(Canvas, xActionIcon, y, 40, 40, BigImp.Canvas,
+  BitBltCanvas(Canvas, xActionIcon, Y, 40, 40, BigImp.Canvas,
     (IconIndex mod 7) * xSizeBig + 8, (IconIndex div 7) * ySizeBig);
-  RFrame(Canvas, xActionIcon - 1, y - 1, xActionIcon + 40, y + 40,
+  RFrame(Canvas, xActionIcon - 1, Y - 1, xActionIcon + 40, Y + 40,
     $000000, $000000);
 end;
 
@@ -554,8 +554,8 @@ procedure TStartDlg.FormPaint(Sender: TObject);
 const
   TabNames: array[TStartTab] of Integer = (0, 11, 3, 4);
 var
-  i, w, h, xMini, yMini, y: integer;
-  s: string;
+  I, W, H, xMini, yMini, Y: Integer;
+  S: string;
   Tab2: TStartTab;
   MainAction: TMainAction;
 begin
@@ -587,29 +587,29 @@ begin
   Frame(Canvas, 0, 0, ClientWidth - 1, ClientHeight - 1, 0, 0);
 
   // draw tabs
-  Frame(Canvas, 2, 2 + 2 * integer(Tab <> tbMain), TabOffset + (0 + 1) * TabSize - 1,
+  Frame(Canvas, 2, 2 + 2 * Integer(Tab <> tbMain), TabOffset + (0 + 1) * TabSize - 1,
     TabHeight, MainTexture.ColorBevelLight, MainTexture.ColorBevelShade);
-  Frame(Canvas, 1, 1 + 2 * integer(Tab <> tbMain), TabOffset + (0 + 1) * TabSize,
+  Frame(Canvas, 1, 1 + 2 * Integer(Tab <> tbMain), TabOffset + (0 + 1) * TabSize,
     TabHeight, MainTexture.ColorBevelLight, MainTexture.ColorBevelShade);
-  Canvas.Pixels[1, 1 + 2 * integer(Tab <> tbMain)] := MainTexture.ColorBevelShade;
+  Canvas.Pixels[1, 1 + 2 * Integer(Tab <> tbMain)] := MainTexture.ColorBevelShade;
   for Tab2 := tbMap to tbPrevious do
   begin
-    Frame(Canvas, TabOffset + Integer(Tab2) * TabSize + 2, 2 + 2 * integer(Tab <> Tab2),
+    Frame(Canvas, TabOffset + Integer(Tab2) * TabSize + 2, 2 + 2 * Integer(Tab <> Tab2),
       TabOffset + (Integer(Tab2) + 1) * TabSize - 1, TabHeight, MainTexture.ColorBevelLight,
       MainTexture.ColorBevelShade);
-    Frame(Canvas, TabOffset + Integer(Tab2) * TabSize + 1, 1 + 2 * integer(Tab <> Tab2),
+    Frame(Canvas, TabOffset + Integer(Tab2) * TabSize + 1, 1 + 2 * Integer(Tab <> Tab2),
       TabOffset + (Integer(Tab2) + 1) * TabSize, TabHeight, MainTexture.ColorBevelLight,
       MainTexture.ColorBevelShade);
-    Canvas.Pixels[TabOffset + Integer(Tab2) * TabSize + 1, 1 + 2 * integer(Tab <> Tab2)] :=
+    Canvas.Pixels[TabOffset + Integer(Tab2) * TabSize + 1, 1 + 2 * Integer(Tab <> Tab2)] :=
       MainTexture.ColorBevelShade;
   end;
   Canvas.Font.Assign(UniFont[ftNormal]);
   for Tab2 := tbMap to tbPrevious do
   begin
-    s := Phrases.Lookup('STARTCONTROLS', TabNames[Tab2]);
+    S := Phrases.Lookup('STARTCONTROLS', TabNames[Tab2]);
     RisedTextOut(Canvas, TabOffset + Integer(Tab2) * TabSize + 1 +
-      (TabSize - BiColorTextWidth(Canvas, s)) div 2,
-      10 + 2 * integer(Tab <> Tab2), s);
+      (TabSize - BiColorTextWidth(Canvas, S)) div 2,
+      10 + 2 * Integer(Tab <> Tab2), S);
   end;
   Frame(Canvas, TabOffset + 4 * TabSize + 1, -1, ClientWidth, TabHeight,
     $000000, $000000);
@@ -639,64 +639,64 @@ begin
   // Paint menu logo
   UnshareBitmap(LogoBuffer);
   BitBltCanvas(LogoBuffer.Canvas, 0, 0, MenuLogo.Width, MenuLogo.Height, Canvas, 6,
-    3 + 2 * integer(Tab <> tbMain));
+    3 + 2 * Integer(Tab <> tbMain));
 
   ImageOp_BCC(LogoBuffer, Templates.Data, 0, 0, MenuLogo.Left, MenuLogo.Top,
     MenuLogo.Width, MenuLogo.Height - 9, $BFBF20, $4040DF); // logo part 1
   ImageOp_BCC(LogoBuffer, Templates.Data, 10, 27, MenuLogo.Left + 10,
     MenuLogo.Top + 27, MenuLogo.Width - 10, 9, $BFBF20, $4040DF); // logo part 2
-  BitBltCanvas(Canvas, 6, 3 + 2 * integer(Tab <> tbMain), MenuLogo.Width, MenuLogo.Height,
+  BitBltCanvas(Canvas, 6, 3 + 2 * Integer(Tab <> tbMain), MenuLogo.Width, MenuLogo.Height,
     LogoBuffer.Canvas, 0, 0);
 
   if Page = pgMain then begin
     if SelectedAction <> maNone then // mark selected action
-      for i := 0 to (ClientWidth - 2 * ActionSideBorder) div wBuffer + 1 do
+      for I := 0 to (ClientWidth - 2 * ActionSideBorder) div wBuffer + 1 do
       begin
-        w := ClientWidth - 2 * ActionSideBorder - i * wBuffer;
-        if w > wBuffer then
-          w := wBuffer;
-        h := ActionPitch;
-        if yAction + Integer(SelectedAction) * ActionPitch - 8 + h > ClientHeight - ActionBottomBorder
+        W := ClientWidth - 2 * ActionSideBorder - I * wBuffer;
+        if W > wBuffer then
+          W := wBuffer;
+        H := ActionPitch;
+        if yAction + Integer(SelectedAction) * ActionPitch - 8 + H > ClientHeight - ActionBottomBorder
         then
-          h := ClientHeight - ActionBottomBorder -
+          H := ClientHeight - ActionBottomBorder -
             (yAction + Integer(SelectedAction) * ActionPitch - 8);
 
         UnshareBitmap(LogoBuffer);
-        BitBltCanvas(LogoBuffer.Canvas, 0, 0, w, h, Canvas,
-          ActionSideBorder + i * wBuffer, yAction + Integer(SelectedAction) * ActionPitch
+        BitBltCanvas(LogoBuffer.Canvas, 0, 0, W, H, Canvas,
+          ActionSideBorder + I * wBuffer, yAction + Integer(SelectedAction) * ActionPitch
           - 8);
-        MakeBlue(LogoBuffer, 0, 0, w, h);
-        BitBltCanvas(Canvas, ActionSideBorder + i * wBuffer,
-          yAction + Integer(SelectedAction) * ActionPitch - 8, w, h,
+        MakeBlue(LogoBuffer, 0, 0, W, H);
+        BitBltCanvas(Canvas, ActionSideBorder + I * wBuffer,
+          yAction + Integer(SelectedAction) * ActionPitch - 8, W, H,
           LogoBuffer.Canvas, 0, 0);
       end;
-    y := yAction;
+    Y := yAction;
     for MainAction := Low(TMainActionSet) to High(TMainActionSet) do
     begin
       if MainAction in ActionsOffered then
         case MainAction of
-          maConfig: DrawAction(y, 25, 'ACTIONHEADER_CONFIG', 'ACTION_CONFIG');
-          maManual: DrawAction(y, 19, 'ACTIONHEADER_MANUAL', 'ACTION_MANUAL');
-          maCredits: DrawAction(y, 22, 'ACTIONHEADER_CREDITS', 'ACTION_CREDITS');
-          maAIDev: DrawAction(y, 24, 'ACTIONHEADER_AIDEV', 'ACTION_AIDEV');
+          maConfig: DrawAction(Y, 25, 'ACTIONHEADER_CONFIG', 'ACTION_CONFIG');
+          maManual: DrawAction(Y, 19, 'ACTIONHEADER_MANUAL', 'ACTION_MANUAL');
+          maCredits: DrawAction(Y, 22, 'ACTIONHEADER_CREDITS', 'ACTION_CREDITS');
+          maAIDev: DrawAction(Y, 24, 'ACTIONHEADER_AIDEV', 'ACTION_AIDEV');
           maWeb:
             begin
               Canvas.Font.Assign(UniFont[ftCaption]);
               // Canvas.Font.Style:=Canvas.Font.Style+[fsUnderline];
-              RisedTextOut(Canvas, xActionIcon + 99, y,
+              RisedTextOut(Canvas, xActionIcon + 99, Y,
                 Format(Phrases2.Lookup('ACTIONHEADER_WEB'), [CevoHomepageShort]));
               Canvas.Font.Assign(UniFont[ftNormal]);
 
               UnshareBitmap(LogoBuffer);
               BitBltCanvas(LogoBuffer.Canvas, 0, 0, LinkArrows.Width, LinkArrows.Height, Canvas,
-                xActionIcon, y + 2);
+                xActionIcon, Y + 2);
               ImageOp_BCC(LogoBuffer, Templates.Data, Point(0, 0), LinkArrows.BoundsRect, 0,
                 Colors.Canvas.Pixels[clkAge0 - 1, cliDimmedText]);
-              BitBltCanvas(Canvas, xActionIcon, y + 2, LinkArrows.Width, LinkArrows.Height,
+              BitBltCanvas(Canvas, xActionIcon, Y + 2, LinkArrows.Width, LinkArrows.Height,
                 LogoBuffer.Canvas, 0, 0);
             end;
         end;
-      Inc(y, ActionPitch);
+      Inc(Y, ActionPitch);
     end;
   end
   else if Page in [pgStartRandom, pgStartMap] then
@@ -704,48 +704,48 @@ begin
     UnderlinedTitleValue(Canvas, Phrases.Lookup('STARTCONTROLS', 10),
       TurnToString(MaxTurn), 344, y0Mini + 61, 170);
 
-    s := Phrases.Lookup('STARTCONTROLS', 7);
-    w := Canvas.TextWidth(s);
-    LoweredTextOut(Canvas, -2, MainTexture, x0Brain + 32 - w div 2,
-      y0Brain + dyBrain + 69, s);
+    S := Phrases.Lookup('STARTCONTROLS', 7);
+    W := Canvas.TextWidth(S);
+    LoweredTextOut(Canvas, -2, MainTexture, x0Brain + 32 - W div 2,
+      y0Brain + dyBrain + 69, S);
 
     InitOrnament;
     if AutoDiff < 0 then
     begin
-      for i := 12 to 19 do
-        if (i < 13) or (i > 17) then begin
-          BitBltCanvas(Canvas, 9 + i * 27, yLogo - 2, Ornament.Width, Ornament.Height,
+      for I := 12 to 19 do
+        if (I < 13) or (I > 17) then begin
+          BitBltCanvas(Canvas, 9 + I * 27, yLogo - 2, Ornament.Width, Ornament.Height,
             HGrSystem2.Mask.Canvas, Ornament.Left, Ornament.Top, SRCAND);
-          BitBltCanvas(Canvas, 9 + i * 27, yLogo - 2, Ornament.Width, Ornament.Height,
+          BitBltCanvas(Canvas, 9 + I * 27, yLogo - 2, Ornament.Width, Ornament.Height,
             HGrSystem2.Data.Canvas, Ornament.Left, Ornament.Top, SRCPAINT);
         end;
       PaintLogo(Canvas, 69 + 11 * 27, yLogo, MainTexture.ColorBevelLight,
         MainTexture.ColorBevelShade);
 
-      for i := 0 to nPlOffered - 1 do
-        if 1 shl i and SlotAvailable <> 0 then
+      for I := 0 to nPlOffered - 1 do
+        if 1 shl I and SlotAvailable <> 0 then
         begin
-          if Assigned(PlayersBrain[i]) then
-            FrameImage(Canvas, PlayersBrain[i].Picture, xBrain[i], yBrain[i],
-              64, 64, 0, 0, true)
+          if Assigned(PlayersBrain[I]) then
+            FrameImage(Canvas, PlayersBrain[I].Picture, xBrain[I], yBrain[I],
+              64, 64, 0, 0, True)
           else
-            FrameImage(Canvas, EmptyPicture, xBrain[i], yBrain[i], 64, 64,
-              0, 0, true);
-          if Assigned(PlayersBrain[I]) and (PlayersBrain[i].Kind in [btTerm, btRandom, btAI]) then
+            FrameImage(Canvas, EmptyPicture, xBrain[I], yBrain[I], 64, 64,
+              0, 0, True);
+          if Assigned(PlayersBrain[I]) and (PlayersBrain[I].Kind in [btTerm, btRandom, btAI]) then
           begin
-            BitBltCanvas(Canvas, xBrain[i] - 18, yBrain[i] + 19, 12, 14,
-              HGrSystem.Data.Canvas, 134 + (Difficulty[i] - 1) *
+            BitBltCanvas(Canvas, xBrain[I] - 18, yBrain[I] + 19, 12, 14,
+              HGrSystem.Data.Canvas, 134 + (Difficulty[I] - 1) *
               13, 28);
-            Frame(Canvas, xBrain[i] - 19, yBrain[i] + 18, xBrain[i] - 18 + 12,
-              yBrain[i] + (19 + 14), $000000, $000000);
-            RFrame(Canvas, PlayerSlots[i].DiffUpBtn.left - 1, PlayerSlots[i].DiffUpBtn.top - 1,
-              PlayerSlots[i].DiffUpBtn.left + 12, PlayerSlots[i].DiffUpBtn.top + 24,
+            Frame(Canvas, xBrain[I] - 19, yBrain[I] + 18, xBrain[I] - 18 + 12,
+              yBrain[I] + (19 + 14), $000000, $000000);
+            RFrame(Canvas, PlayerSlots[I].DiffUpBtn.left - 1, PlayerSlots[I].DiffUpBtn.top - 1,
+              PlayerSlots[I].DiffUpBtn.left + 12, PlayerSlots[I].DiffUpBtn.top + 24,
               MainTexture.ColorBevelShade, MainTexture.ColorBevelLight);
             with Canvas do
             begin
               Brush.Color := $000000;
-              FillRect(Rect(xBrain[i] - 5, yBrain[i] + 25, xBrain[i] - 2,
-                yBrain[i] + 27));
+              FillRect(Rect(xBrain[I] - 5, yBrain[I] + 25, xBrain[I] - 2,
+                yBrain[I] + 27));
               Brush.Style := bsClear;
             end;
             if PlayerSlots[I].OfferMultiple then
@@ -753,15 +753,15 @@ begin
               RFrame(Canvas, PlayerSlots[I].MultiBtn.left - 1, PlayerSlots[I].MultiBtn.top - 1,
                 PlayerSlots[I].MultiBtn.left + 12, PlayerSlots[I].MultiBtn.top + 12,
                 MainTexture.ColorBevelShade, MainTexture.ColorBevelLight);
-              BitBltCanvas(Canvas, xBrain[i] - 31, yBrain[i], 13, 12,
+              BitBltCanvas(Canvas, xBrain[I] - 31, yBrain[I], 13, 12,
                 HGrSystem.Data.Canvas, 88, 47);
             end;
           end;
-          if Assigned(PlayersBrain[i]) then
+          if Assigned(PlayersBrain[I]) then
           begin
-            PlayerSlots[i].DiffUpBtn.Hint := Format(Phrases.Lookup('STARTCONTROLS', 9),
-              [PlayersBrain[i].Name]);
-            PlayerSlots[i].DiffDownBtn.Hint := PlayerSlots[i].DiffUpBtn.Hint;
+            PlayerSlots[I].DiffUpBtn.Hint := Format(Phrases.Lookup('STARTCONTROLS', 9),
+              [PlayersBrain[I].Name]);
+            PlayerSlots[I].DiffDownBtn.Hint := PlayerSlots[I].DiffUpBtn.Hint;
           end;
         end;
     end
@@ -772,12 +772,12 @@ begin
       RisedTextOut(Canvas, 24 { x0Brain+32-BiColorTextWidth(Canvas,s) div 2 } ,
         yMain + 140 { y0Mini-77 } , Phrases.Lookup('STARTCONTROLS', 15));
       if Page = pgStartRandom then
-        s := IntToStr(AutoEnemies)
+        S := IntToStr(AutoEnemies)
       else if nMapStartPositions = 0 then
-        s := '0'
+        S := '0'
       else
-        s := IntToStr(nMapStartPositions - 1);
-      RisedTextOut(Canvas, 198 - BiColorTextWidth(Canvas, s), yMain + 140, s);
+        S := IntToStr(nMapStartPositions - 1);
+      RisedTextOut(Canvas, 198 - BiColorTextWidth(Canvas, S), yMain + 140, S);
 
       DLine(Canvas, 24, xDefault - 6, yMain + 164 + 19,
         MainTexture.ColorBevelLight, MainTexture.ColorBevelShade);
@@ -785,23 +785,23 @@ begin
         yMain + 164 { y0Mini-77 } , Phrases.Lookup('STARTCONTROLS', 16));
       if AutoDiff = 1 then
         FrameImage(Canvas, Brains.GetBeginner.Picture, xDefault, yDefault, 64,
-          64, 0, 0, false)
+          64, 0, 0, False)
       else
         FrameImage(Canvas, BrainDefault.Picture, xDefault, yDefault, 64, 64,
-          0, 0, true);
+          0, 0, True);
       DLine(Canvas, 56, 272, y0Mini + 61 + 19, MainTexture.ColorBevelLight,
         MainTexture.ColorBevelShade);
 
       RisedTextOut(Canvas, 56, y0Mini + 61,
         Phrases.Lookup('STARTCONTROLS', 14));
-      s := Phrases.Lookup('AUTODIFF', AutoDiff - 1);
-      RisedTextOut(Canvas, 272 - BiColorTextWidth(Canvas, s), y0Mini + 61, s);
+      S := Phrases.Lookup('AUTODIFF', AutoDiff - 1);
+      RisedTextOut(Canvas, 272 - BiColorTextWidth(Canvas, S), y0Mini + 61, S);
 
-      for i := 0 to 19 do
-        if (i < 2) or (i > 6) then begin
-          BitBltCanvas(Canvas, 9 + i * 27, yLogo - 2, Ornament.Width, Ornament.Height,
+      for I := 0 to 19 do
+        if (I < 2) or (I > 6) then begin
+          BitBltCanvas(Canvas, 9 + I * 27, yLogo - 2, Ornament.Width, Ornament.Height,
             HGrSystem2.Mask.Canvas, Ornament.Left, Ornament.Top, SRCAND);
-          BitBltCanvas(Canvas, 9 + i * 27, yLogo - 2, Ornament.Width, Ornament.Height,
+          BitBltCanvas(Canvas, 9 + I * 27, yLogo - 2, Ornament.Width, Ornament.Height,
             HGrSystem2.Data.Canvas, Ornament.Left, Ornament.Top, SRCPAINT);
         end;
       PaintLogo(Canvas, 69, yLogo, MainTexture.ColorBevelLight,
@@ -824,8 +824,8 @@ begin
       DLine(Canvas, 344, 514, y0Mini + 61 + 19, MainTexture.ColorBevelLight,
         MainTexture.ColorBevelShade);
     RisedTextOut(Canvas, 344, y0Mini + 61, Phrases.Lookup('STARTCONTROLS', 8));
-    s := TurnToString(LoadTurn);
-    RisedTextOut(Canvas, 514 - BiColorTextWidth(Canvas, s), y0Mini + 61, s);
+    S := TurnToString(LoadTurn);
+    RisedTextOut(Canvas, 514 - BiColorTextWidth(Canvas, S), y0Mini + 61, S);
   end
   else if Page = pgEditRandom then
   begin
@@ -839,12 +839,12 @@ begin
   else if Page = pgEditMap then
   begin
     // DLine(Canvas,344,514,y0Mini+61+19,MainTexture.ColorBevelLight,MainTexture.ColorBevelShade);
-    s := Format(Phrases2.Lookup('MAPPROP'),
+    S := Format(Phrases2.Lookup('MAPPROP'),
       [(nMapLandTiles * 100 + 556) div 1112,
       // 1112 is typical for world with 100% size and default land mass
       nMapStartPositions]);
-    RisedTextOut(Canvas, x0Mini - BiColorTextWidth(Canvas, s) div 2,
-      y0Mini + 61, s);
+    RisedTextOut(Canvas, x0Mini - BiColorTextWidth(Canvas, S) div 2,
+      y0Mini + 61, S);
   end;
 
   if StartBtn.Visible then
@@ -887,25 +887,25 @@ begin
       yMini + 2 + MiniMap.Size.Y, MainTexture.ColorBevelShade,
       MainTexture.ColorBevelLight);
 
-    s := '';
+    S := '';
     if MiniMap.Mode = mmPicture then
     begin
       BitBltCanvas(Canvas, xMini + 2, yMini + 2, MiniMap.Size.X * 2, MiniMap.Size.Y,
         MiniMap.Bitmap.Canvas, 0, 0);
       if Page = pgStartRandom then
-        s := Phrases.Lookup('RANMAP')
+        S := Phrases.Lookup('RANMAP')
     end
     else if MiniMap.Mode = mmMultiPlayer then
-      s := Phrases.Lookup('MPMAP')
+      S := Phrases.Lookup('MPMAP')
     else if Page = pgStartMap then
-      s := Copy(MapFileName, 1, Length(MapFileName) - Length(CevoMapExt))
+      S := Copy(MapFileName, 1, Length(MapFileName) - Length(CevoMapExt))
     else if Page = pgEditMap then
-      s := List.Items[List.ItemIndex]
+      S := List.Items[List.ItemIndex]
     else if Page = pgNoLoad then
-      s := Phrases.Lookup('NOGAMES');
-    if s <> '' then
-      RisedTextOut(Canvas, x0Mini + 2 - BiColorTextWidth(Canvas, s) div 2,
-        y0Mini - 8, s);
+      S := Phrases.Lookup('NOGAMES');
+    if S <> '' then
+      RisedTextOut(Canvas, x0Mini + 2 - BiColorTextWidth(Canvas, S) div 2,
+        y0Mini - 8, S);
   end;
 end;
 
@@ -958,7 +958,7 @@ begin
     pgLoad:
       begin // load
         FileName := List.Items[List.ItemIndex];
-        if LoadGame(GetSavedDir + DirectorySeparator, FileName + CevoExt, LoadTurn, false)
+        if LoadGame(GetSavedDir + DirectorySeparator, FileName + CevoExt, LoadTurn, False)
         then
           UnlistBackupFile(FileName)
         else
@@ -978,7 +978,7 @@ begin
         Reg := TRegistry.Create;
         with Reg do
         try
-          OpenKey(AppRegistryKey, true);
+          OpenKey(AppRegistryKey, True);
           if ValueExists('GameCount') then GameCount := ReadInteger('GameCount')
             else GameCount := 0;
 
@@ -1167,12 +1167,12 @@ begin
         for I := 1 to PlayerSlots.Count - 1 do
           if Assigned(PlayersBrain[I]) and (PlayersBrain[I].Kind = btTerm) then begin
             PlayersBrain[I] := nil;
-            PlayerSlots[I].DiffUpBtn.Visible := false;
+            PlayerSlots[I].DiffUpBtn.Visible := False;
             PlayerSlots[I].DiffUpBtn.Tag := 0;
-            PlayerSlots[I].DiffDownBtn.Visible := false;
+            PlayerSlots[I].DiffDownBtn.Visible := False;
             PlayerSlots[I].DiffDownBtn.Tag := 0;
             if PlayerSlots[I].OfferMultiple then begin
-              PlayerSlots[I].MultiBtn.Visible := false;
+              PlayerSlots[I].MultiBtn.Visible := False;
               PlayerSlots[I].MultiBtn.Tag := 0;
             end;
             SmartInvalidate(xBrain[I] - 31, yBrain[I] - 1, xBrain[I] + 64,
@@ -1198,7 +1198,7 @@ begin
   MenuItem.OnClick := BrainClick;
   J := FixedLines;
   while (J < PopupMenu1.Items.Count) and
-    (StrIComp(pchar(MenuItem.Caption), pchar(PopupMenu1.Items[J].Caption)) > 0) do
+    (StrIComp(PChar(MenuItem.Caption), PChar(PopupMenu1.Items[J].Caption)) > 0) do
     Inc(J);
   MenuItem.RadioItem := True;
   if (PlayerPopupIndex < 0) then MenuItem.Checked := BrainDefault = Brain
@@ -1209,7 +1209,7 @@ end;
 procedure TStartDlg.InitPopup(PlayerIndex: Integer);
 var
   I: Integer;
-  FixedLines: integer;
+  FixedLines: Integer;
   MenuItem: TMenuItem;
   AIBrains: TBrains;
 begin
@@ -1243,7 +1243,7 @@ begin
       Inc(FixedLines);
     end;
     for I := Brains.IndexOf(BrainTerm) downto 0 do // offer game interfaces
-      if (PlayerPopupIndex = 0) or (Brains[i].Kind = btTerm) and
+      if (PlayerPopupIndex = 0) or (Brains[I].Kind = btTerm) and
         (PlayersBrain[0].Kind <> btNoTerm) then begin
         OfferBrain(Brains[I], FixedLines);
         Inc(FixedLines);
@@ -1267,7 +1267,7 @@ begin
       for I := 0 to AIBrains.Count - 1 do // offer available AIs
         if (AIBrains[I].Flags and fMultiple <> 0) or (AIBrains[I].Flags and fUsed = 0)
           or (Brains[I] = PlayersBrain[PlayerPopupIndex]) then
-          OfferBrain(AIBrains[i], FixedLines);
+          OfferBrain(AIBrains[I], FixedLines);
       FreeAndNil(AIBrains);
     end;
   end;
@@ -1282,7 +1282,7 @@ begin
   if FindFirst(GetSavedDir + DirectorySeparator + '*' + CevoExt, $21, F) = 0 then
     repeat
       I := FormerGames.Count;
-      while (I > 0) and (F.Time < integer(FormerGames.Objects[I - 1])) do
+      while (I > 0) and (F.Time < Integer(FormerGames.Objects[I - 1])) do
         Dec(I);
       FormerGames.InsertObject(I, Copy(F.Name, 1, Length(F.Name) - 5),
         TObject(F.Time));
@@ -1296,13 +1296,13 @@ end;
 
 procedure TStartDlg.UpdateMaps;
 var
-  f: TSearchRec;
+  F: TSearchRec;
 begin
   Maps.Clear;
-  if FindFirst(GetMapsDir + DirectorySeparator + '*' + CevoMapExt, $21, f) = 0 then
+  if FindFirst(GetMapsDir + DirectorySeparator + '*' + CevoMapExt, $21, F) = 0 then
     repeat
-      Maps.Add(Copy(f.Name, 1, Length(f.Name) - Length(CevoMapExt)));
-    until FindNext(f) <> 0;
+      Maps.Add(Copy(F.Name, 1, Length(F.Name) - Length(CevoMapExt)));
+    until FindNext(F) <> 0;
   FindClose(F);
   Maps.Sort;
   Maps.Insert(0, Phrases.Lookup('RANMAP'));
@@ -1313,10 +1313,10 @@ end;
 
 procedure TStartDlg.ChangePage(NewPage: TStartPage);
 var
-  i, j, p1: integer;
-  s: string;
+  I, J, p1: Integer;
+  S: string;
   Reg: TRegistry;
-  InvalidateTab0: boolean;
+  InvalidateTab0: Boolean;
 begin
   InvalidateTab0 := (Page = pgMain) or (NewPage = pgMain);
   Page := NewPage;
@@ -1325,25 +1325,25 @@ begin
       begin
         StartBtn.Caption := Phrases.Lookup('STARTCONTROLS', 1);
         if Page = pgStartRandom then
-          i := nPlOffered
+          I := nPlOffered
         else
         begin
-          i := nMapStartPositions;
-          if i = 0 then
+          I := nMapStartPositions;
+          if I = 0 then
           begin
             PlayersBrain[0] := BrainSuperVirtual;
             Difficulty[0] := 0;
           end;
           if PlayersBrain[0].Kind in [btNoTerm, btSuperVirtual] then
-            inc(i);
-          if i > nPl then
-            i := nPl;
-          if i <= nPlOffered then
+            Inc(I);
+          if I > nPl then
+            I := nPl;
+          if I <= nPlOffered then
             MultiControl := 0
           else
-            MultiControl := InitMulti[i];
+            MultiControl := InitMulti[I];
         end;
-        if InitAlive[i] <> SlotAvailable then
+        if InitAlive[I] <> SlotAvailable then
           if Page = pgStartRandom then
           begin // restore AI assignment of last start
             Reg := TRegistry.Create;
@@ -1352,12 +1352,12 @@ begin
               OpenKey(AppRegistryKey + '\AI', True);
               for p1 := 0 to nPlOffered - 1 do begin
                 PlayersBrain[p1] := nil;
-                s := ReadString('Control' + IntToStr(p1));
+                S := ReadString('Control' + IntToStr(p1));
                 Difficulty[p1] := ReadInteger('Diff' + IntToStr(p1));
-                if s <> '' then
-                  for j := 0 to Brains.Count - 1 do
-                    if AnsiCompareFileName(s, Brains[j].FileName) = 0 then
-                      PlayersBrain[p1] := Brains[j];
+                if S <> '' then
+                  for J := 0 to Brains.Count - 1 do
+                    if AnsiCompareFileName(S, Brains[J].FileName) = 0 then
+                      PlayersBrain[p1] := Brains[J];
               end;
             finally
               Free;
@@ -1365,36 +1365,36 @@ begin
           end
           else
             for p1 := 1 to nPl - 1 do
-              if 1 shl p1 and InitAlive[i] <> 0 then
+              if 1 shl p1 and InitAlive[I] <> 0 then
               begin
                 PlayersBrain[p1] := BrainDefault;
                 Difficulty[p1] := 2;
               end
               else
                 PlayersBrain[p1] := nil;
-        SlotAvailable := InitAlive[i];
-        for i := 0 to nPlOffered - 1 do
-          if (AutoDiff < 0) and Assigned(PlayersBrain[i]) and
-            (PlayersBrain[i].Kind in [btTerm, btRandom, btAI]) then
+        SlotAvailable := InitAlive[I];
+        for I := 0 to nPlOffered - 1 do
+          if (AutoDiff < 0) and Assigned(PlayersBrain[I]) and
+            (PlayersBrain[I].Kind in [btTerm, btRandom, btAI]) then
           begin
-            PlayerSlots[i].DiffUpBtn.Tag := 768;
-            PlayerSlots[i].DiffDownBtn.Tag := 768;
+            PlayerSlots[I].DiffUpBtn.Tag := 768;
+            PlayerSlots[I].DiffDownBtn.Tag := 768;
           end
           else
           begin
-            PlayerSlots[i].DiffUpBtn.Tag := 0;
-            PlayerSlots[i].DiffDownBtn.Tag := 0;
+            PlayerSlots[I].DiffUpBtn.Tag := 0;
+            PlayerSlots[I].DiffDownBtn.Tag := 0;
           end;
-        for i := 6 to 8 do
-          if (AutoDiff < 0) and Assigned(PlayersBrain[i]) and
-            (PlayersBrain[i].Kind in [btTerm, btRandom, btAI]) then
+        for I := 6 to 8 do
+          if (AutoDiff < 0) and Assigned(PlayersBrain[I]) and
+            (PlayersBrain[I].Kind in [btTerm, btRandom, btAI]) then
           begin
-            PlayerSlots[i].MultiBtn.Tag := 768;
-            PlayerSlots[i].MultiBtn.ButtonIndex := 2 + (MultiControl shr i) and 1;
-            PlayerSlots[i].MultiBtn.Enabled := Page = pgStartRandom
+            PlayerSlots[I].MultiBtn.Tag := 768;
+            PlayerSlots[I].MultiBtn.ButtonIndex := 2 + (MultiControl shr I) and 1;
+            PlayerSlots[I].MultiBtn.Enabled := Page = pgStartRandom
           end
           else
-            PlayerSlots[i].MultiBtn.Tag := 0;
+            PlayerSlots[I].MultiBtn.Tag := 0;
         if (AutoDiff > 0) and (Page <> pgStartMap) then
         begin
           AutoEnemyUpBtn.Tag := 768;
@@ -1433,8 +1433,8 @@ begin
   end;
 
   PaintInfo;
-  for i := 0 to ControlCount - 1 do
-    Controls[i].Visible := Controls[i].Tag and (256 shl Integer(Page)) <> 0;
+  for I := 0 to ControlCount - 1 do
+    Controls[I].Visible := Controls[I].Tag and (256 shl Integer(Page)) <> 0;
   if Page = pgLoad then
     ReplayBtn.Visible := MiniMap.Mode <> mmMultiPlayer;
   List.Invalidate;
@@ -1478,16 +1478,16 @@ begin
 end;
 
 procedure TStartDlg.FormMouseDown(Sender: TObject; Button: TMouseButton;
-  Shift: TShiftState; x, y: integer);
+  Shift: TShiftState; X, Y: Integer);
 var
   I: Integer;
 begin
-  if (y < TabHeight + 1) and (x - TabOffset < TabSize * 4) and
-    ((x - TabOffset) div TabSize <> Integer(Tab)) then
+  if (Y < TabHeight + 1) and (X - TabOffset < TabSize * 4) and
+    ((X - TabOffset) div TabSize <> Integer(Tab)) then
   begin
     // Play('BUTTON_DOWN');
     ListIndex[Tab] := List.ItemIndex;
-    ChangeTab(TStartTab((x - TabOffset) div TabSize));
+    ChangeTab(TStartTab((X - TabOffset) div TabSize));
   end
   else if Page = pgMain then begin
     case SelectedAction of
@@ -1502,8 +1502,8 @@ begin
     (nMapStartPositions > 0)) then
   begin
     for I := 0 to nPlOffered - 1 do
-      if (1 shl I and SlotAvailable <> 0) and (x >= xBrain[I]) and
-        (y >= yBrain[I]) and (x < xBrain[I] + 64) and (y < yBrain[I] + 64) then
+      if (1 shl I and SlotAvailable <> 0) and (X >= xBrain[I]) and
+        (Y >= yBrain[I]) and (X < xBrain[I] + 64) and (Y < yBrain[I] + 64) then
       begin
         InitPopup(I);
         if yBrain[I] > y0Brain then
@@ -1513,8 +1513,8 @@ begin
       end;
   end
   else if (AutoDiff > 1) and ((Page = pgStartRandom) or (Page = pgStartMap)) and
-    (x >= xDefault) and (y >= yDefault) and (x < xDefault + 64) and
-    (y < yDefault + 64) then
+    (X >= xDefault) and (Y >= yDefault) and (X < xDefault + 64) and
+    (Y < yDefault + 64) then
     if Brains.GetKindCount(btAI) < 2 then
       SimpleMessage(Phrases.Lookup('NOALTAI'))
     else
@@ -1522,11 +1522,11 @@ begin
       InitPopup(-1);
       PopupMenu1.Popup(left + xDefault + 4, top + yDefault + 4);
     end
-  else if (Page = pgLoad) and (LastTurn > 0) and (y >= yTurnSlider) and
-    (y < yTurnSlider + 7) and (x >= xTurnSlider) and
-    (x <= xTurnSlider + wTurnSlider) then
+  else if (Page = pgLoad) and (LastTurn > 0) and (Y >= yTurnSlider) and
+    (Y < yTurnSlider + 7) and (X >= xTurnSlider) and
+    (X <= xTurnSlider + wTurnSlider) then
   begin
-    LoadTurn := LastTurn * (x - xTurnSlider) div wTurnSlider;
+    LoadTurn := LastTurn * (X - xTurnSlider) div wTurnSlider;
     SmartInvalidate(xTurnSlider - 2, y0Mini + 61, xTurnSlider + wTurnSlider + 2,
       yTurnSlider + 9);
     Tracking := True;
@@ -1539,20 +1539,20 @@ begin
     pgStartRandom, pgStartMap:
       if MaxTurn < 1400 then
       begin
-        inc(MaxTurn, 200);
+        Inc(MaxTurn, 200);
         SmartInvalidate(344, y0Mini + 61, 514, y0Mini + 82);
       end;
     pgLoad:
       if LoadTurn < LastTurn then
       begin
-        inc(LoadTurn);
+        Inc(LoadTurn);
         SmartInvalidate(xTurnSlider - 2, y0Mini + 61, xTurnSlider + wTurnSlider
           + 2, yTurnSlider + 9);
       end;
     pgEditRandom:
       if StartLandMass < 96 then
       begin
-        inc(StartLandMass, 5);
+        Inc(StartLandMass, 5);
         PaintInfo;
         SmartInvalidate(344, y0Mini + 61, 514, y0Mini + 61 + 21);
       end;
@@ -1565,20 +1565,20 @@ begin
     pgStartRandom, pgStartMap:
       if MaxTurn > 400 then
       begin
-        dec(MaxTurn, 200);
+        Dec(MaxTurn, 200);
         SmartInvalidate(344, y0Mini + 61, 514, y0Mini + 82);
       end;
     pgLoad:
       if LoadTurn > 0 then
       begin
-        dec(LoadTurn);
+        Dec(LoadTurn);
         SmartInvalidate(xTurnSlider - 2, y0Mini + 61, xTurnSlider + wTurnSlider
           + 2, yTurnSlider + 9);
       end;
     pgEditRandom:
       if StartLandMass > 10 then
       begin
-        dec(StartLandMass, 5);
+        Dec(StartLandMass, 5);
         PaintInfo;
         SmartInvalidate(344, y0Mini + 61, 514, y0Mini + 61 + 21);
       end;
@@ -1633,10 +1633,10 @@ end;
 
 procedure TStartDlg.RenameBtnClick(Sender: TObject);
 var
-  i: integer;
+  I: Integer;
   NewName: string;
-  f: file;
-  ok: boolean;
+  F: file;
+  ok: Boolean;
   MapPictureFileName: string;
 begin
   if List.ItemIndex >= 0 then
@@ -1654,23 +1654,23 @@ begin
     if (InputDlg.ModalResult = mrOK) and (NewName <> '') and
       (NewName <> List.Items[List.ItemIndex]) then
     begin
-      for i := 1 to Length(NewName) do
-        if NewName[i] in ['\', '/', ':', '*', '?', '"', '<', '>', '|'] then
+      for I := 1 to Length(NewName) do
+        if NewName[I] in ['\', '/', ':', '*', '?', '"', '<', '>', '|'] then
         begin
-          SimpleMessage(Format(Phrases.Lookup('NOFILENAME'), [NewName[i]]));
+          SimpleMessage(Format(Phrases.Lookup('NOFILENAME'), [NewName[I]]));
           Exit;
         end;
       if Page = pgLoad then
-        AssignFile(f, GetSavedDir + DirectorySeparator + List.Items[List.ItemIndex] + CevoExt)
+        AssignFile(F, GetSavedDir + DirectorySeparator + List.Items[List.ItemIndex] + CevoExt)
       else
-        AssignFile(f, GetMapsDir + DirectorySeparator + List.Items[List.ItemIndex] +
+        AssignFile(F, GetMapsDir + DirectorySeparator + List.Items[List.ItemIndex] +
           CevoMapExt);
-      ok := true;
+      ok := True;
       try
         if Page = pgLoad then
-          Rename(f, GetSavedDir + DirectorySeparator + NewName + CevoExt)
+          Rename(F, GetSavedDir + DirectorySeparator + NewName + CevoExt)
         else
-          Rename(f, GetMapsDir + DirectorySeparator + NewName + CevoMapExt);
+          Rename(F, GetMapsDir + DirectorySeparator + NewName + CevoMapExt);
       except
         // Play('INVALID');
         ok := False;
@@ -1681,9 +1681,9 @@ begin
           List.Items[List.ItemIndex] + CevoMapPictureExt;
         if FileExists(MapPictureFileName) then
         try
-          AssignFile(f, GetMapsDir + DirectorySeparator + List.Items[List.ItemIndex]
+          AssignFile(F, GetMapsDir + DirectorySeparator + List.Items[List.ItemIndex]
             + CevoMapPictureExt);
-          Rename(f, GetMapsDir + DirectorySeparator + NewName + CevoMapPictureExt);
+          Rename(F, GetMapsDir + DirectorySeparator + NewName + CevoMapPictureExt);
         except
         end;
       end;
@@ -1703,8 +1703,8 @@ end;
 
 procedure TStartDlg.DeleteBtnClick(Sender: TObject);
 var
-  iDel: integer;
-  f: file;
+  iDel: Integer;
+  F: file;
 begin
   if List.ItemIndex >= 0 then
   begin
@@ -1717,11 +1717,11 @@ begin
     if MessgDlg.ModalResult = mrOK then
     begin
       if Page = pgLoad then
-        AssignFile(f, GetSavedDir + DirectorySeparator + List.Items[List.ItemIndex] + CevoExt)
+        AssignFile(F, GetSavedDir + DirectorySeparator + List.Items[List.ItemIndex] + CevoExt)
       else
-        AssignFile(f, GetMapsDir + DirectorySeparator + List.Items[List.ItemIndex] +
+        AssignFile(F, GetMapsDir + DirectorySeparator + List.Items[List.ItemIndex] +
           CevoMapExt);
-      Erase(f);
+      Erase(F);
       iDel := List.ItemIndex;
       if Page = pgLoad then
         FormerGames.Delete(iDel)
@@ -1742,7 +1742,7 @@ begin
         begin
           List.Invalidate;
           if Page = pgLoad then
-            TurnValid := false;
+            TurnValid := False;
           PaintInfo;
           if Page = pgLoad then
             ReplayBtn.Visible := MiniMap.Mode <> mmMultiPlayer;
@@ -1841,26 +1841,26 @@ begin
 end;
 
 procedure TStartDlg.FormMouseUp(Sender: TObject; Button: TMouseButton;
-  Shift: TShiftState; x, y: integer);
+  Shift: TShiftState; X, Y: Integer);
 begin
   Tracking := False;
 end;
 
 procedure TStartDlg.FormMouseMove(Sender: TObject; Shift: TShiftState;
-  x, y: integer);
+  X, Y: Integer);
 var
   OldLoadTurn: Integer;
   NewSelectedAction: TMainAction;
 begin
   if Tracking then
   begin
-    x := x - xTurnSlider;
-    if x < 0 then
-      x := 0
-    else if x > wTurnSlider then
-      x := wTurnSlider;
+    X := X - xTurnSlider;
+    if X < 0 then
+      X := 0
+    else if X > wTurnSlider then
+      X := wTurnSlider;
     OldLoadTurn := LoadTurn;
-    LoadTurn := LastTurn * x div wTurnSlider;
+    LoadTurn := LastTurn * X div wTurnSlider;
     if LoadTurn < OldLoadTurn then
     begin
       SmartInvalidate(xTurnSlider + LoadTurn * wTurnSlider div LastTurn,
@@ -1878,10 +1878,10 @@ begin
   end
   else if Page = pgMain then
   begin
-    if (x >= ActionSideBorder) and (x < ClientWidth - ActionSideBorder) and
-      (y >= yAction - 8) and (y < ClientHeight - ActionBottomBorder) then
+    if (X >= ActionSideBorder) and (X < ClientWidth - ActionSideBorder) and
+      (Y >= yAction - 8) and (Y < ClientHeight - ActionBottomBorder) then
     begin
-      NewSelectedAction := TMainAction((y - (yAction - 8)) div ActionPitch);
+      NewSelectedAction := TMainAction((Y - (yAction - 8)) div ActionPitch);
       if not (NewSelectedAction in ActionsOffered) then
         NewSelectedAction := maNone;
     end

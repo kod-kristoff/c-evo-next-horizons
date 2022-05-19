@@ -123,7 +123,7 @@ type
     function GetHeight: Integer; override;
     procedure SetWidth(AValue: Integer); override;
     function GetWidth: Integer; override;
-    procedure DoLine (x1,y1,x2,y2:integer); override;
+    procedure DoLine (x1,y1,x2,y2:Integer); override;
     procedure DoTextOut(X, Y: Integer; Text: string); override;
     procedure DoRectangle(const Bounds: TRect); override;
     procedure DoRectangleFill(const Bounds: TRect); override;
@@ -450,7 +450,7 @@ begin
   Result := FSize.X;
 end;
 
-procedure TMetaCanvas.DoLine(x1, y1, x2, y2: integer);
+procedure TMetaCanvas.DoLine(x1, y1, x2, y2: Integer);
 var
   NewObj: TCanvasLine;
 begin
@@ -663,4 +663,5 @@ begin
 end;
 
 end.
+
 
