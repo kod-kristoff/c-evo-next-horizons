@@ -1670,7 +1670,7 @@ begin
   { !!!for Loc1:=0 to MapSize-1 do
     if RealMap[Loc1] and fterrain>=fGrass then
     if Delphirandom(3)=0 then RealMap[Loc1]:=RealMap[Loc1] or fRoad
-    else if Delphirandom(3)=0 then RealMap[Loc1]:=RealMap[Loc1] or fRR;
+    else if Delphirandom(3)=0 then RealMap[Loc1]:=RealMap[Loc1] or fRR;}
     {random Road and Railroad }
   { !!!for Loc1:=0 to MapSize-1 do
     if (RealMap[Loc1] and fterrain>=fGrass) and (Delphirandom(20)=0) then

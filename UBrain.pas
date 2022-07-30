@@ -124,12 +124,20 @@ begin
     else if Key = '#PATH_WIN64' then
       DLLName := BasePath + DirectorySeparator + Value
     {$ENDIF}{$ENDIF}
-    {$IFDEF UNIX}{$IFDEF CPU32}
-    else if Key = '#PATH_LINUX32' then
+    {$IFDEF UNIX}{$IFDEF CPUI386}
+    else if Key = '#PATH_LINUX_I386' then
       DLLName := BasePath + DirectorySeparator + Value
     {$ENDIF}{$ENDIF}
-    {$IFDEF UNIX}{$IFDEF CPU64}
-    else if Key = '#PATH_LINUX64' then
+    {$IFDEF UNIX}{$IFDEF CPUAMD64}
+    else if Key = '#PATH_LINUX_AMD64' then
+      DLLName := BasePath + DirectorySeparator + Value
+    {$ENDIF}{$ENDIF}
+    {$IFDEF UNIX}{$IFDEF CPUARM}
+    else if Key = '#PATH_LINUX_ARM32' then
+      DLLName := BasePath + DirectorySeparator + Value
+    {$ENDIF}{$ENDIF}
+    {$IFDEF UNIX}{$IFDEF CPUAARCH64}
+    else if Key = '#PATH_LINUX_ARM64' then
       DLLName := BasePath + DirectorySeparator + Value
     {$ENDIF}{$ENDIF}
     else if Key = '#GAMEVERSION' then
