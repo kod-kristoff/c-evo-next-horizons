@@ -1,0 +1,946 @@
+#GAME Livre %d
+#MAP Carte %d
+#BC %d BC
+#AD %d AD
+#SHARE %d/%d
+#SHORTNAME #S
+#OWNED #A %s
+#GENCITY #S %d
+#GENMODEL #A Modèle %d
+
+'City Screen Text
+#HAPPINESS Morale
+#CONTROL Contrôle
+#FAITH Foi
+#UNREST Troubles
+#HAPPINESSDEMAND Population
+#HAPPINESSPLUS Excédent
+#STORAGE Stockage
+#FOOD Alimentation
+#DEMAND Population
+#SURPLUS Excédent
+#LACK Manque
+#MATERIAL Matériel
+#PROD Production
+#POLL Pollution
+#SUPPORT Unités
+#PROFIT Profit
+#TRADE Commerce
+#CORR Corruption
+#SCIENCE Recherche
+#TAX Fiscalité
+#LUX Richesse
+#DUMP Vider
+#SUPUNITS Unités soutenues
+
+'Class Screen Text
+#UNITOWNER #A
+#UNITSPEED Vitesse
+#UNITSTRENGTH Force
+#UNITTRANSPORT Transport
+#UNITCOST Coût
+#UNITBUILT Construit
+#UNITINTRO Introduit
+#UNITADOPT Adopté
+#UNITLOST Perdu au combat
+#UNITDESTROYED Défaite
+#UNITAVAILABLE Disponible
+#UNITINPROD En production
+#UNITKNOWN Actif connu
+#UNITSPECIAL Unité spéciale
+
+'Diplomacy Screen Text
+#FRSTATGOV Gouvernement: %s
+#FRSTATPOP Population: %d
+#FRSTATTER Territoire: %d
+#FRSTATTECH Technologie: %d%%
+#FRSTATEXP Exploration: %d%%
+#FRLASTCONTACT Dernière visite:
+#FRNOCONTACT Pas de contact, juste des légendes
+#FRNOVISIT Pas encore de visite
+#FROLDCIVILREP (Ancien dossier datant de %s)
+#FRNOCIVILREP (Aucun dossier disponible)
+#FREXTINCT Éteint en
+#FRTREATY Relation:
+#FRAND ,
+#FRCREDIBILITY (%d%% crédibilité)
+#FRTREASURY Trésor public: %d%%c
+#FRRELATIONS Relations extérieures:
+
+'Other Dialog Text
+#PRESENT Unités présentes
+#SHOWSTRENGTH Force: %d/%d
+#RIVER Rivière
+#INITUNIT Recherche militaire
+#TECHFOCUS Focus: %s
+#NEXUS Arrêter la recherche
+#SCIENCEREPORT_EXTINCT %s (tombé)
+#MODELDRAFT Nouvelle conception de l'unité (%s)
+#TAXRATE Taux
+#MONEYGAINPOS +%d%%c
+#MONEYGAINNEG %d%%c
+#TECHGAIN +%d%%r
+#TECHWAIT %s (%d Tourne)
+#COSTDIFF1 Niveau de difficulté: -25%
+#COSTDIFF2 Niveau de difficulté: ±0
+#COSTDIFF3 Niveau de difficulté: +25%
+#NATEXISTS (%s)
+#CONSCRIPTS Conscrit %s
+#WONDEROF %s de %s
+#WONDEROWNER (#A)
+#EXPIRED (a expiré)
+#DESTROYED (détruit)
+#NOWONDER Aucune merveille n'a encore été construite
+#BUILDORDER Construire l'ordre pour
+#BUILDREST Non prévu:
+#ENHANCE %s: %s MP
+#SHIPCOMP Composants
+#SHIPPOW Power
+#SHIPHAB Habitation
+#SEARCH Recherchez
+#RANMAP Carte au hasard
+#TWOTERRAINS %s / %s
+#MPMAP Multi-joueurs
+#NOGAMES Pas encore de livres
+#AIT_ROUND Tour %d,
+
+'Dialog Titles
+#TITLE_TRIBE Choisissez votre tribu
+#TITLE_GOV Choisir le gouvernement
+#TITLE_TECHSELECT Que recherchons-nous maintenant ??
+#TITLE_FARTECH Définir l'orientation de la recherche
+#TITLE_CITIES #A Villes
+#TITLE_EVENTS Événements dans la ville de %s
+#TITLE_MODELS #A Unités
+#TITLE_DIAGRAMS Graphiques
+#TITLE_SHIPS Navires coloniaux
+#TITLE_SHIP #A Navire de colonie
+#TITLE_EMODELS Dessins et modèles des unités étrangères
+#TITLE_RATES Économie
+#TITLE_DRAFT Recherche militaire
+#TITLE_WONDERS Les merveilles du monde
+#TITLE_ENHANCE Amélioration du terrain
+#TITLE_CITYTYPES Types de villes
+#TITLE_PROJECT Que construirons nous ici?
+#TITLE_CITYNAME Nom de la ville
+#TITLE_MODELNAME Nom de la conception de l'unité
+#TITLE_ERROR Erreur
+#TITLE_SCIENCE Rapport de recherche
+#TITLE_OFFERDELIVER Ajouter une offre
+#TITLE_OFFERCOST Ajouter une demande
+#TITLE_NUMBER Numéro
+#TITLE_AMOUNT Montant
+#TITLE_CHOOSETECH Choisir l'avance
+#TITLE_CHOOSEMODEL Choisissez la conception de l'unité
+#TITLE_CHOOSESHIPPART Choisissez le type
+#TITLE_CHOOSECITY Choisissez une ville
+#TITLE_BOOKNAME Nom du livre
+#TITLE_MAPNAME Nom de la carte
+#TITLE_NATION #N
+#TITLE_SPYMISSION Opération secrète
+#TITLE_SUICIDE Mission suicide
+#FRMILREP Rapport militaire
+
+'Message Text
+#NOALTAI Aucune autre IA n'est installée.\Téléchargez d'autres modules d'IA à partir de la page d'accueil de C-evo ou créez le vôtre.
+#REVOLUTION Allons-nous laisser le #a de l'empire à l'anarchie afin que nous puissions mettre en place une nouvelle forme d'administration une fois le chaos surmonté?
+#AUTOREVOLUTION Une nouvelle forme de gouvernement s'offre à nous:\%s\\Afin de
+changement de cette forme d'administration, il faudrait déposer le présent
+gouvernement et de surmonter une période d'anarchie. Commencer la révolution?
+#NOALTGOVS Une révolution nous permettra de changer la forme de notre gouvernement. Actuellement, cela n'a pas de sens car nous n'avons pas encore appris à connaître d'autres formes de gouvernement que le despotisme.
+#AGE1 = %s =\Les connaissances de nos ancêtres sont incomplètes et imparfaites. De nombreuses questions ne peuvent pas être
+répondu correctement depuis la bibliothèque. Nous nous sommes séparés avec le dogmatisme, et nous ferons évoluer notre point de vue
+du monde en observant précisément les choses. Nous l'appelons la science.
+#AGE2 = %s =\Après la réalisation de la production de masse, pour la première fois en
+La richesse de l'histoire n'est plus le privilège d'une minorité. Les conséquences atteignent
+loin. Le marché de masse permet des investissements d'une dimension jusqu'alors inconnue,
+conduisant à une nouvelle ère technologique.
+#AGE3 = %s =\Un vieux rêve humain pourrait devenir réalité. Nous avons maintenant le
+pour commencer la colonisation des systèmes solaires éloignés. Des études indiquent
+que les métaux spéciaux seront la clé de ce gigantesque projet.
+#ENDTURN Aucune unité en attente de commandes à ce tour.\Fin du tour pour continuer sans action.
+#CREDUP Notre crédibilité s'est élevée à "%s".
+#CREDDOWN Notre crédibilité est tombée à "%s".
+#CAPTURE #N s'emparent de la ville de %s!
+#BOMBARD #N bombardent la ville non protégée de %s!
+#EXPEL Des unités ont été expulsées de #a territoire.
+#DISPOSE %s\\Devons-nous reconstruire ce bâtiment?
+#SPDESTRUCTQUERY \(Note: Nous allons perdre le contrôle de notre vaisseau colonial lorsque nous démantèlerons le port spatial!) 
+#SELL %s\\Allons-nous vendre ce bâtiment?
+#LOSEMAT Un changement complet de type de projet signifie le lancement d'un nouveau projet. %d%%p sera vendu pour %d%%c.
+#LOSEMAT3 La modification du projet entraînera une perte de 1/3 du matériel collecté pour le projet. Continuer?
+#DOUBLESTATEIMP %s\\Cette amélioration de l'état existe déjà dans la ville de %s. Devrions-nous le déplacer dans cette ville et vendre l'ancien bâtiment une fois terminé? 
+#READY Le projet sera achevé au prochain tour.
+#NOMONEY Nous n'avons pas assez d'argent\pour mener à bien ce projet au prochain tour.\(%d%%c nécessaire, %d%%c disponible sur)
+#BUY Devrions-nous dépenser %d%%c pour mener à bien ce projet au prochain tour?
+#EMIGRATE L'émigration peut provoquer l'effondrement de la ville. Devons-nous retarder l'achèvement de cette unité jusqu'à ce que la ville ait suffisamment de population pour subsister?
+#ADDTOMAXSIZE Cette ville a atteint sa taille maximale.
+#CITYMANAGEOFF Désactiver la gestion automatique de la population?
+#GLIDERLOST Notre planeur a été perdu en mer.
+#PLANELOST Notre avion est tombé en panne de carburant.
+#DAMAGED_UTILIZE L'utilisation d'un appareil endommagé a réduit les bénéfices. Continuer?  
+#NOBB Nous ne disposons pas de la technologie nécessaire pour construire des ponts sur les rivières.
+#NOCITY Ce type de terrain n'est pas adapté à la colonisation. Nous devrions chercher un terrain qui permette l'irrigation.
+#NOCAPTURER Les unités civiles ne peuvent pas s'emparer des villes.
+#NOBOMBARDER Bombarder les villes nécessite une puissance d'attaque.
+#ZOC Ce type d'unité ne peut pas se déplacer dans les zones sous contrôle étranger.
+#FASTATTACK Attaquer avec %d%% pouvoir?
+#NOTIMELOADGROUND Ce type d'unité nécessite %s points de mouvement à charger sur un transport ou à décharger d'un.
+#NOTIMELOADAIR Un avion nécessite 100 les points de mouvement à charger sur un transporteur ou à décharger d'un transporteur.
+#NOTIMEBOMBARD Pour bombarder une ville, il faut 100 points de mouvement.
+#NOTIMEEXPEL Pour expulser une unité, il faut 100 points de mouvement.
+#NOROAD Cette unité ne peut se déplacer que le long des routes et des voies ferrées.
+#NONAV Ce navire n'a aucune capacité de navigation.
+#NOTRANSPORT Ce navire n'a pas de capacité de transport.
+#FULLTRANSPORT Ce transport est chargé à pleine capacité.
+#LOWFUEL Cet avion n'a plus de carburant. S'il se déplace plus loin, il ne pourra pas retourner dans une ville ou une base militaire. Continuez?
+#LOWFUEL_GLIDER Cette unité doit retourner au sol à la fin du tour. Si elle se déplace plus loin, elle sera perdue. Continuer?
+#UNREST_FOREIGN %s\\Il s'agit de #a territoire. S'y installer augmentera les troubles dans la ville d'origine de l'unité. Continuez quand même?
+#UNREST_NOTOWN %s\\Quitter #s augmentera les troubles dans la ville d'origine de l'unité. Continuez quand même?
+#NOATTACKER C'est une unité civile qui ne peut pas attaquer.
+#ATTACKSUB Nous ne pouvons pas localiser ce sous-marin étranger.
+#ATTACKSTEALTH Nous ne pouvons pas localiser cet avion furtif étranger.
+#PEACE_NOATTACK Nous avons signé un traité de paix avec #n.
+#PEACE_NOMOVE Nous avons signé un traité de paix avec #n. Nous ne sommes pas autorisés à entrer sur leur territoire.
+#PEACE_NOWORK Il s'agit de #a territoire!\Nous sommes liés par un traité de paix.
+#NOFOREIGNINFO Aucune nouvelle information n'a pu être trouvée.
+#FOREIGNINFO La mission nous a fourni de nouvelles informations sur:
+#DOSSIER_PREPARED Le #a est maintenant disponible, y compris le dossier #a et le niveau actuel de leur développement scientifique.
+#VIOLATION Nos forces violent #a territoire!\#N nous accorder du temps jusqu'à %s de les retirer.
+#EVIOLATION #N de s'excuser pour avoir violé le traité de paix. Ils ont accepté de retirer leurs troupes jusqu'à ce que %s.
+#WITHDRAW Nos troupes ont été contraintes de se retirer de #a territoire.
+#WONDERBUILT #N ont terminé l'une des\merveilles du monde:\%s
+#WONDERBUILTEXP Une merveille a été construite par une autre nation:\%s\\C'est une ancienne merveille qui ne donne aucun avantage de nos jours.
+#WONDERBUILTOWN Nous avons achevé l'une des\merveilles du monde:\%s
+#WONDERCAPT #N a capturé l'un des\merveilles du monde:\%s
+#WONDERCAPTOWN Nous avons capturé l'un des\merveilles du monde:\%s
+#WONDEREXP L'effet d'une des merveilles du monde a expiré:\%s
+#WONDERDEST Une des merveilles du monde a été détruite:\%s
+#COLDWAR Avec la menace mutuelle d'une guerre nucléaire, les positions diplomatiques de toutes les parties sont devenues bien ancrées. Les négociations sont inutiles. La guerre froide a commencé.
+#COLDWAREND La guerre froide a pris fin.
+#SHIPBUILT #N ont achevé une partie de leur navire coloniaire transstellaire.
+#SHIPBITRADE1 #S et
+#SHIPBITRADE2 #s échangent des pièces de navires coloniaux.
+#SHIPUNITRADE1 #N recevoir
+#SHIPUNITRADE2 des pièces de navires de la colonie de #s.
+#SHIPCAPTURE1 #N prendre le contrôle de la
+#SHIPCAPTURE2 #a navire de colonie!
+#SHIPDESTROYED #N ont perdu le contrôle de leur navire de colonie.
+#LOWFUNDS Les fonds s'épuisent. Si nous ne réagissons pas, nous pourrions être obligés de vendre des améliorations de la ville.\Avez-vous l'intention de continuer quand même?
+#DISORDER %s tombera dans le désordre civil.\Avez-vous l'intention de continuer quand même?
+#DISORDER_UNREST %s tombera en désordre civil à cause de troubles massifs.\Avez-vous l'intention de continuer quand même?
+#FAMINE %s est en danger de famine.\Avez-vous l'intention de continuer quand même?
+#FAMINE_TILES %s est en danger de famine. Trop peu de tuiles fertiles sont disponibles pour cette ville.\Avez-vous l'intention de continuer quand même?
+#FAMINE_UNREST %s est en danger de famine. Une partie de la population a dû être mobilisée pour les services de police afin de maîtriser les troubles. Cet affaiblissement de l'économie a atteint un point tel que la production alimentaire ne suffit plus.\\Avez-vous l'intention de continuer quand même?
+#LOWSUPPORT %s ne produit pas assez de matériel pour soutenir ses unités.\Avez-vous l'intention de continuer quand même?
+#LOWSUPPORT_TILES %s ne produit pas assez de matériel pour soutenir ses unités. Cette ville ne dispose pas de suffisamment de tuiles productives.\Avez-vous l'intention de continuer quand même?
+#LOWSUPPORT_UNREST %s ne produit pas assez de matériel pour soutenir ses unités. Une partie de la population a dû être mobilisée pour le service de police afin de maîtriser les troubles. Cet affaiblissement de l'économie est maintenant tel que la production matérielle n'est plus suffisante.\\Avez-vous l'intention de continuer quand même?
+#RESIGN Vous allez fermer ce livre.\Souhaitez-vous le sauvegarder?
+#ENDTOUR Souhaitez-vous enregistrer ce tour sous forme de livre afin de pouvoir l'ouvrir en mode superviseur?
+#MODELAVAILABLE De nouvelles unités sont prêtes à être mises en production.
+#RESEARCH_GENERAL Nous avons fait des recherches %s!
+#GRLIB_GENERAL Nous avons acquis %s de la Grande Bibliothèque!
+#ORACLEINCOME Revenu: %d%%c
+#NOSELLAGAIN %s\\Une ville ne peut pas vendre ou reconstruire plus d'un bâtiment par tour.
+#OUTOFCONTROL %s\\Cette ville n'est pas encore sous contrôle.
+#NOCHANGEINANARCHY Nous sommes dans l'anarchie, toutes les fonctions de la ville sont paralysées.
+#EXTINCT = %s =\L'empire de #n est tombée. Seules les légendes nous rappelleront leur grande culture.
+#EXTINCTALL \\Nous sommes maintenant la seule nation qui existe sur terre.
+#GAMEOVER #N ont perdu toutes leurs villes.\\JEU TERMINÉ.
+#TIMEUP Le temps est écoulé.\Même si #n ont atteint une prospérité considérable et une grande technologie, et même s'ils ont conservé une position importante parmi les nations du monde, ils n'ont pas maîtrisé le défi ultime de la civilisation.\\FIN DE LA PARTIE.
+#TIMEUPSUPER Le temps est écoulé.\Aucune nation n'a réussi à achever son navire de colonie.
+#SPACESHIP1 #N ont lancé leur\navire coloniaux transstellaire.\
+#SPACESHIP2 L'achèvement de ce projet a apporté la preuve de leur supériorité dans tous les aspects de la civilisation.\\FIN DE LA PARTIE.
+#MYSPACESHIP Après des âges de pauvreté et de crise, des âges de menaces et de conflits militaires sanglants, des âges de changements radicaux et de progrès incroyables, nous avons enfin réalisé ce vieux rêve de l'humanité. Notre vaisseau a été lancé pour un monde loin dans l'espace afin d'en faire une nouvelle maison pour la vie.\\VOUS GAGNEZ.
+#SHAREDWIN (Victoire partagée avec: %s)
+#SHAREDWIN_CONCAT %s, %s
+#NOAI Pas d'IA installée!
+#FILENOTFOUND Dossier "%s" n'a pas été trouvé. 
+#AIEXCEPTION Exception non gérée dans le module IA %s!
+#LOADERR Ce livre n'est pas compatible avec cette version de C-evo.
+#NOFILENAME Le nom du livre doit être un nom de fichier valide. Le%s' Le caractère n'est pas autorisé.
+#DLLERROR Impossible de charger %s.
+#AIERROR Module IA %s n'a pas été trouvé.
+#MISSDEACT Lecteur %d résilié sans désactivation valable.
+#CLIENTERROR Impossible de trouver le client de %s.
+#LOADERROR Ce livre contient un problème interne, et il peut être impossible de continuer à jouer avec lui.\\Vous pouvez contribuer à la qualité de ce jeu en envoyant le fichier au développeur.\Rendez-vous sur le site de signalement des bugs?
+#NOSTARTPOS Cette carte n'a pas de positions de départ définies. Vous ne pouvez pas la jouer.
+#TOOFEWTRIBES Le nombre de concurrents ne peut pas dépasser le nombre de nations installées.
+#DELETEQUERY Le livre sera retiré.
+#MAPDELETEQUERY La carte sera retirée.
+#TURN #N\%s
+#SUPERTURN Superviseur\%s
+#FRNEWNATION Nous avons des contacts avec #n maintenant.
+#FRCONTACT Un émissaire de #n souhaite\nous parler. Le recevrons-nous?
+#FRREJECTED #N n'a pas reçu nos émissaires.
+#FRCANCELQUERY_PEACE Devons-nous leur déclarer la guerre?
+#FRCANCELQUERY_FRIENDLY Allons-nous mettre fin à notre amitié avec eux?
+#FRCANCELQUERY_ALLIANCE Devons-nous annuler notre alliance avec eux?
+#FRCANCELBYREJECT_PEACE #A émissaire:\Notre patience est épuisée.\Préparer la guerre!
+#FRCANCELBYREJECT_FRIENDLY #A émissaire:\C'est la fin de notre amitié!
+#FRCANCELBYREJECT_ALLIANCE #A émissaire:\Nous ne pouvons pas maintenir une alliance avec une nation
+qui n'est pas disposé à coopérer. Vous ne nous laissez pas d'autre choix que d'annuler ce pacte.
+#FRMYALLIANCE1 #N ont déclaré la guerre à nos alliés,
+#FRMYALLIANCE2 #n. Nous sommes libres de soutenir la #a l'empire contre cette agression.
+#FRENEMYALLIANCE #N ont décidé de soutenir leurs alliés contre nous. Nos accords avec eux sont annulés.
+#FRANARCHY Le #a L'empire est dans l'anarchie. Nos émissaires n'ont pas trouvé d'administration stable à qui parler.
+#FRMYANARCHY Nous sommes dans l'anarchie. Les activités diplomatiques nécessitent une administration stable.
+#FRCOLDWAR Nous sommes dans la guerre froide. Il n'y a pas de réceptivité pour la négociation.
+#MAX2WANTS Vous ne pouvez pas combiner plus de deux souhaits en une seule proposition.
+#MAX2OFFERS Vous ne pouvez pas combiner plus de deux offres dans une proposition.
+#NOOFFER Cette proposition n'est pas valable!
+#CANCELTREATYRUSH L'annulation de plus d'un traité avec la même nation au sein de l 3 n'est pas autorisé. 
+#NOSPACEPORT Nous n'avons pas de port spatial, donc nous perdrions toutes les pièces de vaisseaux de la colonie que nous recevrions. Continuez quand même?  
+#SUICIDE Devons-nous envoyer ces\des hommes à la mort?
+#RATES Que devons-nous orienter\notre économie vers?
+#NORATES Statue de la Liberté\est actif.
+
+'Diplomatic Statements, do not use '\'!
+#FRSTART_NOTREATY Écoutez ce que #n offrent.
+#FRSTART_PEACE Salutations amicales de la part de #n, il y a des préoccupations dont il faut parler.
+#FRCANCELTREATY_PEACE Nous vous déclarons la guerre.
+#FRCANCELTREATY_FRIENDLY Nous mettons fin à notre amitié maintenant.
+#FRCANCELTREATY_ALLIANCE Nous ne voyons plus de sens à notre alliance. Prenez ce pacte pour une annulation.
+#FRNOTICE Ne croyez pas que nous tolérerons plus longtemps vos caprices.
+#FRBREAK Ce débat est une perte de temps. Peut-être que nous nous entendrons mieux un jour, après que vous aurez réfléchi à votre position.
+#FROFFER Nous vous proposons\-%s\en échange de\-%s
+#FRPRESENT Nous vous offrons un cadeau:\-%s
+#FRDEMAND_STRONG Donnez-nous\-%s\ou vous devrez en assumer les conséquences!
+#FRDONE Y a-t-il autre chose dont vous souhaitez parler?
+#FRPEACE Nous avons préparé un traité de paix permanent pour mettre fin à l'agression entre nos deux peuples et pour fixer nos frontières mutuelles. Allez-vous le signer?
+#FRFRIENDLY Nous avons un grand respect pour la #a la culture et la technologie. Restons en contact amical pour mieux nous connaître.
+#FRALLIANCE Nous voyons de grandes possibilités de coopération entre nos deux peuples. Voulez-vous vous joindre à une alliance avec nous, afin que nous puissions présenter un front uni contre nos ennemis mutuels?
+#FRACCEPTTREATY Nous acceptons. Puisse cet accord inaugurer une nouvelle ère de relations entre nos peuples.
+#FRNOTACCEPTTREATY Nous n'avons aucun intérêt à cela pour le moment.
+#FRACCEPTOFFER Cette offre nous semble équitable. Nous l'acceptons.
+#FRACCEPTPRESENT #N Nous acceptons avec gratitude ce présent.
+#FRACCEPTDEMAND_STRONG Dans l'intérêt de nos bonnes relations, nous avons décidé de nous conformer à vos souhaits.
+#FRNOTACCEPTOFFER Cette suggestion ne nous semble pas avantageuse.
+#FRNOTACCEPTPRESENT #N n'ont pas besoin de cadeaux comme celui-ci.
+#FRNOTACCEPTDEMAND_STRONG Vous êtes trop exigeants.
+#FRDELCHOICE Nous sommes intéressés par\-%s\Que pouvons-nous offrir en échange?
+#FRCOSTCHOICE Y a-t-il quelque chose que vous pourriez nous offrir en échange de\-%s?
+#FRBYE Pas pour le moment, alors que cette discussion s'achève ici. Au revoir.
+#PRICE_CHOOSE Un prix de choix
+#PRICE_CIVIL Un dossier sur #n
+#PRICE_MIL Informations militaires sur #n
+#PRICE_MAP Le #a carte du monde
+#PRICE_SHIPCOMP %d Composants des navires coloniaux
+#PRICE_SHIPPOW %d Modules de puissance
+#PRICE_SHIPHAB %d Modules d'habitation
+#PRICE_ALLTECH Tous #a les connaissances scientifiques
+#PRICE_ALLMODEL Tous #a documents de conception d'unité
+#PRICE_CONCAT %s\-%s
+#PRICECAT_ALLTECH Toutes les avances
+#PRICECAT_ALLMODEL Tous les modèles d'unités
+
+'Button Captions
+#BTN_OK OK
+#BTN_CANCEL Annuler
+#BTN_YES Oui
+#BTN_NO Non
+#BTN_INFO Info
+
+'Button Tooltips
+#BTN_SELECT Sélectionnez
+#BTN_PAGE Page suivante
+#BTN_SUPPORT Montrez votre soutien
+#BTN_IMPRS Améliorations
+#BTN_CLASSES Unités
+#BTN_WONDERS Merveilles
+#BTN_BUY Acheter
+#BTN_DELETE Supprimer
+#BTN_RENAME Renommer
+#BTN_OBSOLETE Obsolète
+#BTN_NONOBSOLETE Production autorisée
+#BTN_ALLOWCONSCRIPTS Constitutions autorisées
+#BTN_NOCONSCRIPTS Pas de consorts
+#BTN_ENDTURN Fin du tour!
+#BTN_SKIP Sauter la rubrique "Déménagements à l'étranger
+#BTN_NOAUTOMOVE Ne continuez pas à vous déplacer
+#BTN_STOP Stop
+#BTN_NEGO Retour à la négociation
+#BTN_DIALOG Contacter cette nation!
+#BTN_BREAK Pause dans la négociation
+#BTN_PASS Ne rien offrir
+#BTN_CNTREATY Annuler le traité
+#BTN_ACCEPT Accepter la proposition
+#BTN_NOTICE Décision constatée
+#BTN_REPLAY Reproduction
+#BTN_RENGAME Renommer le livre
+#BTN_DELGAME Supprimer le livre
+#BTN_RENMAP Renommer la carte
+#BTN_DELMAP Enlever la carte
+#BTN_CONTENTS Contenu
+#BTN_BACK Retour
+#BTN_SEARCH Recherchez
+#BTN_WANTPEACE Vouloir la paix
+#BTN_OFFERPEACE Offrir la paix
+#BTN_WANTFRIENDLY Vouloir de l'amitié
+#BTN_OFFERFRIENDLY Offrir son amitié
+#BTN_WANTALLIANCE Alliance de la volonté
+#BTN_OFFERALLIANCE Offrir une alliance
+#BTN_NEGOEARLIER Partie précédente
+#BTN_NEGOLATER Dernière partie
+
+'Morphing Menu Entries
+#SUPER Contrôleur
+#HUMAN Acteur local
+#AIT Tournoi d'IA
+#RANDOMAI Choisir des IA au hasard
+#NOMOD (Aucune)
+#BTN_FOUND S'installer
+#BTN_ADD Ajouter à la ville
+#BTN_SETHOME Le soutien d'ici
+#BTN_MOVEHOME Retour à la ville la plus proche
+#BTN_BUILDROAD Construire une route
+#BTN_BUILDBRIDGE Construire un pont
+#BTN_BUILDRR Construire un chemin de fer
+#BTN_BUILDRRBRIDGE Construire un pont ferroviaire
+#BTN_CLEAR Forêt claire
+#BTN_DRAIN Drainage des marais
+#BTN_UNDESERT Changement en plaine
+#FARTECH Zoom sur
+#NOFARTECH Pas de focus
+#UTILIZE Utilisez
+#INTEGRATE Intégrer
+
+'Busy Messages
+#BUSY_START Créer le monde...
+#BUSY_MOD Chargement %s...
+#BUSY_MODLH Chargement des graphiques et des sons...
+#BUSY_INIT Initialisation de l'IA...
+#BUSY_LOAD Chargement des données sauvegardées...
+
+'Map Editor
+#MAP_START Position de départ
+#MAP_PREFSTART Position de départ préférée
+#MAP_RANDOM Voulez-vous rejeter cette carte et la remplacer par une carte aléatoire générée automatiquement?
+#MAP_CLOSE Vous allez fermer cette carte.\Souhaitez-vous la sauvegarder?
+
+#STARTCONTROLS
+Démissionner
+Démarrer
+Ouvrez
+Nouveau livre
+Livres précédents
+Taille du monde:
+Masse terrestre:
+Configuration du lecteur gratuit
+Année:
+Difficulté pour %s
+Fin:
+Carte
+Rédacteur en chef
+*
+Difficulté:
+Nations étrangères:
+Contrôlé par:
+
+#AUTODIFF
+Débutant
+Facile
+Modéré
+Dur
+Folie
+
+#CONTROLS
+Annuler les commandes
+Fermer
+Économie et fiscalité
+Couverture de la Grande Muraille
+Terrain nu
+Merveilles du monde
+Manuel
+Test
+Rapport militaire
+Voir le journal
+Types de villes
+Centre
+Continuer
+Commandes des unités
+Informations sur les classes d'unités
+Construire une base militaire
+Transformer
+Nettoyer la pollution
+Pillage
+Construire une forteresse
+Graphiques
+Restez ici
+Construire un canal
+Chargement au transport
+Attendre
+Pas de commandes
+Afficher les codes de localisation
+Amélioration du terrain
+Options
+Mouvement des unités
+*
+Attendre à la fin du tour
+Ombrez les zones non observées
+Options de rapport sur les villes
+Noms des villes
+Frontières
+Rapport sur la ville
+Rapport de recherche
+Améliorer
+Amélioration du terrain
+Navires coloniaux
+Gestion macro
+Construire l'irrigation
+Construire des terres agricoles
+Afforest
+Construire la mine
+Créer une unité
+Grille
+Carte de débogage de l'AI
+Dessins et modèles des unités étrangères
+Carte politique
+Attaques et captures uniquement
+Ne pas montrer
+Sauter 20 Tourne
+Nations
+Manipulation
+Obtenir toutes les avances
+Des projets à chaque tour
+La recherche à chaque tour
+Les villes grandissent à chaque tour
+Tout voir
+Les nations se connaissent
+Courir jusqu'à la fin du jeu
+Villes étrangères
+Liste des rapports des villes
+Écrans du rapport sur les villes
+Noms
+Pas besoin de ressources modernes
+Récupérer
+Décharger
+Carte au hasard
+Démanteler
+Charger à ce transport
+Mouvement ennemi
+Lent
+Rapide
+Très rapide
+Lent
+Rapide
+Son
+Off
+Sur (Mise en œuvre par défaut)
+Sur (Mise en œuvre alternative)
+Défilement
+Lent
+Rapide
+Off
+Ouvrez le site web de C-evo
+COMMENCER LA RÉVOLUTION!
+Mouvement des alliés
+Lent
+Rapide
+Ne pas montrer
+Patrouilles, attaques et captures uniquement
+Patrouilles, attaques et captures uniquement
+Taille des carreaux
+
+#ADVANCES
+Vol avancé
+Guerre amphibie
+Astronomie
+Théorie atomique
+Automobile
+Balistique
+Banque
+Construction de ponts
+Le travail du bronze
+Cérémonie d'enterrement
+Chimie
+Chevalerie
+Composites
+Code des lois
+Armes combinées
+Moteur à combustion
+Communisme
+Ordinateurs
+Conscription
+Construction
+La société
+Vol spatial
+Monnaie
+Démocratie
+Économie
+Électricité
+Electronique
+Ingénierie
+Environnementalisme
+La Roue
+Explosifs
+Vol
+Renseignements
+Poudre à canon
+Équitation
+Impulsion
+Industrialisation
+Armes intelligentes
+Invention
+Travail du fer
+Le laser
+L'énergie nucléaire
+Littérature
+L'Internet
+Magnétisme
+Etablissement de cartes
+Maçonnerie
+Production de masse
+Mathématiques
+Médecine
+Métallurgie
+Miniaturisation
+La guerre mobile
+Monarchie
+Mysticisme
+Navigation
+Fission nucléaire
+Philosophie
+Physique
+Plastiques
+Poésie
+Poterie
+Radio
+Recyclage
+Réfrigération
+Monothéisme
+La République
+Robotique
+Rocketry
+Chemin de fer
+Assainissement
+Science
+Rédaction
+La mer
+Environnement autonome
+Furtif
+Moteur à vapeur
+Acier
+Aliments synthétiques
+Tactique
+Théologie
+Théorie de la gravité
+Commerce
+Colonisation transtellaire
+Université
+Fusée avancée
+Code des guerriers
+Alphabet
+Polythéisme
+Raffinage
+Technologie informatique
+Nano technologie
+Technologie des matériaux
+Intelligence artificielle
+
+#IMPROVEMENTS
+Les Pyramides
+Le temple de Zeus
+Les jardins suspendus
+Le colosse
+Le phare
+La Grande Bibliothèque
+L'Oracle
+L'Académie de guerre de Sun Tzu
+L'atelier de Leonardo
+L'expédition de Magellan
+La chapelle de Michel-Ange
+*
+Collège de Newton
+La cathédrale de Bach
+*
+La Statue de la Liberté
+La Tour Eiffel
+Le barrage Hoover
+L'Express Shinkansen
+Le projet Manhattan
+Station spatiale MIR
+*
+*
+*
+*
+*
+*
+*
+Commerce des marchandises
+Caserne
+Grenier
+Temple
+Marché
+Bibliothèque
+Palais de justice
+Murs de la ville
+Aqueduc
+Banque
+Cathédrale
+Université
+Port
+Théâtre
+Usine
+Usine de fabrication
+Centre de recyclage
+Centrale électrique
+Barrage hydroélectrique
+Centrale nucléaire
+Plate-forme offshore
+Hôtel de ville
+Système d'égouts
+Supermarché
+Autoroutes
+Laboratoire de recherche
+Batterie de missiles SAM
+Forteresse côtière
+Aéroport
+Le chantier naval
+Palais
+Grande Muraille
+Colosseum
+Observatoire
+Académie militaire
+Bunker de commandement
+Plante d'algues
+Bourse
+Port spatial
+Volet "navires coloniaux
+Module d'alimentation
+Module d'habitation
+
+#FEATURES
+Armes
+Armor
+Mobilité
+Transport maritime
+Transporteur
+Turbines
+Bombes
+Carburant
+Transport aérien
+Navigation
+Radar / Sonar
+Sous-marin
+Artillerie
+Alpin
+Navire de ravitaillement
+Surcharge pondérale
+Défense aérienne
+Avion espion
+L'énergie à vapeur
+L'énergie nucléaire
+Moteurs à réaction
+Furtif
+Fanatique
+Première grève
+Le pouvoir de la volonté
+Formation de l'Académie
+Production en ligne
+
+#TERRAIN
+Océan
+Côte
+Prairie
+Désert
+Prairie
+Tundra
+Arctique
+Marais
+Jungle
+Forêt
+Collines
+Montagnes
+*
+Poissons
+Plaines
+Oasis
+Blé
+Or
+Ivoire
+Tourbe
+Fruits
+Jeu
+Vin
+Fer
+*
+Manganèse
+*
+Pétrole
+Bauxite
+Gaz
+*
+*
+Ebony
+Eau minérale
+Charbon
+Diamants
+Terres mortes
+Cobalt
+Uranium
+Mercure
+
+#DOMAIN
+Terrain
+Naval
+Air
+
+#EXPERIENCE
+Vert
+Discipliné
+Durci
+Vétéran
+Elite
+
+#UNITSTATUS
+Fortifié
+Bombardier armé
+Se déplacer en montagne 
+Conscrits
+Retiré
+*
+*
+*
+Chargée
+Cause des troubles
+Restez ici
+*
+Passer à la marque
+Améliorer le terrain
+Récupérer
+
+#GOVERNMENT
+Anarchie
+Despotisme
+Monarchie
+République
+Fondamentalisme
+Communisme
+Démocratie
+Société future
+
+#TREATY
+Pas de traité
+*
+Paix
+Amitié
+Alliance
+
+#HAVETREATY
+Contact avec #n
+*
+En paix avec #n
+Amitié avec #n
+Allié à #n
+
+#CREDIBILITY
+Mendiant
+Imprévisible
+Isolationniste
+Respectable
+
+#CITYEVENTS
+Désordre civil
+Production terminée
+Croissance de la population
+Diminution de la population
+Unité dissoute
+Amélioration vendue
+Production sabotée
+Taille maximale atteinte
+Pollution
+Ville en état de siège
+L'émerveillement existe déjà
+L'émigration retardée
+Création de la ville
+Reprise complète
+Capturé
+Le type de ville n'est plus valable
+
+#CITYTYPE
+Ville commune
+La ville de la science
+Ville industrielle
+Metropolis
+
+#DIAGRAM
+Population
+Territoire
+La puissance militaire
+Technologie
+Exploration
+Culture
+
+#JOBRESULT
+*
+Route
+Chemin de fer
+Forêt claire
+Irrigation
+Terres agricoles
+Afforest
+Mine
+Canal
+Transformer
+Forteresse
+Nettoyer
+Base militaire
+Pillage
+S'installer
+Pont
+Pont ferroviaire
+Clair
+Plaines
+Drain
+
+#ARMYLOST
+#A armée détruite.
+#A flotte détruite.
+#A groupe détruit.
+
+#SPYMISSION
+Sabotage de la production
+Voler des cartes
+Collecter les connaissances des pays tiers
+Préparer le dossier
+Préparer le rapport militaire
+
+#WANT
+Vouloir dossier
+Vous voulez des informations militaires
+Vouloir une carte du monde
+*
+Vouloir une avance
+Vouloir la conception d'une unité
+Vouloir être payé
+*
+*
+*
+Vous voulez des pièces de navires de la colonie
+Qu'ils offrent quelque chose
+
+#OFFER
+Dossier d'offre
+Offrir des informations militaires
+Offrir une carte du monde
+*
+Offrir une avance
+Conception de l'unité d'offre
+Proposer un paiement
+*
+*
+*
+Offrir des pièces détachées pour les navires de la colonie
+Laissez-les vouloir quelque chose
+
+#CITYMANAGETYPE
+Contrôle total
+Maximiser\Recherche
+Dépêchez-vous\Recherche
+Maximiser\Croissance
+Dépêchez-vous\Production
+Maximiser\Production
+
+#SETTINGS
+Plein écran

@@ -1,0 +1,71 @@
+#BELONG #A
+
+'Controls
+#SHIFTCLICK Décalage+Cliquez sur l'article pour plus d'informations
+#MAPPROP %d%% Taille,%d Joueurs
+#MENU_ADVTREE Arbre des avances
+#MENU_VIEWPOINT Point de vue
+#MENU_DEBUGMAPOFF De
+#MENU_TELLAI Dites à AI
+#BTN_MENU Menu principal
+#BTN_MANAGE Gestion de l'Empire
+
+'Tooltips
+#TIP_WORKING Citoyens affectés à l'économie
+#TIP_CIVIL Citoyens affectés à la fonction publique
+#TIP_PRIMACY Sélecteur de primauté
+#TIP_PROJECT Actuellement en production
+#TIP_SUPUNITS Afficher les unités prises en charge
+#TIP_TREASURY Trésorerie
+
+'Advance Tree Legend
+#ADVTREE_UP0 Mise à niveau de l'unité au sol
+#ADVTREE_UP1 Amélioration de l'unité navale
+#ADVTREE_UP2 Mise à niveau de l'unité aérienne
+#ADVTREE_GOV Permet de former le gouvernement
+#ADVTREE_OTHER Autre effet
+
+'Start Dialog
+#ACTIONHEADER_CONFIG Configurateur
+#ACTION_CONFIG Changer de langue, ajouter des cartes et des IA
+#ACTIONHEADER_MANUAL Manuel
+#ACTION_MANUAL Règles et interface utilisateur en détail
+#ACTIONHEADER_CREDITS Crédits
+#ACTION_CREDITS Voir qui a contribué à ce jeu
+#ACTIONHEADER_AIDEV Développement IA
+#ACTION_AIDEV Apprenez à coder votre propre IA pour ce jeu
+#ACTIONHEADER_WEB Sur le Web: c-evo.org
+
+'Message Text
+#BUSY_DEINIT Désinitialisation%s...
+#AGE0 = %s =\Nous avons construit une colonie permanente pour faire de l'agriculture, ce qui est un moyen beaucoup plus efficace de se nourrir que la chasse et la cueillette. L'excès de nourriture a un effet largement inconnu de nos ancêtres nomades: croissance.
+#DISPOSE2 %s\\Pouvons-nous reconstruire ce bâtiment pour%d%%p?
+#SELL2 %s\\Pouvons-nous vendre ce bâtiment pour%d%%c?
+#SHIP_UTILIZE Le fret ne peut pas être utilisé pour la production de navires de colonie.
+
+'City Events
+#CITYEVENT_ALLIMPSMADE Toutes les améliorations apportées
+
+'Diplomatic Statements, do not use '\'!
+#FRDEMAND_SOFT Nous serons très heureux si vous nous laissez avoir\-%s
+#FRNOTACCEPTANYOFFER Nous sommes désolés, mais rien de ce que vous pourriez offrir n'a une valeur appropriée.
+#FRNOTACCEPTANYWANT Nous ne voyons aucune valeur dans votre offre.
+
+'help.txt additions
+#HELP_WONDERMORALE1 Effet supplémentaire: +2%m dans cette ville(n'expire pas).
+#HELP_WONDERMORALE2 Effet supplémentaire: +2%m dans cette ville.
+
+'future use
+#BTN_MAPPROJECT Projets de la ville
+#CITYPRIO Donnez la priorité à cette ville
+
+#DRAFTDOMAIN
+Unité au sol
+Unité navale
+Unité aérienne
+
+#AITSTAT
+Le nombre de tours du navire de colonie a été terminé
+Nombre de cartouches toutes les autres nations ont été effacées
+Nombre de rounds que la nation a été effacée
+Part du temps de calcul total

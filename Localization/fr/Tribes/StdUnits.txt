@@ -1,0 +1,131 @@
+0,	074,	Armée d'esclaves
+1,	075,	Citoyens libres
+3,	071,	Plongeur
+4,	073,	Planeur
+7,	064,	Drakkars
+10,	010,	Colons
+11,	011,	Ingénieurs
+13,	021,	Commando spécial
+14,	030,	Fret
+16,	017,	Chantier de construction
+17,	041,	Garde urbaine
+20,	100,	Guerriers
+21,	100,	Archers
+22,	100,	Guerriers
+23,	100,	Guerriers
+24,	101,	Légion
+25,	101,	Piquiers
+26,	101,	Phalange
+27,	101,	Archers
+30,	102,	Garde
+31,	102,	Garde
+32,	102,	Garde
+33,	102,	Garde
+34,	103,	Mousquetaires
+35,	103,	Mousquetaires
+36,	103,	Mousquetaires
+37,	103,	Mousquetaires
+40,	104,	Fusiliers
+41,	104,	Fusiliers
+42,	104,	Fusiliers
+43,	104,	Fusiliers
+44,	105,	Infanterie
+45,	105,	Infanterie
+46,	105,	Infanterie
+47,	105,	Infanterie
+50,	106,	Infanterie de marine
+51,	106,	Infanterie de marine
+52,	106,	Infanterie de marine
+53,	106,	Infanterie de marine 
+54,	110,	Infanterie mécanisée
+55,	110,	Infanterie mécanisée
+56,	110,	Infanterie mécanisée
+57,	110,	Infanterie mécanisée
+60,	130,	Cavaliers
+61,	130,	Cavaliers
+62,	130,	Cavaliers
+63,	130,	Cavaliers
+64,	131,	Cavaliers
+65,	131,	Cavaliers
+66,	131,	Cavaliers
+67,	131,	Cavaliers
+70,	132,	Chevaliers
+71,	132,	Chevaliers
+72,	132,	Chevaliers
+73,	132,	Chevaliers
+74,	133,	Dragons
+75,	133,	Dragons
+76,	133,	Dragons
+77,	133,	Dragons
+80,	134,	Cavalerie
+81,	134,	Cavalerie
+82,	134,	Cavalerie
+83,	134,	Cavalerie
+84,	135,	Tank
+85,	135,	Tank
+86,	135,	Tank
+87,	135,	Tank
+90,	136,	Blindé 
+91,	136,	Blindé
+92,	136,	Blindé
+93,	136,	Blindé
+100,	170,	Baliste
+101,	170,	Tour de combat
+102,	170,	Catapulte
+103,	170,	Catapulte
+104,	171,	Canon
+105,	171,	Canon
+106,	171,	Canon
+107,	171,	Canon
+110,	172,	Obusier
+111,	172,	Obusier
+112,	172,	Obusier
+113,	172,	Obusier
+114,	173,	Lanceur d'engins
+115,	173,	Lanceur d'engins
+116,	173,	Lanceur d'engins
+117,	173,	Lanceur d'engins
+120,	200,	Voilier
+121,	200,	Voilier
+122,	200,	Voilier
+123,	200,	Voilier
+124,	201,	Galion
+125,	201,	Frégate
+126,	201,	Corvette
+127,	201,	Corvette
+130,	202,	Vaisseau cuirassé
+131,	202,	Contre-torpilleur
+132,	202,	Croiseur
+133,	202,	Croiseur
+134,	203,	Croiseur lanceur d'engins
+135,	203,	Cuirassé
+136,	203,	Croiseur de combat
+137,	203,	Cuirassé
+140,	210,	Bâtiment de transport
+141,	210,	Bâtiment de transport
+142,	210,	Bâtiment de transport
+143,	210,	Bâtiment de transport
+144,	220,	Porte-avions
+145,	220,	Porte-avions
+146,	220,	Porte-avions
+147,	220,	Porte-avions
+150,	240,	Sous-marin
+151,	240,	Sous-marin
+152,	240,	Sous-marin
+153,	240,	Sous-marin
+160,	300,	Chasseur
+161,	300,	Chasseur
+162,	300,	Chasseur
+163,	300,	Chasseur
+164,	301,	Chasseur à réaction
+165,	301,	Chasseur à réaction
+166,	301,	Hélicoptère
+167,	301,	Chasseur à réaction
+170,	310,	Bombardier
+171,	310,	Bombardier
+172,	310,	Zeppelin
+173,	310,	Bombardier
+174,	311,	Bombardier
+175,	311,	Bombardier
+176,	311,	Bombardier
+177,	311,	Bombardier
