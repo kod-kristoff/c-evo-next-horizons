@@ -1,0 +1,71 @@
+#BELONG #A
+
+'Controls
+#SHIFTCLICK Verschiebung+Klicken Sie auf den Artikel für Informationen
+#MAPPROP %d%% Größe, %d Spieler
+#MENU_ADVTREE Baum der Fortschritte
+#MENU_VIEWPOINT Standpunkt
+#MENU_DEBUGMAPOFF Aus
+#MENU_TELLAI AI mitteilen
+#BTN_MENU Hauptmenü
+#BTN_MANAGE Reichsverwaltung
+
+'Tooltips
+#TIP_WORKING Bürger, die der Wirtschaft zugeordnet sind
+#TIP_CIVIL Im öffentlichen Dienst eingesetzte Bürger
+#TIP_PRIMACY Primatsselektor
+#TIP_PROJECT Derzeit produzieren
+#TIP_SUPUNITS Unterstützte Einheiten anzeigen
+#TIP_TREASURY Schatzamt
+
+'Advance Tree Legend
+#ADVTREE_UP0 Upgrade der Bodeneinheit
+#ADVTREE_UP1 Aufrüstung von Marineeinheiten
+#ADVTREE_UP2 Upgrade der Lufteinheit
+#ADVTREE_GOV Ermöglicht Regierungsform
+#ADVTREE_OTHER Andere Wirkung
+
+'Start Dialog
+#ACTIONHEADER_CONFIG Konfigurator
+#ACTION_CONFIG Sprache ändern, Karten und KIs hinzufügen
+#ACTIONHEADER_MANUAL Handbuch
+#ACTION_MANUAL Regeln und Benutzeroberfläche im Detail
+#ACTIONHEADER_CREDITS Credits
+#ACTION_CREDITS Sehen Sie, wer zu diesem Spiel beigetragen hat
+#ACTIONHEADER_AIDEV AI-Entwicklung
+#ACTION_AIDEV Lernen Sie, wie Sie Ihre eigene KI für dieses Spiel programmieren
+#ACTIONHEADER_WEB Im Internet: c-evo.org
+
+'Message Text
+#BUSY_DEINIT Deinitialisierung von %s...
+#AGE0 = %s =\Wir haben eine dauerhafte Siedlung gebaut, um Landwirtschaft zu betreiben, was eine viel effizientere Art der Ernährung ist als Jagen und Sammeln. Überschüssige Nahrung hat eine Wirkung, die unseren nomadischen Vorfahren weitgehend unbekannt war.: Wachstum.
+#DISPOSE2 %s\\Sollen wir dieses Gebäude umbauen für %d%%p?
+#SELL2 %s\\Sollen wir dieses Gebäude verkaufen für %d%%c?
+#SHIP_UTILIZE Fracht kann nicht für die Produktion von Kolonieschiffen verwendet werden.
+
+'City Events
+#CITYEVENT_ALLIMPSMADE Alle Verbesserungen
+
+'Diplomatic Statements, do not use '\'!
+#FRDEMAND_SOFT Wir würden uns sehr freuen, wenn Sie uns Folgendes zukommen lassen\-%s
+#FRNOTACCEPTANYOFFER Es tut uns leid, aber nichts, was Sie anbieten können, ist von angemessenem Wert.
+#FRNOTACCEPTANYWANT Wir sehen keinen Wert in Ihrem Angebot.
+
+'help.txt additions
+#HELP_WONDERMORALE1 Zusätzliche Wirkung: +2%m in dieser Stadt (läuft nicht ab).
+#HELP_WONDERMORALE2 Zusätzliche Wirkung: +2%m in dieser Stadt.
+
+'future use
+#BTN_MAPPROJECT Stadt-Projekte
+#CITYPRIO Dieser Stadt oberste Priorität einräumen
+
+#DRAFTDOMAIN
+Bodeneinheit
+Marine-Einheit
+Lufteinheit
+
+#AITSTAT
+Anzahl der Runden Kolonieschiff wurde abgeschlossen
+Anzahl der Runden alle anderen Nationen wurden gelöscht 
+Anzahl der Runden eigene Nation wurde gelöscht 
+Anteil an der Gesamtberechnungszeit
