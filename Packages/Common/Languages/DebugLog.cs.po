@@ -1,0 +1,17 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Jiří Hajda <robie@centrum.cz>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: debuglog.sfilenamenotdefined
+#, fuzzy
+msgctxt "debuglog.sfilenamenotdefined"
+msgid "Filename not defined"
+msgstr "Neurčen soubor"
+

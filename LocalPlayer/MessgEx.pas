@@ -62,7 +62,7 @@ procedure ContextMessage(SimpleText, SoundItem: string;
 implementation
 
 uses
-  ClientTools, BaseWin, Term, Help, UnitStat, Tribes, UPixelPointer,
+  ClientTools, BaseWin, Term, Help, UnitStat, Tribes, PixelPointer,
   Diagram, Sound;
 
 {$R *.lfm}
@@ -210,7 +210,7 @@ begin
   end
   else
     Result := inherited;
-  Gtk2Fix;
+  //Gtk2Fix;
 end;
 
 procedure TMessgExDlg.CancelMovie;
@@ -243,7 +243,7 @@ begin
     // prepare screwed icon
     Screwed := Default(TScrewed);
     BigImp.BeginUpdate;
-    SrcPtr := PixelPointer(BigImp, ScaleToNative(xIcon), ScaleToNative(yIcon));
+    SrcPtr := TPixelPointer.Create(BigImp, ScaleToNative(xIcon), ScaleToNative(yIcon));
     for iy := 0 to ScaleToNative(Height) - 1 do begin
       for ix := 0 to ScaleToNative(Width) - 1 do begin
         xR := ScaleFromNative(ix) * (37 + ScaleFromNative(iy) * 5 / Height) / Width;

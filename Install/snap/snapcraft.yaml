@@ -10,7 +10,7 @@ description: |
   * Multiple localizations included
   * Support for user defined key mapping
   * Many other small improvements
-confinement: strict
+confinement: devmode
 base: core22
 grade: stable
 icon: Graphics/c-evo_64x64.png
@@ -68,9 +68,9 @@ parts:
     - libxrender1
     override-build: |
       snapcraftctl build
-      (cd AI/StdAI &&lazbuild --build-mode=Release StdAI.lpi)
+      (cd AI/StdAI &&lazbuild --build-mode=Debug StdAI.lpi)
       mv AI/StdAI/libstdai.so AI/StdAI/libstdai-amd64.so
-      lazbuild --build-mode=Release Integrated.lpi
+      lazbuild --build-mode=Debug Integrated.lpi
       install -d -m 755 $SNAPCRAFT_PART_INSTALL/usr/share/c-evo
       install -s -m 755 c-evo $SNAPCRAFT_PART_INSTALL/usr/share/c-evo
       install -m 644 Language.txt $SNAPCRAFT_PART_INSTALL/usr/share/c-evo

@@ -1,0 +1,49 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Chronos <robie@centrum.cz>\n"
+"Language-Team: \n"
+"Language: cs_CZ\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.2\n"
+
+#: jobprogressview.sestimatedtime
+#, object-pascal-format, fuzzy
+msgctxt "jobprogressview.sestimatedtime"
+msgid "Estimated time: %s"
+msgstr "Odhadovaný čas: %s"
+
+#: jobprogressview.sexecuted
+#, fuzzy
+msgctxt "jobprogressview.sexecuted"
+msgid "Executed"
+msgstr "Vykonané"
+
+#: jobprogressview.sfinished
+#, fuzzy
+msgctxt "jobprogressview.sfinished"
+msgid "Finished"
+msgstr "Dokončené"
+
+#: jobprogressview.spleasewait
+#, fuzzy
+msgctxt "jobprogressview.spleasewait"
+msgid "Please wait..."
+msgstr "Prosím čekejte..."
+
+#: jobprogressview.sterminate
+#, fuzzy
+msgctxt "jobprogressview.sterminate"
+msgid "Termination"
+msgstr "Přerušení"
+
+#: jobprogressview.stotalestimatedtime
+#, object-pascal-format, fuzzy
+msgctxt "jobprogressview.stotalestimatedtime"
+msgid "Total estimated time: %s"
+msgstr "Celkový odhadovaný čas: %s"
+

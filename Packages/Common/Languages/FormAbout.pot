@@ -1,0 +1,15 @@
+msgid ""
+msgstr "Content-Type: text/plain; charset=UTF-8"
+
+#: formabout.slicense
+msgid "License"
+msgstr ""
+
+#: formabout.sreleasedate
+msgid "Release date"
+msgstr ""
+
+#: formabout.sversion
+msgid "Version"
+msgstr ""
+

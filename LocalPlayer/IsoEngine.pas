@@ -5,7 +5,7 @@ interface
 
 uses
   Protocol, ClientTools, ScreenTools, Tribes, LCLIntf, LCLType, SysUtils,
-  Classes, Graphics, UPixelPointer, UGraphicSet;
+  Classes, Graphics, PixelPointer, GraphicSet;
 
 const
   TerrainIconLines = 21;
@@ -254,7 +254,7 @@ begin
   Mask24.BeginUpdate;
   for ySrc := 0 to TerrainIconLines - 1 do begin
     for I := 0 to yyt * 3 - 1 do
-      MaskLine[I] := PixelPointer(Mask24, ScaleToNative(0),
+      MaskLine[I] := TPixelPointer.Create(Mask24, ScaleToNative(0),
         ScaleToNative(1 + ySrc * (yyt * 3 + 1) + I));
     for xSrc := 0 to TerrainIconCols - 1 do begin
       I := ySrc * 9 + xSrc;
@@ -1423,7 +1423,7 @@ var
   Line: TPixelPointer;
 begin
   FOutput.BeginUpdate;
-  Line := PixelPointer(FOutput, ScaleToNative(x0), ScaleToNative(y0));
+  Line := TPixelPointer.Create(FOutput, ScaleToNative(x0), ScaleToNative(y0));
   for Y := 0 to ScaleToNative(Height) - 1 do begin
     y_n := (ScaleFromNative(Y) + y0 - ym) / yyt;
     if abs(y_n) < rShade then begin

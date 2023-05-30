@@ -5,7 +5,7 @@ interface
 
 uses
   Protocol, ScreenTools, LazFileUtils, Classes, Graphics, SysUtils, Global,
-  UGraphicSet;
+  GraphicSet;
 
 type
   TCityPicture = record

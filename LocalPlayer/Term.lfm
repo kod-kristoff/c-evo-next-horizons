@@ -11,9 +11,9 @@ object MainScreen: TMainScreen
   Color = clBtnFace
   Constraints.MinHeight = 480
   Constraints.MinWidth = 800
-  DesignTimePPI = 120
+  DesignTimePPI = 144
   Font.Color = clWindowText
-  Font.Height = -13
+  Font.Height = -20
   Font.Name = 'MS Sans Serif'
   KeyPreview = True
   OnClose = FormClose
@@ -30,7 +30,7 @@ object MainScreen: TMainScreen
   OnResize = FormResize
   OnShow = FormShow
   Position = poDefault
-  LCLVersion = '2.0.12.0'
+  LCLVersion = '2.2.0.4'
   Scaled = False
   WindowState = wsMaximized
   object UnitBtn: TButtonB

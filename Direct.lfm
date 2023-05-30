@@ -7,9 +7,9 @@ object DirectDlg: TDirectDlg
   BorderStyle = bsNone
   Caption = 'C-evo'
   Color = clBtnFace
-  DesignTimePPI = 125
+  DesignTimePPI = 144
   Font.Color = clWindowText
-  Font.Height = -13
+  Font.Height = -20
   Font.Name = 'MS Sans Serif'
   FormStyle = fsStayOnTop
   OnClose = FormClose
@@ -17,6 +17,6 @@ object DirectDlg: TDirectDlg
   OnPaint = FormPaint
   OnShow = FormShow
   ShowInTaskBar = stNever
-  PixelsPerInch = 96
+  LCLVersion = '2.2.6.0'
   Scaled = False
 end

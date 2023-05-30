@@ -1,0 +1,1047 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Jiří Hajda <software@mezservis.cz>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: languages.slangauto
+#, fuzzy
+msgctxt "languages.slangauto"
+msgid "Automatic"
+msgstr "Automaticky"
+
+#: languages.slang_aa
+msgctxt "languages.slang_aa"
+msgid "Afar"
+msgstr ""
+
+#: languages.slang_ab
+#, fuzzy
+msgctxt "languages.slang_ab"
+msgid "Abkhazian"
+msgstr "Abcházština"
+
+#: languages.slang_ae
+msgctxt "languages.slang_ae"
+msgid "Avestan"
+msgstr ""
+
+#: languages.slang_af
+#, fuzzy
+msgctxt "languages.slang_af"
+msgid "Afrikaans"
+msgstr "Afrikánština"
+
+#: languages.slang_ak
+msgctxt "languages.slang_ak"
+msgid "Akan"
+msgstr ""
+
+#: languages.slang_am
+msgctxt "languages.slang_am"
+msgid "Amharic"
+msgstr ""
+
+#: languages.slang_an
+msgctxt "languages.slang_an"
+msgid "Aragonese"
+msgstr ""
+
+#: languages.slang_ar
+#, fuzzy
+msgctxt "languages.slang_ar"
+msgid "Arabic"
+msgstr "Arabština"
+
+#: languages.slang_as
+msgctxt "languages.slang_as"
+msgid "Assamese"
+msgstr ""
+
+#: languages.slang_av
+msgctxt "languages.slang_av"
+msgid "Avaric"
+msgstr ""
+
+#: languages.slang_ay
+msgctxt "languages.slang_ay"
+msgid "Aymara"
+msgstr ""
+
+#: languages.slang_az
+msgctxt "languages.slang_az"
+msgid "Azerbaijani"
+msgstr ""
+
+#: languages.slang_ba
+msgctxt "languages.slang_ba"
+msgid "Bashkir"
+msgstr ""
+
+#: languages.slang_be
+msgctxt "languages.slang_be"
+msgid "Belarusian"
+msgstr ""
+
+#: languages.slang_bg
+#, fuzzy
+msgctxt "languages.slang_bg"
+msgid "Bulgarian"
+msgstr "Maďarština"
+
+#: languages.slang_bh
+msgctxt "languages.slang_bh"
+msgid "Bihari"
+msgstr ""
+
+#: languages.slang_bi
+msgctxt "languages.slang_bi"
+msgid "Bislama"
+msgstr ""
+
+#: languages.slang_bm
+msgctxt "languages.slang_bm"
+msgid "Bambara"
+msgstr ""
+
+#: languages.slang_bn
+msgctxt "languages.slang_bn"
+msgid "Bengali"
+msgstr ""
+
+#: languages.slang_bo
+#, fuzzy
+msgctxt "languages.slang_bo"
+msgid "Tibetan"
+msgstr "Tibetština"
+
+#: languages.slang_br
+msgctxt "languages.slang_br"
+msgid "Breton"
+msgstr ""
+
+#: languages.slang_bs
+msgctxt "languages.slang_bs"
+msgid "Bosnian"
+msgstr ""
+
+#: languages.slang_ca
+#, fuzzy
+msgctxt "languages.slang_ca"
+msgid "Catalan"
+msgstr "Katalánština"
+
+#: languages.slang_ce
+msgctxt "languages.slang_ce"
+msgid "Chechen"
+msgstr ""
+
+#: languages.slang_ch
+msgctxt "languages.slang_ch"
+msgid "Chamorro"
+msgstr ""
+
+#: languages.slang_co
+msgctxt "languages.slang_co"
+msgid "Corsican"
+msgstr ""
+
+#: languages.slang_cr
+#, fuzzy
+msgctxt "languages.slang_cr"
+msgid "Cree"
+msgstr "Kríjština"
+
+#: languages.slang_cs
+#, fuzzy
+msgctxt "languages.slang_cs"
+msgid "Czech"
+msgstr "Čeština"
+
+#: languages.slang_cv
+msgctxt "languages.slang_cv"
+msgid "Chuvash"
+msgstr ""
+
+#: languages.slang_cy
+msgctxt "languages.slang_cy"
+msgid "Welsh"
+msgstr ""
+
+#: languages.slang_da
+#, fuzzy
+msgctxt "languages.slang_da"
+msgid "Danish"
+msgstr "Dánština"
+
+#: languages.slang_de
+#, fuzzy
+msgctxt "languages.slang_de"
+msgid "German"
+msgstr "Němčina"
+
+#: languages.slang_de_at
+#, fuzzy
+msgctxt "languages.slang_de_at"
+msgid "Austrian German"
+msgstr "Australská němčina"
+
+#: languages.slang_de_ch
+#, fuzzy
+msgctxt "languages.slang_de_ch"
+msgid "Swiss German"
+msgstr "Švédská němčina"
+
+#: languages.slang_dv
+msgctxt "languages.slang_dv"
+msgid "Divehi"
+msgstr ""
+
+#: languages.slang_dz
+msgctxt "languages.slang_dz"
+msgid "Dzongkha"
+msgstr ""
+
+#: languages.slang_ee
+msgctxt "languages.slang_ee"
+msgid "Ewe"
+msgstr ""
+
+#: languages.slang_el
+#, fuzzy
+msgctxt "languages.slang_el"
+msgid "Greek"
+msgstr "Řečtina"
+
+#: languages.slang_en
+#, fuzzy
+msgctxt "languages.slang_en"
+msgid "English"
+msgstr "Angličtina"
+
+#: languages.slang_en_au
+#, fuzzy
+msgctxt "languages.slang_en_au"
+msgid "Australian English"
+msgstr "Australská angličtina"
+
+#: languages.slang_en_ca
+#, fuzzy
+msgctxt "languages.slang_en_ca"
+msgid "Canadian English"
+msgstr "Kanadská angličtina"
+
+#: languages.slang_en_gb
+#, fuzzy
+msgctxt "languages.slang_en_gb"
+msgid "British English"
+msgstr "Britská angličtina"
+
+#: languages.slang_en_us
+#, fuzzy
+msgctxt "languages.slang_en_us"
+msgid "American English"
+msgstr "Americká angličtina"
+
+#: languages.slang_eo
+#, fuzzy
+msgctxt "languages.slang_eo"
+msgid "Esperanto"
+msgstr "Esperanto"
+
+#: languages.slang_es
+#, fuzzy
+msgctxt "languages.slang_es"
+msgid "Spanish"
+msgstr "Španělština"
+
+#: languages.slang_et
+#, fuzzy
+msgctxt "languages.slang_et"
+msgid "Estonian"
+msgstr "Estonština"
+
+#: languages.slang_eu
+msgctxt "languages.slang_eu"
+msgid "Basque"
+msgstr ""
+
+#: languages.slang_fa
+#, fuzzy
+msgctxt "languages.slang_fa"
+msgid "Persian"
+msgstr "Perština"
+
+#: languages.slang_ff
+msgctxt "languages.slang_ff"
+msgid "Fulah"
+msgstr ""
+
+#: languages.slang_fi
+#, fuzzy
+msgctxt "languages.slang_fi"
+msgid "Finnish"
+msgstr "Finština"
+
+#: languages.slang_fj
+msgctxt "languages.slang_fj"
+msgid "Fijian"
+msgstr ""
+
+#: languages.slang_fo
+msgctxt "languages.slang_fo"
+msgid "Faroese"
+msgstr ""
+
+#: languages.slang_fr
+#, fuzzy
+msgctxt "languages.slang_fr"
+msgid "French"
+msgstr "Francouzština"
+
+#: languages.slang_fr_be
+msgctxt "languages.slang_fr_be"
+msgid "Walloon"
+msgstr ""
+
+#: languages.slang_fy
+msgctxt "languages.slang_fy"
+msgid "Frisian"
+msgstr ""
+
+#: languages.slang_ga
+#, fuzzy
+msgctxt "languages.slang_ga"
+msgid "Irish"
+msgstr "Irština"
+
+#: languages.slang_gd
+msgctxt "languages.slang_gd"
+msgid "Gaelic"
+msgstr ""
+
+#: languages.slang_gl
+msgctxt "languages.slang_gl"
+msgid "Gallegan"
+msgstr ""
+
+#: languages.slang_gn
+msgctxt "languages.slang_gn"
+msgid "Guarani"
+msgstr ""
+
+#: languages.slang_gu
+msgctxt "languages.slang_gu"
+msgid "Gujarati"
+msgstr ""
+
+#: languages.slang_gv
+msgctxt "languages.slang_gv"
+msgid "Manx"
+msgstr ""
+
+#: languages.slang_ha
+msgctxt "languages.slang_ha"
+msgid "Hausa"
+msgstr ""
+
+#: languages.slang_he
+#, fuzzy
+msgctxt "languages.slang_he"
+msgid "Hebrew"
+msgstr "Hebrejština"
+
+#: languages.slang_hi
+msgctxt "languages.slang_hi"
+msgid "Hindi"
+msgstr ""
+
+#: languages.slang_ho
+msgctxt "languages.slang_ho"
+msgid "Hiri Motu"
+msgstr ""
+
+#: languages.slang_hr
+#, fuzzy
+msgctxt "languages.slang_hr"
+msgid "Croatian"
+msgstr "Chorvatština"
+
+#: languages.slang_ht
+msgctxt "languages.slang_ht"
+msgid "Haitian"
+msgstr ""
+
+#: languages.slang_hu
+#, fuzzy
+msgctxt "languages.slang_hu"
+msgid "Hungarian"
+msgstr "Maďarština"
+
+#: languages.slang_hy
+#, fuzzy
+msgctxt "languages.slang_hy"
+msgid "Armenian"
+msgstr "Arménština"
+
+#: languages.slang_hz
+msgctxt "languages.slang_hz"
+msgid "Herero"
+msgstr ""
+
+#: languages.slang_ia
+msgctxt "languages.slang_ia"
+msgid "Interlingua"
+msgstr ""
+
+#: languages.slang_id
+msgctxt "languages.slang_id"
+msgid "Indonesian"
+msgstr ""
+
+#: languages.slang_ie
+msgctxt "languages.slang_ie"
+msgid "Interlingue"
+msgstr ""
+
+#: languages.slang_ig
+msgctxt "languages.slang_ig"
+msgid "Igbo"
+msgstr ""
+
+#: languages.slang_ii
+msgctxt "languages.slang_ii"
+msgid "Sichuan Yi"
+msgstr ""
+
+#: languages.slang_ik
+msgctxt "languages.slang_ik"
+msgid "Inupiaq"
+msgstr ""
+
+#: languages.slang_io
+msgctxt "languages.slang_io"
+msgid "Ido"
+msgstr ""
+
+#: languages.slang_is
+#, fuzzy
+msgctxt "languages.slang_is"
+msgid "Icelandic"
+msgstr "Islandština"
+
+#: languages.slang_it
+#, fuzzy
+msgctxt "languages.slang_it"
+msgid "Italian"
+msgstr "Italština"
+
+#: languages.slang_iu
+msgctxt "languages.slang_iu"
+msgid "Inuktitut"
+msgstr ""
+
+#: languages.slang_ja
+#, fuzzy
+msgctxt "languages.slang_ja"
+msgid "Japanese"
+msgstr "Japonština"
+
+#: languages.slang_jv
+msgctxt "languages.slang_jv"
+msgid "Javanese"
+msgstr ""
+
+#: languages.slang_ka
+#, fuzzy
+msgctxt "languages.slang_ka"
+msgid "Georgian"
+msgstr "Gruzínština"
+
+#: languages.slang_kg
+#, fuzzy
+msgctxt "languages.slang_kg"
+msgid "Kongo"
+msgstr "Konžština"
+
+#: languages.slang_ki
+msgctxt "languages.slang_ki"
+msgid "Kikuyu"
+msgstr ""
+
+#: languages.slang_kj
+msgctxt "languages.slang_kj"
+msgid "Kuanyama"
+msgstr ""
+
+#: languages.slang_kk
+msgctxt "languages.slang_kk"
+msgid "Kazakh"
+msgstr ""
+
+#: languages.slang_kl
+#, fuzzy
+msgctxt "languages.slang_kl"
+msgid "Greenlandic"
+msgstr "Grónština"
+
+#: languages.slang_km
+msgctxt "languages.slang_km"
+msgid "Khmer"
+msgstr ""
+
+#: languages.slang_kn
+#, fuzzy
+msgctxt "languages.slang_kn"
+msgid "Kannada"
+msgstr "Kannadština"
+
+#: languages.slang_ko
+#, fuzzy
+msgctxt "languages.slang_ko"
+msgid "Korean"
+msgstr "Korejština"
+
+#: languages.slang_kr
+msgctxt "languages.slang_kr"
+msgid "Kanuri"
+msgstr ""
+
+#: languages.slang_ks
+msgctxt "languages.slang_ks"
+msgid "Kashmiri"
+msgstr ""
+
+#: languages.slang_ku
+msgctxt "languages.slang_ku"
+msgid "Kurdish"
+msgstr ""
+
+#: languages.slang_kv
+msgctxt "languages.slang_kv"
+msgid "Komi"
+msgstr ""
+
+#: languages.slang_kw
+#, fuzzy
+msgctxt "languages.slang_kw"
+msgid "Cornish"
+msgstr "Kornština"
+
+#: languages.slang_ky
+msgctxt "languages.slang_ky"
+msgid "Kirghiz"
+msgstr ""
+
+#: languages.slang_la
+#, fuzzy
+msgctxt "languages.slang_la"
+msgid "Latin"
+msgstr "Latina"
+
+#: languages.slang_lb
+#, fuzzy
+msgctxt "languages.slang_lb"
+msgid "Luxembourgish"
+msgstr "Lucemburština"
+
+#: languages.slang_lg
+msgctxt "languages.slang_lg"
+msgid "Ganda"
+msgstr ""
+
+#: languages.slang_li
+msgctxt "languages.slang_li"
+msgid "Limburgan"
+msgstr ""
+
+#: languages.slang_ln
+msgctxt "languages.slang_ln"
+msgid "Lingala"
+msgstr ""
+
+#: languages.slang_lo
+#, fuzzy
+msgctxt "languages.slang_lo"
+msgid "Lao"
+msgstr "Laoština"
+
+#: languages.slang_lt
+#, fuzzy
+msgctxt "languages.slang_lt"
+msgid "Lithuanian"
+msgstr "Litevština"
+
+#: languages.slang_lu
+msgctxt "languages.slang_lu"
+msgid "Luba-Katanga"
+msgstr ""
+
+#: languages.slang_lv
+#, fuzzy
+msgctxt "languages.slang_lv"
+msgid "Latvian"
+msgstr "Lotyština"
+
+#: languages.slang_mg
+msgctxt "languages.slang_mg"
+msgid "Malagasy"
+msgstr ""
+
+#: languages.slang_mh
+msgctxt "languages.slang_mh"
+msgid "Marshallese"
+msgstr ""
+
+#: languages.slang_mi
+msgctxt "languages.slang_mi"
+msgid "Maori"
+msgstr ""
+
+#: languages.slang_mk
+#, fuzzy
+msgctxt "languages.slang_mk"
+msgid "Macedonian"
+msgstr "Makedonština"
+
+#: languages.slang_ml
+msgctxt "languages.slang_ml"
+msgid "Malayalam"
+msgstr ""
+
+#: languages.slang_mn
+#, fuzzy
+msgctxt "languages.slang_mn"
+msgid "Mongolian"
+msgstr "Mongolština"
+
+#: languages.slang_mo
+#, fuzzy
+msgctxt "languages.slang_mo"
+msgid "Moldavian"
+msgstr "Moldavština"
+
+#: languages.slang_mr
+msgctxt "languages.slang_mr"
+msgid "Marathi"
+msgstr ""
+
+#: languages.slang_ms
+msgctxt "languages.slang_ms"
+msgid "Malay"
+msgstr ""
+
+#: languages.slang_mt
+msgctxt "languages.slang_mt"
+msgid "Maltese"
+msgstr ""
+
+#: languages.slang_my
+msgctxt "languages.slang_my"
+msgid "Burmese"
+msgstr ""
+
+#: languages.slang_na
+msgctxt "languages.slang_na"
+msgid "Nauru"
+msgstr ""
+
+#: languages.slang_nb
+msgctxt "languages.slang_nb"
+msgid "Norwegian Bokmaal"
+msgstr ""
+
+#: languages.slang_nd
+msgctxt "languages.slang_nd"
+msgid "Ndebele, North"
+msgstr ""
+
+#: languages.slang_ne
+msgctxt "languages.slang_ne"
+msgid "Nepali"
+msgstr ""
+
+#: languages.slang_ng
+msgctxt "languages.slang_ng"
+msgid "Ndonga"
+msgstr ""
+
+#: languages.slang_nl
+#, fuzzy
+msgctxt "languages.slang_nl"
+msgid "Dutch"
+msgstr "Němčina"
+
+#: languages.slang_nl_be
+msgctxt "languages.slang_nl_be"
+msgid "Flemish"
+msgstr ""
+
+#: languages.slang_nn
+msgctxt "languages.slang_nn"
+msgid "Norwegian Nynorsk"
+msgstr ""
+
+#: languages.slang_no
+#, fuzzy
+msgctxt "languages.slang_no"
+msgid "Norwegian"
+msgstr "Norština"
+
+#: languages.slang_nr
+msgctxt "languages.slang_nr"
+msgid "Ndebele, South"
+msgstr ""
+
+#: languages.slang_nv
+#, fuzzy
+msgctxt "languages.slang_nv"
+msgid "Navajo"
+msgstr "Navažština"
+
+#: languages.slang_ny
+msgctxt "languages.slang_ny"
+msgid "Chichewa"
+msgstr ""
+
+#: languages.slang_oc
+msgctxt "languages.slang_oc"
+msgid "Occitan"
+msgstr ""
+
+#: languages.slang_oj
+msgctxt "languages.slang_oj"
+msgid "Ojibwa"
+msgstr ""
+
+#: languages.slang_om
+msgctxt "languages.slang_om"
+msgid "Oromo"
+msgstr ""
+
+#: languages.slang_or
+msgctxt "languages.slang_or"
+msgid "Oriya"
+msgstr ""
+
+#: languages.slang_os
+msgctxt "languages.slang_os"
+msgid "Ossetian"
+msgstr ""
+
+#: languages.slang_pa
+msgctxt "languages.slang_pa"
+msgid "Panjabi"
+msgstr ""
+
+#: languages.slang_pi
+msgctxt "languages.slang_pi"
+msgid "Pali"
+msgstr ""
+
+#: languages.slang_pl
+#, fuzzy
+msgctxt "languages.slang_pl"
+msgid "Polish"
+msgstr "Polština"
+
+#: languages.slang_ps
+msgctxt "languages.slang_ps"
+msgid "Pushto"
+msgstr ""
+
+#: languages.slang_pt
+#, fuzzy
+msgctxt "languages.slang_pt"
+msgid "Portuguese"
+msgstr "Portugalština"
+
+#: languages.slang_pt_br
+#, fuzzy
+msgctxt "languages.slang_pt_br"
+msgid "Brazilian Portuguese"
+msgstr "Brazislká portugalština"
+
+#: languages.slang_qu
+msgctxt "languages.slang_qu"
+msgid "Quechua"
+msgstr ""
+
+#: languages.slang_rm
+msgctxt "languages.slang_rm"
+msgid "Raeto-Romance"
+msgstr ""
+
+#: languages.slang_rn
+msgctxt "languages.slang_rn"
+msgid "Rundi"
+msgstr ""
+
+#: languages.slang_ro
+#, fuzzy
+msgctxt "languages.slang_ro"
+msgid "Romanian"
+msgstr "Romština"
+
+#: languages.slang_ru
+#, fuzzy
+msgctxt "languages.slang_ru"
+msgid "Russian"
+msgstr "Ruština"
+
+#: languages.slang_rw
+msgctxt "languages.slang_rw"
+msgid "Kinyarwanda"
+msgstr ""
+
+#: languages.slang_sa
+msgctxt "languages.slang_sa"
+msgid "Sanskrit"
+msgstr ""
+
+#: languages.slang_sc
+msgctxt "languages.slang_sc"
+msgid "Sardinian"
+msgstr ""
+
+#: languages.slang_sd
+msgctxt "languages.slang_sd"
+msgid "Sindhi"
+msgstr ""
+
+#: languages.slang_se
+msgctxt "languages.slang_se"
+msgid "Northern Sami"
+msgstr ""
+
+#: languages.slang_sg
+msgctxt "languages.slang_sg"
+msgid "Sango"
+msgstr ""
+
+#: languages.slang_si
+msgctxt "languages.slang_si"
+msgid "Sinhalese"
+msgstr ""
+
+#: languages.slang_sk
+#, fuzzy
+msgctxt "languages.slang_sk"
+msgid "Slovak"
+msgstr "Slovenština"
+
+#: languages.slang_sl
+#, fuzzy
+msgctxt "languages.slang_sl"
+msgid "Slovenian"
+msgstr "Slovinština"
+
+#: languages.slang_sm
+msgctxt "languages.slang_sm"
+msgid "Samoan"
+msgstr ""
+
+#: languages.slang_sn
+msgctxt "languages.slang_sn"
+msgid "Shona"
+msgstr ""
+
+#: languages.slang_so
+msgctxt "languages.slang_so"
+msgid "Somali"
+msgstr ""
+
+#: languages.slang_sq
+#, fuzzy
+msgctxt "languages.slang_sq"
+msgid "Albanian"
+msgstr "Albánština"
+
+#: languages.slang_sr
+msgctxt "languages.slang_sr"
+msgid "Serbian"
+msgstr ""
+
+#: languages.slang_ss
+msgctxt "languages.slang_ss"
+msgid "Swati"
+msgstr ""
+
+#: languages.slang_st
+msgctxt "languages.slang_st"
+msgid "Sotho, Southern"
+msgstr ""
+
+#: languages.slang_su
+#, fuzzy
+msgctxt "languages.slang_su"
+msgid "Sundanese"
+msgstr "Sundština"
+
+#: languages.slang_sv
+#, fuzzy
+msgctxt "languages.slang_sv"
+msgid "Swedish"
+msgstr "Švédština"
+
+#: languages.slang_sw
+msgctxt "languages.slang_sw"
+msgid "Swahili"
+msgstr ""
+
+#: languages.slang_ta
+msgctxt "languages.slang_ta"
+msgid "Tamil"
+msgstr ""
+
+#: languages.slang_te
+msgctxt "languages.slang_te"
+msgid "Telugu"
+msgstr ""
+
+#: languages.slang_tg
+msgctxt "languages.slang_tg"
+msgid "Tajik"
+msgstr ""
+
+#: languages.slang_th
+msgctxt "languages.slang_th"
+msgid "Thai"
+msgstr ""
+
+#: languages.slang_ti
+msgctxt "languages.slang_ti"
+msgid "Tigrinya"
+msgstr ""
+
+#: languages.slang_tk
+msgctxt "languages.slang_tk"
+msgid "Turkmen"
+msgstr ""
+
+#: languages.slang_tl
+msgctxt "languages.slang_tl"
+msgid "Tagalog"
+msgstr ""
+
+#: languages.slang_tn
+msgctxt "languages.slang_tn"
+msgid "Tswana"
+msgstr ""
+
+#: languages.slang_to
+msgctxt "languages.slang_to"
+msgid "Tonga"
+msgstr ""
+
+#: languages.slang_tr
+#, fuzzy
+msgctxt "languages.slang_tr"
+msgid "Turkish"
+msgstr "Turečtina"
+
+#: languages.slang_ts
+msgctxt "languages.slang_ts"
+msgid "Tsonga"
+msgstr ""
+
+#: languages.slang_tt
+#, fuzzy
+msgctxt "languages.slang_tt"
+msgid "Tatar"
+msgstr "Tatarština"
+
+#: languages.slang_tw
+msgctxt "languages.slang_tw"
+msgid "Twi"
+msgstr ""
+
+#: languages.slang_ty
+msgctxt "languages.slang_ty"
+msgid "Tahitian"
+msgstr ""
+
+#: languages.slang_ug
+msgctxt "languages.slang_ug"
+msgid "Uighur"
+msgstr ""
+
+#: languages.slang_uk
+#, fuzzy
+msgctxt "languages.slang_uk"
+msgid "Ukrainian"
+msgstr "Ukrajinština"
+
+#: languages.slang_ur
+msgctxt "languages.slang_ur"
+msgid "Urdu"
+msgstr ""
+
+#: languages.slang_uz
+msgctxt "languages.slang_uz"
+msgid "Uzbek"
+msgstr ""
+
+#: languages.slang_ve
+msgctxt "languages.slang_ve"
+msgid "Venda"
+msgstr ""
+
+#: languages.slang_vi
+#, fuzzy
+msgctxt "languages.slang_vi"
+msgid "Vietnamese"
+msgstr "Vietnamština"
+
+#: languages.slang_vo
+msgctxt "languages.slang_vo"
+msgid "Volapuk"
+msgstr ""
+
+#: languages.slang_wa
+msgctxt "languages.slang_wa"
+msgid "Walloon"
+msgstr ""
+
+#: languages.slang_wo
+msgctxt "languages.slang_wo"
+msgid "Wolof"
+msgstr ""
+
+#: languages.slang_xh
+msgctxt "languages.slang_xh"
+msgid "Xhosa"
+msgstr ""
+
+#: languages.slang_yi
+msgctxt "languages.slang_yi"
+msgid "Yiddish"
+msgstr ""
+
+#: languages.slang_yo
+msgctxt "languages.slang_yo"
+msgid "Yoruba"
+msgstr ""
+
+#: languages.slang_za
+msgctxt "languages.slang_za"
+msgid "Zhuang"
+msgstr ""
+
+#: languages.slang_zh
+#, fuzzy
+msgctxt "languages.slang_zh"
+msgid "Chinese"
+msgstr "Čínština"
+
+#: languages.slang_zu
+#, fuzzy
+msgctxt "languages.slang_zu"
+msgid "Zulu"
+msgstr "Zuluština"
+

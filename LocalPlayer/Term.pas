@@ -13,7 +13,7 @@ uses
   Protocol, Tribes, PVSB, ClientTools, ScreenTools, BaseWin, Messg, ButtonBase,
   LCLIntf, LCLType, SysUtils, Classes, Graphics, Controls, DrawDlg, Types,
   Forms, Menus, ExtCtrls, dateutils, Platform, ButtonB, ButtonC, EOTButton, Area,
-  UGraphicSet, UMiniMap, IsoEngine;
+  GraphicSet, MiniMap, IsoEngine;
 
 const
   WM_EOT = WM_USER;
@@ -590,8 +590,8 @@ implementation
 
 uses
   Directories, CityScreen, Draft, MessgEx, Select, CityType, Help,
-  UnitStat, Log, Diagram, NatStat, Wonders, Enhance, Nego, UPixelPointer, Sound,
-  Battle, Rates, TechTree, Registry, Global, UKeyBindings, CmdList;
+  UnitStat, Log, Diagram, NatStat, Wonders, Enhance, Nego, PixelPointer, Sound,
+  Battle, Rates, TechTree, Registry, Global, KeyBindings, CmdList;
 
 {$R *.lfm}
 
@@ -679,7 +679,7 @@ begin
   BigImp.BeginUpdate;
   for ix := 0 to BigImp.Width div xSizeBig - 1 do
     for iy := 0 to BigImp.Height div ySizeBig - 1 do begin
-      PixelPtr := PixelPointer(BigImp, ScaleToNative(ix * xSizeBig),
+      PixelPtr := TPixelPointer.Create(BigImp, ScaleToNative(ix * xSizeBig),
         ScaleToNative(Cut + iy * ySizeBig));
       for Y := 0 to ScaleToNative(ySizeBig - 2 * Cut) - 1 do begin
         ydivider := (ScaleFromNative(Y) * ySizeSmall div (ySizeBig - 2 * Cut) + 1) *
@@ -717,7 +717,7 @@ begin
   // Sharpen Resampled icons
   SmallImp.SetSize(nx, ny);
   SmallImp.BeginUpdate;
-  PixelPtr := PixelPointer(SmallImp);
+  PixelPtr := TPixelPointer.Create(SmallImp);
   for Y := 0 to ScaleToNative(ny) - 1 do begin
     for X := 0 to ScaleToNative(nx) - 1 do begin
       for ch := 0 to 2 do begin
@@ -6876,7 +6876,7 @@ begin
         if ClientMode = cEditMap then
         begin
           BrushType := trix[I];
-          PanelPaint
+          PanelPaint;
         end
         else if (TroopLoc >= 0) then
           if MyMap[TroopLoc] and fOwned <> 0 then

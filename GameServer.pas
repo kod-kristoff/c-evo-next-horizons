@@ -7,7 +7,7 @@ interface
 
 uses
   Protocol, Database, dynlibs, Platform, dateutils, LazFileUtils, Graphics,
-  UBrain, Global;
+  Brain, Global;
 
 const
   FirstAICompatibleVersion = $000D00;

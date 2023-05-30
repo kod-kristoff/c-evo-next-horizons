@@ -6,8 +6,8 @@ interface
 uses
   GameServer, Messg, ButtonBase, ButtonA, ButtonC, ButtonB, Area, Types,
   LCLIntf, LCLType, SysUtils, Classes, Graphics, Controls, Forms, StdCtrls,
-  Menus, Registry, DrawDlg, Generics.Collections, Protocol, UMiniMap, UBrain,
-  UTranslator;
+  Menus, Registry, DrawDlg, Generics.Collections, Protocol, MiniMap, Brain,
+  Translator;
 
 type
   { TPlayerSlot }
@@ -150,8 +150,8 @@ var
 implementation
 
 uses
-  Global, Directories, Direct, ScreenTools, Inp, Back, Settings, UKeyBindings,
-  ULanguages;
+  Global, Directories, Direct, ScreenTools, Inp, Back, Settings, KeyBindings,
+  Languages;
 
 {$R *.lfm}
 
@@ -434,7 +434,7 @@ begin
     Free;
   end;
 
-  KeyBindings.LoadFromRegistry(HKEY_CURRENT_USER, AppRegistryKey + '\KeyBindings');
+  KeyBindings.KeyBindings.LoadFromRegistry(HKEY_CURRENT_USER, AppRegistryKey + '\KeyBindings');
 end;
 
 procedure TStartDlg.SaveConfig;
@@ -458,7 +458,7 @@ begin
     Free;
   end;
 
-  KeyBindings.SaveToRegistry(HKEY_CURRENT_USER, AppRegistryKey + '\KeyBindings');
+  KeyBindings.KeyBindings.SaveToRegistry(HKEY_CURRENT_USER, AppRegistryKey + '\KeyBindings');
 end;
 
 procedure TStartDlg.LoadLanguages;

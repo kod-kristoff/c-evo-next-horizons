@@ -849,7 +849,7 @@ end;
 
 procedure TListDlg.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
-  Gtk2Fix;
+  //Gtk2Fix;
 end;
 
 function TListDlg.RenameCity(cix: Integer): Boolean;

@@ -49,7 +49,7 @@ var
 implementation
 
 uses
-  Help, UKeyBindings;
+  Help, KeyBindings;
 
 {$R *.lfm}
 

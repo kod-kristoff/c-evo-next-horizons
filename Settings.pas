@@ -5,7 +5,7 @@ interface
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
   LCLProc, ScreenTools, Messg, ButtonA, Directories, DrawDlg, ButtonC,
-  UKeyBindings, ULanguages;
+  KeyBindings, Languages;
 
 type
   { TSettingsDlg }
@@ -269,7 +269,7 @@ begin
   if FullScreen then ButtonFullscreen.ButtonIndex := 3
     else ButtonFullscreen.ButtonIndex := 2;
   LocalGamma := Gamma;
-  LocalKeyBindings.Assign(KeyBindings);
+  LocalKeyBindings.Assign(KeyBindings.KeyBindings);
 end;
 
 procedure TSettingsDlg.SaveData;
@@ -287,7 +287,7 @@ begin
   FullScreen := (ButtonFullscreen.ButtonIndex and 1) = 1;
   Gamma := LocalGamma;
   if NeedRestart then SimpleMessage(SRestartMsg);
-  KeyBindings.Assign(LocalKeyBindings);
+  KeyBindings.KeyBindings.Assign(LocalKeyBindings);
 end;
 
 end.

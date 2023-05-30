@@ -35,7 +35,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="LocalPlayer;$(ProjOutDir)"/>
-            <OtherUnitFiles Value="LocalPlayer;Network"/>
+            <OtherUnitFiles Value="LocalPlayer;Network;Packages\CevoComponents"/>
             <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)-$(BuildMode)"/>
           </SearchPaths>
           <Parsing>
@@ -55,6 +55,7 @@
           <Linking>
             <Debugging>
               <GenerateDebugInfo Value="False"/>
+              <DebugInfoType Value="dsDwarf2Set"/>
             </Debugging>
             <LinkSmart Value="True"/>
             <Options>
@@ -336,27 +337,27 @@
         <IsPartOfProject Value="True"/>
       </Unit40>
       <Unit41>
-        <Filename Value="LocalPlayer\UKeyBindings.pas"/>
+        <Filename Value="LocalPlayer\KeyBindings.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit41>
       <Unit42>
-        <Filename Value="UMiniMap.pas"/>
+        <Filename Value="MiniMap.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit42>
       <Unit43>
-        <Filename Value="UBrain.pas"/>
+        <Filename Value="Brain.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit43>
       <Unit44>
-        <Filename Value="Network\UNetworkServer.pas"/>
+        <Filename Value="Network\NetworkServer.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit44>
       <Unit45>
-        <Filename Value="Network\UNetworkClient.pas"/>
+        <Filename Value="Network\NetworkClient.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit45>
       <Unit46>
-        <Filename Value="Network\UNetworkCommon.pas"/>
+        <Filename Value="Network\NetworkCommon.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit46>
     </Units>
@@ -369,7 +370,7 @@
     </Target>
     <SearchPaths>
       <IncludeFiles Value="LocalPlayer;$(ProjOutDir)"/>
-      <OtherUnitFiles Value="LocalPlayer;Network"/>
+      <OtherUnitFiles Value="LocalPlayer;Network;Packages\CevoComponents"/>
       <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)-$(BuildMode)"/>
     </SearchPaths>
     <Parsing>
@@ -392,6 +393,7 @@
     </CodeGeneration>
     <Linking>
       <Debugging>
+        <DebugInfoType Value="dsDwarf2Set"/>
         <UseHeaptrc Value="True"/>
         <UseExternalDbgSyms Value="True"/>
       </Debugging>

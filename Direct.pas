@@ -42,8 +42,8 @@ var
 implementation
 
 uses
-  ScreenTools, Protocol, Start, LocalPlayer, NoTerm, Back, Global, UNetworkServer,
-  UNetworkClient;
+  ScreenTools, Protocol, Start, LocalPlayer, NoTerm, Back, Global, NetworkServer,
+  NetworkClient;
 
 {$R *.lfm}
 
@@ -182,9 +182,9 @@ begin
   BrainTerm.Client := LocalPlayer.Client;
   BrainTerm.Name := Phrases.Lookup('HUMAN');
   if NetworkEnabled then begin
-    BrainNetworkServer.Client := UNetworkServer.Client;
+    BrainNetworkServer.Client := NetworkServer.Client;
     BrainNetworkServer.Name := Phrases.Lookup('NETWORK_SERVER');
-    BrainNetworkClient.Client := UNetworkClient.Client;
+    BrainNetworkClient.Client := NetworkClient.Client;
     BrainNetworkClient.Name := Phrases.Lookup('NETWORK_CLIENT');
   end;
   BrainRandom.Name := Phrases.Lookup('RANDOMAI');
@@ -279,7 +279,7 @@ end;
 
 procedure TDirectDlg.FormPaint(Sender: TObject);
 begin
-  PaintBackground(self, 3, 3, ClientWidth - 6, ClientHeight - 6);
+  PaintBackground(Self, 3, 3, ClientWidth - 6, ClientHeight - 6);
   Frame(Canvas, 0, 0, ClientWidth - 1, ClientHeight - 1, 0, 0);
   Frame(Canvas, 1, 1, ClientWidth - 2, ClientHeight - 2,
     MainTexture.ColorBevelLight, MainTexture.ColorBevelShade);

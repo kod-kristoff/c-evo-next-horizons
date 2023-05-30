@@ -37,7 +37,7 @@ var
 implementation
 
 uses
-  Term, ClientTools, Help, Tribes, UPixelPointer;
+  Term, ClientTools, Help, Tribes, PixelPointer;
 
 {$R *.lfm}
 
@@ -109,10 +109,10 @@ begin
   Width := ScaleToNative(180);
   Height := ScaleToNative(128);
   Offscreen.BeginUpdate;
-  Line[0] := PixelPointer(Offscreen, ScaleToNative(Center.X), ScaleToNative(Center.Y));
-  Line[1] := PixelPointer(Offscreen, ScaleToNative(Center.X), ScaleToNative(Center.Y) - 1);
-  Line[2] := PixelPointer(Offscreen, ScaleToNative(Center.X) - 1, ScaleToNative(Center.Y));
-  Line[3] := PixelPointer(Offscreen, ScaleToNative(Center.X) - 1, ScaleToNative(Center.Y) - 1);
+  Line[0] := TPixelPointer.Create(Offscreen, ScaleToNative(Center.X), ScaleToNative(Center.Y));
+  Line[1] := TPixelPointer.Create(Offscreen, ScaleToNative(Center.X), ScaleToNative(Center.Y) - 1);
+  Line[2] := TPixelPointer.Create(Offscreen, ScaleToNative(Center.X) - 1, ScaleToNative(Center.Y));
+  Line[3] := TPixelPointer.Create(Offscreen, ScaleToNative(Center.X) - 1, ScaleToNative(Center.Y) - 1);
   for Y := 0 to Height - 1 do begin
     for X := 0 to Width - 1 do begin
       R := X * X * ((Height div 4) * (Height div 4)) + Y * Y * ((Width div 4) * (Width div 4));
@@ -159,8 +159,8 @@ begin
   y0Dst := ClientHeight div 2 - ySizeBig div 2 + RingPosition[I].Y;
   x0Src := (I mod 7) * xSizeBig;
   y0Src := (I div 7 + SystemIconLines) * ySizeBig;
-  Src := PixelPointer(BigImp, ScaleToNative(x0Src), ScaleToNative(y0Src));
-  Dst := PixelPointer(Offscreen, ScaleToNative(x0Dst), ScaleToNative(y0Dst));
+  Src := TPixelPointer.Create(BigImp, ScaleToNative(x0Src), ScaleToNative(y0Src));
+  Dst := TPixelPointer.Create(Offscreen, ScaleToNative(x0Dst), ScaleToNative(y0Dst));
   for Y := 0 to ScaleToNative(ySizeBig) - 1 do begin
     for X := 0 to ScaleToNative(xSizeBig) - 1 do begin
       Darken := ((255 - Src.Pixel^.B) * 3 + (255 - Src.Pixel^.G) *

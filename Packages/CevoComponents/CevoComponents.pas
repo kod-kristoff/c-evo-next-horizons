@@ -9,7 +9,7 @@ interface
 
 uses
   Area, ButtonA, ButtonB, ButtonC, ButtonN, EOTButton, ButtonBase, DrawDlg, 
-  Sound, BaseWin, AsyncProcess2, UGraphicSet, UTexture, LazarusPackageIntf;
+  Sound, BaseWin, AsyncProcess2, GraphicSet, Texture, LazarusPackageIntf;
 
 implementation
 
@@ -28,4 +28,3 @@ end;
 initialization
   RegisterPackage('CevoComponents', @Register);
 end.
-

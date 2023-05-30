@@ -40,136 +40,153 @@
 
 Source: https://svn.zdechov.net/PascalClassLibrary/Common/"/>
     <License Value="Copy left."/>
-    <Version Minor="10"/>
-    <Files Count="29">
+    <Version Minor="11"/>
+    <Files Count="33">
       <Item1>
         <Filename Value="StopWatch.pas"/>
         <UnitName Value="StopWatch"/>
       </Item1>
       <Item2>
-        <Filename Value="UCommon.pas"/>
-        <UnitName Value="UCommon"/>
+        <Filename Value="Common.pas"/>
+        <UnitName Value="Common"/>
       </Item2>
       <Item3>
-        <Filename Value="UDebugLog.pas"/>
+        <Filename Value="DebugLog.pas"/>
         <HasRegisterProc Value="True"/>
-        <UnitName Value="UDebugLog"/>
+        <UnitName Value="DebugLog"/>
       </Item3>
       <Item4>
-        <Filename Value="UDelay.pas"/>
-        <UnitName Value="UDelay"/>
+        <Filename Value="Common.Delay.pas"/>
+        <UnitName Value="Common.Delay"/>
       </Item4>
       <Item5>
-        <Filename Value="UPrefixMultiplier.pas"/>
+        <Filename Value="PrefixMultiplier.pas"/>
         <HasRegisterProc Value="True"/>
-        <UnitName Value="UPrefixMultiplier"/>
+        <UnitName Value="PrefixMultiplier"/>
       </Item5>
       <Item6>
-        <Filename Value="UURI.pas"/>
-        <UnitName Value="UURI"/>
+        <Filename Value="URI.pas"/>
+        <UnitName Value="URI"/>
       </Item6>
       <Item7>
-        <Filename Value="UThreading.pas"/>
-        <UnitName Value="UThreading"/>
+        <Filename Value="Threading.pas"/>
+        <UnitName Value="Threading"/>
       </Item7>
       <Item8>
-        <Filename Value="UMemory.pas"/>
-        <UnitName Value="UMemory"/>
+        <Filename Value="Memory.pas"/>
+        <UnitName Value="Memory"/>
       </Item8>
       <Item9>
-        <Filename Value="UResetableThread.pas"/>
-        <UnitName Value="UResetableThread"/>
+        <Filename Value="ResetableThread.pas"/>
+        <UnitName Value="ResetableThread"/>
       </Item9>
       <Item10>
-        <Filename Value="UPool.pas"/>
-        <UnitName Value="UPool"/>
+        <Filename Value="Pool.pas"/>
+        <UnitName Value="Pool"/>
       </Item10>
       <Item11>
-        <Filename Value="ULastOpenedList.pas"/>
+        <Filename Value="LastOpenedList.pas"/>
         <HasRegisterProc Value="True"/>
-        <UnitName Value="ULastOpenedList"/>
+        <UnitName Value="LastOpenedList"/>
       </Item11>
       <Item12>
-        <Filename Value="URegistry.pas"/>
-        <UnitName Value="URegistry"/>
+        <Filename Value="RegistryEx.pas"/>
+        <UnitName Value="RegistryEx"/>
       </Item12>
       <Item13>
-        <Filename Value="UJobProgressView.pas"/>
+        <Filename Value="JobProgressView.pas"/>
         <HasRegisterProc Value="True"/>
-        <UnitName Value="UJobProgressView"/>
+        <UnitName Value="JobProgressView"/>
       </Item13>
       <Item14>
-        <Filename Value="UXMLUtils.pas"/>
-        <UnitName Value="UXMLUtils"/>
+        <Filename Value="XML.pas"/>
+        <UnitName Value="XML"/>
       </Item14>
       <Item15>
-        <Filename Value="UApplicationInfo.pas"/>
+        <Filename Value="ApplicationInfo.pas"/>
         <HasRegisterProc Value="True"/>
-        <UnitName Value="UApplicationInfo"/>
+        <UnitName Value="ApplicationInfo"/>
       </Item15>
       <Item16>
-        <Filename Value="USyncCounter.pas"/>
-        <UnitName Value="USyncCounter"/>
+        <Filename Value="SyncCounter.pas"/>
+        <UnitName Value="SyncCounter"/>
       </Item16>
       <Item17>
-        <Filename Value="UListViewSort.pas"/>
+        <Filename Value="ListViewSort.pas"/>
         <HasRegisterProc Value="True"/>
-        <UnitName Value="UListViewSort"/>
+        <UnitName Value="ListViewSort"/>
       </Item17>
       <Item18>
-        <Filename Value="UPersistentForm.pas"/>
+        <Filename Value="PersistentForm.pas"/>
         <HasRegisterProc Value="True"/>
-        <UnitName Value="UPersistentForm"/>
+        <UnitName Value="PersistentForm"/>
       </Item18>
       <Item19>
-        <Filename Value="UFindFile.pas"/>
+        <Filename Value="FindFile.pas"/>
         <HasRegisterProc Value="True"/>
-        <UnitName Value="UFindFile"/>
+        <UnitName Value="FindFile"/>
       </Item19>
       <Item20>
-        <Filename Value="UScaleDPI.pas"/>
+        <Filename Value="ScaleDPI.pas"/>
         <HasRegisterProc Value="True"/>
-        <UnitName Value="UScaleDPI"/>
+        <UnitName Value="ScaleDPI"/>
       </Item20>
       <Item21>
-        <Filename Value="UTheme.pas"/>
+        <Filename Value="Theme.pas"/>
         <HasRegisterProc Value="True"/>
-        <UnitName Value="UTheme"/>
+        <UnitName Value="Theme"/>
       </Item21>
       <Item22>
-        <Filename Value="UStringTable.pas"/>
-        <UnitName Value="UStringTable"/>
+        <Filename Value="StringTable.pas"/>
+        <UnitName Value="StringTable"/>
       </Item22>
       <Item23>
-        <Filename Value="UMetaCanvas.pas"/>
-        <UnitName Value="UMetaCanvas"/>
+        <Filename Value="MetaCanvas.pas"/>
+        <UnitName Value="MetaCanvas"/>
       </Item23>
       <Item24>
-        <Filename Value="UGeometric.pas"/>
-        <UnitName Value="UGeometric"/>
+        <Filename Value="Geometric.pas"/>
+        <UnitName Value="Geometric"/>
       </Item24>
       <Item25>
-        <Filename Value="UTranslator.pas"/>
+        <Filename Value="Translator.pas"/>
         <HasRegisterProc Value="True"/>
-        <UnitName Value="UTranslator"/>
+        <UnitName Value="Translator"/>
       </Item25>
       <Item26>
-        <Filename Value="ULanguages.pas"/>
-        <UnitName Value="ULanguages"/>
+        <Filename Value="Languages.pas"/>
+        <UnitName Value="Languages"/>
       </Item26>
       <Item27>
-        <Filename Value="UFormAbout.pas"/>
-        <UnitName Value="UFormAbout"/>
+        <Filename Value="FormAbout.pas"/>
+        <UnitName Value="FormAbout"/>
       </Item27>
       <Item28>
-        <Filename Value="UAboutDialog.pas"/>
+        <Filename Value="AboutDialog.pas"/>
         <HasRegisterProc Value="True"/>
-        <UnitName Value="UAboutDialog"/>
+        <UnitName Value="AboutDialog"/>
       </Item28>
       <Item29>
-        <Filename Value="UPixelPointer.pas"/>
-        <UnitName Value="UPixelPointer"/>
+        <Filename Value="PixelPointer.pas"/>
+        <UnitName Value="PixelPointer"/>
       </Item29>
+      <Item30>
+        <Filename Value="DataFile.pas"/>
+        <UnitName Value="DataFile"/>
+      </Item30>
+      <Item31>
+        <Filename Value="TestCase.pas"/>
+        <UnitName Value="TestCase"/>
+      </Item31>
+      <Item32>
+        <Filename Value="Generics.pas"/>
+        <UnitName Value="Generics"/>
+      </Item32>
+      <Item33>
+        <Filename Value="CommonPackage.pas"/>
+        <Type Value="Main Unit"/>
+        <UnitName Value="CommonPackage"/>
+      </Item33>
     </Files>
     <CompatibilityMode Value="True"/>
     <i18n>

@@ -1,0 +1,11 @@
+msgid ""
+msgstr "Content-Type: text/plain; charset=UTF-8"
+
+#: datafile.sallfiles
+msgid "All files"
+msgstr ""
+
+#: datafile.sdatafilename
+msgid "Data file"
+msgstr ""
+

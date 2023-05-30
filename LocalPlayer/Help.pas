@@ -127,8 +127,8 @@ var
 implementation
 
 uses
-  Directories, ClientTools, Term, Tribes, Inp, Messg, UPixelPointer, Global,
-  UKeyBindings;
+  Directories, ClientTools, Term, Tribes, Inp, Messg, PixelPointer, Global,
+  KeyBindings;
 
 {$R *.lfm}
 
@@ -466,10 +466,10 @@ begin
   Offscreen.BeginUpdate;
   xSrc := iix mod 7 * xSizeBig;
   ySrc := (iix div 7 + 1) * ySizeBig;
-  PaintPtr := PixelPointer(OffScreen, ScaleToNative(x0), ScaleToNative(y0));
-  CoalPtr := PixelPointer(Templates.Data, ScaleToNative(xCoal), ScaleToNative(yCoal));
+  PaintPtr := TPixelPointer.Create(OffScreen, ScaleToNative(x0), ScaleToNative(y0));
+  CoalPtr := TPixelPointer.Create(Templates.Data, ScaleToNative(xCoal), ScaleToNative(yCoal));
   for dy := -1 to 1 do
-    ImpPtr[dy] := PixelPointer(BigImp, ScaleToNative(xSrc), ScaleToNative(ySrc));
+    ImpPtr[dy] := TPixelPointer.Create(BigImp, ScaleToNative(xSrc), ScaleToNative(ySrc));
   for Y := 0 to ScaleToNative(ySizeBig) * 2 - 1 do begin
     if ((ScaleToNative(y0) + Y) >= 0) and ((ScaleToNative(y0) + Y) < ScaleToNative(InnerHeight)) then begin
       for dy := -1 to 1 do
