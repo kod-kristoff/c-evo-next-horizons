@@ -1,6 +1,9 @@
 C-evo: New Horizons
 ===================
 
+Git copy of [subversion code](https://svn.zdechov.net/c-evo/). The branch `trunk` is used to track `svn`.
+
+
 * Developed with: Lazarus 2.2.0 (https://www.lazarus-ide.org/)
 * Supported platforms: Windows and Linux
 * Supported architectures: 32-bit and 64-bit x86
